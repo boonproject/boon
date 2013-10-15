@@ -9,13 +9,13 @@ Whenever possible toString shall produce valid JSON.
 
 Universal methods to work with list, appendable, strings, sets, maps, etc. if applicable:
 
- ** len
- ** in
- ** idx
- ** add
- ** copy
- ** clone
- ** get
- ** set
+* len
+* in
+* idx
+* add
+* copy
+* clone
+* get
+* set
 
 Code coverage shall always be 90% or above.
