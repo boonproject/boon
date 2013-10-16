@@ -48,11 +48,54 @@ public class HTTPTest {
 
         Map<String,String> headers = map("foo", "bar", "fun", "sun");
 
-        String response = HTTP.postBody("http://localhost:9212/test", headers, "text/plain", "hi mom");
+        String response = HTTP.postBodyWithContentType("http://localhost:9212/test", headers, "text/plain", "hi mom");
 
         System.out.println(response);
 
         assertTrue(response.contains("hi mom"));
+        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+
+
+        response = HTTP.postBodyWithCharset("http://localhost:9212/test", headers, "text/plain", "UTF-8", "hi mom");
+
+        System.out.println(response);
+
+        assertTrue(response.contains("hi mom"));
+        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+
+        response = HTTP.postBodyWithHeaders("http://localhost:9212/test", headers, "hi mom");
+
+        System.out.println(response);
+
+        assertTrue(response.contains("hi mom"));
+        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+
+
+        response = HTTP.get("http://localhost:9212/test");
+
+        System.out.println(response);
+
+
+        response = HTTP.getWithHeaders("http://localhost:9212/test", headers);
+
+        System.out.println(response);
+
+        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+
+
+
+        response = HTTP.getWithContentType("http://localhost:9212/test", headers, "text/plain");
+
+        System.out.println(response);
+
+        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+
+
+
+        response = HTTP.getWithCharSet("http://localhost:9212/test", headers, "text/plain", "UTF-8");
+
+        System.out.println(response);
+
         assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
 
         Thread.sleep(10);
@@ -62,6 +105,30 @@ public class HTTPTest {
 
     }
 
+    @Test
+    public void testPostBody() throws Exception {
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(9220), 0);
+        server.createContext("/test", new MyHandler());
+        server.setExecutor(null); // creates a default executor
+        server.start();
+
+        Thread.sleep(10);
+
+
+        Map<String,String> headers = map("foo", "bar", "fun", "sun");
+
+        String response = HTTP.postBody("http://localhost:9220/test", "hi mom");
+
+        assertTrue(response.contains("hi mom"));
+
+
+        Thread.sleep(10);
+
+        server.stop(0);
+
+
+    }
 
     @Test(expected = RuntimeException.class)
     public void testSad() throws Exception {
@@ -76,7 +143,7 @@ public class HTTPTest {
 
         Map<String,String> headers = map("foo", "bar", "fun", "sun");
 
-        String response = HTTP.postBody("http://localhost:9213/foo", headers, "text/plain", "hi mom");
+        String response = HTTP.postBodyWithContentType("http://localhost:9213/foo", headers, "text/plain", "hi mom");
 
         System.out.println(response);
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.013" errors="0" skipped="0" tests="8" name="org.boon.utils.MapsTest">
+<testsuite failures="0" time="0.209" errors="0" skipped="0" tests="3" name="org.boon.utils.HTTPTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib"/>
@@ -63,12 +63,7 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.001" classname="org.boon.utils.MapsTest" name="testEntry"/>
-  <testcase time="0.002" classname="org.boon.utils.MapsTest" name="testUniversal"/>
-  <testcase time="0.001" classname="org.boon.utils.MapsTest" name="testHashMap"/>
-  <testcase time="0.001" classname="org.boon.utils.MapsTest" name="testTreeMap"/>
-  <testcase time="0.001" classname="org.boon.utils.MapsTest" name="testComparator"/>
-  <testcase time="0" classname="org.boon.utils.MapsTest" name="testSafeMap"/>
-  <testcase time="0.003" classname="org.boon.utils.MapsTest" name="testComparatorSkipMap"/>
-  <testcase time="0.001" classname="org.boon.utils.MapsTest" name="testSkipMap"/>
+  <testcase time="0.082" classname="org.boon.utils.HTTPTest" name="testPostBody"/>
+  <testcase time="0.014" classname="org.boon.utils.HTTPTest" name="testSad"/>
+  <testcase time="0.112" classname="org.boon.utils.HTTPTest" name="testHappy"/>
 </testsuite>

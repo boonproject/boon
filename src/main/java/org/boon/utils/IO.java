@@ -12,9 +12,9 @@ public class IO {
         try (Reader reader = new InputStreamReader(inputStream, charset)) {
                return read(reader);
         }catch (Exception ex) {
-            throw new RuntimeException(ex);
+            Exceptions.handle(ex);
+            return null;
         }
-
     }
 
     public static String read(InputStream inputStream) {
@@ -22,7 +22,8 @@ public class IO {
         try (Reader reader = new InputStreamReader(inputStream)) {
             return read(reader);
         }catch (Exception ex) {
-            throw new RuntimeException(ex);
+            Exceptions.handle(ex);
+            return null;
         }
 
     }
@@ -40,7 +41,8 @@ public class IO {
             }
 
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            Exceptions.handle(ex);
+            return null;
         }
 
         return builder.toString();
@@ -52,7 +54,7 @@ public class IO {
         try (OutputStream o = out) {
             o.write(content.getBytes(charset));
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            Exceptions.handle(ex);
         }
 
     }
@@ -68,4 +70,5 @@ public class IO {
         }
 
     }
+
 }

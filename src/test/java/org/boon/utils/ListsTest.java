@@ -14,6 +14,63 @@ import static org.junit.Assert.assertTrue;
 public class ListsTest {
 
 
+
+    @Test
+    public void sliceTest() {
+        List<String> list =
+                list("apple", "oranges", "pears", "grapes", "kiwi");
+        List<String> list2 = slc(list, 0, 2);
+
+        assertEquals(list("apple", "oranges"), list2);
+    }
+
+
+    @Test
+    public void sliceTest2() {
+        List<String> list =
+                list("apple", "oranges", "pears", "grapes", "kiwi");
+        List<String> list2 = slc(list, -3, -1);
+
+        assertEquals(list( "pears", "grapes", "kiwi"), list2);
+    }
+
+
+    @Test
+    public void sliceStart() {
+        List<String> list =
+                list("apple", "oranges", "pears", "grapes", "kiwi");
+        List<String> list2 = slc(list, 2);
+
+        assertEquals(list( "pears", "grapes", "kiwi"), list2);
+    }
+
+
+    @Test
+    public void sliceEnd() {
+        List<String> list =
+                list("apple", "oranges", "pears", "grapes", "kiwi");
+        List<String> list2 = slcEnd(list, -4);
+
+        assertEquals(list( "apple", "oranges"), list2);
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void tooBigIndex() {
+        List<String> list =
+                list("apple", "oranges", "pears");
+        idx(list, 100);
+    }
+
+
+
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void tooSmallIndex() {
+        List<String> list =
+                list("apple", "oranges", "pears");
+        idx(list, -100);
+    }
+
     @Test
     public void testMe() {
         List<String> list =   (List<String> ) list((String[])null);
@@ -23,7 +80,20 @@ public class ListsTest {
         assertEquals(3, len(list)) ;
         assertTrue(in("apple", list));
         assertEquals("oranges", idx(list, 1));
-        idx(list, 1, "pear");
+
+
+        assertEquals("pears", idx(list, -1));
+        assertEquals("oranges", idx(list, -2));
+        assertEquals("apple", idx(list, -3));
+
+
+        idx(list, 1, "grapes");
+        assertEquals("grapes", idx(list, 1));
+        assertEquals(3, len(list)) ;
+
+
+
+        idx(list, -2, "pear");
         assertEquals("pear", idx(list, 1));
         assertEquals(3, len(list)) ;
 

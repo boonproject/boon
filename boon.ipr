@@ -26,7 +26,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="boon" target="1.7" />
+      <module name="boon" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="CopyrightManager" default="">
