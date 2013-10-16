@@ -1,7 +1,6 @@
 package org.boon.utils;
 
 
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;

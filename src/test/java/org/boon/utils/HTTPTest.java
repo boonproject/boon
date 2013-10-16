@@ -36,14 +36,14 @@ public class HTTPTest {
 
 
     @Test
-    public void testMe() throws Exception {
+    public void testHappy() throws Exception {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(9212), 0);
         server.createContext("/test", new MyHandler());
         server.setExecutor(null); // creates a default executor
         server.start();
 
-        Thread.sleep(1000);
+        Thread.sleep(10);
 
 
         Map<String,String> headers = map("foo", "bar", "fun", "sun");
@@ -55,7 +55,37 @@ public class HTTPTest {
         assertTrue(response.contains("hi mom"));
         assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
 
-        Thread.sleep(1000);
+        Thread.sleep(10);
+
+        server.stop(0);
+
+
+    }
+
+
+    @Test(expected = RuntimeException.class)
+    public void testSad() throws Exception {
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(9212), 0);
+        server.createContext("/test", new MyHandler());
+        server.setExecutor(null); // creates a default executor
+        server.start();
+
+        Thread.sleep(10);
+
+
+        Map<String,String> headers = map("foo", "bar", "fun", "sun");
+
+        String response = HTTP.postBody("http://localhost:9212/foo", headers, "text/plain", "hi mom");
+
+        System.out.println(response);
+
+        assertTrue(response.contains("hi mom"));
+        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+
+        Thread.sleep(10);
+
+        server.stop(0);
 
 
     }

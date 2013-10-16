@@ -2,20 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381901126630" ignored="false" />
+    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381907427800" ignored="false" />
     <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381858666430" ignored="false" />
     <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381858979719" ignored="false" />
     <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381855944478" ignored="false" />
     <file path="/Net.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906064086" ignored="false" />
     <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906048303" ignored="false" />
-    <file path="/HTTPTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906148379" ignored="false" />
+    <file path="/HTTPTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381907621828" ignored="false" />
     <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381904913758" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -145,10 +144,10 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <field_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <method_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <exception_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <method_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
@@ -217,19 +216,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Objects.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Objects.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="263" column="26" selection-start="8952" selection-end="8952" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HTTP.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="HTTP.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="75" selection-start="2031" selection-end="2031" vertical-scroll-proportion="0.67713004">
+            <state line="3" column="0" selection-start="26" selection-end="26" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -250,11 +240,7 @@
         <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="60" column="12" selection-start="1414" selection-end="1414" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#945#958#0" expanded="true" />
-                <element signature="e#1034#1047#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -277,13 +263,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HTTPTest.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="HTTPTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="35" selection-start="1461" selection-end="1461" vertical-scroll-proportion="0.0">
+            <state line="18" column="49" selection-start="506" selection-end="506" vertical-scroll-proportion="0.64179105">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HttpServer.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/net/httpserver/HttpServer.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="21" column="25" selection-start="833" selection-end="833" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -421,7 +416,16 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -450,16 +454,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="ProjectViewSettings">
@@ -680,8 +675,8 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.6701923" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3298077" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.67115384" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18554477" sideWeight="0.6701923" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -811,18 +806,9 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/function/ToLongFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="17" selection-start="532" selection-end="532" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="36" column="17" selection-start="532" selection-end="532" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Objects.java">
@@ -834,9 +820,7 @@
     </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/TreeMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="193" column="11" selection-start="7836" selection-end="7836" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="193" column="11" selection-start="7836" selection-end="7836" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
@@ -846,9 +830,7 @@
     </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/lang/Object.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="147" column="19" selection-start="5729" selection-end="5729" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="147" column="19" selection-start="5729" selection-end="5729" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
@@ -903,26 +885,29 @@
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="60" column="12" selection-start="1414" selection-end="1414" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#945#958#0" expanded="true" />
-            <element signature="e#1034#1047#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="35" selection-start="1461" selection-end="1461" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="75" selection-start="2031" selection-end="2031" vertical-scroll-proportion="0.67713004">
+        <state line="3" column="0" selection-start="26" selection-end="26" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/net/httpserver/HttpServer.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="25" selection-start="833" selection-end="833" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="49" selection-start="506" selection-end="506" vertical-scroll-proportion="0.64179105">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
