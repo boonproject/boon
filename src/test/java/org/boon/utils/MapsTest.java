@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedMap;
 
+import static org.boon.utils.Lists.list;
 import static org.boon.utils.Maps.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -86,7 +87,7 @@ public class MapsTest {
         SortedMap<String,Dog> dogMapT2 = copy(dogMapT);
         assertEquals(dogMapT.hashCode(), dogMapT2.hashCode());
 
-        set(dogMap, "foo", new Dog("foo"));
+        idx(dogMap, "foo", new Dog("foo"));
         assertEquals("foo", idx(dogMap, "foo").name);
 
 
@@ -311,10 +312,10 @@ public class MapsTest {
         assertEquals("dog2", dogMap.get("dog2").name);
 
 
-        dogMap = sortedMap(
+        dogMap = sortedMap(list(
                 entry("dog0", new Dog("dog0")),
                 entry("dog1", new Dog("dog1")),
-                entry("dog2", new Dog("dog2"))
+                entry("dog2", new Dog("dog2")))
 
         );
         assertEquals("dog0", dogMap.get("dog0").name);
@@ -500,10 +501,10 @@ public class MapsTest {
 
 
 
-        dogMap = sortedMapOfEntries(comparator,
+        dogMap = sortedMap(comparator, list(
                 entry("dog0", new Dog("dog0")),
                 entry("dog1", new Dog("dog1")),
-                entry("dog2", new Dog("dog2"))
+                entry("dog2", new Dog("dog2")))
 
         );
         assertEquals("dog0", dogMap.get("dog0").name);
@@ -662,5 +663,587 @@ public class MapsTest {
         assertEquals("dog9", dogMap.get("dog9").name);
 
     }
+
+
+
+
+    @Test
+    public void testSafeMap() {
+
+        Map<String,Dog> dogMap = Maps.safeMap("dog", new Dog("dog"));
+        assertEquals("dog", dogMap.get("dog").name);
+
+
+        dogMap = Maps.safeMap(
+                new String[]{"dog0", "dog1", "dog2"},
+                new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")}
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+        dogMap = Maps.safeMap(
+                Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
+                Arrays.asList(new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")})
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+        dogMap = Maps.safeMap(
+                (Iterable)Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
+                (Iterable)Arrays.asList(new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")})
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+        dogMap = Maps.safeMap("dog", new Dog("dog"),
+                "dog1", new Dog("dog1")
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+
+        dogMap = Maps.safeMap("dog", new Dog("dog"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2")
+
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+        dogMap = Maps.safeMap(
+                entry("dog0", new Dog("dog0")),
+                entry("dog1", new Dog("dog1")),
+                entry("dog2", new Dog("dog2"))
+
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+        dogMap = Maps.safeMap("dog", new Dog("dog"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3")
+
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+
+
+
+        dogMap = Maps.safeMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+
+
+        dogMap = Maps.safeMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+
+
+        dogMap = Maps.safeMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+
+        dogMap = Maps.safeMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+
+
+        dogMap = Maps.safeMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7"),
+                "dog8", new Dog("dog8")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+        assertEquals("dog8", dogMap.get("dog8").name);
+
+
+        dogMap = Maps.safeMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7"),
+                "dog8", new Dog("dog8"),
+                "dog9", new Dog("dog9")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+        assertEquals("dog8", dogMap.get("dog8").name);
+        assertEquals("dog9", dogMap.get("dog9").name);
+
+        assertEquals(10, len(dogMap));
+
+    }
+
+
+
+
+
+    @Test
+    public void testComparatorSkipMap() {
+
+        Comparator comparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return o1.toString().compareTo(o2.toString());
+            }
+        };
+
+
+        Map<String,Dog> dogMap = skipMap(comparator, "dog", new Dog("dog"));
+        assertEquals("dog", dogMap.get("dog").name);
+
+
+        dogMap = skipMap(comparator,
+                Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
+                Arrays.asList(new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")})
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+
+        dogMap = skipMap(comparator, list(
+                entry("dog0", new Dog("dog0")),
+                entry("dog1", new Dog("dog1")),
+                entry("dog2", new Dog("dog2")))
+
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+        dogMap = skipMap(comparator,
+                new String[]{"dog0", "dog1", "dog2"},
+                new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")}
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+        dogMap = skipMap(comparator, "dog", new Dog("dog"),
+                "dog1", new Dog("dog1")
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+
+        dogMap = skipMap(comparator, "dog", new Dog("dog"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2")
+
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+
+        dogMap = skipMap(comparator, "dog", new Dog("dog"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3")
+
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+
+
+
+        dogMap = skipMap(comparator,
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+
+
+        dogMap = skipMap( comparator,
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+
+
+        dogMap = skipMap( comparator,
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+
+        dogMap = skipMap( comparator,
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+
+
+        dogMap = skipMap( comparator,
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7"),
+                "dog8", new Dog("dog8")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+        assertEquals("dog8", dogMap.get("dog8").name);
+
+
+        dogMap = skipMap( comparator,
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7"),
+                "dog8", new Dog("dog8"),
+                "dog9", new Dog("dog9")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+        assertEquals("dog8", dogMap.get("dog8").name);
+        assertEquals("dog9", dogMap.get("dog9").name);
+
+    }
+
+
+
+
+
+    @Test
+    public void testSkipMap() {
+
+        Map<String,Dog> dogMap = Maps.skipMap("dog", new Dog("dog"));
+        assertEquals("dog", dogMap.get("dog").name);
+
+
+        dogMap = Maps.skipMap(
+                new String[]{"dog0", "dog1", "dog2"},
+                new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")}
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+        dogMap = Maps.skipMap(
+                Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
+                Arrays.asList(new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")})
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+        dogMap = Maps.skipMap(
+                (Iterable)Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
+                (Iterable)Arrays.asList(new Dog[]{new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2")})
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+        dogMap = Maps.skipMap("dog", new Dog("dog"),
+                "dog1", new Dog("dog1")
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+
+        dogMap = Maps.skipMap("dog", new Dog("dog"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2")
+
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+        dogMap = Maps.skipMap(
+                entry("dog0", new Dog("dog0")),
+                entry("dog1", new Dog("dog1")),
+                entry("dog2", new Dog("dog2"))
+
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+
+
+        dogMap = Maps.skipMap("dog", new Dog("dog"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3")
+
+        );
+        assertEquals("dog", dogMap.get("dog").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+
+
+
+        dogMap = Maps.skipMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+
+
+        dogMap = Maps.skipMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+
+
+        dogMap = Maps.skipMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+
+        dogMap = Maps.skipMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+
+
+        dogMap = Maps.skipMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7"),
+                "dog8", new Dog("dog8")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+        assertEquals("dog8", dogMap.get("dog8").name);
+
+
+        dogMap = Maps.skipMap(
+                "dog0", new Dog("dog0"),
+                "dog1", new Dog("dog1"),
+                "dog2", new Dog("dog2"),
+                "dog3", new Dog("dog3"),
+                "dog4", new Dog("dog4"),
+                "dog5", new Dog("dog5"),
+                "dog6", new Dog("dog6"),
+                "dog7", new Dog("dog7"),
+                "dog8", new Dog("dog8"),
+                "dog9", new Dog("dog9")
+        );
+        assertEquals("dog0", dogMap.get("dog0").name);
+        assertEquals("dog1", dogMap.get("dog1").name);
+        assertEquals("dog2", dogMap.get("dog2").name);
+        assertEquals("dog3", dogMap.get("dog3").name);
+        assertEquals("dog4", dogMap.get("dog4").name);
+        assertEquals("dog5", dogMap.get("dog5").name);
+        assertEquals("dog6", dogMap.get("dog6").name);
+        assertEquals("dog7", dogMap.get("dog7").name);
+        assertEquals("dog8", dogMap.get("dog8").name);
+        assertEquals("dog9", dogMap.get("dog9").name);
+
+        assertEquals(10, len(dogMap));
+
+    }
+
+
 
 }

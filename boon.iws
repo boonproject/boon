@@ -2,20 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381907427800" ignored="false" />
-    <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381858666430" ignored="false" />
-    <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381858979719" ignored="false" />
+    <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381910398435" ignored="false" />
+    <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381910935391" ignored="false" />
     <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381855944478" ignored="false" />
     <file path="/Net.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906064086" ignored="false" />
     <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906048303" ignored="false" />
     <file path="/HTTPTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381907621828" ignored="false" />
     <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381904913758" ignored="false" />
+    <file path="/Lists.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381910053831" ignored="false" />
+    <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381911844621" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +34,10 @@
     <splitter proportion="0.5" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/boon$org_boon_utils.coverage" NAME="org.boon.utils Coverage Results" MODIFIED="1381911885826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.boon.utils.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/boon$_default_.coverage" NAME="&lt;default&gt; Coverage Results" MODIFIED="1381911505906" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/boon$MapsTest.coverage" NAME="MapsTest Coverage Results" MODIFIED="1381858992240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
@@ -216,10 +225,102 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="HTTP.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
+      <file leaf-file-name="Maps.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="0" selection-start="26" selection-end="26" vertical-scroll-proportion="0.0">
+            <state line="1134" column="55" selection-start="35120" selection-end="35120" vertical-scroll-proportion="-139.67273">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#3777#3783#0" expanded="true" />
+                <element signature="e#3947#3953#0" expanded="true" />
+                <element signature="e#4155#4161#0" expanded="true" />
+                <element signature="e#4438#4444#0" expanded="true" />
+                <element signature="e#4758#4764#0" expanded="true" />
+                <element signature="e#5115#5121#0" expanded="true" />
+                <element signature="e#5509#5515#0" expanded="true" />
+                <element signature="e#5940#5946#0" expanded="true" />
+                <element signature="e#6408#6414#0" expanded="true" />
+                <element signature="e#6952#6958#0" expanded="true" />
+                <element signature="e#7365#7371#0" expanded="true" />
+                <element signature="e#7802#7808#0" expanded="true" />
+                <element signature="e#8208#8214#0" expanded="true" />
+                <element signature="e#8625#8631#0" expanded="true" />
+                <element signature="e#8886#8892#0" expanded="true" />
+                <element signature="e#9066#9072#0" expanded="true" />
+                <element signature="e#9283#9289#0" expanded="true" />
+                <element signature="e#9588#9594#0" expanded="true" />
+                <element signature="e#9930#9936#0" expanded="true" />
+                <element signature="e#10309#10315#0" expanded="true" />
+                <element signature="e#10725#10731#0" expanded="true" />
+                <element signature="e#11178#11184#0" expanded="true" />
+                <element signature="e#11668#11674#0" expanded="true" />
+                <element signature="e#12246#12252#0" expanded="true" />
+                <element signature="e#12669#12675#0" expanded="true" />
+                <element signature="e#13103#13109#0" expanded="true" />
+                <element signature="e#13522#13528#0" expanded="true" />
+                <element signature="e#13938#13944#0" expanded="true" />
+                <element signature="e#14216#14222#0" expanded="true" />
+                <element signature="e#14429#14435#0" expanded="true" />
+                <element signature="e#14679#14685#0" expanded="true" />
+                <element signature="e#15017#15023#0" expanded="true" />
+                <element signature="e#15392#15398#0" expanded="true" />
+                <element signature="e#15804#15810#0" expanded="true" />
+                <element signature="e#16253#16259#0" expanded="true" />
+                <element signature="e#16739#16745#0" expanded="true" />
+                <element signature="e#17262#17268#0" expanded="true" />
+                <element signature="e#17873#17879#0" expanded="true" />
+                <element signature="e#18329#18335#0" expanded="true" />
+                <element signature="e#18780#18786#0" expanded="true" />
+                <element signature="e#19229#19235#0" expanded="true" />
+                <element signature="e#19485#19491#0" expanded="true" />
+                <element signature="e#19663#19669#0" expanded="true" />
+                <element signature="e#19879#19885#0" expanded="true" />
+                <element signature="e#20170#20176#0" expanded="true" />
+                <element signature="e#20498#20504#0" expanded="true" />
+                <element signature="e#20863#20869#0" expanded="true" />
+                <element signature="e#21265#21271#0" expanded="true" />
+                <element signature="e#21704#21710#0" expanded="true" />
+                <element signature="e#22180#22186#0" expanded="true" />
+                <element signature="e#22732#22738#0" expanded="true" />
+                <element signature="e#23153#23159#0" expanded="true" />
+                <element signature="e#23598#23604#0" expanded="true" />
+                <element signature="e#24012#24018#0" expanded="true" />
+                <element signature="e#24437#24443#0" expanded="true" />
+                <element signature="e#24875#24881#0" expanded="true" />
+                <element signature="e#25093#25099#0" expanded="true" />
+                <element signature="e#25390#25396#0" expanded="true" />
+                <element signature="e#25724#25730#0" expanded="true" />
+                <element signature="e#26095#26101#0" expanded="true" />
+                <element signature="e#26503#26509#0" expanded="true" />
+                <element signature="e#26948#26954#0" expanded="true" />
+                <element signature="e#27430#27436#0" expanded="true" />
+                <element signature="e#27992#27998#0" expanded="true" />
+                <element signature="e#28415#28421#0" expanded="true" />
+                <element signature="e#28848#28854#0" expanded="true" />
+                <element signature="e#29266#29272#0" expanded="true" />
+                <element signature="e#29679#29685#0" expanded="true" />
+                <element signature="e#29963#29969#0" expanded="true" />
+                <element signature="e#30188#30194#0" expanded="true" />
+                <element signature="e#30450#30456#0" expanded="true" />
+                <element signature="e#30800#30806#0" expanded="true" />
+                <element signature="e#31187#31193#0" expanded="true" />
+                <element signature="e#31611#31617#0" expanded="true" />
+                <element signature="e#32072#32078#0" expanded="true" />
+                <element signature="e#32570#32576#0" expanded="true" />
+                <element signature="e#33105#33111#0" expanded="true" />
+                <element signature="e#33728#33734#0" expanded="true" />
+                <element signature="e#34196#34202#0" expanded="true" />
+                <element signature="e#34659#34665#0" expanded="true" />
+                <element signature="e#35120#35126#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Lists.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="30" selection-start="149" selection-end="149" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -227,10 +328,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IO.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+      <file leaf-file-name="LinkedList.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/LinkedList.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="0" selection-start="326" selection-end="326" vertical-scroll-proportion="0.0">
+            <state line="116" column="11" selection-start="3841" selection-end="3841" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -239,34 +340,16 @@
       <file leaf-file-name="MapsTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="12" selection-start="1414" selection-end="1414" vertical-scroll-proportion="0.0">
+            <state line="1219" column="30" selection-start="44135" selection-end="44143" vertical-scroll-proportion="-1.4545455">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Reader.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/Reader.java">
+      <file leaf-file-name="ListsTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="15" selection-start="3261" selection-end="3261" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="URLConnection.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/net/URLConnection.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="828" column="23" selection-start="32278" selection-end="32278" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HTTPTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="49" selection-start="506" selection-end="506" vertical-scroll-proportion="0.64179105">
+            <state line="41" column="27" selection-start="1125" selection-end="1125" vertical-scroll-proportion="0.77321154">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -274,38 +357,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HttpServer.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/net/httpserver/HttpServer.class">
+      <file leaf-file-name="ArrayList.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/ArrayList.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="25" selection-start="833" selection-end="833" vertical-scroll-proportion="0.0">
+            <state line="166" column="11" selection-start="6253" selection-end="6253" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Headers.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/net/httpserver/Headers.class">
+      <file leaf-file-name="CopyOnWriteArrayList.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/concurrent/CopyOnWriteArrayList.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="13" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0">
+            <state line="107" column="11" selection-start="3287" selection-end="3287" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HttpExchange.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/net/httpserver/HttpExchange.class">
+      <file leaf-file-name="HTTPTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="25" selection-start="753" selection-end="753" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HttpExchange.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/javax/xml/ws/spi/http/HttpExchange.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="134" column="25" selection-start="4547" selection-end="4547" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="78" column="62" selection-start="2221" selection-end="2221" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -334,12 +410,14 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
-        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Net.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
       </list>
     </option>
   </component>
@@ -404,7 +482,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="PackagesPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -422,6 +500,86 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="boon" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -480,7 +638,7 @@
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="dynamic.classpath" value="false" />
   </component>
-  <component name="RunManager" selected="JUnit.HTTPTest">
+  <component name="RunManager" selected="JUnit.org.boon.utils">
     <configuration default="false" name="MapsTest" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -541,7 +699,74 @@
       </option>
       <envs />
       <patterns />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="org.boon.utils" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="org.boon.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.boon.utils" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Cover" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Cover" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="&lt;default&gt;" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Cover" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Cover" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -602,14 +827,18 @@
       <patterns />
       <method />
     </configuration>
-    <list size="2">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="JUnit.MapsTest" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.HTTPTest" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
     </list>
     <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.HTTPTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.MapsTest" />
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.HTTPTest" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.MapsTest" />
       </list>
     </recent_temporary>
   </component>
@@ -655,7 +884,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="29" width="1900" height="1160" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -670,6 +899,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32884616" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18554477" sideWeight="0.67115384" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973032" sideWeight="0.6701923" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -678,7 +908,6 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.67115384" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18554477" sideWeight="0.6701923" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -806,54 +1035,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/function/ToLongFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="17" selection-start="532" selection-end="532" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Objects.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="263" column="26" selection-start="8952" selection-end="8952" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/TreeMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="193" column="11" selection-start="7836" selection-end="7836" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="306" selection-end="371" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/lang/Object.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="147" column="19" selection-start="5729" selection-end="5729" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="460" column="0" selection-start="13303" selection-end="13303" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/javax/xml/ws/spi/http/HttpExchange.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="25" selection-start="4547" selection-end="4547" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/net/URLConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="828" column="23" selection-start="32278" selection-end="32278" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/Reader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="118" column="15" selection-start="3261" selection-end="3261" vertical-scroll-proportion="0.0">
@@ -877,21 +1058,14 @@
     </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/net/httpserver/Headers.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="12" selection-start="1414" selection-end="1414" vertical-scroll-proportion="0.0">
+        <state line="6" column="13" selection-start="165" selection-end="165" vertical-scroll-proportion="0.03652968">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="26" selection-end="26" vertical-scroll-proportion="0.0">
+        <state line="3" column="0" selection-start="26" selection-end="26" vertical-scroll-proportion="-1.1731343">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -900,14 +1074,164 @@
     </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/net/httpserver/HttpServer.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="25" selection-start="833" selection-end="833" vertical-scroll-proportion="0.0">
+        <state line="21" column="25" selection-start="833" selection-end="833" vertical-scroll-proportion="0.7305936">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/RandomAccess.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="66" column="17" selection-start="1975" selection-end="1975" vertical-scroll-proportion="1.5402985">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="110" column="17" selection-start="4250" selection-end="4250" vertical-scroll-proportion="0.79850745">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/concurrent/CopyOnWriteArrayList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="107" column="11" selection-start="3287" selection-end="3287" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/ArrayList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="166" column="11" selection-start="6253" selection-end="6253" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="49" selection-start="506" selection-end="506" vertical-scroll-proportion="0.64179105">
+        <state line="78" column="62" selection-start="2221" selection-end="2221" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1134" column="55" selection-start="35120" selection-end="35120" vertical-scroll-proportion="-139.67273">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3777#3783#0" expanded="true" />
+            <element signature="e#3947#3953#0" expanded="true" />
+            <element signature="e#4155#4161#0" expanded="true" />
+            <element signature="e#4438#4444#0" expanded="true" />
+            <element signature="e#4758#4764#0" expanded="true" />
+            <element signature="e#5115#5121#0" expanded="true" />
+            <element signature="e#5509#5515#0" expanded="true" />
+            <element signature="e#5940#5946#0" expanded="true" />
+            <element signature="e#6408#6414#0" expanded="true" />
+            <element signature="e#6952#6958#0" expanded="true" />
+            <element signature="e#7365#7371#0" expanded="true" />
+            <element signature="e#7802#7808#0" expanded="true" />
+            <element signature="e#8208#8214#0" expanded="true" />
+            <element signature="e#8625#8631#0" expanded="true" />
+            <element signature="e#8886#8892#0" expanded="true" />
+            <element signature="e#9066#9072#0" expanded="true" />
+            <element signature="e#9283#9289#0" expanded="true" />
+            <element signature="e#9588#9594#0" expanded="true" />
+            <element signature="e#9930#9936#0" expanded="true" />
+            <element signature="e#10309#10315#0" expanded="true" />
+            <element signature="e#10725#10731#0" expanded="true" />
+            <element signature="e#11178#11184#0" expanded="true" />
+            <element signature="e#11668#11674#0" expanded="true" />
+            <element signature="e#12246#12252#0" expanded="true" />
+            <element signature="e#12669#12675#0" expanded="true" />
+            <element signature="e#13103#13109#0" expanded="true" />
+            <element signature="e#13522#13528#0" expanded="true" />
+            <element signature="e#13938#13944#0" expanded="true" />
+            <element signature="e#14216#14222#0" expanded="true" />
+            <element signature="e#14429#14435#0" expanded="true" />
+            <element signature="e#14679#14685#0" expanded="true" />
+            <element signature="e#15017#15023#0" expanded="true" />
+            <element signature="e#15392#15398#0" expanded="true" />
+            <element signature="e#15804#15810#0" expanded="true" />
+            <element signature="e#16253#16259#0" expanded="true" />
+            <element signature="e#16739#16745#0" expanded="true" />
+            <element signature="e#17262#17268#0" expanded="true" />
+            <element signature="e#17873#17879#0" expanded="true" />
+            <element signature="e#18329#18335#0" expanded="true" />
+            <element signature="e#18780#18786#0" expanded="true" />
+            <element signature="e#19229#19235#0" expanded="true" />
+            <element signature="e#19485#19491#0" expanded="true" />
+            <element signature="e#19663#19669#0" expanded="true" />
+            <element signature="e#19879#19885#0" expanded="true" />
+            <element signature="e#20170#20176#0" expanded="true" />
+            <element signature="e#20498#20504#0" expanded="true" />
+            <element signature="e#20863#20869#0" expanded="true" />
+            <element signature="e#21265#21271#0" expanded="true" />
+            <element signature="e#21704#21710#0" expanded="true" />
+            <element signature="e#22180#22186#0" expanded="true" />
+            <element signature="e#22732#22738#0" expanded="true" />
+            <element signature="e#23153#23159#0" expanded="true" />
+            <element signature="e#23598#23604#0" expanded="true" />
+            <element signature="e#24012#24018#0" expanded="true" />
+            <element signature="e#24437#24443#0" expanded="true" />
+            <element signature="e#24875#24881#0" expanded="true" />
+            <element signature="e#25093#25099#0" expanded="true" />
+            <element signature="e#25390#25396#0" expanded="true" />
+            <element signature="e#25724#25730#0" expanded="true" />
+            <element signature="e#26095#26101#0" expanded="true" />
+            <element signature="e#26503#26509#0" expanded="true" />
+            <element signature="e#26948#26954#0" expanded="true" />
+            <element signature="e#27430#27436#0" expanded="true" />
+            <element signature="e#27992#27998#0" expanded="true" />
+            <element signature="e#28415#28421#0" expanded="true" />
+            <element signature="e#28848#28854#0" expanded="true" />
+            <element signature="e#29266#29272#0" expanded="true" />
+            <element signature="e#29679#29685#0" expanded="true" />
+            <element signature="e#29963#29969#0" expanded="true" />
+            <element signature="e#30188#30194#0" expanded="true" />
+            <element signature="e#30450#30456#0" expanded="true" />
+            <element signature="e#30800#30806#0" expanded="true" />
+            <element signature="e#31187#31193#0" expanded="true" />
+            <element signature="e#31611#31617#0" expanded="true" />
+            <element signature="e#32072#32078#0" expanded="true" />
+            <element signature="e#32570#32576#0" expanded="true" />
+            <element signature="e#33105#33111#0" expanded="true" />
+            <element signature="e#33728#33734#0" expanded="true" />
+            <element signature="e#34196#34202#0" expanded="true" />
+            <element signature="e#34659#34665#0" expanded="true" />
+            <element signature="e#35120#35126#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1219" column="30" selection-start="44135" selection-end="44143" vertical-scroll-proportion="-1.4545455">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/LinkedList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="116" column="11" selection-start="3841" selection-end="3841" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="30" selection-start="149" selection-end="149" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="27" selection-start="1125" selection-end="1125" vertical-scroll-proportion="0.77321154">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

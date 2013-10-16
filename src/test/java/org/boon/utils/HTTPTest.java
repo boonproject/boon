@@ -66,7 +66,7 @@ public class HTTPTest {
     @Test(expected = RuntimeException.class)
     public void testSad() throws Exception {
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(9212), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(9213), 0);
         server.createContext("/test", new MyHandler());
         server.setExecutor(null); // creates a default executor
         server.start();
@@ -76,7 +76,7 @@ public class HTTPTest {
 
         Map<String,String> headers = map("foo", "bar", "fun", "sun");
 
-        String response = HTTP.postBody("http://localhost:9212/foo", headers, "text/plain", "hi mom");
+        String response = HTTP.postBody("http://localhost:9213/foo", headers, "text/plain", "hi mom");
 
         System.out.println(response);
 
