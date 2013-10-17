@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/resources/testfile.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/files/proxy.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
@@ -55,7 +51,7 @@
     <file path="$USER_HOME$/clients/apple/config/src/test/java/com/apple/aos/plist/ParseTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959621366" ignored="false" />
     <file path="/ParseTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959495014" ignored="false" />
     <file path="/IssueTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959553479" ignored="false" />
-    <file path="/IOTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381970886543" ignored="false" />
+    <file path="/IOTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381979484934" ignored="false" />
     <file path="/testfile.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381969510035" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -270,10 +266,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="Objects.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Objects.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="200" column="24" selection-start="6625" selection-end="6625" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="IO.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="36" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0">
+            <state line="88" column="0" selection-start="1820" selection-end="2091" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -285,16 +290,11 @@
         <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/BufferedReader.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="387" column="18" selection-start="12717" selection-end="12717" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InputStreamReader.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/InputStreamReader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="11" selection-start="1600" selection-end="1600" vertical-scroll-proportion="0.0">
-              <folding />
+              <folding>
+                <element signature="e#0#19837#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#18887#18895#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -302,10 +302,37 @@
       <file leaf-file-name="IOTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="111" column="64" selection-start="2641" selection-end="2641" vertical-scroll-proportion="0.9258114">
+            <state line="298" column="56" selection-start="0" selection-end="7242" vertical-scroll-proportion="0.81072557">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Pattern.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/regex/Pattern.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="491" column="32" selection-start="27177" selection-end="27177" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InetSocketAddress.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/net/InetSocketAddress.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="164" column="11" selection-start="4737" selection-end="4737" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="proxy.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/files/proxy.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="0" selection-start="0" selection-end="84" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -315,17 +342,8 @@
           <provider selected="true" editor-type-id="text-editor">
             <state line="44" column="0" selection-start="1322" selection-end="1322" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#1368#1369#0" expanded="true" />
+                <element signature="imports" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.0">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -343,24 +361,6 @@
         <entry file="file://$PROJECT_DIR$/src/test/resources/testfile.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state line="3" column="6" selection-start="24" selection-end="24" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListsTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="25" selection-start="1341" selection-end="1341" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MapsTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="13" selection-start="379" selection-end="379" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -389,8 +389,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Net.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java" />
         <option value="$PROJECT_DIR$/README.md" />
@@ -403,8 +401,10 @@
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" />
         <option value="$PROJECT_DIR$/src/test/resources/testfile.txt" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+        <option value="$PROJECT_DIR$/src/test/resources/proxy.txt" />
+        <option value="$PROJECT_DIR$/files/proxy.txt" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
       </list>
     </option>
   </component>
@@ -619,6 +619,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="files" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope">
@@ -731,6 +745,11 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="dynamic.classpath" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/files" />
+    </key>
   </component>
   <component name="RunManager" selected="JUnit.org.boon.utils">
     <configuration default="false" name="HTTPTest" type="JUnit" factoryName="JUnit" temporary="true">
@@ -1064,7 +1083,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.67115384" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1194,34 +1213,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/Files.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2168" column="26" selection-start="99133" selection-end="99133" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/FileSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="294" column="25" selection-start="13212" selection-end="13212" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/ProviderNotFoundException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="11" selection-start="710" selection-end="710" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/FileSystems.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="212" column="29" selection-start="9962" selection-end="9962" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="28" selection-start="542" selection-end="542" vertical-scroll-proportion="0.0">
@@ -1257,17 +1248,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/testfile.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="6" selection-start="24" selection-end="24" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/InputStreamReader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="70" column="11" selection-start="1600" selection-end="1600" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#0#5688#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1275,7 +1262,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="44" column="0" selection-start="1322" selection-end="1322" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#1368#1369#0" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1283,15 +1270,10 @@
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/BufferedReader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="387" column="18" selection-start="12717" selection-end="12717" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="36" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#0#19837#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#18887#18895#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1303,9 +1285,53 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/net/InetSocketAddress.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="164" column="11" selection-start="4737" selection-end="4737" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/regex/Pattern.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="491" column="32" selection-start="27177" selection-end="27177" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testfile.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="6" selection-start="24" selection-end="24" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Objects.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="200" column="24" selection-start="6625" selection-end="6625" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="88" column="0" selection-start="1820" selection-end="2091" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/files/proxy.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="0" selection-end="84" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="64" selection-start="2641" selection-end="2641" vertical-scroll-proportion="0.9258114">
+        <state line="298" column="56" selection-start="0" selection-end="7242" vertical-scroll-proportion="0.81072557">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -119,9 +119,12 @@ public class IO {
         try {
 
             if ( uri.getScheme()==null ) {
+
                 Path thePath = FileSystems.getDefault().getPath(location);
                 return Files.readAllLines(thePath, Charset.forName("UTF-8"));
+
             } else if ( uri.getScheme().equals("file") ) {
+
                 Path thePath = FileSystems.getDefault().getPath(uri.getPath());
                 return Files.readAllLines(thePath, Charset.forName("UTF-8"));
 
