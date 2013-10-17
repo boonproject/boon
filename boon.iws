@@ -2,24 +2,61 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/resources/testfile.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381950688038" ignored="false" />
+    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381966108472" ignored="false" />
     <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381910398435" ignored="false" />
     <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381910935391" ignored="false" />
     <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381948244309" ignored="false" />
     <file path="/Net.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906064086" ignored="false" />
-    <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381950831637" ignored="false" />
+    <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381957644907" ignored="false" />
     <file path="/HTTPTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381950427178" ignored="false" />
-    <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381948548484" ignored="false" />
-    <file path="/Lists.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381947216446" ignored="false" />
-    <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381947271953" ignored="false" />
-    <file path="/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381950787207" ignored="false" />
+    <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381970739831" ignored="false" />
+    <file path="/Lists.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956456280" ignored="false" />
+    <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956975203" ignored="false" />
+    <file path="/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381968421615" ignored="false" />
     <file path="/ExceptionsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381944172321" ignored="false" />
     <file path="/.gitignore" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381951392666" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381953263325" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381953307774" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381957651017" ignored="false" />
+    <file path="/BasicResource.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956750292" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/config/BasicResource.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958970133" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/config/ConfigReader.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958929599" ignored="false" />
+    <file path="/ConfigReader.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956894120" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/config/ConfigServiceResource.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381963532917" ignored="false" />
+    <file path="/ConfigServiceResource.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381963529849" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/test/groovy/com/apple/aos/config/BasicResourceTest.groovy" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956693740" ignored="false" />
+    <file path="/BasicResourceTest.groovy" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956690771" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/Utils.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956860010" ignored="false" />
+    <file path="/Utils.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956851658" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/ASCIIPropertyListParser.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958467617" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/test/java/com/apple/aos/plist/TestPListParser.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958516229" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/NSDictionary.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958601245" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/PropertyListParser.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959449745" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/NSSet.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958601245" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/NSData.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958601245" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/config/ConfigManagerDelegate.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959141135" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/NSArray.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958601245" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/Main.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381958959314" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/plist/TextPropertyListParser.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959477579" ignored="false" />
+    <file path="/TextPropertyListParser.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959465745" ignored="false" />
+    <file path="/PropertyListParser.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959346383" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/test/java/com/apple/aos/plist/IssueTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959595827" ignored="false" />
+    <file path="$USER_HOME$/clients/apple/config/src/test/java/com/apple/aos/plist/ParseTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959621366" ignored="false" />
+    <file path="/ParseTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959495014" ignored="false" />
+    <file path="/IssueTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381959553479" ignored="false" />
+    <file path="/IOTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381970886543" ignored="false" />
+    <file path="/testfile.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381969510035" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,17 +70,17 @@
     <splitter proportion="0.5" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/boon$org_boon_utils.coverage" NAME="org.boon.utils Coverage Results" MODIFIED="1381947333121" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/boon$org_boon_utils.coverage" NAME="org.boon.utils Coverage Results" MODIFIED="1381970308415" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/boon$HTTPTest.coverage" NAME="HTTPTest Coverage Results" MODIFIED="1381950445469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/boon$_default_.coverage" NAME="&lt;default&gt; Coverage Results" MODIFIED="1381951244293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/boon$ExceptionsTest.coverage" NAME="ExceptionsTest Coverage Results" MODIFIED="1381940818386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/boon$_default_.coverage" NAME="&lt;default&gt; Coverage Results" MODIFIED="1381956998400" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/boon$ListsTest.coverage" NAME="ListsTest Coverage Results" MODIFIED="1381945961777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/boon$ListsTest.coverage" NAME="ListsTest Coverage Results" MODIFIED="1381945961777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/boon$ExceptionsTest.coverage" NAME="ExceptionsTest Coverage Results" MODIFIED="1381940818386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/boon$MapsTest.coverage" NAME="MapsTest Coverage Results" MODIFIED="1381858992240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -161,10 +198,10 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <field_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <method_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <exception_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <method_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
@@ -232,7 +269,104 @@
     <favorites_list name="boon" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="IO.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="62" column="36" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BufferedReader.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/BufferedReader.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="387" column="18" selection-start="12717" selection-end="12717" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InputStreamReader.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/InputStreamReader.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="70" column="11" selection-start="1600" selection-end="1600" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IOTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="111" column="64" selection-start="2641" selection-end="2641" vertical-scroll-proportion="0.9258114">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FrameworkMethod.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10-sources.jar!/org/junit/runners/model/FrameworkMethod.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="0" selection-start="1322" selection-end="1322" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#1368#1369#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HTTPTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="78" column="67" selection-start="2357" selection-end="2385" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="testfile.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/resources/testfile.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="6" selection-start="24" selection-end="24" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListsTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="49" column="25" selection-start="1341" selection-end="1341" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MapsTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="13" selection-start="379" selection-end="379" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -259,16 +393,18 @@
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
-        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/boon.ipr" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" />
+        <option value="$PROJECT_DIR$/src/test/resources/testfile.txt" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
       </list>
     </option>
   </component>
@@ -358,10 +494,10 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="2" />
+    <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="Scope" currentSubView="All" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -373,84 +509,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="All">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="boon">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="boon">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="src">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="boon">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="src">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="main/java">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="org/boon/utils">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org.boon.utils" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -466,6 +524,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -541,6 +621,92 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope">
+        <subPane subId="All">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="boon">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="boon">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="test/java">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="org/boon/utils">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="boon">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="main/java">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="org/boon/utils">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="org.boon.utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="ProjectViewSettings">
@@ -566,7 +732,7 @@
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="dynamic.classpath" value="false" />
   </component>
-  <component name="RunManager" selected="JUnit.&lt;default&gt;">
+  <component name="RunManager" selected="JUnit.org.boon.utils">
     <configuration default="false" name="HTTPTest" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -670,7 +836,7 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="ExceptionsTest" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="IOTest" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
           <option name="PATTERN" value="org.boon.utils.*" />
@@ -681,7 +847,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="org.boon.utils" />
-      <option name="MAIN_CLASS_NAME" value="org.boon.utils.ExceptionsTest" />
+      <option name="MAIN_CLASS_NAME" value="org.boon.utils.IOTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -694,19 +860,17 @@
       </option>
       <envs />
       <patterns />
-      <RunnerSettings RunnerId="Cover" />
       <RunnerSettings RunnerId="Debug">
         <option name="DEBUG_PORT" value="" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Cover" />
       <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <configuration default="false" name="ListsTest" type="JUnit" factoryName="JUnit" temporary="true">
+    <configuration default="false" name="IOTest.testReadLines" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
           <option name="PATTERN" value="org.boon.utils.*" />
@@ -717,9 +881,9 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="org.boon.utils" />
-      <option name="MAIN_CLASS_NAME" value="org.boon.utils.ListsTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="MAIN_CLASS_NAME" value="org.boon.utils.IOTest" />
+      <option name="METHOD_NAME" value="testReadLines" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -730,9 +894,13 @@
       </option>
       <envs />
       <patterns />
-      <RunnerSettings RunnerId="Cover" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Cover" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -819,16 +987,16 @@
       <item index="0" class="java.lang.String" itemvalue="JUnit.HTTPTest" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
       <item index="2" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.ExceptionsTest" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.ListsTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.IOTest" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.IOTest.testReadLines" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.HTTPTest" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.ListsTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.ExceptionsTest" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.IOTest.testReadLines" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.IOTest" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.HTTPTest" />
       </list>
     </recent_temporary>
   </component>
@@ -874,7 +1042,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="29" width="1900" height="1160" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -887,16 +1055,16 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32884616" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32692307" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32955772" sideWeight="0.3548077" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.08468177" sideWeight="0.67115384" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973032" sideWeight="0.6701923" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32955772" sideWeight="0.67115384" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973032" sideWeight="0.67115384" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.67115384" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1026,114 +1194,118 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/lang/StackTraceElement.java">
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/Files.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="19" selection-start="774" selection-end="774" vertical-scroll-proportion="0.681388">
+        <state line="2168" column="26" selection-start="99133" selection-end="99133" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/FileSystem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="294" column="25" selection-start="13212" selection-end="13212" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/List.java">
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/ProviderNotFoundException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="658" column="12" selection-start="29641" selection-end="29641" vertical-scroll-proportion="0.0">
+        <state line="48" column="11" selection-start="710" selection-end="710" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java">
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/file/FileSystems.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="50" selection-start="2682" selection-end="2682" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="65" selection-start="1698" selection-end="1698" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="33" selection-start="1339" selection-end="1339" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="0" selection-start="1400" selection-end="1400" vertical-scroll-proportion="0.71146244">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="60" selection-start="508" selection-end="508" vertical-scroll-proportion="0.023715414">
+        <state line="212" column="29" selection-start="9962" selection-end="9962" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="45" selection-start="248" selection-end="248" vertical-scroll-proportion="0.1660079">
+        <state line="24" column="28" selection-start="542" selection-end="542" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/boon.iml">
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/nio/charset/Charset.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/boon.ipr">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="37" selection-start="1150" selection-end="1150" vertical-scroll-proportion="-6.831832">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/boon.iws">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1299" column="23" selection-start="65830" selection-end="65830" vertical-scroll-proportion="0.23123123">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="607" column="26" selection-start="24522" selection-end="24522" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.07114624">
+        <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="13" selection-start="216" selection-end="216" vertical-scroll-proportion="-4.312253">
+        <state line="16" column="13" selection-start="379" selection-end="379" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="25" selection-start="1341" selection-end="1341" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/testfile.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="6" selection-start="24" selection-end="24" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/InputStreamReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="11" selection-start="1600" selection-end="1600" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10-sources.jar!/org/junit/runners/model/FrameworkMethod.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="0" selection-start="1322" selection-end="1322" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#1368#1369#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/io/BufferedReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="387" column="18" selection-start="12717" selection-end="12717" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="36" selection-start="1523" selection-end="1523" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="67" selection-start="2357" selection-end="2385" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="111" column="64" selection-start="2641" selection-end="2641" vertical-scroll-proportion="0.9258114">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

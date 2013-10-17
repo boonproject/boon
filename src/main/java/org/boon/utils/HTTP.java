@@ -2,6 +2,7 @@ package org.boon.utils;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -11,7 +12,6 @@ import static org.boon.utils.IO.read;
 
 public class HTTP {
 
-    final static String CHARSET = "UTF-8";
 
 
     public static String get(
@@ -152,7 +152,7 @@ public class HTTP {
         manageHeaders(headers, connection);
 
 
-        IO.write(connection.getOutputStream(), body, CHARSET);
+        IO.write(connection.getOutputStream(), body, IO.CHARSET);
         return connection;
     }
 
@@ -165,7 +165,7 @@ public class HTTP {
     }
 
     private static void manageContentTypeHeaders(String contentType, String charset, URLConnection connection) {
-        connection.setRequestProperty("Accept-Charset", charset == null ? CHARSET : charset);
+        connection.setRequestProperty("Accept-Charset", charset == null ? IO.CHARSET : charset);
         if (contentType!=null && !contentType.isEmpty()) {
             connection.setRequestProperty("Content-Type", contentType);
         }
@@ -196,9 +196,14 @@ public class HTTP {
     }
 
     private static String readErrorResponseBody(HttpURLConnection http, int status, String charset) {
-        String error = charset== null ? read(http.getErrorStream()) :
-                read(http.getErrorStream(), charset);
-        throw new RuntimeException("STATUS CODE =" + status + "\n\n" + error);
+        InputStream errorStream = http.getErrorStream();
+        if ( errorStream!=null ) {
+            String error = charset== null ? read( errorStream ) :
+                read( errorStream, charset );
+            throw new RuntimeException("STATUS CODE =" + status + "\n\n" + error);
+        } else {
+            throw new RuntimeException("STATUS CODE =" + status);
+        }
     }
 
     private static String readResponseBody(HttpURLConnection http, String charset) throws IOException {
@@ -220,7 +225,7 @@ public class HTTP {
                 break;
             }
         }
-        charset = charset == null ?  CHARSET : charset;
+        charset = charset == null ?  IO.CHARSET : charset;
 
         return charset;
     }

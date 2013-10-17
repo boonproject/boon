@@ -5,9 +5,28 @@ import java.io.PrintWriter;
 
 public class Exceptions {
 
+    public static void die(String message) {
+        throw new Exception(message);
+    }
+
+
+    public static <T> T  die(Class<T> clazz, String message) {
+        throw new Exception(message);
+    }
+
     public static void handle(java.lang.Exception e) {
         throw new Exception(e);
     }
+
+
+    public static <T> T handle(Class<T> clazz, java.lang.Exception e) {
+
+        if (e instanceof Exception) {
+            throw (Exception) e;
+        }
+        throw new Exception(e);
+    }
+
 
     public static void tryIt (TrialWithReturn tryIt) {
          try {

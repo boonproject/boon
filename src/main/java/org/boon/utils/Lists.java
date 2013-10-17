@@ -6,6 +6,62 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Lists {
 
+
+    public static <V> List<V> list(Class<V> clazz) {
+        return new ArrayList<V>();
+    }
+
+    public static <V> List<V> list(Iterable<V> iterable) {
+        List<V> list = new ArrayList<V>();
+        for (V o : iterable) {
+            list.add(o);
+        }
+        return list;
+    }
+
+    public static <V> List<V> list(Collection<V> collection) {
+        List<V> list = new ArrayList<V>();
+        for (V o : collection) {
+            list.add(o);
+        }
+        return list;
+    }
+
+    public static <V> List<V> list(Enumeration<V> enumeration) {
+        List<V> list = new ArrayList<V>();
+        while (enumeration.hasMoreElements()) {
+            list.add(enumeration.nextElement());
+        }
+        return list;
+    }
+
+
+    public static <V> Enumeration<V> enumeration(final List<V> list) {
+        final Iterator<V> iter = list.iterator();
+        return new Enumeration<V>() {
+            @Override
+            public boolean hasMoreElements() {
+                return iter.hasNext();
+            }
+
+            @Override
+            public V nextElement() {
+                return iter.next();
+            }
+        };
+
+    }
+
+
+
+    public static <V> List<V> list(Iterator<V> iterator) {
+        List<V> list = new ArrayList<V>();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
+        }
+        return list;
+    }
+
     public static <V> List<V> list(final V... array) {
         if (array==null) {
             return new ArrayList<>();

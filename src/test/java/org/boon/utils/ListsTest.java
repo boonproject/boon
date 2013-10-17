@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.boon.utils.Lists.*;
@@ -14,6 +15,42 @@ import static org.junit.Assert.assertTrue;
 public class ListsTest {
 
 
+
+    @Test
+    public void iterAndFriends() {
+        List<String> list =
+                list("apple", "oranges", "pears", "grapes", "kiwi");
+
+        list = list(list.iterator());
+        assertEquals(5, len(list)) ;
+        assertTrue(in("apple", list));
+        assertEquals("oranges", idx(list, 1));
+
+        list = new Vector<>(list);
+        list = list(list);
+        assertEquals(5, len(list)) ;
+        assertTrue(in("apple", list));
+        assertEquals("oranges", idx(list, 1));
+
+
+        list = new Vector<>(list);
+        list = list((Iterable<String>)list);
+        assertEquals(5, len(list)) ;
+        assertTrue(in("apple", list));
+        assertEquals("oranges", idx(list, 1));
+
+        list = list(enumeration(list));
+        assertEquals(5, len(list)) ;
+        assertTrue(in("apple", list));
+        assertEquals("oranges", idx(list, 1));
+
+        list = list(String.class);
+        list.add("hi");
+        assertEquals(1, len(list)) ;
+        assertTrue(in("hi", list));
+
+
+    }
 
     @Test
     public void sliceTest() {
