@@ -6,10 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.*;
@@ -38,6 +35,19 @@ public class IOTest {
 
     }
 
+    @Test
+    public void testReadAll() {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+        String content = IO.read(testFile);
+        List<String> lines = IO.readLines(new StringReader(content));
+        assertLines(lines);
+
+    }
+
+
     private void assertLines(List<String> lines) {
 
         assertEquals(
@@ -58,16 +68,52 @@ public class IOTest {
 
     @Test
     public void testReadLinesFromPath() {
-
-
         List<String> lines = IO.readLines("src/test/resources/testfile.txt");
+        assertLines(lines);
+    }
+
+    @Test
+    public void testReadAllFromPath() {
+        String content = IO.read("src/test/resources/testfile.txt");
+        List<String> lines = IO.readLines( new StringReader(content) );
+        assertLines(lines);
+    }
+
+
+
+    @Test
+    public void testReadWriteLines() {
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        IO.write(bos, "line 1\n");
+        IO.write(bos, "apple\n");
+        IO.write(bos, "pear\n");
+        IO.write(bos, "grapes\n");
+
+        List<String> lines = IO.readLines(new ByteArrayInputStream(bos.toByteArray()));
 
         assertLines(lines);
 
 
-
     }
 
+    @Test
+    public void testReadWriteLinesCharSet() {
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        IO.write(bos, "line 1\n", "UTF-8");
+        IO.write(bos, "apple\n", "UTF-8");
+        IO.write(bos, "pear\n", "UTF-8");
+        IO.write(bos, "grapes\n", "UTF-8");
+
+        List<String> lines = IO.readLines(new ByteArrayInputStream(bos.toByteArray()));
+
+        assertLines(lines);
+
+
+    }
 
     @Test
     public void testReadLinesURI() {
@@ -84,6 +130,25 @@ public class IOTest {
 
 
     }
+
+    @Test
+    public void testReadAllLinesURI() {
+
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+        URI uri = testFile.toURI();
+
+
+        System.out.println(uri);
+
+        String content = IO.read(uri.toString());
+
+
+        List<String> lines = IO.readLines( new StringReader(content) );
+        assertLines(lines);
+
+    }
+
 
 
     static class MyHandler implements HttpHandler {
@@ -108,9 +173,27 @@ public class IOTest {
         server.setExecutor(null); // creates a default executor
         server.start();
 
-        Thread.sleep(1000);
+        Thread.sleep(10);
 
         List<String> lines = IO.readLines("http://localhost:9666/test");
+        assertLines(lines);
+
+    }
+
+    @Test
+    public void testReadAllFromHttp() throws Exception {
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(9777), 0);
+        server.createContext("/test", new MyHandler());
+        server.setExecutor(null); // creates a default executor
+        server.start();
+
+        Thread.sleep(10);
+
+        String content = IO.read("http://localhost:9777/test");
+
+
+        List<String> lines = IO.readLines(new StringReader(content));
         assertLines(lines);
 
     }

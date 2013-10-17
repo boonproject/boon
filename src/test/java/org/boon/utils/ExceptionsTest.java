@@ -31,6 +31,17 @@ public class ExceptionsTest {
 
     }
 
+    @Test(expected = Exceptions.Exception.class)
+    public void die()  {
+
+        try {
+            Exceptions.die("Die");
+        } catch (Exception e) {
+            Exceptions.handle(e);
+        }
+
+    }
+
 
     @Test(expected = Exceptions.Exception.class)
     public void testExceptionWithMessage()  {

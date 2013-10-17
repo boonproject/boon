@@ -28,9 +28,9 @@ public class Exceptions {
     }
 
 
-    public static void tryIt (TrialWithReturn tryIt) {
+    public static <T> T tryIt (Class<T> clazz, TrialWithReturn<T> tryIt) {
          try {
-             tryIt.tryIt();
+             return tryIt.tryIt();
          } catch (java.lang.Exception ex) {
              throw new Exception(ex);
          }
