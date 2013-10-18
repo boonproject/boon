@@ -62,8 +62,8 @@ public class DatesTest {
     @Test
     public void testDate () {
 
-        long epic = Dates.utcDate( 1970, Calendar.MAY, 29 );
-        long forties = Dates.utcDate( 1940, Calendar.MAY, 29 );
+        long epic = Dates.date( 1970, Calendar.MAY, 29 );
+        long forties = Dates.date( 1940, Calendar.MAY, 29 );
 
         assertEquals(
 
@@ -100,7 +100,7 @@ public class DatesTest {
     public void wallTimeLongDate () {
 
         long epic = Dates.wallTimeDate(1970, Calendar.MAY, 29, 5, 5);
-        long forties = Dates.utcDate( 1940, Calendar.MAY, 29 );
+        long forties = Dates.wallTimeDate( 1940, Calendar.MAY, 29 );
 
         assertEquals(
 
@@ -134,8 +134,8 @@ public class DatesTest {
     @Test
     public void testLongUTCDate () {
 
-        long epic = Dates.utcDate( 1970, Calendar.MAY, 29, 5, 5 );
-        long forties = Dates.utcDate( 1940, Calendar.MAY, 29, 5, 5 );
+        long epic = Dates.date( 1970, Calendar.MAY, 29, 5, 5 );
+        long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
 
         assertEquals(
 
@@ -148,6 +148,24 @@ public class DatesTest {
 
     }
 
+
+
+    @Test
+    public void testLongTZDate () {
+
+        long epic = Dates.date( TimeZone.getTimeZone("UTC"), 1970, Calendar.MAY, 29, 5, 5 );
+        long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
+
+        assertEquals(
+
+                new Date(epic).toString(),
+                ("Thu May 28 22:05:00 PDT 1970")
+
+        );
+
+        testBeforeAfter(epic, forties);
+
+    }
 
 
     @Test

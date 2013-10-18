@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
@@ -27,7 +19,7 @@
     <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121675777" ignored="false" />
     <file path="/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996515360" ignored="false" />
     <file path="/ExceptionsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996854860" ignored="false" />
-    <file path="/.gitignore" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381951392666" ignored="false" />
+    <file path="/.gitignore" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382129630672" ignored="false" />
     <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381953263325" ignored="false" />
     <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381953307774" ignored="false" />
     <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381957651017" ignored="false" />
@@ -62,7 +54,7 @@
     <file path="/Dates.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382127709093" ignored="false" />
     <file path="/Sets.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382118575979" ignored="false" />
     <file path="/SetsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382118402219" ignored="false" />
-    <file path="/DatesTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382127275877" ignored="false" />
+    <file path="/DatesTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382129460659" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +84,7 @@
     <SUITE FILE_PATH="coverage/boon$ListsTest.coverage" NAME="ListsTest Coverage Results" MODIFIED="1381945961777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/boon$DatesTest.coverage" NAME="DatesTest Coverage Results" MODIFIED="1382127715146" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/boon$DatesTest.coverage" NAME="DatesTest Coverage Results" MODIFIED="1382129519745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/boon$MapsTest.coverage" NAME="MapsTest Coverage Results" MODIFIED="1381858992240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -363,7 +355,7 @@
           <file leaf-file-name="Dates.java" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="37" column="34" selection-start="1086" selection-end="1086" vertical-scroll-proportion="0.26865673">
+                <state line="37" column="34" selection-start="1086" selection-end="1086" vertical-scroll-proportion="-0.40816328">
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -384,13 +376,22 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="DatesTest.java" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="DatesTest.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="126" column="56" selection-start="2675" selection-end="2675" vertical-scroll-proportion="0.6559486">
+                <state line="150" column="29" selection-start="3091" selection-end="3091" vertical-scroll-proportion="0.0">
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/.gitignore">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.22222222">
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -438,7 +439,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/test/resources/proxy.txt" />
         <option value="$PROJECT_DIR$/files/proxy.txt" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
@@ -452,8 +452,9 @@
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -1265,13 +1266,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/NavigableMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="209" column="6" selection-start="7871" selection-end="7871" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="31" column="55" selection-start="762" selection-end="762" vertical-scroll-proportion="0.0">
@@ -1373,7 +1367,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="34" selection-start="1086" selection-end="1086" vertical-scroll-proportion="0.26865673">
+        <state line="37" column="34" selection-start="1086" selection-end="1086" vertical-scroll-proportion="-0.40816328">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1382,10 +1376,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="126" column="56" selection-start="2675" selection-end="2675" vertical-scroll-proportion="0.6559486">
+        <state line="150" column="29" selection-start="3091" selection-end="3091" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.22222222">
+          <folding />
         </state>
       </provider>
     </entry>
