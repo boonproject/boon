@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
@@ -390,7 +390,7 @@
           <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/.gitignore">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.22222222">
+                <state line="4" column="0" selection-start="18" selection-end="25" vertical-scroll-proportion="0.2962963">
                   <folding />
                 </state>
               </provider>
@@ -1385,7 +1385,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="18" selection-end="18" vertical-scroll-proportion="0.22222222">
+        <state line="4" column="0" selection-start="18" selection-end="25" vertical-scroll-proportion="0.2962963">
           <folding />
         </state>
       </provider>
