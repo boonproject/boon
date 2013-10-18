@@ -2,25 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382074583489" ignored="false" />
     <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382083872605" ignored="false" />
     <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382083771629" ignored="false" />
-    <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382085822585" ignored="false" />
+    <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382089390004" ignored="false" />
     <file path="/Net.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906064086" ignored="false" />
     <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996550838" ignored="false" />
     <file path="/HTTPTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381950427178" ignored="false" />
-    <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381997615860" ignored="false" />
+    <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382090870613" ignored="false" />
     <file path="/Lists.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382081021085" ignored="false" />
     <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381956975203" ignored="false" />
     <file path="/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996515360" ignored="false" />
@@ -74,6 +68,9 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/boon$org_boon_utils.coverage" NAME="org.boon.utils Coverage Results" MODIFIED="1382085681125" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.boon.utils.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/boon$SetsTest.coverage" NAME="SetsTest Coverage Results" MODIFIED="1382090938074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/boon$HTTPTest.coverage" NAME="HTTPTest Coverage Results" MODIFIED="1381950445469" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -273,6 +270,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="IO.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="301" column="0" selection-start="8101" selection-end="8101" vertical-scroll-proportion="-19.692308">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Lists.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -291,10 +297,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="56" selection-start="1483" selection-end="1483" vertical-scroll-proportion="0.5457413">
+            <state line="103" column="44" selection-start="3886" selection-end="3886" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -309,28 +315,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LinkedList.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/LinkedList.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="105" column="11" selection-start="3481" selection-end="3481" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Deque.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Deque.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="193" column="17" selection-start="6220" selection-end="6220" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Sets.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Sets.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="204" column="43" selection-start="5434" selection-end="5434" vertical-scroll-proportion="0.0">
+            <state line="204" column="43" selection-start="5434" selection-end="5434" vertical-scroll-proportion="8.314285">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SetsTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="91" column="55" selection-start="1484" selection-end="1484" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -398,7 +397,6 @@
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
@@ -406,6 +404,7 @@
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
       </list>
     </option>
   </component>
@@ -752,7 +751,7 @@
       <recent name="$PROJECT_DIR$/files" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.org.boon.utils">
+  <component name="RunManager" selected="JUnit.SetsTest">
     <configuration default="false" name="org.boon.utils" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -912,7 +911,15 @@
       </option>
       <envs />
       <patterns />
+      <RunnerSettings RunnerId="Cover" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Cover" />
+      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
@@ -1004,8 +1011,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.SetsTest" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.SetsTest" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
         <item index="2" class="java.lang.String" itemvalue="JUnit.IOTest.testReadLines" />
         <item index="3" class="java.lang.String" itemvalue="JUnit.IOTest" />
         <item index="4" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
@@ -1061,7 +1068,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1069,14 +1076,14 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32596153" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3292011" sideWeight="0.33557692" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28856748" sideWeight="0.6" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973032" sideWeight="0.6701923" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3292011" sideWeight="0.33557692" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292011" sideWeight="0.33557692" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25482094" sideWeight="0.67115384" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25482094" sideWeight="0.6" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32884616" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1206,13 +1213,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/concurrent/ConcurrentSkipListSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="140" column="11" selection-start="4825" selection-end="4825" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="13" selection-start="359" selection-end="664" vertical-scroll-proportion="0.0">
@@ -1230,15 +1230,6 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="79" selection-start="401" selection-end="401" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="55" selection-start="1484" selection-end="1484" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1294,15 +1285,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="204" column="43" selection-start="5434" selection-end="5434" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="31" column="55" selection-start="762" selection-end="762" vertical-scroll-proportion="0.0">
@@ -1321,8 +1303,33 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="56" selection-start="1483" selection-end="1483" vertical-scroll-proportion="0.5457413">
+        <state line="103" column="44" selection-start="3886" selection-end="3886" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="301" column="0" selection-start="8101" selection-end="8101" vertical-scroll-proportion="-19.692308">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="55" selection-start="1484" selection-end="1484" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="204" column="43" selection-start="5434" selection-end="5434" vertical-scroll-proportion="8.314285">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

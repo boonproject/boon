@@ -75,6 +75,18 @@ public class IO {
         }
     }
 
+    public static void eachLine(Reader reader, EachLine eachLine) {
+
+        try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+
+            eachLine(bufferedReader, eachLine);
+
+        } catch (Exception ex) {
+
+            Exceptions.handle(List.class, ex);
+        }
+    }
+
     public static List<String> readLines(InputStream is) {
 
         try (Reader reader = new InputStreamReader(is, CHARSET)) {
@@ -86,6 +98,19 @@ public class IO {
             return Exceptions.handle(List.class, ex);
         }
     }
+
+    public static void eachLine(InputStream is, EachLine eachLine) {
+
+        try (Reader reader = new InputStreamReader(is, CHARSET)) {
+
+            eachLine(reader, eachLine);
+
+        } catch (Exception ex) {
+
+            Exceptions.handle(ex);
+        }
+    }
+
 
     public static List<String> readLines(BufferedReader reader) {
         List<String> lines = new ArrayList<>(80);
@@ -106,6 +131,38 @@ public class IO {
         }
         return lines;
     }
+
+    public static interface EachLine {
+        public void line (String line);
+    }
+
+    public static void eachLine(BufferedReader reader, EachLine eachLine) {
+
+        try (BufferedReader bufferedReader = reader) {
+
+
+            String line = null;
+            while ( (line = bufferedReader.readLine()) != null) {
+                eachLine.line(line);
+            }
+
+            reader.close();
+
+        } catch (Exception ex) {
+
+            Exceptions.handle(ex);
+        }
+
+    }
+
+    public static void eachLine(File file, EachLine eachLine) {
+        try (FileReader reader = new FileReader(file)) {
+            eachLine(reader, eachLine);
+        } catch (Exception ex) {
+            Exceptions.handle(List.class, ex);
+        }
+    }
+
 
     public static List<String> readLines(File file) {
         try (FileReader reader = new FileReader(file)) {
@@ -133,6 +190,39 @@ public class IO {
 
             } else {
                 return readLines(location, uri);
+            }
+
+        });
+
+    }
+
+    public static void eachLine(final String location, EachLine eachLine) {
+
+        final URI uri =  URI.create(location);
+
+        Exceptions.tryIt(() -> {
+
+            if ( uri.getScheme()==null ) {
+
+                Path thePath = FileSystems.getDefault().getPath(location);
+                BufferedReader buf = Files.newBufferedReader(
+                        thePath, Charset.forName(CHARSET));
+                eachLine(buf, eachLine);
+                return;
+
+            } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+
+                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+
+                BufferedReader buf = Files.newBufferedReader(
+                        thePath, Charset.forName(CHARSET));
+                eachLine(buf, eachLine);
+                return;
+
+
+            } else {
+                eachLine(location, uri, eachLine);
+                return;
             }
 
         });
@@ -172,6 +262,22 @@ public class IO {
         }
     }
 
+
+    private static void eachLine(String location, URI uri, EachLine eachLine) throws Exception {
+        try {
+            FileSystem fileSystem = FileSystems.getFileSystem(uri);
+            Path fsPath = fileSystem.getPath(location);
+            BufferedReader buf = Files.newBufferedReader(fsPath, Charset.forName(CHARSET));
+            eachLine(buf, eachLine);
+            return;
+
+
+        } catch (ProviderNotFoundException ex) {
+            eachLine(uri.toURL().openStream(), eachLine);
+            return;
+        }
+    }
+
     private static String read(String location, URI uri) throws Exception {
         try {
             FileSystem fileSystem = FileSystems.getFileSystem(uri);
@@ -193,8 +299,6 @@ public class IO {
         }
 
     }
-
-
 
     public static void write(OutputStream out, String content) {
 

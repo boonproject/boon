@@ -16,8 +16,8 @@ Universal methods to work with list, appendable, strings, sets, maps, etc. if ap
 * copy  - shallow copy (map, list, set, string, char sequence, array)
 * slc   - slices using slc(2, -2), slc(-2) syntax (map, list, set, string, char sequence, array)
 * slcEnd - slices the end off
-* before - maps, sets, (refers to the item before an "index")
-* after - maps, sets (refers to an item after an "index")
+* before - tree maps, tree sets, (refers to the item before an "index")
+* after -  tree maps, tree sets (refers to an item after an "index")
 * insert - inserts an item into a list like thing. (so far for lists)
 
 Maps has valueIn which is like in.
@@ -35,7 +35,8 @@ Add Strings (split single char, split list of chars, slc, len, in, idx, copy, sl
 Write article on universal methods
 Add classpath:// and directory scanning support to IO
 Write article on I/O utilities and JDK 7 FileSystem
-Add Reflection utilities
+Add Reflection utilities (deep dive properties)
+Write article
 Create universal Object to Map/List utility
 Write article
 Create universal Binary serializer / deserializer
@@ -44,11 +45,14 @@ Create universal JSON serializer / deserializer
 Write article
 Add DataRepo Support to boon
 Write article
+Create proxies using interface
+Write article
+Add support for Ruby
 
 
 
 
-Possible future
+Possible future   (maybe, maybe not)
 * pop (list, array)
 * push
 * find - finds an object (map, list, set, string, char sequence, array)
@@ -70,6 +74,44 @@ Possible future
                check to see if comparable, then check if it has a toString defined,
                then do string order on toString)
 * filter - add filtering (see DataRepo)
+* see http://groovy.codehaus.org/GDK+Extensions+to+Object
+* any
+* every
+* collect
+* each
+* each with index
+* find and findAll
+* equal (using truth)
+* notEqual (using not truth)
+* JMX support
+* EL style lang support #{} (use Ruby style) since # is less common than $
+* puts "Hello #{name.capitalize}!"
+* puts ("Hello #{cap(name}", ctx(this))
+* Create ReflectionUtils.respondsTo
+* Create ReflectionUtils.invoke
+* Create ReflectionUtils.ctx
+
+    if (bird.respondsTo("fly")) {
+        invoke(bird, "fly", far, high);
+        puts ("Hello #{height}", ctx(bird));
+    }
+
+    if (bird.respondsTo("fly", integer, integer)) {
+        invoke(bird, "fly", far, high);
+        puts ("Hello #{height}", ctx(bird));
+    }
+
+
+* templates built in
+* GPath style path support for any java object, map, json or dom.
+* ObjectGraphBuilder would be nice for testing graphs for data repo
+* queue utilities
+* add Queue as a FCC to the mix
+* Process support
+* add Regex support
+* JDBC support
+* Mongo support
+
 
 
 Code coverage shall always be 90% or above.
