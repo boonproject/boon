@@ -194,6 +194,15 @@ public class Sets {
         return set.higher(index);
     }
 
+    public static <T> T idx(Set<T> set, final T index) {
+
+        if (set instanceof NavigableSet) {
+            return idx((NavigableSet<T>)set, index);
+        } else {
+            throw new IllegalArgumentException("Set must be a NavigableSet for idx operation to work");
+        }
+    }
+
     public static <T> T after(NavigableSet<T> set, final T index) {
 
         return set.higher(index);
@@ -237,18 +246,26 @@ public class Sets {
 
     public static <V> NavigableSet<V> copy(NavigableSet<V> collection) {
         if (collection instanceof ConcurrentSkipListSet)  {
-            return new ConcurrentSkipListSet<V>(collection);
+            return copy( (ConcurrentSkipListSet<V>) collection );
         } else {
-            return new TreeSet<>(collection);
+            return copy( (TreeSet<V>) collection );
         }
     }
 
 
     public static <V> Set<V> copy(Set<V> collection) {
-        if (collection instanceof CopyOnWriteArraySet)  {
-            return new CopyOnWriteArraySet<V>(collection);
+        if ( collection instanceof NavigableSet ) {
+
+            return copy( (NavigableSet) collection );
+
+
+        } else if ( collection instanceof CopyOnWriteArraySet)  {
+
+            return copy( (CopyOnWriteArraySet) collection );
+
         } else {
-            return new LinkedHashSet<>(collection);
+
+            return copy( (LinkedHashSet) collection );
         }
     }
 

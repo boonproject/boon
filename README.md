@@ -19,6 +19,7 @@ Universal methods to work with list, appendable, strings, sets, maps, etc. if ap
 * before - tree maps, tree sets, (refers to the item before an "index")
 * after -  tree maps, tree sets (refers to an item after an "index")
 * insert - inserts an item into a list like thing. (so far for lists)
+* remove or substract or sub or minus
 
 Maps has valueIn which is like in.
 

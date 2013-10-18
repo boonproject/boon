@@ -92,6 +92,11 @@ public class Lists {
         return list;
     }
 
+    public static <V> List<V> linkedList(Collection<V> collection) {
+        List<V> list = new LinkedList<V>(collection);
+        return list;
+    }
+
     /** Universal methods */
     public static int len(List<?> list) {
         return list.size();

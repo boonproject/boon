@@ -1,6 +1,5 @@
 package org.boon.utils;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -34,6 +33,184 @@ public class IOTest {
         assertLines(lines);
 
     }
+
+    @Test
+    public void testReadEachLine() {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+
+        IO.eachLine(testFile.toString(), (line, index) -> {
+            System.out.println(index + " " + line);
+
+            if (index == 0) {
+
+                assertEquals(
+                        "line 1", line
+                );
+
+            } else if (index == 3) {
+
+
+                assertEquals(
+                        "grapes", line
+                );
+            }
+
+            return true;
+        });
+
+        //assertLines(lines);
+
+    }
+
+
+    @Test
+    public void testReadEachLineByURI() {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+
+        IO.eachLine(testFile.toURI().toString(), (line, index) -> {
+            System.out.println(index + " " + line);
+
+            if (index == 0) {
+
+                assertEquals(
+                        "line 1", line
+                );
+
+            } else if (index == 3) {
+
+
+                assertEquals(
+                        "grapes", line
+                );
+            }
+
+            return true;
+        });
+
+        //assertLines(lines);
+
+    }
+
+
+
+    @Test
+    public void testReadFromHttp() throws Exception {
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(9666), 0);
+        server.createContext("/test", new MyHandler());
+        server.setExecutor(null); // creates a default executor
+        server.start();
+
+        Thread.sleep(10);
+
+        List<String> lines = IO.readLines("http://localhost:9666/test");
+        assertLines(lines);
+
+    }
+
+
+    @Test
+    public void testReadEachLineHttp() throws Exception {
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(9668), 0);
+        server.createContext("/test", new MyHandler());
+        server.setExecutor(null); // creates a default executor
+        server.start();
+
+        Thread.sleep(10);
+
+        IO.eachLine( "http://localhost:9668/test",
+                ( line, index ) -> {
+
+                    if ( index == 0 ) {
+
+                        assertEquals(
+                                "line 1", line
+                        );
+
+                    } else if ( index == 3 ) {
+
+
+                        assertEquals(
+                                "grapes", line
+                        );
+                    }
+
+                    return true;
+                });
+
+    }
+
+
+    @Test
+    public void testReadEachLineReader() throws Exception {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+
+        IO.eachLine( new FileReader( testFile ),
+                ( line, index ) -> {
+
+            if ( index == 0 ) {
+
+                assertEquals(
+                        "line 1", line
+                );
+
+            } else if ( index == 3 ) {
+
+
+                assertEquals(
+                        "grapes", line
+                );
+            }
+
+            return true;
+        });
+
+        //assertLines(lines);
+
+    }
+
+
+    @Test
+    public void testReadEachLineInputStream() throws Exception {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+
+        IO.eachLine( new FileInputStream( testFile ),
+                ( line, index ) -> {
+
+                    if ( index == 0 ) {
+
+                        assertEquals(
+                                "line 1", line
+                        );
+
+                    } else if ( index == 3 ) {
+
+
+                        assertEquals(
+                                "grapes", line
+                        );
+                    }
+
+                    return true;
+                });
+
+        //assertLines(lines);
+
+    }
+
 
     @Test
     public void testReadAll() {
@@ -165,20 +342,6 @@ public class IOTest {
     }
 
 
-    @Test
-    public void testReadFromHttp() throws Exception {
-
-        HttpServer server = HttpServer.create(new InetSocketAddress(9666), 0);
-        server.createContext("/test", new MyHandler());
-        server.setExecutor(null); // creates a default executor
-        server.start();
-
-        Thread.sleep(10);
-
-        List<String> lines = IO.readLines("http://localhost:9666/test");
-        assertLines(lines);
-
-    }
 
     @Test
     public void testReadAllFromHttp() throws Exception {

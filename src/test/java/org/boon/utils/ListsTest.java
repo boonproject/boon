@@ -15,11 +15,59 @@ import static org.junit.Assert.assertTrue;
 public class ListsTest {
 
 
-
     @Test
     public void iterAndFriends() {
         List<String> list =
                 list("apple", "oranges", "pears", "grapes", "kiwi");
+
+        iterAndFriends(list);
+
+        list =
+                safeList("apple", "oranges", "pears", "grapes", "kiwi");
+
+        iterAndFriends(list);
+
+
+        list =
+                linkedList("apple", "oranges", "pears", "grapes", "kiwi");
+
+        iterAndFriends(list);
+
+        list =
+                linkedList(list);
+
+        iterAndFriends(list);
+
+        list =
+                safeList(list);
+
+        iterAndFriends(list);
+
+
+        list =
+                copy(safeList(list));
+
+        iterAndFriends(list);
+
+
+
+        list =
+                copy(linkedList(list));
+
+        iterAndFriends(list);
+
+
+
+        list =
+                copy(list(list));
+
+        iterAndFriends(list);
+
+
+    }
+
+
+    public void iterAndFriends(List<String> list) {
 
         list = list(list.iterator());
         assertEquals(5, len(list)) ;
@@ -175,7 +223,7 @@ public class ListsTest {
 
     @Test
     public void testLinked() {
-        LinkedList<String> list = new LinkedList(list("apple", "oranges", "pears"));
+        LinkedList<String> list = (LinkedList<String>) linkedList("apple", "oranges", "pears");
         assertEquals(3, len(list)) ;
         assertTrue(in("apple", list));
         assertEquals("oranges", idx(list, 1));

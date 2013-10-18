@@ -133,7 +133,7 @@ public class IO {
     }
 
     public static interface EachLine {
-        public void line (String line);
+        public boolean line (String line, int index);
     }
 
     public static void eachLine(BufferedReader reader, EachLine eachLine) {
@@ -142,9 +142,10 @@ public class IO {
 
 
             String line = null;
-            while ( (line = bufferedReader.readLine()) != null) {
-                eachLine.line(line);
-            }
+            int lineNumber = 0;
+
+            while ( (line = bufferedReader.readLine()) != null &&
+                    eachLine.line(line, lineNumber++) );
 
             reader.close();
 
