@@ -23,32 +23,6 @@ Universal methods to work with list, appendable, strings, sets, maps, etc. if ap
 
 Maps has valueIn which is like in.
 
-TODO:
-Bring unit tests back up to 90%.
-10/18/2013
-Class coverage is 81%
-Method coverage is 77%
-Line coverage is 85%
-
-Add comparators to Sets.
-Add Arrays (len, in, idx, copy, slc, slcEnd, insert, add, conversion from collection)
-Add Strings (split single char, split list of chars, slc, len, in, idx, copy, slc, slcEnd, insert, add)
-Write article on universal methods
-Add classpath:// and directory scanning support to IO
-Write article on I/O utilities and JDK 7 FileSystem
-Add Reflection utilities (deep dive properties)
-Write article
-Create universal Object to Map/List utility
-Write article
-Create universal Binary serializer / deserializer
-Write article
-Create universal JSON serializer / deserializer
-Write article
-Add DataRepo Support to boon
-Write article
-Create proxies using interface
-Write article
-Add support for Ruby
 
 
 
@@ -123,3 +97,26 @@ Code coverage shall always be 90% or above.
 
 Ideas
 http://docs.python.org/2/library/functions.html
+
+
+
+TODO:
+* Add comparators to Sets.
+* Add Arrays (len, in, idx, copy, slc, slcEnd, insert, add, conversion from collection)
+* Add Strings (split single char, split list of chars, slc, len, in, idx, copy, slc, slcEnd, insert, add)
+* Write article on universal methods
+* Add classpath:// and directory scanning support to IO
+* Write article on I/O utilities and JDK 7 FileSystem
+* Add Reflection utilities (deep dive properties)
+* Write article
+* Create universal Object to Map/List utility
+* Write article
+* Create universal Binary serializer / deserializer
+* Write article
+* Create universal JSON serializer / deserializer
+* Write article
+* Add DataRepo Support to boon
+* Write article
+* Create proxies using interface
+* Write article
+* Add support for Ruby respondsTo
