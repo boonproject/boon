@@ -2,7 +2,58 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="some">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Dates.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Exceptions$Exception.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Exceptions$Trial.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Exceptions$TrialWithReturn.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Exceptions.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/HTTP.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/IO$EachLine.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/IO.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Lists$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Lists.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Maps$Entry.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Maps$EntryImpl.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Maps.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Sets$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/org/boon/utils/Sets.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/config-sources.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/config.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-org.boon.utils.ExceptionsTest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-org.boon.utils.HTTPTest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-org.boon.utils.IOTest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-org.boon.utils.ListsTest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-org.boon.utils.MapsTest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-org.boon.utils.SetsTest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/org.boon.utils.ExceptionsTest.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/org.boon.utils.HTTPTest.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/org.boon.utils.IOTest.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/org.boon.utils.ListsTest.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/org.boon.utils.MapsTest.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/surefire-reports/org.boon.utils.SetsTest.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/DatesTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/ExceptionsTest$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/ExceptionsTest$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/ExceptionsTest$3.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/ExceptionsTest$4.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/ExceptionsTest$5.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/ExceptionsTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/HTTPTest$MyHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/HTTPTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/IOTest$MyHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/IOTest$Proxy.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/IOTest$Proxy2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/IOTest$ProxyLoader.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/IOTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/ListsTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/MapsTest$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/MapsTest$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/MapsTest$Dog.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/MapsTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/org/boon/utils/SetsTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/testfile.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
@@ -19,7 +70,7 @@
     <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121675777" ignored="false" />
     <file path="/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996515360" ignored="false" />
     <file path="/ExceptionsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996854860" ignored="false" />
-    <file path="/.gitignore" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382129630672" ignored="false" />
+    <file path="/.gitignore" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382130669861" ignored="false" />
     <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381953263325" ignored="false" />
     <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381953307774" ignored="false" />
     <file path="$USER_HOME$/clients/apple/config/src/main/java/com/apple/aos/utils/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381957651017" ignored="false" />
@@ -54,7 +105,7 @@
     <file path="/Dates.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382127709093" ignored="false" />
     <file path="/Sets.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382118575979" ignored="false" />
     <file path="/SetsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382118402219" ignored="false" />
-    <file path="/DatesTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382129460659" ignored="false" />
+    <file path="/DatesTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382129838715" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -355,7 +406,7 @@
           <file leaf-file-name="Dates.java" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="37" column="34" selection-start="1086" selection-end="1086" vertical-scroll-proportion="-0.40816328">
+                <state line="44" column="3" selection-start="1332" selection-end="1332" vertical-scroll-proportion="0.1632653">
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -370,7 +421,7 @@
           <file leaf-file-name="ListsTest.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="243" column="16" selection-start="5873" selection-end="5873" vertical-scroll-proportion="0.0">
+                <state line="19" column="2" selection-start="406" selection-end="406" vertical-scroll-proportion="0.0">
                   <folding />
                 </state>
               </provider>
@@ -379,7 +430,7 @@
           <file leaf-file-name="DatesTest.java" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="150" column="29" selection-start="3091" selection-end="3091" vertical-scroll-proportion="0.0">
+                <state line="159" column="0" selection-start="3301" selection-end="3357" vertical-scroll-proportion="0.0">
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -390,7 +441,7 @@
           <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/.gitignore">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="4" column="0" selection-start="18" selection-end="25" vertical-scroll-proportion="0.2962963">
+                <state line="4" column="14" selection-start="25" selection-end="25" vertical-scroll-proportion="0.2962963">
                   <folding />
                 </state>
               </provider>
@@ -1358,25 +1409,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="243" column="16" selection-start="5873" selection-end="5873" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="34" selection-start="1086" selection-end="1086" vertical-scroll-proportion="-0.40816328">
+        <state line="159" column="0" selection-start="3301" selection-end="3357" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/DatesTest.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="150" column="29" selection-start="3091" selection-end="3091" vertical-scroll-proportion="0.0">
+        <state line="19" column="2" selection-start="406" selection-end="406" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="3" selection-start="1332" selection-end="1332" vertical-scroll-proportion="0.1632653">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1385,7 +1436,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="18" selection-end="25" vertical-scroll-proportion="0.2962963">
+        <state line="4" column="14" selection-start="25" selection-end="25" vertical-scroll-proportion="0.2962963">
           <folding />
         </state>
       </provider>

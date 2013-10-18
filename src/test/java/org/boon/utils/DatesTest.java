@@ -156,6 +156,7 @@ public class DatesTest {
         long epic = Dates.date( TimeZone.getTimeZone("UTC"), 1970, Calendar.MAY, 29, 5, 5 );
         long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
 
+        System.out.println("NEGATIVE DATE " + forties);
         assertEquals(
 
                 new Date(epic).toString(),
