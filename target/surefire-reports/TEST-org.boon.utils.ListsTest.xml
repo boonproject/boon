@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.006" errors="0" skipped="0" tests="9" name="org.boon.utils.ListsTest">
+<testsuite failures="0" time="0.01" errors="0" skipped="0" tests="10" name="org.boon.utils.ListsTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib"/>
@@ -11,7 +11,7 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7534"/>
+    <property name="idea.launcher.port" value="7533"/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
@@ -63,13 +63,14 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.001" classname="org.boon.utils.ListsTest" name="sliceTest"/>
+  <testcase time="0.001" classname="org.boon.utils.ListsTest" name="iterAndFriends"/>
+  <testcase time="0" classname="org.boon.utils.ListsTest" name="sliceTest"/>
   <testcase time="0" classname="org.boon.utils.ListsTest" name="sliceTest2"/>
   <testcase time="0" classname="org.boon.utils.ListsTest" name="sliceStart"/>
   <testcase time="0" classname="org.boon.utils.ListsTest" name="sliceEnd"/>
-  <testcase time="0" classname="org.boon.utils.ListsTest" name="tooBigIndex"/>
-  <testcase time="0" classname="org.boon.utils.ListsTest" name="tooSmallIndex"/>
-  <testcase time="0" classname="org.boon.utils.ListsTest" name="testMe"/>
+  <testcase time="0.001" classname="org.boon.utils.ListsTest" name="tooBigIndex"/>
+  <testcase time="0.001" classname="org.boon.utils.ListsTest" name="tooSmallIndex"/>
+  <testcase time="0.001" classname="org.boon.utils.ListsTest" name="testMe"/>
   <testcase time="0.001" classname="org.boon.utils.ListsTest" name="testSafe"/>
-  <testcase time="0" classname="org.boon.utils.ListsTest" name="testLinked"/>
+  <testcase time="0.001" classname="org.boon.utils.ListsTest" name="testLinked"/>
 </testsuite>

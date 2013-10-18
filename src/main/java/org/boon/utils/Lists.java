@@ -20,10 +20,7 @@ public class Lists {
     }
 
     public static <V> List<V> list(Collection<V> collection) {
-        List<V> list = new ArrayList<V>();
-        for (V o : collection) {
-            list.add(o);
-        }
+        List<V> list = new ArrayList<V>(collection);
         return list;
     }
 
@@ -78,6 +75,23 @@ public class Lists {
         return list;
     }
 
+    public static <V> List<V> linkedList(final V... array) {
+        if (array==null) {
+            return new ArrayList<>();
+        }
+        List<V> list = new LinkedList<V>();
+        for (V o : array) {
+            list.add(o);
+        }
+        return list;
+    }
+
+
+    public static <V> List<V> safeList(Collection<V> collection) {
+        List<V> list = new CopyOnWriteArrayList<V>(collection);
+        return list;
+    }
+
     /** Universal methods */
     public static int len(List<?> list) {
         return list.size();
@@ -126,8 +140,12 @@ public class Lists {
     public static <V> List<V> copy(List<V> list) {
         if (list instanceof RandomAccess) {
             return new ArrayList<>(list);
-        }   else {
+        }   else if (list instanceof LinkedList) {
             return new LinkedList<>(list);
+        }  else if (list instanceof CopyOnWriteArrayList) {
+            return new CopyOnWriteArrayList<>(list);
+        } else {
+            return new ArrayList<>(list);
         }
     }
 
@@ -144,6 +162,12 @@ public class Lists {
     public static <V> List<V> copy(LinkedList<V> list) {
         Objects.requireNonNull(list, "list cannot be null");
         return new LinkedList<>(list);
+    }
+
+
+    public static <V> void insert(List<V> list, int index, V v) {
+        int i = calculateIndex(list, index);
+        list.add(i, v);
     }
 
 

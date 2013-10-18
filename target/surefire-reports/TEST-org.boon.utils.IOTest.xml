@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.183" errors="0" skipped="0" tests="9" name="org.boon.utils.ExceptionsTest">
+<testsuite failures="0" time="0.086" errors="0" skipped="0" tests="12" name="org.boon.utils.IOTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib"/>
@@ -63,13 +63,16 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.004" classname="org.boon.utils.ExceptionsTest" name="testTryIt"/>
-  <testcase time="0" classname="org.boon.utils.ExceptionsTest" name="testExceptionWithMessage"/>
-  <testcase time="0.001" classname="org.boon.utils.ExceptionsTest" name="testTryItNoOp"/>
-  <testcase time="0" classname="org.boon.utils.ExceptionsTest" name="testTryItNoOp2WithMessage"/>
-  <testcase time="0" classname="org.boon.utils.ExceptionsTest" name="testTryItWithMessage"/>
-  <testcase time="0.063" classname="org.boon.utils.ExceptionsTest" name="testSupportMethods"/>
-  <testcase time="0" classname="org.boon.utils.ExceptionsTest" name="testPrintWriter"/>
-  <testcase time="0" classname="org.boon.utils.ExceptionsTest" name="testException"/>
-  <testcase time="0" classname="org.boon.utils.ExceptionsTest" name="die"/>
+  <testcase time="0.002" classname="org.boon.utils.IOTest" name="testReadLines"/>
+  <testcase time="0.001" classname="org.boon.utils.IOTest" name="testReadAll"/>
+  <testcase time="0.016" classname="org.boon.utils.IOTest" name="testReadLinesFromPath"/>
+  <testcase time="0.005" classname="org.boon.utils.IOTest" name="testReadAllFromPath"/>
+  <testcase time="0" classname="org.boon.utils.IOTest" name="testReadWriteLines"/>
+  <testcase time="0.001" classname="org.boon.utils.IOTest" name="testReadWriteLinesCharSet"/>
+  <testcase time="0.002" classname="org.boon.utils.IOTest" name="testReadLinesURI"/>
+  <testcase time="0.001" classname="org.boon.utils.IOTest" name="testReadAllLinesURI"/>
+  <testcase time="0.025" classname="org.boon.utils.IOTest" name="testReadFromHttp"/>
+  <testcase time="0.016" classname="org.boon.utils.IOTest" name="testReadAllFromHttp"/>
+  <testcase time="0.008" classname="org.boon.utils.IOTest" name="proxyTest"/>
+  <testcase time="0.004" classname="org.boon.utils.IOTest" name="proxyTest2"/>
 </testsuite>
