@@ -94,12 +94,12 @@ Possible future   (maybe, maybe not)
 
 <pre>
 
-    if (bird.respondsTo("fly")) {
+    if (respondsTo(bird, "fly")) {
         invoke(bird, "fly", far, high);
         puts ("Hello #{height}", ctx(bird));
     }
 
-    if (bird.respondsTo("fly", integer, integer)) {
+    if (respondsTo(bird, "fly", integer, integer)) {
         invoke(bird, "fly", far, high);
         puts ("Hello #{height}", ctx(bird));
     }
