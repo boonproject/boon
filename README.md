@@ -92,6 +92,8 @@ Possible future   (maybe, maybe not)
 * Create ReflectionUtils.invoke
 * Create ReflectionUtils.ctx
 
+<pre>
+
     if (bird.respondsTo("fly")) {
         invoke(bird, "fly", far, high);
         puts ("Hello #{height}", ctx(bird));
@@ -102,6 +104,7 @@ Possible future   (maybe, maybe not)
         puts ("Hello #{height}", ctx(bird));
     }
 
+</pre>
 
 * templates built in
 * GPath style path support for any java object, map, json or dom.
@@ -116,3 +119,7 @@ Possible future   (maybe, maybe not)
 
 
 Code coverage shall always be 90% or above.
+
+
+Ideas
+http://docs.python.org/2/library/functions.html
