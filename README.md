@@ -28,6 +28,7 @@ Maps has valueIn which is like in.
 
 
 Possible future   (maybe, maybe not)
+* count
 * pop (list, array)
 * push
 * find - finds an object (map, list, set, string, char sequence, array)
@@ -102,12 +103,16 @@ http://docs.python.org/2/library/functions.html
 
 TODO:
 * Add comparators to Sets.
+* Missing slice tests for Maps.
+* Need empty and not empty
 * Add Arrays (len, in, idx, copy, slc, slcEnd, insert, add, conversion from collection)
 * Add Strings (split single char, split list of chars, slc, len, in, idx, copy, slc, slcEnd, insert, add)
 * Write article on universal methods
 * Add classpath:// and directory scanning support to IO
 * Write article on I/O utilities and JDK 7 FileSystem
+** Add support for classpath search of resources
 * Add Reflection utilities (deep dive properties)
+** UnsafeField, MapField, ReflecitonField, etc.
 * Write article
 * Create universal Object to Map/List utility
 * Write article
