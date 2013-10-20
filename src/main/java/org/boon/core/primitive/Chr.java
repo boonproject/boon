@@ -1,6 +1,8 @@
 package org.boon.core.primitive;
 
 
+import org.boon.core.Universal;
+
 import java.util.Objects;
 
 public class Chr {
@@ -20,17 +22,19 @@ public class Chr {
      * @param array
      * @return
      */
+    @Universal
     public static char[] array(final char... array) {
         Objects.requireNonNull(array);
         return array;
     }
 
+    @Universal
     public static int len(char[] array) {
         return array.length;
     }
 
 
-
+    @Universal
     public static char idx (final char[] array, final int index) {
         final int i = calculateIndex(array, index);
 
@@ -38,6 +42,7 @@ public class Chr {
     }
 
 
+    @Universal
     public static void idx (final char[] array, int index, char value) {
         final int i = calculateIndex(array, index);
 
@@ -46,6 +51,7 @@ public class Chr {
 
 
 
+    @Universal
     public static char[] slc(char[] array, int startIndex, int endIndex) {
         Objects.requireNonNull(array);
 
@@ -65,6 +71,7 @@ public class Chr {
         return newArray;
     }
 
+    @Universal
     public static char[] slc(char[] array, int startIndex) {
         Objects.requireNonNull(array);
 
@@ -83,6 +90,7 @@ public class Chr {
         return newArray;
     }
 
+    @Universal
     public static char[] slcEnd(char[] array, int endIndex) {
         Objects.requireNonNull(array);
 
@@ -101,6 +109,7 @@ public class Chr {
         return newArray;
     }
 
+    @Universal
     public static boolean in(char value, char[] array) {
         for (char currentValue : array) {
             if ( currentValue == value ) {
@@ -166,6 +175,7 @@ public class Chr {
     }
 
 
+    @Universal
     public static char[] copy(char[] array) {
         Objects.requireNonNull(array);
         char[] newArray = new char[array.length];
@@ -174,6 +184,7 @@ public class Chr {
     }
 
 
+    @Universal
     public static char[] add(char[] array, char v) {
         Objects.requireNonNull(array);
         char[] newArray = new char[array.length + 1];
@@ -182,6 +193,19 @@ public class Chr {
         return newArray;
     }
 
+
+    @Universal
+    public static char[] add(char[] array, String str) {
+          return add(array, str.toCharArray());
+    }
+
+    @Universal
+    public static char[] add(char[] array, StringBuilder stringBuilder) {
+        return add(array, getCharsFromStringBuilder(stringBuilder));
+    }
+
+
+    @Universal
     public static char[] add(char[] array, char[] array2) {
         Objects.requireNonNull(array);
         char[] newArray = new char[array.length + array2.length];
@@ -192,6 +216,7 @@ public class Chr {
 
 
 
+    @Universal
     public static char[] insert(final char[] array, final int idx, final char v) {
         Objects.requireNonNull(array);
 
@@ -231,6 +256,19 @@ public class Chr {
     }
 
 
+    @Universal
+    public static char[] insert(final char[] array, final int fromIndex, String values) {
+        return insert(array, fromIndex, values.toCharArray());
+    }
+
+
+    @Universal
+    public static char[] insert(final char[] array, final int fromIndex, StringBuilder values) {
+        return insert(array, fromIndex, getCharsFromStringBuilder(values));
+    }
+
+
+    @Universal
     public static char[] insert(final char[] array, final int fromIndex, final char[] values) {
         Objects.requireNonNull(array);
 
@@ -276,6 +314,15 @@ public class Chr {
 
 
     /* End universal methods. */
+
+
+    private static char[] getCharsFromStringBuilder(StringBuilder sbuf) {
+        int length = sbuf.length();
+        char [] array2 = new char [sbuf.length()];
+        sbuf.getChars(0, sbuf.length(), array2, 0);
+        return  array2;
+    }
+
     private static int calculateIndex(char[] array, int originalIndex) {
         final int length = array.length;
 

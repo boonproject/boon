@@ -1,115 +1,14 @@
 package org.boon.core.primitive;
 
 
+import org.boon.core.Universal;
+
 import java.util.Objects;
 
 public class Byt {
 
 
 
-    /**
-     * Creates an array of bytes
-     * @param size size of the array you want to make
-     * @return
-     */
-    public static  byte[] arrayOfByte(final int size) {
-        return new byte[size];
-    }
-
-    /**
-     *
-     * @param array
-     * @return
-     */
-    public static byte[] array(final byte... array) {
-        Objects.requireNonNull(array);
-        return array;
-    }
-
-    public static int len(byte[] array) {
-        return array.length;
-    }
-
-
-
-    public static byte idx (final byte[] array, final int index) {
-        final int i = calculateIndex(array, index);
-
-        return array[i];
-    }
-
-
-    public static void idx (final byte[] array, int index, byte value) {
-        final int i = calculateIndex(array, index);
-
-        array[i] = value;
-    }
-
-
-
-    public static byte[] slc(byte[] array, int startIndex, int endIndex) {
-        Objects.requireNonNull(array);
-
-        final int start = calculateIndex(array, startIndex);
-        final int end = calculateIndex(array, endIndex);
-        final int newLength = end - start;
-
-        if (newLength <0 ) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format( "start index %d, end index %d, length %d",
-                            startIndex, endIndex, array.length )
-            );
-        }
-
-        byte [] newArray = new byte[newLength];
-        System.arraycopy(array, start, newArray, 0, newLength);
-        return newArray;
-    }
-
-    public static byte[] slc(byte[] array, int startIndex) {
-        Objects.requireNonNull(array);
-
-        final int start = calculateIndex(array, startIndex);
-        final int newLength = array.length - start;
-
-        if (newLength <0 ) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format( "start index %d, length %d",
-                            startIndex, array.length )
-            );
-        }
-
-        byte [] newArray = new byte[newLength];
-        System.arraycopy(array, start, newArray, 0, newLength);
-        return newArray;
-    }
-
-    public static byte[] slcEnd(byte[] array, int endIndex) {
-        Objects.requireNonNull(array);
-
-        final int end = calculateIndex(array, endIndex);
-        final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
-
-        if (newLength <0 ) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format( "start index %d, length %d",
-                            endIndex, array.length )
-            );
-        }
-
-        byte [] newArray = new byte[newLength];
-        System.arraycopy(array, 0, newArray, 0, newLength);
-        return newArray;
-    }
-
-    public static boolean in(byte value, byte[] array) {
-        for (byte currentValue : array) {
-            if ( currentValue == value ) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     public static byte[] grow(byte [] array, final int size) {
@@ -167,6 +66,122 @@ public class Byt {
     }
 
 
+
+    /**
+     * Creates an array of bytes
+     * @param size size of the array you want to make
+     * @return
+     */
+    public static  byte[] arrayOfByte(final int size) {
+        return new byte[size];
+    }
+
+    /**
+     *
+     * @param array
+     * @return
+     */
+    @Universal
+    public static byte[] array(final byte... array) {
+        Objects.requireNonNull(array);
+        return array;
+    }
+
+
+    @Universal
+    public static int len(byte[] array) {
+        return array.length;
+    }
+
+
+    @Universal
+    public static byte idx (final byte[] array, final int index) {
+        final int i = calculateIndex(array, index);
+
+        return array[i];
+    }
+
+
+    @Universal
+    public static void idx (final byte[] array, int index, byte value) {
+        final int i = calculateIndex(array, index);
+
+        array[i] = value;
+    }
+
+
+
+    @Universal
+    public static byte[] slc(byte[] array, int startIndex, int endIndex) {
+        Objects.requireNonNull(array);
+
+        final int start = calculateIndex(array, startIndex);
+        final int end = calculateIndex(array, endIndex);
+        final int newLength = end - start;
+
+        if (newLength <0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, end index %d, length %d",
+                            startIndex, endIndex, array.length )
+            );
+        }
+
+        byte [] newArray = new byte[newLength];
+        System.arraycopy(array, start, newArray, 0, newLength);
+        return newArray;
+    }
+
+    @Universal
+    public static byte[] slc(byte[] array, int startIndex) {
+        Objects.requireNonNull(array);
+
+        final int start = calculateIndex(array, startIndex);
+        final int newLength = array.length - start;
+
+        if (newLength <0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            startIndex, array.length )
+            );
+        }
+
+        byte [] newArray = new byte[newLength];
+        System.arraycopy(array, start, newArray, 0, newLength);
+        return newArray;
+    }
+
+    @Universal
+    public static byte[] slcEnd(byte[] array, int endIndex) {
+        Objects.requireNonNull(array);
+
+        final int end = calculateIndex(array, endIndex);
+        final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
+
+        if (newLength <0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            endIndex, array.length )
+            );
+        }
+
+        byte [] newArray = new byte[newLength];
+        System.arraycopy(array, 0, newArray, 0, newLength);
+        return newArray;
+    }
+
+    @Universal
+    public static boolean in(byte value, byte[] array) {
+        for (byte currentValue : array) {
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    @Universal
     public static byte[] copy(byte[] array) {
         Objects.requireNonNull(array);
         byte[] newArray = new byte[array.length];
@@ -175,6 +190,7 @@ public class Byt {
     }
 
 
+    @Universal
     public static byte[] add(byte[] array, byte v) {
         Objects.requireNonNull(array);
         byte[] newArray = new byte[array.length + 1];
@@ -183,6 +199,7 @@ public class Byt {
         return newArray;
     }
 
+    @Universal
     public static byte[] add(byte[] array, byte[] array2) {
         Objects.requireNonNull(array);
         byte[] newArray = new byte[array.length + array2.length];
@@ -193,6 +210,7 @@ public class Byt {
 
 
 
+    @Universal
     public static byte[] insert(final byte[] array, final int idx, final byte v) {
         Objects.requireNonNull(array);
 
@@ -232,6 +250,7 @@ public class Byt {
     }
 
 
+    @Universal
     public static byte[] insert(final byte[] array, final int fromIndex, final byte[] values) {
         Objects.requireNonNull(array);
 

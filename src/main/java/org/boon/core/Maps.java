@@ -9,26 +9,32 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class Maps {
 
     /** Universal methods. */
+    @Universal
     public static int len(Map<?, ?> map) {
         return map.size();
     }
 
+    @Universal
     public static <K, V> boolean in(K key, Map<K, V> map) {
         return map.containsKey(key);
     }
 
+    @Universal
     public static <K, V> void add(Map<K, V> map, Entry<K, V> entry) {
          map.put(entry.key(), entry.value());
     }
 
+    @Universal
     public static <K, V> V idx(Map<K, V> map, K k) {
         return map.get(k);
     }
 
+    @Universal
     public static <K, V> void idx(Map<K, V> map, K k, V v) {
         map.put(k, v);
     }
 
+    @Universal
     public static <K, V> SortedMap<K, V> copy(SortedMap<K, V> map) {
         if (map instanceof  TreeMap) {
             return new TreeMap<>(map);
@@ -39,6 +45,7 @@ public class Maps {
         }
     }
 
+    @Universal
     public static <K, V> Map<K, V> copy(Map<K, V> map) {
         if (map instanceof  LinkedHashMap) {
             return new LinkedHashMap<>(map);
@@ -50,25 +57,30 @@ public class Maps {
     }
 
 
+    @Universal
     public static <K, V> V after(NavigableMap<K, V> map, final K index) {
         return map.get(map.higherKey(index));
     }
 
 
+    @Universal
     public static <K, V> V before(NavigableMap<K, V> map, final K index) {
         return map.get(map.lowerKey(index));
     }
 
 
+    @Universal
     public static <K, V> SortedMap<K, V> slc(NavigableMap<K, V> map, K startIndex, K endIndex) {
         return map.subMap(startIndex, endIndex);
     }
 
 
+    @Universal
     public static <K, V> SortedMap<K, V> slcEnd(NavigableMap<K, V> map, K fromKey) {
         return map.tailMap(fromKey);
     }
 
+    @Universal
     public static <K, V> SortedMap<K, V> slc(NavigableMap<K, V> map, K toKey) {
         return map.headMap(toKey);
     }

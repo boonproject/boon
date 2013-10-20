@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Arrays {
 
 
+    @Universal
     public static <V> V[] array(Class<V> clasz, int size) {
         Object newArray = Array.newInstance(clasz, size);
         return (V[]) newArray;
@@ -35,7 +36,7 @@ public class Arrays {
         Objects.requireNonNull(array);
         Object newArray = Array.newInstance(array.getClass().getComponentType(),
                 array.length - size);
-        System.arraycopy(array, 0, newArray, 0, array.length-size);
+        System.arraycopy(array, 0, (V[])newArray, 0, array.length-size);
         return (V[]) newArray;
     }
 
@@ -73,10 +74,12 @@ public class Arrays {
 
     /* Universal methods */
 
+    @Universal
     public static <V> int len(V[] array) {
          return array.length;
     }
 
+    @Universal
     public static <V> V idx (final V[] array, int index) {
         final int i = calculateIndex(array, index);
 
@@ -84,6 +87,7 @@ public class Arrays {
     }
 
 
+    @Universal
     public static <V> void idx (final V[] array, int index, V value) {
         final int i = calculateIndex(array, index);
 
@@ -91,6 +95,7 @@ public class Arrays {
     }
 
 
+    @Universal
     public static <V> V[] slc(V[] array, int startIndex, int endIndex) {
         Objects.requireNonNull(array);
 
@@ -109,6 +114,7 @@ public class Arrays {
         return (V[]) newArray;
     }
 
+    @Universal
     public static <V> boolean in(V value, V[] array) {
         for (V currentValue : array) {
             if (currentValue.equals(value)) {
@@ -118,6 +124,7 @@ public class Arrays {
         return false;
     }
 
+    @Universal
     public static <V> V[] slc(V[] array, int startIndex) {
         Objects.requireNonNull(array);
 
@@ -139,6 +146,7 @@ public class Arrays {
 
 
 
+    @Universal
     public static <V> V[] copy(V[] array) {
         Objects.requireNonNull(array);
         Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length);
@@ -148,6 +156,7 @@ public class Arrays {
 
 
 
+    @Universal
     public static <V> V[] add(V[] array, V v) {
         Objects.requireNonNull(array);
         Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
@@ -157,6 +166,7 @@ public class Arrays {
     }
 
 
+    @Universal
     public static <V> V[] add(V[] array, V[] array2) {
         Objects.requireNonNull(array);
         Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length + array2.length);
@@ -166,6 +176,7 @@ public class Arrays {
         return (V[]) newArray;
     }
 
+    @Universal
     public static <V> V[] insert(V[] array, int index, V v) {
         Objects.requireNonNull(array);
         Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
@@ -189,6 +200,7 @@ public class Arrays {
         return (V[]) newArray;
     }
 
+    @Universal
     public static <V> V[] slcEnd(V[] array, int endIndex) {
         Objects.requireNonNull(array);
 

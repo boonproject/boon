@@ -182,23 +182,29 @@ public class Sets {
         return new CopyOnWriteArraySet<>(collection);
     }
 
+
+    @Universal
     public static int len(Set<?> set) {
         return set.size();
     }
 
+    @Universal
     public static <V> boolean in(V value, Set<?> set) {
         return set.contains(value);
     }
 
+    @Universal
     public static <V> void add(Set<V> set, V value) {
         set.add(value);
     }
 
+    @Universal
     public static <T> T idx(NavigableSet<T> set, final T index) {
 
         return set.higher(index);
     }
 
+    @Universal
     public static <T> T idx(Set<T> set, final T index) {
 
         if (set instanceof NavigableSet) {
@@ -218,37 +224,45 @@ public class Sets {
         return set.lower(index);
     }
 
+    @Universal
     public static <V> SortedSet<V> slc(NavigableSet<V> set, V startIndex, V endIndex) {
         return set.subSet(startIndex, endIndex);
     }
 
 
+    @Universal
     public static <V> SortedSet<V> slcEnd(NavigableSet<V> set, V fromIndex) {
         return set.tailSet(fromIndex);
     }
 
 
+    @Universal
     public static <V> SortedSet<V> slc(NavigableSet<V> set, V toIndex) {
         return set.headSet(toIndex);
     }
 
+    @Universal
     public static <V> Set<V> copy(HashSet<V> collection) {
         return new LinkedHashSet<>(collection);
     }
 
+    @Universal
     public static <V> NavigableSet<V> copy(TreeSet<V> collection) {
         return new TreeSet<>(collection);
     }
 
+    @Universal
     public static <V> Set<V> copy(CopyOnWriteArraySet<V> collection) {
         return new CopyOnWriteArraySet<>(collection);
     }
 
+    @Universal
     public static <V> NavigableSet<V> copy(ConcurrentSkipListSet<V> collection) {
         return new ConcurrentSkipListSet<>(collection);
     }
 
 
+    @Universal
     public static <V> NavigableSet<V> copy(NavigableSet<V> collection) {
         if (collection instanceof ConcurrentSkipListSet)  {
             return copy( (ConcurrentSkipListSet<V>) collection );
@@ -258,20 +272,20 @@ public class Sets {
     }
 
 
-    @SuppressWarnings("unchecked")
+    @Universal
     public static <V> Set<V> copy(Set<V> collection) {
         if ( collection instanceof NavigableSet ) {
 
-            return copy( (NavigableSet) collection );
+            return copy( (NavigableSet<V>) collection );
 
 
         } else if ( collection instanceof CopyOnWriteArraySet)  {
 
-            return copy( (CopyOnWriteArraySet) collection );
+            return copy( (CopyOnWriteArraySet<V>) collection );
 
         } else {
 
-            return copy( (LinkedHashSet) collection );
+            return copy( (LinkedHashSet<V>) collection );
         }
     }
 

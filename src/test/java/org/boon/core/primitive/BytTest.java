@@ -318,9 +318,21 @@ public class BytTest {
 
     }
 
+    void foo(byte a) {
+
+    }
 
     @Test
     public void addInsertSingle() {
+
+        byte f = 0;
+
+        foo( f = 0xa );
+
+        foo( f = 'a' );
+
+        foo( f = 1 );
+
 
         assertArrayEquals(
                 array((byte)'a', (byte)'b', (byte)'c', (byte)'d', (byte)'e', (byte)'f', (byte)'g'),
