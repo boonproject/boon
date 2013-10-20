@@ -376,6 +376,7 @@ public class IOTest {
 
     }
 
+    @SuppressWarnings("unchecked")
     public static class ProxyLoader {
         private static final String DATA_FILE = "./files/proxy.txt";
 

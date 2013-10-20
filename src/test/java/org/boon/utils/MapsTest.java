@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("unchecked")
 public class MapsTest {
 
     class Dog {
@@ -42,11 +43,6 @@ public class MapsTest {
 
         assertTrue(entry.equals((Object)entry));
 
-        Entry<String, Dog> entry2 = new EntryImpl<String, Dog>(
-                entry);
-
-        Entry<String, Dog> entry3 = new EntryImpl<String, Dog>(
-                (EntryImpl) entry);
 
 
         Entry<String, Dog> entry4 = entry("dog4", new Dog("dog4"));
@@ -111,8 +107,8 @@ public class MapsTest {
 
         dogMap = Maps.map(
                 Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -120,9 +116,9 @@ public class MapsTest {
 
 
         dogMap = Maps.map(
-                (Iterable)Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                (Iterable)Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                (Iterable)Arrays.asList("dog0", "dog1", "dog2"),
+                (Iterable)Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -294,8 +290,8 @@ public class MapsTest {
 
         dogMap = sortedMap(
                 Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -303,9 +299,9 @@ public class MapsTest {
 
 
         dogMap = sortedMap(
-                (Iterable)Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                (Iterable)Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                (Iterable)Arrays.asList("dog0", "dog1", "dog2"),
+                (Iterable)Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -478,12 +474,7 @@ public class MapsTest {
     @Test
     public void testComparator() {
 
-        Comparator comparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                return o1.toString().compareTo(o2.toString());
-            }
-        };
+        Comparator<String> comparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
 
 
         Map<String,Dog> dogMap = sortedMap(comparator, "dog", new Dog("dog"));
@@ -492,8 +483,8 @@ public class MapsTest {
 
         dogMap = sortedMap(comparator,
                 Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -685,8 +676,8 @@ public class MapsTest {
 
         dogMap = Maps.safeMap(
                 Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -694,9 +685,9 @@ public class MapsTest {
 
 
         dogMap = Maps.safeMap(
-                (Iterable)Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                (Iterable)Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                (Iterable)Arrays.asList("dog0", "dog1", "dog2"),
+                (Iterable)Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -864,12 +855,7 @@ public class MapsTest {
     @Test
     public void testComparatorSkipMap() {
 
-        Comparator comparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                return o1.toString().compareTo(o2.toString());
-            }
-        };
+        Comparator<String> comparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
 
 
         Map<String,Dog> dogMap = safeSortedMap(comparator, "dog", new Dog("dog"));
@@ -878,8 +864,8 @@ public class MapsTest {
 
         dogMap = safeSortedMap(comparator,
                 Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -1072,8 +1058,8 @@ public class MapsTest {
 
         dogMap = Maps.safeSortedMap(
                 Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);
@@ -1081,9 +1067,9 @@ public class MapsTest {
 
 
         dogMap = Maps.safeSortedMap(
-                (Iterable)Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                (Iterable)Arrays.asList(new Dog[]{new Dog("dog0"),
-                        new Dog("dog1"), new Dog("dog2")})
+                (Iterable)Arrays.asList("dog0", "dog1", "dog2"),
+                (Iterable)Arrays.asList(new Dog("dog0"),
+                        new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
         assertEquals("dog1", dogMap.get("dog1").name);

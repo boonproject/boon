@@ -15,6 +15,7 @@ import static org.boon.utils.Sets.safeSortedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("unchecked")
 public class SetsTest {
 
 
@@ -276,7 +277,7 @@ public class SetsTest {
 
         assertTrue(
 
-               set instanceof SortedSet ? idx(set, "a").equals("apple") : true
+                !(set instanceof SortedSet) || idx(set, "a").equals("apple")
 
         );
 
@@ -284,7 +285,7 @@ public class SetsTest {
         Set<String> set2 = copy(set);
         assertTrue(
 
-                set2 instanceof SortedSet ? idx(set2, "a").equals("apple") : true
+                !(set2 instanceof SortedSet) || idx(set2, "a").equals("apple")
 
         );
 
