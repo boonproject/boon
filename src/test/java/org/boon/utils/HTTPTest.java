@@ -116,7 +116,6 @@ public class HTTPTest {
         Thread.sleep(10);
 
 
-        Map<String,String> headers = map("foo", "bar", "fun", "sun");
 
         String response = HTTP.postBody("http://localhost:9220/test", "hi mom");
 

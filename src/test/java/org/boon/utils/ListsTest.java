@@ -158,7 +158,8 @@ public class ListsTest {
 
     @Test
     public void testMe() {
-        List<String> list =   (List<String> ) list((String[])null);
+        List<String> list =   list((String[])null);
+        System.out.println(list);
 
         list =
                 list("apple", "oranges", "pears");
@@ -187,7 +188,7 @@ public class ListsTest {
         assertTrue(in("apple", list2));
         assertEquals("pear", idx(list2, 1));
 
-        list2 = copy((ArrayList)list);
+        list2 = copy(( ArrayList< String > )list);
         assertEquals(3, len(list2)) ;
         assertTrue(in("apple", list2));
         assertEquals("pear", idx(list2, 1));
@@ -201,7 +202,7 @@ public class ListsTest {
 
     @Test
     public void testSafe() {
-        CopyOnWriteArrayList<String> list = (CopyOnWriteArrayList) safeList("apple", "oranges", "pears");
+        CopyOnWriteArrayList<String> list = (CopyOnWriteArrayList <String>) safeList("apple", "oranges", "pears");
         assertEquals(3, len(list)) ;
         assertTrue(in("apple", list));
         assertEquals("oranges", idx(list, 1));
@@ -236,7 +237,7 @@ public class ListsTest {
         assertTrue(in("apple", list2));
         assertEquals("pear", idx(list2, 1));
 
-        List<String> list3 = copy((List)list);
+        List<String> list3 = copy((List <String>)list);
         assertEquals(3, len(list3)) ;
         assertTrue(in("apple", list3));
         assertEquals("pear", idx(list3, 1));

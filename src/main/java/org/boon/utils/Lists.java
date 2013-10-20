@@ -8,11 +8,11 @@ public class Lists {
 
 
     public static <V> List<V> list(Class<V> clazz) {
-        return new ArrayList<V>();
+        return new ArrayList<>();
     }
 
     public static <V> List<V> list(Iterable<V> iterable) {
-        List<V> list = new ArrayList<V>();
+        List<V> list = new ArrayList<>();
         for (V o : iterable) {
             list.add(o);
         }
@@ -20,12 +20,11 @@ public class Lists {
     }
 
     public static <V> List<V> list(Collection<V> collection) {
-        List<V> list = new ArrayList<V>(collection);
-        return list;
+        return new ArrayList<>(collection);
     }
 
     public static <V> List<V> list(Enumeration<V> enumeration) {
-        List<V> list = new ArrayList<V>();
+        List<V> list = new ArrayList<>();
         while (enumeration.hasMoreElements()) {
             list.add(enumeration.nextElement());
         }
@@ -52,49 +51,45 @@ public class Lists {
 
 
     public static <V> List<V> list(Iterator<V> iterator) {
-        List<V> list = new ArrayList<V>();
+        List<V> list = new ArrayList<>();
         while (iterator.hasNext()) {
             list.add(iterator.next());
         }
         return list;
     }
 
+    @SafeVarargs
     public static <V> List<V> list(final V... array) {
         if (array==null) {
             return new ArrayList<>();
         }
-        List<V> list = new ArrayList<V>(array.length);
-        for (V o : array) {
-            list.add(o);
-        }
+        List<V> list = new ArrayList<>(array.length);
+        Collections.addAll(list, array);
         return list;
     }
 
+    @SafeVarargs
     public static <V> List<V> safeList(final V... array) {
-        List<V> list = new CopyOnWriteArrayList<V>(array);
-        return list;
+        return new CopyOnWriteArrayList<>(array);
     }
 
+    @SafeVarargs
     public static <V> List<V> linkedList(final V... array) {
         if (array==null) {
             return new ArrayList<>();
         }
-        List<V> list = new LinkedList<V>();
-        for (V o : array) {
-            list.add(o);
-        }
+        List<V> list = new LinkedList<>();
+        Collections.addAll(list, array);
         return list;
     }
 
 
     public static <V> List<V> safeList(Collection<V> collection) {
-        List<V> list = new CopyOnWriteArrayList<V>(collection);
-        return list;
+        return new CopyOnWriteArrayList<>(collection);
     }
 
     public static <V> List<V> linkedList(Collection<V> collection) {
-        List<V> list = new LinkedList<V>(collection);
-        return list;
+        return  new LinkedList<>(collection);
     }
 
     /** Universal methods */
@@ -143,9 +138,7 @@ public class Lists {
 
 
     public static <V> List<V> copy(List<V> list) {
-        if (list instanceof RandomAccess) {
-            return new ArrayList<>(list);
-        }   else if (list instanceof LinkedList) {
+        if (list instanceof LinkedList) {
             return new LinkedList<>(list);
         }  else if (list instanceof CopyOnWriteArrayList) {
             return new CopyOnWriteArrayList<>(list);

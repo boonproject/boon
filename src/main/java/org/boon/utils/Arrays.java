@@ -4,6 +4,7 @@ package org.boon.utils;
 import java.lang.reflect.Array;
 import java.util.Objects;
 
+@SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
 public class Arrays {
 
 
@@ -33,9 +34,9 @@ public class Arrays {
         Objects.requireNonNull(array);
 
         int nullCount = 0;
-        for ( int index = 0; index < array.length; index++ ) {
+        for (V anArray1 : array) {
 
-            if (array[index]==null) {
+            if (anArray1 == null) {
                 nullCount++;
             }
         }
@@ -43,18 +44,19 @@ public class Arrays {
                 array.length - nullCount);
 
         int j = 0;
-        for ( int index = 0; index < array.length; index++ ) {
+        for (V anArray : array) {
 
-            if (array[index]==null) {
+            if (anArray == null) {
                 continue;
             }
 
-            Array.set(newArray, j, array[index]);
+            Array.set(newArray, j, anArray);
             j++;
         }
         return (V[]) newArray;
     }
 
+    @SafeVarargs
     public static <V> V[] array(final V... array) {
         return array;
 
@@ -99,8 +101,7 @@ public class Arrays {
     }
 
     public static <V> boolean in(V value, V[] array) {
-        for (int index = 0; index < array.length; index++) {
-            V currentValue = array[index];
+        for (V currentValue : array) {
             if (currentValue.equals(value)) {
                 return true;
             }
@@ -218,15 +219,15 @@ public class Arrays {
          */
         if (index < 0) {
             throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s and array is %s",
-                            length, originalIndex, array
+                    String.format("Out Of Bounds: length was %s index is %s",
+                            length, originalIndex
                     ));
         }
         if (index > length) {
 
             throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s and array is %s",
-                            length, originalIndex, array
+                    String.format("Out Of Bounds: length was %s index is %s",
+                            length, originalIndex
                     ));
         }
         return index;

@@ -7,6 +7,7 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class IO {
 
     public final static String CHARSET = "UTF-8";
@@ -40,7 +41,7 @@ public class IO {
 
         try (Reader r = reader) {
 
-            int i = 0;
+            int i;
             while ((i = reader.read()) !=-1) {
                 builder.append((char)i);
             }
@@ -118,7 +119,7 @@ public class IO {
         try (BufferedReader bufferedReader = reader) {
 
 
-            String line = null;
+            String line;
             while ( (line = bufferedReader.readLine()) != null) {
                 lines.add(line);
             }
@@ -141,11 +142,13 @@ public class IO {
         try (BufferedReader bufferedReader = reader) {
 
 
-            String line = null;
+            String line;
             int lineNumber = 0;
 
             while ( (line = bufferedReader.readLine()) != null &&
-                    eachLine.line(line, lineNumber++) );
+                    eachLine.line(line, lineNumber++) ){ //
+                    // no op
+                    }
 
             reader.close();
 
@@ -209,7 +212,6 @@ public class IO {
                 BufferedReader buf = Files.newBufferedReader(
                         thePath, Charset.forName(CHARSET));
                 eachLine(buf, eachLine);
-                return;
 
             } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
 
@@ -218,12 +220,10 @@ public class IO {
                 BufferedReader buf = Files.newBufferedReader(
                         thePath, Charset.forName(CHARSET));
                 eachLine(buf, eachLine);
-                return;
 
 
             } else {
                 eachLine(location, uri, eachLine);
-                return;
             }
 
         });
@@ -270,12 +270,10 @@ public class IO {
             Path fsPath = fileSystem.getPath(location);
             BufferedReader buf = Files.newBufferedReader(fsPath, Charset.forName(CHARSET));
             eachLine(buf, eachLine);
-            return;
 
 
         } catch (ProviderNotFoundException ex) {
             eachLine(uri.toURL().openStream(), eachLine);
-            return;
         }
     }
 
