@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpHandler;
@@ -12,8 +12,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import static org.boon.utils.Maps.copy;
-import static org.boon.utils.Maps.map;
+import static org.boon.core.Maps.copy;
+import static org.boon.core.Maps.map;
 import static org.junit.Assert.assertTrue;
 
 public class HTTPTest {

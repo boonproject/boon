@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 
 import org.junit.Test;
@@ -9,9 +9,9 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
 
-import static org.boon.utils.Sets.*;
-import static org.boon.utils.Sets.safeSet;
-import static org.boon.utils.Sets.safeSortedSet;
+import static org.boon.core.Sets.*;
+import static org.boon.core.Sets.safeSet;
+import static org.boon.core.Sets.safeSortedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

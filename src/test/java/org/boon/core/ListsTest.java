@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.boon.utils.Lists.*;
+import static org.boon.core.Lists.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

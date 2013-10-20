@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 
 import org.junit.Test;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.boon.utils.Exceptions.tryIt;
+import static org.boon.core.Exceptions.tryIt;
 
 public class ExceptionsTest {
 

@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -12,10 +12,10 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static javax.xml.bind.DatatypeConverter.parseInt;
-import static org.boon.utils.Lists.idx;
-import static org.boon.utils.Lists.len;
-import static org.boon.utils.Maps.copy;
-import static org.boon.utils.Maps.map;
+import static org.boon.core.Lists.idx;
+import static org.boon.core.Lists.len;
+import static org.boon.core.Maps.copy;
+import static org.boon.core.Maps.map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

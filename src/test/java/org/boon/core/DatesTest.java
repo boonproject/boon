@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 import org.junit.Test;
 

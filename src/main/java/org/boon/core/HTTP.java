@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
 
-import static org.boon.utils.IO.read;
+import static org.boon.core.IO.read;
 
 public class HTTP {
 

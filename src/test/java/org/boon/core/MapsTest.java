@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 
 import org.junit.Test;
@@ -8,8 +8,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedMap;
 
-import static org.boon.utils.Lists.list;
-import static org.boon.utils.Maps.*;
+import static org.boon.core.Lists.list;
+import static org.boon.core.Maps.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

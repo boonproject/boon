@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

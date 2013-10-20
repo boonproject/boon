@@ -1,11 +1,9 @@
-package org.boon.utils;
+package org.boon.core;
 
 
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.boon.utils.Arrays.*;
+import static org.boon.core.Arrays.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

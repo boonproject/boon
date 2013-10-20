@@ -1,4 +1,4 @@
-package org.boon.utils;
+package org.boon.core;
 
 import java.io.*;
 import java.net.URI;
