@@ -6,11 +6,20 @@ import java.util.Objects;
 public class Chr {
 
 
-
+    /**
+     * Creates an array of chars
+     * @param size size of the array you want to make
+     * @return
+     */
     public static  char[] arrayOfChar(final int size) {
         return new char[size];
     }
 
+    /**
+     *
+     * @param array
+     * @return
+     */
     public static char[] array(final char... array) {
         Objects.requireNonNull(array);
         return array;
@@ -182,29 +191,90 @@ public class Chr {
     }
 
 
-//
-//    public static <V> V[] insert(V[] array, int index, V v) {
-//        Objects.requireNonNull(array);
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-//        if (index != 0) {
-//            System.arraycopy(array, 0, newArray, 0, index );
-//        }
-//
-//        if (index == array.length -1 ) {
-//            System.arraycopy(array, index, newArray, index + 1, array.length - index );
-//
-//        } else {
-//            System.arraycopy(array, index, newArray, index + 1, array.length - index -1 );
-//
-//        }
-//
-//        Array.set(newArray, index, v);
-//        return (V[]) newArray;
-//    }
-//
-//
-//
-//
+
+    public static char[] insert(final char[] array, final int idx, final char v) {
+        Objects.requireNonNull(array);
+
+        if (idx >= array.length) {
+           return add(array, v);
+        }
+
+        final int index = calculateIndex(array, idx);
+
+        //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
+        char [] newArray = new char[array.length+1];
+
+        if (index != 0) {
+            /* Copy up to the location in the array before the index. */
+            /*                 src     sbegin  dst       dbegin   length of copy */
+            System.arraycopy( array,   0,      newArray, 0,       index );
+        }
+
+
+        boolean lastIndex = index == array.length -1;
+        int remainingIndex = array.length - index;
+
+        if (lastIndex ) {
+            /* Copy the area after the insert. Make sure we don't write over the end. */
+            /*                 src  sbegin   dst       dbegin     length of copy */
+            System.arraycopy(array, index,   newArray, index + 1, remainingIndex );
+
+        } else {
+            /* Copy the area after the insert.  */
+            /*                 src  sbegin   dst       dbegin     length of copy */
+            System.arraycopy(array, index,   newArray, index + 1, remainingIndex );
+
+        }
+
+        newArray[index] = v;
+        return  newArray;
+    }
+
+
+    public static char[] insert(final char[] array, final int fromIndex, final char[] values) {
+        Objects.requireNonNull(array);
+
+        if (fromIndex >= array.length) {
+            return add(array, values);
+        }
+
+        final int index = calculateIndex(array, fromIndex);
+
+        //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
+        char [] newArray = new char[array.length +  values.length];
+
+        if (index != 0) {
+            /* Copy up to the location in the array before the index. */
+            /*                 src     sbegin  dst       dbegin   length of copy */
+            System.arraycopy( array,   0,      newArray, 0,       index );
+        }
+
+
+        boolean lastIndex = index == array.length -1;
+
+        int toIndex = index + values.length;
+        int remainingIndex = newArray.length - toIndex;
+
+        if (lastIndex ) {
+            /* Copy the area after the insert. Make sure we don't write over the end. */
+            /*                 src  sbegin   dst       dbegin     length of copy */
+            System.arraycopy(array, index,   newArray, index + values.length, remainingIndex );
+
+        } else {
+            /* Copy the area after the insert.  */
+            /*                 src  sbegin   dst       dbegin     length of copy */
+            System.arraycopy(array, index,   newArray, index + values.length, remainingIndex );
+
+        }
+
+        for (int i = index, j=0; i < toIndex; i++, j++) {
+            newArray[ i ] = values[ j ];
+        }
+        return  newArray;
+    }
+
+
+
     /* End universal methods. */
     private static int calculateIndex(char[] array, int originalIndex) {
         final int length = array.length;
@@ -237,5 +307,6 @@ public class Chr {
         }
         return index;
     }
+
 
 }

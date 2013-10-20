@@ -318,4 +318,110 @@ public class ChrTest {
 
     }
 
+
+    @Test
+    public void addInsertSingle() {
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('a', 'b', 'd', 'e', 'f', 'g'), 2, 'c' )
+
+        );
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('b', 'c', 'd', 'e', 'f', 'g'), 0, 'a' )
+
+        );
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('a', 'b', 'c', 'd', 'e', 'g'), 5, 'f' )
+
+        );
+
+
+    }
+
+
+    @Test
+    public void addInsertEdge() {
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('a', 'b', 'c', 'd', 'e', 'f'), 6, 'g' )
+
+        );
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('a', 'b', 'c', 'd', 'e', 'f'), 7, 'g' )
+
+        );
+
+    }
+
+    @Test
+    public void addInsertArray() {
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('a', 'b', 'e', 'f', 'g'), 2, array('c', 'd') )
+
+        );
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('c', 'd', 'e', 'f', 'g'), 0, array('a', 'b') )
+
+        );
+
+
+
+    }
+
+
+
+    @Test
+    public void addInsertArrayEnd() {
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'),
+                insert( array('a', 'b', 'c', 'd', 'e', 'h', 'i'), 5, array('f', 'g') )
+
+        );
+
+
+    }
+
+
+
+    @Test
+    public void addInsertArrayEnd2() {
+
+
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'h', 'f', 'g', 'i'),
+                insert( array('a', 'b', 'c', 'd', 'e', 'h', 'i'), 6, array('f', 'g') )
+
+        );
+
+    }
+
+
+
+    @Test
+    public void addInsertArrayEnd3() {
+
+
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'h', 'i', 'f', 'g' ),
+                insert( array('a', 'b', 'c', 'd', 'e', 'h', 'i'), 7, array('f', 'g') )
+
+        );
+
+    }
+
+
 }

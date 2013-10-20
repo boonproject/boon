@@ -173,11 +173,15 @@ public class Arrays {
             System.arraycopy(array, 0, newArray, 0, index );
         }
 
-        if (index == array.length -1 ) {
-            System.arraycopy(array, index, newArray, index + 1, array.length - index );
+
+        boolean lastIndex = index == array.length -1;
+        int remainingArrayLengthAfterIndex =  array.length - index;
+
+        if ( lastIndex ) {
+            System.arraycopy(array, index, newArray, index + 1,  remainingArrayLengthAfterIndex  );
 
         } else {
-            System.arraycopy(array, index, newArray, index + 1, array.length - index -1 );
+            System.arraycopy(array, index, newArray, index + 1, remainingArrayLengthAfterIndex );
 
         }
 

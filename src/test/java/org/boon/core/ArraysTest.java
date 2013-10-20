@@ -440,4 +440,33 @@ public class ArraysTest {
         );
 
     }
+
+
+
+
+    @Test
+    public void addInsertSingle() {
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('a', 'b', 'd', 'e', 'f', 'g'), 2, 'c' )
+
+        );
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('b', 'c', 'd', 'e', 'f', 'g'), 0, 'a' )
+
+        );
+
+        assertArrayEquals(
+                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
+                insert( array('a', 'b', 'c', 'd', 'e', 'f'), 6, 'g' )
+
+        );
+
+    }
+
+
+
 }
