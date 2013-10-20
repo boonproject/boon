@@ -41,7 +41,6 @@ public class IO {
 
         try (Reader r = reader) {
 
-            int i = 0;
             int i;
             while ((i = reader.read()) !=-1) {
                 builder.append((char)i);
@@ -120,7 +119,6 @@ public class IO {
         try (BufferedReader bufferedReader = reader) {
 
 
-            String line = null;
             String line;
             while ( (line = bufferedReader.readLine()) != null) {
                 lines.add(line);
@@ -144,12 +142,10 @@ public class IO {
         try (BufferedReader bufferedReader = reader) {
 
 
-            String line = null;
             String line;
             int lineNumber = 0;
 
             while ( (line = bufferedReader.readLine()) != null &&
-                    eachLine.line(line, lineNumber++) );
                     eachLine.line(line, lineNumber++) ){ //
                     // no op
                     }
@@ -219,16 +215,24 @@ public class IO {
 
                 if ( uri.getScheme()==null ) {
 
+<<<<<<< HEAD
                     Path thePath = FileSystems.getDefault().getPath(location);
                     BufferedReader buf = Files.newBufferedReader(
                             thePath, Charset.forName(CHARSET));
                     eachLine(buf, eachLine);
                     return;
+=======
+                Path thePath = FileSystems.getDefault().getPath(location);
+                BufferedReader buf = Files.newBufferedReader(
+                        thePath, Charset.forName(CHARSET));
+                eachLine(buf, eachLine);
+>>>>>>> master
 
                 } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
 
                     Path thePath = FileSystems.getDefault().getPath(uri.getPath());
 
+<<<<<<< HEAD
                     BufferedReader buf = Files.newBufferedReader(
                             thePath, Charset.forName(CHARSET));
                     eachLine(buf, eachLine);
@@ -239,6 +243,15 @@ public class IO {
                     eachLine(location, uri, eachLine);
                     return;
                 }
+=======
+                BufferedReader buf = Files.newBufferedReader(
+                        thePath, Charset.forName(CHARSET));
+                eachLine(buf, eachLine);
+
+
+            } else {
+                eachLine(location, uri, eachLine);
+>>>>>>> master
             }
         });
 
