@@ -177,55 +177,62 @@ public class IO {
 
         final URI uri =  URI.create(location);
 
-        return Exceptions.tryIt(List.class, () -> {
+        return Exceptions.tryIt(List.class,  new Exceptions.TrialWithReturn<List>() {
+            @Override
+            public List tryIt() throws Exception {
 
-            if ( uri.getScheme()==null ) {
 
-                Path thePath = FileSystems.getDefault().getPath(location);
-                return Files.readAllLines(thePath, Charset.forName(CHARSET));
+                if ( uri.getScheme()==null ) {
 
-            } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    return Files.readAllLines(thePath, Charset.forName(CHARSET));
 
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return Files.readAllLines(thePath, Charset.forName(CHARSET));
+                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
 
-            } else {
-                return readLines(location, uri);
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    return Files.readAllLines(thePath, Charset.forName(CHARSET));
+
+                } else {
+                    return readLines(location, uri);
+                }
+
             }
 
         });
 
     }
 
-    public static void eachLine(final String location, EachLine eachLine) {
+    public static void eachLine(final String location, final EachLine eachLine) {
 
         final URI uri =  URI.create(location);
 
-        Exceptions.tryIt(() -> {
+        Exceptions.tryIt( new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
 
-            if ( uri.getScheme()==null ) {
+                if ( uri.getScheme()==null ) {
 
-                Path thePath = FileSystems.getDefault().getPath(location);
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, Charset.forName(CHARSET));
-                eachLine(buf, eachLine);
-                return;
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, Charset.forName(CHARSET));
+                    eachLine(buf, eachLine);
+                    return;
 
-            } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
 
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
 
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, Charset.forName(CHARSET));
-                eachLine(buf, eachLine);
-                return;
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, Charset.forName(CHARSET));
+                    eachLine(buf, eachLine);
+                    return;
 
 
-            } else {
-                eachLine(location, uri, eachLine);
-                return;
+                } else {
+                    eachLine(location, uri, eachLine);
+                    return;
+                }
             }
-
         });
 
     }
@@ -233,22 +240,24 @@ public class IO {
     public static String read(final String location) {
         final URI uri =  URI.create(location);
 
-        return Exceptions.tryIt(String.class, () -> {
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn() {
 
-            if ( uri.getScheme()==null ) {
+            @Override
+            public Object tryIt() throws Exception {
+                if ( uri.getScheme()==null ) {
 
-                Path thePath = FileSystems.getDefault().getPath(location);
-                return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
 
-            } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
 
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
 
-            } else {
-                return read(location, uri);
+                } else {
+                    return read(location, uri);
+                }
             }
-
         });
 
     }

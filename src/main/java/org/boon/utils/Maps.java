@@ -171,7 +171,10 @@ public class Maps {
 
         @Override
         public int compareTo(Entry entry) {
-            Objects.nonNull(entry);
+
+            if (entry == null) {
+                throw new NullPointerException("EntryImpl: compareTo entry cannot be null");
+            }
             return this.key().toString().compareTo(entry.key().toString());
         }
 
@@ -454,7 +457,7 @@ public class Maps {
     public static <K, V> NavigableMap<K, V> sortedMap(K k0, V v0, K k1, V v1, K k2, V v2, K k3,
                                                    V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
                                                    K k9, V v9) {
-        NavigableMap<K, V> map = new TreeMap<K, V>();
+        NavigableMap<K, V> map = new TreeMap<>();
         map.put(k0, v0);
         map.put(k1, v1);
         map.put(k2, v2);
@@ -469,7 +472,7 @@ public class Maps {
     }
 
     public static <K, V> NavigableMap<K, V> sortedMap(Collection<K> keys, Collection<V> values) {
-        NavigableMap<K, V> map = new TreeMap<K, V>();
+        NavigableMap<K, V> map = new TreeMap<>();
         Iterator<V> iterator = values.iterator();
         for (K k : keys) {
             if (iterator.hasNext()) {

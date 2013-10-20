@@ -17,10 +17,13 @@ public class HTTP {
     public static String get(
             final String url) {
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doGet(url, null, null, null);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet(url, null, null, null);
+                return extractResponseString(connection);
+            }
         });
 
     }
@@ -29,10 +32,13 @@ public class HTTP {
             final String url,
             final Map<String, ? extends Object> headers) {
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doGet(url, headers, null, null);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet(url, headers, null, null);
+                return extractResponseString(connection);
+            }
         });
 
     }
@@ -40,26 +46,32 @@ public class HTTP {
     public static String getWithContentType(
             final String url,
             final Map<String, ? extends Object> headers,
-            String contentType) {
+            final String contentType) {
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doGet(url, headers, contentType, null);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet(url, headers, contentType, null);
+                return extractResponseString(connection);
+            }
         });
 
     }
     public static String getWithCharSet(
             final String url,
             final Map<String, ? extends Object> headers,
-            String contentType,
-            String charSet) {
+            final String contentType,
+            final String charSet) {
 
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doGet(url, headers, contentType, charSet);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet(url, headers, contentType, charSet);
+                return extractResponseString(connection);
+            }
         });
 
     }
@@ -69,10 +81,13 @@ public class HTTP {
             final String body) {
 
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doPost(url, null, "text/plain", null, body);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doPost(url, null, "text/plain", null, body);
+                return extractResponseString(connection);
+            }
         });
 
     }
@@ -82,10 +97,13 @@ public class HTTP {
             final Map<String, ? extends Object> headers,
             final String body) {
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doPost(url, headers, "text/plain", null, body);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doPost(url, headers, "text/plain", null, body);
+                return extractResponseString(connection);
+            }
         });
 
     }
@@ -99,10 +117,13 @@ public class HTTP {
             final String body) {
 
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doPost(url, headers, contentType, null, body);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doPost(url, headers, contentType, null, body);
+                return extractResponseString(connection);
+            }
         });
 
     }
@@ -116,10 +137,13 @@ public class HTTP {
             final String body) {
 
 
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doPost(url, headers, contentType, charSet, body);
-            return extractResponseString(connection);
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doPost(url, headers, contentType, charSet, body);
+                return extractResponseString(connection);
+            }
         });
 
     }

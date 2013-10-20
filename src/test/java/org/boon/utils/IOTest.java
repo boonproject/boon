@@ -41,24 +41,27 @@ public class IOTest {
 
 
 
-        IO.eachLine(testFile.toString(), (line, index) -> {
-            System.out.println(index + " " + line);
+        IO.eachLine(testFile.toString(), new IO.EachLine() {
+            @Override
+            public boolean line(String line, int index) {
+                System.out.println(index + " " + line);
 
-            if (index == 0) {
+                if (index == 0) {
 
-                assertEquals(
-                        "line 1", line
-                );
+                    assertEquals(
+                            "line 1", line
+                    );
 
-            } else if (index == 3) {
+                } else if (index == 3) {
 
 
-                assertEquals(
-                        "grapes", line
-                );
+                    assertEquals(
+                            "grapes", line
+                    );
+                }
+
+                return true;
             }
-
-            return true;
         });
 
         //assertLines(lines);
@@ -73,24 +76,27 @@ public class IOTest {
 
 
 
-        IO.eachLine(testFile.toURI().toString(), (line, index) -> {
-            System.out.println(index + " " + line);
+        IO.eachLine(testFile.toURI().toString(), new IO.EachLine() {
+            @Override
+            public boolean line(String line, int index) {
+                System.out.println(index + " " + line);
 
-            if (index == 0) {
+                if (index == 0) {
 
-                assertEquals(
-                        "line 1", line
-                );
+                    assertEquals(
+                            "line 1", line
+                    );
 
-            } else if (index == 3) {
+                } else if (index == 3) {
 
 
-                assertEquals(
-                        "grapes", line
-                );
+                    assertEquals(
+                            "grapes", line
+                    );
+                }
+
+                return true;
             }
-
-            return true;
         });
 
         //assertLines(lines);
@@ -126,23 +132,26 @@ public class IOTest {
         Thread.sleep(10);
 
         IO.eachLine( "http://localhost:9668/test",
-                ( line, index ) -> {
+                new IO.EachLine() {
+                    @Override
+                    public boolean line(String line, int index) {
 
-                    if ( index == 0 ) {
+                        if (index == 0) {
 
-                        assertEquals(
-                                "line 1", line
-                        );
+                            assertEquals(
+                                    "line 1", line
+                            );
 
-                    } else if ( index == 3 ) {
+                        } else if (index == 3) {
 
 
-                        assertEquals(
-                                "grapes", line
-                        );
+                            assertEquals(
+                                    "grapes", line
+                            );
+                        }
+
+                        return true;
                     }
-
-                    return true;
                 });
 
     }
@@ -156,24 +165,27 @@ public class IOTest {
 
 
         IO.eachLine( new FileReader( testFile ),
-                ( line, index ) -> {
+                new IO.EachLine() {
+                    @Override
+                    public boolean line(String line, int index) {
 
-            if ( index == 0 ) {
+                        if (index == 0) {
 
-                assertEquals(
-                        "line 1", line
-                );
+                            assertEquals(
+                                    "line 1", line
+                            );
 
-            } else if ( index == 3 ) {
+                        } else if (index == 3) {
 
 
-                assertEquals(
-                        "grapes", line
-                );
-            }
+                            assertEquals(
+                                    "grapes", line
+                            );
+                        }
 
-            return true;
-        });
+                        return true;
+                    }
+                });
 
         //assertLines(lines);
 
@@ -188,23 +200,26 @@ public class IOTest {
 
 
         IO.eachLine( new FileInputStream( testFile ),
-                ( line, index ) -> {
+                new IO.EachLine() {
+                    @Override
+                    public boolean line(String line, int index) {
 
-                    if ( index == 0 ) {
+                        if (index == 0) {
 
-                        assertEquals(
-                                "line 1", line
-                        );
+                            assertEquals(
+                                    "line 1", line
+                            );
 
-                    } else if ( index == 3 ) {
+                        } else if (index == 3) {
 
 
-                        assertEquals(
-                                "grapes", line
-                        );
+                            assertEquals(
+                                    "grapes", line
+                            );
+                        }
+
+                        return true;
                     }
-
-                    return true;
                 });
 
         //assertLines(lines);

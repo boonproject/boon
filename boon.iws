@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="" />
+    <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iml" afterPath="$PROJECT_DIR$/boon.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.ipr" afterPath="$PROJECT_DIR$/boon.ipr" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+    </list>
     <ignored path="boon.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382234077494" ignored="false" />
-    <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382083872605" ignored="false" />
+    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382234258837" ignored="false" />
+    <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382235110522" ignored="false" />
     <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382083771629" ignored="false" />
     <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382162689346" ignored="false" />
     <file path="/Net.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906064086" ignored="false" />
-    <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996550838" ignored="false" />
+    <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382234773887" ignored="false" />
     <file path="/HTTPTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381950427178" ignored="false" />
-    <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382119109848" ignored="false" />
+    <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382235055625" ignored="false" />
     <file path="/Lists.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121549942" ignored="false" />
     <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121675777" ignored="false" />
     <file path="/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996515360" ignored="false" />
@@ -49,7 +59,7 @@
     <file path="/IOTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121074426" ignored="false" />
     <file path="/testfile.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381969510035" ignored="false" />
     <file path="/Dates.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382127709093" ignored="false" />
-    <file path="/Sets.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382118575979" ignored="false" />
+    <file path="/Sets.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382234902102" ignored="false" />
     <file path="/SetsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382118402219" ignored="false" />
     <file path="/DatesTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382129838715" ignored="false" />
     <file path="$USER_HOME$/clients/ascentis/objectId/src/main/java/com/rickhightower/hcm/Auditee.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382133978823" ignored="false" />
@@ -390,20 +400,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MapsTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
+      <file leaf-file-name="Maps.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="44" selection-start="390" selection-end="390" vertical-scroll-proportion="0.0">
+            <state line="474" column="45" selection-start="13882" selection-end="13882" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Maps.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
+      <file leaf-file-name="IOTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="29" selection-start="1399" selection-end="1399" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="206" column="24" selection-start="5057" selection-end="5439" vertical-scroll-proportion="-11.257967">
+              <folding>
+                <element signature="e#1089#1596#0" expanded="true" />
+                <element signature="e#1585#1586#0" expanded="true" />
+                <element signature="e#1857#2364#0" expanded="true" />
+                <element signature="e#2353#2354#0" expanded="true" />
+                <element signature="e#3221#3784#0" expanded="true" />
+                <element signature="e#3765#3766#0" expanded="true" />
+                <element signature="e#4048#4611#0" expanded="true" />
+                <element signature="e#4592#4593#0" expanded="true" />
+                <element signature="e#4916#5479#0" expanded="true" />
+                <element signature="e#5460#5461#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -412,71 +433,93 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="13" column="0" selection-start="109" selection-end="264" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Dates.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="0" selection-start="0" selection-end="5531" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IO.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="204" column="61" selection-start="5088" selection-end="5088" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#4331#5016#0" expanded="true" />
+                <element signature="e#5004#5005#0" expanded="true" />
+                <element signature="e#5184#6124#0" expanded="true" />
+                <element signature="e#6113#6114#0" expanded="true" />
+                <element signature="e#6284#6983#0" expanded="true" />
+                <element signature="e#6972#6973#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="HTTP.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="64" column="18" selection-start="1888" selection-end="1888" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#363#663#0" expanded="true" />
+                <element signature="e#652#653#0" expanded="true" />
+                <element signature="e#851#1154#0" expanded="true" />
+                <element signature="e#1143#1144#0" expanded="true" />
+                <element signature="e#1384#1694#0" expanded="true" />
+                <element signature="e#1683#1684#0" expanded="true" />
+                <element signature="e#1954#2267#0" expanded="true" />
+                <element signature="e#2256#2257#0" expanded="true" />
+                <element signature="e#2424#2739#0" expanded="true" />
+                <element signature="e#2728#2729#0" expanded="true" />
+                <element signature="e#2963#3281#0" expanded="true" />
+                <element signature="e#3270#3271#0" expanded="true" />
+                <element signature="e#3550#3867#0" expanded="true" />
+                <element signature="e#3856#3857#0" expanded="true" />
+                <element signature="e#4165#4485#0" expanded="true" />
+                <element signature="e#4474#4475#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Sets.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="83" selection-start="807" selection-end="807" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Exceptions.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="62" selection-start="644" selection-end="659" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="0.03587444">
+            <state line="1" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="System.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/lang/System.java">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="489" column="30" selection-start="19304" selection-end="19304" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ArraysTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ArraysTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="415" column="40" selection-start="6837" selection-end="6837" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Assert.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10-sources.jar!/org/junit/Assert.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="707" column="23" selection-start="22648" selection-end="22648" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListsTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="52" selection-start="2575" selection-end="2600" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Array.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/lang/reflect/Array.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="67" column="25" selection-start="1503" selection-end="1503" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Lists.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="174" column="16" selection-start="4645" selection-end="4648" vertical-scroll-proportion="0.0">
+            <state line="29" column="27" selection-start="930" selection-end="930" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -510,14 +553,8 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
-        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
-        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java" />
@@ -526,6 +563,12 @@
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ArraysTest.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
       </list>
     </option>
   </component>
@@ -615,7 +658,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="0" />
+    <option name="STATE" value="2" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -630,6 +673,92 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="All">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="boon">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="boon">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="test/java">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="org/boon/utils">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="boon">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="main/java">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="org/boon/utils">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="boon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="org.boon.utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -756,92 +885,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="boon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org.boon.utils" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scope">
-        <subPane subId="All">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="boon">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="boon">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="src">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="test/java">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="org/boon/utils">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="boon">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="src">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="main/java">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="org/boon/utils">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
     </panes>
   </component>
   <component name="ProjectViewSettings">
@@ -853,7 +896,7 @@
     <view id="ClasspathPane" />
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="248" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="OverrideImplement.combined" value="true" />
@@ -876,9 +919,9 @@
     <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/org/boon/utils" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
@@ -893,7 +936,7 @@
       <recent name="$PROJECT_DIR$/files" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.&lt;default&gt;">
+  <component name="RunManager" selected="JUnit.org.boon.utils">
     <configuration default="false" name="org.boon.utils" type="JUnit" factoryName="JUnit" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -1155,10 +1198,10 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.DatesTest" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.SetsTest" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.org.boon.utils" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.&lt;default&gt;" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.DatesTest" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.SetsTest" />
         <item index="4" class="java.lang.String" itemvalue="JUnit.IOTest.testReadLines" />
       </list>
     </recent_temporary>
@@ -1223,7 +1266,7 @@
     <frame x="24" y="22" width="1892" height="1160" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3298077" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298077" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1234,15 +1277,15 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917467" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3448276" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3451923" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973032" sideWeight="0.6701923" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10346696" sideWeight="0.6701923" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1056338" sideWeight="0.6730769" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2204767" sideWeight="0.6701923" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3278846" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2204767" sideWeight="0.6730769" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32692307" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1232073" sideWeight="0.26826924" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1374,60 +1417,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="70" selection-start="1811" selection-end="1811" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="227" column="19" selection-start="5506" selection-end="6113" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/NavigableMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="209" column="6" selection-start="7871" selection-end="7871" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="0" selection-start="0" selection-end="5531" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="44" selection-start="390" selection-end="390" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="29" selection-start="1399" selection-end="1399" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/lang/reflect/Array.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="25" selection-start="1503" selection-end="1503" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10-sources.jar!/org/junit/Assert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="707" column="23" selection-start="22648" selection-end="22648" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="118" column="52" selection-start="2575" selection-end="2600" vertical-scroll-proportion="0.0">
@@ -1468,19 +1457,108 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="27" selection-start="930" selection-end="930" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="0" selection-start="109" selection-end="264" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="0" selection-start="0" selection-end="5531" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="62" selection-start="644" selection-end="659" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="18" selection-start="1888" selection-end="1888" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#363#663#0" expanded="true" />
+            <element signature="e#652#653#0" expanded="true" />
+            <element signature="e#851#1154#0" expanded="true" />
+            <element signature="e#1143#1144#0" expanded="true" />
+            <element signature="e#1384#1694#0" expanded="true" />
+            <element signature="e#1683#1684#0" expanded="true" />
+            <element signature="e#1954#2267#0" expanded="true" />
+            <element signature="e#2256#2257#0" expanded="true" />
+            <element signature="e#2424#2739#0" expanded="true" />
+            <element signature="e#2728#2729#0" expanded="true" />
+            <element signature="e#2963#3281#0" expanded="true" />
+            <element signature="e#3270#3271#0" expanded="true" />
+            <element signature="e#3550#3867#0" expanded="true" />
+            <element signature="e#3856#3857#0" expanded="true" />
+            <element signature="e#4165#4485#0" expanded="true" />
+            <element signature="e#4474#4475#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="0.03587444">
+        <state line="35" column="83" selection-start="807" selection-end="807" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="204" column="61" selection-start="5088" selection-end="5088" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#4331#5016#0" expanded="true" />
+            <element signature="e#5004#5005#0" expanded="true" />
+            <element signature="e#5184#6124#0" expanded="true" />
+            <element signature="e#6113#6114#0" expanded="true" />
+            <element signature="e#6284#6983#0" expanded="true" />
+            <element signature="e#6972#6973#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="474" column="45" selection-start="13882" selection-end="13882" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="206" column="24" selection-start="5057" selection-end="5439" vertical-scroll-proportion="-11.257967">
+          <folding>
+            <element signature="e#1089#1596#0" expanded="true" />
+            <element signature="e#1585#1586#0" expanded="true" />
+            <element signature="e#1857#2364#0" expanded="true" />
+            <element signature="e#2353#2354#0" expanded="true" />
+            <element signature="e#3221#3784#0" expanded="true" />
+            <element signature="e#3765#3766#0" expanded="true" />
+            <element signature="e#4048#4611#0" expanded="true" />
+            <element signature="e#4592#4593#0" expanded="true" />
+            <element signature="e#4916#5479#0" expanded="true" />
+            <element signature="e#5460#5461#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1525,7 +1603,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>1.8</last-edited>
+          <last-edited>1.7</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1542,6 +1620,7 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
