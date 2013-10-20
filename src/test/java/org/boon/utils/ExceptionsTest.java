@@ -57,22 +57,14 @@ public class ExceptionsTest {
     @Test(expected = Exceptions.Exception.class)
     public void testTryIt()  {
 
-        tryIt(new Exceptions.Trial() {
-            @Override
-            public void tryIt() throws Exception {
-                methodThatThrowsException();
-            }
-        });
+        tryIt(this::methodThatThrowsException);
 
     }
 
     @Test
     public void testTryItNoOp()  {
 
-        tryIt(new Exceptions.Trial() {
-            @Override
-            public void tryIt() throws Exception {
-            }
+        tryIt(() -> {
         });
 
     }
@@ -80,10 +72,7 @@ public class ExceptionsTest {
     @Test
     public void testTryItNoOp2WithMessage()  {
 
-        tryIt("no op", new Exceptions.Trial() {
-            @Override
-            public void tryIt() throws Exception {
-            }
+        tryIt("no op", () -> {
         });
 
     }
@@ -92,12 +81,7 @@ public class ExceptionsTest {
     @Test(expected = Exceptions.Exception.class)
     public void testTryItWithMessage()  {
 
-        tryIt("Calling method that throws exception", new Exceptions.Trial() {
-            @Override
-            public void tryIt() throws Exception {
-                methodThatThrowsException();
-            }
-        });
+        tryIt("Calling method that throws exception", () -> methodThatThrowsException());
 
     }
 
@@ -105,12 +89,7 @@ public class ExceptionsTest {
     public void testSupportMethods()  {
 
         try {
-            tryIt(new Exceptions.Trial() {
-                @Override
-                public void tryIt() throws Exception {
-                    methodThatThrowsException();
-                }
-            });
+            tryIt(this::methodThatThrowsException);
         }catch (Exception ex) {
             ex.printStackTrace();
 
@@ -119,8 +98,8 @@ public class ExceptionsTest {
 
             ex.printStackTrace(System.out);
             StackTraceElement[] stackTrace = ex.getStackTrace();
-            for (int index = 0; index < stackTrace.length; index++) {
-                System.out.println("\t\t" + stackTrace[index]);
+            for (StackTraceElement aStackTrace : stackTrace) {
+                System.out.println("\t\t" + aStackTrace);
             }
 
             System.out.println(ex.getMessage());
@@ -134,8 +113,8 @@ public class ExceptionsTest {
         ex.printStackTrace(new PrintWriter(new StringWriter()));
 
         StackTraceElement[] stackTrace = ex.getStackTrace();
-        for (int index = 0; index < stackTrace.length; index++) {
-            System.out.println("\t\t" + stackTrace[index]);
+        for (StackTraceElement aStackTrace : stackTrace) {
+            System.out.println("\t\t" + aStackTrace);
         }
         System.out.println(ex.getMessage());
 
@@ -147,8 +126,8 @@ public class ExceptionsTest {
         ex.printStackTrace();
         ex.printStackTrace(System.out);
         stackTrace = ex.getStackTrace();
-        for (int index = 0; index < stackTrace.length; index++) {
-            System.out.println("\t\t" + stackTrace[index]);
+        for (StackTraceElement aStackTrace : stackTrace) {
+            System.out.println("\t\t" + aStackTrace);
         }
         System.out.println(ex.getMessage());
 

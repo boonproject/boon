@@ -31,6 +31,7 @@ public class HTTP {
     public static String getWithHeaders(
             final String url,
             final Map<String, ? extends Object> headers) {
+            final Map<String, ?> headers) {
 
         return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
@@ -95,6 +96,7 @@ public class HTTP {
     public static String postBodyWithHeaders(
             final String url,
             final Map<String, ? extends Object> headers,
+            final Map<String, ?> headers,
             final String body) {
 
         return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
@@ -113,6 +115,7 @@ public class HTTP {
     public static String postBodyWithContentType(
             final String url,
             final Map<String, ? extends Object> headers,
+            final Map<String, ?> headers,
             final String contentType,
             final String body) {
 
@@ -132,6 +135,7 @@ public class HTTP {
     public static String postBodyWithCharset(
             final String url,
             final Map<String, ? extends Object> headers,
+            final Map<String, ?> headers,
             final String contentType,
             final String charSet,
             final String body) {
@@ -149,6 +153,7 @@ public class HTTP {
     }
 
     private static URLConnection doPost(String url, Map<String, ? extends Object> headers,
+    private static URLConnection doPost(String url, Map<String, ?> headers,
                                         String contentType, String charset, String body
                                         ) throws IOException {
         URLConnection connection;/* Handle output. */
@@ -164,8 +169,10 @@ public class HTTP {
     }
 
     private static void manageHeaders(Map<String, ? extends Object> headers, URLConnection connection) {
+    private static void manageHeaders(Map<String, ?> headers, URLConnection connection) {
         if (headers != null) {
             for (Map.Entry<String, ? extends Object> entry : headers.entrySet()) {
+            for (Map.Entry<String, ?> entry : headers.entrySet()) {
                 connection.setRequestProperty(entry.getKey(), entry.getValue().toString());
             }
         }
@@ -179,6 +186,7 @@ public class HTTP {
     }
 
     private static URLConnection doGet(String url, Map<String, ? extends Object> headers,
+    private static URLConnection doGet(String url, Map<String, ?> headers,
                                         String contentType, String charset) throws IOException {
         URLConnection connection;/* Handle output. */
         connection = new URL(url).openConnection();

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="">
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
     </list>
     <ignored path="boon.iws" />
@@ -16,6 +17,36 @@
     <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382235055625" ignored="false" />
     <file path="/Lists.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121549942" ignored="false" />
     <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121675777" ignored="false" />
+=======
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iml" afterPath="$PROJECT_DIR$/boon.iml" />
+    </list>
+    <ignored path="boon.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382235756878" ignored="false" />
+    <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382237326520" ignored="false" />
+    <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382238074221" ignored="false" />
+    <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382236659548" ignored="false" />
+    <file path="/Net.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381906064086" ignored="false" />
+    <file path="/HTTP.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382234773887" ignored="false" />
+    <file path="/HTTPTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381950427178" ignored="false" />
+    <file path="/IO.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382236458195" ignored="false" />
+    <file path="/Lists.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382237273889" ignored="false" />
+    <file path="/ListsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382237426514" ignored="false" />
+>>>>>>> master
     <file path="/Exceptions.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996515360" ignored="false" />
     <file path="/ExceptionsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381996854860" ignored="false" />
     <file path="/.gitignore" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382130669861" ignored="false" />
@@ -51,7 +82,11 @@
     <file path="/IOTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382121074426" ignored="false" />
     <file path="/testfile.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1381969510035" ignored="false" />
     <file path="/Dates.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382127709093" ignored="false" />
+<<<<<<< HEAD
     <file path="/Sets.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382234902102" ignored="false" />
+=======
+    <file path="/Sets.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382238018338" ignored="false" />
+>>>>>>> master
     <file path="/SetsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382118402219" ignored="false" />
     <file path="/DatesTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382129838715" ignored="false" />
     <file path="$USER_HOME$/clients/ascentis/objectId/src/main/java/com/rickhightower/hcm/Auditee.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382133978823" ignored="false" />
@@ -196,6 +231,7 @@
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/boon$_default_.coverage" NAME="&lt;default&gt; Coverage Results" MODIFIED="1382163999753" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+<<<<<<< HEAD
     <SUITE FILE_PATH="coverage/boon$ExceptionsTest.coverage" NAME="ExceptionsTest Coverage Results" MODIFIED="1381940818386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
@@ -203,11 +239,23 @@
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/boon$DatesTest.coverage" NAME="DatesTest Coverage Results" MODIFIED="1382129519745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+=======
+    <SUITE FILE_PATH="coverage/boon$ListsTest.coverage" NAME="ListsTest Coverage Results" MODIFIED="1381945961777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.boon.utils.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/boon$ExceptionsTest.coverage" NAME="ExceptionsTest Coverage Results" MODIFIED="1381940818386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+>>>>>>> master
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/boon$MapsTest.coverage" NAME="MapsTest Coverage Results" MODIFIED="1381858992240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>org.boon.utils.*</FILTER>
     </SUITE>
+<<<<<<< HEAD
+=======
+    <SUITE FILE_PATH="coverage/boon$DatesTest.coverage" NAME="DatesTest Coverage Results" MODIFIED="1382129519745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>org.boon.utils.*</FILTER>
+    </SUITE>
+>>>>>>> master
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -395,12 +443,17 @@
       <file leaf-file-name="Maps.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state line="474" column="45" selection-start="13882" selection-end="13882" vertical-scroll-proportion="0.0">
+=======
+            <state line="158" column="12" selection-start="3925" selection-end="3925" vertical-scroll-proportion="0.0">
+>>>>>>> master
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="IOTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -417,6 +470,13 @@
                 <element signature="e#4916#5479#0" expanded="true" />
                 <element signature="e#5460#5461#0" expanded="true" />
               </folding>
+=======
+      <file leaf-file-name="IOTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="435" column="84" selection-start="10149" selection-end="10149" vertical-scroll-proportion="0.0">
+              <folding />
+>>>>>>> master
             </state>
           </provider>
         </entry>
@@ -424,21 +484,33 @@
       <file leaf-file-name="Arrays.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state line="13" column="0" selection-start="109" selection-end="264" vertical-scroll-proportion="0.0">
+=======
+            <state line="7" column="13" selection-start="160" selection-end="160" vertical-scroll-proportion="0.0">
+>>>>>>> master
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="Dates.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="44" column="0" selection-start="0" selection-end="5531" vertical-scroll-proportion="0.0">
+=======
+      <file leaf-file-name="ExceptionsTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="91" column="24" selection-start="1725" selection-end="1725" vertical-scroll-proportion="0.0">
+>>>>>>> master
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="IO.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -450,11 +522,20 @@
                 <element signature="e#6113#6114#0" expanded="true" />
                 <element signature="e#6284#6983#0" expanded="true" />
                 <element signature="e#6972#6973#0" expanded="true" />
+=======
+      <file leaf-file-name="MapsTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="857" column="25" selection-start="30582" selection-end="30582" vertical-scroll-proportion="0.072916664">
+              <folding>
+                <element signature="e#366#396#0" expanded="true" />
+>>>>>>> master
               </folding>
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="HTTP.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -477,6 +558,13 @@
                 <element signature="e#4165#4485#0" expanded="true" />
                 <element signature="e#4474#4475#0" expanded="true" />
               </folding>
+=======
+      <file leaf-file-name="ListsTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="161" column="31" selection-start="3647" selection-end="3647" vertical-scroll-proportion="0.0">
+              <folding />
+>>>>>>> master
             </state>
           </provider>
         </entry>
@@ -484,34 +572,65 @@
       <file leaf-file-name="Sets.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state line="35" column="83" selection-start="807" selection-end="807" vertical-scroll-proportion="0.0">
               <folding />
+=======
+            <state line="4" column="24" selection-start="70" selection-end="70" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#6994#7024#0" expanded="true" />
+              </folding>
+>>>>>>> master
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="Exceptions.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="30" column="62" selection-start="644" selection-end="659" vertical-scroll-proportion="0.0">
               <folding />
+=======
+      <file leaf-file-name="IO.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="147" column="12" selection-start="3444" selection-end="3444" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#173#203#0" expanded="true" />
+              </folding>
+>>>>>>> master
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name=".gitignore" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state line="1" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="0.0">
+=======
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+>>>>>>> master
               <folding />
             </state>
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state line="29" column="27" selection-start="930" selection-end="930" vertical-scroll-proportion="0.0">
+=======
+      <file leaf-file-name="Lists.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="71" column="30" selection-start="1710" selection-end="1710" vertical-scroll-proportion="0.0">
+>>>>>>> master
               <folding />
             </state>
           </provider>
@@ -528,7 +647,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+<<<<<<< HEAD
         <entry key="$PROJECT_DIR$" value="master" />
+=======
+        <entry key="$PROJECT_DIR$" value="JDK7" />
+>>>>>>> master
       </map>
     </option>
   </component>
@@ -545,6 +668,7 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
@@ -561,6 +685,24 @@
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
+=======
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ArraysTest.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/SetsTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java" />
+>>>>>>> master
       </list>
     </option>
   </component>
@@ -888,6 +1030,7 @@
     <view id="ClasspathPane" />
   </component>
   <component name="PropertiesComponent">
+<<<<<<< HEAD
     <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="248" />
     <property name="project.structure.proportion" value="0.0" />
@@ -898,6 +1041,18 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+=======
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="248" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="249" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="recentsLimit" value="5" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="249" />
+>>>>>>> master
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="259" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1049" />
@@ -911,17 +1066,28 @@
     <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
+<<<<<<< HEAD
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/org/boon/utils" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+=======
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/org/boon/utils" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+>>>>>>> master
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="options.lastSelected" value="settings.github" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
+<<<<<<< HEAD
     <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
+=======
+    <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
+>>>>>>> master
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -1260,11 +1426,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="24" y="22" width="1892" height="1160" extended-state="0" />
+<<<<<<< HEAD
     <editor active="false" />
+=======
+    <editor active="true" />
+>>>>>>> master
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298077" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
+=======
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917467" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+>>>>>>> master
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3983666" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1277,22 +1451,37 @@
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973032" sideWeight="0.6701923" order="1" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1056338" sideWeight="0.6730769" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2204767" sideWeight="0.6730769" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32692307" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+=======
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10671723" sideWeight="0.6730769" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2204767" sideWeight="0.6730769" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39923224" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32692307" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+>>>>>>> master
       <window_info id="Aspects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1232073" sideWeight="0.26826924" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+=======
+>>>>>>> master
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298077" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+=======
+>>>>>>> master
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -1413,20 +1602,33 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="118" column="52" selection-start="2575" selection-end="2600" vertical-scroll-proportion="0.0">
+=======
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Collections.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4566" column="30" selection-start="173765" selection-end="173765" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="174" column="16" selection-start="4645" selection-end="4648" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/HTTPTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="118" column="0" selection-start="3285" selection-end="3285" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="0" selection-start="405" selection-end="405" vertical-scroll-proportion="0.52913386" />
@@ -1435,59 +1637,117 @@
     <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/lang/System.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="489" column="30" selection-start="19304" selection-end="19304" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="25" selection-start="2975" selection-end="2975" vertical-scroll-proportion="-7.037037">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="7" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0">
+        <state line="114" column="34" selection-start="4066" selection-end="4066" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="7" selection-start="1224" selection-end="1224" vertical-scroll-proportion="0.0">
+=======
+    <entry file="jar:///System/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/src.zip!/java/util/Comparator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="106" column="17" selection-start="4169" selection-end="4169" vertical-scroll-proportion="0.0">
+>>>>>>> master
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ArraysTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="415" column="40" selection-start="6837" selection-end="6837" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="29" selection-start="1389" selection-end="1389" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="0" selection-start="7" selection-end="7" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ListsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="161" column="31" selection-start="3647" selection-end="3647" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="29" column="27" selection-start="930" selection-end="930" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Lists.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="30" selection-start="1710" selection-end="1710" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="0" selection-start="109" selection-end="264" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="435" column="84" selection-start="10149" selection-end="10149" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Dates.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="44" column="0" selection-start="0" selection-end="5531" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="158" column="12" selection-start="3925" selection-end="3925" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Exceptions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="62" selection-start="644" selection-end="659" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/ExceptionsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="24" selection-start="1725" selection-end="1725" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="64" column="18" selection-start="1888" selection-end="1888" vertical-scroll-proportion="0.0">
@@ -1508,17 +1768,31 @@
             <element signature="e#3856#3857#0" expanded="true" />
             <element signature="e#4165#4485#0" expanded="true" />
             <element signature="e#4474#4475#0" expanded="true" />
+=======
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="147" column="12" selection-start="3444" selection-end="3444" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#173#203#0" expanded="true" />
+>>>>>>> master
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="35" column="83" selection-start="807" selection-end="807" vertical-scroll-proportion="0.0">
+=======
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+>>>>>>> master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="204" column="61" selection-start="5088" selection-end="5088" vertical-scroll-proportion="0.0">
@@ -1554,6 +1828,29 @@
             <element signature="e#4592#4593#0" expanded="true" />
             <element signature="e#4916#5479#0" expanded="true" />
             <element signature="e#5460#5461#0" expanded="true" />
+=======
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Arrays.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="13" selection-start="160" selection-end="160" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="24" selection-start="70" selection-end="70" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#6994#7024#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/org/boon/utils/MapsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="857" column="25" selection-start="30582" selection-end="30582" vertical-scroll-proportion="0.072916664">
+          <folding>
+            <element signature="e#366#396#0" expanded="true" />
+>>>>>>> master
           </folding>
         </state>
       </provider>
@@ -1599,7 +1896,11 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
+<<<<<<< HEAD
           <last-edited>1.7</last-edited>
+=======
+          <last-edited>1.8</last-edited>
+>>>>>>> master
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1616,7 +1917,10 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
+<<<<<<< HEAD
                 <option value="0.5" />
+=======
+>>>>>>> master
               </list>
             </option>
           </splitter-proportions>
