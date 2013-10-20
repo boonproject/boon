@@ -45,8 +45,7 @@ public class HTTP {
 
     public static String getWithContentType(
             final String url,
-<<<<<<< HEAD
-            final Map<String, ? extends Object> headers,
+            final Map<String, ? > headers,
             final String contentType) {
 
         return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
@@ -56,29 +55,14 @@ public class HTTP {
                 connection = doGet(url, headers, contentType, null);
                 return extractResponseString(connection);
             }
-=======
-            final Map< String, ? > headers,
-            String contentType) {
-
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doGet(url, headers, contentType, null);
-            return extractResponseString(connection);
->>>>>>> master
         });
 
     }
     public static String getWithCharSet(
             final String url,
-<<<<<<< HEAD
-            final Map<String, ? extends Object> headers,
+            final Map<String, ? > headers,
             final String contentType,
             final String charSet) {
-=======
-            final Map< String, ? > headers,
-            String contentType,
-            String charSet) {
->>>>>>> master
 
 
         return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {

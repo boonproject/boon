@@ -474,7 +474,12 @@ public class MapsTest {
     @Test
     public void testComparator() {
 
-        Comparator<String> comparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
+        Comparator<String> comparator = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.toString().compareTo(o2.toString());
+            }
+        };
 
 
         Map<String,Dog> dogMap = sortedMap(comparator, "dog", new Dog("dog"));
@@ -855,7 +860,12 @@ public class MapsTest {
     @Test
     public void testComparatorSkipMap() {
 
-        Comparator<String> comparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
+        Comparator<String> comparator = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.toString().compareTo(o2.toString());
+            }
+        };
 
 
         Map<String,Dog> dogMap = safeSortedMap(comparator, "dog", new Dog("dog"));

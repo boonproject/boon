@@ -215,43 +215,21 @@ public class IO {
 
                 if ( uri.getScheme()==null ) {
 
-<<<<<<< HEAD
                     Path thePath = FileSystems.getDefault().getPath(location);
                     BufferedReader buf = Files.newBufferedReader(
                             thePath, Charset.forName(CHARSET));
                     eachLine(buf, eachLine);
-                    return;
-=======
-                Path thePath = FileSystems.getDefault().getPath(location);
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, Charset.forName(CHARSET));
-                eachLine(buf, eachLine);
->>>>>>> master
 
                 } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
 
                     Path thePath = FileSystems.getDefault().getPath(uri.getPath());
 
-<<<<<<< HEAD
                     BufferedReader buf = Files.newBufferedReader(
                             thePath, Charset.forName(CHARSET));
                     eachLine(buf, eachLine);
-                    return;
-
-
                 } else {
                     eachLine(location, uri, eachLine);
-                    return;
                 }
-=======
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, Charset.forName(CHARSET));
-                eachLine(buf, eachLine);
-
-
-            } else {
-                eachLine(location, uri, eachLine);
->>>>>>> master
             }
         });
 
