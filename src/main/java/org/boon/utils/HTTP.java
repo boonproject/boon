@@ -30,7 +30,6 @@ public class HTTP {
 
     public static String getWithHeaders(
             final String url,
-            final Map<String, ? extends Object> headers) {
             final Map<String, ?> headers) {
 
         return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
@@ -46,6 +45,7 @@ public class HTTP {
 
     public static String getWithContentType(
             final String url,
+<<<<<<< HEAD
             final Map<String, ? extends Object> headers,
             final String contentType) {
 
@@ -56,14 +56,29 @@ public class HTTP {
                 connection = doGet(url, headers, contentType, null);
                 return extractResponseString(connection);
             }
+=======
+            final Map< String, ? > headers,
+            String contentType) {
+
+        return Exceptions.tryIt(String.class, () -> {
+            URLConnection connection;
+            connection = doGet(url, headers, contentType, null);
+            return extractResponseString(connection);
+>>>>>>> master
         });
 
     }
     public static String getWithCharSet(
             final String url,
+<<<<<<< HEAD
             final Map<String, ? extends Object> headers,
             final String contentType,
             final String charSet) {
+=======
+            final Map< String, ? > headers,
+            String contentType,
+            String charSet) {
+>>>>>>> master
 
 
         return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
@@ -95,7 +110,6 @@ public class HTTP {
 
     public static String postBodyWithHeaders(
             final String url,
-            final Map<String, ? extends Object> headers,
             final Map<String, ?> headers,
             final String body) {
 
@@ -114,7 +128,6 @@ public class HTTP {
 
     public static String postBodyWithContentType(
             final String url,
-            final Map<String, ? extends Object> headers,
             final Map<String, ?> headers,
             final String contentType,
             final String body) {
@@ -134,7 +147,6 @@ public class HTTP {
 
     public static String postBodyWithCharset(
             final String url,
-            final Map<String, ? extends Object> headers,
             final Map<String, ?> headers,
             final String contentType,
             final String charSet,
@@ -152,7 +164,6 @@ public class HTTP {
 
     }
 
-    private static URLConnection doPost(String url, Map<String, ? extends Object> headers,
     private static URLConnection doPost(String url, Map<String, ?> headers,
                                         String contentType, String charset, String body
                                         ) throws IOException {
@@ -168,10 +179,8 @@ public class HTTP {
         return connection;
     }
 
-    private static void manageHeaders(Map<String, ? extends Object> headers, URLConnection connection) {
     private static void manageHeaders(Map<String, ?> headers, URLConnection connection) {
         if (headers != null) {
-            for (Map.Entry<String, ? extends Object> entry : headers.entrySet()) {
             for (Map.Entry<String, ?> entry : headers.entrySet()) {
                 connection.setRequestProperty(entry.getKey(), entry.getValue().toString());
             }
@@ -185,7 +194,6 @@ public class HTTP {
         }
     }
 
-    private static URLConnection doGet(String url, Map<String, ? extends Object> headers,
     private static URLConnection doGet(String url, Map<String, ?> headers,
                                         String contentType, String charset) throws IOException {
         URLConnection connection;/* Handle output. */
