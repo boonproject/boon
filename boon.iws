@@ -2,19 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c94b980-7d5a-48a2-9384-a0bb8629da1d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/HTTP.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/IO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" afterPath="$PROJECT_DIR$/src/test/java/org/boon/utils/IOTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Maps.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" afterPath="$PROJECT_DIR$/src/main/java/org/boon/utils/Sets.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iml" afterPath="$PROJECT_DIR$/boon.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.ipr" afterPath="$PROJECT_DIR$/boon.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/boon.iws" afterPath="$PROJECT_DIR$/boon.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="boon.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382234258837" ignored="false" />
+    <file path="/Dummy.txt" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382235280703" ignored="false" />
     <file path="/Maps.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382235110522" ignored="false" />
     <file path="/MapsTest.java" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382083771629" ignored="false" />
     <file path="/README.md" changelist="5c94b980-7d5a-48a2-9384-a0bb8629da1d" time="1382162689346" ignored="false" />
@@ -1247,7 +1239,11 @@
       <created>1382234080726</created>
       <updated>1382234080726</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="some creating new branch for JDK 1.7">
+      <created>1382235298208</created>
+      <updated>1382235298208</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
