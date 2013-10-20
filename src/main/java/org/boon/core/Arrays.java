@@ -22,6 +22,15 @@ public class Arrays {
         return (V[]) newArray;
     }
 
+
+    public static <V> V[] grow(V[] array) {
+        Objects.requireNonNull(array);
+        Object newArray = Array.newInstance(array.getClass().getComponentType(),
+                array.length * 2);
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return (V[]) newArray;
+    }
+
     public static <V> V[] shrink(V[] array, int size) {
         Objects.requireNonNull(array);
         Object newArray = Array.newInstance(array.getClass().getComponentType(),
@@ -87,7 +96,7 @@ public class Arrays {
 
         final int start = calculateIndex(array, startIndex);
         final int end = calculateIndex(array, endIndex);
-        final int newLength = end - start + (endIndex < 0 ? 1 : 0);
+        final int newLength = end - start;
         if (newLength <0 ) {
             throw new ArrayIndexOutOfBoundsException(
                     String.format( "start index %d, end index %d, length %d",
@@ -181,7 +190,7 @@ public class Arrays {
 
 
         final int end = calculateIndex(array, endIndex);
-        final int newLength = end +    (endIndex < 0 ? 1 : 0);
+        final int newLength = end;
 
         if (newLength <0 ) {
             throw new ArrayIndexOutOfBoundsException(
@@ -218,17 +227,10 @@ public class Arrays {
             have an negative index that is greater than length
          */
         if (index < 0) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s",
-                            length, originalIndex
-                    ));
+            index = 0;
         }
-        if (index > length) {
-
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s",
-                            length, originalIndex
-                    ));
+        if (index >= length) {
+            index = length -1;
         }
         return index;
     }

@@ -42,7 +42,7 @@ public class Chr {
 
         final int start = calculateIndex(array, startIndex);
         final int end = calculateIndex(array, endIndex);
-        final int newLength = end - start + (endIndex < 0 ? 1 : 0);
+        final int newLength = end - start;
 
         if (newLength <0 ) {
             throw new ArrayIndexOutOfBoundsException(
@@ -56,115 +56,132 @@ public class Chr {
         return newArray;
     }
 
+    public static char[] slc(char[] array, int startIndex) {
+        Objects.requireNonNull(array);
 
-//    public static char[] grow(char [] array, final int size) {
-//        Objects.requireNonNull(array);
-//
-//        char [] newArray  = new char[size];
-//        System.arraycopy(array, 0, newArray, 0, array.length);
-//        return newArray;
-//    }
-//
-//    public static <V> V[] shrink(V[] array, int size) {
-//        Objects.requireNonNull(array);
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(),
-//                array.length - size);
-//        System.arraycopy(array, 0, newArray, 0, array.length-size);
-//        return (V[]) newArray;
-//    }
-//
-//    public static <V> V[] compact(V[] array) {
-//        Objects.requireNonNull(array);
-//
-//        int nullCount = 0;
-//        for (V anArray1 : array) {
-//
-//            if (anArray1 == null) {
-//                nullCount++;
-//            }
-//        }
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(),
-//                array.length - nullCount);
-//
-//        int j = 0;
-//        for (V anArray : array) {
-//
-//            if (anArray == null) {
-//                continue;
-//            }
-//
-//            Array.set(newArray, j, anArray);
-//            j++;
-//        }
-//        return (V[]) newArray;
-//    }
-//
-//
-//    /* Universal methods */
-//
-//    public static <V> int len(V[] array) {
-//        return array.length;
-//    }
-//
-//
-//
-//
-//    public static <V> boolean in(V value, V[] array) {
-//        for (V currentValue : array) {
-//            if (currentValue.equals(value)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public static <V> V[] slc(V[] array, int startIndex) {
-//        Objects.requireNonNull(array);
-//
-//
-//        final int start = calculateIndex(array, startIndex);
-//        final int newLength = array.length - start;
-//
-//        if (newLength <0 ) {
-//            throw new ArrayIndexOutOfBoundsException(
-//                    String.format( "start index %d, length %d",
-//                            startIndex, array.length )
-//            );
-//        }
-//
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(), newLength);
-//        System.arraycopy(array, start, newArray, 0, newLength);
-//        return (V[]) newArray;
-//    }
-//
-//
-//
-//    public static <V> V[] copy(V[] array) {
-//        Objects.requireNonNull(array);
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length);
-//        System.arraycopy(array, 0, newArray, 0, array.length);
-//        return (V[]) newArray;
-//    }
-//
-//
-//
-//    public static <V> V[] add(V[] array, V v) {
-//        Objects.requireNonNull(array);
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-//        System.arraycopy(array, 0, newArray, 0, array.length);
-//        Array.set(newArray, array.length, v);
-//        return (V[]) newArray;
-//    }
-//
-//
-//    public static <V> V[] add(V[] array, V[] array2) {
-//        Objects.requireNonNull(array);
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length + array2.length);
-//        System.arraycopy(array, 0, newArray, 0, array.length);
-//        System.arraycopy(array2, 0, newArray, array.length, array2.length);
-//
-//        return (V[]) newArray;
-//    }
+        final int start = calculateIndex(array, startIndex);
+        final int newLength = array.length - start;
+
+        if (newLength <0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            startIndex, array.length )
+            );
+        }
+
+        char [] newArray = new char[newLength];
+        System.arraycopy(array, start, newArray, 0, newLength);
+        return newArray;
+    }
+
+    public static char[] slcEnd(char[] array, int endIndex) {
+        Objects.requireNonNull(array);
+
+        final int end = calculateIndex(array, endIndex);
+        final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
+
+        if (newLength <0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            endIndex, array.length )
+            );
+        }
+
+        char [] newArray = new char[newLength];
+        System.arraycopy(array, 0, newArray, 0, newLength);
+        return newArray;
+    }
+
+    public static boolean in(char value, char[] array) {
+        for (char currentValue : array) {
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public static char[] grow(char [] array, final int size) {
+        Objects.requireNonNull(array);
+
+        char [] newArray  = new char[array.length + size];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return newArray;
+    }
+
+
+
+    public static char[] grow(char [] array) {
+        Objects.requireNonNull(array);
+
+        char [] newArray  = new char[array.length *2];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return newArray;
+    }
+
+
+    public static char[] shrink(char[] array, int size) {
+        Objects.requireNonNull(array);
+
+        char[] newArray = new char[array.length - size];
+
+        System.arraycopy(array, 0, newArray, 0, array.length-size);
+        return newArray;
+    }
+
+
+    public static char[] compact(char[] array) {
+        Objects.requireNonNull(array);
+
+        int nullCount = 0;
+        for (char ch : array) {
+
+            if (ch == '\0') {
+                nullCount++;
+            }
+        }
+        char [] newArray = new char [array.length - nullCount];
+
+        int j = 0;
+        for (char ch : array) {
+
+            if (ch == '\0') {
+                continue;
+            }
+
+            newArray[j] = ch;
+            j++;
+        }
+        return newArray;
+    }
+
+
+    public static char[] copy(char[] array) {
+        Objects.requireNonNull(array);
+        char[] newArray = new char[array.length];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return newArray;
+    }
+
+
+    public static char[] add(char[] array, char v) {
+        Objects.requireNonNull(array);
+        char[] newArray = new char[array.length + 1];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        newArray[array.length] = v;
+        return newArray;
+    }
+
+    public static char[] add(char[] array, char[] array2) {
+        Objects.requireNonNull(array);
+        char[] newArray = new char[array.length + array2.length];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        System.arraycopy(array2, 0, newArray, array.length, array2.length);
+        return newArray;
+    }
+
+
 //
 //    public static <V> V[] insert(V[] array, int index, V v) {
 //        Objects.requireNonNull(array);
@@ -185,24 +202,6 @@ public class Chr {
 //        return (V[]) newArray;
 //    }
 //
-//    public static <V> V[] slcEnd(V[] array, int endIndex) {
-//        Objects.requireNonNull(array);
-//
-//
-//        final int end = calculateIndex(array, endIndex);
-//        final int newLength = end +    (endIndex < 0 ? 1 : 0);
-//
-//        if (newLength <0 ) {
-//            throw new ArrayIndexOutOfBoundsException(
-//                    String.format( "end index %d, length %d",
-//                            endIndex, array.length )
-//            );
-//        }
-//
-//        Object newArray = Array.newInstance(array.getClass().getComponentType(), newLength);
-//        System.arraycopy(array, 0, newArray, 0, newLength);
-//        return (V[]) newArray;
-//    }
 //
 //
 //
@@ -226,18 +225,15 @@ public class Chr {
             if it is still less than 0, then they
             have an negative index that is greater than length
          */
+         /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
         if (index < 0) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s",
-                            length, originalIndex
-                    ));
+            index = 0;
         }
-        if (index > length) {
-
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s",
-                            length, originalIndex
-                    ));
+        if (index >= length) {
+            index = length -1;
         }
         return index;
     }

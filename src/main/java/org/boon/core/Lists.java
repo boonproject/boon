@@ -107,7 +107,9 @@ public class Lists {
 
     public static <T> T idx(List<T> list, final int index) {
         int i = calculateIndex(list, index);
-
+        if ( i > list.size()-1 ) {
+             i = list.size()-1;
+        }
         return list.get(i);
 
     }
@@ -120,11 +122,7 @@ public class Lists {
     public static <V> List<V> slc(List<V> list, int startIndex, int endIndex) {
         int start = calculateIndex(list, startIndex);
         int end = calculateIndex(list, endIndex);
-        if (endIndex < 0) {
-            return list.subList(start, end+1);
-        } else {
-            return list.subList(start, end);
-        }
+        return list.subList(start, end);
     }
 
     public static <V> List<V> slc(List<V> list, int startIndex) {
@@ -182,25 +180,19 @@ public class Lists {
         -1 reads the 4th element if the length is 5
          */
         if (index < 0) {
-            index = length + index;
+            index = (length + index);
         }
+
 
         /* Bounds check
             if it is still less than 0, then they
             have an negative index that is greater than length
          */
         if (index < 0) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s and list is %s",
-                            length, originalIndex, list
-                    ));
+            index = 0;
         }
         if (index > length) {
-
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format("Out Of Bounds: length was %s index is %s and list is %s",
-                            length, originalIndex, list
-                    ));
+            index = length;
         }
         return index;
     }

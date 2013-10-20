@@ -116,44 +116,91 @@ public class ListsTest {
                 list("apple", "oranges", "pears", "grapes", "kiwi");
         List<String> list2 = slc(list, -3, -1);
 
-        assertEquals(list( "pears", "grapes", "kiwi"), list2);
+        assertEquals(list( "pears", "grapes"), list2);
     }
 
 
     @Test
-    public void sliceStart() {
+    public void sliceStartNeg() {
         List<String> list =
                 list("apple", "oranges", "pears", "grapes", "kiwi");
-        List<String> list2 = slc(list, 2);
 
-        assertEquals(list( "pears", "grapes", "kiwi"), list2);
+        List<String> list2;
+
+        //list[-2:]
+        //['grapes', 'kiwi']
+        list2 = slc(list, -2);
+
+        assertEquals(list( "grapes", "kiwi"), list2);
+
     }
 
+
+    @Test
+    public void sliceStartPos() {
+        List<String> list =
+                list("apple", "oranges", "pears", "grapes", "kiwi");
+
+        List<String> list2;
+
+
+
+
+        //list[2 : ]
+        //['pears', 'grapes', 'kiwi']
+        list2 = slc(list, 2);
+
+        assertEquals(list( "pears", "grapes", "kiwi"), list2);
+
+
+    }
 
     @Test
     public void sliceEnd() {
         List<String> list =
                 list("apple", "oranges", "pears", "grapes", "kiwi");
-        List<String> list2 = slcEnd(list, -4);
+
+        // list[: -3]
+        // ['apple', 'oranges']
+
+        List<String> list2 = slcEnd(list, -3);
 
         assertEquals(list( "apple", "oranges"), list2);
+
+
+        // list[: 2]
+        // ['apple', 'oranges']
+         list2 = slcEnd(list, 2);
+
+        assertEquals(list( "apple", "oranges"), list2);
+
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test
     public void tooBigIndex() {
         List<String> list =
                 list("apple", "oranges", "pears");
         idx(list, 100);
+
+        slc(list, -100);
+
+        slc(list, 100);
+
     }
 
 
 
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test
     public void tooSmallIndex() {
         List<String> list =
                 list("apple", "oranges", "pears");
         idx(list, -100);
+
+        slcEnd(list, -100);
+
+        slcEnd(list, 100);
+
     }
 
     @Test

@@ -315,6 +315,11 @@ public class ArraysTest {
                 len(fruit)
         );
 
+        assertEquals(
+                "kiwi",
+                idx(fruit, -2)
+        );
+
 
         assertEquals(
                 "bacon",
@@ -385,7 +390,7 @@ public class ArraysTest {
                 array2
         );
 
-        String[] array3 = slc(fruit, -3, -2);
+        String[] array3 = slc(fruit, -3, -1);
 
         assertArrayEquals(
                 array("pears", "grapes"),
@@ -403,11 +408,36 @@ public class ArraysTest {
         String[] array5 = slcEnd(fruit, -3);
 
         assertArrayEquals(
-                array("apple", "oranges", "pears"),
+                array("apple", "oranges"),
                 array5
         );
 
     }
 
 
+    @Test
+    public void outOfBounds() {
+
+        String[] fruit =
+                array("apple", "oranges", "pears", "grapes", "kiwi");
+
+        slcEnd(fruit, 100);
+        slcEnd(fruit, -100);
+
+        slc(fruit, 100);
+        slc(fruit, -100);
+        idx(fruit, 100);
+        idx(fruit, -100);
+
+
+        idx(fruit, 100, "bar");
+
+
+
+        assertEquals(
+                "bar",
+                idx(fruit, -1)
+        );
+
+    }
 }
