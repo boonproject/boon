@@ -126,6 +126,49 @@ Boon has the concept of universal operators similar to Python like **len**.
 ```
 
 
+Boon utility methods
+===
+
+Boon can read in an entire file in one line of code:
+
+```java
+        File testFile = new File(testDir, "testfile.txt");
+        List<String> lines = IO.readLines(testFile);
+```
+
+No really!
+
+```java
+        File testFile = new File(testDir, "testfile.txt");
+        List<String> lines = IO.readLines("~/github/boon/testfiles/testfile.txt");
+```
+
+There is also support for lambda expressions:
+
+```java
+        File testFile = new File(testDir, "testfile.txt");
+
+
+
+        IO.eachLine(testFile.toString(), (line, index) -> {
+            System.out.println(index + " " + line);
+            return true;
+        });
+
+        }
+
+```
+
+The readLines and read methods can read from URIs as well:
+
+```java
+        List<String> lines = IO.readLines("http://localhost:9666/test");
+```
+
+
+
+Right now I have a JDK 1.8 branch and and a JDK 1.7 branch.
+
 Why Boon
 ====
 Easily read in files into lines or a giant string with one method call.
@@ -142,4 +185,8 @@ It will always be able to run as a single jar.
 Further Reading
 ===
 
-[Boon's Universal Operations and the BBBB  - Java does have a ByteBuilder sort of](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder Boon's Universal Operations and the BBBB!)
++ [Boon's Universal Operations and the BBBB  - Java does have a ByteBuilder sort of](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder Boon's Universal Operations and the BBBB!)
++ [Java Boon Sets and slice notation](https://github.com/RichardHightower/boon/wiki/Sets-and-Slice-Notation-for-Java-Boon!)
++ [Java Boon Slice notation](https://github.com/RichardHightower/boon/wiki/Boon-Slice-Notation)
++ [Random thoughts and TODO](https://github.com/RichardHightower/boon/wiki/Random-thoughts-and-TODO-for-Boon)
++ [Birth of Boon](https://github.com/RichardHightower/boon/wiki/Birth-of-Boon)
