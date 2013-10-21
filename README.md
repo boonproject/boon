@@ -31,14 +31,16 @@ Brief introduction to Boon
     NavigableMap <Integer, String> favoritesMap;
     Map<String, Integer> map;
 
+    //In Java a TreeMap is a SortedMap and a NavigableMap by the way.
+
 
 ```
 
-In Java a TreeMap is a SortedMap and a NavigableMap by the way.
 Boon comes with helper methods that allow you to easily create lists,
 sets, maps, concurrent maps, sorted maps, sorted sets, etc. The helper methods
 are **safeList**, **list**, **set**, **sortedSet**, **safeSet**,
-**safeSortedSet**, etc.
+**safeSortedSet**, etc. The idea is to make Java feel more
+like list and maps are built in types.
 
 ```java
 
@@ -51,7 +53,7 @@ are **safeList**, **list**, **set**, **sortedSet**, **safeSet**,
 
 There are even methods to create maps and sorted maps
 called **map**, **sortedMap**, **safeMap** (concurrent) and **sortedSafeMap**
-(concurrent). These was mainly created because Java does not having
+(concurrent). These were mainly created because Java does not have
 literals for lists, maps, etc.
 
 
@@ -94,25 +96,57 @@ You can index maps, lists, arrays, using the **idx** operator.
 
 ```
 
-left off here.
-The idx o
+The **idx** operators works with negative indexes as well.
 
-     * Negative index works with list like, array like things.
-     *
-     * <blockquote>
-     * <pre>
-     *
-     *          //Negative indexes
-     *
-     *          assert idx( fruitList, -2 ).equals("oranges");
-     *
-     *          assert idx( fruitArray, -2 ).equals("oranges");
-     *
-     *          assert idx( letters, -2 ) == 'b';
-     *
-     *          assert idx( bytes, -3 )   == 0x2;
-     * </pre>
-     * </blockquote>
+```java
 
 
+               //Negative indexes
+
+                assert idx( fruitList, -2 ).equals("oranges");
+
+                assert idx( fruitArray, -2 ).equals("oranges");
+
+                assert idx( letters, -2 ) == 'b';
+
+                assert idx( bytes, -3 )   == 0x2;
+
+```
+
+Ruby, Groovy and Python have this feature. Now you can use this in Java as well.
+The Java version (Boon) works with primitive arrays (with no autoboxing).
+
+Boon has the concept of universal operators similar to Python like **len**.
+
+```java
+
+
+     // Getting the length
+     assert len( veggiesSet )        == 3;
+     assert len( fruitList )         == 3;
+     assert len( fruitArray )        == 3;
+     assert len( letters )           == 3;
+     assert len( bytes )             == 4;
+     assert len( favoritesMap )      == 3;
+     assert len( map )               == 3;
+
+```
+
+Boon has been a while in the making. My first attempt was EasyJava, which later became Facile.
+Facile had a lot of good ideas in it, but was also me sort of pushing Java to see how
+I could twist and use its syntax.  I also took a detour with DataRepo.
+
+My plan is to roll the ideas from DataRepo, EasyJava and Facile into Boon. There will
+be a Java 8 version of boon (supporting Lambda), and a Java 7 version of Boon with all of the
+Java 8 goodness stripped out.
+
+Why Boon
+====
+Easily read in files into lines or a giant string with one method call.
+Slice notation for dealing with Strings, Lists, primitive arrays, etc.
+If you are from Groovy land, Ruby land, Python land, or whatever land, and you have to use
+Java then Boon might give you some relief.
+
+Further Reading
+===
 
