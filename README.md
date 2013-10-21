@@ -136,9 +136,10 @@ Boon has been a while in the making. My first attempt was EasyJava, which later 
 Facile had a lot of good ideas in it, but was also me sort of pushing Java to see how
 I could twist and use its syntax.  I also took a detour with DataRepo.
 
-My plan is to roll the ideas from DataRepo, EasyJava and Facile into Boon. There will
+My plan is to roll the ideas from Crank, DataRepo, EasyJava and Facile into Boon. There will
 be a Java 8 version of boon (supporting Lambda), and a Java 7 version of Boon with all of the
 Java 8 goodness stripped out.
+
 
 Why Boon
 ====
@@ -147,6 +148,13 @@ Slice notation for dealing with Strings, Lists, primitive arrays, etc.
 If you are from Groovy land, Ruby land, Python land, or whatever land, and you have to use
 Java then Boon might give you some relief.
 
+Core Boon Philosophy
+===
+Core Boon will never have any dependencies.
+It will always be able to run as a single jar.
+
+
 Further Reading
 ===
 
+[This link](./wiki/Boon's-Byte-Buffer-Builder Boon's Universal Operations and the BBBB!)
