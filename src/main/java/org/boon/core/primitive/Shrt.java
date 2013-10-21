@@ -4,54 +4,53 @@ import org.boon.core.Universal;
 
 import java.util.Objects;
 
-public class Int {
+public class Shrt {
 
 
 
-
-    public static int[] grow(int [] array, final int size) {
+    public static short[] grow(short [] array, final int size) {
         Objects.requireNonNull(array);
 
-        int [] newArray  = new int[array.length + size];
+        short [] newArray  = new short[array.length + size];
         System.arraycopy(array, 0, newArray, 0, array.length);
         return newArray;
     }
 
 
 
-    public static int[] grow(int [] array) {
+    public static short[] grow(short [] array) {
         Objects.requireNonNull(array);
 
-        int [] newArray  = new int[array.length *2];
+        short [] newArray  = new short[array.length *2];
         System.arraycopy(array, 0, newArray, 0, array.length);
         return newArray;
     }
 
 
-    public static int[] shrink(int[] array, int size) {
+    public static short[] shrink(short[] array, int size) {
         Objects.requireNonNull(array);
 
-        int[] newArray = new int[array.length - size];
+        short[] newArray = new short[array.length - size];
 
         System.arraycopy(array, 0, newArray, 0, array.length-size);
         return newArray;
     }
 
 
-    public static int[] compact(int[] array) {
+    public static short[] compact(short[] array) {
         Objects.requireNonNull(array);
 
         int nullCount = 0;
-        for (int ch : array) {
+        for (short ch : array) {
 
             if (ch == '\0') {
                 nullCount++;
             }
         }
-        int [] newArray = new int [array.length - nullCount];
+        short [] newArray = new short [array.length - nullCount];
 
         int j = 0;
-        for (int ch : array) {
+        for (short ch : array) {
 
             if (ch == '\0') {
                 continue;
@@ -70,8 +69,8 @@ public class Int {
      * @param size size of the array you want to make
      * @return
      */
-    public static  int[] arrayOfInt(final int size) {
-        return new int[size];
+    public static  short[] arrayOfShort(final int size) {
+        return new short[size];
     }
 
     /**
@@ -80,20 +79,20 @@ public class Int {
      * @return
      */
     @Universal
-    public static int[] array(final int... array) {
+    public static short[] array(final short... array) {
         Objects.requireNonNull(array);
         return array;
     }
 
 
     @Universal
-    public static int len(int[] array) {
+    public static int len(short[] array) {
         return array.length;
     }
 
 
     @Universal
-    public static int idx (final int[] array, final int index) {
+    public static short idx (final short[] array, final int index) {
         final int i = calculateIndex(array, index);
 
         return array[i];
@@ -101,7 +100,7 @@ public class Int {
 
 
     @Universal
-    public static void idx (final int[] array, int index, int value) {
+    public static void idx (final short[] array, int index, short value) {
         final int i = calculateIndex(array, index);
 
         array[i] = value;
@@ -110,7 +109,7 @@ public class Int {
 
 
     @Universal
-    public static int[] slc(int[] array, int startIndex, int endIndex) {
+    public static short[] slc(short[] array, int startIndex, int endIndex) {
         Objects.requireNonNull(array);
 
         final int start = calculateIndex(array, startIndex);
@@ -124,13 +123,13 @@ public class Int {
             );
         }
 
-        int [] newArray = new int[newLength];
+        short [] newArray = new short[newLength];
         System.arraycopy(array, start, newArray, 0, newLength);
         return newArray;
     }
 
     @Universal
-    public static int[] slc(int[] array, int startIndex) {
+    public static short[] slc(short[] array, int startIndex) {
         Objects.requireNonNull(array);
 
         final int start = calculateIndex(array, startIndex);
@@ -143,13 +142,13 @@ public class Int {
             );
         }
 
-        int [] newArray = new int[newLength];
+        short [] newArray = new short[newLength];
         System.arraycopy(array, start, newArray, 0, newLength);
         return newArray;
     }
 
     @Universal
-    public static int[] slcEnd(int[] array, int endIndex) {
+    public static short[] slcEnd(short[] array, int endIndex) {
         Objects.requireNonNull(array);
 
         final int end = calculateIndex(array, endIndex);
@@ -162,14 +161,14 @@ public class Int {
             );
         }
 
-        int [] newArray = new int[newLength];
+        short [] newArray = new short[newLength];
         System.arraycopy(array, 0, newArray, 0, newLength);
         return newArray;
     }
 
     @Universal
-    public static boolean in(int value, int[] array) {
-        for (int currentValue : array) {
+    public static boolean in(short value, short[] array) {
+        for (short currentValue : array) {
             if ( currentValue == value ) {
                 return true;
             }
@@ -180,27 +179,27 @@ public class Int {
 
 
     @Universal
-    public static int[] copy(int[] array) {
+    public static short[] copy(short[] array) {
         Objects.requireNonNull(array);
-        int[] newArray = new int[array.length];
+        short[] newArray = new short[array.length];
         System.arraycopy(array, 0, newArray, 0, array.length);
         return newArray;
     }
 
 
     @Universal
-    public static int[] add(int[] array, int v) {
+    public static short[] add(short[] array, short v) {
         Objects.requireNonNull(array);
-        int[] newArray = new int[array.length + 1];
+        short[] newArray = new short[array.length + 1];
         System.arraycopy(array, 0, newArray, 0, array.length);
         newArray[array.length] = v;
         return newArray;
     }
 
     @Universal
-    public static int[] add(int[] array, int[] array2) {
+    public static short[] add(short[] array, short[] array2) {
         Objects.requireNonNull(array);
-        int[] newArray = new int[array.length + array2.length];
+        short[] newArray = new short[array.length + array2.length];
         System.arraycopy(array, 0, newArray, 0, array.length);
         System.arraycopy(array2, 0, newArray, array.length, array2.length);
         return newArray;
@@ -209,7 +208,7 @@ public class Int {
 
 
     @Universal
-    public static int[] insert(final int[] array, final int idx, final int v) {
+    public static short[] insert(final short[] array, final int idx, final short v) {
         Objects.requireNonNull(array);
 
         if (idx >= array.length) {
@@ -219,7 +218,7 @@ public class Int {
         final int index = calculateIndex(array, idx);
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-        int [] newArray = new int[array.length+1];
+        short [] newArray = new short[array.length+1];
 
         if (index != 0) {
             /* Copy up to the location in the array before the index. */
@@ -249,7 +248,7 @@ public class Int {
 
 
     @Universal
-    public static int[] insert(final int[] array, final int fromIndex, final int[] values) {
+    public static short[] insert(final short[] array, final int fromIndex, final short[] values) {
         Objects.requireNonNull(array);
 
         if (fromIndex >= array.length) {
@@ -259,7 +258,7 @@ public class Int {
         final int index = calculateIndex(array, fromIndex);
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-        int [] newArray = new int[array.length +  values.length];
+        short [] newArray = new short[array.length +  values.length];
 
         if (index != 0) {
             /* Copy up to the location in the array before the index. */
@@ -294,7 +293,7 @@ public class Int {
 
 
     /* End universal methods. */
-    private static int calculateIndex(int[] array, int originalIndex) {
+    private static int calculateIndex(short[] array, int originalIndex) {
         final int length = array.length;
 
         Objects.requireNonNull(array, "array cannot be null");

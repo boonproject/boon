@@ -354,86 +354,86 @@ public class BytTest {
 
 
     }
-//
-//
-//    @Test
-//    public void addInsertEdge() {
-//        assertArrayEquals(
-//                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-//                insert( array('a', 'b', 'c', 'd', 'e', 'f'), 6, 'g' )
-//
-//        );
-//
-//        assertArrayEquals(
-//                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-//                insert( array('a', 'b', 'c', 'd', 'e', 'f'), 7, 'g' )
-//
-//        );
-//
-//    }
-//
-//    @Test
-//    public void addInsertArray() {
-//
-//        assertArrayEquals(
-//                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-//                insert( array('a', 'b', 'e', 'f', 'g'), 2, array('c', 'd') )
-//
-//        );
-//
-//        assertArrayEquals(
-//                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-//                insert( array('c', 'd', 'e', 'f', 'g'), 0, array('a', 'b') )
-//
-//        );
-//
-//
-//
-//    }
-//
-//
-//
-//    @Test
-//    public void addInsertArrayEnd() {
-//
-//        assertArrayEquals(
-//                array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'),
-//                insert( array('a', 'b', 'c', 'd', 'e', 'h', 'i'), 5, array('f', 'g') )
-//
-//        );
-//
-//
-//    }
-//
-//
-//
-//    @Test
-//    public void addInsertArrayEnd2() {
-//
-//
-//
-//        assertArrayEquals(
-//                array('a', 'b', 'c', 'd', 'e', 'h', 'f', 'g', 'i'),
-//                insert( array('a', 'b', 'c', 'd', 'e', 'h', 'i'), 6, array('f', 'g') )
-//
-//        );
-//
-//    }
-//
-//
-//
-//    @Test
-//    public void addInsertArrayEnd3() {
-//
-//
-//
-//        assertArrayEquals(
-//                array('a', 'b', 'c', 'd', 'e', 'h', 'i', 'f', 'g' ),
-//                insert( array('a', 'b', 'c', 'd', 'e', 'h', 'i'), 7, array('f', 'g') )
-//
-//        );
-//
-//    }
-//
+
+
+    @Test
+    public void addInsertEdge() {
+        assertArrayEquals(
+                array(new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'}),
+                insert( array(new byte[]{'a', 'b', 'c', 'd', 'e', 'f'}), 6, (byte)'g' )
+
+        );
+
+        assertArrayEquals(
+                array(new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'}),
+                insert( array(new byte[]{'a', 'b', 'c', 'd', 'e', 'f'}), 7, (byte)'g' )
+
+        );
+
+    }
+
+    @Test
+    public void addInsertArray() {
+
+        assertArrayEquals(
+                array(new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'}),
+                insert( array(new byte[]{'a', 'b', 'e', 'f', 'g'}), 2, array(new byte[]{'c', 'd'}) )
+
+        );
+
+        assertArrayEquals(
+                array(new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'}),
+                insert( array(new byte[]{'c', 'd', 'e', 'f', 'g'}), 0, array(new byte[]{'a', 'b'}) )
+
+        );
+
+
+
+    }
+
+
+
+    @Test
+    public void addInsertArrayEnd() {
+
+        assertArrayEquals(
+                array(new byte[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'}),
+                insert( array(new byte[]{'a', 'b', 'c', 'd', 'e', 'h', 'i'}), 5, array(new byte[]{'f', 'g'}) )
+
+        );
+
+
+    }
+
+
+
+    @Test
+    public void addInsertArrayEnd2() {
+
+
+
+        assertArrayEquals(
+                array(new byte[]{'a', 'b', 'c', 'd', 'e', 'h', 'f', 'g', 'i'}),
+                insert( array(new byte[]{'a', 'b', 'c', 'd', 'e', 'h', 'i'}), 6, array(new byte[]{'f', 'g'}) )
+
+        );
+
+    }
+
+
+
+    @Test
+    public void addInsertArrayEnd3() {
+
+
+
+        assertArrayEquals(
+                array(new byte[]{'a', 'b', 'c', 'd', 'e', 'h', 'i', 'f', 'g'} ),
+                insert( array(new byte[]{'a', 'b', 'c', 'd', 'e', 'h', 'i'}), 7, array(new byte[]{'f', 'g'}) )
+
+        );
+
+    }
+
 
 }
