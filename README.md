@@ -3,6 +3,7 @@ Java Boon
 
 Simple opinionated Java for the novice to expert level Java Programmer.
 
+Low Ceremony. High Productivity.
 
 
 
