@@ -4,21 +4,14 @@ Java Boon
 Simple opinionated Java for the novice to expert level Java Programmer.
 
 
-Birth of Boon
-===
-
-Boon came from my frustration when moving back and forth between Groovy, Ruby, Python and Java.
-I do a lot of contract programming and consulting, and I do not always get to pick my programming language.
-I found that I keep dragging libs around from project to project to fill the gaps for simple things like
-slice notation or reading a file quickly or HTTP posting.
-
-This is not to make Java a competitor to Python or Ruby or Groovy, but to say hey, I
-don't always get to pick the language I am using when I write software, and more often
-than not I am programming in Java. I might as well enjoy it.
 
 
 Brief introduction to Boon
 ===
+
+Here are some basic Java types, list, array, veggies, primitive char array,
+and a primitive byte array.
+
 
 ```java
 
@@ -63,18 +56,18 @@ literals for lists, maps, etc.
             2, "pineapple",
             1, "oranges",
             3, "apple"
-    );
+     );
 
 
-    map =    map (
+     map =    map (
         "pineapple",  2,
         "oranges",    1,
         "apple",      3
-    );
+     );
 
 ```
 
-You can index maps, lists, arrays, using the **idx** operator.
+You can index maps, lists, arrays, etc. using the **idx** operator.
 
 ```java
 
@@ -113,7 +106,7 @@ The **idx** operators works with negative indexes as well.
 
 ```
 
-Ruby, Groovy and Python have this feature. Now you can use this in Java as well.
+*Ruby, Groovy and Python* have this feature. Now you can use this in Java as well.
 The Java version (Boon) works with primitive arrays (with no autoboxing).
 
 Boon has the concept of universal operators similar to Python like **len**.
@@ -131,14 +124,6 @@ Boon has the concept of universal operators similar to Python like **len**.
      assert len( map )               == 3;
 
 ```
-
-Boon has been a while in the making. My first attempt was EasyJava, which later became Facile.
-Facile had a lot of good ideas in it, but was also me sort of pushing Java to see how
-I could twist and use its syntax.  I also took a detour with DataRepo.
-
-My plan is to roll the ideas from Crank, DataRepo, EasyJava and Facile into Boon. There will
-be a Java 8 version of boon (supporting Lambda), and a Java 7 version of Boon with all of the
-Java 8 goodness stripped out.
 
 
 Why Boon
