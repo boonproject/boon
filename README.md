@@ -185,7 +185,7 @@ It will always be able to run as a single jar.
 Further Reading
 ===
 
-+ [Boon's Universal Operations and the BBBB  - Java does have a ByteBuilder sort of](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder Boon's Universal Operations and the BBBB!)
++ [Boon's Universal Operations and the BBBB Java does have a ByteBuilder sort of](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder Boon's Universal Operations and the BBBB)
 + [Java Boon Sets and slice notation](https://github.com/RichardHightower/boon/wiki/Sets-and-Slice-Notation-for-Java-Boon!)
 + [Java Boon Slice notation](https://github.com/RichardHightower/boon/wiki/Boon-Slice-Notation)
 + [Random thoughts and TODO](https://github.com/RichardHightower/boon/wiki/Random-thoughts-and-TODO-for-Boon)
