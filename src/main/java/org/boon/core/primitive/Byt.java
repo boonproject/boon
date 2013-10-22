@@ -181,8 +181,8 @@ public class Byt {
     }
 
     @Universal
-    public static boolean in(byte value, byte[] array) {
-        for (byte currentValue : array) {
+    public static boolean in(int value, byte[] array) {
+        for ( int currentValue : array ) {
             if ( currentValue == value ) {
                 return true;
             }
@@ -190,6 +190,28 @@ public class Byt {
         return false;
     }
 
+
+    @Universal
+    public static boolean in( int value, int offset, byte[] array ) {
+        for ( int index = offset; index < array.length; index++ ) {
+            int currentValue = array[index];
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Universal
+    public static boolean in( int value, int offset, int end, byte[] array ) {
+        for ( int index = offset; index < end; index++ ) {
+            int currentValue = array[index];
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     @Universal

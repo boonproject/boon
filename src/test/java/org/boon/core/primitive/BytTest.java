@@ -87,6 +87,39 @@ public class BytTest {
 
     }
 
+
+
+    @Test
+    public void isInAtOffset() {
+
+        byte[] letters = {'a', 'b', 'c', 'd'};
+
+        assertFalse(
+                in('a', 1, letters)
+        );
+
+        assertTrue(
+                in('c', 1, letters)
+        );
+
+    }
+
+    @Test
+    public void isInAtRange() {
+
+        byte[] letters = {'a', 'b', 'c', 'd'};
+
+
+        assertFalse(
+                in('a', 1, 2, letters)
+        );
+
+        assertTrue(
+                in('c', 1, 3, letters)
+        );
+
+    }
+
     @Test
     public void slice() {
 
@@ -298,7 +331,7 @@ public class BytTest {
 
         boolean works = true;
 
-        byte[] bytes = bytes( new byte[]{0x01, 0x02,  0x03});
+        byte[] bytes = bytes(new byte[]{0x01, 0x02,  0x03});
 
 
         bytes = add(bytes, (byte)0x04);

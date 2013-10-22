@@ -87,6 +87,285 @@ public class ChrTest {
     }
 
     @Test
+    public void splitThisEndsInSpace() {
+
+        char[] letters =
+                chars("This is a string ");
+
+
+        char[][] splitted = splitExact(letters, ' ', 10);
+
+
+        assertEquals(
+                4,
+                splitted.length
+        );
+
+        assertArrayEquals(
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals(
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals(
+                chars("a"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals(
+                chars("string"),
+                splitted[3]
+        );
+
+        assertArrayEquals(
+                new char[][]{chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+    @Test
+    public void splitThis() {
+
+        char[] letters =
+                chars("This is a string");
+
+
+        char[][] splitted = splitExact(letters, ' ', 10);
+
+
+        assertEquals (
+                4,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[3]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+
+
+    @Test
+    public void splitThisStartSpace() {
+
+        char[] letters =
+                chars(" This is a string");
+
+
+        char[][] splitted = splitExact(letters, ' ', 10);
+
+
+        assertEquals (
+                5,
+                splitted.length
+        );
+
+
+
+        assertEquals(
+                0,
+                splitted[0].length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[3]
+        );
+
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[4]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars(""), chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+
+    @Test
+    public void splitThisByTabOrSpace() {
+
+        char[] letters =
+                chars("This\tis a string");
+
+
+        char[][] splitted = splitExact(letters, 10, '\t', ' ');
+
+
+        assertEquals (
+                4,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[3]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+
+    @Test
+    public void splitThis3DoubleSpaceAfterA() {
+
+        char[] letters =
+                chars("This is a  string");
+
+
+        char[][] splitted = splitExact(letters, ' ', 10);
+
+
+        assertEquals (
+                5,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[2]
+        );
+
+        assertEquals(
+                0,
+                splitted[3].length
+        );
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[4]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars("This"), chars("is"), chars("a"), chars(""), chars("string")},
+                splitted
+        );
+
+
+    }
+
+    @Test
+    public void isInAtOffset() {
+
+        char[] letters =
+                array('a', 'b', 'c', 'd');
+
+
+        assertFalse(
+                in('a', 1, letters)
+        );
+
+        assertTrue(
+                in('c', 1, letters)
+        );
+
+    }
+
+    @Test
+    public void isInAtRange() {
+
+        char[] letters =
+                array('a', 'b', 'c', 'd');
+
+
+        assertFalse(
+                in('a', 1, 2, letters)
+        );
+
+        assertTrue(
+                in('c', 1, 3, letters)
+        );
+
+    }
+
+    @Test
     public void slice() {
 
         char[] letters =
@@ -422,6 +701,259 @@ public class ChrTest {
         );
 
     }
+
+
+
+
+
+
+    ///
+    ///
+    @Test
+    public void autoSplitThisEndsInSpace() {
+
+        char[] letters =
+                chars("This is a string ");
+
+
+        char[][] splitted = split(letters, ' ');
+
+
+        assertEquals (
+                4,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[3]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+    @Test
+    public void autoSplitThis() {
+
+        char[] letters =
+                chars("This is a string");
+
+
+        char[][] splitted = split(letters, ' ');
+
+
+        assertEquals (
+                4,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[3]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+
+
+    @Test
+    public void autoSplitThisStartSpace() {
+
+        char[] letters =
+                chars(" This is a string");
+
+
+        char[][] splitted = split(letters, ' ');
+
+
+        assertEquals (
+                5,
+                splitted.length
+        );
+
+
+
+        assertEquals (
+                0,
+                splitted[0].length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[3]
+        );
+
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[4]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars(""), chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+
+    @Test
+    public void autoSplitThisByTabOrSpace() {
+
+        char[] letters =
+                chars("This\tis a string");
+
+
+        char[][] splitted = splitByChars(letters, '\t', ' ');
+
+
+        assertEquals (
+                4,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[2]
+        );
+
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[3]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                splitted
+        );
+
+
+    }
+
+
+    @Test
+    public void autoSplitThis3DoubleSpaceAfterA() {
+
+        char[] letters =
+                chars("This is a  string");
+
+
+        char[][] splitted = split(letters, ' ');
+
+
+        assertEquals (
+                5,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars("This"),
+                splitted[0]
+        );
+
+
+        assertArrayEquals (
+                chars("is"),
+                splitted[1]
+        );
+
+
+        assertArrayEquals (
+                chars("a"),
+                splitted[2]
+        );
+
+        assertEquals (
+                0,
+                splitted[3].length
+        );
+
+        assertArrayEquals (
+                chars("string"),
+                splitted[4]
+        );
+
+        assertArrayEquals (
+                new char [] [] { chars("This"), chars("is"), chars("a"), chars(""), chars("string")},
+                splitted
+        );
+
+
+    }
+
 
 
 }

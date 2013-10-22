@@ -3,6 +3,7 @@ package org.boon.core.primitive;
 
 import org.boon.core.Universal;
 
+import java.lang.reflect.Array;
 import java.util.Objects;
 
 public class Chr {
@@ -17,25 +18,31 @@ public class Chr {
         return new char[size];
     }
 
+
     /**
      *
      * @param array
      * @return
      */
     @Universal
-    public static char[] array(final char... array) {
+    public static char[] array( final char... array ) {
         Objects.requireNonNull(array);
         return array;
     }
 
     @Universal
-    public static int len(char[] array) {
+    public static char[] chars( final String array ) {
+        return array.toCharArray();
+    }
+
+    @Universal
+    public static int len( char[] array ) {
         return array.length;
     }
 
 
     @Universal
-    public static char idx (final char[] array, final int index) {
+    public static char idx ( final char[] array, final int index ) {
         final int i = calculateIndex(array, index);
 
         return array[i];
@@ -43,7 +50,7 @@ public class Chr {
 
 
     @Universal
-    public static void idx (final char[] array, int index, char value) {
+    public static void idx ( final char[] array, int index, char value ) {
         final int i = calculateIndex(array, index);
 
         array[i] = value;
@@ -52,7 +59,7 @@ public class Chr {
 
 
     @Universal
-    public static char[] slc(char[] array, int startIndex, int endIndex) {
+    public static char[] slc( char[] array, int startIndex, int endIndex ) {
         Objects.requireNonNull(array);
 
         final int start = calculateIndex(array, startIndex);
@@ -72,7 +79,7 @@ public class Chr {
     }
 
     @Universal
-    public static char[] slc(char[] array, int startIndex) {
+    public static char[] slc( char[] array, int startIndex ) {
         Objects.requireNonNull(array);
 
         final int start = calculateIndex(array, startIndex);
@@ -91,7 +98,7 @@ public class Chr {
     }
 
     @Universal
-    public static char[] slcEnd(char[] array, int endIndex) {
+    public static char[] slcEnd( char[] array, int endIndex ) {
         Objects.requireNonNull(array);
 
         final int end = calculateIndex(array, endIndex);
@@ -110,7 +117,7 @@ public class Chr {
     }
 
     @Universal
-    public static boolean in(char value, char[] array) {
+    public static boolean in( char value, char[] array ) {
         for (char currentValue : array) {
             if ( currentValue == value ) {
                 return true;
@@ -119,6 +126,226 @@ public class Chr {
         return false;
     }
 
+    @Universal
+    public static boolean in( char value, int offset, char[] array ) {
+        for ( int index = offset; index < array.length; index++ ) {
+            char currentValue = array[index];
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Universal
+    public static boolean in( char value, int offset, int end, char[] array ) {
+        for ( int index = offset; index < end; index++ ) {
+            char currentValue = array[index];
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public static char[][] splitExact( final char[] inputArray,
+                                 final char split, final int resultsArrayLength ) {
+        /** Holds the results. */
+        char[][] results = new char[resultsArrayLength][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex=0;
+        int currentLineLength=1;
+
+
+        char c='\u0000';
+        int index = 0;
+
+        for ( ; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[index];
+            if (c == split) {
+
+                results[ resultIndex ] = copy(
+                        inputArray, startCurrentLineIndex, currentLineLength -1 );
+                startCurrentLineIndex = index + 1; //skip the char
+
+                currentLineLength=0;
+                resultIndex++;
+            }
+        }
+
+        if ( c !=  split ) {
+
+            results[ resultIndex ] = copy(
+                    inputArray, startCurrentLineIndex, currentLineLength -1 );
+            resultIndex++;
+        }
+
+        int actualLength = resultIndex;
+        if ( actualLength < resultsArrayLength) {
+            final int newSize = resultsArrayLength - actualLength;
+            results = __shrink(results, newSize);
+        }
+        return results;
+    }
+
+    public static char[][] splitExact(final char[] inputArray,
+                                      final int resultsArrayLength, char... delims) {
+        /** Holds the results. */
+        char[][] results = new char[resultsArrayLength][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex=0;
+        int currentLineLength=1;
+
+
+        char c='\u0000';
+        int index = 0;
+        int j;
+        char split;
+
+
+        for ( ; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[index];
+
+            inner:
+            for ( j = 0; j < delims.length; j++) {
+                split = delims[j];
+                if (c == split) {
+
+                    results[ resultIndex ] = copy(
+                        inputArray, startCurrentLineIndex, currentLineLength -1 );
+                    startCurrentLineIndex = index + 1; //skip the char
+
+                    currentLineLength=0;
+                    resultIndex++;
+                    break inner;
+                }
+            }
+        }
+
+        if ( !in(c, delims) ) {
+
+                results[ resultIndex ] = copy(
+                        inputArray, startCurrentLineIndex, currentLineLength -1 );
+                resultIndex++;
+        }
+
+
+        int actualLength = resultIndex;
+        if ( actualLength < resultsArrayLength) {
+            final int newSize = resultsArrayLength - actualLength;
+            results = __shrink(results, newSize);
+        }
+        return results;
+    }
+
+
+    public static char[][] split( final char[] inputArray,
+                                  final char split) {
+        /** Holds the results. */
+        char[][] results = new char[16][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex=0;
+        int currentLineLength=1;
+
+
+        char c='\u0000';
+        int index = 0;
+
+        for ( ; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[index];
+            if (c == split) {
+
+                if (resultIndex == results.length ) {
+
+                    results = _grow(results);
+                }
+
+
+                results[ resultIndex ] = copy(
+                        inputArray, startCurrentLineIndex, currentLineLength -1 );
+                startCurrentLineIndex = index + 1; //skip the char
+
+                currentLineLength=0;
+                resultIndex++;
+            }
+        }
+
+        if ( c !=  split ) {
+
+            results[ resultIndex ] = copy(
+                    inputArray, startCurrentLineIndex, currentLineLength -1 );
+            resultIndex++;
+        }
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length) {
+            final int newSize = results.length - actualLength;
+            results = __shrink(results, newSize);
+        }
+        return results;
+    }
+
+    public static char[][] splitByChars( final char[] inputArray,
+                                  char... delims ) {
+        /** Holds the results. */
+        char[][] results = new char[16][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex=0;
+        int currentLineLength=1;
+
+
+        char c='\u0000';
+        int index = 0;
+        int j;
+        char split;
+
+
+        for ( ; index < inputArray.length; index++, currentLineLength++ ) {
+
+            c = inputArray[index];
+
+            inner:
+            for ( j = 0; j < delims.length; j++) {
+                split = delims[j];
+                if (c == split) {
+
+                    if (resultIndex == results.length ) {
+
+                        results = _grow(results);
+                    }
+
+
+                    results[ resultIndex ] = copy(
+                            inputArray, startCurrentLineIndex, currentLineLength -1 );
+                    startCurrentLineIndex = index + 1; //skip the char
+
+                    currentLineLength=0;
+                    resultIndex++;
+                    break inner;
+                }
+            }
+        }
+
+        if ( !in(c, delims) ) {
+
+            results[ resultIndex ] = copy(
+                    inputArray, startCurrentLineIndex, currentLineLength -1 );
+            resultIndex++;
+        }
+
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length) {
+            final int newSize = results.length - actualLength;
+            results = __shrink(results, newSize);
+        }
+        return results;
+    }
 
     public static char[] grow(char [] array, final int size) {
         Objects.requireNonNull(array);
@@ -138,6 +365,13 @@ public class Chr {
         return newArray;
     }
 
+    private static char[][] _grow(char [][] array) {
+        Objects.requireNonNull(array);
+
+        char [][] newArray  = new char[array.length *2][];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return newArray;
+    }
 
     public static char[] shrink(char[] array, int size) {
         Objects.requireNonNull(array);
@@ -180,6 +414,14 @@ public class Chr {
         Objects.requireNonNull(array);
         char[] newArray = new char[array.length];
         System.arraycopy(array, 0, newArray, 0, array.length);
+        return newArray;
+    }
+
+    @Universal
+    public static char[] copy(char[] array, int offset, int length) {
+        Objects.requireNonNull(array);
+        char[] newArray = new char[length];
+        System.arraycopy(array, offset, newArray, 0, length);
         return newArray;
     }
 
@@ -353,6 +595,16 @@ public class Chr {
             index = length -1;
         }
         return index;
+    }
+
+
+
+    private static char[][] __shrink(char[][] array, int size) {
+        Objects.requireNonNull(array);
+        char[][] newArray = new char[ array.length - size ][];
+
+        System.arraycopy(array, 0, (char[][])newArray, 0, array.length-size);
+        return newArray;
     }
 
 
