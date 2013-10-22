@@ -5,7 +5,8 @@ import java.io.PrintWriter;
 
 public class Exceptions {
 
-    public static void die(String message) {
+
+    public static boolean die(String message) {
         throw new Exception(message);
     }
 

@@ -5,7 +5,9 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class IO {
@@ -257,6 +259,8 @@ public class IO {
         try {
             FileSystem fileSystem = FileSystems.getFileSystem(uri);
             Path fsPath = fileSystem.getPath(location);
+
+            //Paths.get()
             return Files.readAllLines(fsPath, Charset.forName(CHARSET));
         } catch (ProviderNotFoundException ex) {
              return readLines(uri.toURL().openStream());
@@ -307,6 +311,26 @@ public class IO {
         } catch (Exception ex) {
             Exceptions.handle(ex);
         }
+
+    }
+
+
+    public static void main(String [] args) throws Throwable {
+//        Map<String, String> env = new HashMap<>();
+//        env.put("create", "true");
+//        // locate file system by using the syntax
+//        // defined in java.net.JarURLConnection
+//        URI uri = URI.create("jar:file:/codeSamples/zipfs/zipfstest.zip");
+//
+//        try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
+//            Path externalTxtFile = Paths.get("/codeSamples/zipfs/SomeTextFile.txt");
+//            Path pathInZipfile = zipfs.getPath("/SomeTextFile.txt");
+//            // copy a file into the zip file
+//            Files.copy( externalTxtFile,pathInZipfile,
+//                    StandardCopyOption.REPLACE_EXISTING );
+//        }
+
+
 
     }
 

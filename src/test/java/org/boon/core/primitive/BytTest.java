@@ -3,6 +3,7 @@ package org.boon.core.primitive;
 import org.junit.Test;
 
 
+import static org.boon.core.Exceptions.die;
 import static org.boon.core.primitive.Byt.*;
 import static org.junit.Assert.*;
 
@@ -288,6 +289,89 @@ public class BytTest {
 
         );
 
+
+
+    }
+
+    @Test
+    public void addBasic() {
+
+        boolean works = true;
+
+        byte[] bytes = bytes( new byte[]{0x01, 0x02,  0x03});
+
+
+        bytes = add(bytes, (byte)0x04);
+
+
+        works |=
+                bytes[3] == 0x04            || die("byte 3 not 0x04");
+
+
+        /* Add an int and read it back. */
+
+        bytes = addInt(bytes, 1);
+
+        works |=
+                len( bytes ) == 8           || die("length should be 8");
+
+
+        works |=
+                idxInt( bytes,  4 ) == 1        || die("read int back as 1");
+
+
+
+
+        /* Write and read in a Long. */
+        bytes = addLong(bytes, 0xFFFEFAFBFCL);
+
+        works |=
+                len( bytes ) == 16           || die("length should be 16");
+
+
+        works |=
+                idxLong( bytes,  8 ) == 0xFFFEFAFBFCL        || die("read int back as  0xFFFEFAFBFCL");
+
+
+
+
+                /* Write and read in a Short. */
+        bytes = addShort(bytes, (short)0x0FED);
+
+        works |=
+                len( bytes ) == 18                       || die("length should be 18");
+
+
+        works |=
+                idxShort( bytes,  16 ) == 0x0FED        || die("read shor back as 0x0FED");
+
+
+
+        /* Write and read in a char. */
+        bytes = addChar(bytes, 'a');
+
+        works |=
+                len( bytes ) == 20                       || die("length should be 20");
+
+
+        works |=
+                idxChar( bytes,  18 ) == 'a'           || die("read char back as 'a'");
+
+
+
+
+        /* Write and read in a float. */
+        bytes = addFloat(bytes, 99.00f);
+
+        works |=
+                len( bytes ) == 24                       || die("length should be 24");
+
+
+        works |=
+                idxFloat( bytes,  20 ) == 99.00f           || die("read float back as 99.00f");
+
+
+        System.out.println("it all worked " + works);
 
 
     }

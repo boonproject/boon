@@ -87,6 +87,17 @@ public class Byt {
         return array;
     }
 
+    /**
+     *
+     * @param array
+     * @return
+     */
+    @Universal
+    public static byte[] bytes(final byte... array) {
+        Objects.requireNonNull(array);
+        return array;
+    }
+
 
     @Universal
     public static int len(byte[] array) {
@@ -327,5 +338,308 @@ public class Byt {
         }
         return index;
     }
+
+
+
+
+
+
+
+    public static int idxInt(byte[] bytes, int off) {
+        return ((bytes[off + 3] & 0xFF)) +
+                ((bytes[off + 2] & 0xFF) << 8) +
+                ((bytes[off + 1] & 0xFF) << 16) +
+                ((bytes[off]) << 24);
+    }
+
+    public static byte[] addInt(byte[] array, int v) {
+        Objects.requireNonNull(array);
+
+        byte [] arrayToHoldInt = new byte [4];
+        intTo(arrayToHoldInt, 0, v);
+        return add(array, arrayToHoldInt);
+
+    }
+
+    public static byte[] insertIntInto(byte[] array, int index, int v) {
+        Objects.requireNonNull(array);
+
+        byte [] arrayToHoldInt = new byte [4];
+        intTo(arrayToHoldInt, 0, v);
+        return insert(array, index, arrayToHoldInt);
+
+    }
+
+
+    public static void intTo(byte[] b, int off, int val) {
+        b[off + 3] = (byte) (val);
+        b[off + 2] = (byte) (val >>> 8);
+        b[off + 1] = (byte) (val >>> 16);
+        b[off] = (byte) (val >>> 24);
+    }
+
+
+    public static void longTo(byte[] b, int off, long val) {
+        b[off + 7] = (byte) (val);
+        b[off + 6] = (byte) (val >>> 8);
+        b[off + 5] = (byte) (val >>> 16);
+        b[off + 4] = (byte) (val >>> 24);
+        b[off + 3] = (byte) (val >>> 32);
+        b[off + 2] = (byte) (val >>> 40);
+        b[off + 1] = (byte) (val >>> 48);
+        b[off] = (byte) (val >>> 56);
+    }
+
+    public static byte[] addLong(byte[] array, long value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [8];
+        longTo(holder, 0, value);
+        return add(array, holder);
+
+    }
+
+
+
+    public static long idxLong(byte[] b, int off) {
+        return ((b[off + 7] & 0xFFL)) +
+                ((b[off + 6] & 0xFFL) << 8) +
+                ((b[off + 5] & 0xFFL) << 16) +
+                ((b[off + 4] & 0xFFL) << 24) +
+                ((b[off + 3] & 0xFFL) << 32) +
+                ((b[off + 2] & 0xFFL) << 40) +
+                ((b[off + 1] & 0xFFL) << 48) +
+                (((long) b[off]) << 56);
+    }
+
+
+
+
+    public static short idxShort(byte[] b, int off) {
+        return (short) ((b[off + 1] & 0xFF) +
+                (b[off] << 8));
+    }
+
+    public static byte[] addShort(byte[] array, short value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [2];
+        shortTo(holder, 0, value);
+        return add(array, holder);
+
+    }
+
+
+    public static byte[] insertShortInto(byte[] array, int index, short value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [2];
+        shortTo(holder, 0, value);
+        return insert(array, index, holder);
+
+    }
+
+
+    public static void shortTo(byte[] b, int off, short val) {
+        b[off + 1] = (byte) (val);
+        b[off] = (byte) (val >>> 8);
+    }
+
+
+    public static char idxChar(byte[] b, int off) {
+        return (char) ((b[off + 1] & 0xFF) +
+                (b[off] << 8));
+    }
+
+    public static byte[] addChar(byte[] array, char value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [2];
+        charTo(holder, 0, value);
+        return add(array, holder);
+
+    }
+
+    public static byte[] insertCharInto(byte[] array, int index, char value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [2];
+        charTo(holder, 0, value);
+        return insert(array, index, holder);
+
+    }
+
+
+    public static void charTo(byte[] b, int off, char val) {
+        b[off + 1] = (byte) (val);
+        b[off] = (byte) (val >>> 8);
+    }
+
+
+    public static float idxFloat(byte[] array, int off) {
+        return Float.intBitsToFloat(idxInt(array, off));
+    }
+
+    public static byte[] addFloat(byte[] array, float value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [4];
+        floatTo(holder, 0, value);
+        return add(array, holder);
+
+    }
+
+    public static byte[] insertFloatInto(byte[] array, int index, float value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [4];
+        floatTo(holder, 0, value);
+        return insert(array, index, holder);
+
+    }
+
+    public static void floatTo(byte[] array, int off, float val) {
+        intTo(array, off, Float.floatToIntBits(val));
+    }
+
+
+
+//
+//
+//    public static void doubleTo(byte[] b, int off, double val) {
+//        longTo(b, off, Double.doubleToLongBits(val));
+//    }
+//
+//
+//
+//    public static boolean booleanAt(byte[] b, int off) {
+//        return b[off] != 0;
+//    }
+//
+//
+//    public static boolean booleanInBytePos1(int val) {
+//        val = val & 0x01;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos2(int val) {
+//        val = val & 0x02;
+//        return val != 0;
+//    }
+//
+//
+//    public static boolean booleanInBytePos3(int val) {
+//        val = val & 0x04;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos4(int val) {
+//        val = val & 0x08;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos1(byte[] b, int off) {
+//        int val = b[off] & 0x01;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos2(byte[] b, int off) {
+//        int val = b[off] & 0x02;
+//        return val != 0;
+//    }
+//
+//
+//    public static boolean booleanInBytePos3(byte[] b, int off) {
+//        int val = b[off] & 0x04;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos4(byte[] b, int off) {
+//        int val = b[off] & 0x08;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos5(byte[] b, int off) {
+//        int val = b[off] & 0x10;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos6(byte[] b, int off) {
+//        int val = b[off] & 0x20;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos7(byte[] b, int off) {
+//        int val = b[off] & 0x40;
+//        return val != 0;
+//    }
+//
+//    public static boolean booleanInBytePos8(byte[] b, int off) {
+//        int val = b[off] & 0x80;
+//        return val != 0;
+//    }
+//
+//
+//    public static int byteAt(byte[] b, int off) {
+//        return b[off];
+//    }
+//
+//
+//    public static int topNibbleAt(byte[] b, int off) {
+//        return topNibbleAt (b[off] );
+//    }
+//
+//    public static int bottomNibbleAt(byte[] b, int off) {
+//        return bottomNibbleAt (b[off] );
+//    }
+//
+//    public static int topNibbleAt(int val) {
+//        return  (val & 0xF0);
+//    }
+//
+//    public static int bottomNibbleAt(int val) {
+//        return  (val & 0x0F);
+//    }
+//
+//
+//    public static char charAt1(byte[] b, int off) {
+//        return (char) ((b[off + 1] & 0xFF) +
+//                (b[off] << 8));
+//    }
+//
+//
+//
+//    public static char charAt(byte[] b, int off) {
+//        return (char) toChar(b[off + 1], b[off], off);
+//    }
+//
+//
+//    public static char toChar(int b1, int b2, int off) {
+//        return (char) ( ( b1 & 0xFF ) + ( b2 << 8 ) );
+//    }
+//
+//    public static int unsignedShortAt(byte[] b, int off) {
+//        return ((b[off + 1] & 0xFF) +
+//                (b[off] << 8));
+//    }
+//
+//
+//
+//
+//    public static double doubleAt(byte[] b, int off) {
+//        return Double.longBitsToDouble(idxLong(b, off));
+//    }
+//
+//    public static void booleanTo(byte[] b, int off, boolean val) {
+//        b[off] = (byte) (val ? 1 : 0);
+//    }
+//
+//    public static void charTo(byte[] b, int off, char val) {
+//        b[off + 1] = (byte) (val);
+//        b[off] = (byte) (val >>> 8);
+//    }
+//
+
+
 
 }
