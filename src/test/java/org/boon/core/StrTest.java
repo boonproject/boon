@@ -3,10 +3,10 @@ package org.boon.core;
 
 import org.junit.Test;
 
-import static org.boon.core.Strings.*;
+import static org.boon.core.Str.*;
 import static org.junit.Assert.*;
 
-public class StringsTest {
+public class StrTest {
 
     @Test
     public void index() {

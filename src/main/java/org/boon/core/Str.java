@@ -5,7 +5,7 @@ import org.boon.core.primitive.Chr;
 
 import java.util.Objects;
 
-public class Strings {
+public class Str {
 
     public final static String EMPTY_STRING="";
 
