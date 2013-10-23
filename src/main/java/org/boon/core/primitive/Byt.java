@@ -98,6 +98,17 @@ public class Byt {
         return array;
     }
 
+    /**
+     *
+     * @param str
+     * @return
+     */
+    @Universal
+    public static byte[] bytes(String str) {
+        Objects.requireNonNull(str);
+        return str.getBytes();
+    }
+
 
     @Universal
     public static int len(byte[] array) {
@@ -192,6 +203,17 @@ public class Byt {
 
 
     @Universal
+    public static boolean inIntArray(byte value, int[] array) {
+        for ( int currentValue : array ) {
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    @Universal
     public static boolean in( int value, int offset, byte[] array ) {
         for ( int index = offset; index < array.length; index++ ) {
             int currentValue = array[index];
@@ -221,6 +243,15 @@ public class Byt {
         System.arraycopy(array, 0, newArray, 0, array.length);
         return newArray;
     }
+
+    @Universal
+    public static byte[] copy(byte[] array, int offset, int length) {
+        Objects.requireNonNull(array);
+        byte[] newArray = new byte[length];
+        System.arraycopy(array, offset, newArray, 0, length);
+        return newArray;
+    }
+
 
 
     @Universal
