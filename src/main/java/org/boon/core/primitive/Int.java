@@ -1,5 +1,6 @@
 package org.boon.core.primitive;
 
+import org.boon.core.Exceptions;
 import org.boon.core.Universal;
 
 import java.util.Objects;
@@ -222,7 +223,7 @@ public class Int {
         int [] newArray = new int[array.length+1];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }
@@ -262,7 +263,7 @@ public class Int {
         int [] newArray = new int[array.length +  values.length];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }
@@ -325,5 +326,9 @@ public class Int {
         }
         return index;
     }
+
+
+
+
 
 }

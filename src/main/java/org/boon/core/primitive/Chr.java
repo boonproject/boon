@@ -67,7 +67,7 @@ public class Chr {
          _idx(array, i, input);
     }
 
-    @Universal
+
     public static void _idx ( final char[] array, int startIndex, char[] input ) {
         try {
 
@@ -291,7 +291,7 @@ public class Chr {
         char [] newArray = new char[array.length+1];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }
@@ -343,7 +343,7 @@ public class Chr {
         char [] newArray = new char[array.length +  values.length];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }

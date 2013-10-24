@@ -1,8 +1,10 @@
 package org.boon.core.primitive;
 
 
+import org.boon.core.Exceptions;
 import org.boon.core.Universal;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 public class Byt {
@@ -106,7 +108,12 @@ public class Byt {
     @Universal
     public static byte[] bytes(String str) {
         Objects.requireNonNull(str);
-        return str.getBytes();
+        try {
+            return str.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Exceptions.handle(String.format("Unable to add \"%s\" ", str), ex);
+            return null;
+        }
     }
 
 
@@ -288,7 +295,7 @@ public class Byt {
         byte [] newArray = new byte[array.length+1];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }
@@ -328,7 +335,7 @@ public class Byt {
         byte [] newArray = new byte[array.length +  values.length];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }
@@ -694,5 +701,16 @@ public class Byt {
 //
 
 
+
+    public static void _idx ( final byte[] array, int startIndex, byte[] input ) {
+        try {
+
+            System.arraycopy(input, 0, array, startIndex, input.length);
+        }
+        catch (Exception ex) {
+            Exceptions.handle(String.format("array size %d, startIndex %d, input length %d",
+                    array.length, startIndex, input.length), ex);
+        }
+    }
 
 }

@@ -221,7 +221,7 @@ public class Lng {
         long [] newArray = new long[array.length+1];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }
@@ -261,7 +261,7 @@ public class Lng {
         long [] newArray = new long[array.length +  values.length];
 
         if (index != 0) {
-            /* Copy up to the location in the array before the index. */
+            /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
             System.arraycopy( array,   0,      newArray, 0,       index );
         }
