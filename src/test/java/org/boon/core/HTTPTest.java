@@ -48,7 +48,7 @@ public class HTTPTest {
 
         Map<String,String> headers = map("foo", "bar", "fun", "sun");
 
-        String response = HTTP.postBodyWithContentType("http://localhost:9212/test", headers, "text/plain", "hi mom");
+        String response = HTTP.postWithContentType("http://localhost:9212/test", headers, "text/plain", "hi mom");
 
         System.out.println(response);
 
@@ -56,14 +56,14 @@ public class HTTPTest {
         assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
 
 
-        response = HTTP.postBodyWithCharset("http://localhost:9212/test", headers, "text/plain", "UTF-8", "hi mom");
+        response = HTTP.postWithCharset("http://localhost:9212/test", headers, "text/plain", "UTF-8", "hi mom");
 
         System.out.println(response);
 
         assertTrue(response.contains("hi mom"));
         assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
 
-        response = HTTP.postBodyWithHeaders("http://localhost:9212/test", headers, "hi mom");
+        response = HTTP.postWithHeaders("http://localhost:9212/test", headers, "hi mom");
 
         System.out.println(response);
 
@@ -117,7 +117,7 @@ public class HTTPTest {
 
 
 
-        String response = HTTP.postBody("http://localhost:9220/test", "hi mom");
+        String response = HTTP.post("http://localhost:9220/test", "hi mom");
 
         assertTrue(response.contains("hi mom"));
 
@@ -142,7 +142,7 @@ public class HTTPTest {
 
         Map<String,String> headers = map("foo", "bar", "fun", "sun");
 
-        String response = HTTP.postBodyWithContentType("http://localhost:9213/foo", headers, "text/plain", "hi mom");
+        String response = HTTP.postWithContentType("http://localhost:9213/foo", headers, "text/plain", "hi mom");
 
         System.out.println(response);
 

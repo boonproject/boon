@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.Map;
 
 import static org.boon.core.IO.read;
@@ -64,20 +65,48 @@ public class HTTP {
 
     }
 
-    public static String postBody(
+    public static String postText(
             final String url,
+            final String body) {
+            return postText(url, body);
+    }
+
+    public static String postBodyTextWithContentType(
+            final String url,
+            final String contentType,
             final String body) {
 
 
         return Exceptions.tryIt(String.class, () -> {
             URLConnection connection;
-            connection = doPost(url, null, "text/plain", null, body);
+            connection = doPost(url, Collections.emptyMap(), contentType, null, body);
             return extractResponseString(connection);
         });
 
     }
 
-    public static String postBodyWithHeaders(
+    public static String post(
+            final String url,
+            final String body) {
+
+        return postBodyTextWithContentType(url, "text/plain", body);
+    }
+
+    public static String postJSON(
+            final String url,
+            final String jsonString) {
+
+        return postBodyTextWithContentType(url, "text/json", jsonString);
+    }
+
+    public static String postXML(
+            final String url,
+            final String jsonString) {
+
+        return postBodyTextWithContentType(url, "text/xml", jsonString);
+    }
+
+    public static String postWithHeaders(
             final String url,
             final Map<String, ?> headers,
             final String body) {
@@ -92,7 +121,7 @@ public class HTTP {
 
 
 
-    public static String postBodyWithContentType(
+    public static String postWithContentType(
             final String url,
             final Map<String, ?> headers,
             final String contentType,
@@ -108,7 +137,7 @@ public class HTTP {
     }
 
 
-    public static String postBodyWithCharset(
+    public static String postWithCharset(
             final String url,
             final Map<String, ?> headers,
             final String contentType,
