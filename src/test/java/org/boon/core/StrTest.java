@@ -3,6 +3,7 @@ package org.boon.core;
 
 import org.junit.Test;
 
+import static org.boon.core.Exceptions.die;
 import static org.boon.core.Str.*;
 import static org.junit.Assert.*;
 
@@ -192,6 +193,35 @@ public class StrTest {
         );
 
 
+
+    }
+
+
+    @Test
+    public void joinByTest() {
+        String foo = Str.join(',', "foo", "bar", "baz");
+        boolean ok = true;
+
+        ok |= foo.equals("foo,bar,baz") || die("Foo was not equal to foo,bar,baz");
+
+
+
+    }
+
+
+    @Test
+    public void lines() {
+        String foo = Str.lines(
+                "Line 1",
+                "Line 2",
+                "Line 3");
+
+        boolean ok = true;
+
+
+        ok |= foo.startsWith("Line 1") || die("foo string started with Line 1");
+
+        ok |= foo.endsWith("Line 3")   || die("foo string ends with Line 3 \n" + foo);
 
     }
 

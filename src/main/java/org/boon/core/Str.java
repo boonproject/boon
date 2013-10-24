@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class Str {
 
+
     public final static String EMPTY_STRING="";
 
     public static int len(String str) {
@@ -87,19 +88,6 @@ public class Str {
     }
 
 
-    public static String[] split( String string ) {
-        char [][] arrays = Chr.split(string.toCharArray());
-        String[] results = new String[arrays.length];
-        int index = 0;
-        for ( char[] array : arrays ) {
-            results[index] = array.length == 0 ? EMPTY_STRING : new String(array);
-            index++;
-        }
-        return results;
-    }
-
-
-
     public static String add( String str, char c ) {
         return new String(Chr.add(str.toCharArray(), c));
     }
@@ -160,6 +148,52 @@ public class Str {
             index = length -1;
         }
         return index;
+    }
+
+
+    public static String lines(String... lines) {
+        return join('\n', lines);
+    }
+
+
+
+    public static String join(char delim, String... args) {
+        CharBuf builder = CharBuf.create(10 * args.length);
+
+        int index = 0;
+        for (String arg : args) {
+                builder.add( arg);
+                if ( ! (index == args.length - 1) ) {
+                    builder.add(delim);
+                }
+                index++;
+        }
+        return builder.toString();
+    }
+
+
+    public static String[] split(String str) {
+        char[][] split = Chr.split(str.toCharArray());
+        return fromCharArrayofArrayToStringArray(split);
+    }
+
+    public static String[] splitLines(String str) {
+        char[][] split = Chr.splitLine(str.toCharArray());
+        return fromCharArrayofArrayToStringArray(split);
+    }
+
+    private static String[] fromCharArrayofArrayToStringArray(char[][] split) {
+        String[] results = new String [ split.length ];
+
+        char [] array;
+
+        for (int index =0 ; index < split.length; index++) {
+            array = split[index];
+
+            results[index] = array.length == 0 ?
+                    EMPTY_STRING : new String(array);
+        }
+        return results;
     }
 
 

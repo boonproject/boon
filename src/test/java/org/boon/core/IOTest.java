@@ -14,13 +14,49 @@ import java.util.regex.Pattern;
 import static javax.xml.bind.DatatypeConverter.parseInt;
 import static org.boon.core.Lists.idx;
 import static org.boon.core.Lists.len;
-import static org.boon.core.Maps.copy;
-import static org.boon.core.Maps.map;
+import static org.boon.core.Lists.list;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class IOTest {
 
+
+
+    @Test
+    public void testReadLinesFromFileAsBufferedReader() throws Exception {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+        List<String> lines = IO.readLines(new BufferedReader(new FileReader(testFile)));
+
+        assertLines(lines);
+
+    }
+
+    @Test
+    public void testReadLinesFromFileAsInputStream() throws Exception {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+        List<String> lines = IO.readLines(new FileInputStream(testFile));
+
+        assertLines(lines);
+
+    }
+
+
+    @Test
+    public void testReadFromFileAsInputStreamCharSet() throws Exception {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+        String buf = IO.read(new FileInputStream(testFile), "UTF-8");
+
+        assertLines( list ( Str.splitLines(buf) ) );
+
+    }
 
     @Test
     public void testReadLines() {
@@ -65,6 +101,37 @@ public class IOTest {
 
     }
 
+
+    @Test
+    public void testReadEachLineFromFile() {
+        File testDir = new File("src/test/resources");
+        File testFile = new File(testDir, "testfile.txt");
+
+
+
+        IO.eachLine(testFile, (line, index) -> {
+            System.out.println(index + " " + line);
+
+            if (index == 0) {
+
+                assertEquals(
+                        "line 1", line
+                );
+
+            } else if (index == 3) {
+
+
+                assertEquals(
+                        "grapes", line
+                );
+            }
+
+            return true;
+        });
+
+        //assertLines(lines);
+
+    }
 
     @Test
     public void testReadEachLineByURI() {

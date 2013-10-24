@@ -48,7 +48,6 @@ public class IO {
                 builder.append((char)i);
             }
 
-            reader.close();
 
         } catch (Exception ex) {
             return Exceptions.handle(String.class, ex);
@@ -126,7 +125,6 @@ public class IO {
                 lines.add(line);
             }
 
-            reader.close();
 
         } catch (Exception ex) {
 
@@ -151,9 +149,6 @@ public class IO {
                     eachLine.line(line, lineNumber++) ){ //
                     // no op
                     }
-
-            reader.close();
-
         } catch (Exception ex) {
 
             Exceptions.handle(ex);
@@ -296,7 +291,6 @@ public class IO {
 
         try (OutputStream o = out) {
             o.write(content.getBytes(charset));
-            o.close();
         } catch (Exception ex) {
             Exceptions.handle(ex);
         }
@@ -307,7 +301,6 @@ public class IO {
 
         try (OutputStream o = out) {
             o.write(content.getBytes(CHARSET));
-            o.close();
         } catch (Exception ex) {
             Exceptions.handle(ex);
         }

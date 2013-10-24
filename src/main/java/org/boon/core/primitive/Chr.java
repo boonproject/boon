@@ -11,6 +11,7 @@ public class Chr {
 
 
     public static final char[] DEFAULT_SPLIT= {' ', '\t', ',', ':', ';'};
+    public static final char[] NEWLINE_CHARS= {'\n', '\r'};
 
     /**
      * Creates an array of chars
@@ -225,6 +226,10 @@ public class Chr {
 
     public static char[][] split(char [] chars) {
           return CharScanner.splitByChars(chars, DEFAULT_SPLIT);
+    }
+
+    public static char[][] splitLine(char [] chars) {
+        return CharScanner.splitByChars(chars, NEWLINE_CHARS);
     }
 
 
