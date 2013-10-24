@@ -28,6 +28,14 @@ public class Exceptions {
         throw new Exception(e);
     }
 
+    public static <T> T handle(Class<T> clazz,  String message, java.lang.Exception e) {
+
+        if (e instanceof Exception) {
+            throw (Exception) e;
+        }
+        throw new Exception(e);
+    }
+
 
     public static <T> T tryIt (Class<T> clazz, TrialWithReturn<T> tryIt) {
          try {
