@@ -23,6 +23,12 @@ public class ByteBuf {
         return new ByteBuf(capacity);
     }
 
+    public static ByteBuf create( byte [] buffer) {
+        ByteBuf buf = new ByteBuf(buffer.length);
+        buf.buffer = buffer;
+        return buf;
+    }
+
     protected ByteBuf(int capacity)  {
         this.capacity = capacity;
         init();

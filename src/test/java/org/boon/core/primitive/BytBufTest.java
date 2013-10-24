@@ -217,6 +217,12 @@ public class BytBufTest {
         worked |= myLong   == 6 || die("value was 6");
         worked |= myDouble == 7 || die("value was 7");
 
+        ByteBuf buf2 = ByteBuf.create( bytes );
+
+        bytes = buf2.readAndReset();
+
+        myDouble  =   idxDouble ( bytes, 21 );
+        worked |= myDouble == 7 || die("value was 7");
 
 
     }

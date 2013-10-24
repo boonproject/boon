@@ -19,7 +19,7 @@
 
 
     <build>
-    <finalName>config</finalName>
+    <finalName>boon</finalName>
     <plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
