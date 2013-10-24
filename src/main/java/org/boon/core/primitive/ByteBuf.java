@@ -43,6 +43,122 @@ public class ByteBuf {
 
     }
 
+
+    public void add(int value) {
+
+        if (4 + length < capacity) {
+            Byt.intTo(buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer);
+            capacity = buffer.length;
+
+            Byt.intTo(buffer, length, value);
+        }
+
+        length += 4;
+
+
+    }
+
+
+    public void add(float value) {
+
+        if (4 + length < capacity) {
+            Byt.floatTo(buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer);
+            capacity = buffer.length;
+
+            Byt.floatTo(buffer, length, value);
+        }
+
+        length += 4;
+
+
+    }
+
+
+
+    public void add(char value) {
+
+        if (2 + length < capacity) {
+            Byt.charTo(buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer);
+            capacity = buffer.length;
+
+            Byt.charTo(buffer, length, value);
+        }
+
+        length += 2;
+
+
+    }
+
+
+
+    public void add(short value) {
+
+        if (2 + length < capacity) {
+            Byt.shortTo(buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer);
+            capacity = buffer.length;
+
+            Byt.shortTo(buffer, length, value);
+        }
+
+        length += 2;
+
+
+    }
+
+    public void add(byte value) {
+
+        if (1 + length < capacity) {
+            Byt.idx(buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer);
+            capacity = buffer.length;
+
+            Byt.idx(buffer, length, value);
+        }
+
+        length += 1;
+
+
+    }
+
+    public void add(long value) {
+
+        if (8 + length < capacity) {
+            Byt.longTo(buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer);
+            capacity = buffer.length;
+
+            Byt.longTo(buffer, length, value);
+        }
+
+        length += 8;
+
+    }
+
+    public void add(double value) {
+
+        if (8 + length < capacity) {
+            Byt.doubleTo(buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer);
+            capacity = buffer.length;
+
+            Byt.doubleTo(buffer, length, value);
+        }
+
+        length += 8;
+
+    }
+
     public void add(byte[] array) {
         if (array.length + length < capacity) {
             Byt._idx( buffer, length, array );

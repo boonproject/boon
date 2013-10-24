@@ -563,13 +563,34 @@ public class Byt {
     }
 
 
+    public static byte[] addDouble(byte[] array, double value) {
+        Objects.requireNonNull(array);
 
-//
-//
-//    public static void doubleTo(byte[] b, int off, double val) {
-//        longTo(b, off, Double.doubleToLongBits(val));
-//    }
-//
+        byte [] holder = new byte [4];
+        doubleTo(holder, 0, value);
+        return add(array, holder);
+
+    }
+
+
+    public static byte[] insertDoubleInto(byte[] array, int index, double value) {
+        Objects.requireNonNull(array);
+
+        byte [] holder = new byte [4];
+        doubleTo(holder, 0, value);
+        return insert(array, index, holder);
+
+    }
+
+
+    public static void doubleTo(byte[] b, int off, double val) {
+        longTo(b, off, Double.doubleToLongBits(val));
+    }
+
+    public static double idxDouble(byte []b, int off) {
+         return Double.longBitsToDouble(idxLong(b, off));
+    }
+
 //
 //
 //    public static boolean booleanAt(byte[] b, int off) {
