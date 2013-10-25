@@ -263,7 +263,7 @@ public class JSONParseTest {
 
         String testString =
                 ("  'this is all sort of text, " +
-            "   do you think it is \\'cool\\' ' ").replace('\'', '"');
+            "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
         Object obj = JSONParser.parse(testString);
