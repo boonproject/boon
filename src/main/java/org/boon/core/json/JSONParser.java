@@ -236,6 +236,14 @@ public class JSONParser  {
         return map;
     }
 
+    boolean lastValueJSONNull=false;
+
+    private boolean wasJsonNull() {
+            boolean was = lastValueJSONNull;
+            lastValueJSONNull = false;
+            return was;
+    }
+
     private Object decodeValue() throws Exception {
         Object value = null;
 
@@ -249,6 +257,8 @@ public class JSONParser  {
                 break;
             } else if (c == 'n') {
                 value = decodeNull();
+
+                lastValueJSONNull=true;
                 break;
             } else if (c == '[') {
                 value = decodeJsonArray();
@@ -389,14 +399,25 @@ public class JSONParser  {
         if (this.currentChar() == '[' && hasMore())
             this.nextChar();
         skipWhiteSpace();
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
 
         int arrayIndex = 0;
 
         do {
             skipWhiteSpace();
             char c = this.currentChar();
-            list.add(decodeValue());
+
+            Object arrayItem = decodeValue();
+            boolean wasNull = wasJsonNull();
+
+            if ( arrayItem == null && wasNull )  {
+                list.add(null); //JSON null detected
+            } else if (arrayItem == null) {
+                 //do nothing
+            } else {
+                list.add(arrayItem);
+            }
+
             arrayIndex++;
             skipWhiteSpace();
             c = this.currentChar();
