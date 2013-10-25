@@ -19,25 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 public class JSONParseTest {
 
-//    @Test
-//    public void complex() {
-//
-//        Object obj = JSONParser.decodeObject(
-//                lines(
-//
-//                "{    'num' : 1   , ",
-//                "     'bar' : { 'foo': 1  },  ",
-//                "     'nums': [1,2 3,4,5 ],  ",
-//                "     'bar' : { 'foo': { 'fee': { 'foo' : 'fum'} }} }},  ",
-//                "     'bar' : { 'foo': 1                             },   ",
-//                "     'bar' : { 'foo': 1                             },   ",
-//                "     'bar' : { 'foo': 1                             }   ",
-//                "}"
-//                        ).replace('\'', '"')
-//        );
-//
-//        boolean ok = true;
-//    }
     @Test
     public void testParserSimpleMapWithNumber() {
 
@@ -191,16 +172,19 @@ public class JSONParseTest {
     @Test
     public void testNumbersTable() {
         String [][] tests = {
-                {"one", "1"},                  //0
-                {"two", "1.1"},                  //1
+                {"one", " 1 "},                  //0
+                {"two", "1.1 "},                  //1
                 {"three", " 1.8 "},                  //2
                 {"four", " 9.99 "},                  //3
-               // {"six", " 123456789012345678"},    does not work yet              //5
+                {"six", "123456789012345678 "},//    does not work yet              //5
 
         };
 
-        Number[] nums = {1, 1.1, 1.8, 9.99};
-                //123456789012345678L};
+        Number[] nums = {1,
+                1.1,
+                1.8,
+                9.99,
+                123456789012345678L};
 
 
 
@@ -320,5 +304,28 @@ public class JSONParseTest {
 
         System.out.println(obj.getClass());
     }
+
+
+    //
+//    @Test
+//    public void complex() {
+//
+//        Object obj = JSONParser.decodeObject(
+//                lines(
+//
+//                "{    'num' : 1   , ",
+//                "     'bar' : { 'foo': 1  },  ",
+//                "     'nums': [1,2 3,4,5 ],  ",
+//                "     'bar' : { 'foo': { 'fee': { 'foo' : 'fum'} }} }},  ",
+//                "     'bar' : { 'foo': 1                             },   ",
+//                "     'bar' : { 'foo': 1                             },   ",
+//                "     'bar' : { 'foo': 1                             }   ",
+//                "}"
+//                        ).replace('\'', '"')
+//        );
+//
+//        boolean ok = true;
+//    }
+
 
 }

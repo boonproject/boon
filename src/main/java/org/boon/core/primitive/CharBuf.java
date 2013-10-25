@@ -11,9 +11,10 @@ public class CharBuf {
 
     public static CharBuf createExact( final int capacity) {
           return new CharBuf(capacity) {
-              public void add(char[] chars) {
+              public CharBuf add(char[] chars) {
                       Chr._idx( buffer, location, chars );
                       location += chars.length;
+                      return this;
              }
          };
     }
@@ -36,12 +37,19 @@ public class CharBuf {
         buffer = new char[capacity];
     }
 
-    public void add(String str) {
+    public CharBuf add(String str) {
         add( str.toCharArray() );
+        return this;
+    }
+
+    public CharBuf addLine(String str) {
+        add( str.toCharArray() );
+        add('\n');
+        return this;
     }
 
 
-    public void add(char[] chars) {
+    public CharBuf add(char[] chars) {
         if (chars.length + location < capacity) {
             Chr._idx( buffer, location, chars );
         } else {
@@ -50,6 +58,7 @@ public class CharBuf {
             capacity = buffer.length;
         }
         location += chars.length;
+        return this;
     }
 
 

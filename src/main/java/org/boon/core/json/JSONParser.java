@@ -1,27 +1,35 @@
 package org.boon.core.json;
 
-import java.io.PrintStream;
+import org.boon.core.primitive.CharBuf;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.core.json.JSONParserState.*;
+
 /**
  * Converts an input JSON String into Java objects works with Reader or String
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
- * */
-public class JSONParser  {
+ */
+public class JSONParser {
 
     private char[] charArray;
     private int __index;
     private int line;
     private int lastLineStart;
-    private char ch;
-    private final boolean debug = true; // just used to debug if their are
+    private char __currentChar;
+    private char __lastChar;
 
+    private final boolean debug = false; // just used to debug if their are
+    private Map<String, Object> lastObject;
+    private List<Object> lastList;
+    private JSONParserState state;
+    private JSONParserState lastState;
 
-    private  JSONParser() {
+    private JSONParser() {
 
     }
 
@@ -49,61 +57,10 @@ public class JSONParser  {
     }
 
 
-    private final boolean safe() {
-
-        return __index < charArray.length;
-    }
-
-    private final boolean hasMore() throws Exception {
-        return __index + 1 <= charArray.length;
-    }
-
-    private final char currentChar() throws Exception {
-
-        if (safe()) {
-            return ch = charArray[__index];
-        }
-        return ch;
-
-    }
-
-    private final char nextChar() throws Exception {
-        if (hasMore()) {
-            __index++;
-            return this.currentChar();
-        }
-        return ch;
-
-    }
-
-    private void reset() {
-        charArray = null;
-        __index = 0;
-        line = 0;
-        lastLineStart = 0;
-        ch = (char) 0;
-
-    }
-
-
-
     @SuppressWarnings("unchecked")
     private Object decode(char[] cs) {
         charArray = cs;
-        Object root=null;
-        try {
-            root = decodeValue();
-        } catch (Exception e) {
-            JSONException.handleException(e);
-        }
-        return  root;
-    }
-
-
-
-    private Object decode(String cs) {
-        charArray = cs.toCharArray();
-        Object root=null;
+        Object root = null;
         try {
             root = decodeValue();
         } catch (Exception e) {
@@ -113,50 +70,113 @@ public class JSONParser  {
     }
 
 
-    @SuppressWarnings("nls")
-    private void debug() {
-        if (debug) {
-            PrintStream out = System.out;
-            out.println("line number " + line); //$NON-NLS-1$
-
-            int lineCount = __index - lastLineStart;
-
-            out.println(new String(charArray, lastLineStart, __index));
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < lineCount; i++) {
-                if (lineCount - 1 == i) {
-                    builder.append('^');
-                } else {
-                    builder.append('.');
-                }
-            }
-            System.out.println(builder.toString());
+    private Object decode(String cs) {
+        charArray = cs.toCharArray();
+        Object root = null;
+        try {
+            root = decodeValue();
+        } catch (Exception e) {
+            JSONException.handleException(e);
         }
+        return root;
+    }
+
+
+    private final boolean safe() {
+
+        return __index < charArray.length;
+    }
+
+    private final boolean hasMore() throws Exception {
+        return __index + 1 < charArray.length;
+    }
+
+    private final char currentChar() throws Exception {
+
+        if (safe()) {
+            return __currentChar = charArray[__index];
+        }
+        return __currentChar;
+
+    }
+
+    private final char nextChar() throws Exception {
+
+        try {
+            if (hasMore()) {
+                __lastChar = __currentChar;
+                __index++;
+                return __currentChar = charArray[__index];
+            }
+            return __currentChar;
+
+        } catch (Exception ex) {
+            throw new RuntimeException ( exceptionDetails("failure in next "+
+            ex.getLocalizedMessage()), ex);
+
+        }
+    }
+
+    private String exceptionDetails(String message) {
+        CharBuf buf = CharBuf.create(255);
+
+        buf.addLine(message);
+
+        buf.addLine("");
+        buf.addLine("The last character read was " + __lastChar);
+        buf.addLine("The current character read is " + __currentChar);
+
+
+        if (lastObject != null) {
+            buf.addLine("The last object read was");
+            buf.addLine("------------------------");
+            buf.addLine(lastObject.toString());
+            buf.addLine("------------------------");
+        }
+
+        if (lastList != null) {
+            buf.addLine("The last array read was");
+            buf.addLine("------------------------");
+            buf.addLine(lastList.toString());
+            buf.addLine("------------------------");
+        }
+
+
+        buf.addLine(message);
+        buf.addLine("line number " + line);
+        buf.addLine("index number " + __index);
+
+        int lineLocationCount = __index - lastLineStart;
+
+        buf.addLine(new String(charArray, lastLineStart, __index));
+        for (int i = 0; i < lineLocationCount; i++) {
+            if (lineLocationCount - 1 == i) {
+                buf.add('^');
+            } else {
+                buf.add('.');
+            }
+        }
+        return buf.toString();
     }
 
     private void skipWhiteSpace() throws Exception {
 
-        // if (fine) System.out.println("skipWhiteSpace");
-
-        int tooMuchWhiteSpace = 20;
         int count = 0;
 
         while (hasMore()) {
             count++;
-            if (count > tooMuchWhiteSpace)
-                break;
-            char c = this.currentChar();
-            // if (fine) System.out.printf("skipWhiteSpace c='%s' \n", c);
-            if (c == '\n') {
+
+            currentChar();
+            if (__currentChar == '\n') {
                 line++;
                 lastLineStart = __index;
                 this.nextChar();
                 continue;
-            } else if (c == '\r') {
+            } else if (__currentChar == '\r') {
                 line++;
                 if (hasMore()) {
-                    c = this.nextChar();
-                    if (c != '\n') {
+                    this.nextChar();
+                    if (__currentChar != '\n') {
                         lastLineStart = __index;
                         break;
                     }
@@ -164,7 +184,7 @@ public class JSONParser  {
                 lastLineStart = __index;
                 this.nextChar();
                 continue;
-            } else if (Character.isWhitespace(c)) {
+            } else if (Character.isWhitespace(__currentChar)) {
                 this.nextChar();
                 continue;
             } else {
@@ -182,6 +202,9 @@ public class JSONParser  {
             this.nextChar();
 
         Map<String, Object> map = new LinkedHashMap<>();
+
+        this.lastObject = map;
+
         do {
 
             skipWhiteSpace();
@@ -193,11 +216,8 @@ public class JSONParser  {
                 skipWhiteSpace();
                 c = this.currentChar();
                 if (c != ':') {
-                    debug();
-                    throw new IllegalStateException(
-                            "expecting ':' but got current char " + c
-                                    + " line " + line
-                                    + " index " + __index); //$NON-NLS-1$
+
+                    complain("expecting current character to be '" + c + "'\n");
                 }
                 c = this.nextChar(); // skip past ':'
                 skipWhiteSpace();
@@ -212,11 +232,7 @@ public class JSONParser  {
 
                 c = this.currentChar();
                 if (!(c == '}' || c == ',')) {
-                    debug();
-                    throw new IllegalStateException(
-                            "expecting '}' or ',' but got current char " + c
-                                    + " line " + line
-                                    + " index " + __index); //$NON-NLS-1$
+                    complain("expecting '}' or ',' but got current char " + c);
                 }
             }
             if (c == '}') {
@@ -226,28 +242,30 @@ public class JSONParser  {
                 this.nextChar();
                 continue;
             } else {
-                debug();
-                throw new IllegalStateException(
-                        "expecting '}' or ',' but got current char " + c
-                                + " line " + line
-                                + " index " + __index); //$NON-NLS-1$
+                complain(
+                        "expecting '}' or ',' but got current char " + c);
+
             }
         } while (this.hasMore());
         return map;
     }
 
-    boolean lastValueJSONNull=false;
+    private void complain(String complaint) {
+        throw new JSONException(exceptionDetails(complaint));
+    }
+
+    boolean lastValueJSONNull = false;
 
     private boolean wasJsonNull() {
-            boolean was = lastValueJSONNull;
-            lastValueJSONNull = false;
-            return was;
+        boolean was = lastValueJSONNull;
+        lastValueJSONNull = false;
+        return was;
     }
 
     private Object decodeValue() throws Exception {
         Object value = null;
 
-        while (hasMore()) {
+        do  {
             char c = this.currentChar();
             if (c == '"') {
                 value = decodeString();
@@ -258,22 +276,32 @@ public class JSONParser  {
             } else if (c == 'n') {
                 value = decodeNull();
 
-                lastValueJSONNull=true;
+                lastValueJSONNull = true;
                 break;
             } else if (c == '[') {
+                setState(START_LIST);
                 value = decodeJsonArray();
+                setState(END_LIST);
                 break;
             } else if (c == '{') {
+                setState(START_OBJECT);
                 value = decodeJsonObject();
+                setState(END_OBJECT);
                 break;
+
             } else if (c == '-' || Character.isDigit(c)) {
                 value = decodeNumber();
                 break;
             }
             this.nextChar();
-        }
+        } while (hasMore());
         skipWhiteSpace();
         return value;
+    }
+
+    private void setState(JSONParserState state) {
+        this.lastState = this.state;
+        this.state = state;
     }
 
     private Object decodeNumber() throws Exception {
@@ -294,11 +322,7 @@ public class JSONParser  {
                 this.nextChar();
                 continue;
             }
-            debug();
-            throw new IllegalStateException(
-                    "expecting number char but got current char " + c
-                            + " line " + line
-                            + " index " + __index); //$NON-NLS-1$
+            complain("expecting number char but got current char " + c);
 
         } while (this.hasMore());
 
@@ -311,11 +335,11 @@ public class JSONParser  {
                 value = Integer.parseInt(svalue);
             }
         } catch (Exception ex) {
-            debug();
-            throw new IllegalStateException(
-                    "expecting to decode a number but got value of " + svalue
-                            + " line " + line
-                            + " index " + __index);
+            try {
+                value = Long.parseLong(svalue);
+            } catch (Exception ex2) {
+                complain("expecting to decode a number but got value of "+ svalue);
+            }
 
         }
 
@@ -375,7 +399,7 @@ public class JSONParser  {
     }
 
     private String encodeString(int start, int to) throws Exception {
-        return JSONStringParser.decode( charArray, start, to );
+        return JSONStringParser.decode(charArray, start, to);
     }
 
     private String decodeKeyName() throws Exception {
@@ -400,33 +424,33 @@ public class JSONParser  {
             this.nextChar();
         skipWhiteSpace();
         List<Object> list = new ArrayList<>();
+        this.lastList = list;
 
         int arrayIndex = 0;
 
         do {
             skipWhiteSpace();
-            char c = this.currentChar();
 
             Object arrayItem = decodeValue();
             boolean wasNull = wasJsonNull();
 
-            if ( arrayItem == null && wasNull )  {
+            if (arrayItem == null && wasNull) {
                 list.add(null); //JSON null detected
             } else if (arrayItem == null) {
-                 //do nothing
+                //do nothing
             } else {
                 list.add(arrayItem);
             }
 
             arrayIndex++;
             skipWhiteSpace();
-            c = this.currentChar();
+            char c = this.currentChar();
             if (!(c == ',' || c == ']')) {
-                debug();
-                throw new IllegalStateException(
-                        "expecting a ',' of a ']' but got the current character of  " + c
-                                + " line " + line
-                                + " index " + __index + " on array index of " + arrayIndex);
+                complain(
+                        String.format("expecting a ',' of a ']', " +
+                        " but got the current character of  %s " +
+                        " on array index of %s \n", c, arrayIndex)
+                );
             }
             if (c == ']') {
                 this.nextChar();
