@@ -6,6 +6,10 @@ import java.io.PrintWriter;
 public class Exceptions {
 
 
+    public static boolean die() {
+        throw new Exception("died");
+    }
+
     public static boolean die(String message) {
         throw new Exception(message);
     }

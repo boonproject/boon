@@ -1,8 +1,6 @@
 package org.boon.core.json;
 
 import org.boon.core.Lists;
-import org.boon.core.json.JSONParser;
-import org.boon.core.json.JSONStringParser;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -22,7 +20,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithNumber() {
 
-        Object obj = JSONParser.decodeObject(
+        Object obj = JSONParser.parse(
                 " { 'foo': 1 }  ".replace('\'', '"')
         );
 
@@ -40,7 +38,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithBoolean() {
 
-        Object obj = JSONParser.decodeObject(
+        Object obj = JSONParser.parse(
                 " { 'foo': true }  ".replace('\'', '"')
         );
 
@@ -59,7 +57,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithList() {
 
-        Object obj = JSONParser.decodeObject(
+        Object obj = JSONParser.parse(
                 " { 'foo': [0,1,2] }  ".replace('\'', '"')
         );
 
@@ -77,7 +75,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithString() {
 
-        Object obj = JSONParser.decodeObject(
+        Object obj = JSONParser.parse(
                 " { 'foo': 'str ' }  ".replace('\'', '"')
         );
 
@@ -100,8 +98,8 @@ public class JSONParseTest {
     public void testLists() {
          String [][] testLists = {
                  {"emptyList", "[]"},                  //0
-//                 {"emptyList", " [ ]"},                  //1  fails
-                 {"oddly spaced", "[ 0 , 1 ,2, 3, 99 ]"},   //2
+                 {"emptyList", " [ ]"},                  //1  fails
+                 {"oddly spaced", "[ 0 , 1 ,2, 3, '99' ]"},   //2
                  {"nums and strings", "[ 0 , 1 ,'bar', 'foo', 'baz' ]"}, //3
                  {"nums stings map", "[ 0 , 1 ,'bar', 'foo', {'baz':1} ]"}, //4
                  {"nums strings map with list", "[ 0 , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//5
@@ -112,12 +110,17 @@ public class JSONParseTest {
 
         List<?>[] lists  = {
                 Collections.EMPTY_LIST,    //0
-                //Collections.EMPTY_LIST,    //1
-                Lists.list(0, 1, 2, 3, 99),  //2
+                Collections.EMPTY_LIST,    //1
+                Lists.list(0, 1, 2, 3, "99"),  //2
                 Lists.list(0, 1, "bar", "foo", "baz"),//3
                 Lists.list(0, 1, "bar", "foo", map("baz", 1)),//4
-                Lists.list(0, 1, "bar", "foo", map("baz", 1, "lst",
-                        list(1,2,3))),//5
+                Lists.list(0, 1,
+                        "bar",
+                        "foo",
+                        map( "baz", 1,
+                             "lst", list(1,2,3)
+                        )
+                ),//5
                 Lists.list(map("bar", map("zed", 1)), 1, "bar", "foo", map("baz", 1, "lst", list(1,2,3))),//6
                 Lists.list(0, 1, 2, 3, 99)
         };
@@ -172,19 +175,24 @@ public class JSONParseTest {
     @Test
     public void testNumbersTable() {
         String [][] tests = {
+                {"seven", "1.23E+11 "}, //6
+
                 {"one", " 1 "},                  //0
                 {"two", "1.1 "},                  //1
                 {"three", " 1.8 "},                  //2
                 {"four", " 9.99 "},                  //3
-                {"six", "123456789012345678 "},//    does not work yet              //5
+                {"six", "123456789012345678 "},//                //5
 
         };
 
-        Number[] nums = {1,
+        Number[] nums = {
+                1.23e11,
+                1,
                 1.1,
                 1.8,
                 9.99,
-                123456789012345678L};
+                123456789012345678L,
+                };
 
 
 
@@ -198,8 +206,9 @@ public class JSONParseTest {
 
     public void helper(String name, String json, Object compareTo) {
 
+        System.out.printf("%s, %s, %s", name, json, compareTo);
 
-        Object obj = JSONParser.decodeObject(
+        Object obj = JSONParser.parse(
                 json.replace('\'', '"')
         );
 
@@ -207,7 +216,7 @@ public class JSONParseTest {
 
 
 
-        System.out.printf("NAME=%s    \n    objt=%s\n    json=%s\n", name, obj, json);
+        System.out.printf("\nNAME=%s \n \t parsed obj=%s\n \t json=%s\n \t compareTo=%s\n", name, obj, json, compareTo);
         ok &= compareTo.equals(obj) || die(name + " :: List has items " + json);
 
 
@@ -216,7 +225,7 @@ public class JSONParseTest {
     @Test
     public void testNumber() {
 
-        Object obj = JSONParser.decodeObject(
+        Object obj = JSONParser.parse(
                 "  1  ".replace('\'', '"')
         );
 
@@ -234,7 +243,7 @@ public class JSONParseTest {
     @Test
     public void testNumberBoolean() {
 
-        Object obj = JSONParser.decodeObject(
+        Object obj = JSONParser.parse(
                 "  true  ".replace('\'', '"')
         );
 
@@ -249,28 +258,27 @@ public class JSONParseTest {
         System.out.println(obj.getClass());
     }
 
-    @Test    //broke need to fix
+    @Test
     public void testString() {
 
         String testString =
-            "  'this is all sort of text, " +
-            "   do you think it is \\'cool\\' ' ".replace('\'', '"');
+                ("  'this is all sort of text, " +
+            "   do you think it is \\'cool\\' ' ").replace('\'', '"');
 
 
-        Object obj = JSONParser.decodeObject(testString);
+        Object obj = JSONParser.parse(testString);
 
         System.out.println("here is what I got " + obj);
 
-//        boolean ok = true;
-//
-//        ok &= obj instanceof String || die("Object was not a String");
-//
-//        String value = (String) obj;
-//
-//
-//        ok &=  value.equals("") || die("I did see i equal to true");
-//
-//        System.out.println(obj.getClass());
+        boolean ok = true;
+
+        ok &= obj instanceof String || die("Object was not a String");
+
+        String value = (String) obj;
+
+        assertEquals("this is all sort of text,    do you think it is \"cool\" ", obj);
+
+        System.out.println(obj.getClass());
     }
 
 
@@ -286,7 +294,7 @@ public class JSONParseTest {
         );
 
 
-        Object obj = JSONParser.decodeObject(testString);
+        Object obj = JSONParser.parse(testString);
 
 
 
@@ -305,27 +313,54 @@ public class JSONParseTest {
         System.out.println(obj.getClass());
     }
 
+    @Test
+    public void textInMiddleOfArray() {
 
-    //
-//    @Test
-//    public void complex() {
-//
-//        Object obj = JSONParser.decodeObject(
-//                lines(
-//
-//                "{    'num' : 1   , ",
-//                "     'bar' : { 'foo': 1  },  ",
-//                "     'nums': [1,2 3,4,5 ],  ",
-//                "     'bar' : { 'foo': { 'fee': { 'foo' : 'fum'} }} }},  ",
-//                "     'bar' : { 'foo': 1                             },   ",
-//                "     'bar' : { 'foo': 1                             },   ",
-//                "     'bar' : { 'foo': 1                             }   ",
-//                "}"
-//                        ).replace('\'', '"')
-//        );
-//
-//        boolean ok = true;
-//    }
+        try {
+            Object obj = JSONParser.parse(
+                    lines("[A, 0]"
+                    ).replace('\'', '"')
+            );
+
+        } catch (Exception ex) {
+          //success
+            return;
+        }
+        die("The above should cause an exception");
+
+    }
+
+    @Test
+    public void oddlySpaced2() {
+
+        Object obj = JSONParser.parse(
+                lines("[       1, 0]"
+                ).replace('\'', '"')
+        );
+
+        boolean ok = true;
+
+        System.out.println(obj);
+
+    }
+
+    @Test
+    public void complex() {
+
+        Object obj = JSONParser.parse(
+                lines(
+
+                        "{    'num' : 1   , ",
+                        "     'bar' : { 'foo': 1  },  ",
+                        "     'nums': [0  ,1,2,3,4,5] } "
+                ).replace('\'', '"')
+        );
+
+        boolean ok = true;
+
+        System.out.println(obj);
+        //die();
+    }
 
 
 }
