@@ -5,6 +5,7 @@ import org.boon.primitive.CharBuf;
 import java.io.*;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,9 @@ import java.util.stream.CloseableStream;
 @SuppressWarnings("unchecked")
 public class IO {
 
-    public final static String UTF_8 = "UTF-8";
 
 
-    public final static Charset DEFAULT_CHARSET = Charset.forName(UTF_8);
+    public final static Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     public final static String FILE_SCHEMA = "file";
 
@@ -36,9 +36,7 @@ public class IO {
     public static String readChild(Path parentDir, String childFileName) {
         try {
 
-            final FileSystem fileSystem = FileSystems.getDefault();
-
-            final Path newFilePath = fileSystem.getPath(parentDir.toString(),
+            final Path newFilePath = path(parentDir.toString(),
                     childFileName);
 
             return read(newFilePath);
@@ -405,11 +403,11 @@ public class IO {
     }
 
     public static Path path(String path) {
-        return fileSystem().getPath(path);
+        return Paths.get(path);
     }
 
     public static Path path(String path, String... more) {
-        return fileSystem().getPath(path, more);
+        return Paths.get(path, more);
     }
 
     public static void write(Path file, String contents) {
