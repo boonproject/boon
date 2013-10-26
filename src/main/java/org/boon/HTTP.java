@@ -13,7 +13,8 @@ import static org.boon.IO.read;
 
 public class HTTP {
 
-
+    public static final int DEFAULT_TIMEOUT_SECONDS =
+            Integer.parseInt(System.getProperty("org.boon.HTTP.timeout", "5"));
 
     public static String get(
             final String url) {
@@ -156,15 +157,19 @@ public class HTTP {
     private static URLConnection doPost(String url, Map<String, ?> headers,
                                         String contentType, String charset, String body
                                         ) throws IOException {
-        URLConnection connection;/* Handle output. */
-        connection = new URL(url).openConnection();
+        HttpURLConnection connection;/* Handle output. */
+
+
+        connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setConnectTimeout(DEFAULT_TIMEOUT_SECONDS * 1000);
+
         connection.setDoOutput(true);
         manageContentTypeHeaders(contentType, charset, connection);
 
         manageHeaders(headers, connection);
 
 
-        IO.write(connection.getOutputStream(), body, IO.CHARSET);
+        IO.write(connection.getOutputStream(), body, IO.DEFAULT_CHARSET);
         return connection;
     }
 
@@ -177,7 +182,7 @@ public class HTTP {
     }
 
     private static void manageContentTypeHeaders(String contentType, String charset, URLConnection connection) {
-        connection.setRequestProperty("Accept-Charset", charset == null ? IO.CHARSET : charset);
+        connection.setRequestProperty("Accept-Charset", charset == null ? IO.UTF_8 : charset);
         if (contentType!=null && !contentType.isEmpty()) {
             connection.setRequestProperty("Content-Type", contentType);
         }
@@ -238,7 +243,7 @@ public class HTTP {
                 break;
             }
         }
-        charset = charset == null ?  IO.CHARSET : charset;
+        charset = charset == null ?  IO.UTF_8 : charset;
 
         return charset;
     }

@@ -13,10 +13,12 @@ import java.util.stream.CloseableStream;
 @SuppressWarnings("unchecked")
 public class IO {
 
-    public final static String CHARSET = "UTF-8";
+    public final static String UTF_8 = "UTF-8";
+
+
+    public final static Charset DEFAULT_CHARSET = Charset.forName(UTF_8);
 
     public final static String FILE_SCHEMA = "file";
-
 
 
     @Java8
@@ -30,10 +32,25 @@ public class IO {
         return list;
     }
 
+
+    public static String readChild(Path parentDir, String childFileName) {
+        try {
+
+            final FileSystem fileSystem = FileSystems.getDefault();
+
+            final Path newFilePath = fileSystem.getPath(parentDir.toString(),
+                    childFileName);
+
+            return read(newFilePath);
+        } catch (Exception ex) {
+            return Exceptions.handle(String.class, ex);
+        }
+    }
+
     public static String read(Path path) {
         try {
 
-            return read(Files.newBufferedReader(path, Charset.forName(CHARSET)));
+            return read(Files.newBufferedReader(path, DEFAULT_CHARSET));
 
         } catch (IOException ex) {
             return Exceptions.handle(String.class, ex);
@@ -43,8 +60,8 @@ public class IO {
     public static String read(InputStream inputStream, String charset) {
 
         try (Reader reader = new InputStreamReader(inputStream, charset)) {
-               return read(reader);
-        }catch (Exception ex) {
+            return read(reader);
+        } catch (Exception ex) {
             return Exceptions.handle(String.class, ex);
         }
     }
@@ -53,7 +70,7 @@ public class IO {
 
         try (Reader reader = new InputStreamReader(inputStream)) {
             return read(reader);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             return Exceptions.handle(String.class, ex);
         }
 
@@ -68,7 +85,7 @@ public class IO {
 
 
             int i;
-            while ((i = reader.read()) !=-1) {
+            while ((i = reader.read()) != -1) {
                 builder.add((char) i);
             }
 
@@ -82,7 +99,7 @@ public class IO {
     }
 
     public static String read(File file) {
-        try  (Reader reader = new FileReader(file)) {
+        try (Reader reader = new FileReader(file)) {
             return read(reader);
         } catch (Exception ex) {
             return Exceptions.handle(String.class, ex);
@@ -93,7 +110,7 @@ public class IO {
 
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
 
-              return readLines(bufferedReader);
+            return readLines(bufferedReader);
 
         } catch (Exception ex) {
 
@@ -115,7 +132,7 @@ public class IO {
 
     public static List<String> readLines(InputStream is) {
 
-        try (Reader reader = new InputStreamReader(is, CHARSET)) {
+        try (Reader reader = new InputStreamReader(is, DEFAULT_CHARSET)) {
 
             return readLines(reader);
 
@@ -127,7 +144,7 @@ public class IO {
 
     public static void eachLine(InputStream is, EachLine eachLine) {
 
-        try (Reader reader = new InputStreamReader(is, CHARSET)) {
+        try (Reader reader = new InputStreamReader(is, DEFAULT_CHARSET)) {
 
             eachLine(reader, eachLine);
 
@@ -145,7 +162,7 @@ public class IO {
 
 
             String line;
-            while ( (line = bufferedReader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 lines.add(line);
             }
 
@@ -158,7 +175,7 @@ public class IO {
     }
 
     public static interface EachLine {
-        public boolean line (String line, int index);
+        public boolean line(String line, int index);
     }
 
     public static void eachLine(BufferedReader reader, EachLine eachLine) {
@@ -169,10 +186,10 @@ public class IO {
             String line;
             int lineNumber = 0;
 
-            while ( (line = bufferedReader.readLine()) != null &&
-                    eachLine.line(line, lineNumber++) ){ //
-                    // no op
-                    }
+            while ((line = bufferedReader.readLine()) != null &&
+                    eachLine.line(line, lineNumber++)) { //
+                // no op
+            }
         } catch (Exception ex) {
 
             Exceptions.handle(ex);
@@ -199,19 +216,19 @@ public class IO {
 
     public static List<String> readLines(final String location) {
 
-        final URI uri =  URI.create(location);
+        final URI uri = URI.create(location);
 
         return Exceptions.tryIt(List.class, () -> {
 
-            if ( uri.getScheme()==null ) {
+            if (uri.getScheme() == null) {
 
                 Path thePath = FileSystems.getDefault().getPath(location);
-                return Files.readAllLines(thePath, Charset.forName(CHARSET));
+                return Files.readAllLines(thePath, DEFAULT_CHARSET);
 
-            } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
                 Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return Files.readAllLines(thePath, Charset.forName(CHARSET));
+                return Files.readAllLines(thePath, DEFAULT_CHARSET);
 
             } else {
                 return readLines(location, uri);
@@ -223,23 +240,23 @@ public class IO {
 
     public static void eachLine(final String location, EachLine eachLine) {
 
-        final URI uri =  URI.create(location);
+        final URI uri = URI.create(location);
 
         Exceptions.tryIt(() -> {
 
-            if ( uri.getScheme()==null ) {
+            if (uri.getScheme() == null) {
 
                 Path thePath = FileSystems.getDefault().getPath(location);
                 BufferedReader buf = Files.newBufferedReader(
-                        thePath, Charset.forName(CHARSET));
+                        thePath, DEFAULT_CHARSET);
                 eachLine(buf, eachLine);
 
-            } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
                 Path thePath = FileSystems.getDefault().getPath(uri.getPath());
 
                 BufferedReader buf = Files.newBufferedReader(
-                        thePath, Charset.forName(CHARSET));
+                        thePath, DEFAULT_CHARSET);
                 eachLine(buf, eachLine);
 
 
@@ -252,19 +269,19 @@ public class IO {
     }
 
     public static String read(final String location) {
-        final URI uri =  URI.create(location);
+        final URI uri = URI.create(location);
 
         return Exceptions.tryIt(String.class, () -> {
 
-            if ( uri.getScheme()==null ) {
+            if (uri.getScheme() == null) {
 
                 Path thePath = FileSystems.getDefault().getPath(location);
-                return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
+                return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
 
-            } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
                 Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
+                return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
 
             } else {
                 return read(location, uri);
@@ -280,9 +297,9 @@ public class IO {
             Path fsPath = fileSystem.getPath(location);
 
             //Paths.get()
-            return Files.readAllLines(fsPath, Charset.forName(CHARSET));
+            return Files.readAllLines(fsPath, DEFAULT_CHARSET);
         } catch (ProviderNotFoundException ex) {
-             return readLines(uri.toURL().openStream());
+            return readLines(uri.toURL().openStream());
         }
     }
 
@@ -291,7 +308,7 @@ public class IO {
         try {
             FileSystem fileSystem = FileSystems.getFileSystem(uri);
             Path fsPath = fileSystem.getPath(location);
-            BufferedReader buf = Files.newBufferedReader(fsPath, Charset.forName(CHARSET));
+            BufferedReader buf = Files.newBufferedReader(fsPath, DEFAULT_CHARSET);
             eachLine(buf, eachLine);
 
 
@@ -304,14 +321,14 @@ public class IO {
         try {
             FileSystem fileSystem = FileSystems.getFileSystem(uri);
             Path fsPath = fileSystem.getPath(location);
-            return read (Files.newBufferedReader(fsPath, Charset.forName(CHARSET)));
+            return read(Files.newBufferedReader(fsPath, DEFAULT_CHARSET));
         } catch (ProviderNotFoundException ex) {
             return read(uri.toURL().openStream());
         }
     }
 
 
-    public static void write(OutputStream out, String content, String charset) {
+    public static void write(OutputStream out, String content, Charset charset) {
 
         try (OutputStream o = out) {
             o.write(content.getBytes(charset));
@@ -321,10 +338,97 @@ public class IO {
 
     }
 
+    public static void writeChild(Path parentDir, String childFileName, String childContents) {
+
+        try {
+
+            final Path newFilePath = path(parentDir.toString(),
+                    childFileName);
+
+            write(newFilePath, childContents);
+        } catch (Exception ex) {
+            Exceptions.handle(ex);
+        }
+    }
+
+    public static Path createChildDirectory(Path parentDir, String childDir) {
+
+        try {
+
+
+
+            final Path newDir = path(parentDir.toString(),
+                    childDir);
+
+
+            if (!Files.exists(newDir)) {
+                Files.createDirectory(newDir);
+            }
+
+            return newDir;
+
+        } catch (Exception ex) {
+            return Exceptions.handle(Path.class, ex);
+        }
+    }
+
+    public static void createDirectory(Path dir) {
+
+        try {
+
+
+            if (!Files.exists(dir)) {
+                Files.createDirectory(dir);
+            }
+
+        } catch (Exception ex) {
+            Exceptions.handle(ex);
+        }
+    }
+
+    public static Path createDirectory(String dir) {
+
+        try {
+
+            final Path newDir = path(dir);
+            createDirectory(newDir);
+
+            return newDir;
+
+        } catch (Exception ex) {
+            return Exceptions.handle(Path.class, ex);
+        }
+    }
+
+    public static FileSystem fileSystem() {
+        return FileSystems.getDefault();
+    }
+
+    public static Path path(String path) {
+        return fileSystem().getPath(path);
+    }
+
+    public static Path path(String path, String... more) {
+        return fileSystem().getPath(path, more);
+    }
+
+    public static void write(Path file, String contents) {
+        write(file, contents.getBytes(DEFAULT_CHARSET));
+    }
+
+    public static void write(Path file, byte[] contents) {
+        try {
+            Files.write(file, contents);
+
+        } catch (Exception ex) {
+            Exceptions.handle(ex);
+        }
+    }
+
     public static void write(OutputStream out, String content) {
 
         try (OutputStream o = out) {
-            o.write(content.getBytes(CHARSET));
+            o.write(content.getBytes(DEFAULT_CHARSET));
         } catch (Exception ex) {
             Exceptions.handle(ex);
         }
@@ -332,7 +436,7 @@ public class IO {
     }
 
 
-    public static void main(String [] args) throws Throwable {
+    public static void main(String[] args) throws Throwable {
 //        Map<String, String> env = new HashMap<>();
 //        env.put("create", "true");
 //        // locate file system by using the syntax
@@ -346,7 +450,6 @@ public class IO {
 //            Files.copy( externalTxtFile,pathInZipfile,
 //                    StandardCopyOption.REPLACE_EXISTING );
 //        }
-
 
 
     }

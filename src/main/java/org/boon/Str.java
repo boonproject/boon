@@ -172,15 +172,15 @@ public class Str {
 
     public static String[] split(String str) {
         char[][] split = Chr.split(str.toCharArray());
-        return fromCharArrayofArrayToStringArray(split);
+        return fromCharArrayOfArrayToStringArray(split);
     }
 
     public static String[] splitLines(String str) {
         char[][] split = Chr.splitLine(str.toCharArray());
-        return fromCharArrayofArrayToStringArray(split);
+        return fromCharArrayOfArrayToStringArray(split);
     }
 
-    private static String[] fromCharArrayofArrayToStringArray(char[][] split) {
+    public static String[] fromCharArrayOfArrayToStringArray(char[][] split) {
         String[] results = new String [ split.length ];
 
         char [] array;

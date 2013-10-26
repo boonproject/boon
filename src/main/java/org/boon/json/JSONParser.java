@@ -441,11 +441,21 @@ public class JSONParser {
     }
 
     private Object decodeJsonArray()  {
-        if (this.currentChar() == '[' && hasMore())
+        if (this.currentChar() == '[')  {
             this.nextChar();
+        }
+
         skipWhiteSpace();
+
         List<Object> list = new ArrayList<>();
         this.lastList = list;
+
+        /* the list might be empty  */
+        if (this.currentChar() == ']') {
+            this.nextChar();
+            return list;
+        }
+
 
         int arrayIndex = 0;
 

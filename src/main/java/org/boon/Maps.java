@@ -198,6 +198,10 @@ public class Maps {
 
 
 
+    public static <K, V> Map<K, V> map(Class<K> keyClass, Class<V> valueClass) {
+        return new LinkedHashMap<>(10);
+    }
+
     public static <K, V> Map<K, V> map(K k0, V v0) {
         Map<K, V> map = new LinkedHashMap<>(10);
         map.put(k0, v0);

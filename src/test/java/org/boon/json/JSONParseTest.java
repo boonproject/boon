@@ -17,6 +17,16 @@ import static org.junit.Assert.assertEquals;
 
 public class JSONParseTest {
 
+
+    @Test
+    public void bug() {
+        String badText = "{\"result\":[],\"_expire\":\"-1\"}";
+        Object obj = JSONParser.parse(badText);
+
+
+
+    }
+
     @Test
     public void testParserSimpleMapWithNumber() {
 

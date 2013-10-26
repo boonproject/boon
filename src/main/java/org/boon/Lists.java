@@ -1,10 +1,12 @@
 package org.boon;
 
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Lists {
+
 
 
     public static <V> List<V> list(Class<V> clazz) {
@@ -17,6 +19,32 @@ public class Lists {
             list.add(o);
         }
         return list;
+    }
+
+
+    public static List<?> toList(Object item) {
+        if ( item == null )  {
+           return new ArrayList<>();
+        } else if ( item.getClass().isArray() ) {
+            final int length = Array.getLength(item);
+            List <Object> list = new ArrayList<>();
+            for (int index = 0; index < length; index++) {
+                list.add( Array.get(item, index) );
+            }
+            return list;
+        } else if ( item instanceof Collection ) {
+            return list( (Collection) item);
+        } else if ( item instanceof  Iterator ) {
+            return list( (Iterator) item );
+        } else if ( item instanceof  Enumeration ) {
+            return list( (Enumeration) item );
+        } else if ( item instanceof  Iterable ) {
+            return list( (Iterable) item );
+        }  else {
+            List <Object> list = new ArrayList<>();
+            list.add(item);
+            return list;
+        }
     }
 
     public static <V> List<V> list(Collection<V> collection) {

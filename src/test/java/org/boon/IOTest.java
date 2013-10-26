@@ -3,13 +3,12 @@ package org.boon;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import org.boon.IO;
-import org.boon.Str;
 import org.junit.Test;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -349,10 +348,10 @@ public class IOTest {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        IO.write(bos, "line 1\n", "UTF-8");
-        IO.write(bos, "apple\n", "UTF-8");
-        IO.write(bos, "pear\n", "UTF-8");
-        IO.write(bos, "grapes\n", "UTF-8");
+        IO.write(bos, "line 1\n", Charset.forName("UTF-8"));
+        IO.write(bos, "apple\n", IO.DEFAULT_CHARSET);
+        IO.write(bos, "pear\n", IO.DEFAULT_CHARSET);
+        IO.write(bos, "grapes\n", IO.DEFAULT_CHARSET);
 
         List<String> lines = IO.readLines(new ByteArrayInputStream(bos.toByteArray()));
 
@@ -405,7 +404,7 @@ public class IOTest {
             String body = IO.read(testFile);
             t.sendResponseHeaders(200, body.length());
             OutputStream os = t.getResponseBody();
-            os.write(body.getBytes(IO.CHARSET));
+            os.write(body.getBytes(IO.UTF_8));
             os.close();
         }
     }
