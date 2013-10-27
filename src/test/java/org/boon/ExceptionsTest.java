@@ -1,7 +1,6 @@
 package org.boon;
 
 
-import org.boon.Exceptions;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class ExceptionsTest {
 
 
 
-    @Test(expected = Exceptions.Exception.class)
+    @Test(expected = Exceptions.SoftenedException.class)
     public void testException()  {
 
         try {
@@ -32,7 +31,7 @@ public class ExceptionsTest {
 
     }
 
-    @Test(expected = Exceptions.Exception.class)
+    @Test(expected = Exceptions.SoftenedException.class)
     public void die()  {
 
         try {
@@ -44,7 +43,7 @@ public class ExceptionsTest {
     }
 
 
-    @Test(expected = Exceptions.Exception.class)
+    @Test(expected = Exceptions.SoftenedException.class)
     public void testExceptionWithMessage()  {
 
         try {
@@ -55,7 +54,7 @@ public class ExceptionsTest {
 
     }
 
-    @Test(expected = Exceptions.Exception.class)
+    @Test(expected = Exceptions.SoftenedException.class)
     public void testTryIt()  {
 
         tryIt(this::methodThatThrowsException);
@@ -79,7 +78,7 @@ public class ExceptionsTest {
     }
 
 
-    @Test(expected = Exceptions.Exception.class)
+    @Test(expected = Exceptions.SoftenedException.class)
     public void testTryItWithMessage()  {
 
         tryIt("Calling method that throws exception", () -> methodThatThrowsException());
@@ -106,7 +105,7 @@ public class ExceptionsTest {
             System.out.println(ex.getMessage());
         }
 
-        Exception ex = new Exceptions.Exception("");
+        Exception ex = new Exceptions.SoftenedException("");
         ex.printStackTrace();
         ex.printStackTrace(System.out);
 
@@ -120,7 +119,7 @@ public class ExceptionsTest {
         System.out.println(ex.getMessage());
 
 
-        ex = new Exceptions.Exception("Foobar");
+        ex = new Exceptions.SoftenedException("Foobar");
 
         ex.printStackTrace(new PrintWriter(new StringWriter()));
 

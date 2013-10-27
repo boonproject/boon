@@ -7,9 +7,6 @@ import java.util.Map;
 
 import static org.boon.Exceptions.die;
 
-//import static org.boon.utils.ComplainAndDie.complain;
-
-
 public class MapField implements FieldAccess {
 
     private String name;
@@ -75,7 +72,11 @@ public class MapField implements FieldAccess {
 
     @Override
     public void setInt(Object obj, int value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
     }
 
     @Override
@@ -90,7 +91,11 @@ public class MapField implements FieldAccess {
 
     @Override
     public void setShort(Object obj, short value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
     }
 
     @Override
@@ -105,7 +110,11 @@ public class MapField implements FieldAccess {
 
     @Override
     public void setChar(Object obj, char value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
     }
 
     @Override
@@ -120,7 +129,11 @@ public class MapField implements FieldAccess {
 
     @Override
     public void setLong(Object obj, long value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
     }
 
     @Override
@@ -135,7 +148,11 @@ public class MapField implements FieldAccess {
 
     @Override
     public void setDouble(Object obj, double value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
     }
 
     @Override
@@ -150,7 +167,11 @@ public class MapField implements FieldAccess {
 
     @Override
     public void setFloat(Object obj, float value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
     }
 
     @Override
@@ -164,7 +185,12 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setByte(Object obj, byte vaue) {
+    public void setByte(Object obj, byte value) {
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
 
     }
 
@@ -180,13 +206,18 @@ public class MapField implements FieldAccess {
 
     @Override
     public void setObject(Object obj, Object value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (obj instanceof Map) {
+            Map map = (Map) obj;
+            map.put(name, value);
+        }
+        die("Object must be a map");
     }
 
 
     @Override
     public Field getField() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return die(Field.class, "Unsupported operation") ;
+
     }
 
     @Override
@@ -216,6 +247,6 @@ public class MapField implements FieldAccess {
 
     @Override
     public Class<?> getType() {
-        return null;
+        return Object.class;
     }
 }

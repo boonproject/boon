@@ -15,6 +15,10 @@ public class StringScanner {
 //    }
 
 
+    public static boolean isDigits( String input ) {
+        return CharScanner.isDigits( input.toCharArray() );
+    }
+
     public static String[] split( final String string,
                                   final char split) {
 

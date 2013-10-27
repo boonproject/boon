@@ -7,37 +7,37 @@ public class Exceptions {
 
 
     public static boolean die() {
-        throw new Exception("died");
+        throw new SoftenedException("died");
     }
 
     public static boolean die(String message) {
-        throw new Exception(message);
+        throw new SoftenedException(message);
     }
 
 
     public static <T> T  die(Class<T> clazz, String message) {
-        throw new Exception(message);
+        throw new SoftenedException(message);
     }
 
     public static void handle(java.lang.Exception e) {
-        throw new Exception(e);
+        throw new SoftenedException(e);
     }
 
 
     public static <T> T handle(Class<T> clazz, java.lang.Exception e) {
 
-        if (e instanceof Exception) {
-            throw (Exception) e;
+        if (e instanceof SoftenedException) {
+            throw (SoftenedException) e;
         }
-        throw new Exception(e);
+        throw new SoftenedException(e);
     }
 
     public static <T> T handle(Class<T> clazz,  String message, java.lang.Exception e) {
 
-        if (e instanceof Exception) {
-            throw (Exception) e;
+        if (e instanceof SoftenedException) {
+            throw (SoftenedException) e;
         }
-        throw new Exception(e);
+        throw new SoftenedException(e);
     }
 
 
@@ -45,7 +45,7 @@ public class Exceptions {
          try {
              return tryIt.tryIt();
          } catch (java.lang.Exception ex) {
-             throw new Exception(ex);
+             throw new SoftenedException(ex);
          }
     }
 
@@ -54,19 +54,19 @@ public class Exceptions {
         try {
             tryIt.tryIt();
         } catch (java.lang.Exception ex) {
-            throw new Exception(ex);
+            throw new SoftenedException(ex);
         }
     }
 
     public static void handle(String message, Throwable e) {
-        throw new Exception(message, e);
+        throw new SoftenedException(message, e);
     }
 
     public static void tryIt (String message, Trial tryIt) {
         try {
             tryIt.tryIt();
         } catch (java.lang.Exception ex) {
-            throw new Exception(message, ex);
+            throw new SoftenedException(message, ex);
         }
     }
 
@@ -79,17 +79,17 @@ public class Exceptions {
         T tryIt () throws java.lang.Exception;
     }
 
-    public static class Exception extends RuntimeException {
+    public static class SoftenedException extends RuntimeException {
 
-           public Exception(String message) {
+           public SoftenedException(String message) {
                super(message);
            }
 
-           public Exception(String message, Throwable cause) {
+           public SoftenedException(String message, Throwable cause) {
                super(message, cause);
            }
 
-           public Exception(Throwable cause) {
+           public SoftenedException(Throwable cause) {
                super("Wrapped Exception", cause);
            }
 
