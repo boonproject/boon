@@ -1,127 +1,193 @@
-boon
+Java Boon
 ====
 
 Simple opinionated Java for the novice to expert level Java Programmer.
 
-Whenever possible no overloading (except for language literal simulations).
-Whenever possible toString shall produce valid JSON.
-
-Universal methods to work with list, appendable, strings, sets, maps, etc. if applicable:
-
-* len   - length (map, list, set, string, char sequence, array)
-* in    - checks if value is in (map (checks for key), list, set, string, char sequence, array)
-* idx   - indexes object (map, list, set, string, char sequence, array)
-* idx   - does set (map, list, set, string, char sequence, array)
-* add   - adds item to object (map (adds entry), list, set, string, char sequence, array)
-* copy  - shallow copy (map, list, set, string, char sequence, array)
-* slc   - slices using slc(2, -2), slc(-2) syntax (map, list, set, string, char sequence, array)
-* slcEnd - slices the end off
-* before - tree maps, tree sets, (refers to the item before an "index")
-* after -  tree maps, tree sets (refers to an item after an "index")
-* insert - inserts an item into a list like thing. (so far for lists)
-* remove or subtract or sub or minus
-
-Maps has valueIn which is like in.
+Low Ceremony. High Productivity.
 
 
 
+Brief introduction to Boon
+===
+
+Here are some basic Java types, list, array, veggies, primitive char array,
+and a primitive byte array.
 
 
-Possible future   (maybe, maybe not)
-* count
-* pop (list, array)
-* push
-* find - finds an object (map, list, set, string, char sequence, array)
-* findAll - finds a collection of objects (map, list, set, string, char sequence, array)
-* clone - deep copy (map, list, set, string, char sequence, array)
-* str - converts object into readable string
-* oStr - converts object into JSON
-* sub - remove an item (map, list, set, string, char sequence, array)
-* dir - list properties, methods and other information about a class
-* dice - like slice but creates lists of lists or arrays of arrays, etc.
-* divide - like dice but different - divide(2, list) would break up the list evenly into two lists.
-* sum - add a list or array of values together
-* max - find the max value in an array, map, set or list.
-* min - find the min value in an array, map set or list.
-* avg - find the avg value in an array, map, set or list.
-* mode - find the mode
-* median - find the median
-* sort - add the ability to sort things (for lists array, if not primitive then
-               check to see if comparable, then check if it has a toString defined,
-               then do string order on toString)
-* filter - add filtering (see DataRepo)
-* see http://groovy.codehaus.org/GDK+Extensions+to+Object
-* any
-* every
-* collect
-* each
-* each with index
-* find and findAll
-* equal (using truth)
-* notEqual (using not truth)
-* JMX support
-* EL style lang support #{} (use Ruby style) since # is less common than $
-* puts "Hello #{name.capitalize}!"
-* puts ("Hello #{cap(name}", ctx(this))
-* Create ReflectionUtils.respondsTo
-* Create ReflectionUtils.invoke
-* Create ReflectionUtils.ctx
+```java
 
-<pre>
+    //Boon works with lists, arrays, sets, maps, sorted maps, etc.
+    List<String> fruitList;
+    String [] fruitArray;
+    Set<String> veggiesSet;
+    char [] letters;
+    byte [] bytes;
+    NavigableMap <Integer, String> favoritesMap;
+    Map<String, Integer> map;
 
-    if (respondsTo(bird, "fly")) {
-        invoke(bird, "fly", far, high);
-        puts ("Hello #{height}", ctx(bird));
-    }
-
-    if (respondsTo(bird, "fly", integer, integer)) {
-        invoke(bird, "fly", far, high);
-        puts ("Hello #{height}", ctx(bird));
-    }
-
-</pre>
-
-* templates built in
-* GPath style path support for any java object, map, json or dom.
-* ObjectGraphBuilder would be nice for testing graphs for data repo
-* queue utilities
-* add Queue as a FCC to the mix
-* Process support
-* add Regex support
-* JDBC support
-* Mongo support
+    //In Java a TreeMap is a SortedMap and a NavigableMap by the way.
 
 
+```
 
-Code coverage shall always be 90% or above.
+Boon comes with helper methods that allow you to easily create lists,
+sets, maps, concurrent maps, sorted maps, sorted sets, etc. The helper methods
+are **safeList**, **list**, **set**, **sortedSet**, **safeSet**,
+**safeSortedSet**, etc. The idea is to make Java feel more
+like list and maps are built in types.
+
+```java
+
+    veggiesSet  =  set( "salad", "broccoli", "spinach");
+    fruitList   =  list( "apple", "oranges", "pineapple");
+    fruitArray  =  array( "apple", "oranges", "pineapple");
+    letters     =  array( 'a', 'b', 'c');
+    bytes       =  array( new byte[]{0x1, 0x2, 0x3, 0x4});
+```
+
+There are even methods to create maps and sorted maps
+called **map**, **sortedMap**, **safeMap** (concurrent) and **sortedSafeMap**
+(concurrent). These were mainly created because Java does not have
+literals for lists, maps, etc.
 
 
-Ideas
-http://docs.python.org/2/library/functions.html
+```java
+
+     favoritesMap = sortedMap(
+            2, "pineapple",
+            1, "oranges",
+            3, "apple"
+     );
+
+
+     map =    map (
+        "pineapple",  2,
+        "oranges",    1,
+        "apple",      3
+     );
+
+```
+
+You can index maps, lists, arrays, etc. using the **idx** operator.
+
+```java
+
+     //Using idx to access a value.
+
+     assert idx( veggiesSet, "b").equals("broccoli");
+
+     assert idx( fruitList, 1 ).equals("oranges");
+
+     assert idx( fruitArray, 1 ).equals("oranges");
+
+     assert idx( letters, 1 ) == 'b';
+
+     assert idx( bytes, 1 )      == 0x2;
+
+     assert idx( favoritesMap, 2 ).equals("pineapple");
+
+     assert idx( map, "pineapple" )  == 2;
+
+```
+
+The **idx** operators works with negative indexes as well.
+
+```java
+
+
+               //Negative indexes
+
+                assert idx( fruitList, -2 ).equals("oranges");
+
+                assert idx( fruitArray, -2 ).equals("oranges");
+
+                assert idx( letters, -2 ) == 'b';
+
+                assert idx( bytes, -3 )   == 0x2;
+
+```
+
+*Ruby, Groovy and Python* have this feature. Now you can use this in Java as well.
+The Java version (Boon) works with primitive arrays (with no autoboxing).
+
+Boon has the concept of universal operators similar to Python like **len**.
+
+```java
+
+
+     // Getting the length
+     assert len( veggiesSet )        == 3;
+     assert len( fruitList )         == 3;
+     assert len( fruitArray )        == 3;
+     assert len( letters )           == 3;
+     assert len( bytes )             == 4;
+     assert len( favoritesMap )      == 3;
+     assert len( map )               == 3;
+
+```
+
+
+Boon utility methods
+===
+
+Boon can read in an entire file in one line of code:
+
+```java
+        File testFile = new File(testDir, "testfile.txt");
+        List<String> lines = IO.readLines(testFile);
+```
+
+No really!
+
+```java
+        File testFile = new File(testDir, "testfile.txt");
+        List<String> lines = IO.readLines("~/github/boon/testfiles/testfile.txt");
+```
+
+There is also support for lambda expressions:
+
+```java
+        File testFile = new File(testDir, "testfile.txt");
 
 
 
-TODO:
-* Add comparators to Sets.
-* Missing slice tests for Maps.
-* Need empty and not empty
-* Add Arrays (len, in, idx, copy, slc, slcEnd, insert, add, conversion from collection)
-* Add Strings (split single char, split list of chars, slc, len, in, idx, copy, slc, slcEnd, insert, add)
-* Write article on universal methods
-* Add classpath:// and directory scanning support to IO
-* Write article on I/O utilities and JDK 7 FileSystem
-** Add support for classpath search of resources
-* Add Reflection utilities (deep dive properties)
-** UnsafeField, MapField, ReflectionField, etc.
-* Write article
-* Create universal Object to Map/List utility
-* Write article
-* Create universal Binary serializer / deserializer
-* Write article
-* Create universal JSON serializer / deserializer
-* Write article
-* Add DataRepo Support to boon
-* Write article
-* Create proxies using interface
-* Write article
-* Add support for Ruby respondsTo
+        IO.eachLine(testFile.toString(), (line, index) -> {
+            System.out.println(index + " " + line);
+            return true;
+        });
+
+        }
+
+```
+
+The readLines and read methods can read from URIs as well:
+
+```java
+        List<String> lines = IO.readLines("http://localhost:9666/test");
+```
+
+
+
+Right now I have a JDK 1.8 branch and and a JDK 1.7 branch.
+
+Why Boon
+====
+Easily read in files into lines or a giant string with one method call.
+Slice notation for dealing with Strings, Lists, primitive arrays, etc.
+If you are from Groovy land, Ruby land, Python land, or whatever land, and you have to use
+Java then Boon might give you some relief.
+
+Core Boon Philosophy
+===
+Core Boon will never have any dependencies.
+It will always be able to run as a single jar.
+
+
+Further Reading
+===
+
++ [Boon's Universal Operations and the BBBB Java does have a ByteBuilder sort of](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder)
++ [Java Boon Sets and slice notation](https://github.com/RichardHightower/boon/wiki/Sets-and-Slice-Notation-for-Java-Boon!)
++ [Java Boon Slice notation](https://github.com/RichardHightower/boon/wiki/Boon-Slice-Notation)
++ [Random thoughts and TODO](https://github.com/RichardHightower/boon/wiki/Random-thoughts-and-TODO-for-Boon)
++ [Birth of Boon](https://github.com/RichardHightower/boon/wiki/Birth-of-Boon)
