@@ -30,10 +30,10 @@ public class Reflection {
 
     private static boolean _useUnsafe;
 
-    static Set<String> fieldSortNames = Sets.set("name", "orderBy", "title", "key");
-    static Set<String> fieldSortNamesPrefixes = Sets.set("Name", "Title", "Key");
+    private static Set<String> fieldSortNames = Sets.set("name", "orderBy", "title", "key");
+    private static Set<String> fieldSortNamesPrefixes = Sets.set("Name", "Title", "Key");
 
-    static ConcurrentHashMap<Class, String> sortableFields = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Class, String> sortableFields = new ConcurrentHashMap<>();
 
 
     static {
@@ -46,14 +46,14 @@ public class Reflection {
         }
 
         _useUnsafe = _useUnsafe && ! Boolean.getBoolean("com.org.org.boon.noUnsafe");
-        _useUnsafe = true;
     }
 
 
     /**
-     * Does this return getPropertyFieldFieldAccessMap(clazz, true, true);
+     * This returns getPropertyFieldFieldAccessMap(clazz, true, true);
      *
-     * @param clazz
+     * @see Reflection#getPropertyFieldAccessMap(Class,  boolean, boolean)
+     * @param clazz  gets the properties or fields of this class.
      * @return
      */
     public static Map<String, FieldAccess> getPropertyFieldAccessMap(Class<?> clazz) {
@@ -63,15 +63,20 @@ public class Reflection {
     /**
      * Gets a list of fields merges with properties if field is not found.
      *
-     * @param clazz
-     * @param useFieldFirst
-     * @param useUnSafe
+     * @param clazz             get the properties or fields
+     * @param useFieldFirst     try to use the field first if this is set
+     * @param useUnSafe         use unsafe if it is available for speed.
      * @return
      */
     public static Map<String, FieldAccess> getPropertyFieldAccessMap(Class<?> clazz, boolean useFieldFirst, boolean useUnSafe) {
+        /* Fallback map. */
         Map<String, FieldAccess> fieldsFallbacks = null;
+
+        /* Primary merge into this one. */
         Map<String, FieldAccess> fieldsPrimary = null;
 
+
+        /* Try to find the fields first if this is set. */
         if (useFieldFirst) {
             fieldsPrimary = Reflection.getAllAccessorFields(clazz, useUnSafe);
 
@@ -79,8 +84,8 @@ public class Reflection {
 
         } else {
 
+             /* Try to find the properties first if this is set. */
             fieldsFallbacks = Reflection.getAllAccessorFields(clazz, useUnSafe);
-
             fieldsPrimary = Reflection.getPropertyFieldAccessors(clazz);
 
         }
@@ -96,40 +101,64 @@ public class Reflection {
     }
 
 
-    public static String getFirstStringFieldName(Object value1, String name) {
-        List<Field> fields = getAllFields(value1.getClass());
-        for (Field field : fields) {
-            if (field.getName().equals(name) || field.getType().equals(Typ.string) && !Modifier.isStatic(field.getModifiers())
-                    && field.getDeclaringClass() == value1.getClass()) {
-                return field.getName();
-            }
-        }
-        for (Field field : fields) {
-            if (field.getName().equals(name) || field.getType().equals(Typ.string) && !Modifier.isStatic(field.getModifiers())
-                    ) {
-                return field.getName();
-            }
-        }
+    public static boolean hasStringField(final Object value1, final String name) {
 
-        return null;
+        Class<?> clz = value1.getClass();
+        return classHasStringField( clz, name );
     }
 
+    public static boolean classHasStringField( Class<?> clz, String name ) {
+
+        List<Field> fields = getAllFields( clz );
+        for (Field field : fields) {
+            if (field.getName().equals(name) || field.getType().equals(Typ.string) && !Modifier.isStatic(field.getModifiers())
+                    && field.getDeclaringClass() == clz ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    public static boolean hasField(Object value1, String name) {
+        return classHasField(value1.getClass(), name);
+    }
+
+    public static boolean classHasField(Class<?> clz, String name) {
+        List<Field> fields = getAllFields( clz );
+        for (Field field : fields) {
+            if (field.getName().equals(name)
+                    && !Modifier.isStatic(field.getModifiers())
+                    && field.getDeclaringClass() == clz ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * This can be used for default sort.
+     * @param value1 value we are analyzing
+     * @return first field that is comparable or primitive.
+     */
     public static String getFirstComparableOrPrimitive(Object value1) {
-        List<Field> fields = getAllFields(value1.getClass());
+            return  getFirstComparableOrPrimitiveFromClass( value1.getClass()) ;
+    }
+
+    /**
+     * This can be used for default sort.
+     * @param clz class we are analyzing
+     * @return first field that is comparable or primitive or null if not found.
+     */
+    public static String getFirstComparableOrPrimitiveFromClass(Class<?> clz) {
+        List<Field> fields = getAllFields( clz );
         for (Field field : fields) {
 
-            if ((field.getType().isPrimitive() || Conversions.isComparable(field.getType())
+            if (( field.getType().isPrimitive() || Conversions.isComparable(field.getType() )
                     && !Modifier.isStatic(field.getModifiers())
-                    && field.getDeclaringClass() == value1.getClass())
-                    ) {
-                return field.getName();
-            }
-        }
-        for (Field field : fields) {
-
-            if ((field.getType().isPrimitive() || Conversions.isComparable(field.getType())
-                    && !Modifier.isStatic(field.getModifiers())
-            )
+                    && field.getDeclaringClass() == clz )
                     ) {
                 return field.getName();
             }
@@ -138,17 +167,27 @@ public class Reflection {
         return null;
     }
 
-    public static String getFirstStringFieldNameEndsWith(Object value1, String name) {
-        List<Field> fields = getAllFields(value1.getClass());
+    /**
+     *     getFirstStringFieldNameEndsWith
+     * @param value     object we are looking at
+     * @param name       name
+     * @return         field name or null
+     */
+    public static String getFirstStringFieldNameEndsWith(Object value, String name) {
+        return getFirstStringFieldNameEndsWithFromClass(value.getClass(), name);
+    }
+
+    /**
+     *   getFirstStringFieldNameEndsWithFromClass
+     * @param clz   class we are looking at
+     * @param name    name
+     * @return        field name or null
+     */
+    public static String getFirstStringFieldNameEndsWithFromClass(Class<?> clz, String name) {
+        List<Field> fields = getAllFields( clz );
         for (Field field : fields) {
             if (field.getName().endsWith(name) || field.getType().equals(Typ.string) && !Modifier.isStatic(field.getModifiers())
-                    && field.getDeclaringClass() == value1.getClass()) {
-                return field.getName();
-            }
-        }
-        for (Field field : fields) {
-            if (field.getName().endsWith(name) || field.getType().equals(Typ.string) && !Modifier.isStatic(field.getModifiers())
-                    ) {
+                    && field.getDeclaringClass() == clz ) {
                 return field.getName();
             }
         }
@@ -164,11 +203,11 @@ public class Reflection {
         String fieldName = sortableFields.get(value1.getClass());
         if (fieldName == null) {
             for (String name : fieldSortNames) {
-                fieldName = getFirstStringFieldName(value1, name);
-                if (fieldName != null) {
-                    break;
-                }
+                    if (hasStringField( value1, name )) {
+                        break;
+                    }
             }
+
             if (fieldName == null) {
                 for (String name : fieldSortNamesPrefixes) {
                     fieldName = getFirstStringFieldNameEndsWith(value1, name);
