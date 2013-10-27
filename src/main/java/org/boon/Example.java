@@ -1,6 +1,8 @@
 package org.boon;
 
 
+import org.boon.primitive.Chr;
+
 import java.util.*;
 
 
@@ -103,7 +105,7 @@ public class Example {
         veggiesSet  =  Sets.sortedSet("salad", "broccoli", "spinach");
         fruitList   =  Lists.list("apple", "oranges", "pineapple");
         fruitArray  =  array( "apple", "oranges", "pineapple");
-        letters     =  array( 'a', 'b', 'c');
+        letters     =  Chr.array('a', 'b', 'c');
         bytes       =  array( new byte[]{0x1, 0x2, 0x3, 0x4});
 
         //You add up name / value pairs as a pseudo literal for map

@@ -220,22 +220,6 @@ public class IO {
             @Override
             public List tryIt() throws Exception {
 
-<<<<<<< HEAD:src/main/java/org/boon/utils/IO.java
-
-                if ( uri.getScheme()==null ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(location);
-                    return Files.readAllLines(thePath, Charset.forName(CHARSET));
-
-                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                    return Files.readAllLines(thePath, Charset.forName(CHARSET));
-
-                } else {
-                    return readLines(location, uri);
-                }
-=======
             if (uri.getScheme() == null) {
 
                 Path thePath = FileSystems.getDefault().getPath(location);
@@ -245,95 +229,10 @@ public class IO {
 
                 Path thePath = FileSystems.getDefault().getPath(uri.getPath());
                 return Files.readAllLines(thePath, DEFAULT_CHARSET);
->>>>>>> master:src/main/java/org/boon/IO.java
 
+            }  else {
+                return readLines(location, uri);
             }
-
-        });
-
-    }
-
-    public static void eachLine(final String location, final EachLine eachLine) {
-
-        final URI uri = URI.create(location);
-
-<<<<<<< HEAD:src/main/java/org/boon/utils/IO.java
-        Exceptions.tryIt( new Exceptions.Trial() {
-            @Override
-            public void tryIt() throws Exception {
-
-                if ( uri.getScheme()==null ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(location);
-                    BufferedReader buf = Files.newBufferedReader(
-                            thePath, Charset.forName(CHARSET));
-                    eachLine(buf, eachLine);
-=======
-        Exceptions.tryIt(() -> {
-
-            if (uri.getScheme() == null) {
-
-                Path thePath = FileSystems.getDefault().getPath(location);
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, DEFAULT_CHARSET);
-                eachLine(buf, eachLine);
-
-            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
->>>>>>> master:src/main/java/org/boon/IO.java
-
-                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
-
-<<<<<<< HEAD:src/main/java/org/boon/utils/IO.java
-                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-=======
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, DEFAULT_CHARSET);
-                eachLine(buf, eachLine);
->>>>>>> master:src/main/java/org/boon/IO.java
-
-                    BufferedReader buf = Files.newBufferedReader(
-                            thePath, Charset.forName(CHARSET));
-                    eachLine(buf, eachLine);
-                } else {
-                    eachLine(location, uri, eachLine);
-                }
-            }
-        });
-
-    }
-
-    public static String read(final String location) {
-        final URI uri = URI.create(location);
-
-        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn() {
-
-<<<<<<< HEAD:src/main/java/org/boon/utils/IO.java
-            @Override
-            public Object tryIt() throws Exception {
-                if ( uri.getScheme()==null ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(location);
-                    return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
-
-                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                    return read( Files.newBufferedReader(thePath, Charset.forName(CHARSET)) );
-=======
-            if (uri.getScheme() == null) {
-
-                Path thePath = FileSystems.getDefault().getPath(location);
-                return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
-
-            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
-
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
->>>>>>> master:src/main/java/org/boon/IO.java
-
-                } else {
-                    return read(location, uri);
-                }
             }
         });
 
@@ -350,6 +249,63 @@ public class IO {
             return readLines(uri.toURL().openStream());
         }
     }
+
+
+    public static void eachLine(final String location, final EachLine eachLine) {
+
+        final URI uri = URI.create(location);
+
+        Exceptions.tryIt( new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
+
+                if ( uri.getScheme()==null ) {
+
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, DEFAULT_CHARSET);
+                    eachLine(buf, eachLine);
+
+                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, DEFAULT_CHARSET);
+                    eachLine(buf, eachLine);
+                } else {
+                    eachLine(location, uri, eachLine);
+                }
+            }
+        });
+
+    }
+
+    public static String read(final String location) {
+        final URI uri = URI.create(location);
+
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn() {
+
+            @Override
+            public Object tryIt() throws Exception {
+                if ( uri.getScheme()==null ) {
+
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    return read( Files.newBufferedReader(thePath, DEFAULT_CHARSET) );
+
+                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    return read( Files.newBufferedReader(thePath, DEFAULT_CHARSET) );
+
+                } else {
+                    return read(location, uri);
+                }
+            }
+        });
+
+    }
+
 
 
     private static void eachLine(String location, URI uri, EachLine eachLine) throws Exception {

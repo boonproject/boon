@@ -182,14 +182,7 @@ public class Maps {
 
         @Override
         public int compareTo(Entry entry) {
-<<<<<<< HEAD:src/main/java/org/boon/utils/Maps.java
-
-            if (entry == null) {
-                throw new NullPointerException("EntryImpl: compareTo entry cannot be null");
-            }
-=======
             Objects.requireNonNull(entry);
->>>>>>> master:src/main/java/org/boon/Maps.java
             return this.key().toString().compareTo(entry.key().toString());
         }
 

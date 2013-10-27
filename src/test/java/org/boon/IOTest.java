@@ -108,37 +108,6 @@ public class IOTest {
 
 
     @Test
-    public void testReadEachLineFromFile() {
-        File testDir = new File("src/test/resources");
-        File testFile = new File(testDir, "testfile.txt");
-
-
-
-        IO.eachLine(testFile, (line, index) -> {
-            System.out.println(index + " " + line);
-
-            if (index == 0) {
-
-                assertEquals(
-                        "line 1", line
-                );
-
-            } else if (index == 3) {
-
-
-                assertEquals(
-                        "grapes", line
-                );
-            }
-
-            return true;
-        });
-
-        //assertLines(lines);
-
-    }
-
-    @Test
     public void testReadEachLineByURI() {
         File testDir = new File("src/test/resources");
         File testFile = new File(testDir, "testfile.txt");

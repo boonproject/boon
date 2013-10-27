@@ -91,7 +91,6 @@ public class HTTP {
             final String body) {
 
 
-<<<<<<< HEAD:src/main/java/org/boon/utils/HTTP.java
         return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
             public String tryIt() throws Exception {
@@ -99,12 +98,6 @@ public class HTTP {
                 connection = doPost(url, null, "text/plain", null, body);
                 return extractResponseString(connection);
             }
-=======
-        return Exceptions.tryIt(String.class, () -> {
-            URLConnection connection;
-            connection = doPost(url, Collections.emptyMap(), contentType, null, body);
-            return extractResponseString(connection);
->>>>>>> master:src/main/java/org/boon/HTTP.java
         });
 
     }
