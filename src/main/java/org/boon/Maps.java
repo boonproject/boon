@@ -136,7 +136,7 @@ public class Maps {
             this.v = entry.value();
         }
 
-        EntryImpl(K k, V v) {
+        public EntryImpl(K k, V v) {
             Objects.requireNonNull(k);
             Objects.requireNonNull(v);
 
@@ -182,7 +182,7 @@ public class Maps {
 
         @Override
         public int compareTo(Entry entry) {
-            Objects.nonNull(entry);
+            Objects.requireNonNull(entry);
             return this.key().toString().compareTo(entry.key().toString());
         }
 

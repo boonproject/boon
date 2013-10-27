@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -404,7 +405,7 @@ public class IOTest {
             String body = IO.read(testFile);
             t.sendResponseHeaders(200, body.length());
             OutputStream os = t.getResponseBody();
-            os.write(body.getBytes(IO.UTF_8));
+            os.write(body.getBytes(StandardCharsets.UTF_8.displayName()));
             os.close();
         }
     }

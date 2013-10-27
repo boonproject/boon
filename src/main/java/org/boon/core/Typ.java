@@ -3,9 +3,7 @@ package org.boon.core;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Typ {
 
@@ -14,8 +12,11 @@ public class Typ {
     public static final Class<String> string = String.class;
     public static final Class<List> list = List.class;
     public static final Class<CharSequence> chars = CharSequence.class;
+    public static final Class<Set> set = Set.class;
+    public static final Class<Collection> collection = Collection.class;
 
 
+    public static final Class<Comparable>  comparable = Comparable.class;
     /* Wrapper */
     public static final Class<Boolean> bool          = Boolean.class;
     public static final Class<Integer> integer       = Integer.class;

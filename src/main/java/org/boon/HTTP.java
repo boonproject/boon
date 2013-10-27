@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -182,7 +183,7 @@ public class HTTP {
     }
 
     private static void manageContentTypeHeaders(String contentType, String charset, URLConnection connection) {
-        connection.setRequestProperty("Accept-Charset", charset == null ? IO.UTF_8 : charset);
+        connection.setRequestProperty("Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset);
         if (contentType!=null && !contentType.isEmpty()) {
             connection.setRequestProperty("Content-Type", contentType);
         }
@@ -243,7 +244,7 @@ public class HTTP {
                 break;
             }
         }
-        charset = charset == null ?  IO.UTF_8 : charset;
+        charset = charset == null ?  StandardCharsets.UTF_8.displayName() : charset;
 
         return charset;
     }

@@ -422,6 +422,106 @@ public class Chr {
 
 
 
+    //
+    //
+    //
+
+
+
+    public static char[] underBarCase(char[] in) {
+
+        if (in == null || in.length == 0 || in.length == 1) {
+            return in;
+        }
+
+        char[] out = null;
+        int count = 0;
+
+        boolean wasLower = false;
+
+        for (int index = 0; index < in.length; index++) {
+            char ch = in[index];
+            boolean isUpper;
+
+            isUpper = Character.isUpperCase(ch);
+
+            if (wasLower && isUpper) {
+                count++;
+            }
+
+            wasLower = Character.isLowerCase(ch);
+
+        }
+
+        out = new char[in.length + count];
+
+        wasLower = false;
+
+        for (int index = 0, secondIndex = 0; index < in.length; index++, secondIndex++) {
+            char ch = in[index];
+            boolean isUpper;
+
+            isUpper = Character.isUpperCase(ch);
+
+            if (wasLower && isUpper) {
+                out[secondIndex] = '_';
+                secondIndex++;
+            }
+
+            if (ch == ' ' || ch == '-' || ch == '\t') {
+                out[secondIndex] = '_';
+            } else {
+                out[secondIndex] = Character.toUpperCase(ch);
+            }
+            wasLower = Character.isLowerCase(ch);
+
+        }
+
+        return out;
+    }
+
+
+
+    public static char[] camelCase(char[] in, boolean upper) {
+
+        if (in == null || in.length == 0 || in.length == 1) {
+            return in;
+        }
+
+        char[] out = null;
+        int count = 0;
+        for (int index = 0; index < in.length; index++) {
+            char ch = in[index];
+            if (ch == '_' || ch == ' ' || ch == '\t') {
+                count++;
+            }
+        }
+
+        out = new char[in.length - count];
+
+
+        boolean upperNext = false;
+
+        for (int index = 0, secondIndex = 0; index < in.length; index++) {
+            char ch = in[index];
+            if (ch == '_' || ch == ' ' || ch == '\t') {
+                upperNext = true;
+            } else {
+                out[secondIndex] = upperNext ? Character.toUpperCase(ch) : Character.toLowerCase(ch);
+                upperNext = false;
+                secondIndex++;
+            }
+        }
+
+        if (upper) {
+            out[0] = Character.toUpperCase(out[0]);
+        } else {
+            out[0] = Character.toLowerCase(out[0]);
+        }
+
+        return out;
+    }
+
 
 
 }
