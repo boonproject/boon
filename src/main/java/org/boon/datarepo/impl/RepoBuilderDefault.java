@@ -1,7 +1,6 @@
 package org.boon.datarepo.impl;
 
 import org.boon.Str;
-import org.boon.*;
 import org.boon.datarepo.*;
 import org.boon.datarepo.impl.decorators.FilterWithSimpleCache;
 import org.boon.datarepo.impl.decorators.ObjectEditorCloneDecorator;
@@ -24,92 +23,313 @@ import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 
 
-
-
+/**
+ * This class is used to build Repo objects.
+ * @author Rick Hightower
+ */
 public class RepoBuilderDefault implements RepoBuilder {
 
+    /**
+     * Search index factory.
+     * @see org.boon.datarepo.impl.indexes.SearchIndexDefault
+     */
     Function<Class, SearchIndex> searchIndexFactory;
+    /**
+     * Lookup index factory.
+     * @see org.boon.datarepo.impl.indexes.LookupIndexDefault
+     */
     Function<Class, LookupIndex> lookupIndexFactory;
+    /**
+     * Unique lookup index factory.
+     * @see org.boon.datarepo.impl.indexes.UniqueLookupIndex
+     */
     Function<Class, LookupIndex> uniqueLookupIndexFactory;
+    /**
+     * Unique search index factory.
+     * @see org.boon.datarepo.impl.indexes.UniqueSearchIndex
+     */
     Function<Class, SearchIndex> uniqueSearchIndexFactory;
+
+    /**
+     * Sets the Object Editor Factory
+     * @see ObjectEditor
+     */
     Supplier<ObjectEditorComposer> objectEditorFactory;
+
+    /**
+     * Sets the searchableCollectionFactory.
+     *
+     * @see SearchableCollectionComposer
+     */
     Supplier<SearchableCollectionComposer> searchableCollectionFactory;
 
-
+    /**
+     * Repo composer factory
+     * @see RepoComposer
+     */
     Supplier<RepoComposer> repoComposerFactory;
+
+    /**
+     *
+     * @see Filter
+     */
     Supplier<Filter> filterFactory;
 
+    /**
+     * Primary key for this object.
+     */
     String primaryKey;
+
+
+    /**
+     * This holds the set of search indexes that the Repo will manage
+     */
     Set<String> searchIndexes = new HashSet<>();
+    /**
+     * This holds the set of lookupIndexes that the Repo will manage.
+     */
     Set<String> lookupIndexes = new HashSet<>();
+    /**
+     * This holds the uniqueSearchIndexes that this repo will manage.
+     */
     Set<String> uniqueSearchIndexes = new HashSet<>();
+    /**
+     * This holds the uniqueLookupIndexes that this repo will manager.
+     */
     Set<String> uniqueLookupIndexes = new HashSet<>();
 
+    /**
+     * If we are dealing with a complex key, like a derived key or some sort of
+     * fancy nested and/or composite key, then we just tell the Repo
+     * how to access the key with this here map.
+     *
+     * This maps property names to a Function (just like a method pointer that
+     * returns something.
+     *
+     * In our case, they give us the key and the Function gives them the value of the key.
+     */
     Map<String, Function> keyGetterMap = new HashMap();
 
 
+    /**
+     * Sets if we should use the field directly.
+     */
     boolean useField = true;
+
+    /** Sets if we should use unsafe (fast) access to the field. */
     boolean useUnSafe = false;
+
+    /** Checks to see if we should enable runtime null checking and logging
+     * This essentially means that we will not allow null keys or values.
+     */
     boolean nullChecksAndLogging;
+
+
+    /**
+     * If you turn this on, then every time an object is sent to be
+     * edited or added it is cloned.
+     * In a multi-threaded application, this should prevent MT from
+     * accessing objects that is in the data repo.
+     *
+     */
     boolean cloneEdits;
+
+    /**
+     * This is not implemented yet.
+     * It would allow to have only keys in the repo and the actual data could live
+     * elsewhere like a cache or an off JVM heap RAM location.
+     * It is is in the plans.
+     */
     boolean storeKeyInIndexOnly;
+
+    /** This would turn on extra debugging. */
     boolean debug;
+
+    /** This sets up the log level for the builder. */
     Level level = Level.FINER;
+
+
+    /** This keeps a list of fields that we are reading per object.
+     * @see FieldAccess
+     * */
     private Map<String, FieldAccess> fields;
+
+
+    /** This provides an interface to the composable nature of a Repo.
+     * @see RepoComposer
+     * */
     private RepoComposer repo;
+
+    /** This is the Object editor that we are constructing.
+     * @see ObjectEditor
+     * */
     private ObjectEditor editor;
+
+
+    /** This is the Searchable Collection that the data repo uses
+     * that we are constructing.
+     * @see SearchableCollection
+     * */
     private SearchableCollectionComposer query;
+
+
+    /**
+     * Turns caching on. Caching is very rudimentary at this point.
+     * This can cache complex queries and hold on the results until
+     * there is an update.
+     */
     private boolean cache = false;
-    private Map<String, Comparator> collators = new HashMap<String, Comparator>();
+
+    /**
+     * Holds a collection of comparators that will be used per property for the Repo.
+     */
+    private Map<String, Comparator> collators = new HashMap<>();
+
+
+    /**
+     * Holds a collection of key transformers per property for the Repo.
+     *
+     * Key transformers are used to for example make a case insensitive search.
+     * It determines how the key is indexed.
+     */
     private Map<String, Function> keyTransformers = new HashMap<>();
+
+
+    /**
+     * This holds a set of nestedIndexes.
+     *
+     * Employee.address.zip would be a nested index.
+     */
     private Map<String, String[]> nestedIndexes = new HashMap<>();
+
+
+    /**
+     * Turning on this flag, turns on indexing type hierarchy.
+     */
     private boolean indexHierarchy;
+
+    /**
+     * For non-unique indexes, this sets up how many values you would like
+     * the index to hold initially. (It expands automatically).
+     */
     private Map<String, Integer> indexBucketSize = new HashMap<>();
+
+
+    /**
+     * Turns on hashCode Optimization.
+     * This means we will try to store the hashCode, and hold on to it
+     * unless the object changes.
+     */
     private boolean hashCodeOptimizationOn;
+
+    /**
+     * If you want duplicates removed from query results.
+     */
     private boolean removeDuplication;
 
+    /** turn on modification events listenting. */
+    boolean events = false;
 
+    /** Listen to modification changes. */
+    ModificationListener[] listeners;
+
+
+
+    /**
+     * Turns on property access instead of field access.
+     * Field is the default.
+     *
+     * @param useProperty     do you want property access or not
+     * @return  RepoBuilder
+     */
     public RepoBuilder usePropertyForAccess(boolean useProperty) {
         this.useField = !useProperty;
         return this;
     }
 
+    /**
+     * Turns on field access instead of property access.
+     * Field is the default.
+     *
+     * @param useField     do you want field access or not
+     * @return  RepoBuilder
+     */
     public RepoBuilder useFieldForAccess(boolean useField) {
         this.useField = useField;
         return this;
 
     }
 
+    /**
+     * Turns on field unsafe access instead of reflection.
+     * Reflection is the default.
+     *
+     *
+     *
+     * @param useUnSafe     use unsafe
+     * @return  RepoBuilder
+     */
     public RepoBuilder useUnsafe(boolean useUnSafe) {
         this.useUnSafe = useUnSafe;
         return this;
 
     }
 
+    /**
+     * Turns on logging and null checking for the Repo.
+     * @param nullChecks   do you want null checks?
+     * @see ObjectEditorLogNullCheckDecorator
+     * @return   RepoBuilder
+     */
     @Override
     public RepoBuilder nullChecks(boolean nullChecks) {
         this.nullChecksAndLogging = nullChecks;
         return this;
     }
 
+    /**
+     * Turns on logging and null checking for the Repo.
+     * @see ObjectEditorLogNullCheckDecorator
+     * @param logging   do you want null checks?
+     * @return   RepoBuilder
+     */
     @Override
     public RepoBuilder addLogging(boolean logging) {
         this.nullChecksAndLogging = logging;
         return this;
     }
 
+    /**
+     * Clones the object in the repo before editing and also
+     * clones returns values.
+     * This should limit two threads from getting the same object that is in
+     * the repo.
+     *
+     * @see ObjectEditorCloneDecorator
+     * @param cloneEdits   do you want cloning?
+     * @return   RepoBuilder
+     */
     @Override
     public RepoBuilder cloneEdits(boolean cloneEdits) {
         this.cloneEdits = cloneEdits;
         return this;
     }
 
+    /**
+     * This caches query results until there is an update.
+     * @return  RepoBuilder
+     */
     @Override
     public RepoBuilder useCache() {
         this.cache = true;
         return this;
     }
 
+    /**
+     * Stores only the keys in the index. The data is stored elsewhere.
+     * This is not implemented yet.
+     * @return  RepoBuilder
+     */
     @Override
     public RepoBuilder storeKeyInIndexOnly() {
         this.storeKeyInIndexOnly = true;
@@ -117,9 +337,12 @@ public class RepoBuilderDefault implements RepoBuilder {
         return this;
     }
 
-    boolean events = false;
-    ModificationListener[] listeners;
-
+    /**
+     * Register event listeners for modification changes.
+     * @see ObjectEditorEventDecorator
+     * @param listeners  list of event listeners
+     * @return  RepoBuilder
+     */
     @Override
     public RepoBuilder events(ModificationListener... listeners) {
         events = true;
@@ -127,65 +350,121 @@ public class RepoBuilderDefault implements RepoBuilder {
         return this;
     }
 
+
+    /**
+     *
+     * @return
+     */
     @Override
     public RepoBuilder debug() {
         this.debug = true;
         return this;
     }
 
+    /**
+     *
+     * @param factory
+     * @return
+     */
     @Override
     public RepoBuilder searchIndexFactory(Function<Class, SearchIndex> factory) {
         this.searchIndexFactory = factory;
         return this;
     }
 
+    /**
+     *
+     * @param factory
+     * @return
+     */
     @Override
     public RepoBuilder uniqueLookupIndexFactory(Function<Class, LookupIndex> factory) {
         this.uniqueLookupIndexFactory = factory;
         return this;
     }
 
+    /**
+     *
+     * @param factory
+     * @return
+     */
     @Override
     public RepoBuilder uniqueSearchIndexFactory(Function<Class, SearchIndex> factory) {
         this.uniqueSearchIndexFactory = factory;
         return this;
     }
 
+    /**
+     *
+     * @param factory
+     * @return
+     */
     @Override
     public RepoBuilder lookupIndexFactory(Function<Class, LookupIndex> factory) {
         this.lookupIndexFactory = factory;
         return this;
     }
 
+    /**
+     *
+     * @param factory
+     * @return
+     */
     @Override
     public RepoBuilder repoFactory(Supplier<RepoComposer> factory) {
         this.repoComposerFactory = factory;
         return this;
     }
 
+    /**
+     *
+     * @param factory
+     * @return
+     */
     @Override
     public RepoBuilder filterFactory(Supplier<Filter> factory) {
         this.filterFactory = factory;
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @return
+     */
     @Override
     public RepoBuilder primaryKey(String propertyName) {
         this.primaryKey = propertyName;
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @return
+     */
     @Override
     public RepoBuilder lookupIndex(String propertyName) {
         this.lookupIndexes.add(propertyName);
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @return
+     */
     @Override
     public RepoBuilder uniqueLookupIndex(String propertyName) {
         return this.lookupIndex(propertyName, true);
     }
 
+    /**
+     *
+     * @param propertyName
+     * @param unique
+     * @return
+     */
     public RepoBuilder lookupIndex(String propertyName, boolean unique) {
         if (unique) {
             this.lookupIndexes.add(propertyName);
@@ -195,36 +474,69 @@ public class RepoBuilderDefault implements RepoBuilder {
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @return
+     */
     @Override
     public RepoBuilder searchIndex(String propertyName) {
         this.searchIndexes.add(propertyName);
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @return
+     */
     @Override
     public RepoBuilder uniqueSearchIndex(String propertyName) {
         return searchIndex(propertyName, true);
     }
 
 
+    /**
+     *
+     * @param propertyName
+     * @return
+     */
     @Override
     public RepoBuilder collateIndex(String propertyName) {
         collators.put(propertyName, Collator.getInstance());
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @param locale
+     * @return
+     */
     @Override
     public RepoBuilder collateIndex(String propertyName, Locale locale) {
         collators.put(propertyName, Collator.getInstance(locale));
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @param collator
+     * @return
+     */
     @Override
     public RepoBuilder collateIndex(String propertyName, Comparator collator) {
         collators.put(propertyName, collator);
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @param unique
+     * @return
+     */
     public RepoBuilder searchIndex(String propertyName, boolean unique) {
         if (unique) {
             this.searchIndexes.add(propertyName);
@@ -234,13 +546,22 @@ public class RepoBuilderDefault implements RepoBuilder {
         return this;
     }
 
+    /**
+     *
+     * @param propertyName
+     * @param keyGetter
+     * @return
+     */
     @Override
     public RepoBuilder keyGetter(String propertyName, Function<?, ?> keyGetter) {
         keyGetterMap.put(propertyName, keyGetter);
         return this;
     }
 
-    private void init() {
+    /**
+     *
+     */
+    private void initializeTheFactories() {
 
         if (this.repoComposerFactory == null) {
             this.repoComposerFactory = SPIFactory.getRepoFactory();
@@ -267,29 +588,43 @@ public class RepoBuilderDefault implements RepoBuilder {
 
     }
 
+    /**
+     *
+     * @param key
+     * @param clazz
+     * @param classes
+     * @param <KEY>
+     * @param <ITEM>
+     * @return
+     */
     @Override
     public <KEY, ITEM> Repo<KEY, ITEM> build(Class<KEY> key, Class<ITEM> clazz, Class<?>... classes) {
         return build(null, key, clazz, classes);
     }
 
+    /**
+     *
+     * @param primitiveKey
+     * @param key
+     * @param clazz
+     * @param classes
+     * @param <KEY>
+     * @param <ITEM>
+     * @return
+     */
     public <KEY, ITEM> Repo<KEY, ITEM> build(Class<?> primitiveKey, Class<KEY> key, Class<ITEM> clazz, Class<?>... classes) {
-        init();
 
-        this.fields = Reflection.getPropertyFieldAccessMap(clazz, useField, useUnSafe);
+        /* Initialize factories. */
+        initializeTheFactories();
 
-        for (Class<?> cls : classes) {
-            Map<String, FieldAccess> fieldsSubType
-                    = Reflection.getPropertyFieldAccessMap(cls, useField, useUnSafe);
 
-            for (String sKey : fieldsSubType.keySet()) {
-                if (!fields.containsKey(sKey)) {
-                    fields.put(sKey, fieldsSubType.get(sKey));
-                }
-            }
-        }
+        /* Reflect and load all of the fields. */
+        loadFields(clazz, classes);
+
+
 
         /* Construct */
-        this.repo = (RepoComposer) this.repoComposerFactory.get();
+        this.repo = this.repoComposerFactory.get();
         this.editor = constructObjectEditor(fields);
         SearchableCollectionComposer query = constructSearchableCollection(primitiveKey, clazz, repo, fields);
         query.setRemoveDuplication(this.removeDuplication);
@@ -304,14 +639,51 @@ public class RepoBuilderDefault implements RepoBuilder {
         return (Repo<KEY, ITEM>) repo;
     }
 
+    /**
+     *
+     * @param clazz
+     * @param classes
+     * @param <ITEM>
+     */
+    private <ITEM> void loadFields(Class<ITEM> clazz, Class<?>[] classes) {
+        /**
+         * Load all of the fields that we need.
+         */
+        this.fields = Reflection.getPropertyFieldAccessMap(clazz, useField, useUnSafe);
+
+        for (Class<?> cls : classes) {
+            Map<String, FieldAccess> fieldsComponentType
+                    = Reflection.getPropertyFieldAccessMap(cls, useField, useUnSafe);
+
+            for (String sKey : fieldsComponentType.keySet()) {
+                if (!fields.containsKey(sKey)) {
+                    fields.put(sKey, fieldsComponentType.get(sKey));
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param primitiveKey
+     * @param itemClazz
+     * @param repo
+     * @param fields
+     * @return
+     */
     private SearchableCollectionComposer constructSearchableCollection(Class<?> primitiveKey, Class<?> itemClazz, RepoComposer repo, Map<String, FieldAccess> fields) {
 
+        /* Create the searchable collection. */
         query = searchableCollectionFactory.get();
 
+        /* Create the filter object. */
         Filter filter = this.filterFactory.get();
 
 
         configPrimaryKey(primitiveKey == null ? itemClazz : primitiveKey, fields);
+
+
+
         configIndexes(repo, fields);
 
 
@@ -448,6 +820,11 @@ public class RepoBuilderDefault implements RepoBuilder {
         };
     }
 
+    /**
+     *
+     * @param repo
+     * @param fields
+     */
     private void configIndexes(RepoComposer repo,
                                Map<String, FieldAccess> fields) {
 
@@ -464,29 +841,38 @@ public class RepoBuilderDefault implements RepoBuilder {
             configIndex(prop, index);
         }
         for (String prop : searchIndexes) {
-            try {
+                FieldAccess fieldAccess = fields.get(prop);
 
-            FieldAccess fieldAccess = fields.get(prop);
-            Class<?> type = fieldAccess.getType();
+                Objects.requireNonNull(fieldAccess, "Field access for property was null. " + prop);
 
-            SearchIndex searchIndex = this.searchIndexFactory.apply(type);
-            configSearchIndex(fields, prop, searchIndex);
+                Class<?> type = fieldAccess.getType();
 
-            } catch (Exception ex) {
-                throw new RuntimeException("Unable to load property " + prop);
-            }
+                SearchIndex searchIndex = this.searchIndexFactory.apply(type);
+                configSearchIndex(fields, prop, searchIndex);
+
         }
         for (String prop : uniqueSearchIndexes) {
-            SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply(fields.get(prop).getType());
+            FieldAccess fieldAccess = fields.get(prop);
+            Objects.requireNonNull(fieldAccess, "Field access for property was null. " + prop);
+
+            SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply( fieldAccess.getType() );
             configSearchIndex(fields, prop, searchIndex);
         }
 
         for (String prop : lookupIndexes) {
-            LookupIndex index = this.lookupIndexFactory.apply(fields.get(prop).getType());
+
+            FieldAccess fieldAccess = fields.get(prop);
+            Objects.requireNonNull(fieldAccess, "Field access for property was null. " + prop);
+
+            LookupIndex index = this.lookupIndexFactory.apply( fieldAccess.getType() );
             configLookupIndex(fields, prop, index);
         }
         for (String prop : uniqueLookupIndexes) {
-            LookupIndex index = this.uniqueLookupIndexFactory.apply(fields.get(prop).getType());
+            FieldAccess fieldAccess = fields.get(prop);
+            Objects.requireNonNull(fieldAccess, "Field access for property was null. " + prop);
+
+
+            LookupIndex index = this.uniqueLookupIndexFactory.apply( fieldAccess.getType() );
             configLookupIndex(fields, prop, index);
         }
 
@@ -554,8 +940,10 @@ public class RepoBuilderDefault implements RepoBuilder {
 
 
         primaryKeyIndex.setKeyGetter(getKeyGetterOrCreate(fields, this.primaryKey));
-        ((SearchableCollectionComposer) query).setPrimaryKeyName(this.primaryKey);
-        ((SearchableCollectionComposer) query).setPrimaryKeyGetter(this.keyGetterMap.get(this.primaryKey));
+        query.setPrimaryKeyName(this.primaryKey);
+        query.setPrimaryKeyGetter(this.keyGetterMap.get(this.primaryKey));
+
+
         ((SearchableCollection) query).addLookupIndex(this.primaryKey, primaryKeyIndex);
 
 
