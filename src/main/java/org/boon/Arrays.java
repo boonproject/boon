@@ -2,7 +2,11 @@ package org.boon;
 
 
 import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+
+import static org.boon.Exceptions.die;
 
 @SuppressWarnings({"unchecked", "SuspiciousSystemArraycopy"})
 public class Arrays {
@@ -249,6 +253,20 @@ public class Arrays {
             index = length -1;
         }
         return index;
+    }
+
+
+
+    @SuppressWarnings("unchecked")
+    public static <V> V[] array(Collection<V> collection) {
+        if (collection.size() > 0) {
+            Object newInstance = Array.newInstance(collection.iterator().next().getClass(),
+            collection.size());
+            return collection.toArray((V[]) newInstance);
+        } else {
+            die("array(list): The collection has to have at least one item in it");
+            return null;
+        }
     }
 
 }

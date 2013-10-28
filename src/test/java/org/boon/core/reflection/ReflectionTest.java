@@ -2,21 +2,23 @@ package org.boon.core.reflection;
 
 
 import org.boon.Exceptions;
+import org.boon.Lists;
 import org.boon.Maps;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.junit.Test;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.in;
+import static org.boon.Maps.map;
+import static org.boon.primitive.Int.array;
 
 public class ReflectionTest {
 
-    public static class Employee {
-        private String firstName="Rick";
-    }
 
     public static class Dog {
         private int age=7;
@@ -24,6 +26,26 @@ public class ReflectionTest {
     }
 
     public static class Cat {
+    }
+
+
+
+
+    public static class TypeTester {
+        Types types = new Types();
+    }
+
+    public static class Types {
+
+        boolean     boolean0    = true;
+        byte        byte0       = 1;
+        int         int0        = 2;
+        short       short0      = 3;
+        long        long0      = 3;
+        float       float0      = 5.0f;
+        double      double0     = 6.0;
+        char        char0       = 7;
+
     }
 
 
@@ -46,6 +68,50 @@ public class ReflectionTest {
     );
 
 
+
+    public static class Employee {
+        Employee(String firstname) {
+            this.firstName = firstname;
+
+        }
+        Employee() {
+
+        }
+
+        private String firstName="Rick";
+    }
+
+
+    public static class Department {
+        String name;
+        List<Employee> employees;
+    }
+
+
+    static Map<String, Object> department =
+            map(
+                 "name",     (Object)"engineering",
+                 "employees",   list(new Employee("Bob"), new Employee("Sue"))
+
+            ) ;
+
+
+
+    @Test
+    public void testFromMap() throws Exception {
+
+        final Department engineering =
+                Reflection.fromMap(department, Department.class);
+
+
+        boolean ok = true;
+
+        ok &= engineering.name.equals("engineering") || die();
+
+        //left off here.
+        //ok &= engineering.employees.size() == 2 || die();
+
+    }
 
     @Test
     public void test() throws Exception {
@@ -183,15 +249,49 @@ public class ReflectionTest {
 
 
         //idx nested int     left off here.
-//        value = Reflection.idxInt( husband, "wife.age" );
-//
-//        ok &= value.equals(29) || die();
+        value = Reflection.idxInt( husband, "wife.age" );
+
+        ok &= value.equals(30) || die();
+
+
+        TypeTester typeTest = new TypeTester();
+
+        ok &= Reflection.idxLong    ( typeTest, "types.long0"   ) == typeTest.types.long0   || die();
+        ok &= Reflection.idxByte(typeTest, "types.byte0") == typeTest.types.byte0   || die();
+        ok &= Reflection.idxShort(typeTest, "types.short0") == typeTest.types.short0  || die();
+        ok &= Reflection.idxDouble(typeTest, "types.double0") == typeTest.types.double0 || die();
+        ok &= Reflection.idxFloat(typeTest, "types.float0") == typeTest.types.float0  || die();
+        ok &= Reflection.idxChar(typeTest, "types.char0") == typeTest.types.char0   || die();
+        ok &= Reflection.idxInt(typeTest, "types.int0") == typeTest.types.int0    || die();
+        ok &= Reflection.idxBoolean(typeTest, "types.boolean0") == typeTest.types.boolean0|| die();
+
+
+        final List<Integer> list = Lists.list(1, 2, 3);
+        final int[] array = array(1, 2, 3);
+
+
+        final Iterator iterator  = Reflection.iterator( list );
+
+        final Iterator iterator2 = Reflection.iterator( array );
+
+        iterator.next(); iterator2.next();
+        iterator.next(); iterator2.next();
+
+        ok &= iterator.next().equals(iterator2.next()) || die();
+        ok &= iterator.hasNext() == iterator2.hasNext() || die();
+
 
     }
 
 
 
 
+
+
+
+
+    public static void main (String [] args) {
+    }
 
 
 

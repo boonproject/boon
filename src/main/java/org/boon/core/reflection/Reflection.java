@@ -3,6 +3,7 @@ package org.boon.core.reflection;
 import org.boon.*;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.*;
+import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -385,6 +386,25 @@ public class Reflection {
 
 
 
+    @SuppressWarnings("unchecked")
+    public static <T> T idxGeneric(Class<T> t, Object object, final String path) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return (T) getPropByPath(object, properties);
+
+
+    }
+
+    public static <T> List<T> idxList(Class<T> cls, Object items, String... path) {
+        return (List<T>) getPropByPath(items, path);
+    }
+
+
+
     /**
      * Get property value
      * @param object
@@ -401,6 +421,98 @@ public class Reflection {
         return getPropertyValue(object, properties);
     }
 
+    /**
+     *
+     * @param object
+     * @param path
+     * @return
+     */
+    public static Object idxRelax(Object object, final String path) {
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropByPath(object, properties);
+    }
+
+
+    /** This is an amazing little recursive method. It walks a fanout of
+     * nested collection to pull out the leaf nodes */
+    private static Object getCollecitonProp(Object o, String propName, int index, String[] path) {
+        o = getFieldValues(o, propName);
+
+        if (index + 1 == path.length) {
+            return o;
+        } else {
+            index++;
+            return getCollecitonProp(o, path[index], index, path);
+        }
+    }
+
+
+    /**
+     * This method handles walking lists of lists.
+     * @param item
+     * @param path
+     * @return
+     */
+    public static Object getPropByPath(Object item, String... path) {
+        Object o = item;
+        for (int index = 0; index < path.length; index++) {
+            String propName = path[index];
+            if (o == null) {
+                return null;
+            } else if (isArray(o) || o instanceof Collection) {
+                o = getCollecitonProp(o, propName, index, path);
+                break;
+            } else {
+                o = getProp(o, propName);
+            }
+        }
+        return Conversions.unifyList(o);
+    }
+
+
+
+    /**
+     * This is one is forgiving of null paths.
+     * This works with getters first, i.e., properties.
+     *
+     * @param object
+     * @param property
+     * @return
+     */
+    public static Object getProp(Object object, final String property) {
+        if (object == null) {
+            return null;
+        }
+
+        if ( isDigits(property) ) {
+                /* We can index numbers and names. */
+            object = idx(object, Integer.parseInt(property)) ;
+
+        }
+
+        Class<?> cls = object.getClass();
+
+        /** Tries the getters first. */
+        Map<String, FieldAccess> fields = getPropertyFieldAccessors(cls);
+
+        if (!fields.containsKey(property)) {
+            fields = getAllAccessorFields(cls);
+        }
+
+        if (!fields.containsKey(property)) {
+            return null;
+        } else {
+            return fields.get(property).getValue(object);
+        }
+
+    }
+
+
+
     /** Get an int property. */
     public static int getPropertyInt(final Object root, final String... properties) {
 
@@ -408,6 +520,28 @@ public class Reflection {
         Objects.requireNonNull( properties );
 
 
+        Object object = baseForGetProperty(root, properties);
+
+        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
+        if (field.getType() == Typ.intgr) {
+            return field.getInt(object);
+        } else {
+            return Conversions.toInt(field.getValue(object));
+        }
+
+    }
+
+
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    private static Object baseForGetProperty(Object root, String[] properties) {
         Object object = root;
 
         Map<String, FieldAccess> fields = null;
@@ -437,19 +571,8 @@ public class Reflection {
                 object = field.getObject( object );
             }
         }
-
-        Objects.requireNonNull( fields );
-
-        FieldAccess field = fields.get(properties[properties.length - 1]);
-
-        if (field.getType() == Typ.intgr) {
-            return field.getInt(object);
-        } else {
-            return Conversions.toInt(field.getValue(object));
-        }
-
+        return object;
     }
-
 
     /**
      * Get property value
@@ -468,14 +591,19 @@ public class Reflection {
     }
 
 
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static byte getPropertyByte(final Object root, final String... properties) {
+        Object object = baseForGetProperty(root, properties);
 
-    public static byte getPropertyByte(Object object, String... properties) {
-        Map<String, FieldAccess> fields = null;
-        for (int index = 0; index < properties.length - 1; index++) {
-            fields = Reflection.getPropertyFieldAccessMap(object.getClass());
-            object = fields.get(properties[index]);
-        }
-        FieldAccess field = fields.get(properties[properties.length - 1]);
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
         if (field.getType() == Typ.bt) {
             return field.getByte(object);
         } else {
@@ -483,13 +611,35 @@ public class Reflection {
         }
     }
 
-    public static float getPropertyFloat(Object object, String... properties) {
-        Map<String, FieldAccess> fields = null;
-        for (int index = 0; index < properties.length - 1; index++) {
-            fields = Reflection.getPropertyFieldAccessMap(object.getClass());
-            object = fields.get(properties[index]);
-        }
-        FieldAccess field = fields.get(properties[properties.length - 1]);
+    /**
+     *
+     * @param object
+     * @param path
+     * @return
+     */
+    public static byte idxByte(Object object, String path) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropertyByte(object, properties);
+    }
+
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static float getPropertyFloat(final Object root, final String... properties) {
+        Object object = baseForGetProperty(root, properties);
+
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
         if (field.getType() == Typ.flt) {
             return field.getFloat(object);
         } else {
@@ -498,13 +648,40 @@ public class Reflection {
     }
 
 
-    public static short getPropertyShort(Object object, String... properties) {
-        Map<String, FieldAccess> fields = null;
-        for (int index = 0; index < properties.length - 1; index++) {
-            fields = Reflection.getPropertyFieldAccessMap(object.getClass());
-            object = fields.get(properties[index]);
-        }
-        FieldAccess field = fields.get(properties[properties.length - 1]);
+    /**
+     *
+     * @param object
+     * @param path
+     * @return
+     */
+    public static float idxFloat(Object object, String path) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropertyFloat(object, properties);
+    }
+
+
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static short getPropertyShort( final Object root,
+                                          final String... properties) {
+
+
+        Object object = baseForGetProperty(root, properties);
+
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
+
         if (field.getType() == Typ.shrt) {
             return field.getShort(object);
         } else {
@@ -513,13 +690,37 @@ public class Reflection {
     }
 
 
-    public static char getPropertyChar(Object object, String... properties) {
-        Map<String, FieldAccess> fields = null;
-        for (int index = 0; index < properties.length - 1; index++) {
-            fields = Reflection.getPropertyFieldAccessMap(object.getClass());
-            object = fields.get(properties[index]);
-        }
-        FieldAccess field = fields.get(properties[properties.length - 1]);
+    /**
+     *
+     * @param object
+     * @param path
+     * @return
+     */
+    public static short idxShort(Object object, String path) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropertyShort(object, properties);
+    }
+
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static char getPropertyChar(final Object root,
+                                       final String... properties) {
+
+        Object object = baseForGetProperty(root, properties);
+
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
         if (field.getType() == Typ.chr) {
             return field.getChar(object);
         } else {
@@ -528,13 +729,39 @@ public class Reflection {
     }
 
 
-    public static double getPropertyDouble(Object object, String... properties) {
-        Map<String, FieldAccess> fields = null;
-        for (int index = 0; index < properties.length - 1; index++) {
-            fields = Reflection.getPropertyFieldAccessMap(object.getClass());
-            object = fields.get(properties[index]);
-        }
-        FieldAccess field = fields.get(properties[properties.length - 1]);
+    /**
+     *
+     * @param object
+     * @param path
+     * @return
+     */
+    public static char idxChar( Object object, String path ) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropertyChar( object, properties );
+    }
+
+
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static double getPropertyDouble(final Object root,
+                                           final String... properties) {
+
+
+        Object object = baseForGetProperty(root, properties);
+
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
         if (field.getType() == Typ.dbl) {
             return field.getDouble(object);
         } else {
@@ -543,19 +770,99 @@ public class Reflection {
     }
 
 
-    public static long getPropertyLong(Object object, String... properties) {
-        Map<String, FieldAccess> fields = null;
-        for (int index = 0; index < properties.length - 1; index++) {
-            fields = Reflection.getPropertyFieldAccessMap(object.getClass());
-            object = fields.get(properties[index]);
-        }
-        FieldAccess field = fields.get(properties[properties.length - 1]);
+    /**
+     *
+     * @param object
+     * @param path
+     * @return
+     */
+    public static double idxDouble(Object object, String path) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropertyDouble(object, properties);
+    }
+
+
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static long getPropertyLong( final Object root,
+                                        final String... properties) {
+
+
+        Object object = baseForGetProperty(root, properties);
+
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
         if (field.getType() == Typ.lng) {
             return field.getLong(object);
         } else {
             return Conversions.toLong(field.getValue(object));
         }
     }
+
+
+    /**
+     *
+     * @param object
+     * @param path
+     * @return
+     */
+    public static long idxLong( Object object, String path ) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropertyLong( object, properties );
+    }
+
+
+    /**
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static boolean getPropertyBoolean( final Object root,
+                                        final String... properties) {
+
+
+        Object object = baseForGetProperty(root, properties);
+
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap(object.getClass());
+        final String lastProperty= properties[properties.length - 1];
+        FieldAccess field = fields.get(lastProperty);
+
+        if (field.getType() == Typ.bln) {
+            return field.getBoolean(object);
+        } else {
+            return Conversions.toBoolean( field.getValue(object) );
+        }
+    }
+
+
+
+    public static boolean idxBoolean( Object object, String path ) {
+
+        Objects.requireNonNull(object);
+        Objects.requireNonNull(path);
+
+        String [] properties = StringScanner.splitByDelimiters(path, ".[]");
+
+        return getPropertyBoolean( object, properties );
+    }
+
 
     public static boolean hasField(Class<?> aClass, String name) {
         Map<String, FieldAccess> fields = getAllAccessorFields(aClass);
@@ -587,23 +894,6 @@ public class Reflection {
         return obj.getClass().isArray();
     }
 
-    public static boolean isStaticField(Field field) {
-        return Modifier.isStatic(field.getModifiers());
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <V> V[] array(List<V> list) {
-        if (list.size() > 0) {
-            Object newInstance = Array.newInstance(list.get(0).getClass(),
-                    list.size());
-            return (V[]) list.toArray((V[]) newInstance);
-        } else {
-            die("array(list): The list has to have at least one item in it");
-            return null;
-        }
-    }
-
-
     public static int len(Object obj) {
         if (isArray(obj)) {
             return arrayLength(obj);
@@ -629,13 +919,6 @@ public class Reflection {
         throw new ReflectionException(ex);
     }
 
-    private static Class<?> clazz(Object that) {
-        if (that instanceof Class) {
-            return (Class<?>) that;
-        } else {
-            return that.getClass();
-        }
-    }
 
     public static Object idx(Object object, int index) {
         if (isArray(object)) {
@@ -668,64 +951,6 @@ public class Reflection {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T getProperty(Class<T> t, Object object, final String key) {
-        return (T) getProp(object, key);
-    }
-
-
-    public static Object getCollecitonProp(Object o, String propName, int index, String[] path) {
-        o = getFieldValues(o, propName);
-
-        if (index + 1 == path.length) {
-            return o;
-        } else {
-            index++;
-            return getCollecitonProp(o, path[index], index, path);
-        }
-    }
-
-
-    public static Object getPropByPath(Object item, String... path) {
-        Object o = item;
-        for (int index = 0; index < path.length; index++) {
-            String propName = path[index];
-            if (o == null) {
-                return null;
-            } else if (isArray(o) || o instanceof Collection) {
-                o = getCollecitonProp(o, propName, index, path);
-                break;
-            } else {
-                o = getProp(o, propName);
-            }
-        }
-        return Conversions.unifyList(o);
-    }
-
-    public static <T> List<T> getListOfProps(Class<T> cls, Collection items, String... path) {
-        return (List<T>) getPropByPath(items, path);
-    }
-
-    public static Object getProp(Object object, final String key) {
-        if (object == null) {
-            return null;
-        }
-
-        Class<?> cls = object.getClass();
-
-        Map<String, FieldAccess> fields = getPropertyFieldAccessors(cls);
-
-        if (!fields.containsKey(key)) {
-            fields = getAllAccessorFields(cls);
-        }
-
-        if (!fields.containsKey(key)) {
-            return null;
-        } else {
-            return fields.get(key).getValue(object);
-        }
-
-    }
 
     public static void getFields(Object object, final String key, Collection col) {
         if (isArray(object) || object instanceof Collection) {
@@ -880,7 +1105,7 @@ public class Reflection {
                     }
                 }
                 if (target == null) {
-                    target = (Collection<Object>) createCollection(type, value.size());
+                    target =  createCollection(type, value.size());
                 }
             }
 
@@ -1048,7 +1273,7 @@ public class Reflection {
         LinkedHashMap<String, V> map = new LinkedHashMap<String, V>(values.size());
         Iterator<V> iterator = values.iterator();
         for (V v : values) {
-            String key = Reflection.getProperty(Typ.string, v, propertyKey);
+            String key = Reflection.idxGeneric(Typ.string, v, propertyKey);
             map.put(key, v);
         }
         return map;
@@ -1091,57 +1316,6 @@ public class Reflection {
 
 
         return fields;
-    }
-
-    public static List<Method> getPropertyGetterMethods(
-            Class<? extends Object> theClass) {
-
-        Method[] methods = theClass.getMethods();
-
-        List<Method> methodList = new ArrayList<Method>(methods.length);
-
-        for (int index = 0; index < methods.length; index++) {
-            Method method = methods[index];
-            String name = method.getName();
-
-            boolean staticFlag = Modifier.isStatic(method.getModifiers());
-
-
-            if (staticFlag || method.getParameterTypes().length > 0
-                    || method.getReturnType() == Void.class
-                    || !(name.startsWith("get") || name.startsWith("is"))
-                    || name.equals("getClass")) {
-                continue;
-            }
-            methodList.add(method);
-
-        }
-        return methodList;
-    }
-
-
-    public static List<Method> getPropertySetterMethods(
-            Class<? extends Object> theClass) {
-
-        Method[] methods = theClass.getMethods();
-
-        List<Method> methodList = new ArrayList<>(methods.length);
-
-
-        for (int index = 0; index < methods.length; index++) {
-            Method method = methods[index];
-            String name = method.getName();
-            boolean staticFlag = Modifier.isStatic(method.getModifiers());
-
-
-            if (!staticFlag && method.getParameterTypes().length == 1
-                    && method.getReturnType() == Void.class
-                    && name.startsWith("set")) {
-                methodList.add(method);
-            }
-
-        }
-        return methodList;
     }
 
     public static Map<String, Pair<Method>> getPropertySetterGetterMethods(
@@ -1245,9 +1419,6 @@ public class Reflection {
     }
 
 
-
-
-
     public static Iterator iterator(final Object o) {
         if (o instanceof Collection) {
             return ((Collection) o).iterator();
@@ -1281,27 +1452,14 @@ public class Reflection {
 
 
     public static String joinBy(char delim, Object... args) {
-        StringBuilder builder = new StringBuilder(256);
-
-        if (args.length == 1 && isArray(args[0])) {
-            Object array = args[0];
-            for (int index = 0; index < len(array); index++) {
-                Object obj = Reflection.idx(array, index);
-                builder.append(obj.toString());
+        CharBuf builder = CharBuf.create(256);
+        int index = 0;
+        for (Object arg : args) {
+                builder.add(arg.toString());
                 if (!(index == args.length - 1)) {
-                    builder.append(delim);
-                }
-
-            }
-        } else {
-            int index = 0;
-            for (Object arg : args) {
-                builder.append(arg.toString());
-                if (!(index == args.length - 1)) {
-                    builder.append(delim);
+                    builder.add(delim);
                 }
                 index++;
-            }
         }
         return builder.toString();
     }
