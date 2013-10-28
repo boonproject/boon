@@ -1,5 +1,6 @@
 package org.boon;
 
+import org.boon.core.Typ;
 import org.boon.core.reflection.Conversions;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.Reflection;
@@ -168,7 +169,7 @@ public class Ordering {
             String str2 = Conversions.toString(value2);
             Collator collator = Collator.getInstance();
             return collator.compare(str1, str2);
-        } else if (Conversions.isComparable(value1)) {
+        } else if (Typ.isComparable(value1)) {
             Comparable c1 = comparable(value1);
             Comparable c2 = comparable(value2);
             return c1.compareTo(c2);

@@ -8,6 +8,7 @@ import org.boon.core.reflection.Conversions;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.logging.Logger;
 
 import static org.boon.core.reflection.Conversions.*;
@@ -129,6 +130,42 @@ public class PropertyField implements FieldAccess {
     public Field getField() {
         return null;
     }
+
+
+    public ParameterizedType getParameterizedType() {
+
+
+        ParameterizedType type = null;
+
+        if (setter.getReturnType() != null) {
+            Object obj = setter.getParameters()[0].getParameterizedType();
+
+            if (obj instanceof ParameterizedType)  {
+
+                type =  (ParameterizedType) obj;
+            }
+
+        }
+
+        return type;
+
+    }
+
+
+
+    public Class<?> getComponentClass() {
+        final ParameterizedType parameterizedType = this.getParameterizedType();
+        if (parameterizedType == null) {
+
+            if (getter != null) return (Class<?>) getter.getGenericParameterTypes()[0];
+
+        } else {
+            return (Class<?>)(parameterizedType.getActualTypeArguments()[0]);
+        }
+
+        return null;
+    }
+
 
 
     @Override

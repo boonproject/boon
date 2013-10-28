@@ -7,12 +7,10 @@ import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 
-import static java.util.logging.Level.WARNING;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Str.lines;
@@ -44,7 +42,7 @@ public class Reflection {
      */
     private static ConcurrentHashMap<Class, String> sortableFields = new ConcurrentHashMap<>();
 
-    static Map<String, Map<String, FieldAccess>> allAccessorFieldsCache = new ConcurrentHashMap<>();
+    private static Map<String, Map<String, FieldAccess>> allAccessorFieldsCache = new ConcurrentHashMap<>();
 
 
     static {
@@ -198,7 +196,7 @@ public class Reflection {
         List<Field> fields = getAllFields( clz );
         for (Field field : fields) {
 
-            if (( field.getType().isPrimitive() || Conversions.isComparable(field.getType() )
+            if (( field.getType().isPrimitive() || Typ.isComparable(field.getType())
                     && !Modifier.isStatic(field.getModifiers())
                     && field.getDeclaringClass() == clz )
                     ) {
@@ -999,15 +997,6 @@ public class Reflection {
 
 
 
-    @SuppressWarnings("unchecked")
-    public static <T> T fromMap(Map<String, Object> map, Class<T> clazz) {
-
-        if (map.get("class") == null) {
-            map.put("class", clazz.getName());
-        }
-        return (T) fromMap(map);
-    }
-
 
     public static Object newInstance(String className) {
         Class<?> clazz = null;
@@ -1036,10 +1025,21 @@ public class Reflection {
     }
 
 
+
+    @SuppressWarnings("unchecked")
+    public static <T> T fromMap(Map<String, Object> map, Class<T> clazz) {
+
+        if (map.get("class") == null) {
+            map.put("class", clazz.getName());
+        }
+        return (T) fromMap(map);
+    }
+
     @SuppressWarnings("unchecked")
     public static Object fromMap(Map<String, Object> map) {
         String className = (String) map.get("class");
         Object newInstance = newInstance(className);
+
         if (newInstance == null) {
             log.info("we were not able to load the class so we are leaving this as a map");
             return map;
@@ -1047,104 +1047,136 @@ public class Reflection {
 
         Collection<FieldAccess> fields = getAllAccessorFields(newInstance.getClass()).values();
 
+        /* Iterate through the fields. */
         for (FieldAccess field : fields) {
             String name = field.getName();
             Object value = map.get(name);
-            if (value instanceof Map && Conversions.getKeyType((Map<?, ?>) value) == Typ.string) {
-                value = fromMap((Map<String, Object>) value);
-            } else if (value instanceof Collection || value instanceof Map[]) {
-                listOfMaps(newInstance, field, value);
+
+            if ( value == null ) {
                 continue;
             }
 
-            if (value != null) {
-                field.setValue(newInstance, value);
+            /* See if it is a map<string, object>, and if it is then process it. */
+            if (value instanceof Map && Typ.getKeyType((Map<?, ?>) value) == Typ.string) {
+                value = fromMap((Map<String, Object>) value);
+            } else if (value instanceof Collection ) {
+                /*It is a collection so process it that way. */
+                processCollectionFromMap( newInstance, field, (Collection) value);
+                continue;
+            }  else if (value instanceof Map[]) {
+                /* It is an array of maps so, we need to process it as such. */
+                processArrayOfMaps( newInstance, field, value );
             }
+
+            field.setValue(newInstance, value);
         }
 
         return newInstance;
     }
 
-    private static void listOfMaps(Object newInstance, FieldAccess field, Object value) {
-        if (value instanceof Collection) {
-            Class<?> componentType = getComponentType((Collection<?>) value);
-            if (Conversions.isMap(componentType)) {
+    private static void processCollectionFromMap(final Object newInstance,
+                                                 final FieldAccess field,
+                                                 final Collection<?> collection ) {
+
+        final Class<?> componentType = getComponentType( collection );
+        /** See if we have a collection of maps because if we do, then we have some
+         * recursive processing to do.
+         */
+        if ( Typ.isMap( componentType ) ) {
                 handleCollectionOfMaps(newInstance, field,
-                        (Collection<Map<?, ?>>) value);
+                        (Collection<Map<String, Object>>) collection);
+        } else {
+
+            /* It might be a collection of regular types. */
+
+            /*If it is a compatiable type just inject it. */
+            if ( field.getType().isInterface() &&
+                    Typ.implementsInterface( collection.getClass(), field.getType() ) ) {
+
+                field.setValue( newInstance, collection );
+
+            } else {
+                /* The type was not compatible so create a new collection that is. */
+                Collection<Object> newCollection =
+                    createCollection( field.getType(),  collection.size() );
+
+                newCollection.addAll( collection );
+                field.setValue( newInstance, newCollection );
+
             }
-        } else if (value instanceof Map[]) {
-            Map<?, ?>[] maps = (Map<?, ?>[]) value;
-            List<Map<?, ?>> list = Arrays.asList(maps);
-            handleCollectionOfMaps(newInstance, field,
-                    list);
+
         }
+
+    }
+
+    private static void processArrayOfMaps(Object newInstance, FieldAccess field, Object value) {
+        Map<String, Object>[] maps = (Map<String, Object>[]) value;
+        List<Map<String, Object>> list = Lists.list(maps);
+        handleCollectionOfMaps(newInstance, field,
+                list);
+
     }
 
     @SuppressWarnings("unchecked")
     private static void handleCollectionOfMaps(Object newInstance,
-                                               FieldAccess field, Collection<Map<?, ?>> value) {
+                                               FieldAccess field, Collection<Map<String, Object>> collectionOfMaps) {
 
-        Class<?> type = field.getType();
-        Collection<Object> target = null;
-        try {
-            if (!type.isInterface()) {
-                Constructor<?> constructor = type.getConstructor(Typ.intgr);
-                constructor.setAccessible(true);
-                target = (Collection<Object>) constructor.newInstance(value
-                        .size());
-            } else {
-                // the type was an interface so let's see if we can figure out
-                // what it should be
-                Collection<Object> value2 = (Collection<Object>) field
-                        .getValue(newInstance);
+        Collection<Object> newCollection = createCollection(field.getType(),  collectionOfMaps.size());
 
-                if (value2 != null) {
 
-                    if (Conversions.isModifiableCollection(value2)) {
-                        target = value2;
-                    }
-                }
-                if (target == null) {
-                    target =  createCollection(type, value.size());
-                }
+        Class<?> componentClass = field.getComponentClass();
+
+        if (componentClass != null)  {
+
+
+            for ( Map<String, Object> mapComponent : collectionOfMaps )  {
+
+                newCollection.add( fromMap( mapComponent, componentClass  ) );
+
             }
+            field.setValue( newInstance, newCollection );
 
-            if (value.size() > 0) {
-                Map<?, ?> item = value.iterator().next();
-                if (Conversions.getKeyType(item) == Typ.string) {
-                    for (Map<?, ?> i : value) {
-                        target.add(fromMap((Map<String, Object>) i));
-                        field.setValue(newInstance, target);
-                        return;
-                    }
-                } else {
-                    log.warning(
-                            "This should not happen, but for some reason there is a type and we don't know how to convert it");
-
-                }
-            } else {
-                field.setValue(newInstance, target);
-                return;
-            }
-
-        } catch (Exception e) {
-            log.log(WARNING, "This should not happen, but for some reason we were not able to get the constructor",
-                    e);
         }
+
     }
 
     public static Collection<Object> createCollection(Class<?> type, int size) {
-        if (type == List.class) {
-            return new ArrayList<>(size);
-        } else if (type == SortedSet.class) {
-            return new TreeSet<>();
-        } else if (type == Set.class) {
-            return new HashSet<>(size);
-        } else if (type == Queue.class) {
-            return new LinkedList<>();
-        } else {
-            return new ArrayList<>(size);
+
+        if ( type.isInterface() )  {
+            if (type == List.class) {
+                return new ArrayList<>(size);
+            } else if (type == SortedSet.class) {
+                return new TreeSet<>();
+            } else if (type == Set.class) {
+                return new LinkedHashSet<>(size);
+            } else if ( Typ.isList(type) ) {
+                return new ArrayList<>();
+            } else if ( Typ.isSortedSet(type) ) {
+                return new TreeSet<>();
+            } else if ( Typ.isSet(type) ) {
+                return new LinkedHashSet<>(size);
+            } else {
+                new ArrayList(size);
+            }
+
+        }  else {
+            try {
+                Collection<Object> collection = (Collection<Object>) type.newInstance();
+                return collection;
+            } catch (Exception ex) {
+                if ( Typ.isList(type) ) {
+                    return new ArrayList<>();
+                } else if ( Typ.isSortedSet(type) ) {
+                    return new TreeSet<>();
+                } else if ( Typ.isSet(type) ) {
+                    return new LinkedHashSet<>(size);
+                } else {
+                    return new ArrayList(size);
+                }
+            }
         }
+        return new ArrayList(size);
+
     }
 
     public static Map<String, Object> toMap(final Object object) {
@@ -1168,7 +1200,9 @@ public class Reflection {
                 return entry;
             }
         }
-        List<FieldAccess> fields = new ArrayList(getAllAccessorFields(object.getClass()).values());
+
+        final Map<String, FieldAccess> fieldMap = getAllAccessorFields(object.getClass());
+        List<FieldAccess> fields = new ArrayList(fieldMap.values());
 
 
         Collections.reverse(fields); // make super classes fields first that
@@ -1185,10 +1219,10 @@ public class Reflection {
             if (value == null) {
                 continue;
             }
-            if (Conversions.isBasicType(value)) {
+            if (Typ.isBasicType(value)) {
                 map.put(entry.key(), entry.value());
             } else if (isArray(value)
-                    && Conversions.isBasicType(value.getClass().getComponentType())) {
+                    && Typ.isBasicType(value.getClass().getComponentType())) {
                 map.put(entry.key(), entry.value());
             } else if (isArray(value)) {
                 int length = arrayLength(value);
@@ -1200,8 +1234,8 @@ public class Reflection {
                 map.put(entry.key(), list);
             } else if (value instanceof Collection) {
                 Collection<?> collection = (Collection<?>) value;
-                Class<?> componentType = getComponentType(collection);
-                if (Conversions.isBasicType(componentType)) {
+                Class<?> componentType = getComponentType(collection, fieldMap.get(entry.key()));
+                if (Typ.isBasicType(componentType)) {
                     map.put(entry.key(), value);
                 } else {
                     List<Map<String, Object>> list = new ArrayList<>(
@@ -1222,6 +1256,15 @@ public class Reflection {
             }
         }
         return map;
+    }
+
+    public static Class<?> getComponentType(Collection<?> collection, FieldAccess fieldAccess) {
+             Class<?> clz =  fieldAccess.getComponentClass();
+             if ( clz == null )  {
+                clz = getComponentType(collection);
+             }
+             return clz;
+
     }
 
     public static Class<?> getComponentType(Collection<?> value) {

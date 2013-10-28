@@ -3,6 +3,7 @@ package org.boon.core.reflection.fields;
 import org.boon.core.reflection.Conversions;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 
 import static org.boon.Exceptions.die;
@@ -218,6 +219,16 @@ public class MapField implements FieldAccess {
     public Field getField() {
         return die(Field.class, "Unsupported operation") ;
 
+    }
+
+    @Override
+    public ParameterizedType getParameterizedType() {
+        return null;
+    }
+
+    @Override
+    public Class<?> getComponentClass() {
+        return null;
     }
 
     @Override

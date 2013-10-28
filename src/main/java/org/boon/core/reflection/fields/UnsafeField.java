@@ -6,6 +6,7 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 
 import static org.boon.Exceptions.die;
 import static org.boon.core.reflection.Conversions.*;
@@ -284,6 +285,40 @@ public abstract class UnsafeField implements FieldAccess {
     public Object getBase() {
         return base;
     }
+
+
+
+    public ParameterizedType getParameterizedType() {
+
+
+        ParameterizedType type = null;
+
+        if (field != null) {
+            Object obj = field.getGenericType();
+
+            if (obj instanceof ParameterizedType)  {
+
+                type =  (ParameterizedType) obj;
+            }
+
+        }
+
+        return type;
+
+    }
+
+
+
+    public Class<?> getComponentClass() {
+        final ParameterizedType parameterizedType = this.getParameterizedType();
+        if (parameterizedType == null) {
+            return null;
+        } else {
+            return (Class<?>)(parameterizedType.getActualTypeArguments()[0]);
+        }
+    }
+
+
 
 
     @Override

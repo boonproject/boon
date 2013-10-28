@@ -15,6 +15,7 @@ import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.in;
 import static org.boon.Maps.map;
+import static org.boon.Sets.set;
 import static org.boon.primitive.Int.array;
 
 public class ReflectionTest {
@@ -95,6 +96,24 @@ public class ReflectionTest {
 
             ) ;
 
+    static Map<String, Object> department2 =
+            map(
+                    "name",     (Object)"hr",
+                    "employees",   set(new Employee("Bob"), new Employee("Sue"), new Employee("Sam"))
+
+            ) ;
+
+    static Map<String, Object> department3 =
+            map(
+                    "name",     (Object)"manufacturing",
+                    "employees",   set(
+                                    map("firstName", "Rick"),
+                                    map("firstName", "Tom"),
+                                    map("firstName", "Chris"),
+                                    map("firstName", "Diana")
+                                   )
+
+            ) ;
 
 
     @Test
@@ -108,8 +127,32 @@ public class ReflectionTest {
 
         ok &= engineering.name.equals("engineering") || die();
 
-        //left off here.
-        //ok &= engineering.employees.size() == 2 || die();
+        ok &= engineering.employees.size() == 2 || die();
+
+
+
+
+        final Department hr =
+                Reflection.fromMap(department2, Department.class);
+
+
+
+        ok &= hr.name.equals("hr") || die();
+
+        ok &= hr.employees.size() == 3 || die();
+
+
+        final Department manufacturing =
+                Reflection.fromMap(department3, Department.class);
+
+
+
+        ok &= manufacturing.name.equals("manufacturing") || die();
+
+        ok &= manufacturing.employees.size() == 4 || die();
+
+        ok &= manufacturing.employees.get( 0 ).firstName.equals("Rick") || die();
+
 
     }
 
