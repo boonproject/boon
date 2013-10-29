@@ -1,5 +1,6 @@
 package org.boon;
 
+import org.boon.core.Typ;
 import org.boon.primitive.CharBuf;
 
 import java.io.*;
@@ -13,7 +14,6 @@ import java.util.stream.CloseableStream;
 
 @SuppressWarnings("unchecked")
 public class IO {
-
 
 
     public final static Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -212,33 +212,102 @@ public class IO {
         }
     }
 
+
+
     public static List<String> readLines(final String location) {
 
         final URI uri = URI.create(location);
 
-        return Exceptions.tryIt(List.class,  new Exceptions.TrialWithReturn<List>() {
+        return (List<String>) Exceptions.tryIt(Typ.list, new Exceptions.TrialWithReturn<List>() {
             @Override
-            public List tryIt() throws Exception {
+            public List<String> tryIt() throws Exception {
+                if (uri.getScheme() == null) {
 
-            if (uri.getScheme() == null) {
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    return Files.readAllLines(thePath, DEFAULT_CHARSET);
 
-                Path thePath = FileSystems.getDefault().getPath(location);
-                return Files.readAllLines(thePath, DEFAULT_CHARSET);
+                } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
-            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    return Files.readAllLines(thePath, DEFAULT_CHARSET);
 
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return Files.readAllLines(thePath, DEFAULT_CHARSET);
-
-            }  else {
-                return readLines(location, uri);
+                } else {
+                    return readLines(location, uri);
+                }
             }
+        });
+    }
+
+
+
+
+
+
+    public static void eachLine(final String location, final EachLine eachLine) {
+
+        final URI uri = URI.create(location);
+
+        Exceptions.tryIt(new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
+
+
+                if (uri.getScheme() == null) {
+
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, DEFAULT_CHARSET);
+                    eachLine(buf, eachLine);
+
+                } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, DEFAULT_CHARSET);
+                    eachLine(buf, eachLine);
+
+
+                } else {
+                    eachLine(location, uri, eachLine);
+                }
+
+            }
+
+        });
+    }
+
+    public static String read(final String location) {
+        final URI uri = URI.create(location);
+
+        return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
+
+            @Override
+            public String tryIt() throws Exception {
+
+
+                if (uri.getScheme() == null) {
+
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
+
+                } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
+
+                } else {
+                    return read(location, uri);
+                }
+
+
             }
         });
 
     }
 
-    private static List<String> readLines(String location, URI uri) throws Exception {
+
+private static List<String> readLines(String location, URI uri) throws Exception {
         try {
             FileSystem fileSystem = FileSystems.getFileSystem(uri);
             Path fsPath = fileSystem.getPath(location);
@@ -249,63 +318,6 @@ public class IO {
             return readLines(uri.toURL().openStream());
         }
     }
-
-
-    public static void eachLine(final String location, final EachLine eachLine) {
-
-        final URI uri = URI.create(location);
-
-        Exceptions.tryIt( new Exceptions.Trial() {
-            @Override
-            public void tryIt() throws Exception {
-
-                if ( uri.getScheme()==null ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(location);
-                    BufferedReader buf = Files.newBufferedReader(
-                            thePath, DEFAULT_CHARSET);
-                    eachLine(buf, eachLine);
-
-                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-
-                    BufferedReader buf = Files.newBufferedReader(
-                            thePath, DEFAULT_CHARSET);
-                    eachLine(buf, eachLine);
-                } else {
-                    eachLine(location, uri, eachLine);
-                }
-            }
-        });
-
-    }
-
-    public static String read(final String location) {
-        final URI uri = URI.create(location);
-
-        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn() {
-
-            @Override
-            public Object tryIt() throws Exception {
-                if ( uri.getScheme()==null ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(location);
-                    return read( Files.newBufferedReader(thePath, DEFAULT_CHARSET) );
-
-                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
-
-                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                    return read( Files.newBufferedReader(thePath, DEFAULT_CHARSET) );
-
-                } else {
-                    return read(location, uri);
-                }
-            }
-        });
-
-    }
-
 
 
     private static void eachLine(String location, URI uri, EachLine eachLine) throws Exception {
@@ -358,7 +370,6 @@ public class IO {
     public static Path createChildDirectory(Path parentDir, String childDir) {
 
         try {
-
 
 
             final Path newDir = path(parentDir.toString(),
@@ -457,5 +468,66 @@ public class IO {
 
 
     }
+
+
+    //JDK 8 versions of methods on hold
+
+
+//    public static List<String> readLines(final String location) {
+//
+//        final URI uri = URI.create(location);
+//
+//        return Exceptions.tryIt(List.class, () -> {
+//
+//            if (uri.getScheme() == null) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(location);
+//                return Files.readAllLines(thePath, DEFAULT_CHARSET);
+//
+//            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+//                return Files.readAllLines(thePath, DEFAULT_CHARSET);
+//
+//            } else {
+//                return readLines(location, uri);
+//            }
+//
+//        });
+//
+//    }
+
+
+
+//    public static void eachLine(final String location, EachLine eachLine) {
+//
+//        final URI uri = URI.create(location);
+//
+//        Exceptions.tryIt(() -> {
+//
+//            if (uri.getScheme() == null) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(location);
+//                BufferedReader buf = Files.newBufferedReader(
+//                        thePath, DEFAULT_CHARSET);
+//                eachLine(buf, eachLine);
+//
+//            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+//
+//                BufferedReader buf = Files.newBufferedReader(
+//                        thePath, DEFAULT_CHARSET);
+//                eachLine(buf, eachLine);
+//
+//
+//            } else {
+//                eachLine(location, uri, eachLine);
+//            }
+//
+//        });
+//
+//    }
+
 
 }
