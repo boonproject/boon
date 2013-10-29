@@ -1,5 +1,6 @@
 package org.boon;
 
+import org.boon.core.Typ;
 import org.boon.primitive.CharBuf;
 
 import java.io.*;
@@ -13,7 +14,6 @@ import java.util.stream.CloseableStream;
 
 @SuppressWarnings("unchecked")
 public class IO {
-
 
 
     public final static Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -212,84 +212,102 @@ public class IO {
         }
     }
 
+
+
     public static List<String> readLines(final String location) {
 
         final URI uri = URI.create(location);
 
-        return Exceptions.tryIt(List.class, () -> {
+        return (List<String>) Exceptions.tryIt(Typ.list, new Exceptions.TrialWithReturn<List>() {
+            @Override
+            public List<String> tryIt() throws Exception {
+                if (uri.getScheme() == null) {
 
-            if (uri.getScheme() == null) {
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    return Files.readAllLines(thePath, DEFAULT_CHARSET);
 
-                Path thePath = FileSystems.getDefault().getPath(location);
-                return Files.readAllLines(thePath, DEFAULT_CHARSET);
+                } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
-            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    return Files.readAllLines(thePath, DEFAULT_CHARSET);
 
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return Files.readAllLines(thePath, DEFAULT_CHARSET);
-
-            } else {
-                return readLines(location, uri);
+                } else {
+                    return readLines(location, uri);
+                }
             }
-
         });
-
     }
+
+
+
+
+
 
     public static void eachLine(final String location, EachLine eachLine) {
 
         final URI uri = URI.create(location);
 
-        Exceptions.tryIt(() -> {
-
-            if (uri.getScheme() == null) {
-
-                Path thePath = FileSystems.getDefault().getPath(location);
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, DEFAULT_CHARSET);
-                eachLine(buf, eachLine);
-
-            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
-
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-
-                BufferedReader buf = Files.newBufferedReader(
-                        thePath, DEFAULT_CHARSET);
-                eachLine(buf, eachLine);
+        Exceptions.tryIt(new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
 
 
-            } else {
-                eachLine(location, uri, eachLine);
+                if (uri.getScheme() == null) {
+
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, DEFAULT_CHARSET);
+                    eachLine(buf, eachLine);
+
+                } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+
+                    BufferedReader buf = Files.newBufferedReader(
+                            thePath, DEFAULT_CHARSET);
+                    eachLine(buf, eachLine);
+
+
+                } else {
+                    eachLine(location, uri, eachLine);
+                }
+
             }
 
         });
-
     }
 
     public static String read(final String location) {
         final URI uri = URI.create(location);
 
-        return Exceptions.tryIt(String.class, () -> {
+        return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
 
-            if (uri.getScheme() == null) {
+            @Override
+            public String tryIt() throws Exception {
 
-                Path thePath = FileSystems.getDefault().getPath(location);
-                return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
 
-            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+                if (uri.getScheme() == null) {
 
-                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-                return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
+                    Path thePath = FileSystems.getDefault().getPath(location);
+                    return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
 
-            } else {
-                return read(location, uri);
+                } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+
+                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
+
+                } else {
+                    return read(location, uri);
+                }
+
+
             }
-
         });
 
     }
 
-    private static List<String> readLines(String location, URI uri) throws Exception {
+
+private static List<String> readLines(String location, URI uri) throws Exception {
         try {
             FileSystem fileSystem = FileSystems.getFileSystem(uri);
             Path fsPath = fileSystem.getPath(location);
@@ -352,7 +370,6 @@ public class IO {
     public static Path createChildDirectory(Path parentDir, String childDir) {
 
         try {
-
 
 
             final Path newDir = path(parentDir.toString(),
@@ -451,5 +468,66 @@ public class IO {
 
 
     }
+
+
+    //JDK 8 versions of methods on hold
+
+
+//    public static List<String> readLines(final String location) {
+//
+//        final URI uri = URI.create(location);
+//
+//        return Exceptions.tryIt(List.class, () -> {
+//
+//            if (uri.getScheme() == null) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(location);
+//                return Files.readAllLines(thePath, DEFAULT_CHARSET);
+//
+//            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+//                return Files.readAllLines(thePath, DEFAULT_CHARSET);
+//
+//            } else {
+//                return readLines(location, uri);
+//            }
+//
+//        });
+//
+//    }
+
+
+
+//    public static void eachLine(final String location, EachLine eachLine) {
+//
+//        final URI uri = URI.create(location);
+//
+//        Exceptions.tryIt(() -> {
+//
+//            if (uri.getScheme() == null) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(location);
+//                BufferedReader buf = Files.newBufferedReader(
+//                        thePath, DEFAULT_CHARSET);
+//                eachLine(buf, eachLine);
+//
+//            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
+//
+//                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+//
+//                BufferedReader buf = Files.newBufferedReader(
+//                        thePath, DEFAULT_CHARSET);
+//                eachLine(buf, eachLine);
+//
+//
+//            } else {
+//                eachLine(location, uri, eachLine);
+//            }
+//
+//        });
+//
+//    }
+
 
 }
