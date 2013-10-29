@@ -15,7 +15,7 @@
  */
 package org.boon.datarepo;
 
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Typ;
 import org.boon.datarepo.impl.decorators.FilterWithSimpleCache;
 import org.boon.criteria.Criteria;
 import org.boon.datarepo.spi.SPIFactory;
@@ -237,7 +237,7 @@ public class Collections {
             if (f.getName().equals(primaryKey)) {
                 continue;
             }
-            if (Conversions.isBasicType(f.getType())) {
+            if (Typ.isBasicType(f.getType())) {
                 configIndexes((SearchableCollection) query, f.getName(), fields);
             }
         }

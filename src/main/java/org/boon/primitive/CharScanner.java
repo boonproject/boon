@@ -6,6 +6,29 @@ import java.util.Objects;
 public class CharScanner {
 
 
+    public static final char[] DIGITS= {'0', '1', '2', '3', '4', '5',
+            '6', '7', '8', '9'};
+
+
+    public static boolean isDigit(char a) {
+        for ( int j = 0; j < DIGITS.length; j++ )  {
+               if ( a == DIGITS[j] )  {
+                   return true;
+               }
+        }
+        return false;
+    }
+
+    public static boolean isDigits(final char[] inputArray) {
+        for ( int index = 0; index< inputArray.length; index++ ) {
+               char a = inputArray [ index ];
+               if ( !isDigit( a ) )  {
+                     return false;
+               }
+        }
+        return true;
+    }
+
     public static char[][] splitExact( final char[] inputArray,
                                  final char split, final int resultsArrayLength ) {
         /** Holds the results. */

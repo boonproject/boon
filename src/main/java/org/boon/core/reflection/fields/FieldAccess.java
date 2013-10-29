@@ -1,6 +1,8 @@
 package org.boon.core.reflection.fields;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 
 public interface FieldAccess {
@@ -67,4 +69,11 @@ public interface FieldAccess {
     Class<?> getType();
 
     Field getField();
+
+
+
+    public ParameterizedType getParameterizedType() ;
+
+
+    public Class<?> getComponentClass() ;
 }

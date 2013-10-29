@@ -428,6 +428,55 @@ public class Chr {
 
 
 
+    public static char[] rpad(final char[] in, final int size, char pad) {
+
+        if (in.length >= size)  {
+            return  in;
+        }
+
+        int index = 0;
+        char [] newArray = new char[ size ];
+
+        for ( index = 0; index < in.length; index++ ) {
+            newArray [index] = in[index];
+        }
+
+
+
+        for (; index < size; index++ ) {
+            newArray [index] = pad;
+        }
+
+        return newArray;
+    }
+
+
+
+    public static char[] lpad(final char[] in, final int size, char pad) {
+
+        if (in.length >= size)  {
+            return  in;
+        }
+
+        int delta = size - in.length;
+        int index = 0;
+        char [] newArray = new char[ size ];
+
+
+
+        for (; index < delta; index++ ) {
+            newArray [index] = pad;
+        }
+
+
+        for (int index2 = 0; index2 < in.length; index++, index2++ ) {
+            newArray [index] = in[index2];
+        }
+
+        return newArray;
+    }
+
+
     public static char[] underBarCase(char[] in) {
 
         if (in == null || in.length == 0 || in.length == 1) {

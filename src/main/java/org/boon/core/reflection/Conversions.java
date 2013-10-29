@@ -1,11 +1,14 @@
 package org.boon.core.reflection;
 
+import org.boon.Dates;
 import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.Typ;
-import org.boon.core.reflection.Reflection;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
@@ -360,17 +363,17 @@ public class Conversions {
             //return (T) toFile(set);
             die("Need to fix this");
             return null;
-        } else if (isMap(clz)) {
+        } else if (Typ.isMap(clz)) {
             if (value instanceof Map) {
                 return (T) value;
             }
             return (T) toMap(value);
         } else if (clz.isArray()) {
             return (T) toPrimitiveArrayIfPossible(clz, value);
-        } else if (isCollection(clz)) {
+        } else if (Typ.isCollection(clz)) {
             return toCollection(clz, value);
         } else if (clz != null && clz.getPackage() != null && !clz.getPackage().getName().startsWith("java")
-                && isMap(value.getClass()) && isKeyTypeString(value)) {
+                && Typ.isMap(value.getClass()) && Typ.doesMapHaveKeyTypeString(value)) {
             return (T) Reflection.fromMap((Map<String, Object>) value);
         } else {
             return (T) value;
@@ -543,9 +546,9 @@ public class Conversions {
                 public void remove() {
                 }
             };
-        } else if (isCollection(value.getClass())) {
+        } else if (Typ.isCollection(value.getClass())) {
             return ((Collection<T>) value).iterator();
-        } else if (isMap(value.getClass())) {
+        } else if (Typ.isMap(value.getClass())) {
             Iterator<T> iterator = ((Map<String, T>) value).values().iterator();
             return iterator;
         } else {
@@ -555,11 +558,11 @@ public class Conversions {
 
     @SuppressWarnings("unchecked")
     public static <T> T toCollection(Class<T> clz, Object value) {
-        if (isList(clz)) {
+        if (Typ.isList(clz)) {
             return (T) toList(value);
-        } else if (isSortedSet(clz)) {
+        } else if (Typ.isSortedSet(clz)) {
             return (T) toSortedSet(value);
-        } else if (isSet(clz)) {
+        } else if (Typ.isSet(clz)) {
             return (T) toSet(value);
         } else {
             return (T) toList(value);
@@ -614,10 +617,6 @@ public class Conversions {
         }
     }
 
-
-    public static boolean isKeyTypeString(Object value) {
-        return getKeyType((Map<?, ?>) value) == Typ.string;
-    }
 
     public static Map<String, Object> toMap(Object value) {
         return Reflection.toMap(value);
@@ -682,73 +681,6 @@ public class Conversions {
         return Float.valueOf(i);
     }
 
-    public static boolean isBasicType(Object value) {
-        return (value instanceof Number || value instanceof CharSequence
-                || value instanceof Date || value instanceof Calendar);
-    }
-
-    public static boolean isBasicType(Class<?> theClass) {
-        return (Typ.number.isAssignableFrom(theClass)
-                || Typ.chars.isAssignableFrom(theClass)
-                || Typ.date.isAssignableFrom(theClass)
-                || Typ.calendar.isAssignableFrom(theClass) || theClass
-                .isPrimitive());
-    }
-
-    public static boolean isMap(Class<?> thisType) {
-        return implementsInterface(thisType, Map.class);
-    }
-
-    public static boolean isCharSequence(Class<?> thisType) {
-        return implementsInterface(thisType, CharSequence.class);
-    }
-
-    public static boolean isCollection(Class<?> thisType) {
-        return implementsInterface(thisType, Collection.class);
-    }
-
-    public static boolean isList(Class<?> thisType) {
-        return implementsInterface(thisType, List.class);
-    }
-
-    public static boolean isSet(Class<?> thisType) {
-        return implementsInterface(thisType, Set.class);
-    }
-
-    public static boolean isSortedSet(Class<?> thisType) {
-        return implementsInterface(thisType, SortedSet.class);
-    }
-
-    public static boolean isType(Class<?> thisType, Class<?> isThisType) {
-        return isSuperType(thisType, isThisType);
-    }
-
-    public static boolean isModifiableCollection(Collection<Object> value) {
-        try {
-            value.clear();
-        } catch (Exception ex) {
-            return false;
-        }
-
-        @SuppressWarnings("rawtypes")
-        Class<? extends Collection> clazz = value.getClass();
-
-        if (clazz == HashSet.class || clazz == TreeSet.class
-                || clazz == ArrayList.class || clazz == LinkedList.class) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static Class<?> getKeyType(Map<?, ?> value) {
-        if (value.size() > 0) {
-            return value.keySet().iterator().next().getClass();
-        } else {
-            return null;
-        }
-    }
-
     public static Object toArrayGuessType(Collection<?> value) {
         Class<?> componentType = Reflection.getComponentType(value);
         Object array = Array.newInstance(componentType, value.size());
@@ -786,79 +718,6 @@ public class Conversions {
 
     }
 
-    public static Date toDateUS(String string) {
-
-        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
-
-        if (split.length == 3) {
-            return getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
-        } else if (split.length == 6) {
-            return getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
-                    toInt(split[3]), toInt(split[4]), toInt(split[5])
-            );
-        } else {
-            die(String.format("Not able to parse %s into a US date", string));
-            return null;
-        }
-
-    }
-
-    public static Date toEuroDate(String string) {
-
-        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
-
-        if (split.length == 3) {
-            return getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
-        } else if (split.length == 6) {
-            return getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
-                    toInt(split[3]), toInt(split[4]), toInt(split[5])
-            );
-        } else {
-            die(String.format("Not able to parse %s into a US date", string));
-            return null;
-        }
-
-    }
-
-
-    public static Date year(int year) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(1970, Calendar.JANUARY, 2, 0, 0, 0);
-        c.set(Calendar.YEAR, year);
-        return c.getTime();
-    }
-
-    public static Date getUSDate(int month, int day, int year) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, 0, 0, 0);
-        return c.getTime();
-    }
-
-
-    public static Date getUSDate(int month, int day, int year, int hour, int minute, int second) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, hour, minute, second);
-        return c.getTime();
-    }
-
-    public static Date getEuroDate(int day, int month, int year) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, 0, 0, 0);
-        return c.getTime();
-    }
-
-    public static Date getEuroDate(int day, int month, int year, int hour, int minute, int second) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, hour, minute, second);
-        return c.getTime();
-    }
-
-
     public static Date toDate(long value) {
         return new Date(value);
     }
@@ -881,6 +740,42 @@ public class Conversions {
         }
     }
 
+
+    public static Date toDateUS(String string) {
+
+        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
+
+        if (split.length == 3) {
+            return Dates.getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
+        } else if (split.length >= 6) {
+            return Dates.getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
+                    toInt(split[3]), toInt(split[4]), toInt(split[5])
+            );
+        } else {
+            die(String.format("Not able to parse %s into a US date", string));
+            return null;
+        }
+
+    }
+
+    public static Date toEuroDate(String string) {
+
+        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
+
+        if (split.length == 3) {
+            return Dates.getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
+        } else if (split.length >= 6) {
+            return Dates.getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
+                    toInt(split[3]), toInt(split[4]), toInt(split[5])
+            );
+        } else {
+            die(String.format("Not able to parse %s into a Euro date", string));
+            return null;
+        }
+
+    }
+
+
     public static Date toDate(Object value) {
         if (value instanceof Long) {
             return toDate((Long) value);
@@ -895,37 +790,6 @@ public class Conversions {
             }
         }
     }
-
-    public static boolean isComparable(Object o) {
-        return o instanceof Comparable;
-    }
-
-    public static boolean isComparable(Class<?> type) {
-        return implementsInterface(type, Typ.comparable);
-    }
-
-    public static boolean isSuperClass(Class<?> type, Class<?> possibleSuperType) {
-        if (possibleSuperType.isInterface()) {
-            return false;
-        } else {
-            return possibleSuperType.isAssignableFrom(type);
-        }
-
-    }
-
-    public static boolean isSuperType(Class<?> type, Class<?> possibleSuperType) {
-        return possibleSuperType.isAssignableFrom(type);
-    }
-
-    public static boolean implementsInterface(Class<?> type, Class<?> interfaceType) {
-        if (!interfaceType.isInterface()) {
-            return false;
-        } else {
-            return interfaceType.isAssignableFrom(type);
-        }
-
-    }
-
 
 
     public interface Converter<TO, FROM> {
@@ -1000,6 +864,23 @@ public class Conversions {
         return list;
 
 
+    }
+
+
+    public Number coerceNumber(Object inputArgument, Class<?> paraType) {
+        Number number = (Number) inputArgument;
+        if (paraType == int.class || paraType == Integer.class) {
+            return number.intValue();
+        } else if (paraType == double.class || paraType == Double.class) {
+            return number.doubleValue();
+        } else if (paraType == float.class || paraType == Float.class) {
+            return number.floatValue();
+        } else if (paraType == short.class || paraType == Short.class) {
+            return number.shortValue();
+        } else if (paraType == byte.class || paraType == Byte.class) {
+            return number.byteValue();
+        }
+        return null;
     }
 
 

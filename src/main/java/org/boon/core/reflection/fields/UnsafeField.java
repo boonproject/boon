@@ -6,6 +6,7 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 
 import static org.boon.Exceptions.die;
 import static org.boon.core.reflection.Conversions.*;
@@ -55,6 +56,8 @@ public abstract class UnsafeField implements FieldAccess {
                 return new DoubleUnsafeField(field);
             } else if (type == Typ.flt) {
                 return new FloatUnsafeField(field);
+            } else if (type == Typ.bln) {
+                return new BooleanUnsafeField(field);
             } else {
                 return new ObjectUnsafeField(field);
             }
@@ -73,6 +76,8 @@ public abstract class UnsafeField implements FieldAccess {
                 return new VolatileDoubleUnsafeField(field);
             } else if (type == Typ.flt) {
                 return new VolatileFloatUnsafeField(field);
+            } else if (type == Typ.bln) {
+                return new VolatileBooleanUnsafeField(field);
             } else {
                 return new ObjectUnsafeField(field);
             }
@@ -280,6 +285,40 @@ public abstract class UnsafeField implements FieldAccess {
     public Object getBase() {
         return base;
     }
+
+
+
+    public ParameterizedType getParameterizedType() {
+
+
+        ParameterizedType type = null;
+
+        if (field != null) {
+            Object obj = field.getGenericType();
+
+            if (obj instanceof ParameterizedType)  {
+
+                type =  (ParameterizedType) obj;
+            }
+
+        }
+
+        return type;
+
+    }
+
+
+
+    public Class<?> getComponentClass() {
+        final ParameterizedType parameterizedType = this.getParameterizedType();
+        if (parameterizedType == null) {
+            return null;
+        } else {
+            return (Class<?>)(parameterizedType.getActualTypeArguments()[0]);
+        }
+    }
+
+
 
 
     @Override
@@ -528,6 +567,24 @@ public abstract class UnsafeField implements FieldAccess {
     }
 
 
+    private static class BooleanUnsafeField extends UnsafeField {
+
+        protected BooleanUnsafeField(Field f) {
+            super(f);
+        }
+
+        @Override
+        public void setBoolean(Object obj, boolean value) {
+            unsafe.putBoolean(obj, offset, value);
+        }
+
+        @Override
+        public boolean getBoolean(Object obj) {
+            return unsafe.getBoolean(obj, offset);
+        }
+    }
+
+
     private static class VolatileIntUnsafeField extends UnsafeField {
 
         protected VolatileIntUnsafeField(Field f) {
@@ -542,6 +599,24 @@ public abstract class UnsafeField implements FieldAccess {
         @Override
         public int getInt(Object obj) {
             return unsafe.getIntVolatile(obj, offset);
+        }
+    }
+
+
+    private static class VolatileBooleanUnsafeField extends UnsafeField {
+
+        protected VolatileBooleanUnsafeField(Field f) {
+            super(f);
+        }
+
+        @Override
+        public void setBoolean(Object obj, boolean value) {
+            unsafe.putBooleanVolatile(obj, offset, value);
+        }
+
+        @Override
+        public boolean getBoolean(Object obj) {
+            return unsafe.getBooleanVolatile(obj, offset);
         }
     }
 

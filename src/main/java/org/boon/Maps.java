@@ -1,6 +1,8 @@
 package org.boon;
 
 
+import org.boon.core.reflection.Conversions;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1191,6 +1193,21 @@ public class Maps {
         return map;
     }
 
+
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <T> T idx(Class<T> clz, Map map, Object key) {
+        Object value = map.get(key.toString());
+        if (value == null) {
+            return (T) value;
+        }
+        if (value.getClass() != clz) {
+            T t = Conversions.coerce(clz, value);
+            return t;
+        } else {
+            return (T) value;
+        }
+    }
 
 
 }

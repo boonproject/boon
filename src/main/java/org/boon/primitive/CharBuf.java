@@ -42,6 +42,12 @@ public class CharBuf {
         return this;
     }
 
+
+    public CharBuf add(int i) {
+        add( "" + i );
+        return this;
+    }
+
     public CharBuf addLine(String str) {
         add( str.toCharArray() );
         add('\n');

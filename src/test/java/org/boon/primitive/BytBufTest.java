@@ -45,7 +45,7 @@ public class BytBufTest {
 
     }
 
-    @Test(expected = Exceptions.Exception.class)
+    @Test(expected = Exceptions.SoftenedException.class)
     public void testExact2TooSmall() {
         ByteBuf buf = ByteBuf.createExact(22);
         buf.add(bytes("0123456789\n"));

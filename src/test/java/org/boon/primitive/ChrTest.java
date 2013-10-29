@@ -9,6 +9,38 @@ import static org.junit.Assert.*;
 public class ChrTest {
 
 
+
+
+    @Test
+    public void rpadTest() {
+
+        char[] letters =
+                array('a', 'b', 'c');
+
+        assertArrayEquals(
+                array('a', 'b', 'c', '#', '#'),
+                rpad( array( 'a', 'b', 'c' ), 5,  '#')
+        );
+
+    }
+
+
+    @Test
+    public void lpadTest() {
+
+        char[] letters =
+                array('a', 'b', 'c');
+
+
+        char[] results = lpad( array( 'a', 'b', 'c' ), 5,  '#');
+
+        assertArrayEquals(
+                array( '#', '#', 'a', 'b', 'c' ),
+                results
+        );
+
+    }
+
     @Test
     public void allocate() {
 

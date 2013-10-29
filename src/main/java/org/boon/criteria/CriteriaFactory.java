@@ -2,7 +2,6 @@ package org.boon.criteria;
 
 
 import org.boon.core.Typ;
-import org.boon.core.reflection.Conversions;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 
@@ -89,7 +88,7 @@ public class CriteriaFactory {
         return new Criterion<Object>("_type", Operator.EQUAL, cls.getName()) {
             @Override
             public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
-                return Conversions.isSuperClass(owner.getClass(), cls);
+                return Typ.isSuperClass(owner.getClass(), cls);
             }
         };
     }
@@ -98,7 +97,7 @@ public class CriteriaFactory {
         return new Criterion<Object>("_type", Operator.EQUAL, cls.getName()) {
             @Override
             public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
-                return Conversions.implementsInterface(owner.getClass(), cls);
+                return Typ.implementsInterface(owner.getClass(), cls);
             }
         };
     }
@@ -290,7 +289,7 @@ public class CriteriaFactory {
 
                 boolean returnVal;
                 FieldAccess field = fields.get(name);
-                if (Conversions.implementsInterface(field.getType(), Typ.collection)) {
+                if (Typ.implementsInterface(field.getType(), Typ.collection)) {
                     Collection collection = (Collection) field.getValue(owner);
                     returnVal = collection.contains(value);
                 } else if (field.getType().isArray()) {
@@ -330,7 +329,7 @@ public class CriteriaFactory {
 
                 boolean returnVal;
                 FieldAccess field = fields.get(name);
-                if (Conversions.implementsInterface(field.getType(), Typ.collection)) {
+                if (Typ.implementsInterface(field.getType(), Typ.collection)) {
                     Collection collection = (Collection) field.getValue(owner);
                     returnVal = collection == null || collection.isEmpty();
                 } else if (field.getType().isArray()) {
