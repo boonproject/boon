@@ -1,14 +1,14 @@
 package org.boon;
 
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Sys;
 import org.boon.primitive.CharBuf;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static org.boon.Exceptions.die;
-import static org.boon.core.reflection.Conversions.toInt;
+import static org.boon.Boon.println;
+import static org.boon.Str.lpad;
 
 public class Dates {
 
@@ -195,14 +195,21 @@ public class Dates {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
-
+    /**
+     * Useful for generating string versions of timestamps
+     * @return euro style format.
+     */
     public static String euroUTCSystemDateNowString() {
         long now = System.currentTimeMillis();
         return euroUTCSystemDateString( now );
     }
 
 
-
+    /**
+     * Useful for generated file names and generated work directories.
+     * @param timestamp  the timestamp
+     * @return  euro style format.
+     */
     public static String euroUTCSystemDateString( long timestamp ) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestamp);
@@ -215,16 +222,22 @@ public class Dates {
         int second = calendar.get(Calendar.SECOND);
 
         CharBuf buf = CharBuf.create(16);
-        buf.add(day).add('_');
-        buf.add(month).add('_');
+        buf.add( Str.zfill( day,       2 )).add('_');
+        buf.add( Str.zfill( month,     2) ).add('_');
         buf.add(year).add('_');
-        buf.add(hour).add('_');
-        buf.add(minute).add('_');
-        buf.add(second).add("_utc_euro");
+        buf.add( Str.zfill( hour,      2) ).add('_');
+        buf.add( Str.zfill(minute,     2) ).add('_');
+        buf.add( Str.zfill(second,     2) ).add("_utc_euro");
 
         return buf.toString();
     }
 
+
+    public static void main (String... args) {
+
+        Sys.println(euroUTCSystemDateNowString());
+
+    }
 
 
     public static Date year(int year) {
