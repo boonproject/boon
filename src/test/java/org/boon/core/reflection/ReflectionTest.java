@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
@@ -86,6 +87,8 @@ public class ReflectionTest {
     public static class Department {
         String name;
         List<Employee> employees;
+        List<Set> employeesSet;
+
     }
 
 

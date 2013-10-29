@@ -950,17 +950,6 @@ public class Reflection {
     }
 
 
-    public static void getFields(Object object, final String key, Collection col) {
-        if (isArray(object) || object instanceof Collection) {
-            Iterator iter = Conversions.iterator(object);
-            while (iter.hasNext()) {
-                col.add(iter.next());
-            }
-        } else {
-            col.add(getFieldValue(object, key));
-        }
-
-    }
 
     private static Object getFieldValues(Object object, final String key) {
         if (object == null) {
