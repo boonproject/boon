@@ -1,7 +1,14 @@
 package org.boon;
 
+import org.boon.core.reflection.Conversions;
+import org.boon.primitive.CharBuf;
+
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
+
+import static org.boon.Exceptions.die;
+import static org.boon.core.reflection.Conversions.toInt;
 
 public class Dates {
 
@@ -187,6 +194,77 @@ public class Dates {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
     }
+
+
+    public static String euroUTCSystemDateNowString() {
+        long now = System.currentTimeMillis();
+        return euroUTCSystemDateString( now );
+    }
+
+
+
+    public static String euroUTCSystemDateString( long timestamp ) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp);
+        calendar.setTimeZone(UTC_TIME_ZONE);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+
+        CharBuf buf = CharBuf.create(16);
+        buf.add(day).add('_');
+        buf.add(month).add('_');
+        buf.add(year).add('_');
+        buf.add(hour).add('_');
+        buf.add(minute).add('_');
+        buf.add(second).add("_utc_euro");
+
+        return buf.toString();
+    }
+
+
+
+    public static Date year(int year) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
+        c.set(1970, Calendar.JANUARY, 2, 0, 0, 0);
+        c.set(Calendar.YEAR, year);
+        return c.getTime();
+    }
+
+    public static Date getUSDate(int month, int day, int year) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
+        c.set(year, month - 1, day + 1, 0, 0, 0);
+        return c.getTime();
+    }
+
+
+    public static Date getUSDate(int month, int day, int year, int hour, int minute, int second) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
+        c.set(year, month - 1, day + 1, hour, minute, second);
+        return c.getTime();
+    }
+
+    public static Date getEuroDate(int day, int month, int year) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
+        c.set(year, month - 1, day + 1, 0, 0, 0);
+        return c.getTime();
+    }
+
+    public static Date getEuroDate(int day, int month, int year, int hour, int minute, int second) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT"));
+        c.set(year, month - 1, day + 1, hour, minute, second);
+        return c.getTime();
+    }
+
+
 
 
 }

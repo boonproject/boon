@@ -1,5 +1,6 @@
 package org.boon.core.reflection;
 
+import org.boon.Dates;
 import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.Typ;
@@ -717,79 +718,6 @@ public class Conversions {
 
     }
 
-    public static Date toDateUS(String string) {
-
-        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
-
-        if (split.length == 3) {
-            return getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
-        } else if (split.length == 6) {
-            return getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
-                    toInt(split[3]), toInt(split[4]), toInt(split[5])
-            );
-        } else {
-            die(String.format("Not able to parse %s into a US date", string));
-            return null;
-        }
-
-    }
-
-    public static Date toEuroDate(String string) {
-
-        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
-
-        if (split.length == 3) {
-            return getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
-        } else if (split.length == 6) {
-            return getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
-                    toInt(split[3]), toInt(split[4]), toInt(split[5])
-            );
-        } else {
-            die(String.format("Not able to parse %s into a US date", string));
-            return null;
-        }
-
-    }
-
-
-    public static Date year(int year) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(1970, Calendar.JANUARY, 2, 0, 0, 0);
-        c.set(Calendar.YEAR, year);
-        return c.getTime();
-    }
-
-    public static Date getUSDate(int month, int day, int year) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, 0, 0, 0);
-        return c.getTime();
-    }
-
-
-    public static Date getUSDate(int month, int day, int year, int hour, int minute, int second) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, hour, minute, second);
-        return c.getTime();
-    }
-
-    public static Date getEuroDate(int day, int month, int year) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, 0, 0, 0);
-        return c.getTime();
-    }
-
-    public static Date getEuroDate(int day, int month, int year, int hour, int minute, int second) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeZone(TimeZone.getTimeZone("GMT"));
-        c.set(year, month - 1, day + 1, hour, minute, second);
-        return c.getTime();
-    }
-
-
     public static Date toDate(long value) {
         return new Date(value);
     }
@@ -811,6 +739,42 @@ public class Conversions {
 
         }
     }
+
+
+    public static Date toDateUS(String string) {
+
+        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
+
+        if (split.length == 3) {
+            return Dates.getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
+        } else if (split.length >= 6) {
+            return Dates.getUSDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
+                    toInt(split[3]), toInt(split[4]), toInt(split[5])
+            );
+        } else {
+            die(String.format("Not able to parse %s into a US date", string));
+            return null;
+        }
+
+    }
+
+    public static Date toEuroDate(String string) {
+
+        String[] split = StringScanner.splitByChars(string, new char[]{'.', '\\', '/', ':'});
+
+        if (split.length == 3) {
+            return Dates.getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]));
+        } else if (split.length >= 6) {
+            return Dates.getEuroDate(toInt(split[0]), toInt(split[1]), toInt(split[2]),
+                    toInt(split[3]), toInt(split[4]), toInt(split[5])
+            );
+        } else {
+            die(String.format("Not able to parse %s into a Euro date", string));
+            return null;
+        }
+
+    }
+
 
     public static Date toDate(Object value) {
         if (value instanceof Long) {
