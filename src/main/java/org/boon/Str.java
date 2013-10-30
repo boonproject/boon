@@ -1,6 +1,7 @@
 package org.boon;
 
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
 public class Str {
@@ -246,6 +247,13 @@ public class Str {
 
     public static String rpad( String inStr, int size, char fill ) {
         return new String( Chr.rpad(inStr.toCharArray(), size, fill) );
+    }
+
+
+    public static String [] split( final String input,
+                                  final char split) {
+        return StringScanner.split ( input, split );
+
     }
 
 }

@@ -26,9 +26,9 @@ package org.boon;
  // These helper methods are used to create common Java types.
  // Sets and lists have concurrent and non concurrent variants
  // Set also has sorted and non sorted variants
- // This makes safeList, list, set, sortedSet, safeSet, safeSortedSet
+ // This makes safeList, listStream, set, sortedSet, safeSet, safeSortedSet
  veggiesSet  =  set( "salad", "broccoli", "spinach");
- fruitList   =  list( "apple", "oranges", "pineapple");
+ fruitList   =  listStream( "apple", "oranges", "pineapple");
  fruitArray  =  array( "apple", "oranges", "pineapple");
  letters     =  array( 'a', 'b', 'c');
  bytes       =  array( new byte[]{0x1, 0x2, 0x3, 0x4});
@@ -88,7 +88,7 @@ public interface UniversalOperations <ITEM, INDEX> {
      *
      *     NavigableSet<String> set; //set of strings
      *
-     *     List<String> list;
+     *     List<String> listStream;
      *
      *     char[] letters;
      *
@@ -99,11 +99,11 @@ public interface UniversalOperations <ITEM, INDEX> {
      *  <pre>
      *        dogMap = map("dog", dog);
      *        set = sortedSet("apple", "kiwi", "oranges", "pears", "pineapple");
-     *        list = list("apple", "oranges", "pears");
+     *        listStream = listStream("apple", "oranges", "pears");
      *        letters = array('a', 'b', 'c', 'd');
      *
      * </pre>
-     *        The methods map, list, sortedSet, arrays
+     *        The methods map, listStream, sortedSet, arrays
      *        are utility methods for creating Maps, lists sets, etc.
      * <br />
      *
@@ -133,29 +133,29 @@ public interface UniversalOperations <ITEM, INDEX> {
      *
      *               );
      *
-     *               //Get the string "oranges" at index 1 of the list.
+     *               //Get the string "oranges" at index 1 of the listStream.
      *               assertEquals(
      *                   "oranges",
-     *                   idx(list, 1)
+     *                   idx(listStream, 1)
      *               );
      *
      *               // Get the string "pears" at index -1 (using Python style slice notation)
-     *               // of the list.
+     *               // of the listStream.
      *               assertEquals(
      *                   "pears",
-     *                   idx(list, -1)
+     *                   idx(listStream, -1)
      *                );
      *
      *               //oranges are two from the back
      *               assertEquals(
      *               "oranges",
-     *               idx(list, -2));
+     *               idx(listStream, -2));
      *
      *
      *               //apple are two from the back
      *               assertEquals(
      *               "apple",
-     *               idx(list, -3));
+     *               idx(listStream, -3));
      *
      *
      *
@@ -184,7 +184,7 @@ public interface UniversalOperations <ITEM, INDEX> {
      </pre>
      </blockquote>
 
-     * Negative index works with list like, array like things.
+     * Negative index works with listStream like, array like things.
      *
      * <blockquote>
      * <pre>
@@ -507,7 +507,7 @@ public interface UniversalOperations <ITEM, INDEX> {
      * Python and boon are kind to the programmer
      * if there are fewer items than you ask for.
      * For example, if you ask for a[:-2] and a only contains one element,
-     * you get an empty list instead of an error.
+     * you get an empty listStream instead of an error.
      * Sometimes you would prefer the error, so you have to
      * be aware that this may happen.
      *

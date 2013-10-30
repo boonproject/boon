@@ -393,7 +393,7 @@ public class MoreTests {
 
     @Test
     public void testBetweenSalaryExactOutOfRange() throws Exception {
-        //rint(list);
+        //rint(listStream);
         List<Employee> queryableList = $q(list);
         List<Employee> results = sortedQuery(queryableList, "firstName", CriteriaFactory.between("salary", 400, 500));
 
@@ -404,7 +404,7 @@ public class MoreTests {
     //@Test  //Java data handling SUCKS! I don't think it is an issue with index lib.
     public void testBetweenDateExact() throws Exception {
 
-        //rint(list);
+        //rint(listStream);
 
         List<Employee> queryableList = $q(list);
         List<Employee> results = sortedQuery(queryableList, "firstName", CriteriaFactory.between("birthDate", "5/29/1960:00:00:01", "5/29/1970:00:00:00"));

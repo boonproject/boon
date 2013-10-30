@@ -99,7 +99,7 @@ public class Example {
         // These helper methods are used to create common Java types.
         // Sets and lists have concurrent and non concurrent variants
         // Set also has sorted and non sorted variants
-        // This makes safeList, list, set, sortedSet, safeSet, safeSortedSet
+        // This makes safeList, listStream, set, sortedSet, safeSet, safeSortedSet
         veggiesSet  =  Sets.sortedSet("salad", "broccoli", "spinach");
         fruitList   =  Lists.list("apple", "oranges", "pineapple");
         fruitArray  =  array( "apple", "oranges", "pineapple");

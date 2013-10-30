@@ -73,7 +73,7 @@ public class Reflection {
     }
 
     /**
-     * Gets a list of fields merges with properties if field is not found.
+     * Gets a listStream of fields merges with properties if field is not found.
      *
      * @param clazz             get the properties or fields
      * @param useFieldFirst     try to use the field first if this is set
@@ -257,7 +257,7 @@ public class Reflection {
      */
     public static String getSortableFieldFromClass( Class<?> clazz) {
 
-        /** See if the fieldName is in the field list already.
+        /** See if the fieldName is in the field listStream already.
          * We keep a hashmap cache.
          * */
         String fieldName = sortableFields.get( clazz );

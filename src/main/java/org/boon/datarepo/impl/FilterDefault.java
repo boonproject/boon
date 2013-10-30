@@ -45,7 +45,7 @@ public class FilterDefault implements Filter, FilterComposer {
      * and i will give you a nice results set.
      * @see ResultSet
      * @see org.boon.criteria.Criteria
-     * @param expressions list of expressions
+     * @param expressions listStream of expressions
      * @return result set
      */
     @Override
@@ -228,9 +228,9 @@ public class FilterDefault implements Filter, FilterComposer {
 //                /*
 //                At this point, this group should be indexed only
 //                 */
-//                List list = doFilterGroup((Group) expression);
-//                if (list.size() > 0) {
-//                    listOfSets.add(new HashSet(list));
+//                List listStream = doFilterGroup((Group) expression);
+//                if (listStream.size() > 0) {
+//                    listOfSets.add(new HashSet(listStream));
 //                    expressionsWeEvaluated.add(expression);
 //                }
 //            }
@@ -355,7 +355,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
     private List processResultsFromIndex(SearchIndex searchIndex, List results) {
         if (searchIndex.isPrimaryKeyOnly()) {
-            //TODO iterate through list and lookup items from keys, and put those in the actual results
+            //TODO iterate through listStream and lookup items from keys, and put those in the actual results
             return null;
         } else {
             return results;

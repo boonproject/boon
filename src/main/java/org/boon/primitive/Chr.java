@@ -6,6 +6,8 @@ import org.boon.Universal;
 
 import java.util.Objects;
 
+import static org.boon.primitive.CharScanner.split;
+
 public class Chr {
 
 
@@ -571,6 +573,13 @@ public class Chr {
         return out;
     }
 
+
+
+    public static char[][] split( final char[] inputArray,
+                                  final char split) {
+            return CharScanner.split(inputArray, split);
+
+    }
 
 
 }

@@ -22,7 +22,7 @@ public class IO {
 
 
     @Java8
-    public static CloseableStream<Path> list(Path path) {
+    public static CloseableStream<Path> listStream(Path path) {
         CloseableStream<Path> list = null;
         try {
             list = Files.list(path);
@@ -32,6 +32,118 @@ public class IO {
         return list;
     }
 
+
+    public static List<String> list(String path) {
+        final Path pathFromFileSystem = path(path);
+        return list ( pathFromFileSystem );
+    }
+
+    public static List<String> list( final Path pathFromFileSystem ) {
+
+        List<String> result = new ArrayList<>();
+
+        try {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream( pathFromFileSystem )) {
+                for (Path entry: stream) {
+                    result.add(entry.toAbsolutePath().toString());
+                }
+            }
+            return result;
+        } catch (IOException ex) {
+            return Exceptions.handle(List.class, ex);
+        }
+
+    }
+
+    public static List<String> listByGlob(final String path, final String glob) {
+        final Path pathFromFileSystem = path(path);
+        return  listByGlob(pathFromFileSystem, glob);
+    }
+
+
+    public static List<String> listByGlob(Path pathFromFileSystem, String glob) {
+
+        List<String> result = new ArrayList<>();
+
+        try {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(pathFromFileSystem, glob)) {
+                for (Path entry: stream) {
+                    result.add(entry.toAbsolutePath().toString());
+                }
+            }
+            return result;
+        } catch (IOException ex) {
+            return Exceptions.handle(List.class, ex);
+        }
+
+    }
+
+
+    public static List<String> listByFileExtension(final String path, final String ext) {
+        final Path pathFromFileSystem = path(path);
+        return  listByFileExtension(pathFromFileSystem, ext);
+    }
+
+    public static List<String> listByFileExtension(final Path pathFromFileSystem, final String ext) {
+        final String extToLookForGlob = "*." + ext;
+
+        List<String> result = new ArrayList<>();
+
+        try {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(pathFromFileSystem, extToLookForGlob)) {
+                for (Path entry: stream) {
+                    result.add(entry.toAbsolutePath().toString());
+                }
+            }
+            return result;
+        } catch (IOException ex) {
+            return Exceptions.handle(List.class, ex);
+        }
+
+    }
+
+
+    public static List<String> listByFileExtensionRecursive(final String path, final String ext) {
+        final Path pathFromFileSystem = path(path);
+        return  listByFileExtensionRecursive(pathFromFileSystem, ext);
+    }
+
+
+    public static List<String> listByFileExtensionRecursive(final Path pathFromFileSystem, final String ext) {
+
+        final String extToLookForGlob = "*." + ext;
+
+        List<String> result = new ArrayList<>();
+
+        return doListByFileExtensionRecursive( result, pathFromFileSystem, extToLookForGlob);
+    }
+
+   private static List<String> doListByFileExtensionRecursive(  final List<String> result,
+                                                                final Path pathFromFileSystem,
+                                                                final String glob) {
+
+
+
+        try {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(pathFromFileSystem, glob)) {
+                for (Path entry: stream) {
+                    result.add(entry.toAbsolutePath().toString());
+                }
+            }
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(pathFromFileSystem)) {
+                for (Path entry: stream) {
+                    if ( Files.isDirectory( entry ) ) {
+                        doListByFileExtensionRecursive(result, entry, glob);
+                    }
+                }
+            }
+
+            return result;
+        } catch (IOException ex) {
+            return Exceptions.handle(List.class, ex);
+        }
+
+    }
 
     public static String readChild(Path parentDir, String childFileName) {
         try {
@@ -387,17 +499,19 @@ private static List<String> readLines(String location, URI uri) throws Exception
         }
     }
 
-    public static void createDirectory(Path dir) {
+    public static Path createDirectory(Path dir) {
 
         try {
 
 
             if (!Files.exists(dir)) {
-                Files.createDirectory(dir);
+                return Files.createDirectory(dir);
+            }  else {
+                return null;
             }
 
         } catch (Exception ex) {
-            Exceptions.handle(ex);
+            return Exceptions.handle(Path.class, ex);
         }
     }
 
@@ -425,6 +539,10 @@ private static List<String> readLines(String location, URI uri) throws Exception
 
     public static Path path(String path, String... more) {
         return Paths.get(path, more);
+    }
+
+    public static Path path(Path path, String... more) {
+        return Paths.get(path.toString(), more);
     }
 
     public static void write(Path file, String contents) {

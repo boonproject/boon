@@ -450,7 +450,7 @@ public class JSONParser {
         List<Object> list = new ArrayList<>();
         this.lastList = list;
 
-        /* the list might be empty  */
+        /* the listStream might be empty  */
         if (this.currentChar() == ']') {
             this.nextChar();
             return list;

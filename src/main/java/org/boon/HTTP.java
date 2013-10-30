@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.boon.IO.read;
+import org.boon.IO;
 
 public class HTTP {
 
@@ -70,7 +70,7 @@ public class HTTP {
     public static String postText(
             final String url,
             final String body) {
-            return postText(url, body);
+            return postBodyTextWithContentType(url, "text/plain", body);
     }
 
     public static String postBodyTextWithContentType(
@@ -98,7 +98,7 @@ public class HTTP {
             final String url,
             final String jsonString) {
 
-        return postBodyTextWithContentType(url, "text/json", jsonString);
+        return postBodyTextWithContentType(url, "application/json", jsonString);
     }
 
     public static String postXML(

@@ -112,8 +112,8 @@ public class JSONParseTest {
                  {"oddly spaced", "[ 0 , 1 ,2, 3, '99' ]"},   //2
                  {"nums and strings", "[ 0 , 1 ,'bar', 'foo', 'baz' ]"}, //3
                  {"nums stings map", "[ 0 , 1 ,'bar', 'foo', {'baz':1} ]"}, //4
-                 {"nums strings map with list", "[ 0 , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//5
-                 {"nums strings map with list", "[ {'bar': {'zed': 1}} , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//6
+                 {"nums strings map with listStream", "[ 0 , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//5
+                 {"nums strings map with listStream", "[ {'bar': {'zed': 1}} , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//6
                  {"tightly spaced", "[0,1,2,3,99]"},
 
          };
@@ -150,8 +150,8 @@ public class JSONParseTest {
     public void testMaps() {
         String [][] tests = {
                 {"empty map", "{}"},                  //1
-                {"map with list", "{'lst': [1,2,3]}"},      //2
-                {"map with list, num, str", "{'lst': [1,2,3] , 'num' : 5, 'str': 'Maya!!!!' }"} ,     //3
+                {"map with listStream", "{'lst': [1,2,3]}"},      //2
+                {"map with listStream, num, str", "{'lst': [1,2,3] , 'num' : 5, 'str': 'Maya!!!!' }"} ,     //3
                 {"same as above with odd spacing", "\t{\n'lst'\r\n: \t[1\t,\n2,3] , \n'num' : 5, " +
                         "'str': 'Maya!!!!' }"} ,     //4
                 {"more stuff", "\t{\n'lst'\r\n: \t[1\t,\n2,3, {'a':'b'}] " +
