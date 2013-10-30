@@ -24,26 +24,11 @@ import static org.boon.StringScanner.isDigits;
 public class Reflection {
 
     private static final Logger log = Logger.getLogger(Reflection.class.getName());
-
-    private static boolean _useUnsafe;
-
-
-
-    /**
-     * We should make these imutable because the are not suppose to change.
-     * TODO
-     */
     private final static Set<String> fieldSortNames = Sets.set("name", "orderBy", "title", "key");
     private final static Set<String> fieldSortNamesSuffixes = Sets.set("Name", "Title", "Key");
 
-    /** This will not work in a web app.
-     *  We need to make these soft references.
-     *  TODO
-     */
-    private static ConcurrentHashMap<Class, String> sortableFields = new ConcurrentHashMap<>();
-
-    private static Map<String, Map<String, FieldAccess>> allAccessorFieldsCache = new ConcurrentHashMap<>();
-
+    private static boolean _useUnsafe;
+    private  static boolean _inContainer;
 
     static {
         try {
@@ -56,8 +41,45 @@ public class Reflection {
 
         _useUnsafe = _useUnsafe && ! Boolean.getBoolean("com.org.org.boon.noUnsafe");
     }
-
     private static final boolean useUnsafe = _useUnsafe;
+
+
+    static {
+        try {
+            Class.forName("javax.servlet.http.HttpServlet");
+            _inContainer = true;
+        } catch (ClassNotFoundException e) {
+            _inContainer = false;
+        }
+    }
+    private  static boolean inContainer = _inContainer;
+
+
+    private static void setSortableField(Class<?> clazz, String fieldName) {
+        _sortableFields.put( clazz,  fieldName );
+    }
+
+    private static String getSortableField(Class<?> clazz) {
+        return _sortableFields.get( clazz );
+    }
+
+    private static class Context {
+        /**
+        * We should make these immutable because the are not suppose to change.
+        * TODO
+        */
+
+    }
+
+    /** This will not work in a web app.
+     *  We need to make these soft references.
+     *  TODO
+     */
+    private static ConcurrentHashMap<Class, String> _sortableFields = new ConcurrentHashMap<>();
+
+    private static Map<String, Map<String, FieldAccess>> allAccessorFieldsCache = new ConcurrentHashMap<>();
+
+
 
 
 
@@ -260,7 +282,7 @@ public class Reflection {
         /** See if the fieldName is in the field listStream already.
          * We keep a hashmap cache.
          * */
-        String fieldName = sortableFields.get( clazz );
+        String fieldName = getSortableField(clazz);
 
         /**
          * Not found in cache.
@@ -297,17 +319,18 @@ public class Reflection {
 
             /* We could not find a sortable field. */
             if (fieldName == null) {
-                sortableFields.put(Typ.object.getClass(), "NOT_FOUND");
+                setSortableField(clazz, "NOT FOUND");
                 die("Could not find a sortable field for type " + clazz);
 
             }
 
             /* We found a sortable field. */
-            sortableFields.put(Typ.object.getClass(), fieldName);
+            setSortableField(clazz, fieldName);
         }
         return fieldName;
 
     }
+
 
     /**
      * Get fields from object or Map.
