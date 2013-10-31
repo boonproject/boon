@@ -169,41 +169,6 @@ public class JSONParser {
         return buf.toString();
     }
 
-    private void _skipWhiteSpace() {
-        this._currentChar();
-
-
-        while (hasMore()) {
-
-            if (__currentChar == '\n') {
-                line++;
-                lastLineStart = __index;
-                this.nextChar();
-                continue;
-            } else if (__currentChar == '\r') {
-                line++;
-                if (hasMore()) {
-                    this.nextChar();
-                    if (__currentChar != '\n') {
-                        lastLineStart = __index;
-                        break;
-                    }
-                }
-                lastLineStart = __index;
-                this.nextChar();
-                continue;
-            } else if (__currentChar == ' ' || __currentChar == '\t' || __currentChar == '\b' || __currentChar == '\f') {
-                this.nextChar();
-                continue;
-            } else {
-                break;
-            }
-        }
-
-    }
-
-
-
     private void skipWhiteSpace() {
 
 
