@@ -249,6 +249,8 @@ public class JSONParser {
         done:
         for (;__index < this.charArray.length; __index++) {
             __currentChar = charArray[__index];
+
+
             switch (__currentChar) {
                 case '\n' :
                     line++;
@@ -420,13 +422,7 @@ public class JSONParser {
                     continue loop;
 
             }
-            if (
-                    c == '0' || c == '1' || c == '2' || c == '3' || c == '4' ||
-                            c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
-                            || c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-') {
 
-
-            }
             complain("expecting number char but got current char " + charDescription(c));
         }
 
@@ -459,9 +455,6 @@ public class JSONParser {
 
     }
 
-    private int index() {
-        return __index;
-    }
 
 
     private static char [] NULL = Chr.chars("null");
