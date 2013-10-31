@@ -2,8 +2,11 @@ package org.boon.json;
 
 public enum ParserState {
     START,
+    START_STRING, END_STRING,
     START_OBJECT, END_OBJECT,
     START_LIST, END_LIST,
+    START_NULL, END_NULL,
     START_BOOLEAN, END_BOOLEAN,
+    START_NUMBER, END_NUMBER,
 
 }

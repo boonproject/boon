@@ -3,6 +3,7 @@ package org.boon.criteria;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.Conversions;
+import org.boon.primitive.CharBuf;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -99,17 +100,17 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
     public String doToString() {
-        StringBuilder builder = new StringBuilder(80);
-        builder.append("c{");
-        builder.append("\"name\":'");
-        builder.append(name);
-        builder.append(", \"operator\":");
-        builder.append(operator);
-        builder.append(", \"set\":");
-        builder.append(value);
-        builder.append(", \"update\":");
-        builder.append(Arrays.toString(values));
-        builder.append("}");
+        CharBuf builder = CharBuf.create( 80 );
+        builder.add("c{");
+        builder.add("\"name\":'");
+        builder.add(String.valueOf(name));
+        builder.add(", \"operator\":");
+        builder.add(String.valueOf(operator));
+        builder.add(", \"set\":");
+        builder.add(String.valueOf(value));
+        builder.add(", \"update\":");
+        builder.add(Arrays.toString(values));
+        builder.add("}");
         return builder.toString();
     }
 

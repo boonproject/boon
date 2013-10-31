@@ -150,11 +150,11 @@ public class JSONParseTest {
     public void testMaps() {
         String [][] tests = {
                 {"empty map", "{}"},                  //1
-                {"map with listStream", "{'lst': [1,2,3]}"},      //2
-                {"map with listStream, num, str", "{'lst': [1,2,3] , 'num' : 5, 'str': 'Maya!!!!' }"} ,     //3
-                {"same as above with odd spacing", "\t{\n'lst'\r\n: \t[1\t,\n2,3] , \n'num' : 5, " +
+                {"map with listStream", "{'alst1': [1,2,3]}"},      //2
+                {"map with listStream, num, str", "{'blst2': [1,2,3] , 'num' : 5, 'str': 'Maya!!!!' }"} ,     //3
+                {"same as above with odd spacing", "\t{\n'clst3'\r\n: \t[1\t,\n2,3] , \n'num' : 5, " +
                         "'str': 'Maya!!!!' }"} ,     //4
-                {"more stuff", "\t{\n'lst'\r\n: \t[1\t,\n2,3, {'a':'b'}] " +
+                {"more stuff", "\t{\n'ablst4'\r\n: \t[1\t,\n2,3, {'a':'b'}] " +
                         "\t, \n" +
                         "\n'num' : [5, {}], " +
                                 "'str': 'Maya!!!!' }"} ,     //5
@@ -163,10 +163,10 @@ public class JSONParseTest {
 
         Map<?,?>[] maps  = {
                 Collections.EMPTY_MAP,    //1
-                map("lst", list( 1,2,3 ) ), //  2
-                map("lst", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  3
-                map("lst", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  4
-                map("lst", list( 1,2,3, map("a", "b") ),
+                map("alst1", list( 1,2,3 ) ), //  2
+                map("blst2", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  3
+                map("clst3", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  4
+                map("ablst4", list( 1,2,3, map("a", "b") ),
                     "num", list(5, Collections.EMPTY_MAP),
                      "str", "Maya!!!!"), //  5
 

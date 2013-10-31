@@ -3,6 +3,7 @@ package org.boon.datarepo.impl.indexes;
 import org.boon.datarepo.spi.SPIFactory;
 import org.boon.datarepo.spi.SearchIndex;
 import org.boon.predicates.Function;
+import org.boon.primitive.CharBuf;
 
 import java.text.Collator;
 import java.util.*;
@@ -111,10 +112,10 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
             char endLetter = start.charAt(start.length() - 1);
             String sub = start.substring(0, start.length() - 1);
 
-            StringBuilder after = new StringBuilder(start.length());
+            CharBuf after = CharBuf.create(start.length());
 
-            after.append(sub);
-            after.append((char) (endLetter + 1));
+            after.add(sub);
+            after.add((char) (endLetter + 1));
 
             NavigableMap<String, MultiValue> sortMap = (NavigableMap<String, MultiValue>) this.navigableMap;
 

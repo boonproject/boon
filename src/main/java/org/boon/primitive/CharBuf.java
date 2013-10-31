@@ -83,4 +83,8 @@ public class CharBuf {
         return new String(buffer, 0, location);
     }
 
+    public int len() {
+        return location;
+    }
+
 }

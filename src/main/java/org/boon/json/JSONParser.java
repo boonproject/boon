@@ -112,25 +112,6 @@ public class JSONParser {
         }
     }
 
-    private final char nextCharIfSafe() {
-
-        try {
-            if (hasMore()) {
-                __lastChar = __currentChar;
-                __index++;
-                return __currentChar = charArray[__index];
-            } else if (__index + 1 == charArray.length) {
-                __lastChar = __currentChar;
-                return __currentChar = charArray[charArray.length-1];
-            }
-            return __currentChar;
-
-        } catch (Exception ex) {
-            throw new RuntimeException(exceptionDetails("failure in next " +
-                    ex.getLocalizedMessage()), ex);
-
-        }
-    }
 
     private String exceptionDetails(String message) {
         CharBuf buf = CharBuf.create(255);
@@ -188,7 +169,7 @@ public class JSONParser {
         return buf.toString();
     }
 
-    private void skipWhiteSpace() {
+    private void _skipWhiteSpace() {
         this._currentChar();
 
 
@@ -216,6 +197,38 @@ public class JSONParser {
                 continue;
             } else {
                 break;
+            }
+        }
+
+    }
+
+
+
+    private void skipWhiteSpace() {
+
+
+
+        label:
+        for (;__index < this.charArray.length; __index++) {
+            __currentChar = charArray[__index];
+            switch (__currentChar) {
+                case '\n' :
+                    line++;
+                    lastLineStart = __index+1;
+                    continue label;
+                case '\r' :
+                    line++;
+                    lastLineStart = __index+1;
+                    continue label;
+
+                case ' ':
+                case '\t':
+                case '\b':
+                case '\f':
+                    continue label;
+                default:
+                    break label;
+
             }
         }
 
@@ -274,13 +287,6 @@ public class JSONParser {
         throw new JSONException(exceptionDetails(complaint));
     }
 
-    boolean lastValueJSONNull = false;
-
-    private boolean wasJsonNull() {
-        boolean was = lastValueJSONNull;
-        lastValueJSONNull = false;
-        return was;
-    }
 
     private Object decodeValue() {
         Object value = null;
@@ -290,7 +296,9 @@ public class JSONParser {
             skipWhiteSpace();
             char c = this.__currentChar;
             if (c == '"') {
+                setState(START_STRING);
                 value = decodeString();
+                setState(END_STRING);
                 break;
             } else if (c == 't' || c == 'f') {
                 setState(START_BOOLEAN);
@@ -298,9 +306,9 @@ public class JSONParser {
                 setState(END_BOOLEAN);
                 break;
             } else if (c == 'n') {
+                setState(START_NULL);
                 value = decodeNull();
-
-                lastValueJSONNull = true;
+                setState(END_NULL);
                 break;
             } else if (c == '[') {
                 setState(START_LIST);
@@ -314,7 +322,9 @@ public class JSONParser {
                 break;
 
             } else if (c == '-' || Character.isDigit(c)) {
+                setState(START_NUMBER);
                 value = decodeNumber();
+                setState(END_NUMBER);
                 break;
             } else {
                 if (__index + 1 >= charArray.length) {
@@ -477,7 +487,7 @@ public class JSONParser {
             if (c == '"') {
                 break;
             }
-            if (c == '\\' && (c = this.nextChar()) == '"') {
+            if (c == '\\' && (this.nextChar()) == '"') {
                 continue;
             }
 
@@ -533,12 +543,11 @@ public class JSONParser {
             skipWhiteSpace();
 
             Object arrayItem = decodeValue();
-            boolean wasNull = wasJsonNull();
 
-            if (arrayItem == null && wasNull) {
+            if (arrayItem == null && state == END_NULL) {
                 list.add(null); //JSON null detected
             } else if (arrayItem == null) {
-                //do nothing
+                throw new JSONException("array item was null");
             } else {
                 list.add(arrayItem);
             }

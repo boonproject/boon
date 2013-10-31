@@ -4,7 +4,6 @@ package org.boon;
 import org.boon.core.Sys;
 import org.boon.primitive.CharBuf;
 
-import static org.boon.Lists.list;
 import static org.boon.Lists.toList;
 
 public class Boon {
