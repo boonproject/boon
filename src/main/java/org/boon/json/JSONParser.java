@@ -513,20 +513,34 @@ public class JSONParser {
     private Object decodeString() {
         String value = null;
 
-        int startIndex = index();
-        do {
-            char c = this.nextChar();
-            if (c == '"') {
-                break;
-            }
-            if (c == '\\' && (this.nextChar()) == '"') {
-                continue;
-            }
+        final int startIndex = __index;
+        if (__index < charArray.length && __currentChar == '"')  {
+            __index++;
+        }
 
-        } while (hasMore());
 
-        value = encodeString(startIndex, index());
-        this.nextChar(); // skip other quote
+        done:
+        for (;__index < this.charArray.length; __index++) {
+            __currentChar = charArray[__index];
+            switch (__currentChar) {
+
+                case '"':
+                    break done;
+
+                case '\\':
+                    if (__index < charArray.length) {
+                        __index++;
+                    }
+                    continue;
+
+            }
+        }
+
+        value = encodeString(startIndex, __index);
+
+        if (__index < charArray.length) {
+            __index++;
+        }
 
         return value;
     }
