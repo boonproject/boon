@@ -63,7 +63,14 @@ public class Sets {
 
     @SafeVarargs
     public static <V> Set<V> set(final V... array) {
-        return new LinkedHashSet<>(Arrays.asList(array));
+
+
+        Set <V> set = new LinkedHashSet<>();
+
+        for (V v : array) {
+            set.add(v);
+        }
+        return set;
     }
 
 
@@ -97,7 +104,12 @@ public class Sets {
 
     @SafeVarargs
     public static <V> NavigableSet<V> sortedSet(final V... array) {
-        return new TreeSet<>(Arrays.asList(array));
+        NavigableSet <V> set = new TreeSet<>();
+
+        for (V v : array) {
+            set.add(v);
+        }
+        return set;
     }
 
     public static <V> NavigableSet<V> sortedSet(Collection<V> collection) {
@@ -135,7 +147,14 @@ public class Sets {
 
     @SafeVarargs
     public static <V> NavigableSet<V> safeSortedSet(final V... array) {
-        return new ConcurrentSkipListSet<>(Arrays.asList(array));
+
+        NavigableSet <V> set = new ConcurrentSkipListSet<>();
+
+        for (V v : array) {
+            set.add(v);
+        }
+        return set;
+
     }
 
 
@@ -175,7 +194,12 @@ public class Sets {
 
     @SafeVarargs
     public static <V> Set<V> safeSet(final V... array) {
-        return new CopyOnWriteArraySet<>(Arrays.asList(array));
+        Set <V> set = new CopyOnWriteArraySet<>();
+
+        for (V v : array) {
+            set.add(v);
+        }
+        return set;
     }
 
     public static <V> Set<V> safeSet(Collection<V> collection) {

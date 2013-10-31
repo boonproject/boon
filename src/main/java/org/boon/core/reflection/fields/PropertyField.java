@@ -135,19 +135,7 @@ public class PropertyField implements FieldAccess {
     public ParameterizedType getParameterizedType() {
 
 
-        ParameterizedType type = null;
-
-        if (setter.getReturnType() != null) {
-            Object obj = setter.getParameters()[0].getParameterizedType();
-
-            if (obj instanceof ParameterizedType)  {
-
-                type =  (ParameterizedType) obj;
-            }
-
-        }
-
-        return type;
+	return null;
 
     }
 

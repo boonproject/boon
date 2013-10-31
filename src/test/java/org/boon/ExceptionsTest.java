@@ -57,14 +57,22 @@ public class ExceptionsTest {
     @Test(expected = Exceptions.SoftenedException.class)
     public void testTryIt()  {
 
-        tryIt(this::methodThatThrowsException);
+        tryIt(new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
+                methodThatThrowsException();
+            }
+        });
 
     }
 
     @Test
     public void testTryItNoOp()  {
 
-        tryIt(() -> {
+        Exceptions.tryIt(new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
+            }
         });
 
     }
@@ -72,7 +80,10 @@ public class ExceptionsTest {
     @Test
     public void testTryItNoOp2WithMessage()  {
 
-        tryIt("no op", () -> {
+        tryIt("no op", new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
+            }
         });
 
     }
@@ -81,7 +92,12 @@ public class ExceptionsTest {
     @Test(expected = Exceptions.SoftenedException.class)
     public void testTryItWithMessage()  {
 
-        tryIt("Calling method that throws exception", () -> methodThatThrowsException());
+        tryIt("Calling method that throws exception", new Exceptions.Trial() {
+            @Override
+            public void tryIt() throws Exception {
+                methodThatThrowsException();
+            }
+        });
 
     }
 
@@ -89,7 +105,12 @@ public class ExceptionsTest {
     public void testSupportMethods()  {
 
         try {
-            tryIt(this::methodThatThrowsException);
+            tryIt(new Exceptions.Trial() {
+                @Override
+                public void tryIt() throws Exception {
+                    methodThatThrowsException();
+                }
+            });
         }catch (Exception ex) {
             ex.printStackTrace();
 
