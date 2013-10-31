@@ -55,7 +55,7 @@ public class ByteBuf {
         if (4 + length < capacity) {
             Byt.intTo(buffer, length, value);
         } else {
-            buffer = Byt.grow(buffer);
+            buffer = Byt.grow(buffer, buffer.length * 2 + 4 );
             capacity = buffer.length;
 
             Byt.intTo(buffer, length, value);
@@ -72,7 +72,7 @@ public class ByteBuf {
         if (4 + length < capacity) {
             Byt.floatTo(buffer, length, value);
         } else {
-            buffer = Byt.grow(buffer);
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 4 );
             capacity = buffer.length;
 
             Byt.floatTo(buffer, length, value);
@@ -90,7 +90,7 @@ public class ByteBuf {
         if (2 + length < capacity) {
             Byt.charTo(buffer, length, value);
         } else {
-            buffer = Byt.grow(buffer);
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 2 );
             capacity = buffer.length;
 
             Byt.charTo(buffer, length, value);
@@ -108,7 +108,7 @@ public class ByteBuf {
         if (2 + length < capacity) {
             Byt.shortTo(buffer, length, value);
         } else {
-            buffer = Byt.grow(buffer);
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 2 );
             capacity = buffer.length;
 
             Byt.shortTo(buffer, length, value);
@@ -140,7 +140,7 @@ public class ByteBuf {
         if (8 + length < capacity) {
             Byt.longTo(buffer, length, value);
         } else {
-            buffer = Byt.grow(buffer);
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 8 );
             capacity = buffer.length;
 
             Byt.longTo(buffer, length, value);
@@ -155,7 +155,7 @@ public class ByteBuf {
         if (8 + length < capacity) {
             Byt.doubleTo(buffer, length, value);
         } else {
-            buffer = Byt.grow(buffer);
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 8 );
             capacity = buffer.length;
 
             Byt.doubleTo(buffer, length, value);
@@ -165,13 +165,16 @@ public class ByteBuf {
 
     }
 
+
     public void add(byte[] array) {
         if (array.length + length < capacity) {
             Byt._idx( buffer, length, array );
         } else {
-            buffer = Byt.grow(buffer);
-            Byt._idx( buffer, length, array );
+            buffer = Byt.grow(buffer,  buffer.length * 2 + array.length );
             capacity = buffer.length;
+
+            Byt._idx(buffer, length, array);
+
         }
         length += array.length;
     }
