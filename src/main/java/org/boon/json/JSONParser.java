@@ -1,6 +1,7 @@
 package org.boon.json;
 
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.Chr;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -269,9 +270,14 @@ public class JSONParser {
 
 
                 case 't':
+                    setState(START_BOOLEAN);
+                    value = decodeTrue();
+                    setState(END_BOOLEAN);
+                    break done;
+
                 case 'f':
                     setState(START_BOOLEAN);
-                    value = decodeBoolean();
+                    value = decodeFalse();
                     setState(END_BOOLEAN);
                     break done;
 
@@ -457,76 +463,54 @@ public class JSONParser {
         return __index;
     }
 
-    private Object decodeBoolean() {
-        if (__currentChar == 't') {
-            nextChar();
-            nextChar();
-            if (__lastChar == 'r' && __currentChar == 'u') {
-                nextChar();
-                if (__currentChar == 'e') {
-                    nextChar();
-                    skipWhiteSpace();
-                    return true;
-                } else {
-                    throw new JSONException(exceptionDetails("boolean parse for true"));
 
-                }
+    private static char [] NULL = Chr.chars("null");
+    private Object decodeNull() {
 
-            } else {
-                throw new JSONException(exceptionDetails("boolean parse for true"));
-
+        if (__index + NULL.length <= charArray.length) {
+            if (charArray  [__index]=='n' &&
+                    charArray[++__index]=='u' &&
+                    charArray[++__index]=='l' &&
+                    charArray[++__index]=='l')  {
+                return null;
             }
-        } else if (__currentChar == 'f') {
-            nextChar();
-            nextChar();
-            if (__lastChar == 'a' && __currentChar == 'l') {
-                nextChar();
-                nextChar();
-                if (__lastChar == 's' && __currentChar == 'e') {
-                    nextChar();
-                    skipWhiteSpace();
-                    return true;
-                } else {
-                    throw new JSONException(exceptionDetails("boolean parse for false"));
-
-                }
-
-            } else {
-                throw new JSONException(exceptionDetails("boolean parse for false"));
-
-            }
-        } else {
-            throw new JSONException(exceptionDetails("boolean parse"));
-
         }
-
-
+        throw new JSONException("null not parse properly");
     }
 
-    private Object decodeNull() {
-        if (__currentChar == 'n') {
-            nextChar();
-            nextChar();
-            if (__lastChar == 'u' && __currentChar == 'l') {
+    private static char [] TRUE = Chr.chars("true");
+    private boolean decodeTrue() {
+
+        if (__index + TRUE.length <= charArray.length) {
+            if (charArray  [__index]=='t' &&
+                    charArray[++__index]=='r' &&
+                    charArray[++__index]=='u' &&
+                    charArray[++__index]=='e')  {
+
                 nextChar();
-                if (__currentChar == 'l') {
-                    nextChar();
-                    skipWhiteSpace();
-                    return null;
-                } else {
-                    throw new JSONException(exceptionDetails("null parse"));
-
-                }
-
-            } else {
-                throw new JSONException(exceptionDetails("null parse"));
+                return true;
 
             }
-        } else {
-            throw new JSONException(exceptionDetails("null parse"));
-
         }
 
+        throw new JSONException("true not parse properly");
+    }
+
+
+
+    private static char [] FALSE = Chr.chars("false");
+    private boolean decodeFalse() {
+
+        if (__index + FALSE.length <= charArray.length) {
+            if (charArray  [__index]=='f' &&
+                    charArray[++__index]=='a' &&
+                    charArray[++__index]=='l' &&
+                    charArray[++__index]=='s' &&
+                    charArray[++__index]=='e'){
+                return true;
+            }
+        }
+        throw new JSONException("true not parse properly");
     }
 
     private String decodeString() {
