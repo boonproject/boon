@@ -4,4 +4,6 @@ public enum ParserState {
     START,
     START_OBJECT, END_OBJECT,
     START_LIST, END_LIST,
+    START_BOOLEAN, END_BOOLEAN,
+
 }

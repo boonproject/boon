@@ -23,11 +23,10 @@ public class JSONParser {
     private char __currentChar;
     private char __lastChar;
 
-    private final boolean debug = false; // just used to debug if their are
     private Map<String, Object> lastObject;
     private List<Object> lastList;
-    private ParserState state=START;
-    private ParserState lastState=START;
+    private ParserState state = START;
+    private ParserState lastState = START;
 
     private JSONParser() {
 
@@ -61,7 +60,7 @@ public class JSONParser {
     private Object decode(char[] cs) {
         charArray = cs;
         Object root = null;
-         root = decodeValue();
+        root = decodeValue();
         return root;
     }
 
@@ -79,11 +78,15 @@ public class JSONParser {
         return __index < charArray.length;
     }
 
-    private final boolean hasMore()  {
+    private final boolean hasMore() {
         return __index + 1 < charArray.length;
     }
 
-    private final char currentChar()  {
+    private final boolean hasMorePlus() {
+        return __index < charArray.length;
+    }
+
+    private final char _currentChar() {
 
         if (safe()) {
             return __currentChar = charArray[__index];
@@ -92,7 +95,7 @@ public class JSONParser {
 
     }
 
-    private final char nextChar()  {
+    private final char nextChar() {
 
         try {
             if (hasMore()) {
@@ -103,8 +106,28 @@ public class JSONParser {
             return __currentChar;
 
         } catch (Exception ex) {
-            throw new RuntimeException ( exceptionDetails("failure in next "+
-            ex.getLocalizedMessage()), ex);
+            throw new RuntimeException(exceptionDetails("failure in next " +
+                    ex.getLocalizedMessage()), ex);
+
+        }
+    }
+
+    private final char nextCharIfSafe() {
+
+        try {
+            if (hasMore()) {
+                __lastChar = __currentChar;
+                __index++;
+                return __currentChar = charArray[__index];
+            } else if (__index + 1 == charArray.length) {
+                __lastChar = __currentChar;
+                return __currentChar = charArray[charArray.length-1];
+            }
+            return __currentChar;
+
+        } catch (Exception ex) {
+            throw new RuntimeException(exceptionDetails("failure in next " +
+                    ex.getLocalizedMessage()), ex);
 
         }
     }
@@ -118,8 +141,8 @@ public class JSONParser {
         buf.add(lastState.toString()).addLine(" is LAST STATE");
 
         buf.addLine("");
-        buf.addLine("The last character read was " + charDescription( __lastChar ));
-        buf.addLine("The current character read is " + charDescription( __currentChar ));
+        buf.addLine("The last character read was " + charDescription(__lastChar));
+        buf.addLine("The current character read is " + charDescription(__currentChar));
 
 
         if (lastObject != null) {
@@ -148,11 +171,11 @@ public class JSONParser {
         } catch (Exception ex) {
 
             try {
-                int index = (__index - 20 < 0) ? 0 :__index - 20 ;
+                int index = (__index - 20 < 0) ? 0 : __index - 20;
 
-                buf.addLine(new String(charArray, index, __index ));
-            }  catch (Exception ex2) {
-                buf.addLine(new String(charArray, 0, charArray.length ));
+                buf.addLine(new String(charArray, index, __index));
+            } catch (Exception ex2) {
+                buf.addLine(new String(charArray, 0, charArray.length));
             }
         }
         for (int i = 0; i < lineLocationCount; i++) {
@@ -165,12 +188,12 @@ public class JSONParser {
         return buf.toString();
     }
 
-    private void skipWhiteSpace()  {
+    private void skipWhiteSpace() {
+        this._currentChar();
 
 
         while (hasMore()) {
 
-            currentChar();
             if (__currentChar == '\n') {
                 line++;
                 lastLineStart = __index;
@@ -188,7 +211,7 @@ public class JSONParser {
                 lastLineStart = __index;
                 this.nextChar();
                 continue;
-            } else if (Character.isWhitespace(__currentChar)) {
+            } else if (__currentChar == ' ' || __currentChar == '\t' || __currentChar == '\b' || __currentChar == '\f') {
                 this.nextChar();
                 continue;
             } else {
@@ -198,11 +221,9 @@ public class JSONParser {
 
     }
 
-    private Object decodeJsonObject()  {
-        if (debug)
-            System.out.println("decodeJsonObject enter"); //$NON-NLS-1$
+    private Object decodeJsonObject() {
 
-        if (this.currentChar() == '{' && this.hasMore())
+        if (__currentChar == '{' && this.hasMore())
             this.nextChar();
 
         Map<String, Object> map = new LinkedHashMap<>();
@@ -213,41 +234,36 @@ public class JSONParser {
 
             skipWhiteSpace();
 
-            char c = this.currentChar();
 
-            if (c == '"') {
+            if (__currentChar == '"') {
                 String key = decodeKeyName();
                 skipWhiteSpace();
-                c = this.currentChar();
-                if (c != ':') {
 
-                    complain("expecting current character to be " + charDescription(c) + "\n");
+                if (__currentChar != ':') {
+
+                    complain("expecting current character to be " + charDescription(__currentChar) + "\n");
                 }
-                c = this.nextChar(); // skip past ':'
+                this.nextChar(); // skip past ':'
                 skipWhiteSpace();
                 Object value = decodeValue();
 
-                if (debug)
-                    System.out
-                            .printf("key:%s value:%s", key, value); //$NON-NLS-1$
                 skipWhiteSpace();
 
                 map.put(key, value);
 
-                c = this.currentChar();
-                if (!(c == '}' || c == ',')) {
-                    complain("expecting '}' or ',' but got current char " + charDescription(c));
+                if (!(__currentChar == '}' || __currentChar == ',')) {
+                    complain("expecting '}' or ',' but got current char " + charDescription(__currentChar));
                 }
             }
-            if (c == '}') {
+            if (__currentChar == '}') {
                 this.nextChar();
                 break;
-            } else if (c == ',') {
+            } else if (__currentChar == ',') {
                 this.nextChar();
                 continue;
             } else {
                 complain(
-                        "expecting '}' or ',' but got current char " + charDescription(c));
+                        "expecting '}' or ',' but got current char " + charDescription(__currentChar));
 
             }
         } while (this.hasMore());
@@ -266,17 +282,20 @@ public class JSONParser {
         return was;
     }
 
-    private Object decodeValue()  {
+    private Object decodeValue() {
         Object value = null;
 
-        do  {
+
+        do {
             skipWhiteSpace();
             char c = this.__currentChar;
             if (c == '"') {
                 value = decodeString();
                 break;
             } else if (c == 't' || c == 'f') {
+                setState(START_BOOLEAN);
                 value = decodeBoolean();
+                setState(END_BOOLEAN);
                 break;
             } else if (c == 'n') {
                 value = decodeNull();
@@ -302,7 +321,7 @@ public class JSONParser {
                     break;
                 } else {
                     throw new JSONException(exceptionDetails("Unable to determine the " +
-                        "current character, it is not a string, number, array, or object"));
+                            "current character, it is not a string, number, array, or object"));
                 }
             }
         } while (hasMore());
@@ -315,37 +334,42 @@ public class JSONParser {
         this.state = state;
     }
 
-    private Object decodeNumber()  {
+    private Object decodeNumber() {
         CharBuf buf = CharBuf.create(16);
 
         boolean doubleFloat = false;
-        do {
-            char c = this.currentChar();
+
+        int index;
+
+        for ( index = __index; index < charArray.length; index++ ) {
+           __currentChar = charArray [index];
+            char c = __currentChar;
             /*
                 Numbers are odd, if you see anything that is nto a number
                 then we are done with the number.
                 Look for space, tab, comma, curly bracket, and bracket.
              */
-            if (c == ' ' || c=='\t' || c == ',' || c == '}' || c == ']') {
+            if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == ',' || c == '}' || c == ']') {
+                __index = index + 1;
                 break;
             }
 
             if (
-                c == '0' || c == '1' || c == '2' || c == '3' || c == '4' ||
-                c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
-                || c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-') {
+                    c == '0' || c == '1' || c == '2' || c == '3' || c == '4' ||
+                            c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
+                            || c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-') {
 
                 if (c == '.' || c == 'e' || c == 'E') {
                     doubleFloat = true;
                 }
                 buf.add(c);
-                this.nextChar();
                 continue;
             }
             complain("expecting number char but got current char " + charDescription(c));
+        }
 
-        } while (this.hasMore());
-
+        __index = index;
+        skipWhiteSpace();
 
         String svalue = buf.toString();
         Object value = null;
@@ -359,7 +383,7 @@ public class JSONParser {
             try {
                 value = Long.parseLong(svalue);
             } catch (Exception ex2) {
-                complain("expecting to decode a number but got value of "+ svalue);
+                complain("expecting to decode a number but got value of " + svalue);
             }
 
         }
@@ -372,30 +396,76 @@ public class JSONParser {
         return __index;
     }
 
-    private Object decodeBoolean()  {
-        StringBuilder builder = new StringBuilder();
-        do {
-            char c = this.currentChar();
-            if (Character.isWhitespace(c) || c == ',' || c == '}') {
-                break;
+    private Object decodeBoolean() {
+        if (__currentChar == 't') {
+            nextChar();
+            nextChar();
+            if (__lastChar == 'r' && __currentChar == 'u') {
+                nextChar();
+                if (__currentChar == 'e') {
+                    nextChar();
+                    skipWhiteSpace();
+                    return true;
+                } else {
+                    throw new JSONException(exceptionDetails("boolean parse for true"));
+
+                }
+
+            } else {
+                throw new JSONException(exceptionDetails("boolean parse for true"));
+
             }
-            builder.append(c);
-            this.nextChar();
-        } while (hasMore());
-        return Boolean.parseBoolean(builder.toString());
+        } else if (__currentChar == 'f') {
+            nextChar();
+            nextChar();
+            if (__lastChar == 'a' && __currentChar == 'l') {
+                nextChar();
+                nextChar();
+                if (__lastChar == 's' && __currentChar == 'e') {
+                    nextChar();
+                    skipWhiteSpace();
+                    return true;
+                } else {
+                    throw new JSONException(exceptionDetails("boolean parse for false"));
+
+                }
+
+            } else {
+                throw new JSONException(exceptionDetails("boolean parse for false"));
+
+            }
+        } else {
+            throw new JSONException(exceptionDetails("boolean parse"));
+
+        }
+
+
     }
 
-    private Object decodeNull()  {
-        StringBuilder builder = new StringBuilder();
-        do {
-            char c = this.currentChar();
-            if (Character.isWhitespace(c) || c == ',' || c == '}') {
-                break;
+    private Object decodeNull() {
+        if (__currentChar == 'n') {
+            nextChar();
+            nextChar();
+            if (__lastChar == 'u' && __currentChar == 'l') {
+                nextChar();
+                if (__currentChar == 'l') {
+                    nextChar();
+                    skipWhiteSpace();
+                    return null;
+                } else {
+                    throw new JSONException(exceptionDetails("null parse"));
+
+                }
+
+            } else {
+                throw new JSONException(exceptionDetails("null parse"));
+
             }
-            builder.append(c);
-            this.nextChar();
-        } while (hasMore());
-        return null;
+        } else {
+            throw new JSONException(exceptionDetails("null parse"));
+
+        }
+
     }
 
     private Object decodeString() {
@@ -419,19 +489,19 @@ public class JSONParser {
         return value;
     }
 
-    private String encodeString(int start, int to)  {
+    private String encodeString(int start, int to) {
         return JSONStringParser.decode(charArray, start, to);
     }
 
-    private String decodeKeyName()  {
+    private String decodeKeyName() {
 
-        StringBuilder builder = new StringBuilder();
+        CharBuf builder = CharBuf.create(12);
         do {
             char c = this.nextChar();
             if (c == '"') {
                 break;
             }
-            builder.append(c);
+            builder.add( c );
         } while (hasMore());
 
         Object value = builder.toString();
@@ -440,8 +510,8 @@ public class JSONParser {
         return (String) value;
     }
 
-    private Object decodeJsonArray()  {
-        if (this.currentChar() == '[')  {
+    private Object decodeJsonArray() {
+        if (__currentChar == '[') {
             this.nextChar();
         }
 
@@ -451,7 +521,7 @@ public class JSONParser {
         this.lastList = list;
 
         /* the listStream might be empty  */
-        if (this.currentChar() == ']') {
+        if (__currentChar == ']') {
             this.nextChar();
             return list;
         }
@@ -477,9 +547,9 @@ public class JSONParser {
 
             skipWhiteSpace();
 
-            char c = this.currentChar();
+            char c = __currentChar;
 
-            if (c == ',')  {
+            if (c == ',') {
                 this.nextChar();
                 continue;
             } else if (c == ']') {
@@ -502,16 +572,18 @@ public class JSONParser {
     private String charDescription(char c) {
         String charString;
         if (c == ' ') {
-            charString="[SPACE]";
+            charString = "[SPACE]";
         } else if (c == '\t') {
-            charString="[TAB]";
+            charString = "[TAB]";
 
         } else if (c == '\n') {
-            charString="[NEWLINE]";
+            charString = "[NEWLINE]";
 
         } else {
             charString = "'" + c + "'";
         }
+
+        charString = charString + " with an int value of " + ((int) c);
         return charString;
     }
 

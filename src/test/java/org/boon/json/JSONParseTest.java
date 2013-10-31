@@ -187,11 +187,11 @@ public class JSONParseTest {
         String [][] tests = {
                 {"seven", "1.23E+11 "}, //6
 
-                {"one", " 1 "},                  //0
+                {"one", " 1"},                  //0
                 {"two", "1.1 "},                  //1
                 {"three", " 1.8 "},                  //2
                 {"four", " 9.99 "},                  //3
-                {"six", "123456789012345678 "},//                //5
+                {"six", "123456789012345678"},//                //5
 
         };
 
@@ -211,6 +211,41 @@ public class JSONParseTest {
             String json = tests[index][1];
 
             helper(name, json, nums[index]);
+        }
+    }
+
+
+    @Test
+    public void testNullTable() {
+        String [][] tests = {
+                {"space before null", " null"},
+
+                {"spaces around null", " null "},
+                {"space after null", "null "},
+
+        };
+
+        Object[] objs = {
+                null,
+                null,
+                null,
+        };
+
+
+
+        for (int index = 0; index < tests.length; index++)  {
+            String name = tests[index][0];
+            String json = tests[index][1];
+
+                    Object obj = JSONParser.parse( json );
+
+
+            boolean ok = true;
+
+
+
+            ok &= obj == null  || die(name + " :: null good  " + json);
+
         }
     }
 
@@ -236,7 +271,7 @@ public class JSONParseTest {
     public void testNumber() {
 
         Object obj = JSONParser.parse(
-                "  1  ".replace('\'', '"')
+                "1".replace('\'', '"')
         );
 
         boolean ok = true;
@@ -251,10 +286,28 @@ public class JSONParseTest {
     }
 
     @Test
-    public void testNumberBoolean() {
+    public void testBoolean() {
 
         Object obj = JSONParser.parse(
                 "  true  ".replace('\'', '"')
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Boolean || die("Object was not a Boolean");
+
+        boolean value = (Boolean) obj;
+
+        ok &=  value == true || die("I did see value equal to true");
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test(expected = JSONException.class)
+    public void testBooleanParseError() {
+
+        Object obj = JSONParser.parse(
+                "  tbone  ".replace('\'', '"')
         );
 
         boolean ok = true;
@@ -344,7 +397,7 @@ public class JSONParseTest {
     public void oddlySpaced2() {
 
         Object obj = JSONParser.parse(
-                lines("[       1, 0]"
+                lines("[   2   ,    1, 0]"
                 ).replace('\'', '"')
         );
 
@@ -362,7 +415,7 @@ public class JSONParseTest {
 
                         "{    'num' : 1   , ",
                         "     'bar' : { 'foo': 1  },  ",
-                        "     'nums': [0  ,1,2,3,4,5] } "
+                        "     'nums': [0  ,1,2,3,4,5,'abc'] } "
                 ).replace('\'', '"')
         );
 
