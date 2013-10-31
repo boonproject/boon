@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.CloseableStream;
+//import java.util.stream.CloseableStream;
 
 @SuppressWarnings("unchecked")
 public class IO {
@@ -21,16 +21,16 @@ public class IO {
     public final static String FILE_SCHEMA = "file";
 
 
-    @Java8
-    public static CloseableStream<Path> listStream(Path path) {
-        CloseableStream<Path> list = null;
-        try {
-            list = Files.list(path);
-        } catch (IOException ex) {
-            return Exceptions.handle(CloseableStream.class, ex);
-        }
-        return list;
-    }
+//    @Java8
+//    public static CloseableStream<Path> listStream(Path path) {
+//        CloseableStream<Path> list = null;
+//        try {
+//            list = Files.list(path);
+//        } catch (IOException ex) {
+//            return Exceptions.handle(CloseableStream.class, ex);
+//        }
+//        return list;
+//    }
 
 
     public static List<String> list(String path) {
