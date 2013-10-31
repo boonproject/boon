@@ -377,6 +377,33 @@ public class JSONParseTest {
     }
 
     @Test
+    public void testStringInsideOfList2() {
+
+        String testString =
+                "[ 'abc','def' ]".replace('\'', '"');
+
+        System.out.println(
+                JSONStringParser.decode(testString)
+        );
+
+
+        Object obj = JSONParser.parse(testString);
+        System.out.println("here is what I got " + obj);
+
+        boolean ok = true;
+
+        ok &= obj instanceof List || die("Object was not a List");
+
+        List<String> value = (List<String>) obj;
+
+
+        assertEquals("abc",
+                idx(value, 0));
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test
     public void textInMiddleOfArray() {
 
         try {

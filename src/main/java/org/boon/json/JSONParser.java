@@ -82,19 +82,6 @@ public class JSONParser {
         return __index + 1 < charArray.length;
     }
 
-    private final boolean hasMorePlus() {
-        return __index < charArray.length;
-    }
-
-    private final char _currentChar() {
-
-        if (safe()) {
-            return __currentChar = charArray[__index];
-        }
-        return __currentChar;
-
-    }
-
     private final char nextChar() {
 
         try {
@@ -253,7 +240,7 @@ public class JSONParser {
     }
 
 
-    private Object decodeValue() {
+    private Object _decodeValue() {
         Object value = null;
 
 
@@ -303,6 +290,86 @@ public class JSONParser {
         skipWhiteSpace();
         return value;
     }
+
+
+
+    private Object decodeValue() {
+        Object value = null;
+
+        done:
+        for (;__index < this.charArray.length; __index++) {
+            __currentChar = charArray[__index];
+            switch (__currentChar) {
+                case '\n' :
+                    line++;
+                    lastLineStart = __index+1;
+                    break;
+
+                case '\r' :
+                case ' ':
+                case '\t':
+                case '\b':
+                case '\f':
+                    break;
+
+                case '"':
+                    setState(START_STRING);
+                    value = decodeString();
+                    setState(END_STRING);
+                    break done;
+
+
+                case 't':
+                case 'f':
+                    setState(START_BOOLEAN);
+                    value = decodeBoolean();
+                    setState(END_BOOLEAN);
+                    break done;
+
+                case 'n':
+                    setState(START_NULL);
+                    value = decodeNull();
+                    setState(END_NULL);
+                    break done;
+
+                case '[':
+                    setState(START_LIST);
+                    value = decodeJsonArray();
+                    setState(END_LIST);
+                    break done;
+
+                case '{' :
+                    setState(START_OBJECT);
+                    value = decodeJsonObject();
+                    setState(END_OBJECT);
+                    break done;
+
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':
+                case '-':
+                    setState(START_NUMBER);
+                    value = decodeNumber();
+                    setState(END_NUMBER);
+                    break done;
+
+                default:
+                    throw new JSONException(exceptionDetails("Unable to determine the " +
+                            "current character, it is not a string, number, array, or object"));
+
+            }
+        }
+
+        return value;
+    }
+
 
     private void setState(ParserState state) {
         this.lastState = this.state;
