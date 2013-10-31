@@ -5,6 +5,7 @@ import org.boon.core.Typ;
 import org.boon.core.reflection.fields.*;
 import org.boon.primitive.CharBuf;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -28,7 +29,11 @@ public class Reflection {
     private final static Set<String> fieldSortNamesSuffixes = Sets.set("Name", "Title", "Key");
 
     private static boolean _useUnsafe;
-    private  static boolean _inContainer;
+    private static boolean _inContainer;
+
+    private final static Context _context;
+    private static WeakReference<Context> weakContext=new WeakReference<Context>(null);
+
 
     static {
         try {
@@ -39,7 +44,7 @@ public class Reflection {
             _useUnsafe = false;
         }
 
-        _useUnsafe = _useUnsafe && ! Boolean.getBoolean("com.org.org.boon.noUnsafe");
+        _useUnsafe = _useUnsafe && ! Boolean.getBoolean("org.boon.noUnsafe");
     }
     private static final boolean useUnsafe = _useUnsafe;
 
@@ -52,32 +57,74 @@ public class Reflection {
             _inContainer = false;
         }
     }
-    private  static boolean inContainer = _inContainer;
+    private final static boolean inContainer = _inContainer;
+
+    static {
+
+        boolean noStatics = Boolean.getBoolean("org.boon.noStatics");
+        if ( noStatics || inContainer) {
+
+            _context = null;
+            weakContext = new WeakReference<Context>( new Context() );
+
+        } else {
+
+            _context = new Context();
+        }
+    }
 
 
     private static void setSortableField(Class<?> clazz, String fieldName) {
-        _sortableFields.put( clazz,  fieldName );
+        context()._sortableFields.put( clazz.getName(),  fieldName );
     }
 
     private static String getSortableField(Class<?> clazz) {
-        return _sortableFields.get( clazz );
+        return context()._sortableFields.get(clazz.getName());
+    }
+
+
+
+    /* Manages weak references. */
+    private static Context context() {
+
+        if (_context != null) {
+            return _context;
+        } else {
+            Context context = weakContext.get();
+            if (context == null) {
+                context = new Context();
+                weakContext = new WeakReference<>( context );
+            }
+            return context;
+        }
     }
 
     private static class Context {
-        /**
-        * We should make these immutable because the are not suppose to change.
-        * TODO
-        */
+
+        private Map<String, String> _sortableFields = new ConcurrentHashMap<>();
+
+        private Map<String, Map<String, FieldAccess>> _allAccessorFieldsCache = new ConcurrentHashMap<>();
+
 
     }
 
-    /** This will not work in a web app.
-     *  We need to make these soft references.
-     *  TODO
-     */
-    private static ConcurrentHashMap<Class, String> _sortableFields = new ConcurrentHashMap<>();
 
-    private static Map<String, Map<String, FieldAccess>> allAccessorFieldsCache = new ConcurrentHashMap<>();
+    private static void setAccessorFieldInCache(Class<? extends Object> theClass, boolean useUnsafe, Map<String, FieldAccess> map) {
+        context()._allAccessorFieldsCache.put(theClass.getName() + useUnsafe, map);
+    }
+
+    private static Map<String, FieldAccess> getAccesorFieldFromCache(String key) {
+        return context()._allAccessorFieldsCache.get(key);
+    }
+
+    private static Map<String, FieldAccess> getAccesorFieldFromCache(Class<? extends Object> theClass, boolean useUnsafe) {
+        return context()._allAccessorFieldsCache.get(theClass.getName() + useUnsafe);
+    }
+
+    private static void setAccessorFieldInCache(String key, Map<String, FieldAccess> map) {
+        context()._allAccessorFieldsCache.put(key, map);
+    }
+
 
 
 
@@ -1313,15 +1360,16 @@ public class Reflection {
 
     public static Map<String, FieldAccess> getAllAccessorFields(
             Class<? extends Object> theClass, boolean useUnsafe) {
-        Map<String, FieldAccess> map = allAccessorFieldsCache.get(theClass.getName() + useUnsafe);
+        Map<String, FieldAccess> map = getAccesorFieldFromCache(theClass, useUnsafe);
         if (map == null) {
             List<FieldAccess> list = Conversions.map(new FieldConverter(useUnsafe), getAllFields(theClass));
             map = collectionToMap("name", list);
-            allAccessorFieldsCache.put(theClass.getName() + useUnsafe, map);
+            setAccessorFieldInCache(theClass, useUnsafe, map);
 
         }
         return map;
     }
+
 
 
     public static <V> Map<String, V> collectionToMap(String propertyKey, Collection<V> values) {
@@ -1344,11 +1392,13 @@ public class Reflection {
         return list;
     }
 
+
+
     public static Map<String, FieldAccess> getPropertyFieldAccessors(
             Class<? extends Object> theClass) {
 
 
-        Map<String, FieldAccess> fields = allAccessorFieldsCache.get(theClass.getName() + "PROPS");
+        Map<String, FieldAccess> fields = getAccesorFieldFromCache(theClass.getName() + "PROPS");
         if (fields == null) {
             Map<String, Pair<Method>> methods = getPropertySetterGetterMethods(theClass);
 
@@ -1366,7 +1416,7 @@ public class Reflection {
 
             }
 
-            allAccessorFieldsCache.put(theClass.getName() + "PROPS", fields);
+            setAccessorFieldInCache(theClass.getName() + "PROPS", fields);
         }
 
 
