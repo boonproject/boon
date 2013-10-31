@@ -95,7 +95,7 @@ public class HTTP {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doPost(url, null, "text/plain", null, body);
+                connection = doPost(url, null, contentType, null, body);
                 return extractResponseString(connection);
             }
         });

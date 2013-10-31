@@ -55,7 +55,8 @@ public class HTTPTest {
         System.out.println(response);
 
         assertTrue(response.contains("hi mom"));
-        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+        assertTrue(response.contains("Fun=[sun]"));
+        assertTrue(response.contains("Foo=[bar]"));
 
 
         response = HTTP.postWithCharset("http://localhost:9212/test", headers, "text/plain", "UTF-8", "hi mom");
@@ -63,14 +64,16 @@ public class HTTPTest {
         System.out.println(response);
 
         assertTrue(response.contains("hi mom"));
-        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+        assertTrue(response.contains("Fun=[sun]"));
+        assertTrue(response.contains("Foo=[bar]"));
 
         response = HTTP.postWithHeaders("http://localhost:9212/test", headers, "hi mom");
 
         System.out.println(response);
 
         assertTrue(response.contains("hi mom"));
-        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+        assertTrue(response.contains("Fun=[sun]"));
+        assertTrue(response.contains("Foo=[bar]"));
 
 
         response = HTTP.get("http://localhost:9212/test");
@@ -82,7 +85,8 @@ public class HTTPTest {
 
         System.out.println(response);
 
-        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+        assertTrue(response.contains("Fun=[sun]"));
+        assertTrue(response.contains("Foo=[bar]"));
 
 
 
@@ -90,7 +94,8 @@ public class HTTPTest {
 
         System.out.println(response);
 
-        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+        assertTrue(response.contains("Fun=[sun]"));
+        assertTrue(response.contains("Foo=[bar]"));
 
 
 
@@ -98,7 +103,8 @@ public class HTTPTest {
 
         System.out.println(response);
 
-        assertTrue(response.contains("Fun=[sun], Foo=[bar]"));
+        assertTrue(response.contains("Fun=[sun]"));
+        assertTrue(response.contains("Foo=[bar]"));
 
         Thread.sleep(10);
 
