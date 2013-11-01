@@ -7,6 +7,8 @@ Low Ceremony. High Productivity.
 
 
 
+
+
 Brief introduction to Boon
 ===
 
@@ -186,8 +188,11 @@ It will always be able to run as a single jar.
 Further Reading
 ===
 
+
 + [Boon's Universal Operations and the BBBB Java does have a ByteBuilder sort of](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder)
 + [Java Boon Sets and slice notation](https://github.com/RichardHightower/boon/wiki/Sets-and-Slice-Notation-for-Java-Boon!)
 + [Java Boon Slice notation](https://github.com/RichardHightower/boon/wiki/Boon-Slice-Notation)
 + [Random thoughts and TODO](https://github.com/RichardHightower/boon/wiki/Random-thoughts-and-TODO-for-Boon)
 + [Birth of Boon](https://github.com/RichardHightower/boon/wiki/Birth-of-Boon)
++ [Javadocs](http://richardhightower.github.io/site/javadocs/index.html)
++ [jar file](http://richardhightower.github.io/site/releases/)

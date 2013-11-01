@@ -184,19 +184,19 @@ public class Lists {
 
     @Universal
     public static <V> List<V> copy(CopyOnWriteArrayList<V> list) {
-        Objects.requireNonNull(list, "list cannot be null");
+        Objects.requireNonNull(list, "listStream cannot be null");
         return new CopyOnWriteArrayList<>(list);
     }
 
     @Universal
     public static <V> List<V> copy(ArrayList<V> list) {
-        Objects.requireNonNull(list, "list cannot be null");
+        Objects.requireNonNull(list, "listStream cannot be null");
         return new ArrayList<>(list);
     }
 
     @Universal
     public static <V> List<V> copy(LinkedList<V> list) {
-        Objects.requireNonNull(list, "list cannot be null");
+        Objects.requireNonNull(list, "listStream cannot be null");
         return new LinkedList<>(list);
     }
 
@@ -212,7 +212,7 @@ public class Lists {
     private static <T> int calculateIndex(List<T> list, int originalIndex) {
         final int length = list.size();
 
-        Objects.requireNonNull(list, "list cannot be null");
+        Objects.requireNonNull(list, "listStream cannot be null");
 
 
         int index = originalIndex;

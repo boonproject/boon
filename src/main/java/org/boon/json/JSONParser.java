@@ -1,6 +1,7 @@
 package org.boon.json;
 
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.Chr;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,11 +24,10 @@ public class JSONParser {
     private char __currentChar;
     private char __lastChar;
 
-    private final boolean debug = false; // just used to debug if their are
     private Map<String, Object> lastObject;
     private List<Object> lastList;
-    private ParserState state=START;
-    private ParserState lastState=START;
+    private ParserState state = START;
+    private ParserState lastState = START;
 
     private JSONParser() {
 
@@ -61,7 +61,7 @@ public class JSONParser {
     private Object decode(char[] cs) {
         charArray = cs;
         Object root = null;
-         root = decodeValue();
+        root = decodeValue();
         return root;
     }
 
@@ -74,25 +74,11 @@ public class JSONParser {
     }
 
 
-    private final boolean safe() {
-
-        return __index < charArray.length;
-    }
-
-    private final boolean hasMore()  {
+    private final boolean hasMore() {
         return __index + 1 < charArray.length;
     }
 
-    private final char currentChar()  {
-
-        if (safe()) {
-            return __currentChar = charArray[__index];
-        }
-        return __currentChar;
-
-    }
-
-    private final char nextChar()  {
+    private final char nextChar() {
 
         try {
             if (hasMore()) {
@@ -103,11 +89,12 @@ public class JSONParser {
             return __currentChar;
 
         } catch (Exception ex) {
-            throw new RuntimeException ( exceptionDetails("failure in next "+
-            ex.getLocalizedMessage()), ex);
+            throw new RuntimeException(exceptionDetails("failure in next " +
+                    ex.getLocalizedMessage()), ex);
 
         }
     }
+
 
     private String exceptionDetails(String message) {
         CharBuf buf = CharBuf.create(255);
@@ -118,8 +105,8 @@ public class JSONParser {
         buf.add(lastState.toString()).addLine(" is LAST STATE");
 
         buf.addLine("");
-        buf.addLine("The last character read was " + charDescription( __lastChar ));
-        buf.addLine("The current character read is " + charDescription( __currentChar ));
+        buf.addLine("The last character read was " + charDescription(__lastChar));
+        buf.addLine("The current character read is " + charDescription(__currentChar));
 
 
         if (lastObject != null) {
@@ -148,11 +135,11 @@ public class JSONParser {
         } catch (Exception ex) {
 
             try {
-                int index = (__index - 20 < 0) ? 0 :__index - 20 ;
+                int index = (__index - 20 < 0) ? 0 : __index - 20;
 
-                buf.addLine(new String(charArray, index, __index ));
-            }  catch (Exception ex2) {
-                buf.addLine(new String(charArray, 0, charArray.length ));
+                buf.addLine(new String(charArray, index, __index));
+            } catch (Exception ex2) {
+                buf.addLine(new String(charArray, 0, charArray.length));
             }
         }
         for (int i = 0; i < lineLocationCount; i++) {
@@ -165,44 +152,39 @@ public class JSONParser {
         return buf.toString();
     }
 
-    private void skipWhiteSpace()  {
+    private void skipWhiteSpace() {
 
 
-        while (hasMore()) {
 
-            currentChar();
-            if (__currentChar == '\n') {
-                line++;
-                lastLineStart = __index;
-                this.nextChar();
-                continue;
-            } else if (__currentChar == '\r') {
-                line++;
-                if (hasMore()) {
-                    this.nextChar();
-                    if (__currentChar != '\n') {
-                        lastLineStart = __index;
-                        break;
-                    }
-                }
-                lastLineStart = __index;
-                this.nextChar();
-                continue;
-            } else if (Character.isWhitespace(__currentChar)) {
-                this.nextChar();
-                continue;
-            } else {
-                break;
+        label:
+        for (;__index < this.charArray.length; __index++) {
+            __currentChar = charArray[__index];
+            switch (__currentChar) {
+                case '\n' :
+                    line++;
+                    lastLineStart = __index+1;
+                    continue label;
+                case '\r' :
+                    line++;
+                    lastLineStart = __index+1;
+                    continue label;
+
+                case ' ':
+                case '\t':
+                case '\b':
+                case '\f':
+                    continue label;
+                default:
+                    break label;
+
             }
         }
 
     }
 
-    private Object decodeJsonObject()  {
-        if (debug)
-            System.out.println("decodeJsonObject enter"); //$NON-NLS-1$
+    private Object decodeJsonObject() {
 
-        if (this.currentChar() == '{' && this.hasMore())
+        if (__currentChar == '{' && this.hasMore())
             this.nextChar();
 
         Map<String, Object> map = new LinkedHashMap<>();
@@ -213,41 +195,41 @@ public class JSONParser {
 
             skipWhiteSpace();
 
-            char c = this.currentChar();
 
-            if (c == '"') {
+            if (__currentChar == '"') {
                 String key = decodeKeyName();
                 skipWhiteSpace();
-                c = this.currentChar();
-                if (c != ':') {
 
-                    complain("expecting current character to be " + charDescription(c) + "\n");
+                if (__currentChar != ':') {
+
+                    complain("expecting current character to be " + charDescription(__currentChar) + "\n");
                 }
-                c = this.nextChar(); // skip past ':'
+                this.nextChar(); // skip past ':'
                 skipWhiteSpace();
+
+                setState(START_OBJECT_ITEM);
                 Object value = decodeValue();
 
-                if (debug)
-                    System.out
-                            .printf("key:%s value:%s", key, value); //$NON-NLS-1$
                 skipWhiteSpace();
 
                 map.put(key, value);
 
-                c = this.currentChar();
-                if (!(c == '}' || c == ',')) {
-                    complain("expecting '}' or ',' but got current char " + charDescription(c));
+
+                setState(END_OBJECT_ITEM);
+
+                if (!(__currentChar == '}' || __currentChar == ',')) {
+                    complain("expecting '}' or ',' but got current char " + charDescription(__currentChar));
                 }
             }
-            if (c == '}') {
+            if (__currentChar == '}') {
                 this.nextChar();
                 break;
-            } else if (c == ',') {
+            } else if (__currentChar == ',') {
                 this.nextChar();
                 continue;
             } else {
                 complain(
-                        "expecting '}' or ',' but got current char " + charDescription(c));
+                        "expecting '}' or ',' but got current char " + charDescription(__currentChar));
 
             }
         } while (this.hasMore());
@@ -258,96 +240,199 @@ public class JSONParser {
         throw new JSONException(exceptionDetails(complaint));
     }
 
-    boolean lastValueJSONNull = false;
 
-    private boolean wasJsonNull() {
-        boolean was = lastValueJSONNull;
-        lastValueJSONNull = false;
-        return was;
-    }
 
-    private Object decodeValue()  {
+
+    private Object decodeValue() {
         Object value = null;
 
-        do  {
-            skipWhiteSpace();
-            char c = this.__currentChar;
-            if (c == '"') {
-                value = decodeString();
-                break;
-            } else if (c == 't' || c == 'f') {
-                value = decodeBoolean();
-                break;
-            } else if (c == 'n') {
-                value = decodeNull();
+        done:
+        for (;__index < this.charArray.length; __index++) {
+            __currentChar = charArray[__index];
 
-                lastValueJSONNull = true;
-                break;
-            } else if (c == '[') {
-                setState(START_LIST);
-                value = decodeJsonArray();
-                setState(END_LIST);
-                break;
-            } else if (c == '{') {
-                setState(START_OBJECT);
-                value = decodeJsonObject();
-                setState(END_OBJECT);
-                break;
 
-            } else if (c == '-' || Character.isDigit(c)) {
-                value = decodeNumber();
-                break;
-            } else {
-                if (__index + 1 >= charArray.length) {
+            switch (__currentChar) {
+                case '\n' :
+                    line++;
+                    lastLineStart = __index+1;
                     break;
-                } else {
+
+                case '\r' :
+                case ' ':
+                case '\t':
+                case '\b':
+                case '\f':
+                    break;
+
+                case '"':
+                    setState(START_STRING);
+                    value = decodeString();
+                    setState(END_STRING);
+                    break done;
+
+
+                case 't':
+                    setState(START_BOOLEAN);
+                    value = decodeTrue();
+                    setState(END_BOOLEAN);
+                    break done;
+
+                case 'f':
+                    setState(START_BOOLEAN);
+                    value = decodeFalse();
+                    setState(END_BOOLEAN);
+                    break done;
+
+                case 'n':
+                    setState(START_NULL);
+                    value = decodeNull();
+                    setState(END_NULL);
+                    break done;
+
+                case '[':
+                    setState(START_LIST);
+                    value = decodeJsonArray();
+                    setState(END_LIST);
+                    break done;
+
+                case '{' :
+                    setState(START_OBJECT);
+                    value = decodeJsonObject();
+                    setState(END_OBJECT);
+                    break done;
+
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':
+                case '-':
+                    setState(START_NUMBER);
+                    value = decodeNumber();
+                    setState(END_NUMBER);
+                    break done;
+
+                default:
                     throw new JSONException(exceptionDetails("Unable to determine the " +
-                        "current character, it is not a string, number, array, or object"));
-                }
+                            "current character, it is not a string, number, array, or object"));
+
             }
-        } while (hasMore());
-        skipWhiteSpace();
+        }
+
         return value;
     }
+
 
     private void setState(ParserState state) {
         this.lastState = this.state;
         this.state = state;
     }
 
-    private Object decodeNumber()  {
-        CharBuf buf = CharBuf.create(16);
+    private Object decodeNumber() {
+
+        int startIndex = __index;
 
         boolean doubleFloat = false;
-        do {
-            char c = this.currentChar();
-            /*
-                Numbers are odd, if you see anything that is nto a number
-                then we are done with the number.
-                Look for space, tab, comma, curly bracket, and bracket.
-             */
-            if (c == ' ' || c=='\t' || c == ',' || c == '}' || c == ']') {
-                break;
-            }
 
-            if (
-                c == '0' || c == '1' || c == '2' || c == '3' || c == '4' ||
-                c == '5' || c == '6' || c == '7' || c == '8' || c == '9'
-                || c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-') {
+        int index;
+        int count =0;
+        int countDecimalPoint=0;
+        int eCount=0;
+        int plusCount=0;
 
-                if (c == '.' || c == 'e' || c == 'E') {
+        loop:
+        for ( index = __index; index < charArray.length; index++, count++ ) {
+           __currentChar = charArray [index];
+            char c = __currentChar;
+
+            switch(__currentChar) {
+                case ' ':
+                case '\t':
+                case '\n':
+                case '\r':
+                    __index = index+1;
+                    break loop;
+
+                case ',':
+                    if ( lastState == START_LIST_ITEM || lastState == START_OBJECT_ITEM ) {
+                        break loop;
+                    } else {
+                        throw new JSONException("Unexpected comma token");
+                    }
+
+                case ']':
+                    if ( lastState == START_LIST_ITEM ) {
+                        break loop;
+                    } else {
+                        throw new JSONException("Unexpected close bracket token");
+                    }
+
+                case '}':
+                    if ( lastState == START_OBJECT_ITEM ) {
+                        break loop;
+                    } else {
+                        throw new JSONException("Unexpected close curly brace token");
+                    }
+
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':
+                case '-':
+                    continue loop;
+
+                case '.':
                     doubleFloat = true;
-                }
-                buf.add(c);
-                this.nextChar();
-                continue;
+                    countDecimalPoint++;
+                    if (countDecimalPoint>1) {
+                        throw new JSONException("number has more than one decimal point");
+                    }
+                    continue loop;
+
+                case 'e':
+                case 'E':
+                    doubleFloat = true;
+                    eCount++;
+                    if (eCount>1) {
+                        throw new JSONException("number has more than one exp definition");
+                    }
+                    continue loop;
+
+                case '+':
+                    doubleFloat = true;
+                    plusCount++;
+                    if (plusCount>1) {
+                        throw new JSONException("number has more than one plus sign");
+                    }
+                    if (eCount==0) {
+                        throw new JSONException("plus sign must come after exp");
+
+                    }
+                    continue loop;
+
             }
+
             complain("expecting number char but got current char " + charDescription(c));
+        }
 
-        } while (this.hasMore());
+        __index = index;
+
+        String svalue = new String(this.charArray, startIndex, count);
 
 
-        String svalue = buf.toString();
+
+
         Object value = null;
         try {
             if (doubleFloat) {
@@ -359,89 +444,122 @@ public class JSONParser {
             try {
                 value = Long.parseLong(svalue);
             } catch (Exception ex2) {
-                complain("expecting to decode a number but got value of "+ svalue);
+                complain("expecting to decode a number but got value of " + svalue);
             }
 
         }
 
+        skipWhiteSpace();
+
         return value;
 
     }
 
-    private int index() {
-        return __index;
-    }
 
-    private Object decodeBoolean()  {
-        StringBuilder builder = new StringBuilder();
-        do {
-            char c = this.currentChar();
-            if (Character.isWhitespace(c) || c == ',' || c == '}') {
-                break;
+
+    private static char [] NULL = Chr.chars("null");
+    private Object decodeNull() {
+
+        if (__index + NULL.length <= charArray.length) {
+            if (charArray  [__index]=='n' &&
+                    charArray[++__index]=='u' &&
+                    charArray[++__index]=='l' &&
+                    charArray[++__index]=='l')  {
+                return null;
             }
-            builder.append(c);
-            this.nextChar();
-        } while (hasMore());
-        return Boolean.parseBoolean(builder.toString());
+        }
+        throw new JSONException("null not parse properly");
     }
 
-    private Object decodeNull()  {
-        StringBuilder builder = new StringBuilder();
-        do {
-            char c = this.currentChar();
-            if (Character.isWhitespace(c) || c == ',' || c == '}') {
-                break;
+    private static char [] TRUE = Chr.chars("true");
+    private boolean decodeTrue() {
+
+        if (__index + TRUE.length <= charArray.length) {
+            if (charArray  [__index]=='t' &&
+                    charArray[++__index]=='r' &&
+                    charArray[++__index]=='u' &&
+                    charArray[++__index]=='e')  {
+
+                nextChar();
+                return true;
+
             }
-            builder.append(c);
-            this.nextChar();
-        } while (hasMore());
-        return null;
+        }
+
+        throw new JSONException("true not parse properly");
     }
 
-    private Object decodeString() {
+
+
+    private static char [] FALSE = Chr.chars("false");
+    private boolean decodeFalse() {
+
+        if (__index + FALSE.length <= charArray.length) {
+            if (charArray  [__index]=='f' &&
+                    charArray[++__index]=='a' &&
+                    charArray[++__index]=='l' &&
+                    charArray[++__index]=='s' &&
+                    charArray[++__index]=='e'){
+                return true;
+            }
+        }
+        throw new JSONException("true not parse properly");
+    }
+
+    private String decodeString() {
         String value = null;
 
-        int startIndex = index();
-        do {
-            char c = this.nextChar();
-            if (c == '"') {
-                break;
-            }
-            if (c == '\\' && (c = this.nextChar()) == '"') {
-                continue;
-            }
+        final int startIndex = __index;
+        if (__index < charArray.length && __currentChar == '"')  {
+            __index++;
+        }
 
-        } while (hasMore());
 
-        value = encodeString(startIndex, index());
-        this.nextChar(); // skip other quote
+        done:
+        for (;__index < this.charArray.length; __index++) {
+            __currentChar = charArray[__index];
+            switch (__currentChar) {
+
+                case '"':
+                    break done;
+
+                case '\t':
+                case '\n':
+                case '\r':
+                case '\f':
+                case '\b':
+                    throw new JSONException( "illegal control character found " +__currentChar );
+
+
+                case '\\':
+                    if (__index < charArray.length) {
+                        __index++;
+                    }
+                    continue;
+
+            }
+        }
+
+        value = encodeString(startIndex, __index);
+
+        if (__index < charArray.length) {
+            __index++;
+        }
 
         return value;
     }
 
-    private String encodeString(int start, int to)  {
+    private String encodeString(int start, int to) {
         return JSONStringParser.decode(charArray, start, to);
     }
 
-    private String decodeKeyName()  {
+    private String decodeKeyName() {
+        return decodeString();
 
-        StringBuilder builder = new StringBuilder();
-        do {
-            char c = this.nextChar();
-            if (c == '"') {
-                break;
-            }
-            builder.append(c);
-        } while (hasMore());
-
-        Object value = builder.toString();
-        this.nextChar(); // skip other quote
-
-        return (String) value;
     }
 
-    private Object decodeJsonArray()  {
-        if (this.currentChar() == '[')  {
+    private List decodeJsonArray() {
+        if (__currentChar == '[') {
             this.nextChar();
         }
 
@@ -451,7 +569,7 @@ public class JSONParser {
         this.lastList = list;
 
         /* the list might be empty  */
-        if (this.currentChar() == ']') {
+        if (__currentChar == ']') {
             this.nextChar();
             return list;
         }
@@ -462,24 +580,26 @@ public class JSONParser {
         do {
             skipWhiteSpace();
 
+            setState(START_LIST_ITEM);
             Object arrayItem = decodeValue();
-            boolean wasNull = wasJsonNull();
 
-            if (arrayItem == null && wasNull) {
+            if (arrayItem == null && state == END_NULL) {
                 list.add(null); //JSON null detected
             } else if (arrayItem == null) {
-                //do nothing
+                throw new JSONException("array item was null");
             } else {
                 list.add(arrayItem);
             }
 
             arrayIndex++;
 
+            setState(END_LIST_ITEM);
+
             skipWhiteSpace();
 
-            char c = this.currentChar();
+            char c = __currentChar;
 
-            if (c == ',')  {
+            if (c == ',') {
                 this.nextChar();
                 continue;
             } else if (c == ']') {
@@ -502,16 +622,18 @@ public class JSONParser {
     private String charDescription(char c) {
         String charString;
         if (c == ' ') {
-            charString="[SPACE]";
+            charString = "[SPACE]";
         } else if (c == '\t') {
-            charString="[TAB]";
+            charString = "[TAB]";
 
         } else if (c == '\n') {
-            charString="[NEWLINE]";
+            charString = "[NEWLINE]";
 
         } else {
             charString = "'" + c + "'";
         }
+
+        charString = charString + " with an int value of " + ((int) c);
         return charString;
     }
 

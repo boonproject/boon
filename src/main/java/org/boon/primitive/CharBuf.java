@@ -59,7 +59,7 @@ public class CharBuf {
         if (chars.length + location < capacity) {
             Chr._idx( buffer, location, chars );
         } else {
-            buffer = Chr.grow(buffer);
+            buffer = Chr.grow( buffer, buffer.length * 2 + chars.length);
             Chr._idx( buffer, location, chars );
             capacity = buffer.length;
         }
@@ -81,6 +81,10 @@ public class CharBuf {
 
     public String toString() {
         return new String(buffer, 0, location);
+    }
+
+    public int len() {
+        return location;
     }
 
 }

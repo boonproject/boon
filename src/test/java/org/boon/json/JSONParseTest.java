@@ -112,8 +112,8 @@ public class JSONParseTest {
                  {"oddly spaced", "[ 0 , 1 ,2, 3, '99' ]"},   //2
                  {"nums and strings", "[ 0 , 1 ,'bar', 'foo', 'baz' ]"}, //3
                  {"nums stings map", "[ 0 , 1 ,'bar', 'foo', {'baz':1} ]"}, //4
-                 {"nums strings map with list", "[ 0 , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//5
-                 {"nums strings map with list", "[ {'bar': {'zed': 1}} , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//6
+                 {"nums strings map with listStream", "[ 0 , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//5
+                 {"nums strings map with listStream", "[ {'bar': {'zed': 1}} , 1 ,'bar', 'foo', {'baz':1, 'lst':[1,2,3]} ]"},//6
                  {"tightly spaced", "[0,1,2,3,99]"},
 
          };
@@ -150,11 +150,11 @@ public class JSONParseTest {
     public void testMaps() {
         String [][] tests = {
                 {"empty map", "{}"},                  //1
-                {"map with list", "{'lst': [1,2,3]}"},      //2
-                {"map with list, num, str", "{'lst': [1,2,3] , 'num' : 5, 'str': 'Maya!!!!' }"} ,     //3
-                {"same as above with odd spacing", "\t{\n'lst'\r\n: \t[1\t,\n2,3] , \n'num' : 5, " +
+                {"map with listStream", "{'alst1': [1,2,3]}"},      //2
+                {"map with listStream, num, str", "{'blst2': [1,2,3] , 'num' : 5, 'str': 'Maya!!!!' }"} ,     //3
+                {"same as above with odd spacing", "\t{\n'clst3'\r\n: \t[1\t,\n2,3] , \n'num' : 5, " +
                         "'str': 'Maya!!!!' }"} ,     //4
-                {"more stuff", "\t{\n'lst'\r\n: \t[1\t,\n2,3, {'a':'b'}] " +
+                {"more stuff", "\t{\n'ablst4'\r\n: \t[1\t,\n2,3, {'a':'b'}] " +
                         "\t, \n" +
                         "\n'num' : [5, {}], " +
                                 "'str': 'Maya!!!!' }"} ,     //5
@@ -163,10 +163,10 @@ public class JSONParseTest {
 
         Map<?,?>[] maps  = {
                 Collections.EMPTY_MAP,    //1
-                map("lst", list( 1,2,3 ) ), //  2
-                map("lst", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  3
-                map("lst", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  4
-                map("lst", list( 1,2,3, map("a", "b") ),
+                map("alst1", list( 1,2,3 ) ), //  2
+                map("blst2", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  3
+                map("clst3", list( 1,2,3 ), "num", 5, "str", "Maya!!!!"), //  4
+                map("ablst4", list( 1,2,3, map("a", "b") ),
                     "num", list(5, Collections.EMPTY_MAP),
                      "str", "Maya!!!!"), //  5
 
@@ -187,11 +187,11 @@ public class JSONParseTest {
         String [][] tests = {
                 {"seven", "1.23E+11 "}, //6
 
-                {"one", " 1 "},                  //0
+                {"one", " 1"},                  //0
                 {"two", "1.1 "},                  //1
                 {"three", " 1.8 "},                  //2
                 {"four", " 9.99 "},                  //3
-                {"six", "123456789012345678 "},//                //5
+                {"six", "123456789012345678"},//                //5
 
         };
 
@@ -211,6 +211,41 @@ public class JSONParseTest {
             String json = tests[index][1];
 
             helper(name, json, nums[index]);
+        }
+    }
+
+
+    @Test
+    public void testNullTable() {
+        String [][] tests = {
+                {"space before null", " null"},
+
+                {"spaces around null", " null "},
+                {"space after null", "null "},
+
+        };
+
+        Object[] objs = {
+                null,
+                null,
+                null,
+        };
+
+
+
+        for (int index = 0; index < tests.length; index++)  {
+            String name = tests[index][0];
+            String json = tests[index][1];
+
+                    Object obj = JSONParser.parse( json );
+
+
+            boolean ok = true;
+
+
+
+            ok &= obj == null  || die(name + " :: null good  " + json);
+
         }
     }
 
@@ -236,7 +271,7 @@ public class JSONParseTest {
     public void testNumber() {
 
         Object obj = JSONParser.parse(
-                "  1  ".replace('\'', '"')
+                "1".replace('\'', '"')
         );
 
         boolean ok = true;
@@ -251,10 +286,28 @@ public class JSONParseTest {
     }
 
     @Test
-    public void testNumberBoolean() {
+    public void testBoolean() {
 
         Object obj = JSONParser.parse(
                 "  true  ".replace('\'', '"')
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Boolean || die("Object was not a Boolean");
+
+        boolean value = (Boolean) obj;
+
+        ok &=  value == true || die("I did see value equal to true");
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test(expected = JSONException.class)
+    public void testBooleanParseError() {
+
+        Object obj = JSONParser.parse(
+                "  tbone  ".replace('\'', '"')
         );
 
         boolean ok = true;
@@ -324,6 +377,33 @@ public class JSONParseTest {
     }
 
     @Test
+    public void testStringInsideOfList2() {
+
+        String testString =
+                "[ 'abc','def' ]".replace('\'', '"');
+
+        System.out.println(
+                JSONStringParser.decode(testString)
+        );
+
+
+        Object obj = JSONParser.parse(testString);
+        System.out.println("here is what I got " + obj);
+
+        boolean ok = true;
+
+        ok &= obj instanceof List || die("Object was not a List");
+
+        List<String> value = (List<String>) obj;
+
+
+        assertEquals("abc",
+                idx(value, 0));
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test
     public void textInMiddleOfArray() {
 
         try {
@@ -344,7 +424,7 @@ public class JSONParseTest {
     public void oddlySpaced2() {
 
         Object obj = JSONParser.parse(
-                lines("[       1, 0]"
+                lines("[   2   ,    1, 0]"
                 ).replace('\'', '"')
         );
 
@@ -362,7 +442,7 @@ public class JSONParseTest {
 
                         "{    'num' : 1   , ",
                         "     'bar' : { 'foo': 1  },  ",
-                        "     'nums': [0  ,1,2,3,4,5] } "
+                        "     'nums': [0  ,1,2,3,4,5,'abc'] } "
                 ).replace('\'', '"')
         );
 

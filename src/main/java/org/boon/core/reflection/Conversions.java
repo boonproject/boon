@@ -4,6 +4,7 @@ import org.boon.Dates;
 import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.Typ;
+import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
@@ -37,18 +38,18 @@ public class Conversions {
                 } catch (Exception ex) {
                     char[] chars = toString(obj).toCharArray();
                     boolean found = false;
-                    StringBuilder builder = new StringBuilder(chars.length);
+                    CharBuf builder = CharBuf.create(chars.length);
                     for (char c : chars) {
                         if (Character.isDigit(c) && !found) {
                             found = true;
-                            builder.append(c);
+                            builder.add(c);
                         } else if (Character.isDigit(c) && found) {
-                            builder.append(c);
+                            builder.add(c);
                         } else if (!Character.isDigit(c) && found) {
                         }
                     }
                     try {
-                        if (builder.length() > 0) {
+                        if (builder.len() > 0) {
                             return Integer.parseInt(builder.toString());
                         }
                     } catch (Exception ex2) {
@@ -84,18 +85,18 @@ public class Conversions {
                 } catch (Exception ex) {
                     char[] chars = toString(obj).toCharArray();
                     boolean found = false;
-                    StringBuilder builder = new StringBuilder(chars.length);
+                    CharBuf builder = CharBuf.create(chars.length);
                     for (char c : chars) {
                         if (Character.isDigit(c) && !found) {
                             found = true;
-                            builder.append(c);
+                            builder.add(c);
                         } else if (Character.isDigit(c) && found) {
-                            builder.append(c);
+                            builder.add(c);
                         } else if (!Character.isDigit(c) && found) {
                         }
                     }
                     try {
-                        if (builder.length() > 0) {
+                        if (builder.len() > 0) {
                             return Byte.parseByte(builder.toString());
                         }
                     } catch (Exception ex2) {
@@ -131,18 +132,18 @@ public class Conversions {
                 } catch (Exception ex) {
                     char[] chars = toString(obj).toCharArray();
                     boolean found = false;
-                    StringBuilder builder = new StringBuilder(chars.length);
+                    CharBuf builder = CharBuf.create(chars.length);
                     for (char c : chars) {
                         if (Character.isDigit(c) && !found) {
                             found = true;
-                            builder.append(c);
+                            builder.add(c);
                         } else if (Character.isDigit(c) && found) {
-                            builder.append(c);
+                            builder.add(c);
                         } else if (!Character.isDigit(c) && found) {
                         }
                     }
                     try {
-                        if (builder.length() > 0) {
+                        if (builder.len() > 0) {
                             return Short.parseShort(builder.toString());
                         }
                     } catch (Exception ex2) {
@@ -201,19 +202,19 @@ public class Conversions {
                 } catch (Exception ex) {
                     char[] chars = toString(obj).toCharArray();
 
-                    StringBuilder builder = new StringBuilder(chars.length);
+                    CharBuf builder = CharBuf.create(chars.length);
                     boolean found = false;
                     for (char c : chars) {
                         if (Character.isDigit(c) && !found) {
                             found = true;
-                            builder.append(c);
+                            builder.add(c);
                         } else if (Character.isDigit(c) && found) {
-                            builder.append(c);
+                            builder.add(c);
                         } else if (!Character.isDigit(c) && found) {
                         }
                     }
                     try {
-                        if (builder.length() > 0) {
+                        if (builder.len() > 0) {
                             return Long.parseLong(builder.toString());
                         }
                     } catch (Exception ex2) {

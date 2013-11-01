@@ -127,7 +127,7 @@ public class ListsTest {
 
         List<String> list2;
 
-        //list[-2:]
+        //listStream[-2:]
         //['grapes', 'kiwi']
         list2 = slc(list, -2);
 
@@ -146,7 +146,7 @@ public class ListsTest {
 
 
 
-        //list[2 : ]
+        //listStream[2 : ]
         //['pears', 'grapes', 'kiwi']
         list2 = slc(list, 2);
 
@@ -160,7 +160,7 @@ public class ListsTest {
         List<String> list =
                 list("apple", "oranges", "pears", "grapes", "kiwi");
 
-        // list[: -3]
+        // listStream[: -3]
         // ['apple', 'oranges']
 
         List<String> list2 = slcEnd(list, -3);
@@ -168,7 +168,7 @@ public class ListsTest {
         assertEquals(list( "apple", "oranges"), list2);
 
 
-        // list[: 2]
+        // listStream[: 2]
         // ['apple', 'oranges']
          list2 = slcEnd(list, 2);
 

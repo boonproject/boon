@@ -149,7 +149,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     Level level = Level.FINER;
 
 
-    /** This keeps a list of fields that we are reading per object.
+    /** This keeps a listStream of fields that we are reading per object.
      * @see FieldAccess
      * */
     private Map<String, FieldAccess> fields;
@@ -340,7 +340,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     /**
      * Register event listeners for modification changes.
      * @see ObjectEditorEventDecorator
-     * @param listeners  list of event listeners
+     * @param listeners  listStream of event listeners
      * @return  RepoBuilder
      */
     @Override

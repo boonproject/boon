@@ -4,7 +4,6 @@ package org.boon;
 import org.boon.core.Sys;
 import org.boon.primitive.CharBuf;
 
-import static org.boon.Lists.list;
 import static org.boon.Lists.toList;
 
 public class Boon {
@@ -42,17 +41,53 @@ public class Boon {
 
         for (Object message : messages) {
             print(message);
+            print(' ');
         }
         println();
 
     }
 
+    public static void putl(Object... messages) {
+
+        for (Object message : messages) {
+            print(message);
+            println();
+        }
+        println();
+
+    }
+
+    public static String sputl (Object... messages) {
+        CharBuf buf = CharBuf.create(100);
+        return sputl ( buf, messages );
+    }
 
     public static String sputs(Object... messages) {
          CharBuf buf = CharBuf.create(100);
+         return sputs(buf, messages);
+    }
 
 
+    public static String sputl (CharBuf buf, Object... messages) {
 
+       for (Object message : messages) {
+            if (message == null ) {
+                buf.add("<NULL>");
+            } else if (message.getClass().isArray()) {
+                buf.add( toList(message).toString() );
+            } else {
+                buf.add( message.toString());
+            }
+            buf.add( '\n');
+        }
+        buf.add('\n');
+
+        return buf.toString();
+
+
+    }
+
+    public static String sputs(CharBuf buf, Object... messages) {
 
         for (Object message : messages) {
             if (message == null ) {

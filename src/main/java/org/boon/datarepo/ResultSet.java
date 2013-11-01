@@ -13,6 +13,10 @@ public interface ResultSet<T> extends Iterable<T> {
 
     ResultSet expectOne();
 
+
+    <EXPECT> ResultSet <EXPECT> expectOne(Class<EXPECT> clz);
+
+
     ResultSet expectMany();
 
     ResultSet expectNone();

@@ -406,7 +406,7 @@ public class RepoDefaultTest {
                 selects(select("tags", "metas", "metas2", "metas3", "name3")),
                 CriteriaFactory.eq("lastName", "Hightower"));
 
-        //rint("list", list);
+        //rint("listStream", listStream);
 
         Assert.assertEquals("3tag1", idx(list.get(0).get("tags.metas.metas2.metas3.name3"), 0));
 

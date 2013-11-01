@@ -264,7 +264,7 @@ public class Arrays {
             collection.size());
             return collection.toArray((V[]) newInstance);
         } else {
-            die("array(list): The collection has to have at least one item in it");
+            die("array(listStream): The collection has to have at least one item in it");
             return null;
         }
     }

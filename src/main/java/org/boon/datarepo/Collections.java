@@ -39,37 +39,37 @@ public class Collections {
 
 
     /**
-     * $q turns a list into a querying list.
-     * @param list  the list you want to convert
+     * $q turns a listStream into a querying listStream.
+     * @param list  the listStream you want to convert
      * @param classes classes you want to be able to criteria.
-     * @param <T> The type this criteria list will return
-     * @return generic list decorated with criteria features.
+     * @param <T> The type this criteria listStream will return
+     * @return generic listStream decorated with criteria features.
      */
     public static <T> List<T> $q(final List<T> list, Class<?>... classes) {
         return listQuery(list, true, true, classes);
     }
 
     /**
-     * $c turns a list back into a regular list.
+     * $c turns a listStream back into a regular listStream.
      * This is the reverse of $q.
      *
      * @see Collections#plainList(java.util.List)
-     * @param list the list
-     * @param <T> the type of the list.
-     * @return the new decorated list.
+     * @param list the listStream
+     * @param <T> the type of the listStream.
+     * @return the new decorated listStream.
      */
     public static <T> List<T> $c(final List<T> list) {
         return plainList(list);
     }
 
     /**
-     * $c turns a list back into a regular list.
+     * $c turns a listStream back into a regular listStream.
      * This is the reverse of $q.
      *
      * @see Collections#$c(java.util.List)
-     * @param list the list
-     * @param <T> the type of the list.
-     * @return the new decorated list.
+     * @param list the listStream
+     * @param <T> the type of the listStream.
+     * @return the new decorated listStream.
      */
     private static <T> List<T> plainList(List<T> list) {
         if (list instanceof QList) {
@@ -81,25 +81,25 @@ public class Collections {
 
 
     /**
-     * listQuery turns a list into a querying list.
+     * listQuery turns a listStream into a querying listStream.
      * @see Collections#$q(java.util.List, Class[])
-     * @param list  the list you want to convert
-     * @param <T> The type this criteria list will return
-     * @return generic list decorated with criteria features.
+     * @param list  the listStream you want to convert
+     * @param <T> The type this criteria listStream will return
+     * @return generic listStream decorated with criteria features.
      */
     public static <T> List<T> listQuery(final List<T> list) {
         return listQuery(list, true, true);
     }
 
     /**
-     * listQuery turns a list into a querying list.
-     * @param list  the list you want to convert
+     * listQuery turns a listStream into a querying listStream.
+     * @param list  the listStream you want to convert
      * @param classes classes you want to be able to criteria.
-     * @param <T> The type this criteria list will return
+     * @param <T> The type this criteria listStream will return
      * @param useField use the field instead of the property
      * @param useUnSafe use unsafe
-     * @param classes  list of classes that we can criteria against, these can be component classes
-     * @return generic list decorated with criteria features.
+     * @param classes  listStream of classes that we can criteria against, these can be component classes
+     * @return generic listStream decorated with criteria features.
      */
     public static <T> List<T> listQuery(final List<T> list, boolean useField, boolean useUnSafe, Class<?>... classes) {
         if (list == null || list.size() == 0) {
@@ -126,7 +126,7 @@ public class Collections {
      *
      * @param set   set to decorate
      * @param <T>   generic type
-     * @return      new decorated list
+     * @return      new decorated listStream
      */
     public static <T> Set<T> $q(final Set<T> set) {
         return setQuery(set, true, true);
@@ -137,7 +137,7 @@ public class Collections {
      *
      * @param set   set to un-decorate
      * @param <T>   generic type
-     * @return      new decorated list
+     * @return      new decorated listStream
      */
     public static <T> Set<T> $c(final Set<T> set) {
         return plainSet(set);
@@ -149,7 +149,7 @@ public class Collections {
      *
      * @param set   set to un-decorate
      * @param <T>   generic type
-     * @return      new decorated list
+     * @return      new decorated listStream
      */
     private static <T> Set<T> plainSet(Set<T> set) {
         if (set instanceof QSet) {
@@ -164,7 +164,7 @@ public class Collections {
      *
      * @param set   set to un-decorate
      * @param <T>   generic type
-     * @return      new decorated list
+     * @return      new decorated listStream
      */
     public static <T> Set<T> setQuery(final Set<T> set) {
         return setQuery(set, true, true);
@@ -252,44 +252,44 @@ public class Collections {
 
 
     /**
-     * Allow you to criteria a criteria-able list.
-     * @param list  the list you want to criteria
+     * Allow you to criteria a criteria-able listStream.
+     * @param list  the listStream you want to criteria
      * @param expressions array of expressions
-     * @param <T> the type of the list
-     * @return the criteria results or an empty list if the list was not a criteria-able list.
+     * @param <T> the type of the listStream
+     * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
     public static <T> List<T> query(final List<T> list, Criteria... expressions) {
         if (list instanceof QList) {
             QList qlist = (QList) list;
             return qlist.searchCollection().query(expressions);
         }  else {
-            throw new DataRepoException("Not a criteria-able list.");
+            throw new DataRepoException("Not a criteria-able listStream.");
         }
     }
 
     /**
-     * Allow you to criteria a criteria-able list.
-     * @param list  the list you want to criteria
+     * Allow you to criteria a criteria-able listStream.
+     * @param list  the listStream you want to criteria
      * @param expressions array of expressions
-     * @param <T> the type of the list
-     * @return the criteria results or an empty list if the list was not a criteria-able list.
+     * @param <T> the type of the listStream
+     * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
     public static <T> List<T> sortedQuery(final List<T> list, String sortBy, Criteria... expressions) {
         if (list instanceof QList) {
             QList qlist = (QList) list;
             return qlist.searchCollection().sortedQuery(sortBy, expressions);
         }  else {
-            throw new DataRepoException("Not a criteria-able list.");
+            throw new DataRepoException("Not a criteria-able listStream.");
         }
     }
 
 
     /**
-     * Allow you to criteria a criteria-able list.
+     * Allow you to criteria a criteria-able listStream.
      * @param set  the set you want to criteria
      * @param expressions array of expressions
-     * @param <T> the type of the list
-     * @return the criteria results or an empty list if the list was not a criteria-able list.
+     * @param <T> the type of the listStream
+     * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
     public static <T> List<T> query(final Set<T> set, Criteria... expressions) {
         if (set instanceof QSet) {
@@ -300,11 +300,11 @@ public class Collections {
     }
 
     /**
-     * Allow you to criteria a criteria-able list.
+     * Allow you to criteria a criteria-able listStream.
      * @param set  the set you want to criteria
      * @param expressions array of expressions
-     * @param <T> the type of the list
-     * @return the criteria results or an empty list if the list was not a criteria-able list.
+     * @param <T> the type of the listStream
+     * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
     public static <T> List<T> sortedQuery(final Set<T> set, String sortBy, Criteria... expressions) {
         if (set instanceof QSet) {
