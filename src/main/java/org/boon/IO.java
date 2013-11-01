@@ -276,11 +276,15 @@ public class IO {
 
                 } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
-                    String path = uri.toString();
+                    Path thePath = null;
+                    if (Sys.isWindows ()) {
+                        String path = uri.toString();
+                        path = getWindowsPathIfNeeded(path);
+                        thePath = FileSystems.getDefault().getPath( path );
 
-                    path = getWindowsPathIfNeeded(path);
-                    Path thePath = FileSystems.getDefault().getPath( path );
-
+                    } else {
+                        thePath = FileSystems.getDefault().getPath( uri.getPath () );
+                    }
                     BufferedReader buf = Files.newBufferedReader(
                             thePath, DEFAULT_CHARSET);
                     eachLine(buf, eachLine);
