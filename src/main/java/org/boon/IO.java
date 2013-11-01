@@ -1,5 +1,6 @@
 package org.boon;
 
+import org.boon.core.Sys;
 import org.boon.core.Typ;
 import org.boon.primitive.CharBuf;
 
@@ -10,6 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.boon.Str.idx;
+import static org.boon.Str.slc;
 
 
 @SuppressWarnings("unchecked")
@@ -252,7 +256,15 @@ public class IO {
 
                 } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
-                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    String path = uri.toString();
+
+                    if (Sys.isWindows()) {
+                        path = path.replace('/', Sys.windowsPathSeparator()) ;
+                        if ( slc(path, 0, 6).equals( "file:\\" ) ) {
+                                path = slc (path, 6 ) ;
+                        }
+                    }
+                    Path thePath = FileSystems.getDefault().getPath( path );
 
                     BufferedReader buf = Files.newBufferedReader(
                             thePath, DEFAULT_CHARSET);
