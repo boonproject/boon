@@ -333,14 +333,17 @@ public class IO {
 
     public static List<String> readLines(final String location) {
 
-        final URI uri = URI.create(location);
+
+        final String path = getWindowsPathIfNeeded( location );
+
+        final URI uri = createURI( path );
 
         return (List<String>) Exceptions.tryIt(Typ.list, new Exceptions.TrialWithReturn<List>() {
             @Override
             public List<String> tryIt() throws Exception {
                 if (uri.getScheme() == null) {
 
-                    Path thePath = FileSystems.getDefault().getPath(location);
+                    Path thePath = FileSystems.getDefault().getPath( path );
                     return Files.readAllLines(thePath, DEFAULT_CHARSET);
 
                 } else if (uri.getScheme().equals(FILE_SCHEMA)) {
@@ -355,14 +358,31 @@ public class IO {
         });
     }
 
+    public static URI createURI(final String path) {
+        if ( !Sys.isWindows() )  {
+            return URI.create(path);
 
+        } else {
 
+            if ( path.contains("\\") || path.startsWith("C:") || path.startsWith("D:")) {
+                String newPath = new File(path).toURI().toString();
+                if (newPath.startsWith("file:/C:")) {
+                    newPath = slc ( newPath, 8);
+                    return URI.create(newPath);
+                } else {
+                    return URI.create(newPath);
+                }
 
+            } else {
+                return URI.create(path);
+            }
+        }
+    }
 
 
     public static void eachLine(final String location, final EachLine eachLine) {
 
-        final URI uri = URI.create(location);
+        final URI uri = createURI(location);
 
         Exceptions.tryIt(new Exceptions.Trial() {
             @Override
@@ -407,23 +427,53 @@ public class IO {
         });
     }
 
+    private static String getWindowsPathIfNeeded(String path) {
+        if (Sys.isWindows()) {
+
+            if ( !path.startsWith("http") ) {
+                path = path.replace('/', Sys.windowsPathSeparator()) ;
+                if ( slc(path, 0, 6).equals( "file:\\" ) ) {
+                    path = slc (path, 6 ) ;
+                }
+            }
+
+            if ( path.startsWith(".\\")) {
+                path = slc(path, 2) ;
+            }
+        }
+        return path;
+    }
+
     public static String read(final String location) {
-        final URI uri = URI.create(location);
+        final URI uri = createURI(location);
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
 
             @Override
             public String tryIt() throws Exception {
 
+                String path = location;
+
+                path = getWindowsPathIfNeeded(path);
 
                 if (uri.getScheme() == null) {
 
-                    Path thePath = FileSystems.getDefault().getPath(location);
+                    Path thePath = FileSystems.getDefault().getPath(path);
                     return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
 
                 } else if (uri.getScheme().equals(FILE_SCHEMA)) {
 
-                    Path thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    Path thePath = null;
+                    if (Sys.isWindows()) {
+                        String newPath = uri.getPath();
+                        if (newPath.startsWith("/C:")) {
+                            newPath = slc (newPath, 3);
+                        }
+                        thePath  = FileSystems.getDefault().getPath( newPath );
+                    } else {
+                        thePath = FileSystems.getDefault().getPath(uri.getPath());
+                    }
+
                     return read(Files.newBufferedReader(thePath, DEFAULT_CHARSET));
 
                 } else {
@@ -438,9 +488,12 @@ public class IO {
 
 
 private static List<String> readLines(String location, URI uri) throws Exception {
-        try {
+    try {
+            String path = location;
+            path = getWindowsPathIfNeeded(path);
+
             FileSystem fileSystem = FileSystems.getFileSystem(uri);
-            Path fsPath = fileSystem.getPath(location);
+            Path fsPath = fileSystem.getPath(path);
 
             //Paths.get()
             return Files.readAllLines(fsPath, DEFAULT_CHARSET);
