@@ -90,6 +90,11 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
+    public <EXPECT> ResultSet<EXPECT> expectOne ( Class<EXPECT> clz ) {
+        return (ResultSet<EXPECT>) this.expectOne ();
+    }
+
+    @Override
     public ResultSet expectMany() {
         prepareResults();
 
