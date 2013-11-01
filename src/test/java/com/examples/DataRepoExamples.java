@@ -1,6 +1,7 @@
 package com.examples;
 
 
+import com.examples.model.test.Email;
 import com.examples.security.model.User;
 import org.boon.Lists;
 import org.boon.core.Typ;
@@ -19,7 +20,12 @@ import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
 import static org.boon.criteria.CriteriaFactory.eq;
+import static org.boon.criteria.CriteriaFactory.eqNested;
 import static org.boon.criteria.CriteriaFactory.notEq;
+
+
+import com.examples.model.test.UserEmail;
+
 
 public class DataRepoExamples {
 
@@ -138,6 +144,83 @@ public class DataRepoExamples {
         } catch (DataRepoException ex) {
             puts ("success for Example 6");
         }
+
+
+        runComponentClassTestForIssue ();
+
+
+    }
+
+    private static void runComponentClassTestForIssue () {
+        //TESTS
+
+        putl ("EXAMPLE: Simple Composite Object query example",
+                "See com.examples.model.test",
+                "See Email and UserEmail classes",
+                "__________________________________________"
+            );
+
+
+        boolean ok = true;
+
+        RepoBuilder repoBuilder = Repos.builder ();
+
+        repoBuilder.usePropertyForAccess ( true );
+
+
+        putl ("The primary key is set to email");
+
+        repoBuilder.primaryKey ( "email" );
+
+
+        putl ("For ease of use you can setup nested properties ",
+                "UserEmail.email property is a Email object not a string",
+                "Email.email is a string.");
+
+        //You can index component objects if you want
+        repoBuilder.nestedIndex ( "email", "email" );
+
+
+        /** Create a repo of type String.class and User.class */
+        final Repo<Email, UserEmail> userRepo = repoBuilder.build ( Email.class, UserEmail.class );
+
+
+        puts("Adding three test objects for bob, sam and joe ");
+        userRepo.add ( new UserEmail ( "bob@bob.com" ) );
+        userRepo.add ( new UserEmail ( "sam@bob.com" ) );
+        userRepo.add ( new UserEmail ( "joe@bob.com" ) );
+
+
+        putl("Query using nested query Repo.eqNested()");
+        UserEmail bob = (UserEmail) userRepo.results ( eqNested ( "bob@bob.com", "email", "email" ) )
+                .expectOne ().firstItem ();
+
+        ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die();
+
+
+        putl("Avoid the cast with using nested query Repo.eqNested(UserEmail.class)");
+
+        //NOT IN JDK7 Branch yet , but there is a generic version coming
+        bob = userRepo.results ( eqNested ( "bob@bob.com", "email", "email" ) )
+                .expectOne (UserEmail.class).firstItem ();
+
+
+        ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die();
+
+
+
+        Email email = new Email ( "bob@bob.com" );
+        bob = (UserEmail) userRepo.results ( eq ( EMAIL, email ) )
+                .expectOne ().firstItem ();
+
+        ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die();
+
+        puts("success=", ok);
+
+
+        putl("__________________________________________",
+             "__________________________________________",
+             "__________________________________________");
 
 
     }
