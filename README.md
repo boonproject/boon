@@ -5,6 +5,7 @@ Simple opinionated Java for the novice to expert level Java Programmer.
 
 Low Ceremony. High Productivity.
 
+Boon Home: http://richardhightower.github.io/site/Boon/Welcome.html
 
 
 
