@@ -50,9 +50,10 @@ public class DataRepoExamples {
 
 
         /** Create a repo of type String.class and User.class */
-        final Repo<String,User> userRepo = repoBuilder.build ( Typ.string, user );
+        final Repo< String, User > userRepo = repoBuilder.build ( Typ.string, user );
 
-        final List<User> users = Lists.list ( user ( "rick.hightower@foo.com" ),
+        final List<User> users = Lists.list (
+                user ( "rick.hightower@foo.com" ),
                 user ( "bob.jones@foo.com" ),
                 user ( "sam.jones@google.com" )
         );
@@ -110,7 +111,8 @@ public class DataRepoExamples {
         /////// 4
         /** Example 4: Expect only one item with expectOne().firstItem() . */
         rick =  (User)     //expectOne is not generic
-                userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) ).expectOne ().firstItem ();
+                userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) )
+                        .expectOne ().firstItem ();
         putl ( "Example 4: Simple query using ResultSet.expectOne().firstItem", rick );
 
 
@@ -122,7 +124,8 @@ public class DataRepoExamples {
 
         /////// 5
         /** Example 5: Expect only one item with expectOne(user).firstItem() . */
-        rick =  userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) ).expectOne (user).firstItem ();
+        rick =  userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) )
+                .expectOne (user).firstItem ();
         putl ( "Example 5: Simple query using ResultSet.expectOne(user).firstItem", rick );
 
 
@@ -138,7 +141,8 @@ public class DataRepoExamples {
             putl ( "Example 6: Failure case, we have more than one for",
                     "query using ResultSet.expectOne(user).firstItem");
 
-            rick =  userRepo.results ( notEq ( EMAIL, "rick.hightower@foo.com" ) ).expectOne (user).firstItem ();
+            rick =  userRepo.results ( notEq ( EMAIL, "rick.hightower@foo.com" ) )
+                    .expectOne (user).firstItem ();
             die("We should never get here!");
 
         } catch (DataRepoException ex) {
@@ -182,7 +186,8 @@ public class DataRepoExamples {
 
 
         /** Create a repo of type String.class and User.class */
-        final Repo<Email, UserEmail> userRepo = repoBuilder.build ( Email.class, UserEmail.class );
+        final Repo<Email, UserEmail> userRepo = repoBuilder.build (
+                                                Email.class, UserEmail.class );
 
 
         puts("Adding three test objects for bob, sam and joe ");
@@ -192,7 +197,8 @@ public class DataRepoExamples {
 
 
         putl("Query using nested query Repo.eqNested()");
-        UserEmail bob = (UserEmail) userRepo.results ( eqNested ( "bob@bob.com", "email", "email" ) )
+        UserEmail bob = (UserEmail) userRepo.results (
+                    eqNested ( "bob@bob.com", "email", "email" ) )
                 .expectOne ().firstItem ();
 
         ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die();
