@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
+import static org.boon.Lists.copy;
 import static org.boon.Lists.list;
 
 
@@ -40,9 +41,10 @@ public class BenchMark {
 
         Map<String, List<MeasuredRun>> testResults = new ConcurrentHashMap<>();
 
-        MeasuredRun run1 = test(employees, testResults);
+        MeasuredRun run1 = testIndex(employees, testResults);
+        MeasuredRun run2 = testLinear(employees, testResults);
 
-        List<MeasuredRun> runs = list(run1);
+        List<MeasuredRun> runs = list(run1, run2);
 
 
         for (int index = 0; index < 2; index++) {
@@ -76,8 +78,8 @@ public class BenchMark {
     }
 
 
-    private static MeasuredRun test(final List<Employee> employees, final Map<String, List<MeasuredRun>> results) {
-        return new MeasuredRun("test", 1000, 1_000_000, results) {
+    private static MeasuredRun testIndex(final List<Employee> employees, final Map<String, List<MeasuredRun>> results) {
+        return new MeasuredRun("index ", 1000, 1_000_000, results) {
             Repo repo;
             Criteria exp = eq("firstName", "Mike");
 
@@ -95,6 +97,37 @@ public class BenchMark {
             @Override
             protected void test() {
                 List<Employee> results = repo.query(exp);
+
+                boolean found = false;
+                for (Employee employee : results) {
+                    if (employee.getFirstName().equals("Mike")
+                            && employee.getLastName().equals("Middleoflist")) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    die("not found");
+                }
+
+            }
+        };
+    }
+
+
+    private static MeasuredRun testLinear(final List<Employee> employees, final Map<String, List<MeasuredRun>> results) {
+        return new MeasuredRun("linear ", 10, 1_000, results) {
+
+            List<Employee> results;
+            @Override
+            protected void init() {
+                results = copy(employees);
+
+
+            }
+
+            @Override
+            protected void test() {
 
                 boolean found = false;
                 for (Employee employee : results) {

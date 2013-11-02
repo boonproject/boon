@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Boon.println;
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.criteria.CriteriaFactory.eq;
 
@@ -60,11 +62,11 @@ public class BenchMarkMainSimpleSearch {
                 System.gc();
                 Thread.sleep(10);
                 run.run();
-                System.out.printf("%s\t%s", run.name(), run.time());
+                puts ( "Name", run.name (), "Time", run.time () );
             }
         }
 
-        System.out.println("done");
+        println ( "done" );
 
 
     }
