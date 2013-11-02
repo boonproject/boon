@@ -1,7 +1,9 @@
-package org.boon;
+package com.examples;
 
 
+import org.boon.*;
 import org.boon.primitive.Chr;
+import org.junit.Test;
 
 import java.util.*;
 
@@ -12,12 +14,16 @@ import static org.boon.primitive.Byt.*;
 import static org.boon.primitive.Chr.*;
 
 /**
- * TODO exclude this from the jar file.
  */
-public class Example {
+public class SliceNotationExample {
 
 
-    public static void main(String [] args) {
+    @Test
+    public void test() {
+        SliceNotationExample.main ( );
+    }
+
+    public static void main(String... args) {
             collectionAndBasicTypes();
             strings();
 
@@ -31,8 +37,8 @@ public class Example {
 
         worked &=
 
-                Str.idx(letters, 0)  == 'a'
-                        || Exceptions.die("0 index is equal to a");
+                Str.idx ( letters, 0 )  == 'a'
+                        || Exceptions.die ( "0 index is equal to a" );
 
 
 
@@ -102,14 +108,14 @@ public class Example {
         // Sets and lists have concurrent and non concurrent variants
         // Set also has sorted and non sorted variants
         // This makes safeList, listStream, set, sortedSet, safeSet, safeSortedSet
-        veggiesSet  =  Sets.sortedSet("salad", "broccoli", "spinach");
-        fruitList   =  Lists.list("apple", "oranges", "pineapple");
+        veggiesSet  =  Sets.sortedSet ( "salad", "broccoli", "spinach" );
+        fruitList   =  Lists.list ( "apple", "oranges", "pineapple" );
         fruitArray  =  array( "apple", "oranges", "pineapple");
         letters     =  Chr.array('a', 'b', 'c');
         bytes       =  array( new byte[]{0x1, 0x2, 0x3, 0x4});
 
         //You add up name / value pairs as a pseudo literal for map
-        favoritesMap = Maps.sortedMap(
+        favoritesMap = Maps.sortedMap (
                 2, "pineapple",
                 1, "oranges",
                 3, "apple"

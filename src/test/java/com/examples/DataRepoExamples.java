@@ -61,13 +61,13 @@ public class DataRepoExamples {
 
         userRepo.addAll ( users );
 
-        /** Example 1: Query with eq. */
+        /** SliceNotationExample 1: Query with eq. */
 
         /** Simple query. */
         List<User> results =
                 userRepo.query ( eq( EMAIL, "rick.hightower@foo.com") );
 
-        putl ( "Example 1: Simple Query using Equals Results", results );
+        putl ( "SliceNotationExample 1: Simple Query using Equals Results", results );
 
         /** Same as results.get(0) */
         User rick = idx (results, 0);
@@ -78,11 +78,11 @@ public class DataRepoExamples {
 
 
         ////// 2
-        /** Example 2: Simple not query. */
+        /** SliceNotationExample 2: Simple not query. */
         results =
                 userRepo.query ( notEq( EMAIL, "rick.hightower@foo.com" ) );
 
-        putl ( "Example 2: Simple Query using Not Equals Results", results );
+        putl ( "SliceNotationExample 2: Simple Query using Not Equals Results", results );
 
         /** Same as results.get(0) */
         User notRick = idx (results, 0);
@@ -96,10 +96,10 @@ public class DataRepoExamples {
 
 
         /////// 3
-        /** Example 3: Simple query using ResultSet.firstItem. */
+        /** SliceNotationExample 3: Simple query using ResultSet.firstItem. */
         rick =
                 userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) ).firstItem ();
-        putl ( "Example 3: Simple query using ResultSet.firstItem", rick );
+        putl ( "SliceNotationExample 3: Simple query using ResultSet.firstItem", rick );
 
 
                 /* Make sure we got what we wanted. */
@@ -109,11 +109,11 @@ public class DataRepoExamples {
 
 
         /////// 4
-        /** Example 4: Expect only one item with expectOne().firstItem() . */
+        /** SliceNotationExample 4: Expect only one item with expectOne().firstItem() . */
         rick =  (User)     //expectOne is not generic
                 userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) )
                         .expectOne ().firstItem ();
-        putl ( "Example 4: Simple query using ResultSet.expectOne().firstItem", rick );
+        putl ( "SliceNotationExample 4: Simple query using ResultSet.expectOne().firstItem", rick );
 
 
                 /* Make sure we got what we wanted. */
@@ -123,10 +123,10 @@ public class DataRepoExamples {
 
 
         /////// 5
-        /** Example 5: Expect only one item with expectOne(user).firstItem() . */
+        /** SliceNotationExample 5: Expect only one item with expectOne(user).firstItem() . */
         rick =  userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) )
                 .expectOne (user).firstItem ();
-        putl ( "Example 5: Simple query using ResultSet.expectOne(user).firstItem", rick );
+        putl ( "SliceNotationExample 5: Simple query using ResultSet.expectOne(user).firstItem", rick );
 
 
                 /* Make sure we got what we wanted. */
@@ -135,10 +135,10 @@ public class DataRepoExamples {
 
 
         /////// 6
-        /** Example 6: Expect only one item with expectOne(user).firstItem() and we have many. */
+        /** SliceNotationExample 6: Expect only one item with expectOne(user).firstItem() and we have many. */
 
         try {
-            putl ( "Example 6: Failure case, we have more than one for",
+            putl ( "SliceNotationExample 6: Failure case, we have more than one for",
                     "query using ResultSet.expectOne(user).firstItem");
 
             rick =  userRepo.results ( notEq ( EMAIL, "rick.hightower@foo.com" ) )
@@ -146,7 +146,7 @@ public class DataRepoExamples {
             die("We should never get here!");
 
         } catch (DataRepoException ex) {
-            puts ("success for Example 6");
+            puts ("success for SliceNotationExample 6");
         }
 
 

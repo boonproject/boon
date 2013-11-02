@@ -1,7 +1,7 @@
 package org.boon;
 
 
-import org.boon.Example;
+import com.examples.SliceNotationExample;
 import org.junit.Test;
 
 public class ExampleTest {
@@ -9,6 +9,6 @@ public class ExampleTest {
 
     @Test
     public void runMain() {
-        Example.main(null);
+        SliceNotationExample.main ( null );
     }
 }
