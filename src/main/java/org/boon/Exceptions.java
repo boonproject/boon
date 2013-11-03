@@ -34,10 +34,7 @@ public class Exceptions {
 
     public static <T> T handle(Class<T> clazz,  String message, java.lang.Exception e) {
 
-        if (e instanceof SoftenedException) {
-            throw (SoftenedException) e;
-        }
-        throw new SoftenedException(e);
+        throw new SoftenedException(message, e);
     }
 
 

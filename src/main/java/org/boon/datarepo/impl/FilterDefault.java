@@ -313,7 +313,7 @@ public class FilterDefault implements Filter, FilterComposer {
         foundIndex = true;
 
         if (!criterion.isInitialized()) {
-            criterion.init(this.fields);
+            criterion.initByFields ( this.fields );
         }
 
         switch (operator) {
@@ -345,12 +345,15 @@ public class FilterDefault implements Filter, FilterComposer {
                 break;
         }
 
+        criterion.clean ();
+
         if (resultList != null) {
             resultSet.addResults(resultList);
             return foundIndex;
         } else {
             return foundIndex;
         }
+
     }
 
     private List processResultsFromIndex(SearchIndex searchIndex, List results) {

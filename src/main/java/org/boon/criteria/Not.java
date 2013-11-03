@@ -13,7 +13,12 @@ public class Not extends Criteria {
     }
 
     @Override
-    public void prepare ( Map<String, FieldAccess> fields, Object owner ) {
+    public void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
+
+    }
+
+    @Override
+    public void cleanAfterGroupTest () {
 
     }
 

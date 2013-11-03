@@ -27,12 +27,16 @@ public class Conversions {
 
     public static int toInt(Object obj) {
         if (obj.getClass() == int.class) {
-            return (Integer) obj;
+            return int.class.cast ( obj );
         }
         try {
             if (obj instanceof Number) {
                 return ((Number) obj).intValue();
-            } else if (obj instanceof CharSequence) {
+            } else if (obj instanceof Boolean || obj.getClass ()==Boolean.class) {
+                boolean value = toBoolean ( obj );
+                return value ? 1 : 0;
+            }
+            else if (obj instanceof CharSequence) {
                 try {
                     return Integer.parseInt(((CharSequence) obj).toString());
                 } catch (Exception ex) {
@@ -74,123 +78,54 @@ public class Conversions {
 
     public static byte toByte(Object obj) {
         if (obj.getClass() == byte.class) {
-            return (Byte) obj;
-        }
-        try {
-            if (obj instanceof Number) {
+            return byte.class.cast ( obj );
+        } else if (obj instanceof Number) {
                 return ((Number) obj).byteValue();
-            } else if (obj instanceof CharSequence) {
-                try {
-                    return Byte.parseByte(((CharSequence) obj).toString());
-                } catch (Exception ex) {
-                    char[] chars = toString(obj).toCharArray();
-                    boolean found = false;
-                    CharBuf builder = CharBuf.create(chars.length);
-                    for (char c : chars) {
-                        if (Character.isDigit(c) && !found) {
-                            found = true;
-                            builder.add(c);
-                        } else if (Character.isDigit(c) && found) {
-                            builder.add(c);
-                        } else if (!Character.isDigit(c) && found) {
-                        }
-                    }
-                    try {
-                        if (builder.len() > 0) {
-                            return Byte.parseByte(builder.toString());
-                        }
-                    } catch (Exception ex2) {
-                        log.warning(String.format(
-                                "unable to convert to byte and there was an exception %s",
-                                ex2.getMessage()));
-                    }
-                }
-            } else {
-            }
-        } catch (Exception ex) {
-                log.warning(String.format(
-                        "unable to convert to byte and there was an exception %s",
-                        ex.getMessage()));
+        } else  {
+                return (byte) toInt ( obj );
         }
-        die(String.format("Unable to convert %s to a byte", obj.getClass()));
-        return -66; // die throws an exception
-
     }
 
     public static short toShort(Object obj) {
 
         if (obj.getClass() == short.class) {
-            return (Short) obj;
-        }
-
-        try {
-            if (obj instanceof Number) {
+                return short.class.cast ( obj );
+        } else if (obj instanceof Number) {
                 return ((Number) obj).shortValue();
-            } else if (obj instanceof CharSequence) {
-                try {
-                    return Short.parseShort(((CharSequence) obj).toString());
-                } catch (Exception ex) {
-                    char[] chars = toString(obj).toCharArray();
-                    boolean found = false;
-                    CharBuf builder = CharBuf.create(chars.length);
-                    for (char c : chars) {
-                        if (Character.isDigit(c) && !found) {
-                            found = true;
-                            builder.add(c);
-                        } else if (Character.isDigit(c) && found) {
-                            builder.add(c);
-                        } else if (!Character.isDigit(c) && found) {
-                        }
-                    }
-                    try {
-                        if (builder.len() > 0) {
-                            return Short.parseShort(builder.toString());
-                        }
-                    } catch (Exception ex2) {
-                        log.warning(String.format(
-                                "unable to convert to byte and there was an exception %s",
-                                ex2.getMessage()));
-
-                    }
-                }
-            } else {
-            }
-        } catch (Exception ex) {
-            log.warning(String.format(
-                    "unable to convert to byte and there was an exception %s",
-                    ex.getMessage()));
+        } else {
+                return (short) toInt( obj );
         }
-        die(String.format("Unable to convert %s to a short", obj.getClass()));
-        return -66; // die throws an exception
-
     }
 
     public static char toChar(Object obj) {
         if (obj.getClass() == char.class) {
-            return (Character) obj;
-        }
-
-        try {
-            if (obj instanceof Character) {
+            return char.class.cast ( obj );
+        }  else if (obj instanceof Character) {
                 return ((Character) obj).charValue();
-            } else if (obj instanceof CharSequence) {
-                obj.toString().charAt(0);
-            } else {
-            }
-        } catch (Exception ex) {
-            log.warning(String.format(
-                    "unable to convert to char and there was an exception %s",
-                    ex.getMessage()));
+        } else if (obj instanceof CharSequence) {
+                return obj.toString().charAt(0);
+        } else if (obj instanceof Number ) {
+                return (char)   toInt ( obj );
+        } else if ( obj instanceof Boolean || obj.getClass ()==Boolean.class) {
+                boolean value = toBoolean ( obj );
+                return value ? 'T' : 'F';
+        } else if (obj.getClass ().isPrimitive ())  {
+                return (char)   toInt ( obj );
         }
-        die(String.format("Unable to convert %s to a char", obj.getClass()));
-        return 'Z'; // die throws an exception
-
+        else {
+            String str = toString ( obj );
+            if (str.length () > 0) {
+                return str.charAt ( 0 );
+            } else {
+                return '0';
+            }
+        }
     }
 
     public static long toLong(Object obj) {
 
         if (obj.getClass() == long.class) {
-            return (Long) obj;
+            return long.class.cast ( obj );
         }
 
         try {
@@ -225,6 +160,7 @@ public class Conversions {
                     }
                 }
             } else {
+                return toInt( obj );
             }
         } catch (Exception ex) {
             log.warning(String.format(
@@ -239,16 +175,18 @@ public class Conversions {
     }
 
     final static Set<String> TRUE_SET = Sets.set("t", "true", "True", "y", "yes", "1", "aye",
-            "ofcourse", "T", "TRUE", "ok");
+            "T", "TRUE", "ok");
 
     public static boolean toBoolean(Object obj) {
 
         if (obj.getClass() == boolean.class) {
-            return (Boolean) obj;
-        }
-
-
-        if (obj instanceof String || obj instanceof CharSequence
+            return boolean.class.cast ( obj );
+        } else if (obj instanceof Boolean) {
+            return ((Boolean) obj).booleanValue();
+        } else if ( obj instanceof Number || obj.getClass().isPrimitive ()) {
+               int value = toInt( obj );
+               return value != 0 ? true : false;
+        } else if (obj instanceof String || obj instanceof CharSequence
                 || obj.getClass() == char[].class) {
             String str = Conversions.toString(obj);
             if (str.length() == 0) {
@@ -256,9 +194,7 @@ public class Conversions {
             } else {
                 return Sets.in(str, TRUE_SET);
             }
-        } else if (obj instanceof Boolean) {
-            return ((Boolean) obj).booleanValue();
-        } else if (Reflection.isArray(obj) || obj instanceof Collection) {
+        }  else if (Reflection.isArray(obj) || obj instanceof Collection) {
             return Reflection.len(obj) > 0;
         } else {
             return toBoolean(Conversions.toString(obj));
@@ -625,14 +561,7 @@ public class Conversions {
 
 
     public static String toString(Object obj) {
-        if (obj == null) {
-            return "";
-        }
-        if (obj instanceof String) {
-            return (String) obj;
-        } else {
-            return obj.toString();
-        }
+        return String.valueOf ( obj );
     }
 
     public static Number toWrapper(long l) {

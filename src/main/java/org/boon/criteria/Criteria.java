@@ -19,7 +19,11 @@ public abstract class Criteria implements Predicate {
         fieldsLocal.set(null);
     }
 
-    public abstract void prepare(Map<String, FieldAccess> fields, Object owner);
+    public abstract void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner );
+
+
+
+    public abstract void cleanAfterGroupTest (  );
 
     public abstract boolean resolve(Map<String, FieldAccess> fields, Object owner);
 

@@ -203,7 +203,7 @@ public class Collections {
         SearchableCollectionComposer query = SPIFactory.getSearchableCollectionFactory().get();
 
 
-        Map<String, FieldAccess> fields = new HashMap<>();
+        Map<String, FieldAccess> fields = new LinkedHashMap<> ();
 
         for (Class<?> cls : classes) {
 
@@ -215,6 +215,8 @@ public class Collections {
                     fields.put(sKey, fieldsSubType.get(sKey));
                 }
             }
+
+
         }
 
         String primaryKey = findPrimaryKey(fields);

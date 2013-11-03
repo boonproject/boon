@@ -1,5 +1,6 @@
 package org.boon.criteria;
 
+import org.boon.Exceptions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.Conversions;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.boon.Boon.sputl;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 
@@ -26,6 +28,12 @@ public abstract class Criterion<VALUE> extends Criteria {
     private boolean initialized;
     private Criterion nativeDelegate;
     private boolean useDelegate;
+
+    private FieldAccess field;
+
+    private Object objectUnderTest;
+
+    private Map<String, FieldAccess> fields;
 
     public Criterion(String name, Operator operator, VALUE... values) {
         Objects.requireNonNull( name,       "name cannot be null");
@@ -120,401 +128,100 @@ public abstract class Criterion<VALUE> extends Criteria {
         return initialized;
     }
 
-    public void init(Object o) {
-        init(o.getClass());
+
+    public void initByClass ( Class clazz ) {
+
+        this.fields = getFieldsInternal(clazz);
+        initIfNeeded();
     }
 
-    public void init(Class clazz) {
-        Map<String, FieldAccess> fields = getFieldsInternal(clazz);
-        initIfNeeded(this, fields);
+    public void initByFields(Map<String, FieldAccess> fields) {
+        this.fields = fields;
+        initIfNeeded();
     }
 
-    public void init(Map<String, FieldAccess> fields) {
-        initIfNeeded(this, fields);
-    }
-
-
-    private static void initIfNeeded(Criterion criterion, Map<String, FieldAccess> fields) {
-        if (!criterion.initialized) {
-            criterion.initialized = true;
-            FieldAccess field = fields.get(criterion.name);
-
-            if (field == null) {
-                return;
-            }
-
-            Class type = field.getType();
-
-
-            if (!type.isPrimitive() && type != Typ.date) {
-                return;
-            }
-
-
-            if (type == Typ.date && !(criterion.value instanceof Date)) {
-                criterion.value = Conversions.toDate(criterion.value);
-                if (criterion.operator == Operator.BETWEEN) {
-                    criterion.values[0] = Conversions.toDate(criterion.values[0]);
-
-                    criterion.values[1] = Conversions.toDate(criterion.values[1]);
-
-                }
-                return;
-            }
-
-            criterion.useDelegate = true;
-
-            if (type == Typ.intgr) {
-                switch (criterion.operator) {
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqInt(criterion.name, Conversions.toInt(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqInt(criterion.name, Conversions.toInt(criterion.value));
-                        break;
-
-                    case LESS_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.ltInt(criterion.name, Conversions.toInt(criterion.value));
-                        break;
-
-                    case LESS_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.lteInt(criterion.name, Conversions.toInt(criterion.value));
-                        break;
-
-                    case GREATER_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.gtInt(criterion.name, Conversions.toInt(criterion.value));
-                        break;
-
-                    case GREATER_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.gteInt(criterion.name, Conversions.toInt(criterion.value));
-                        break;
-
-                    case BETWEEN:
-                        criterion.nativeDelegate = CriteriaFactory.betweenInt(criterion.name, Conversions.toInt(criterion.value),
-                                Conversions.toInt(criterion.values[1]));
-                        break;
-
-                    case IN:
-                        criterion.nativeDelegate = CriteriaFactory.inInts(criterion.name, Conversions.iarray(criterion.values));
-                        break;
-
-
-                    case NOT_IN:
-                        criterion.nativeDelegate = CriteriaFactory.notInInts(criterion.name, Conversions.iarray(criterion.values));
-
-                        break;
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-            } else if (type == Typ.bt) {
-                switch (criterion.operator) {
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqByte(criterion.name, Conversions.toByte(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqByte(criterion.name, Conversions.toByte(criterion.value));
-                        break;
-
-                    case LESS_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.ltByte(criterion.name, Conversions.toByte(criterion.value));
-                        break;
-
-                    case LESS_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.lteByte(criterion.name, Conversions.toByte(criterion.value));
-                        break;
-
-                    case GREATER_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.gtByte(criterion.name, Conversions.toByte(criterion.value));
-                        break;
-
-                    case GREATER_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.gteByte(criterion.name, Conversions.toByte(criterion.value));
-                        break;
-
-                    case IN:
-                        criterion.nativeDelegate = CriteriaFactory.inBytes(criterion.name, Conversions.barray(criterion.values));
-                        break;
-
-
-                    case NOT_IN:
-                        criterion.nativeDelegate = CriteriaFactory.notInBytes(criterion.name, Conversions.barray(criterion.values));
-
-                        break;
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-
-            } else if (type == Typ.shrt) {
-                switch (criterion.operator) {
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqShort(criterion.name, Conversions.toShort(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqShort(criterion.name, Conversions.toShort(criterion.value));
-                        break;
-
-                    case LESS_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.ltShort(criterion.name, Conversions.toShort(criterion.value));
-                        break;
-
-                    case LESS_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.lteShort(criterion.name, Conversions.toShort(criterion.value));
-                        break;
-
-                    case GREATER_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.gtShort(criterion.name, Conversions.toShort(criterion.value));
-                        break;
-
-                    case GREATER_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.gteShort(criterion.name, Conversions.toShort(criterion.value));
-                        break;
-
-                    case IN:
-                        criterion.nativeDelegate = CriteriaFactory.inShorts(criterion.name, Conversions.sarray(criterion.values));
-                        break;
-
-
-                    case NOT_IN:
-                        criterion.nativeDelegate = CriteriaFactory.notInShorts(criterion.name, Conversions.sarray(criterion.values));
-
-                        break;
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-
-            } else if (type == Typ.lng) {
-                switch (criterion.operator) {
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqLong(criterion.name, Conversions.toLong(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqLong(criterion.name, Conversions.toLong(criterion.value));
-                        break;
-
-                    case LESS_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.ltLong(criterion.name, Conversions.toLong(criterion.value));
-                        break;
-
-                    case LESS_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.lteLong(criterion.name, Conversions.toLong(criterion.value));
-                        break;
-
-                    case GREATER_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.gtLong(criterion.name, Conversions.toLong(criterion.value));
-                        break;
-
-                    case GREATER_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.gteLong(criterion.name, Conversions.toLong(criterion.value));
-                        break;
-
-                    case IN:
-                        criterion.nativeDelegate = CriteriaFactory.inLongs(criterion.name, Conversions.larray(criterion.values));
-                        break;
-
-
-                    case NOT_IN:
-                        criterion.nativeDelegate = CriteriaFactory.notInLongs(criterion.name, Conversions.larray(criterion.values));
-
-                        break;
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-
-
-            } else if (type == Typ.flt) {
-
-
-                switch (criterion.operator) {
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqFloat(criterion.name, Conversions.toFloat(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqFloat(criterion.name, Conversions.toFloat(criterion.value));
-                        break;
-
-                    case LESS_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.ltFloat(criterion.name, Conversions.toFloat(criterion.value));
-                        break;
-
-                    case LESS_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.lteFloat(criterion.name, Conversions.toFloat(criterion.value));
-                        break;
-
-                    case GREATER_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.gtFloat(criterion.name, Conversions.toFloat(criterion.value));
-                        break;
-
-                    case GREATER_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.gteFloat(criterion.name, Conversions.toFloat(criterion.value));
-                        break;
-
-                    case IN:
-                        criterion.nativeDelegate = CriteriaFactory.inFloats(criterion.name, Conversions.farray(criterion.values));
-                        break;
-
-
-                    case NOT_IN:
-                        criterion.nativeDelegate = CriteriaFactory.notInFloats(criterion.name, Conversions.farray(criterion.values));
-
-                        break;
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-
-            } else if (type == Typ.dbl) {
-
-                switch (criterion.operator) {
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqDouble(criterion.name, Conversions.toDouble(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqDouble(criterion.name, Conversions.toDouble(criterion.value));
-                        break;
-
-                    case LESS_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.ltDouble(criterion.name, Conversions.toDouble(criterion.value));
-                        break;
-
-                    case LESS_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.lteDouble(criterion.name, Conversions.toDouble(criterion.value));
-                        break;
-
-                    case GREATER_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.gtDouble(criterion.name, Conversions.toDouble(criterion.value));
-                        break;
-
-                    case GREATER_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.gteDouble(criterion.name, Conversions.toDouble(criterion.value));
-                        break;
-
-                    case BETWEEN:
-                        criterion.nativeDelegate = CriteriaFactory.betweenDouble(criterion.name, Conversions.toDouble(criterion.value),
-                                Conversions.toDouble(criterion.values[1]));
-                        break;
-
-                    case IN:
-                        criterion.nativeDelegate = CriteriaFactory.inDoubles(criterion.name, Conversions.toDouble(criterion.value),
-                                Conversions.toDouble(criterion.values[1]));
-                        break;
-
-
-                    case NOT_IN:
-                        criterion.nativeDelegate = CriteriaFactory.notInDoubles(criterion.name, Conversions.toDouble(criterion.value),
-                                Conversions.toDouble(criterion.values[1]));
-                        break;
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-
-
-            } else if (type == Typ.bln) {
-
-
-                switch (criterion.operator) {
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqBoolean(criterion.name, Conversions.toBoolean(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqBoolean(criterion.name, Conversions.toBoolean(criterion.value));
-                        break;
-
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-
-            } else if (type == Typ.chr) {
-                switch (criterion.operator) {
-
-
-                    case EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.eqChar(criterion.name, Conversions.toChar(criterion.value));
-                        break;
-
-                    case NOT_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.notEqChar(criterion.name, Conversions.toChar(criterion.value));
-                        break;
-
-                    case LESS_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.ltChar(criterion.name, Conversions.toChar(criterion.value));
-                        break;
-
-                    case LESS_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.lteChar(criterion.name, Conversions.toChar(criterion.value));
-                        break;
-
-                    case GREATER_THAN:
-                        criterion.nativeDelegate = CriteriaFactory.gtChar(criterion.name, Conversions.toChar(criterion.value));
-                        break;
-
-                    case GREATER_THAN_EQUAL:
-                        criterion.nativeDelegate = CriteriaFactory.gteChar(criterion.name, Conversions.toChar(criterion.value));
-                        break;
-
-                    case BETWEEN:
-                        criterion.nativeDelegate = CriteriaFactory.betweenChar(criterion.name, Conversions.toChar(criterion.value),
-                                Conversions.toChar(criterion.values[1]));
-                        break;
-
-                    case IN:
-                        criterion.nativeDelegate = CriteriaFactory.inChars(criterion.name, Conversions.toChar(criterion.value),
-                                Conversions.toChar(criterion.values[1]));
-                        break;
-
-
-                    case NOT_IN:
-                        criterion.nativeDelegate = CriteriaFactory.notInChars(criterion.name, Conversions.toChar(criterion.value),
-                                Conversions.toChar(criterion.values[1]));
-                        break;
-
-                    default:
-                        criterion.useDelegate = false;
-                }
-
-            }
-        }
-
-    }
 
 
 
     //Only called when part of group.
-    public  void prepare(Map<String, FieldAccess> fields, Object owner) {
-        initIfNeeded(this, fields);
+    public  void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
+
+        this.fields = fields;
+        this.objectUnderTest = owner;
+
+
+    }
+
+    public  void cleanAfterGroupTest( ) {
+        clean();
+    }
+
+    public  void clean( ) {
+        this.field = null;
+        this.fields = null;
+        this.objectUnderTest = null;
 
     }
 
     @Override
     public boolean test(Object o) {
 
-        Objects.requireNonNull ( o, "object under test can't be null" );
 
 
-        Map<String, FieldAccess> fields = getFieldsInternal(o);
+        try {
 
-        initIfNeeded(this, fields);
-        if (this.useDelegate) {
-            return this.nativeDelegate.resolve(fields, o);
+            Objects.requireNonNull ( o, "object under test can't be null" );
+
+            this.objectUnderTest = o;
+
+            initIfNeeded( );
+            if (this.useDelegate) {
+
+                return this.nativeDelegate.resolve(fields, o);
+            }
+
+
+            boolean result = resolve(fields, o);
+
+            return  result;
+
+        } catch (Exception ex) {
+            return Exceptions.handle (Typ.bool,
+                    sputl("In class " + this.getClass ().getName (),
+                            "the test method is unable to test the following criteria operator",
+                            Objects.toString ( this.getOperator () )   ,
+                            sputs("The field name is          :          ",  this.getName ()),
+                            sputs("The value is               :          ",  this.getValue ()),
+                            sputs("The value type is          :          ",  this.getValue ().getClass ().getName ()),
+                            sputs("The object under test      :          ",  this.objectUnderTest),
+                            sputs("The object under test type :          ",
+                                    this.objectUnderTest == null ? "null" : this.objectUnderTest.getClass ().getName () ),
+                            sputs("Field                      :          ",
+                                    field ),
+                            sputs("Fields                     :          ",
+                                    fields ),
+
+                            sputs()
+
+                    )
+                    , ex);
         }
-
-
-        return resolve(fields, o);
     }
 
+    private FieldAccess field (  ) {
+        if ( field == null ) {
+            field = fields().get ( this.name );
+        }
+        return field;
+    }
 
+    private Map<String, FieldAccess> fields (  ) {
+
+        if (fields == null) {
+            fields = getFieldsInternal ( this.objectUnderTest ) ;
+        }
+        return fields;
+    }
 
     public static abstract class PrimitiveCriterion extends Criterion {
 
@@ -530,5 +237,472 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
 
     }
+
+
+
+
+    private void initForShortValue ( short v ) {
+
+        this.value = (VALUE) (Short)   v;
+
+        switch (operator) {
+            case EQUAL:
+                nativeDelegate = CriteriaFactory.eqShort( name, v );
+                break;
+
+            case NOT_EQUAL:
+                nativeDelegate = CriteriaFactory.notEqShort(name, v);
+                break;
+
+            case LESS_THAN:
+                nativeDelegate = CriteriaFactory.ltShort(name, v);
+                break;
+
+            case LESS_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.lteShort(name, v);
+                break;
+
+            case GREATER_THAN:
+                nativeDelegate = CriteriaFactory.gtShort(name, v);
+                break;
+
+            case GREATER_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.gteShort(name, v);
+                break;
+
+            case IN:
+                nativeDelegate = CriteriaFactory.inShorts(name, Conversions.sarray(values));
+                break;
+
+
+            case BETWEEN:
+                nativeDelegate = CriteriaFactory.betweenShort(name, (v),
+                        Conversions.toShort(values[1]));
+                break;
+
+
+
+
+            case NOT_IN:
+                nativeDelegate = CriteriaFactory.notInShorts(name, Conversions.sarray(values));
+
+                break;
+
+            default:
+                useDelegate = false;
+        }
+    }
+
+
+    private  void initIfNeeded( ) {
+
+        if (initialized) return;
+            initialized = true;
+
+        FieldAccess field = field();
+        if (field == null) {
+                return;
+        }
+
+        Class type = field.getType();
+
+
+        if (!type.isPrimitive() && type != Typ.date) {
+                return;
+        }
+
+
+
+        if ( type == Typ.date  ) {
+
+            if (!( value instanceof Date )) {
+                initForDate ();
+            }
+            return;
+        }
+
+
+        useDelegate = true;
+
+
+
+        if (type == Typ.intgr) {
+                int v = Conversions.toInt ( value );
+                initForInt ( v );
+            } else if (type == Typ.bt) {
+
+                byte v = Conversions.toByte ( value );
+
+                initForByte ( v );
+
+            } else if (type == Typ.shrt) {
+
+                short v = Conversions.toShort ( value );
+
+                initForShortValue ( v );
+
+            } else if (type == Typ.lng) {
+
+                long v = Conversions.toLong ( value );
+
+                initForLong ( v );
+
+
+            } else if (type == Typ.flt) {
+
+                float v = Conversions.toFloat ( value );
+
+
+
+                initForFloat ( v );
+
+            } else if (type == Typ.dbl) {
+
+                double v = Conversions.toDouble ( value );
+
+                initForDouble ( v );
+
+
+            } else if (type == Typ.bln) {
+
+
+                switch (operator) {
+                    case EQUAL:
+                        nativeDelegate = CriteriaFactory.eqBoolean(name, Conversions.toBoolean(value));
+                        break;
+
+                    case NOT_EQUAL:
+                        nativeDelegate = CriteriaFactory.notEqBoolean(name, Conversions.toBoolean(value));
+                        break;
+
+
+                    default:
+                        useDelegate = false;
+                }
+
+            } else if (type == Typ.chr) {
+
+                char v = Conversions.toChar ( value );
+                initForChar ( v );
+
+            }
+
+
+    }
+
+    private void initForChar (char value) {
+
+
+        this.value = (VALUE) (Character)value;
+
+        switch (operator) {
+
+
+            case EQUAL:
+                nativeDelegate = CriteriaFactory.eqChar( name, ( value ) );
+                break;
+
+            case NOT_EQUAL:
+                nativeDelegate = CriteriaFactory.notEqChar(name, (value));
+                break;
+
+            case LESS_THAN:
+                nativeDelegate = CriteriaFactory.ltChar(name, (value));
+                break;
+
+            case LESS_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.lteChar(name, (value));
+                break;
+
+            case GREATER_THAN:
+                nativeDelegate = CriteriaFactory.gtChar(name, (value));
+                break;
+
+            case GREATER_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.gteChar(name, (value));
+                break;
+
+            case BETWEEN:
+                nativeDelegate = CriteriaFactory.betweenChar(name, (value),
+                        Conversions.toChar(values[1]));
+                break;
+
+            case IN:
+                nativeDelegate = CriteriaFactory.inChars(name, Conversions.carray ( values ) );
+                break;
+
+
+            case NOT_IN:
+                nativeDelegate = CriteriaFactory.notInChars(name, Conversions.carray ( values ) );
+                break;
+
+            default:
+                useDelegate = false;
+        }
+    }
+
+    private void initForDouble (double value) {
+
+        this.value = (VALUE) (Double) value;
+
+        switch (operator) {
+            case EQUAL:
+                nativeDelegate = CriteriaFactory.eqDouble( name, ( value ) );
+                break;
+
+            case NOT_EQUAL:
+                nativeDelegate = CriteriaFactory.notEqDouble(name, (value));
+                break;
+
+            case LESS_THAN:
+                nativeDelegate = CriteriaFactory.ltDouble(name, (value));
+                break;
+
+            case LESS_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.lteDouble(name, (value));
+                break;
+
+            case GREATER_THAN:
+                nativeDelegate = CriteriaFactory.gtDouble(name, (value));
+                break;
+
+            case GREATER_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.gteDouble(name, (value));
+                break;
+
+            case BETWEEN:
+                nativeDelegate = CriteriaFactory.betweenDouble(name, (value),
+                        Conversions.toDouble(values[1]));
+                break;
+
+            case IN:
+                nativeDelegate = CriteriaFactory.inDoubles(name,
+                        Conversions.darray ( values ));
+                break;
+
+
+            case NOT_IN:
+                nativeDelegate = CriteriaFactory.notInDoubles(name,
+                        Conversions.darray ( values ));
+                break;
+
+            default:
+                useDelegate = false;
+        }
+    }
+
+    private void initForFloat (float value ) {
+
+        this.value = (VALUE) (Float) value;
+
+        switch (operator) {
+            case EQUAL:
+                nativeDelegate = CriteriaFactory.eqFloat( name,  ( value ) );
+                break;
+
+            case NOT_EQUAL:
+                nativeDelegate = CriteriaFactory.notEqFloat(name, (value));
+                break;
+
+            case LESS_THAN:
+                nativeDelegate = CriteriaFactory.ltFloat(name, (value));
+                break;
+
+            case LESS_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.lteFloat(name, (value));
+                break;
+
+            case GREATER_THAN:
+                nativeDelegate = CriteriaFactory.gtFloat(name, (value));
+                break;
+
+            case GREATER_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.gteFloat(name, (value));
+                break;
+
+            case BETWEEN:
+                nativeDelegate = CriteriaFactory.betweenFloat ( name, ( value ),
+                        Conversions.toFloat ( values[ 1 ] ) );
+                break;
+
+            case IN:
+                nativeDelegate = CriteriaFactory.inFloats(name, Conversions.farray(values));
+                break;
+
+
+            case NOT_IN:
+                nativeDelegate = CriteriaFactory.notInFloats(name, Conversions.farray(values));
+
+                break;
+
+            default:
+                useDelegate = false;
+        }
+    }
+
+    private void initForLong ( long value ) {
+
+        this.value = (VALUE) (Long) value;
+
+        switch (operator) {
+            case EQUAL:
+                nativeDelegate = CriteriaFactory.eqLong( name,  ( value ) );
+                break;
+
+            case NOT_EQUAL:
+                nativeDelegate = CriteriaFactory.notEqLong(name, (value));
+                break;
+
+            case LESS_THAN:
+                nativeDelegate = CriteriaFactory.ltLong(name, (value));
+                break;
+
+            case LESS_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.lteLong(name, (value));
+                break;
+
+            case GREATER_THAN:
+                nativeDelegate = CriteriaFactory.gtLong(name, (value));
+                break;
+
+            case GREATER_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.gteLong(name, (value));
+                break;
+
+            case IN:
+                nativeDelegate = CriteriaFactory.inLongs(name, Conversions.larray(values));
+                break;
+
+
+            case BETWEEN:
+                nativeDelegate = CriteriaFactory.betweenLong(name, (value),
+                        Conversions.toLong(values[1]));
+                break;
+
+
+
+            case NOT_IN:
+                nativeDelegate = CriteriaFactory.notInLongs(name, Conversions.larray(values));
+
+                break;
+
+            default:
+                useDelegate = false;
+        }
+    }
+
+    private void initForByte  ( byte value ) {
+
+        this.value = (VALUE) (Byte) value;
+
+        switch (operator) {
+            case EQUAL:
+                nativeDelegate = CriteriaFactory.eqByte( name,  ( value ) );
+                break;
+
+            case NOT_EQUAL:
+                nativeDelegate = CriteriaFactory.notEqByte(name, (value));
+                break;
+
+            case LESS_THAN:
+                nativeDelegate = CriteriaFactory.ltByte(name, (value));
+                break;
+
+            case LESS_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.lteByte(name, (value));
+                break;
+
+            case GREATER_THAN:
+                nativeDelegate = CriteriaFactory.gtByte(name, (value));
+                break;
+
+            case GREATER_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.gteByte(name, (value));
+                break;
+
+            case IN:
+                nativeDelegate = CriteriaFactory.inBytes(name, Conversions.barray(values));
+                break;
+
+
+            case NOT_IN:
+                nativeDelegate = CriteriaFactory.notInBytes(name, Conversions.barray(values));
+
+                break;
+
+
+            case BETWEEN:
+                nativeDelegate = CriteriaFactory.betweenByte(name, (value),
+                        Conversions.toByte(values[1]));
+                break;
+
+
+
+            default:
+                useDelegate = false;
+        }
+    }
+
+    private void initForDate () {
+        value = (VALUE) Conversions.toDate ( value );
+
+        if (operator == Operator.BETWEEN) {
+            values[0] = (VALUE) Conversions.toDate( values[0] );
+
+            values[1] = (VALUE) Conversions.toDate( values[1] );
+
+        }
+
+    }
+
+    private void initForInt (int v) {
+        this.value = (VALUE) (Integer) v;
+
+
+        switch (operator) {
+            case EQUAL:
+                nativeDelegate = CriteriaFactory.eqInt( name, v );
+                break;
+
+            case NOT_EQUAL:
+                nativeDelegate = CriteriaFactory.notEqInt(name, v);
+                break;
+
+            case LESS_THAN:
+                nativeDelegate = CriteriaFactory.ltInt(name, v);
+                break;
+
+            case LESS_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.lteInt(name, v);
+                break;
+
+            case GREATER_THAN:
+                nativeDelegate = CriteriaFactory.gtInt(name, v);
+                break;
+
+            case GREATER_THAN_EQUAL:
+                nativeDelegate = CriteriaFactory.gteInt(name, v);
+                break;
+
+            case BETWEEN:
+                nativeDelegate = CriteriaFactory.betweenInt(name, v,
+                        Conversions.toInt(values[1]) );
+                break;
+
+            case IN:
+                nativeDelegate = CriteriaFactory.inInts(name, Conversions.iarray(values));
+                break;
+
+
+            case NOT_IN:
+                nativeDelegate = CriteriaFactory.notInInts(name, Conversions.iarray(values));
+
+                break;
+
+            default:
+                useDelegate = false;
+        }
+    }
+
 
 }

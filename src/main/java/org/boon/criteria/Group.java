@@ -5,7 +5,6 @@ import org.boon.primitive.CharBuf;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 
 public abstract class Group extends Criteria {
 
@@ -15,6 +14,18 @@ public abstract class Group extends Criteria {
     private String toString;
 
     private Grouping grouping = Grouping.AND;
+
+
+    //TODO there is an opportunity to optimize this so Group holds on to fields for subgroups.
+    @Override
+    public void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
+
+    }
+
+    @Override
+    public void cleanAfterGroupTest () {
+
+    }
 
     public Group(Grouping grouping, Criteria... expressions) {
         this.grouping = grouping;
@@ -87,18 +98,15 @@ public abstract class Group extends Criteria {
         }
 
 
-        @Override
-        public void prepare ( Map<String, FieldAccess> fields, Object owner ) {
-
-        }
 
         @Override
         public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
             for (Criteria c : expressions) {
-                c.prepare ( fields, owner );
-                if (!c.resolve ( fields, owner )) {
+                c.prepareForGroupTest ( fields, owner );
+                if (!c.test (  owner )) {
                     return false;
                 }
+                c.cleanAfterGroupTest ();
             }
             return true;
         }
@@ -111,17 +119,18 @@ public abstract class Group extends Criteria {
         }
 
         @Override
-        public void prepare ( Map<String, FieldAccess> fields, Object owner ) {
+        public void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
 
         }
 
         @Override
         public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
             for (Criteria c : expressions) {
-                c.prepare ( fields, owner );
-                if (c.resolve(fields, owner)) {
+                c.prepareForGroupTest ( fields, owner );
+                if (c.test( owner )) {
                     return true;
                 }
+                c.cleanAfterGroupTest ();
             }
             return false;
         }

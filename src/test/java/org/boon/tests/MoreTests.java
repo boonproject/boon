@@ -75,9 +75,26 @@ public class MoreTests {
         int max = repo.results(CriteriaFactory.gt("salary", 100))
                 .firstInt(ProjectedSelector.max("salary"));
 
+
         assertEquals(2999, max);
 
-        System.out.println(max);
+        max = repo.results(CriteriaFactory.gt("salary", 100))
+                .firstInt(ProjectedSelector.maxInt("salary"));
+
+        assertEquals(2999, max);
+
+
+        int min = repo.results(CriteriaFactory.gt("salary", 0))
+                .firstInt(ProjectedSelector.min("salary"));
+
+        assertEquals(100, min);
+
+
+        min = repo.results(CriteriaFactory.gt("salary", 0))
+                .firstInt(ProjectedSelector.minInt ("salary"));
+
+        assertEquals(100, min);
+
     }
 
     @Test
@@ -111,7 +128,7 @@ public class MoreTests {
 
     }
 
-    @Test(expected = NullPointerException.class)   //TODO add better error messages
+    @Test(expected = Exception.class)
     public void fieldOnlyInSubClass4() throws Exception {
         List<Employee> queryableList = $q(h_list, Employee.class, SalesEmployee.class);
         List<Employee> results = sortedQuery(queryableList, "firstName", CriteriaFactory.eq("commissionRate", 1));
@@ -167,7 +184,7 @@ public class MoreTests {
 
     @Test
     public void testBetweenSalary_AND_LOTS_OF_TERMS_BIG_LIST() throws Exception {
-        List<Employee> queryableList = $q(bigList);
+        List<Employee> queryableList = $q(bigList, Employee.class, HourlyEmployee.class);
         List<Employee> results = sortedQuery(queryableList, "firstName",
                 CriteriaFactory.and(
                         CriteriaFactory.between("salary", 1000, 2000),
