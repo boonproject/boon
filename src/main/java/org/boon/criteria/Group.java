@@ -86,10 +86,17 @@ public abstract class Group extends Criteria {
             super(Grouping.AND, expressions);
         }
 
+
+        @Override
+        public void prepare ( Map<String, FieldAccess> fields, Object owner ) {
+
+        }
+
         @Override
         public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
             for (Criteria c : expressions) {
-                if (!c.resolve(fields, owner)) {
+                c.prepare ( fields, owner );
+                if (!c.resolve ( fields, owner )) {
                     return false;
                 }
             }
@@ -104,8 +111,14 @@ public abstract class Group extends Criteria {
         }
 
         @Override
+        public void prepare ( Map<String, FieldAccess> fields, Object owner ) {
+
+        }
+
+        @Override
         public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
             for (Criteria c : expressions) {
+                c.prepare ( fields, owner );
                 if (c.resolve(fields, owner)) {
                     return true;
                 }

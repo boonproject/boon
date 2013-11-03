@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
 
 
 public abstract class Criterion<VALUE> extends Criteria {
@@ -286,7 +288,7 @@ public abstract class Criterion<VALUE> extends Criteria {
                         criterion.useDelegate = false;
                 }
 
-            } else if (type == Typ.flt) {
+            } else if (type == Typ.lng) {
                 switch (criterion.operator) {
                     case EQUAL:
                         criterion.nativeDelegate = CriteriaFactory.eqLong(criterion.name, Conversions.toLong(criterion.value));
@@ -487,8 +489,19 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     }
 
+
+
+    //Only called when part of group.
+    public  void prepare(Map<String, FieldAccess> fields, Object owner) {
+        initIfNeeded(this, fields);
+
+    }
+
     @Override
     public boolean test(Object o) {
+
+        Objects.requireNonNull ( o, "object under test can't be null" );
+
 
         Map<String, FieldAccess> fields = getFieldsInternal(o);
 
@@ -496,8 +509,12 @@ public abstract class Criterion<VALUE> extends Criteria {
         if (this.useDelegate) {
             return this.nativeDelegate.resolve(fields, o);
         }
+
+
         return resolve(fields, o);
     }
+
+
 
     public static abstract class PrimitiveCriterion extends Criterion {
 
