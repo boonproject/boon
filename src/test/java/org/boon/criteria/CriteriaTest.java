@@ -34,6 +34,8 @@ public class CriteriaTest {
         char mychar = 5;
 
         String mystring = "five";
+        String empty = "";
+
     }
 
     public static void main (String... args) {
@@ -43,8 +45,12 @@ public class CriteriaTest {
 
         boolean ok = true;
 
+        //empty
+        Criteria criteria = empty ( "empty");
+        ok |= QueryFactory.andTest ( o, criteria ) || die();
+
         //INT
-        Criteria criteria = eq ( "myint", 5  );
+        criteria = eq ( "myint", 5  );
         ok |= QueryFactory.andTest ( o, criteria ) || die();
 
         criteria = eq ( "myint", 6  );

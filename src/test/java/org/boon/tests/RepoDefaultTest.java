@@ -296,7 +296,7 @@ public class RepoDefaultTest {
 
         List<Map<String, Object>> list = repo.query(
                 selects(select("tags", "metas", "metas2", "name2")),
-                CriteriaFactory.eqNested("2tag1", "tags", "metas", "metas2", "name2"));
+                CriteriaFactory.eqNestedAdvanced ( "2tag1", "tags", "metas", "metas2", "name2" ));
 
 
         Assert.assertEquals("2tag1", idx(list.get(0).get("tags.metas.metas2.name2"), 0));

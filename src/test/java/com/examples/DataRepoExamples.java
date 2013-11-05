@@ -20,7 +20,7 @@ import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
 import static org.boon.criteria.CriteriaFactory.eq;
-import static org.boon.criteria.CriteriaFactory.eqNested;
+import static org.boon.criteria.CriteriaFactory.eqNestedAdvanced;
 import static org.boon.criteria.CriteriaFactory.notEq;
 
 
@@ -196,18 +196,18 @@ public class DataRepoExamples {
         userRepo.add ( new UserEmail ( "joe@bob.com" ) );
 
 
-        putl("Query using nested query Repo.eqNested()");
+        putl("Query using nested query Repo.eqNestedAdvanced()");
         UserEmail bob = (UserEmail) userRepo.results (
-                    eqNested ( "bob@bob.com", "email", "email" ) )
+                eqNestedAdvanced ( "bob@bob.com", "email", "email" ) )
                 .expectOne ().firstItem ();
 
         ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die();
 
 
-        putl("Avoid the cast with using nested query Repo.eqNested(UserEmail.class)");
+        putl("Avoid the cast with using nested query Repo.eqNestedAdvanced(UserEmail.class)");
 
         //NOT IN JDK7 Branch yet , but there is a generic version coming
-        bob = userRepo.results ( eqNested ( "bob@bob.com", "email", "email" ) )
+        bob = userRepo.results ( eqNestedAdvanced ( "bob@bob.com", "email", "email" ) )
                 .expectOne (UserEmail.class).firstItem ();
 
 

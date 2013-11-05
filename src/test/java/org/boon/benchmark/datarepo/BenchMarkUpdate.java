@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.println;
 import static org.boon.Boon.puts;
-import static org.boon.criteria.CriteriaFactory.eqNested;
+import static org.boon.criteria.CriteriaFactory.eqNestedAdvanced;
 
 
 
@@ -99,7 +99,7 @@ public class BenchMarkUpdate {
             protected void test() {
                 repo.updateByFilter(
                         Update.update(Update.incPercent("salary", 10)),
-                        eqNested("engineering", "department", "name"));
+                        eqNestedAdvanced ( "engineering", "department", "name" ));
             }
         };
     }

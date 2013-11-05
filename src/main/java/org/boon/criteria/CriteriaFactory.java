@@ -23,11 +23,33 @@ public class CriteriaFactory {
         return new Group.Or(expressions);
     }
 
-    public static Criterion eqNested(final Object value, final Object... path) {
+    public static Criterion eqNestedAdvanced ( final Object value, final Object... path ) {
         return new Criterion<Object>(Reflection.joinBy('.', path), Operator.EQUAL, value) {
             @Override
             public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
                 Object v = Reflection.getPropByPath(path);
+                if (v instanceof List) {
+                    List list = (List) v;
+                    for (Object i : list) {
+                        if (i.equals(value)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    return value.equals(v);
+                }
+
+            }
+
+        };
+    }
+
+    public static Criterion eqNested ( final Object value, final String... path ) {
+        return new Criterion<Object>(Reflection.joinBy('.', path), Operator.EQUAL, value) {
+            @Override
+            public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
+                Object v = Reflection.getPropertyValue (owner, path);
                 if (v instanceof List) {
                     List list = (List) v;
                     for (Object i : list) {

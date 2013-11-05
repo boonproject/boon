@@ -159,12 +159,14 @@ public class FilterDefault implements Filter, FilterComposer {
         Criterion criteria = null;
         boolean foundIndex = false;
 
+
         if (expressions.length == 1 && expressions[0] instanceof Criterion) {
             criteria = (Criterion) expressions[0];
-            foundIndex = doFilterWithIndex(criteria, fields, resultSet);
-            if (foundIndex) {
-                expressionSet.remove(criteria);
-            }
+                foundIndex = doFilterWithIndex(criteria, fields, resultSet);
+                if (foundIndex) {
+                    expressionSet.remove(criteria);
+                }
+
             return foundIndex;
         }
 
@@ -176,10 +178,12 @@ public class FilterDefault implements Filter, FilterComposer {
             if (expression instanceof Criterion) {
                 criteria = (Criterion) expression;
 
-                foundIndex = doFilterWithIndex(criteria, fields, resultSet);
-                if (foundIndex) {
-                    expressionSet.remove(criteria);
-                }
+
+                    foundIndex = doFilterWithIndex(criteria, fields, resultSet);
+                    if (foundIndex) {
+                        expressionSet.remove(criteria);
+                    }
+
                 /* if it is less than 20, just linear search the rest. */
                 if (resultSet.lastSize() < 20) {
                     resultSet.andResults(); //consolidate now
@@ -286,6 +290,15 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
     private boolean doFilterWithIndex(Criterion criterion, Map<String, FieldAccess> fields, ResultSetInternal resultSet) {
+
+
+        boolean indexed = indexedOperators.contains ( criterion.getOperator () ) ;
+
+        if ( !indexed )  {
+            return false;
+        }
+
+
         String name = criterion.getName();
         Object value = criterion.getValue();
         Operator operator = criterion.getOperator();
@@ -343,6 +356,9 @@ public class FilterDefault implements Filter, FilterComposer {
             case BETWEEN:
                 resultList = searchIndex.findBetween(criterion.getValue(), criterion.getValues()[1]);
                 break;
+
+
+
         }
 
         criterion.clean ();
