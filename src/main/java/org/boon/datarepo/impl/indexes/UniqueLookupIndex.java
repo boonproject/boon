@@ -14,7 +14,6 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     protected Function<ITEM, KEY> keyGetter;
     protected Map<KEY, ITEM> map = null;
-    protected List<ITEM> items = new LinkedList();
 
 
     private Logger log = Logger.getLogger(UniqueLookupIndex.class.getName());
@@ -58,7 +57,6 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         }
 
         map.put(key, item);
-        items.add(item);
         return true;
     }
 
@@ -71,8 +69,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
         KEY key = keyGetter.apply(item);
         key = getKey(key);
-        map.remove(key);
-        return items.remove(item);
+        return map.remove(key) != null;
     }
 
     @Override
@@ -82,7 +79,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
             log.fine("all called ");
         }
 
-        return new ArrayList<>(items);
+        return new ArrayList<>(map.values ());
     }
 
     @Override
@@ -97,12 +94,12 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     @Override
     public int size() {
-        return this.items.size();
+        return this.map.size();
     }
 
     @Override
     public Collection<ITEM> toCollection() {
-        return this.items;
+        return new HashSet(this.map.values ());
     }
 
     @Override
@@ -113,8 +110,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     @Override
     public boolean deleteByKey(KEY key) {
         key = getKey(key);
-        this.map.remove(key);
-        return true;
+        return this.map.remove(key) != null;
     }
 
     @Override

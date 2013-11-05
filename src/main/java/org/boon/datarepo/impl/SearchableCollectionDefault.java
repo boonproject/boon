@@ -33,7 +33,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
 
     protected Map<String, LookupIndex> lookupIndexMap = new LinkedHashMap<>();
     protected Map<String, SearchIndex> searchIndexMap = new LinkedHashMap<>();
-    protected List<LookupIndex> indexes = new ArrayList<LookupIndex>();
+    protected Set<LookupIndex> indexes = new LinkedHashSet<> ();
     protected Filter filter;
 
     protected Map<String, FieldAccess> fields = new LinkedHashMap<>();
@@ -509,6 +509,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         for (LookupIndex index : indexes) {
             index.clear();
         }
+
     }
 
 
@@ -579,6 +580,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
             fc.setSearchableCollection(this);
             fc.init();
         }
+        indexes.add ( this.primaryIndex );
     }
 
     @Override

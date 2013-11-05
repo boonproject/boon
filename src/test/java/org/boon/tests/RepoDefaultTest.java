@@ -423,4 +423,14 @@ public class RepoDefaultTest {
         });
 
     }
+
+
+    @Test
+    public void testClear() {
+               Employee emp = employee("Clear", "Day", "asdf", "08.15.72", 70_000);
+                repo.add(emp);
+                assertTrue(repo.size() > 1);
+                repo.clear();
+                assertEquals(0, repo.size());
+    }
 }
