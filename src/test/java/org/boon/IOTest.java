@@ -621,22 +621,24 @@ public class IOTest {
 
         //Proper URL
         ok |= Str.in ("apple", IO.read ( "classpath:///testfile.txt" ))
-                || die( "two slashes should work" );
+                || die( "three slashes should work" );
 
 
-        //Proper URL
+        //Not proper URL
         ok |= Str.in ("apple", IO.read ( "classpath:testfile.txt" ))
-                || die( "two slashes should work" );
+                || die( "no slashes should work" );
 
-        //Proper URL
+        //No URL
         ok |= Str.in ("apple", IO.readFromClasspath ( this.getClass (), "testfile.txt" ))
-                || die( "two slashes should work" );
+                || die( "you don't have to use classpath scheme" );
 
-        //Proper URL
+        //Slash or no slash, it just works
         ok |= Str.in ("apple", IO.readFromClasspath ( this.getClass (), "/testfile.txt" ))
-                || die( "two slashes should work" );
+                || die( "on slash works" );
 
 
+        //You can do a listing of a directory inside of a jar file or anywhere on the classpath
+        //this also handles duplicate entries as in two jar files having identical file locations.
         puts(IO.list ( "classpath:/org/node" )) ;
 
         //Proper URL
