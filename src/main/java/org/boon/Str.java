@@ -256,4 +256,8 @@ public class Str {
 
     }
 
+    public static boolean in (String value, String str) {
+        return str.contains ( value );
+    }
+
 }

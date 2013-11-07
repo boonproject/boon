@@ -160,6 +160,7 @@ public class Chr {
         return false;
     }
 
+
     @Universal
     public static boolean in( char value, int offset, int end, char[] array ) {
         for ( int index = offset; index < end; index++ ) {

@@ -126,6 +126,10 @@ public class Lists {
         return list.size();
     }
 
+    public static boolean isEmpty(List<?> list) {
+        return list == null || list.size () == 0;
+    }
+
     @Universal
     public static <V> boolean in(V value, List<?> list) {
             return list.contains(value);
