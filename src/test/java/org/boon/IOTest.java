@@ -613,6 +613,25 @@ public class IOTest {
     @Test
     public void readClasspathResource() {
 
+//        I added classpath reading, listing to IO.
+//
+//        This allows you to easily search a classpath (which is not included with the JDK).
+//
+//        Reading resources from the classpath is included in the JDK, but treating it like a file system (listing directories, etc.) is not.
+//
+//        Also a common problem with loading resources is that the resource path has different  rules so if you are reading from a jar file, you need to specify clz.getResource("org/foo/foo.txt") where org is in the root, but if you are reading from the actual classpath you can specify clz.getResource("/org/foo/foo.txt");. IO utils don't care, it finds it either way.
+//
+//        (I have run into this one about 1 million times, and it throws me for a loop each time. It is on stackoverflow a lot).
+//
+//        Here is some sample code to check out.
+//
+//        Test file is on the classpath and contains this content:
+//
+//        line 1
+//        apple
+//        pear
+//        grapes
+
         boolean ok = true;
 
         ok |= Str.in ("apple", IO.read ( "classpath://testfile.txt" ))
