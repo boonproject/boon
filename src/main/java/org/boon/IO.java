@@ -31,37 +31,6 @@ public class IO {
     public final static String JAR_SCHEMA = "jar";
     public final static String CLASSPATH_SCHEMA = "classpath";
 
-
-    public static List<String> list ( final String path ) {
-
-        URI uri = URI.create ( path );
-        if (uri.getScheme ()==null) {
-            final Path pathFromFileSystem = path ( path );
-            return list ( pathFromFileSystem );
-        } else if (uri.getScheme ().equals ( CLASSPATH_SCHEMA ) ) {
-
-            List<String> result = new ArrayList<> ();
-
-            String newPath = StringScanner.split ( path, ':' )[1];
-
-            final List<Path> resources = Classpaths.resources (
-                    Thread.currentThread ().getContextClassLoader (), newPath );
-
-
-            for (Path resourcePath : resources) {
-                if ( Files.isDirectory ( resourcePath )) {
-                    result.addAll( IO.list( resourcePath ) );
-                }
-            }
-
-            return result;
-
-        } else {
-            final Path pathFromFileSystem = path ( path );
-            return list ( pathFromFileSystem );
-        }
-    }
-
     public static List<String> list ( final Path path ) {
 
         List<String> result = new ArrayList<> ();
@@ -513,46 +482,6 @@ public class IO {
         return read ( Files.newBufferedReader ( thePath, DEFAULT_CHARSET ) );
     }
 
-    public static String readFromClasspath ( String location )  {
-
-        Objects.requireNonNull ( location, "location can't be null" );
-
-
-        if ( !location.startsWith ( CLASSPATH_SCHEMA + ":") ) {
-             die( sputs("Location must starts with", CLASSPATH_SCHEMA) );
-        }
-
-        String path = StringScanner.split ( location, ':' )[1];
-
-        final List<Path> resources = Classpaths.resources (
-                Thread.currentThread ().getContextClassLoader (), path );
-
-        if ( len( resources ) > 0)  {
-            try {
-                return read ( Files.newBufferedReader ( resources.get ( 0 ), DEFAULT_CHARSET ) );
-            } catch ( IOException e ) {
-                return Exceptions.handle ( String.class, "unable to read classpath resource " + location, e );
-
-            }
-        }   else {
-            return null;
-        }
-    }
-
-    public static String readFromClasspath ( Class<?> clazz,  String location ) {
-        List<Path> resources = Classpaths.resources ( clazz, location );
-
-        if ( len( resources ) > 0)  {
-            try {
-                return read ( Files.newBufferedReader ( resources.get ( 0 ), DEFAULT_CHARSET ) );
-            } catch ( IOException e ) {
-                return Exceptions.handle ( String.class, "unable to read classpath resource " + location, e );
-            }
-        }   else {
-            return null;
-        }
-    }
-
     private static List<String> readLines ( String location, URI uri ) throws Exception {
         try {
             String path = location;
@@ -670,9 +599,6 @@ public class IO {
         return FileSystems.getDefault ();
     }
 
-    public static Path path ( String path ) {
-        return Paths.get ( path );
-    }
 
     public static Path path ( String path, String... more ) {
         return Paths.get ( path, more );
@@ -704,5 +630,115 @@ public class IO {
         }
 
     }
+
+
+
+
+
+    public static String readFromClasspath ( Class<?> clazz,  String location ) {
+        List<Path> resources = Classpaths.resources ( clazz, location );
+
+        if ( len( resources ) > 0)  {
+            try {
+                return read ( Files.newBufferedReader ( resources.get ( 0 ), DEFAULT_CHARSET ) );
+            } catch ( IOException e ) {
+                return Exceptions.handle ( String.class, "unable to read classpath resource " + location, e );
+            }
+        }   else {
+            return null;
+        }
+    }
+
+    private static List<String> listFromDefaultClassLoader ( String s ) {
+        List<String> result = new ArrayList<> ();
+
+        String newPath = s;
+
+        final List<Path> resources = Classpaths.resources (
+                IO.class, newPath );
+
+
+        for (Path resourcePath : resources) {
+            if ( Files.isDirectory ( resourcePath )) {
+                result.addAll( IO.list ( resourcePath ) );
+            } else {
+                result.add( resourcePath.toString () );
+            }
+        }
+
+        for ( int index = 0 ; index < result.size (); index++ ) {
+            result.set(index, "classpath:" + result.get(index) );
+        }
+
+        return result;
+    }
+
+
+    public static Path path ( String location ) {
+        if ( !location.startsWith ( CLASSPATH_SCHEMA + ":" ) ) {
+            return Paths.get ( location );
+        } else {
+            String path = StringScanner.split ( location, ':' )[1];
+
+            final List<Path> resources = Classpaths.resources (
+                    IO.class, path );
+
+            Path result = Lists.idx(resources, 0);
+            if ( result == null ) {
+                return path( path );
+            }
+            return result;
+        }
+    }
+
+    public static String readFromClasspath ( String location )  {
+
+        Objects.requireNonNull ( location, "location can't be null" );
+
+        if ( !location.startsWith ( CLASSPATH_SCHEMA + ":") ) {
+            die( "Location must starts with " + CLASSPATH_SCHEMA );
+        }
+
+        Path path = path (location);
+
+        if ( path == null ) {
+            return null;
+        }
+        try {
+            return read ( Files.newBufferedReader ( path, DEFAULT_CHARSET ) );
+        } catch ( IOException e ) {
+            return Exceptions.handle ( String.class, "unable to read classpath resource " + location, e );
+
+        }
+    }
+
+
+    public static InputStream inputStream ( String resource ) {
+        Path path = path( resource );
+        try {
+            return Files.newInputStream ( path );
+        } catch ( IOException e ) {
+            return Exceptions.handle ( InputStream.class, "unable to open " +resource , e);
+        }
+    }
+
+    //
+
+    public static List<String> list ( final String path ) {
+
+        URI uri = URI.create ( path );
+        if (uri.getScheme ()==null) {
+            final Path pathFromFileSystem = path ( path );
+            return list ( pathFromFileSystem );
+        } else if (uri.getScheme ().equals ( CLASSPATH_SCHEMA ) ) {
+
+            return listFromDefaultClassLoader ( StringScanner.split ( path, ':' )[ 1 ] );
+
+        } else {
+            final Path pathFromFileSystem = path ( path );
+            return list ( pathFromFileSystem );
+        }
+    }
+
 
 }

@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Lists.add;
 import static org.boon.Lists.isEmpty;
@@ -139,6 +138,7 @@ public class Classpaths {
         add ( resourcePaths, FileSystems.getDefault ().getPath ( fileURI.getPath () ) );
     }
 
+
     private static void resourcesFromJar ( List<Path> resourcePaths, URL resourceURL, Map<URI, FileSystem> pathToZipFileSystems ) {
 
         String str = resourceURL.toString ();
@@ -148,11 +148,12 @@ public class Classpaths {
         URI fileJarURI = URI.create ( strings[ 0 ] );
         String resourcePath = strings[ 1 ];
 
-        if ( !in ( fileJarURI, pathToZipFileSystems ) ) {
-                idx ( pathToZipFileSystems, fileJarURI, zipFileSystem( fileJarURI ) );
+        if ( !pathToZipFileSystems.containsKey ( fileJarURI ) ) {
+            pathToZipFileSystems.put ( fileJarURI, zipFileSystem( fileJarURI ) );
         }
 
-        FileSystem fileSystem = idx ( pathToZipFileSystems, fileJarURI );
+        FileSystem fileSystem = pathToZipFileSystems.get(fileJarURI);
         add ( resourcePaths, fileSystem.getPath ( resourcePath ) );
     }
+
 }
