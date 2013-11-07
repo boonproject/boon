@@ -103,7 +103,7 @@ public class Classpaths {
     public static List<Path> resources ( Class<?> clazz, String resource ) {
 
 
-        List<Path> list = resources ( Thread.currentThread ().getContextClassLoader (), resource );
+        List<Path> list = resources ( Thread.currentThread().getContextClassLoader(), resource );
 
         if ( isEmpty ( list ) ) {
             list = resources ( clazz.getClassLoader (), resource );

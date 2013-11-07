@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static javax.xml.bind.DatatypeConverter.parseInt;
+import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
 import static org.boon.Lists.len;
 import static org.boon.Lists.list;
@@ -606,5 +608,36 @@ public class IOTest {
 
 
     }
+
+
+    @Test
+    public void readClasspathResource() {
+
+        boolean ok = true;
+
+        ok |= Str.in ("apple", IO.read ( "classpath://testfile.txt" ))
+                || die( "two slashes should work" );
+
+
+        //Proper URL
+        ok |= Str.in ("apple", IO.read ( "classpath:///testfile.txt" ))
+                || die( "two slashes should work" );
+
+
+        //Proper URL
+        ok |= Str.in ("apple", IO.read ( "classpath:testfile.txt" ))
+                || die( "two slashes should work" );
+
+        //Proper URL
+        ok |= Str.in ("apple", IO.readFromClasspath ( this.getClass (), "testfile.txt" ))
+                || die( "two slashes should work" );
+
+        //Proper URL
+        ok |= Str.in ("apple", IO.readFromClasspath ( this.getClass (), "/testfile.txt" ))
+                || die( "two slashes should work" );
+
+    }
+
+
 
 }
