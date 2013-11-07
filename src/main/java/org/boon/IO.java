@@ -32,18 +32,43 @@ public class IO {
     public final static String CLASSPATH_SCHEMA = "classpath";
 
 
-    public static List<String> list ( String path ) {
-        final Path pathFromFileSystem = path ( path );
-        return list ( pathFromFileSystem );
+    public static List<String> list ( final String path ) {
+
+        URI uri = URI.create ( path );
+        if (uri.getScheme ()==null) {
+            final Path pathFromFileSystem = path ( path );
+            return list ( pathFromFileSystem );
+        } else if (uri.getScheme ().equals ( CLASSPATH_SCHEMA ) ) {
+
+            List<String> result = new ArrayList<> ();
+
+            String newPath = StringScanner.split ( path, ':' )[1];
+
+            final List<Path> resources = Classpaths.resources (
+                    Thread.currentThread ().getContextClassLoader (), newPath );
+
+
+            for (Path resourcePath : resources) {
+                if ( Files.isDirectory ( resourcePath )) {
+                    result.addAll( IO.list( resourcePath ) );
+                }
+            }
+
+            return result;
+
+        } else {
+            final Path pathFromFileSystem = path ( path );
+            return list ( pathFromFileSystem );
+        }
     }
 
-    public static List<String> list ( final Path pathFromFileSystem ) {
+    public static List<String> list ( final Path path ) {
 
         List<String> result = new ArrayList<> ();
 
         try {
-            try ( DirectoryStream<Path> stream = Files.newDirectoryStream ( pathFromFileSystem ) ) {
-                for ( Path entry : stream ) {
+            try ( DirectoryStream<Path> directoryStream = Files.newDirectoryStream ( path ) ) {
+                for ( Path entry : directoryStream ) {
                     result.add ( entry.toAbsolutePath ().toString () );
                 }
             }
@@ -456,18 +481,7 @@ public class IO {
 
                 } else if ( uri.getScheme ().equals ( FILE_SCHEMA ) ) {
 
-                    Path thePath = null;
-                    if ( Sys.isWindows () ) {
-                        String newPath = uri.getPath ();
-                        if ( newPath.startsWith ( "/C:" ) ) {
-                            newPath = slc ( newPath, 3 );
-                        }
-                        thePath = FileSystems.getDefault ().getPath ( newPath );
-                    } else {
-                        thePath = FileSystems.getDefault ().getPath ( uri.getPath () );
-                    }
-
-                    return read ( Files.newBufferedReader ( thePath, DEFAULT_CHARSET ) );
+                    return readFromFileSchema ( uri );
 
                 }  else if ( uri.getScheme ().equals ( CLASSPATH_SCHEMA )
                         || uri.getScheme ().equals ( JAR_SCHEMA )) {
@@ -482,6 +496,21 @@ public class IO {
             }
         } );
 
+    }
+
+    private static String readFromFileSchema ( URI uri ) throws IOException {
+        Path thePath = null;
+        if ( Sys.isWindows () ) {
+            String newPath = uri.getPath ();
+            if ( newPath.startsWith ( "/C:" ) ) {
+                newPath = slc ( newPath, 3 );
+            }
+            thePath = FileSystems.getDefault ().getPath ( newPath );
+        } else {
+            thePath = FileSystems.getDefault ().getPath ( uri.getPath () );
+        }
+
+        return read ( Files.newBufferedReader ( thePath, DEFAULT_CHARSET ) );
     }
 
     public static String readFromClasspath ( String location )  {
@@ -675,84 +704,5 @@ public class IO {
         }
 
     }
-
-
-    public static void main ( String[] args ) throws Throwable {
-//        Map<String, String> env = new HashMap<>();
-//        env.put("create", "true");
-//        // locate file system by using the syntax
-//        // defined in java.net.JarURLConnection
-//        URI uri = URI.create("jar:file:/codeSamples/zipfs/zipfstest.zip");
-//
-//        try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
-//            Path externalTxtFile = Paths.get("/codeSamples/zipfs/SomeTextFile.txt");
-//            Path pathInZipfile = zipfs.getPath("/SomeTextFile.txt");
-//            // copy a file into the zip file
-//            Files.copy( externalTxtFile,pathInZipfile,
-//                    StandardCopyOption.REPLACE_EXISTING );
-//        }
-
-
-    }
-
-
-    //JDK 8 versions of methods on hold
-
-
-//    public static List<String> readLines(final String location) {
-//
-//        final URI uri = URI.create(location);
-//
-//        return Exceptions.tryIt(List.class, () -> {
-//
-//            if (uri.getScheme() == null) {
-//
-//                Path thePath = FileSystems.getDefault().getPath(location);
-//                return Files.readAllLines(thePath, DEFAULT_CHARSET);
-//
-//            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
-//
-//                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-//                return Files.readAllLines(thePath, DEFAULT_CHARSET);
-//
-//            } else {
-//                return readLines(location, uri);
-//            }
-//
-//        });
-//
-//    }
-
-
-//    public static void eachLine(final String location, EachLine eachLine) {
-//
-//        final URI uri = URI.create(location);
-//
-//        Exceptions.tryIt(() -> {
-//
-//            if (uri.getScheme() == null) {
-//
-//                Path thePath = FileSystems.getDefault().getPath(location);
-//                BufferedReader buf = Files.newBufferedReader(
-//                        thePath, DEFAULT_CHARSET);
-//                eachLine(buf, eachLine);
-//
-//            } else if (uri.getScheme().equals(FILE_SCHEMA)) {
-//
-//                Path thePath = FileSystems.getDefault().getPath(uri.getPath());
-//
-//                BufferedReader buf = Files.newBufferedReader(
-//                        thePath, DEFAULT_CHARSET);
-//                eachLine(buf, eachLine);
-//
-//
-//            } else {
-//                eachLine(location, uri, eachLine);
-//            }
-//
-//        });
-//
-//    }
-
 
 }

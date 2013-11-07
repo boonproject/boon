@@ -636,6 +636,17 @@ public class IOTest {
         ok |= Str.in ("apple", IO.readFromClasspath ( this.getClass (), "/testfile.txt" ))
                 || die( "two slashes should work" );
 
+
+        puts(IO.list ( "classpath:/org/node" )) ;
+
+        //Proper URL
+        ok |=
+
+                Lists.idx (IO.list ( "classpath:/org/node" ), 0).endsWith ( "org/node/file1.txt" )
+
+                || die( );
+
+
     }
 
 
