@@ -185,6 +185,10 @@ public class ByteBuf {
         return bytes;
     }
 
+    public byte[] readForRecycle () {
+        this.length = 0;
+        return  this.buffer;
+    }
 
     public int len() {
         return length;
