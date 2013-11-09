@@ -134,7 +134,7 @@ public class Classpaths {
     }
 
     private static void resourcesFromFileSystem ( List<Path> resourcePaths, URL u ) {
-        URI fileURI = URI.create ( u.toString () );
+        URI fileURI =  IO.createURI (  u.toString () );
         add ( resourcePaths, FileSystems.getDefault ().getPath ( fileURI.getPath () ) );
     }
 
