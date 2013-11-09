@@ -467,7 +467,18 @@ public class IO {
 
     }
 
-    public static String readFromFileSchema ( URI uri ) {
+    private static String readFromFileSchema ( URI uri ) {
+        Path thePath = uriToPath ( uri );
+
+        try {
+            return read ( Files.newBufferedReader ( thePath, DEFAULT_CHARSET ) );
+        } catch (IOException e) {
+
+            return Exceptions.handle(Typ.string, e); //
+        }
+    }
+
+    public static Path uriToPath ( URI uri ) {
         Path thePath = null;
         if ( Sys.isWindows () ) {
             String newPath = uri.getPath ();
@@ -478,13 +489,7 @@ public class IO {
         } else {
             thePath = FileSystems.getDefault ().getPath ( uri.getPath () );
         }
-
-        try {
-            return read ( Files.newBufferedReader ( thePath, DEFAULT_CHARSET ) );
-        } catch (IOException e) {
-
-            return Exceptions.handle(Typ.string, e); //
-        }
+        return thePath;
     }
 
     private static List<String> readLines ( String location, URI uri ) throws Exception {
