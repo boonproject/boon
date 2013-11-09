@@ -7,6 +7,11 @@ import java.util.Objects;
 public class Lng {
 
 
+    public static String str ( long value ) {
+        return String.format ( "%,d", value );
+    }
+
+
 
     public static long[] grow(long [] array, final int size) {
         Objects.requireNonNull(array);
