@@ -9,7 +9,7 @@ public class LngTest {
 
     @Test
     public void test() {
-
+       main();
     }
 
     public static void main(String... args) {
