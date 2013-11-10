@@ -239,17 +239,15 @@ public class HTTP {
             Object value = formData.get ( key );
 
             if (index > 0) {
-                buf.add ( (byte) '&' );
+                buf.addByte ( '&' );
             }
 
-            buf.add ( key.getBytes ( StandardCharsets.UTF_8 ) );
-            buf.add ( '=' );
+
+            buf.addUrlEncoded (  key  );
+            buf.addByte ( '=' );
 
             if ( ! ( value instanceof byte[] ) ) {
-                    String svalue = value.toString ();
-                    svalue = URLEncoder.encode ( svalue, StandardCharsets.UTF_8.name () );
-
-                    buf.add ( svalue );
+                buf.addUrlEncoded ( value.toString () );
             } else {
                 buf.addUrlEncodedByteArray((byte[]) value);
             }

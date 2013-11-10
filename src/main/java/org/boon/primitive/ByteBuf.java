@@ -1,6 +1,11 @@
 package org.boon.primitive;
 
+import org.boon.Exceptions;
+
+import java.io.UnsupportedEncodingException;
 import java.util.Objects;
+
+import static org.boon.Exceptions.die;
 
 public class ByteBuf {
 
@@ -261,15 +266,15 @@ public class ByteBuf {
 
 
     /**
-     * Encodes a single nibble.
+     * Turns a single nibble into an ascii HEX digit.
      *
-     * @param decoded the nibble to encode.
+     * @param nibble the nibble to encode.
      *
-     * @return the encoded half octet.
+     * @return the encoded nibble (1/2 byte).
      */
-    protected static int encodeNibbleToHexAsciiCharByte(final int decoded) {
+    protected static int encodeNibbleToHexAsciiCharByte( final int nibble ) {
 
-        switch (decoded) {
+        switch ( nibble ) {
             case 0x00:
             case 0x01:
             case 0x02:
@@ -280,40 +285,46 @@ public class ByteBuf {
             case 0x07:
             case 0x08:
             case 0x09:
-                return decoded + 0x30; // 0x30('0') - 0x39('9')
+                return nibble + 0x30; // 0x30('0') - 0x39('9')
             case 0x0A:
             case 0x0B:
             case 0x0C:
             case 0x0D:
             case 0x0E:
             case 0x0F:
-                return decoded + 0x57; // 0x41('a') - 0x46('f')
+                return nibble + 0x57; // 0x41('a') - 0x46('f')
             default:
-                throw new IllegalArgumentException("illegal half: " + decoded);
+                die ( "illegal nibble: " + nibble );
+                return -1;
         }
     }
 
 
     /**
-     * Encodes a single octet into two nibbles.
+     * Turn a single bytes into two hex character representation.
      *
-     * @param decoded the octet to encode.
-     * @param encoded the array to which each encoded nibbles are written.
+     * @param decoded the byte to encode.
+     * @param encoded the array to which each encoded nibbles are now ascii hex representations.
      */
-    protected static void encodeByteIntoTwoAsciiCharBytes(final int decoded, final byte[] encoded) {
+    public static void encodeByteIntoTwoAsciiCharBytes(final int decoded, final byte[] encoded) {
 
-        if (encoded == null) {
-            throw new IllegalArgumentException("null encoded");
-        }
+        Objects.requireNonNull ( encoded );
 
-        if (encoded.length < 2) {
-            // not required
-            throw new IllegalArgumentException(
-                    "encoded.length(" + encoded.length + ") < 2");
-        }
+        boolean ok = true;
+
+
+        ok |= encoded.length == 2 || die("encoded array must be 2");
+
 
         encoded[0] = (byte) encodeNibbleToHexAsciiCharByte((decoded >> 4) & 0x0F);
         encoded[1] = (byte) encodeNibbleToHexAsciiCharByte(decoded & 0x0F);
     }
 
+    public void addUrlEncoded ( String key ) {
+        try {
+            this.addUrlEncodedByteArray( key.getBytes ("UTF-8"));
+        } catch ( UnsupportedEncodingException e ) {
+            Exceptions.handle (e);
+        }
+    }
 }

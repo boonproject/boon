@@ -3,6 +3,9 @@ package org.boon.primitive;
 import org.boon.Exceptions;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import static junit.framework.Assert.assertTrue;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.Byt.*;
@@ -12,6 +15,37 @@ public class BytBufTest {
 
 
     @Test
+    public void test2() {
+        ByteBuf buf = new ByteBuf();
+        buf.add("abc");
+        buf.add("def");
+        boolean ok = true;
+        final byte[] bytes = buf.readForRecycle ();
+        ok |=  bytes[3] == 'd' || die ();
+    }
+
+    @Test
+    public void test3() throws UnsupportedEncodingException {
+        ByteBuf buf = new ByteBuf();
+        buf.add( URLEncoder.encode ("abc", "UTF-8") );
+        buf.addUrlEncodedByteArray ( new byte[]{ ( byte ) 1, 2, 3 } );
+        buf.add( URLEncoder.encode ("def", "UTF-8") );
+        boolean ok = true;
+        final byte[] bytes = buf.readForRecycle ();
+        ok |=  bytes[3]  == '%' || die ();
+        ok |=  bytes[4]  == '0' || die ();
+        ok |=  bytes[5]  == '1' || die ();
+        ok |=  bytes[6]  == '%' || die ( "" + bytes[5]);
+        ok |=  bytes[7]  == '0' || die ();
+        ok |=  bytes[8]  == '2' || die ();
+        ok |=  bytes[9]  == '%' || die ();
+        ok |=  bytes[10]  == '0' || die ();
+        ok |=  bytes[11] == '3' || die ();
+        ok |=  bytes[12] == 'd' || die ();
+
+    }
+
+        @Test
     public void testMe() {
         ByteBuf buf = new ByteBuf();
         buf.add(bytes("0123456789\n"));
