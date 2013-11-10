@@ -3,6 +3,7 @@ package org.boon.primitive;
 import org.junit.Test;
 
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.Byt.*;
 import static org.junit.Assert.*;
@@ -10,6 +11,50 @@ import static org.junit.Assert.*;
 public class BytTest {
 
 
+    @Test
+    public void readUnsignedInt () {
+        //0x53, 0x2D, 0x78, 0xAA.
+        //http://stackoverflow.com/questions/19874527/conversion-from-bytes-to-large-unsigned-integer-and-string
+        ByteBuf buf = ByteBuf.create ( 20 );
+        buf.addByte ( 0xAA );
+        buf.addByte ( 0x78 );
+        buf.addByte ( 0x2D );
+        buf.addByte ( 0x53 );
+
+        byte[] bytes = buf.readForRecycle ();
+
+        long val = idxUnsignedInt ( bytes, 0 );
+
+        boolean ok = true;
+
+        ok |= val ==  2860002643L || die(); //die if not equal to 2860002643L
+
+        buf.add ( 2860002643L );
+
+        bytes = buf.readForRecycle ();
+
+        val = idxLong ( bytes, 0 );
+
+        ok |= val ==  2860002643L || die();
+
+        //add unsigned int to the byte buffer.
+        buf.addUnsignedInt ( 2860002643L );
+
+        //read the byte array of the buffer
+        bytes = buf.readForRecycle ();
+
+        //Read the unsigned int from the array, 2nd arg is offset
+        val = idxUnsignedInt ( bytes, 0 );
+
+        //Convert it to string and print it to console
+        puts("" + val);
+
+        ok |= val ==  2860002643L || die();
+
+        ok |= ("" + val).equals("2860002643") || die();
+
+
+    }
     @Test
     public void allocate() {
 

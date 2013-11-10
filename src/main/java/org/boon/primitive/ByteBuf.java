@@ -119,6 +119,10 @@ public class ByteBuf {
 
     }
 
+    public void addByte(int value) {
+         this.add ( (byte) value );
+    }
+
     public void add(byte value) {
 
         if (1 + length < capacity) {
@@ -147,6 +151,21 @@ public class ByteBuf {
         }
 
         length += 8;
+
+    }
+
+    public void addUnsignedInt(long value) {
+
+        if (4 + length < capacity) {
+            Byt.unsignedIntTo (buffer, length, value);
+        } else {
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 4 );
+            capacity = buffer.length;
+
+            Byt.unsignedIntTo(buffer, length, value);
+        }
+
+        length += 4;
 
     }
 

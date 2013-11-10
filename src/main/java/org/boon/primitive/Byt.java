@@ -412,6 +412,7 @@ public class Byt {
                 ((bytes[off]) << 24);
     }
 
+
     public static byte[] addInt(byte[] array, int v) {
         Objects.requireNonNull(array);
 
@@ -438,6 +439,12 @@ public class Byt {
         b[off] = (byte) (val >>> 24);
     }
 
+    public static void unsignedIntTo(byte[] b, int off, long val) {
+        b[off + 3] = (byte) (val);
+        b[off + 2] = (byte) (val >>> 8);
+        b[off + 1] = (byte) (val >>> 16);
+        b[off] = (byte) (val >>> 24);
+    }
 
     public static void longTo(byte[] b, int off, long val) {
         b[off + 7] = (byte) (val);
@@ -460,6 +467,12 @@ public class Byt {
     }
 
 
+    public static long idxUnsignedInt(byte[] bytes, int off) {
+        return ((bytes[off + 3] & 0xFFL)) +
+                ((bytes[off + 2] & 0xFFL) << 8L) +
+                ((bytes[off + 1] & 0xFFL) << 16L) +
+                ((bytes[off] & 0xFFL) << 24L);
+    }
 
     public static long idxLong(byte[] b, int off) {
         return ((b[off + 7] & 0xFFL)) +
