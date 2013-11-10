@@ -11,6 +11,30 @@ import static org.junit.Assert.*;
 public class BytTest {
 
 
+
+    @Test
+    public void testURLEncodeBytes () {
+
+        ByteBuf buf = ByteBuf.create ( 20 );
+
+        buf.addUrlEncodedByteArray( new byte[] {0x0, 0x1, 0x2} );
+
+        final byte[] bytes = buf.readForRecycle ();
+
+        boolean ok = true;
+
+        ok |= bytes[0] == '%' || die();
+        ok |= bytes[1] == '0' || die();
+        ok |= bytes[2] == '0' || die();
+        ok |= bytes[3] == '%' || die();
+        ok |= bytes[4] == '0' || die();
+        ok |= bytes[5] == '1' || die();
+        ok |= bytes[6] == '%' || die();
+        ok |= bytes[7] == '0' || die();
+        ok |= bytes[8] == '2' || die();
+
+
+    }
     @Test
     public void readUnsignedInt () {
         //0x53, 0x2D, 0x78, 0xAA.
@@ -54,7 +78,31 @@ public class BytTest {
         ok |= ("" + val).equals("2860002643") || die();
 
 
+        //Read the unsigned int from the array, 2nd arg is offset
+        byte [] bytes2 = new byte[] {
+                (byte)0xAA, 0x78, 0x2D, 0x53,   0,
+                      0,       0,    0,    0,   0,
+                      0,       0,    0,    0,   0,
+                      0 ,      0,    0,    0,   0 };
+
+
+        val = idxUnsignedInt ( bytes2, 0 );
+
+        ok |= val ==  2860002643L || die();
+
+
+        //Deal direct with bytes
+        byte [] bytes3 = new byte[20];
+
+
+        unsignedIntTo ( bytes3, 0,  2860002643L);
+
+        val = idxUnsignedInt ( bytes2, 0 );
+
+        ok |= val ==  2860002643L || die();
+
     }
+
     @Test
     public void allocate() {
 

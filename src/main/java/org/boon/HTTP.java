@@ -1,16 +1,20 @@
 package org.boon;
 
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import org.boon.IO;
+import org.boon.primitive.ByteBuf;
 
 public class HTTP {
 
@@ -195,6 +199,72 @@ public class HTTP {
 
 
         IO.write(connection.getOutputStream(), body, IO.DEFAULT_CHARSET);
+        return connection;
+    }
+
+    public static String postForm(final String url, final Map<String, ?> headers,
+                                                final Map<String, Object> formData
+    ) {
+        return Exceptions.tryIt(String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doPostFormData(url, headers, formData);
+                return extractResponseString(connection);
+            }
+        });
+
+    }
+
+    private static URLConnection doPostFormData(String url, Map<String, ?> headers,
+                                        Map<String, Object> formData
+    ) throws IOException {
+        HttpURLConnection connection;/* Handle output. */
+
+
+        connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setConnectTimeout(DEFAULT_TIMEOUT_SECONDS * 1000);
+
+        connection.setDoOutput(true);
+
+        connection.addRequestProperty ( "Content-Type", "application/x-www-form-urlencoded" );
+
+        ByteBuf buf = ByteBuf.create ( 244 );
+
+        final Set<String> keys = formData.keySet ();
+
+        int index = 0;
+        for ( String key : keys )  {
+
+            Object value = formData.get ( key );
+
+            if (index > 0) {
+                buf.add ( (byte) '&' );
+            }
+
+            buf.add ( key.getBytes ( StandardCharsets.UTF_8 ) );
+            buf.add ( '=' );
+
+            if ( ! ( value instanceof byte[] ) ) {
+                    String svalue = value.toString ();
+                    svalue = URLEncoder.encode ( svalue, StandardCharsets.UTF_8.name () );
+
+                    buf.add ( svalue );
+            } else {
+                buf.addUrlEncodedByteArray((byte[]) value);
+            }
+            index++;
+        }
+
+        manageContentTypeHeaders ( "application/x-www-form-urlencoded",
+                StandardCharsets.UTF_8.name (), connection );
+
+        manageHeaders(headers, connection);
+
+
+        int len = buf.len ();
+        IO.write(connection.getOutputStream(),
+                new String(buf.readForRecycle (), 0, len, StandardCharsets.UTF_8), IO.DEFAULT_CHARSET);
         return connection;
     }
 

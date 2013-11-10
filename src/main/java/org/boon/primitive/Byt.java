@@ -747,4 +747,15 @@ public class Byt {
         }
     }
 
+    public static void _idx ( final byte[] array, int startIndex, byte[] input, int length ) {
+        try {
+
+            System.arraycopy(input, 0, array, startIndex, length);
+        }
+        catch (Exception ex) {
+            Exceptions.handle(String.format("array size %d, startIndex %d, input length %d",
+                    array.length, startIndex, input.length), ex);
+        }
+    }
+
 }

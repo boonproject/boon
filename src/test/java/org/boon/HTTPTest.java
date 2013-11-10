@@ -12,10 +12,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.Collections;
 import java.util.Map;
 
 import static org.boon.Maps.copy;
 import static org.boon.Maps.map;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class HTTPTest {
@@ -116,6 +118,31 @@ public class HTTPTest {
     @Test
     public void testPostBody() throws Exception {
 
+        HttpServer server = HttpServer.create(new InetSocketAddress(9290), 0);
+        server.createContext("/test", new MyHandler());
+        server.setExecutor(null); // creates a default executor
+        server.start();
+
+        Thread.sleep(10);
+
+
+
+        String response = HTTP.post("http://localhost:9290/test", "hi mom");
+
+        assertTrue(response.contains("hi mom"));
+
+
+        Thread.sleep(10);
+
+        server.stop(0);
+
+
+    }
+
+
+    @Test
+    public void testPostForm() throws Exception {
+
         HttpServer server = HttpServer.create(new InetSocketAddress(9220), 0);
         server.createContext("/test", new MyHandler());
         server.setExecutor(null); // creates a default executor
@@ -125,9 +152,13 @@ public class HTTPTest {
 
 
 
-        String response = HTTP.post("http://localhost:9220/test", "hi mom");
+        String response = HTTP.postForm ( "http://localhost:9220/test",
+                Collections.EMPTY_MAP,
+                map("hI", (Object)"hi-mom", "image", new byte[] {1,2,3})
+        );
 
-        assertTrue(response.contains("hi mom"));
+        assertEquals ("hI\u0000=hi-mom&image\u0000=%01%02%03\n" +
+                "{Accept=[text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2], Accept-charset=[UTF-8], Connection=[keep-alive], Host=[localhost:9220], User-agent=[Java/1.8.0-ea], Content-type=[application/x-www-form-urlencoded], Content-length=[27]}", response );
 
 
         Thread.sleep(10);
