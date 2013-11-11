@@ -9,9 +9,147 @@ import java.net.URLEncoder;
 import static junit.framework.Assert.assertTrue;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.Byt.*;
+import static org.boon.primitive.Shrt.*;
+
 import static org.junit.Assert.assertEquals;
 
 public class BytBufTest {
+
+
+    @Test
+    public void test4() {
+        ByteBuf buf = new ByteBuf();
+        buf.writeUnsignedShort ( Short.MAX_VALUE   + 1 );
+        buf.writeUnsignedInt   ( ((long)Integer.MAX_VALUE) + 1L );
+        buf.writeUnsignedByte  ( (short) ( Byte.MAX_VALUE    + 1 ) );
+        buf.writeInt ( 1 );
+        buf.writeBoolean ( true );
+        buf.writeBoolean ( false );
+        buf.writeFloat ( 1.0f );
+        buf.writeDouble ( 1.0d );
+        buf.writeChar ( 'a' );
+        buf.writeLong ( 1L );
+        buf.writeSmallString  ( "hi mom" );
+        buf.writeMediumString ( "hi mom" );
+        buf.writeLargeString  ( "AAA" );
+        buf.writeLargeString  ( "BBB" );
+        buf.writeByte  ( (byte) 7 );
+        buf.writeShort  ( (short) 11 );
+        buf.writeSmallByteArray  ( new byte[] {1, 2, 3} );
+        buf.writeMediumByteArray ( new byte[] {1, 2, 3} );
+        buf.writeLargeByteArray  ( new byte[] {1, 2, 3} );
+        buf.writeSmallShortArray  ( new short[] {1, 2, 3} );
+        buf.writeSmallShortArray  ( new short[] {1, 2, 3} );
+
+//        buf.writeMediumShortArray ( new short[] {1, 2, 3} );
+        buf.writeLargeShortArray  ( new short[] {1, 2, 3} );
+
+
+        boolean ok = true;
+
+        final Input input = buf.input ();
+
+        int unsignedShort = input.readUnsignedShort ();
+        ok |= unsignedShort ==  Short.MAX_VALUE + 1 || die("" + unsignedShort);
+
+        long unsignedInt = input.readUnsignedInt ();
+        ok |= unsignedInt ==  ((long)Integer.MAX_VALUE) + 1L || die("" + unsignedInt);
+
+        short unsignedByte = input.readUnsignedByte ();
+        ok |= unsignedByte ==  Byte.MAX_VALUE + 1 || die("" + unsignedByte);
+
+        int myint = input.readInt ();
+        ok |= myint ==  1 || die("" + myint);
+
+        boolean btrue = input.readBoolean ();
+        ok |= btrue || die("" + btrue);
+
+        boolean bfalse = input.readBoolean ();
+        ok |= !bfalse || die("" + bfalse);
+
+        float myfloat = input.readFloat ();
+        ok |= myfloat ==  1 || die("" + myfloat);
+
+        double mydouble = input.readDouble ();
+        ok |= mydouble ==  1 || die("" + mydouble);
+
+        char mychar = input.readChar ();
+        ok |= mychar ==  'a' || die("" + mychar);
+
+        long mylong = input.readLong ();
+        ok |= mylong ==  1L || die("" + mylong);
+
+        String str = input.readSmallString ();
+        ok |= str.equals ( "hi mom" )  || die( str );
+
+
+        str = input.readMediumString();
+        ok |= str.equals ( "hi mom" )  || die( str );
+
+
+        str = input.readLargeString();
+        ok |= str.equals ( "AAA" )  || die( str );
+
+        str = input.readLargeString();
+        ok |= str.equals ( "BBB" )  || die( str );
+
+
+        short byt = input.readByte ();
+        ok |= byt == 7 || die( "" + byt );
+
+        short shrt = input.readShort ();
+        ok |= shrt == 11 || die( "" + shrt );
+
+
+        byte [] bytes = null;
+
+        bytes = input.readSmallByteArray ();
+        ok |= bytes.length == 3 || die ("" + bytes.length );
+        ok |= idx(bytes, 0) == 1 || die ("" + idx(bytes, 0) );
+        ok |= idx(bytes, 1) == 2 || die ("" + idx(bytes, 1) );
+        ok |= idx(bytes, 2) == 3 || die ("" + idx(bytes, 2) );
+
+        bytes = input.readMediumByteArray ();
+        ok |= bytes.length == 3 || die ("" + bytes.length );
+        ok |= idx(bytes, 0) == 1 || die ("" + idx(bytes, 0) );
+        ok |= idx(bytes, 1) == 2 || die ("" + idx(bytes, 1) );
+        ok |= idx(bytes, 2) == 3 || die ("" + idx(bytes, 2) );
+
+        bytes = input.readLargeByteArray ();
+        ok |= bytes.length == 3 || die ("" + bytes.length );
+        ok |= idx(bytes, 0) == 1 || die ("" + idx(bytes, 0) );
+        ok |= idx(bytes, 1) == 2 || die ("" + idx(bytes, 1) );
+        ok |= idx(bytes, 2) == 3 || die ("" + idx(bytes, 2) );
+
+
+        short [] shorts = null;
+
+        shorts = input.readSmallShortArray ();
+        ok |= shorts.length == 3 || die ("" + shorts.length );
+        ok |= idx(shorts, 0) == 1 || die ("" + idx(shorts, 0) );
+        ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
+        ok |= idx(shorts, 2) == 3 || die ("" + idx(shorts, 2) );
+
+        shorts = input.readSmallShortArray ();
+        ok |= shorts.length == 3 || die ("" + shorts.length );
+        ok |= idx(shorts, 0) == 1 || die ("" + idx(shorts, 0) );
+        ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
+        ok |= idx(shorts, 2) == 3 || die ("" + idx(shorts, 2) );
+
+//        shorts = input.readMediumShortArray ();
+//        ok |= shorts.length == 3 || die ("" + shorts.length );
+//        ok |= idx(shorts, 0) == 1 || die ("" + idx(shorts, 0) );
+//        ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
+//        ok |= idx(shorts, 2) == 3 || die ("" + idx(shorts, 2) );
+//
+        shorts = input.readLargeShortArray ();
+        ok |= shorts.length == 3 || die ("" + shorts.length );
+        ok |= idx(shorts, 0) == 1 || die ("" + idx(shorts, 0) );
+        ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
+        ok |= idx(shorts, 2) == 3 || die ("" + idx(shorts, 2) );
+
+
+    }
 
 
     @Test
@@ -29,7 +167,7 @@ public class BytBufTest {
         ByteBuf buf = new ByteBuf();
         buf.add( URLEncoder.encode ("abc", "UTF-8") );
         buf.addUrlEncodedByteArray ( new byte[]{ ( byte ) 1, 2, 3 } );
-        buf.add( URLEncoder.encode ("def", "UTF-8") );
+        buf.add ( URLEncoder.encode ( "def", "UTF-8" ) );
         boolean ok = true;
         final byte[] bytes = buf.readForRecycle ();
         ok |=  bytes[3]  == '%' || die ();

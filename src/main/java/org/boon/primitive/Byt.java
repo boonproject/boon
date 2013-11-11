@@ -439,13 +439,6 @@ public class Byt {
         b[off] = (byte) (val >>> 24);
     }
 
-    public static void unsignedIntTo(byte[] b, int off, long val) {
-        b[off + 3] = (byte) (val);
-        b[off + 2] = (byte) (val >>> 8);
-        b[off + 1] = (byte) (val >>> 16);
-        b[off] = (byte) (val >>> 24);
-    }
-
     public static void longTo(byte[] b, int off, long val) {
         b[off + 7] = (byte) (val);
         b[off + 6] = (byte) (val >>> 8);
@@ -701,38 +694,6 @@ public class Byt {
 //                (b[off] << 8));
 //    }
 //
-//
-//
-//    public static char charAt(byte[] b, int off) {
-//        return (char) toChar(b[off + 1], b[off], off);
-//    }
-//
-//
-//    public static char toChar(int b1, int b2, int off) {
-//        return (char) ( ( b1 & 0xFF ) + ( b2 << 8 ) );
-//    }
-//
-//    public static int unsignedShortAt(byte[] b, int off) {
-//        return ((b[off + 1] & 0xFF) +
-//                (b[off] << 8));
-//    }
-//
-//
-//
-//
-//    public static double doubleAt(byte[] b, int off) {
-//        return Double.longBitsToDouble(idxLong(b, off));
-//    }
-//
-//    public static void booleanTo(byte[] b, int off, boolean val) {
-//        b[off] = (byte) (val ? 1 : 0);
-//    }
-//
-//    public static void charTo(byte[] b, int off, char val) {
-//        b[off + 1] = (byte) (val);
-//        b[off] = (byte) (val >>> 8);
-//    }
-//
 
 
 
@@ -757,5 +718,56 @@ public class Byt {
                     array.length, startIndex, input.length), ex);
         }
     }
+
+
+
+    public static void _idx ( final byte[] output, int ouputStartIndex, byte[] input, int inputOffset, int length ) {
+        try {
+
+            System.arraycopy(input, inputOffset, output, ouputStartIndex, length);
+        }
+        catch (Exception ex) {
+            Exceptions.handle(String.format("array size %d, startIndex %d, input length %d",
+                    output.length, ouputStartIndex, input.length), ex);
+        }
+    }
+
+
+    public static int idxUnsignedShort ( byte[] buffer, int off ) {
+
+        int ch1 = buffer[off] & 0xFF;
+        int ch2 = buffer[off+1] & 0xFF;
+
+        return (ch1 << 8) + (ch2 << 0);
+
+
+    }
+
+    public static short idxUnsignedByte ( byte[] array, int location ) {
+        return (short) (array [location] & 0xFF);
+    }
+
+
+
+    public static void unsignedIntTo(byte[] b, int off, long val) {
+        b[off + 3] = (byte) (val      );
+        b[off + 2] = (byte) (val >>> 8);
+        b[off + 1] = (byte) (val >>> 16);
+        b[off    ] = (byte) (val >>> 24);
+    }
+
+    public static void unsignedShortTo ( byte[] buffer, int off, int value ) {
+
+        buffer[off + 1] = (byte) (value);
+        buffer[off    ] = (byte) (value >>> 8);
+
+    }
+
+    public static void unsignedByteTo ( byte[] buffer, int off, short value ) {
+        buffer[off    ] = (byte) (value);
+
+    }
+
+
 
 }

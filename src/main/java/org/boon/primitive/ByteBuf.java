@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import static org.boon.Exceptions.die;
 
-public class ByteBuf {
+public class ByteBuf implements Output {
 
     protected int capacity = 16;
 
@@ -219,6 +219,19 @@ public class ByteBuf {
         this.length += length;
     }
 
+    public void add(byte[] array, final int offset, final int length) {
+        if (array.length + length < capacity) {
+            Byt._idx( buffer, length, array, offset, length );
+        } else {
+            buffer = Byt.grow(buffer,  buffer.length * 2 + length );
+            capacity = buffer.length;
+
+            Byt._idx(buffer, length, array, offset, length);
+
+        }
+        this.length += length;
+    }
+
     public byte[] readAndReset () {
         byte [] bytes = this.buffer;
         this.buffer = null;
@@ -327,4 +340,198 @@ public class ByteBuf {
             Exceptions.handle (e);
         }
     }
+
+    @Override
+    public void write ( int b ) {
+        this.addByte ( b );
+    }
+
+    @Override
+    public void write ( byte[] b ) {
+        this.add ( b );
+    }
+
+    @Override
+    public void write ( byte[] b, int off, int len ) {
+        this.add ( b, len );
+    }
+
+    @Override
+    public void writeBoolean ( boolean v ) {
+        if ( v == true ) {
+             this.addByte ( 1 );
+        } else {
+            this.addByte ( 0 );
+        }
+    }
+
+    @Override
+    public void writeByte ( byte v ) {
+        this.addByte ( v );
+    }
+
+    @Override
+    public void writeUnsignedByte ( short v ) {
+        this.addUnsignedByte( v );
+    }
+
+    public void addUnsignedByte ( short value ) {
+        if (1 + length < capacity) {
+            Byt.unsignedByteTo ( buffer, length, value );
+        } else {
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 1 );
+            capacity = buffer.length;
+
+            Byt.unsignedByteTo ( buffer, length, value );
+        }
+
+        length += 1;
+
+    }
+
+    @Override
+    public void writeShort ( short v ) {
+        this.add( v );
+    }
+
+    @Override
+    public void writeUnsignedShort ( int v ) {
+        this.addUnsignedShort( v );
+    }
+
+    public void addUnsignedShort ( int value ) {
+
+        if (2 + length < capacity) {
+            Byt.unsignedShortTo ( buffer, length, value );
+        } else {
+            buffer = Byt.grow(buffer,  buffer.length * 2 + 2 );
+            capacity = buffer.length;
+
+            Byt.unsignedShortTo ( buffer, length, value );
+        }
+
+        length += 2;
+
+
+    }
+
+    @Override
+    public void writeChar ( char v ) {
+
+        this.add(v);
+    }
+
+    @Override
+    public void writeInt ( int v ) {
+        this.add ( v );
+    }
+
+    @Override
+    public void writeUnsignedInt ( long v ) {
+        this.addUnsignedInt ( v );
+    }
+
+    @Override
+    public void writeLong ( long v ) {
+        this.add(v);
+    }
+
+    @Override
+    public void writeFloat ( float v ) {
+        this.add(v);
+    }
+
+    @Override
+    public void writeDouble ( double v ) {
+        this.add(v);
+    }
+
+    @Override
+    public void writeLargeString ( String s ) {
+        final byte[] bytes = Byt.bytes ( s );
+        this.add ( bytes.length );
+        this.add( bytes );
+    }
+
+    @Override
+    public void writeSmallString ( String s ) {
+        final byte[] bytes = Byt.bytes ( s );
+        this.addUnsignedByte ( (short) bytes.length );
+        this.add( bytes );
+    }
+
+    @Override
+    public void writeMediumString ( String s ) {
+        final byte[] bytes = Byt.bytes ( s );
+        this.addUnsignedShort ( bytes.length );
+        this.add( bytes );
+    }
+
+    @Override
+    public void writeLargeByteArray ( byte[] bytes ) {
+        this.add ( bytes.length );
+        this.add( bytes );
+    }
+
+    @Override
+    public void writeSmallByteArray ( byte[] bytes ) {
+        this.addUnsignedByte ( (short) bytes.length );
+        this.add( bytes );
+    }
+
+    @Override
+    public void writeMediumByteArray ( byte[] bytes ) {
+        this.addUnsignedShort ( bytes.length );
+        this.add( bytes );
+    }
+
+    @Override
+    public void writeLargeShortArray ( short[] values ) {
+        int byteSize = values.length * 2 + 4;
+
+
+        if ( !( byteSize + length < capacity ) ) {
+            buffer = Byt.grow(buffer, buffer.length * 2 + byteSize);
+        }
+
+        this.add( values.length );
+        for (int index=0; index < values.length; index++) {
+            this.add(values[index]);
+        }
+
+    }
+
+    @Override
+    public void writeSmallShortArray ( short[] values ) {
+
+        int byteSize = values.length * 2 + 1;
+
+
+        doWriteShortArray ( values, byteSize );
+
+    }
+
+    @Override
+    public void writeMediumShortArray ( short[] values ) {
+        int byteSize = values.length * 2 + 2;
+
+
+        doWriteShortArray ( values, byteSize );
+    }
+
+    private void doWriteShortArray ( short[] values, int byteSize ) {
+        if ( !( byteSize + length < capacity ) ) {
+            buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
+        }
+
+        this.addByte ( values.length );
+        for (int index=0; index < values.length; index++) {
+            this.add(values[index]);
+        }
+    }
+
+    public Input input() {
+          return new InputByteArray (this.buffer) ;
+    }
+
 }
