@@ -14,58 +14,58 @@ public class ByteBuf implements Output {
 
     protected int length = 0;
 
-    protected byte [] buffer;
+    protected byte[] buffer;
 
 
-    public static ByteBuf createExact( final int capacity) {
-        return new ByteBuf(capacity) {
-            public void add(byte[] chars) {
-                Byt._idx( buffer, length, chars );
+    public static ByteBuf createExact ( final int capacity ) {
+        return new ByteBuf ( capacity ) {
+            public void add ( byte[] chars ) {
+                Byt._idx ( buffer, length, chars );
                 length += chars.length;
             }
         };
     }
 
-    public static ByteBuf create( int capacity) {
-        return new ByteBuf(capacity);
+    public static ByteBuf create ( int capacity ) {
+        return new ByteBuf ( capacity );
     }
 
-    public static ByteBuf create( byte [] buffer) {
-        ByteBuf buf = new ByteBuf(buffer.length);
+    public static ByteBuf create ( byte[] buffer ) {
+        ByteBuf buf = new ByteBuf ( buffer.length );
         buf.buffer = buffer;
         return buf;
     }
 
-    protected ByteBuf(int capacity)  {
+    protected ByteBuf ( int capacity ) {
         this.capacity = capacity;
-        init();
+        init ();
     }
 
 
-    protected ByteBuf()  {
-        init();
+    protected ByteBuf () {
+        init ();
     }
 
-    private void init() {
-        buffer = new byte[capacity];
-    }
-
-
-    public void add(String str) {
-            this.add( Byt.bytes(str) );
-
+    private void init () {
+        buffer = new byte[ capacity ];
     }
 
 
-    public void add(int value) {
+    public void add ( String str ) {
+        this.add ( Byt.bytes ( str ) );
 
-        if (4 + length < capacity) {
-            Byt.intTo(buffer, length, value);
+    }
+
+
+    public void add ( int value ) {
+
+        if ( 4 + length < capacity ) {
+            Byt.intTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer, buffer.length * 2 + 4 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 4 );
             capacity = buffer.length;
 
-            Byt.intTo(buffer, length, value);
+            Byt.intTo ( buffer, length, value );
         }
 
         length += 4;
@@ -74,15 +74,15 @@ public class ByteBuf implements Output {
     }
 
 
-    public void add(float value) {
+    public void add ( float value ) {
 
-        if (4 + length < capacity) {
-            Byt.floatTo(buffer, length, value);
+        if ( 4 + length < capacity ) {
+            Byt.floatTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 4 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 4 );
             capacity = buffer.length;
 
-            Byt.floatTo(buffer, length, value);
+            Byt.floatTo ( buffer, length, value );
         }
 
         length += 4;
@@ -91,16 +91,15 @@ public class ByteBuf implements Output {
     }
 
 
+    public void add ( char value ) {
 
-    public void add(char value) {
-
-        if (2 + length < capacity) {
-            Byt.charTo(buffer, length, value);
+        if ( 2 + length < capacity ) {
+            Byt.charTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 2 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 2 );
             capacity = buffer.length;
 
-            Byt.charTo(buffer, length, value);
+            Byt.charTo ( buffer, length, value );
         }
 
         length += 2;
@@ -109,16 +108,15 @@ public class ByteBuf implements Output {
     }
 
 
+    public void add ( short value ) {
 
-    public void add(short value) {
-
-        if (2 + length < capacity) {
-            Byt.shortTo(buffer, length, value);
+        if ( 2 + length < capacity ) {
+            Byt.shortTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 2 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 2 );
             capacity = buffer.length;
 
-            Byt.shortTo(buffer, length, value);
+            Byt.shortTo ( buffer, length, value );
         }
 
         length += 2;
@@ -126,19 +124,19 @@ public class ByteBuf implements Output {
 
     }
 
-    public void addByte(int value) {
-         this.add ( (byte) value );
+    public void addByte ( int value ) {
+        this.add ( ( byte ) value );
     }
 
-    public void add(byte value) {
+    public void add ( byte value ) {
 
-        if (1 + length < capacity) {
-            Byt.idx(buffer, length, value);
+        if ( 1 + length < capacity ) {
+            Byt.idx ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer);
+            buffer = Byt.grow ( buffer );
             capacity = buffer.length;
 
-            Byt.idx(buffer, length, value);
+            Byt.idx ( buffer, length, value );
         }
 
         length += 1;
@@ -146,27 +144,27 @@ public class ByteBuf implements Output {
 
     }
 
-    public void add(long value) {
+    public void add ( long value ) {
 
-        if (8 + length < capacity) {
-            Byt.longTo(buffer, length, value);
+        if ( 8 + length < capacity ) {
+            Byt.longTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 8 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 8 );
             capacity = buffer.length;
 
-            Byt.longTo(buffer, length, value);
+            Byt.longTo ( buffer, length, value );
         }
 
         length += 8;
 
     }
 
-    public void addUnsignedInt(long value) {
+    public void addUnsignedInt ( long value ) {
 
-        if (4 + length < capacity) {
+        if ( 4 + length < capacity ) {
             Byt.unsignedIntTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 4 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 4 );
             capacity = buffer.length;
 
             Byt.unsignedIntTo ( buffer, length, value );
@@ -176,15 +174,15 @@ public class ByteBuf implements Output {
 
     }
 
-    public void add(double value) {
+    public void add ( double value ) {
 
-        if (8 + length < capacity) {
-            Byt.doubleTo(buffer, length, value);
+        if ( 8 + length < capacity ) {
+            Byt.doubleTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 8 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 8 );
             capacity = buffer.length;
 
-            Byt.doubleTo(buffer, length, value);
+            Byt.doubleTo ( buffer, length, value );
         }
 
         length += 8;
@@ -192,69 +190,68 @@ public class ByteBuf implements Output {
     }
 
 
-    public void add(byte[] array) {
-        if (array.length + length < capacity) {
-            Byt._idx( buffer, length, array );
+    public void add ( byte[] array ) {
+        if ( array.length + length < capacity ) {
+            Byt._idx ( buffer, length, array );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + array.length );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + array.length );
             capacity = buffer.length;
 
-            Byt._idx(buffer, length, array);
+            Byt._idx ( buffer, length, array );
 
         }
         length += array.length;
     }
 
 
-    public void add(byte[] array, final int length) {
-        if (array.length + length < capacity) {
-            Byt._idx( buffer, length, array, length );
+    public void add ( byte[] array, final int length ) {
+        if ( array.length + length < capacity ) {
+            Byt._idx ( buffer, length, array, length );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + length );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + length );
             capacity = buffer.length;
 
-            Byt._idx(buffer, length, array, length);
+            Byt._idx ( buffer, length, array, length );
 
         }
         this.length += length;
     }
 
-    public void add(byte[] array, final int offset, final int length) {
-        if (array.length + length < capacity) {
-            Byt._idx( buffer, length, array, offset, length );
+    public void add ( byte[] array, final int offset, final int length ) {
+        if ( array.length + length < capacity ) {
+            Byt._idx ( buffer, length, array, offset, length );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + length );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + length );
             capacity = buffer.length;
 
-            Byt._idx(buffer, length, array, offset, length);
+            Byt._idx ( buffer, length, array, offset, length );
 
         }
         this.length += length;
     }
 
     public byte[] readAndReset () {
-        byte [] bytes = this.buffer;
+        byte[] bytes = this.buffer;
         this.buffer = null;
         return bytes;
     }
 
     public byte[] readForRecycle () {
         this.length = 0;
-        return  this.buffer;
+        return this.buffer;
     }
 
-    public int len() {
+    public int len () {
         return length;
     }
 
     public void addUrlEncodedByteArray ( byte[] value ) {
 
 
+        final byte[] encoded = new byte[ 2 ];
 
-        final byte[] encoded = new byte [2];
-
-        for (int index = 0; index < value.length; index++) {
-            int i = value[index];
+        for ( int index = 0; index < value.length; index++ ) {
+            int i = value[ index ];
 
             if ( i >= 'a' && i <= 'z' ) {
                 this.addByte ( i );
@@ -262,30 +259,28 @@ public class ByteBuf implements Output {
                 this.addByte ( i );
             } else if ( i >= '0' && i <= '9' ) {
                 this.addByte ( i );
-            } else if ( i == '_' || i == '-' || i == '.' || i == '*') {
+            } else if ( i == '_' || i == '-' || i == '.' || i == '*' ) {
                 this.addByte ( i );
-            } else if ( i == ' ') {
+            } else if ( i == ' ' ) {
                 this.addByte ( '+' );
             } else {
-                encodeByteIntoTwoAsciiCharBytes(i, encoded);
+                encodeByteIntoTwoAsciiCharBytes ( i, encoded );
                 this.addByte ( '%' );
-                this.addByte ( encoded [0] );
-                this.addByte ( encoded [1] );
+                this.addByte ( encoded[ 0 ] );
+                this.addByte ( encoded[ 1 ] );
             }
 
         }
     }
 
 
-
     /**
      * Turns a single nibble into an ascii HEX digit.
      *
      * @param nibble the nibble to encode.
-     *
      * @return the encoded nibble (1/2 byte).
      */
-    protected static int encodeNibbleToHexAsciiCharByte( final int nibble ) {
+    protected static int encodeNibbleToHexAsciiCharByte ( final int nibble ) {
 
         switch ( nibble ) {
             case 0x00:
@@ -319,25 +314,25 @@ public class ByteBuf implements Output {
      * @param decoded the byte to encode.
      * @param encoded the array to which each encoded nibbles are now ascii hex representations.
      */
-    public static void encodeByteIntoTwoAsciiCharBytes(final int decoded, final byte[] encoded) {
+    public static void encodeByteIntoTwoAsciiCharBytes ( final int decoded, final byte[] encoded ) {
 
         Objects.requireNonNull ( encoded );
 
         boolean ok = true;
 
 
-        ok |= encoded.length == 2 || die("encoded array must be 2");
+        ok |= encoded.length == 2 || die ( "encoded array must be 2" );
 
 
-        encoded[0] = (byte) encodeNibbleToHexAsciiCharByte((decoded >> 4) & 0x0F);
-        encoded[1] = (byte) encodeNibbleToHexAsciiCharByte(decoded & 0x0F);
+        encoded[ 0 ] = ( byte ) encodeNibbleToHexAsciiCharByte ( ( decoded >> 4 ) & 0x0F );
+        encoded[ 1 ] = ( byte ) encodeNibbleToHexAsciiCharByte ( decoded & 0x0F );
     }
 
     public void addUrlEncoded ( String key ) {
         try {
-            this.addUrlEncodedByteArray( key.getBytes ("UTF-8"));
+            this.addUrlEncodedByteArray ( key.getBytes ( "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
-            Exceptions.handle (e);
+            Exceptions.handle ( e );
         }
     }
 
@@ -359,7 +354,7 @@ public class ByteBuf implements Output {
     @Override
     public void writeBoolean ( boolean v ) {
         if ( v == true ) {
-             this.addByte ( 1 );
+            this.addByte ( 1 );
         } else {
             this.addByte ( 0 );
         }
@@ -372,14 +367,14 @@ public class ByteBuf implements Output {
 
     @Override
     public void writeUnsignedByte ( short v ) {
-        this.addUnsignedByte( v );
+        this.addUnsignedByte ( v );
     }
 
     public void addUnsignedByte ( short value ) {
-        if (1 + length < capacity) {
+        if ( 1 + length < capacity ) {
             Byt.unsignedByteTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 1 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 1 );
             capacity = buffer.length;
 
             Byt.unsignedByteTo ( buffer, length, value );
@@ -391,20 +386,20 @@ public class ByteBuf implements Output {
 
     @Override
     public void writeShort ( short v ) {
-        this.add( v );
+        this.add ( v );
     }
 
     @Override
     public void writeUnsignedShort ( int v ) {
-        this.addUnsignedShort( v );
+        this.addUnsignedShort ( v );
     }
 
     public void addUnsignedShort ( int value ) {
 
-        if (2 + length < capacity) {
+        if ( 2 + length < capacity ) {
             Byt.unsignedShortTo ( buffer, length, value );
         } else {
-            buffer = Byt.grow(buffer,  buffer.length * 2 + 2 );
+            buffer = Byt.grow ( buffer, buffer.length * 2 + 2 );
             capacity = buffer.length;
 
             Byt.unsignedShortTo ( buffer, length, value );
@@ -418,7 +413,7 @@ public class ByteBuf implements Output {
     @Override
     public void writeChar ( char v ) {
 
-        this.add(v);
+        this.add ( v );
     }
 
     @Override
@@ -433,69 +428,69 @@ public class ByteBuf implements Output {
 
     @Override
     public void writeLong ( long v ) {
-        this.add(v);
+        this.add ( v );
     }
 
     @Override
     public void writeFloat ( float v ) {
-        this.add(v);
+        this.add ( v );
     }
 
     @Override
     public void writeDouble ( double v ) {
-        this.add(v);
+        this.add ( v );
     }
 
     @Override
     public void writeLargeString ( String s ) {
         final byte[] bytes = Byt.bytes ( s );
         this.add ( bytes.length );
-        this.add( bytes );
+        this.add ( bytes );
     }
 
     @Override
     public void writeSmallString ( String s ) {
         final byte[] bytes = Byt.bytes ( s );
-        this.addUnsignedByte ( (short) bytes.length );
-        this.add( bytes );
+        this.addUnsignedByte ( ( short ) bytes.length );
+        this.add ( bytes );
     }
 
     @Override
     public void writeMediumString ( String s ) {
         final byte[] bytes = Byt.bytes ( s );
         this.addUnsignedShort ( bytes.length );
-        this.add( bytes );
+        this.add ( bytes );
     }
 
     @Override
     public void writeLargeByteArray ( byte[] bytes ) {
         this.add ( bytes.length );
-        this.add( bytes );
+        this.add ( bytes );
     }
 
     @Override
     public void writeSmallByteArray ( byte[] bytes ) {
-        this.addUnsignedByte ( (short) bytes.length );
-        this.add( bytes );
+        this.addUnsignedByte ( ( short ) bytes.length );
+        this.add ( bytes );
     }
 
     @Override
     public void writeMediumByteArray ( byte[] bytes ) {
         this.addUnsignedShort ( bytes.length );
-        this.add( bytes );
+        this.add ( bytes );
     }
 
     @Override
     public void writeLargeShortArray ( short[] values ) {
         int byteSize = values.length * 2 + 4;
-        this.add( values.length );
+        this.add ( values.length );
         doWriteShortArray ( values, byteSize );
     }
 
     @Override
     public void writeSmallShortArray ( short[] values ) {
         int byteSize = values.length * 2 + 1;
-        this.addUnsignedByte ( (short) values.length );
+        this.addUnsignedByte ( ( short ) values.length );
         doWriteShortArray ( values, byteSize );
     }
 
@@ -507,29 +502,27 @@ public class ByteBuf implements Output {
     }
 
 
-
     private void doWriteShortArray ( short[] values, int byteSize ) {
         if ( !( byteSize + length < capacity ) ) {
             buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
         }
-        for (int index=0; index < values.length; index++) {
-            this.add(values[index]);
+        for ( int index = 0; index < values.length; index++ ) {
+            this.add ( values[ index ] );
         }
     }
-
 
 
     @Override
     public void writeLargeIntArray ( int[] values ) {
         int byteSize = values.length * 4 + 4;
-        this.add( values.length );
+        this.add ( values.length );
         doWriteIntArray ( values, byteSize );
     }
 
     @Override
     public void writeSmallIntArray ( int[] values ) {
         int byteSize = values.length * 4 + 1;
-        this.addUnsignedByte ( (short) values.length );
+        this.addUnsignedByte ( ( short ) values.length );
         doWriteIntArray ( values, byteSize );
     }
 
@@ -545,29 +538,27 @@ public class ByteBuf implements Output {
         if ( !( byteSize + length < capacity ) ) {
             buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
         }
-        for (int index=0; index < values.length; index++) {
-            this.add(values[index]);
+        for ( int index = 0; index < values.length; index++ ) {
+            this.add ( values[ index ] );
         }
     }
 
-    public Input input() {
-          return new InputByteArray (this.buffer) ;
+    public Input input () {
+        return new InputByteArray ( this.buffer );
     }
-
-
 
 
     @Override
     public void writeLargeLongArray ( long[] values ) {
         int byteSize = values.length * 8 + 4;
-        this.add( values.length );
+        this.add ( values.length );
         doWriteLongArray ( values, byteSize );
     }
 
     @Override
     public void writeSmallLongArray ( long[] values ) {
         int byteSize = values.length * 8 + 1;
-        this.addUnsignedByte ( (short) values.length );
+        this.addUnsignedByte ( ( short ) values.length );
         doWriteLongArray ( values, byteSize );
     }
 
@@ -583,10 +574,78 @@ public class ByteBuf implements Output {
         if ( !( byteSize + length < capacity ) ) {
             buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
         }
-        for (int index=0; index < values.length; index++) {
-            this.add(values[index]);
+        for ( int index = 0; index < values.length; index++ ) {
+            this.add ( values[ index ] );
         }
     }
 
+
+    @Override
+    public void writeLargeFloatArray ( float[] values ) {
+        int byteSize = values.length * 4 + 4;
+        this.add ( values.length );
+        doWriteFloatArray ( values, byteSize );
+
+    }
+
+    @Override
+    public void writeSmallFloatArray ( float[] values ) {
+        int byteSize = values.length * 4 + 1;
+        this.addUnsignedByte ( ( short ) values.length );
+        doWriteFloatArray ( values, byteSize );
+    }
+
+    @Override
+    public void writeMediumFloatArray ( float[] values ) {
+        int byteSize = values.length * 4 + 2;
+        this.addUnsignedShort ( values.length );
+        doWriteFloatArray ( values, byteSize );
+
+    }
+
+    private void doWriteFloatArray ( float[] values, int byteSize ) {
+        if ( !( byteSize + length < capacity ) ) {
+            buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
+        }
+        for ( int index = 0; index < values.length; index++ ) {
+            this.add ( values[ index ] );
+        }
+    }
+
+
+    @Override
+    public void writeLargeDoubleArray ( double[] values ) {
+        int byteSize = values.length * 8 + 4;
+        this.add ( values.length );
+        doWriteDoubleArray ( values, byteSize );
+
+
+    }
+
+    @Override
+    public void writeSmallDoubleArray ( double[] values ) {
+        int byteSize = values.length * 8 + 1;
+        this.addUnsignedByte ( ( short ) values.length );
+        doWriteDoubleArray ( values, byteSize );
+
+    }
+
+    @Override
+    public void writeMediumDoubleArray ( double[] values ) {
+        int byteSize = values.length * 8 + 2;
+        this.addUnsignedShort ( values.length );
+        doWriteDoubleArray ( values, byteSize );
+
+    }
+
+
+    private void doWriteDoubleArray ( double[] values, int byteSize ) {
+        if ( !( byteSize + length < capacity ) ) {
+            buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
+        }
+        for ( int index = 0; index < values.length; index++ ) {
+            this.add ( values[ index ] );
+        }
+    }
 
 }

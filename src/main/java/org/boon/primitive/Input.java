@@ -66,4 +66,18 @@ public interface Input {
     long[] readMediumLongArray ();
 
 
+
+
+    float[] readSmallFloatArray ();
+    float[] readLargeFloatArray ();
+    float[] readMediumFloatArray ();
+
+
+    double[] readSmallDoubleArray ();
+    double[] readLargeDoubleArray ();
+    double[] readMediumDoubleArray ();
+
+    //TODO add unsigned int, unsigned byte, unsigned short array
+
+
 }

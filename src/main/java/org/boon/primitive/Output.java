@@ -32,33 +32,39 @@ public interface Output {
     void writeDouble ( double v );
 
 
-    void writeLargeString ( String s );
-
-    void writeSmallString ( String s );
-
+    void writeLargeString  ( String s );
+    void writeSmallString  ( String s );
     void writeMediumString ( String s );
 
-    void writeLargeByteArray ( byte[] bytes );
-
-    void writeSmallByteArray ( byte[] bytes );
-
+    void writeLargeByteArray  ( byte[] bytes );
+    void writeSmallByteArray  ( byte[] bytes );
     void writeMediumByteArray ( byte[] bytes );
 
 
-    void writeLargeShortArray ( short[] values );
-
-    void writeSmallShortArray ( short[] values );
-
+    void writeLargeShortArray  ( short[] values );
+    void writeSmallShortArray  ( short[] values );
     void writeMediumShortArray ( short[] values );
 
 
-    void writeLargeIntArray ( int[] values );
-    void writeSmallIntArray ( int[] values );
+    void writeLargeIntArray  ( int[] values );
+    void writeSmallIntArray  ( int[] values );
     void writeMediumIntArray ( int[] values );
 
 
-    void writeLargeLongArray ( long[] values );
-    void writeSmallLongArray ( long[] values );
+    void writeLargeLongArray  ( long[] values );
+    void writeSmallLongArray  ( long[] values );
     void writeMediumLongArray ( long[] values );
+
+    void writeLargeFloatArray  ( float[] values );
+    void writeSmallFloatArray  ( float[] values );
+    void writeMediumFloatArray ( float[] values );
+
+
+    void writeLargeDoubleArray  ( double[] values );
+    void writeSmallDoubleArray  ( double[] values );
+    void writeMediumDoubleArray ( double[] values );
+
+    //TODO add unsigned int, unsigned byte, unsigned short array
+
 
 }

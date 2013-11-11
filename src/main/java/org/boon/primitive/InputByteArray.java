@@ -337,4 +337,60 @@ public class InputByteArray implements Input {
 
     }
 
+    @Override
+    public float[] readSmallFloatArray () {
+        short size = this.readUnsignedByte ();
+        return doReadFloatArray ( size );
+    }
+
+    @Override
+    public float[] readLargeFloatArray () {
+        int size = this.readInt ();
+        return doReadFloatArray ( size );
+    }
+
+    @Override
+    public float[] readMediumFloatArray () {
+        int size = this.readUnsignedShort ();
+        return doReadFloatArray ( size );
+    }
+
+    private float [] doReadFloatArray ( int size ) {
+        float [] values = new float[size];
+        for ( int index=0; index < values.length; index++ ) {
+            values[index] = this.readFloat ();
+        }
+        return values;
+    }
+
+
+    @Override
+    public double[] readSmallDoubleArray () {
+        short size = this.readUnsignedByte ();
+        return doReadDoubleArray ( size );
+    }
+
+    @Override
+    public double[] readLargeDoubleArray () {
+        int size = this.readInt ();
+        return doReadDoubleArray ( size );
+    }
+
+    @Override
+    public double[] readMediumDoubleArray () {
+        int size = this.readUnsignedShort ();
+        return doReadDoubleArray ( size );
+    }
+
+
+    private double [] doReadDoubleArray ( int size ) {
+        double [] values = new double[size];
+        for ( int index=0; index < values.length; index++ ) {
+            values[index] = this.readDouble ();
+        }
+        return values;
+    }
+
+    //TODO add unsigned int, unsigned byte, unsigned short
+
 }

@@ -12,6 +12,8 @@ import static org.boon.primitive.Byt.*;
 import static org.boon.primitive.Shrt.*;
 import static org.boon.primitive.Int.*;
 import static org.boon.primitive.Lng.*;
+import static org.boon.primitive.Flt.*;
+import static org.boon.primitive.Dbl.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,11 +49,16 @@ public class BytBufTest {
         buf.writeSmallIntArray  ( new int[] {1, 2, 3} );
         buf.writeLargeIntArray  ( new int[] {1, 2, 3} );
         buf.writeMediumIntArray ( new int[] {2, 2, 2} );
-
-
         buf.writeSmallLongArray  ( new long[] {1, 2, 3} );
         buf.writeLargeLongArray  ( new long[] {1, 2, 3} );
         buf.writeMediumLongArray ( new long[] {2, 2, 2} );
+        buf.writeSmallFloatArray  ( new float[] {1.0f, 2.0f, 3.0f} );
+        buf.writeLargeFloatArray  ( new float[] {1.0f, 2.0f, 3.0f} );
+        buf.writeMediumFloatArray ( new float[] {2.0f, 2.0f, 2.0f} );
+
+        buf.writeSmallDoubleArray  ( new double[] {1.0, 2.0, 3.0} );
+        buf.writeLargeDoubleArray  ( new double[] {1.0, 2.0, 3.0} );
+        buf.writeMediumDoubleArray ( new double[] {2.0, 2.0, 2.0} );
 
         boolean ok = true;
 
@@ -194,6 +201,44 @@ public class BytBufTest {
         ok |= idx(longs, 0) == 2 || die ("" + idx(longs, 0) );
         ok |= idx(longs, 1) == 2 || die ("" + idx(longs, 1) );
         ok |= idx(longs, 2) == 2 || die ("" + idx(longs, 2) );
+
+
+        float [] floats = input.readSmallFloatArray ();
+        ok |= floats.length == 3 || die ("" + floats.length );
+        ok |= idx(floats, 0) == 1 || die ("" + idx(floats, 0) );
+        ok |= idx(floats, 1) == 2 || die ("" + idx(floats, 1) );
+        ok |= idx(floats, 2) == 3 || die ("" + idx(floats, 2) );
+
+        floats = input.readLargeFloatArray ();
+        ok |= floats.length == 3 || die ("" + floats.length );
+        ok |= idx(floats, 0) == 1 || die ("" + idx(floats, 0) );
+        ok |= idx(floats, 1) == 2 || die ("" + idx(floats, 1) );
+        ok |= idx(floats, 2) == 3 || die ("" + idx(floats, 2) );
+
+        floats = input.readMediumFloatArray ();
+        ok |= floats.length == 3 || die ("" + floats.length );
+        ok |= idx(floats, 0) == 2 || die ("" + idx(floats, 0) );
+        ok |= idx(floats, 1) == 2 || die ("" + idx(floats, 1) );
+        ok |= idx(floats, 2) == 2 || die ("" + idx(floats, 2) );
+
+
+        double [] doubles = input.readSmallDoubleArray ();
+        ok |= doubles.length == 3 || die ("" + doubles.length );
+        ok |= idx(doubles, 0) == 1 || die ("" + idx(doubles, 0) );
+        ok |= idx(doubles, 1) == 2 || die ("" + idx(doubles, 1) );
+        ok |= idx(doubles, 2) == 3 || die ("" + idx(doubles, 2) );
+
+        doubles = input.readLargeDoubleArray ();
+        ok |= doubles.length == 3 || die ("" + doubles.length );
+        ok |= idx(doubles, 0) == 1 || die ("" + idx(doubles, 0) );
+        ok |= idx(doubles, 1) == 2 || die ("" + idx(doubles, 1) );
+        ok |= idx(doubles, 2) == 3 || die ("" + idx(doubles, 2) );
+
+        doubles = input.readMediumDoubleArray ();
+        ok |= doubles.length == 3 || die ("" + doubles.length );
+        ok |= idx(doubles, 0) == 2 || die ("" + idx(doubles, 0) );
+        ok |= idx(doubles, 1) == 2 || die ("" + idx(doubles, 1) );
+        ok |= idx(doubles, 2) == 2 || die ("" + idx(doubles, 2) );
 
     }
 
