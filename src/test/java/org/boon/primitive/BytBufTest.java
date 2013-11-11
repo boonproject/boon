@@ -40,9 +40,8 @@ public class BytBufTest {
         buf.writeLargeByteArray  ( new byte[] {1, 2, 3} );
         buf.writeSmallShortArray  ( new short[] {1, 2, 3} );
         buf.writeSmallShortArray  ( new short[] {1, 2, 3} );
-
-//        buf.writeMediumShortArray ( new short[] {1, 2, 3} );
         buf.writeLargeShortArray  ( new short[] {1, 2, 3} );
+        buf.writeMediumShortArray ( new short[] {2, 2, 2} );
 
 
         boolean ok = true;
@@ -136,17 +135,17 @@ public class BytBufTest {
         ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
         ok |= idx(shorts, 2) == 3 || die ("" + idx(shorts, 2) );
 
-//        shorts = input.readMediumShortArray ();
-//        ok |= shorts.length == 3 || die ("" + shorts.length );
-//        ok |= idx(shorts, 0) == 1 || die ("" + idx(shorts, 0) );
-//        ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
-//        ok |= idx(shorts, 2) == 3 || die ("" + idx(shorts, 2) );
-//
         shorts = input.readLargeShortArray ();
         ok |= shorts.length == 3 || die ("" + shorts.length );
         ok |= idx(shorts, 0) == 1 || die ("" + idx(shorts, 0) );
         ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
         ok |= idx(shorts, 2) == 3 || die ("" + idx(shorts, 2) );
+
+        shorts = input.readMediumShortArray ();
+        ok |= shorts.length == 3 || die ("" + shorts.length );
+        ok |= idx(shorts, 0) == 2 || die ("" + idx(shorts, 0) );
+        ok |= idx(shorts, 1) == 2 || die ("" + idx(shorts, 1) );
+        ok |= idx(shorts, 2) == 2 || die ("" + idx(shorts, 2) );
 
 
     }

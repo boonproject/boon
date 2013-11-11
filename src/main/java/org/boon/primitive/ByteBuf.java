@@ -489,15 +489,8 @@ public class ByteBuf implements Output {
     public void writeLargeShortArray ( short[] values ) {
         int byteSize = values.length * 2 + 4;
 
-
-        if ( !( byteSize + length < capacity ) ) {
-            buffer = Byt.grow(buffer, buffer.length * 2 + byteSize);
-        }
-
         this.add( values.length );
-        for (int index=0; index < values.length; index++) {
-            this.add(values[index]);
-        }
+        doWriteShortArray ( values, byteSize );
 
     }
 
@@ -506,6 +499,9 @@ public class ByteBuf implements Output {
 
         int byteSize = values.length * 2 + 1;
 
+
+
+        this.addUnsignedByte ( (short) values.length );
 
         doWriteShortArray ( values, byteSize );
 
@@ -516,15 +512,17 @@ public class ByteBuf implements Output {
         int byteSize = values.length * 2 + 2;
 
 
+        this.addUnsignedShort ( values.length );
+
         doWriteShortArray ( values, byteSize );
     }
 
     private void doWriteShortArray ( short[] values, int byteSize ) {
+
+
         if ( !( byteSize + length < capacity ) ) {
             buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
         }
-
-        this.addByte ( values.length );
         for (int index=0; index < values.length; index++) {
             this.add(values[index]);
         }
