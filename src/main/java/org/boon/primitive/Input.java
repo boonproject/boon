@@ -52,5 +52,11 @@ public interface Input {
     short[] readLargeShortArray ();
     short[] readMediumShortArray ();
 
+
+    int[] readSmallIntArray ();
+    int[] readLargeIntArray ();
+    int[] readMediumIntArray ();
+
+
     byte[] readBytes ( int size );
 }

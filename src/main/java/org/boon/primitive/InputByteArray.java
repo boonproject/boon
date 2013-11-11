@@ -255,4 +255,44 @@ public class InputByteArray implements Input {
     }
 
 
+
+
+
+    @Override
+    public int[] readSmallIntArray () {
+
+        short size = this.readUnsignedByte ();
+
+        return doReadIntArray ( size );
+
+
+    }
+
+    private int [] doReadIntArray ( int size ) {
+        int [] values = new int[size];
+
+        for ( int index=0; index < values.length; index++ ) {
+            values[index] = this.readInt ();
+        }
+        return values;
+    }
+
+    @Override
+    public int[] readLargeIntArray () {
+
+        int size = this.readInt ();
+
+        return doReadIntArray ( size );
+
+    }
+
+    @Override
+    public int[] readMediumIntArray () {
+
+        int size = this.readUnsignedShort ();
+
+        return doReadIntArray ( size );
+
+    }
+
 }

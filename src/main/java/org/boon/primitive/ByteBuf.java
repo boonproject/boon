@@ -488,38 +488,58 @@ public class ByteBuf implements Output {
     @Override
     public void writeLargeShortArray ( short[] values ) {
         int byteSize = values.length * 2 + 4;
-
         this.add( values.length );
         doWriteShortArray ( values, byteSize );
-
     }
 
     @Override
     public void writeSmallShortArray ( short[] values ) {
-
         int byteSize = values.length * 2 + 1;
-
-
-
         this.addUnsignedByte ( (short) values.length );
-
         doWriteShortArray ( values, byteSize );
-
     }
 
     @Override
     public void writeMediumShortArray ( short[] values ) {
         int byteSize = values.length * 2 + 2;
-
-
         this.addUnsignedShort ( values.length );
-
         doWriteShortArray ( values, byteSize );
     }
 
+
+
+    @Override
+    public void writeLargeIntArray ( int[] values ) {
+        int byteSize = values.length * 4 + 4;
+        this.add( values.length );
+        doWriteIntArray ( values, byteSize );
+    }
+
+    @Override
+    public void writeSmallIntArray ( int[] values ) {
+        int byteSize = values.length * 4 + 1;
+        this.addUnsignedByte ( (short) values.length );
+        doWriteIntArray ( values, byteSize );
+    }
+
+    @Override
+    public void writeMediumIntArray ( int[] values ) {
+        int byteSize = values.length * 4 + 2;
+        this.addUnsignedShort ( values.length );
+        doWriteIntArray ( values, byteSize );
+    }
+
     private void doWriteShortArray ( short[] values, int byteSize ) {
+        if ( !( byteSize + length < capacity ) ) {
+            buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
+        }
+        for (int index=0; index < values.length; index++) {
+            this.add(values[index]);
+        }
+    }
 
 
+    private void doWriteIntArray ( int[] values, int byteSize ) {
         if ( !( byteSize + length < capacity ) ) {
             buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
         }
