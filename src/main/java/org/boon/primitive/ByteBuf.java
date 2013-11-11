@@ -508,6 +508,17 @@ public class ByteBuf implements Output {
 
 
 
+    private void doWriteShortArray ( short[] values, int byteSize ) {
+        if ( !( byteSize + length < capacity ) ) {
+            buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
+        }
+        for (int index=0; index < values.length; index++) {
+            this.add(values[index]);
+        }
+    }
+
+
+
     @Override
     public void writeLargeIntArray ( int[] values ) {
         int byteSize = values.length * 4 + 4;
@@ -529,15 +540,6 @@ public class ByteBuf implements Output {
         doWriteIntArray ( values, byteSize );
     }
 
-    private void doWriteShortArray ( short[] values, int byteSize ) {
-        if ( !( byteSize + length < capacity ) ) {
-            buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
-        }
-        for (int index=0; index < values.length; index++) {
-            this.add(values[index]);
-        }
-    }
-
 
     private void doWriteIntArray ( int[] values, int byteSize ) {
         if ( !( byteSize + length < capacity ) ) {
@@ -551,5 +553,40 @@ public class ByteBuf implements Output {
     public Input input() {
           return new InputByteArray (this.buffer) ;
     }
+
+
+
+
+    @Override
+    public void writeLargeLongArray ( long[] values ) {
+        int byteSize = values.length * 8 + 4;
+        this.add( values.length );
+        doWriteLongArray ( values, byteSize );
+    }
+
+    @Override
+    public void writeSmallLongArray ( long[] values ) {
+        int byteSize = values.length * 8 + 1;
+        this.addUnsignedByte ( (short) values.length );
+        doWriteLongArray ( values, byteSize );
+    }
+
+    @Override
+    public void writeMediumLongArray ( long[] values ) {
+        int byteSize = values.length * 8 + 2;
+        this.addUnsignedShort ( values.length );
+        doWriteLongArray ( values, byteSize );
+    }
+
+
+    private void doWriteLongArray ( long[] values, int byteSize ) {
+        if ( !( byteSize + length < capacity ) ) {
+            buffer = Byt.grow ( buffer, buffer.length * 2 + byteSize );
+        }
+        for (int index=0; index < values.length; index++) {
+            this.add(values[index]);
+        }
+    }
+
 
 }

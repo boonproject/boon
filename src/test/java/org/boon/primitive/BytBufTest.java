@@ -11,6 +11,7 @@ import static org.boon.Exceptions.die;
 import static org.boon.primitive.Byt.*;
 import static org.boon.primitive.Shrt.*;
 import static org.boon.primitive.Int.*;
+import static org.boon.primitive.Lng.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,6 +47,11 @@ public class BytBufTest {
         buf.writeSmallIntArray  ( new int[] {1, 2, 3} );
         buf.writeLargeIntArray  ( new int[] {1, 2, 3} );
         buf.writeMediumIntArray ( new int[] {2, 2, 2} );
+
+
+        buf.writeSmallLongArray  ( new long[] {1, 2, 3} );
+        buf.writeLargeLongArray  ( new long[] {1, 2, 3} );
+        buf.writeMediumLongArray ( new long[] {2, 2, 2} );
 
         boolean ok = true;
 
@@ -169,6 +175,25 @@ public class BytBufTest {
         ok |= idx(ints, 0) == 2 || die ("" + idx(ints, 0) );
         ok |= idx(ints, 1) == 2 || die ("" + idx(ints, 1) );
         ok |= idx(ints, 2) == 2 || die ("" + idx(ints, 2) );
+
+
+        long [] longs = input.readSmallLongArray ();
+        ok |= longs.length == 3 || die ("" + longs.length );
+        ok |= idx(longs, 0) == 1 || die ("" + idx(longs, 0) );
+        ok |= idx(longs, 1) == 2 || die ("" + idx(longs, 1) );
+        ok |= idx(longs, 2) == 3 || die ("" + idx(longs, 2) );
+
+        longs = input.readLargeLongArray ();
+        ok |= longs.length == 3 || die ("" + longs.length );
+        ok |= idx(longs, 0) == 1 || die ("" + idx(longs, 0) );
+        ok |= idx(longs, 1) == 2 || die ("" + idx(longs, 1) );
+        ok |= idx(longs, 2) == 3 || die ("" + idx(longs, 2) );
+
+        longs = input.readMediumLongArray ();
+        ok |= longs.length == 3 || die ("" + longs.length );
+        ok |= idx(longs, 0) == 2 || die ("" + idx(longs, 0) );
+        ok |= idx(longs, 1) == 2 || die ("" + idx(longs, 1) );
+        ok |= idx(longs, 2) == 2 || die ("" + idx(longs, 2) );
 
     }
 

@@ -53,9 +53,12 @@ public interface Output {
 
 
     void writeLargeIntArray ( int[] values );
-
     void writeSmallIntArray ( int[] values );
-
     void writeMediumIntArray ( int[] values );
+
+
+    void writeLargeLongArray ( long[] values );
+    void writeSmallLongArray ( long[] values );
+    void writeMediumLongArray ( long[] values );
 
 }

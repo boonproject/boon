@@ -295,4 +295,46 @@ public class InputByteArray implements Input {
 
     }
 
+
+
+    ///
+
+
+    @Override
+    public long[] readSmallLongArray () {
+
+        short size = this.readUnsignedByte ();
+
+        return doReadLongArray ( size );
+
+
+    }
+
+    private long [] doReadLongArray ( int size ) {
+        long [] values = new long[size];
+
+        for ( int index=0; index < values.length; index++ ) {
+            values[index] = this.readLong ();
+        }
+        return values;
+    }
+
+    @Override
+    public long[] readLargeLongArray () {
+
+        int size = this.readInt ();
+
+        return doReadLongArray ( size );
+
+    }
+
+    @Override
+    public long[] readMediumLongArray () {
+
+        int size = this.readUnsignedShort ();
+
+        return doReadLongArray ( size );
+
+    }
+
 }
