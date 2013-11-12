@@ -16,7 +16,7 @@ public class DatesTest {
     public void testDates () {
         long now = Dates.utcNow();
         Date clockTime = new Date(Dates.lastNow());
-        long lClocktime = Dates.fromUtcTimeToTimeZone(now, TimeZone.getDefault());
+        long lClocktime = Dates.fromUtcTimeToTimeZone(now, TimeZone.getTimeZone ( "PACIFIC" ));
         Date clockTime2 = new Date(lClocktime);
 
         System.out.println(clockTime2);
