@@ -119,9 +119,13 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     private boolean removeKey(ITEM item, KEY key) {
         key = getKey(key);
 
+        if ( key == null )  {
+            return false;
+        }
+
         MultiValue mv = map.get(key);
 
-        if (mv == null) {
+        if ( mv == null ) {
             return false;
         }
 

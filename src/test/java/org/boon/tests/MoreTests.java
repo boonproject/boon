@@ -557,4 +557,24 @@ public class MoreTests {
     }
 
 
+
+    @Test
+    public void testDeleteWithNullIndexedField() {
+        Repo<String, Employee> repo =
+                Repos.builder ().primaryKey ( "id" )
+                        .searchIndex ( "firstName" )
+                        .build ( Typ.string, Employee.class );
+
+        Employee e = Employee.employee ( null, "LastA", "9131971", "5.29.1970:00:00:01", 100 );
+        repo.put(e);
+
+        e = repo.get("9131971");
+        assertEquals ( "9131971", e.getId() );
+
+        repo.delete ( e );
+        e = repo.get ( "9131971" );
+        assertEquals ( null, e );
+    }
+
+
 }
