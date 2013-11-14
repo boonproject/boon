@@ -3,6 +3,7 @@ package org.boon.primitive;
 import org.boon.Exceptions;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static org.boon.Exceptions.die;
@@ -646,6 +647,12 @@ public class ByteBuf implements Output {
         for ( int index = 0; index < values.length; index++ ) {
             this.add ( values[ index ] );
         }
+    }
+
+
+    public String toString() {
+        int len  = len();
+        return new String (this.buffer, 0, len, StandardCharsets.UTF_8);
     }
 
 }
