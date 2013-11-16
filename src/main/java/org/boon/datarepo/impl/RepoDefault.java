@@ -425,6 +425,11 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
+    public void update ( ITEM item ) {
+        editor.update ( item );
+    }
+
+    @Override
     public void modifyByValue(ITEM item, String property, String value) {
         editor.modifyByValue(item, property, value);
     }

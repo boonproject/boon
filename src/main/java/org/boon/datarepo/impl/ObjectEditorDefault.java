@@ -96,6 +96,23 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
     }
 
+    @Override
+    public void update ( ITEM item ) {
+        KEY key = query.getKey(item);
+        ITEM oldItem = this.doGet(key);
+
+        if (oldItem == null) {
+            throw new DataRepoException ( "Unable to perform update, the object does not exist" );
+        }
+        this.query.delete ( item );
+        this.query.validateIndexes ( item );
+
+        if (log.isLoggable(Level.FINE)) {
+            log.fine(String.format("This item %s was modified like this %s", oldItem, item));
+        }
+
+    }
+
     public void modify(ITEM item, String property, Object value) {
         item = lookupAndExpect(item);
         query.invalidateIndex(property, item);

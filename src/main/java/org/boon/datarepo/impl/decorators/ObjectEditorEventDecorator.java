@@ -45,6 +45,12 @@ public class ObjectEditorEventDecorator<KEY, ITEM> extends ObjectEditorDecorator
         fire(createModification(AFTER_MODIFY, super.getKey(item), item, null, null));
     }
 
+    public void update(ITEM item) {
+        fire(createModification(BEFORE_UPDATE, super.getKey(item), item, null, null));
+        super.modify(item);
+        fire(createModification(AFTER_UPDATE, super.getKey(item), item, null, null));
+    }
+
     private void fire(ModificationEvent<KEY, ITEM> event) {
         for (ModificationListener l : listeners) {
             l.modification(event);

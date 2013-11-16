@@ -58,6 +58,11 @@ public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, I
         objectEditorDefault.modify(item);
     }
 
+    @Override
+    public void update ( ITEM item ) {
+        objectEditorDefault.update ( item );
+    }
+
     public void modify(ITEM item, String property, Object value) {
         objectEditorDefault.modify(item, property, value);
     }

@@ -47,6 +47,8 @@ public interface ObjectEditor<KEY, ITEM> extends Bag<ITEM> {
 
     void modify(ITEM item);
 
+    void update(ITEM item);
+
     /* Does basic conversion */
     void modifyByValue(ITEM item, String property, String value);
 

@@ -647,4 +647,50 @@ public class MoreTests {
         assertEquals ( 1, results2.size() );
     }
 
+
+    @Test
+    public void testQueryAfterUpdate3() {
+        String id = "9131971";
+
+        Repo<String, Employee> repo =
+                Repos.builder ().primaryKey ( "id" )
+                        .searchIndex ( "firstName" )
+                        .build ( Typ.string, Employee.class );
+
+        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put ( e );
+        assertEquals ( 1, repo.size() );
+
+        // Find the new employee
+        Criteria exp = eq ( "firstName", "FirstA" );
+        List<Employee> results = repo.query ( exp );
+        assertEquals ( 1, results.size() );
+
+
+        // Add returns true or false based on whether it was able to add
+        // the object to the repo.
+        Employee e2 = repo.get ( id );
+        assertEquals ( false, repo.add ( e2 ) );
+
+
+        Employee e3 = repo.get ( id );
+        repo.update ( e3 );
+
+
+        Employee e4 = Employee.employee ( "FirstA", "LastA", "9131971777" + System.currentTimeMillis (),
+                "5.29.1970:00:00:01", 100 );
+
+
+        try {
+            repo.update ( e4 );
+            die("you never get here") ;
+        }catch (DataRepoException dre) {
+            puts("you tried to put something in the repo that is already there", dre.getMessage ());
+        }
+
+
+        List<Employee> results2 = repo.query ( exp );
+        assertEquals ( 1, results2.size() );
+    }
+
 }
