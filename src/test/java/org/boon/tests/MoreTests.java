@@ -2,6 +2,7 @@ package org.boon.tests;
 
 import org.boon.Lists;
 import org.boon.core.Typ;
+import org.boon.criteria.Criteria;
 import org.boon.datarepo.Repo;
 import org.boon.datarepo.RepoBuilder;
 import org.boon.datarepo.Repos;
@@ -18,9 +19,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.boon.criteria.CriteriaFactory.empty;
-import static org.boon.criteria.CriteriaFactory.eqNested;
-import static org.boon.criteria.CriteriaFactory.eqNestedAdvanced;
+import static org.boon.criteria.CriteriaFactory.*;
 import static org.boon.datarepo.Collections.$q;
 import static org.boon.datarepo.Collections.sortedQuery;
 
@@ -107,7 +106,7 @@ public class MoreTests {
     @Test
     public void fieldOnlyInSubClass () throws Exception {
         List<Employee> queryableList = $q ( h_list, SalesEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.eq ( "commissionRate", 1 ) );
+        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
         assertEquals ( 1, results.size () );
         assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
 
@@ -116,7 +115,7 @@ public class MoreTests {
     @Test
     public void fieldOnlyInSubClass2 () throws Exception {
         List<Employee> queryableList = $q ( h_list, Employee.class, SalesEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.eq ( "commissionRate", 1 ) );
+        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
         assertEquals ( 1, results.size () );
         assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
 
@@ -125,11 +124,11 @@ public class MoreTests {
     @Test
     public void fieldOnlyInSubClass3 () throws Exception {
         List<Employee> queryableList = $q ( h_list, Employee.class, SalesEmployee.class, HourlyEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.eq ( "commissionRate", 1 ) );
+        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
         assertEquals ( 1, results.size () );
         assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
 
-        results = sortedQuery ( queryableList, "firstName", CriteriaFactory.eq ( "weeklyHours", 40 ) );
+        results = sortedQuery ( queryableList, "firstName", eq ( "weeklyHours", 40 ) );
         assertEquals ( 1, results.size () );
         assertEquals ( "HourlyEmployee", results.get ( 0 ).getClass ().getSimpleName () );
 
@@ -138,11 +137,11 @@ public class MoreTests {
     @Test ( expected = Exception.class )
     public void fieldOnlyInSubClass4 () throws Exception {
         List<Employee> queryableList = $q ( h_list, Employee.class, SalesEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.eq ( "commissionRate", 1 ) );
+        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
         assertEquals ( 1, results.size () );
         assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
 
-        results = sortedQuery ( queryableList, "firstName", CriteriaFactory.eq ( "weeklyHours", 40 ) );
+        results = sortedQuery ( queryableList, "firstName", eq ( "weeklyHours", 40 ) );
         assertEquals ( 0, results.size () );
 
     }
@@ -195,7 +194,7 @@ public class MoreTests {
         List<Employee> results = sortedQuery ( queryableList, "firstName",
                 CriteriaFactory.and (
                         CriteriaFactory.between ( "salary", 1000, 2000 ),
-                        CriteriaFactory.eq ( "firstName", "firstC1" ),
+                        eq ( "firstName", "firstC1" ),
                         CriteriaFactory.startsWith ( "lastName", "last" ),
                         CriteriaFactory.gt ( "birthDate", toDate ( "5.29.1940" ) ),
                         CriteriaFactory.startsWith ( "id", "ssn" ),
@@ -213,17 +212,17 @@ public class MoreTests {
                 CriteriaFactory.or (
                         CriteriaFactory.between ( "salary", 1001, 1002 ),
                         CriteriaFactory.between ( "salary", 1002, 1003 ),
-                        CriteriaFactory.or ( CriteriaFactory.eq ( "firstName", "firstC12" ), CriteriaFactory.and ( CriteriaFactory.eq ( "firstName", "firstC10" ), CriteriaFactory.eq ( "firstName", "firstC11" ) ) ),
-                        CriteriaFactory.and ( CriteriaFactory.eq ( "firstName", "firstC20" ), CriteriaFactory.eq ( "firstName", "firstC21" ), CriteriaFactory.eq ( "firstName", "first22" ),
-                                CriteriaFactory.or ( CriteriaFactory.eq ( "firstName", "firstC30" ), CriteriaFactory.eq ( "firstName", "firstC31" ) ) ),
+                        CriteriaFactory.or ( eq ( "firstName", "firstC12" ), CriteriaFactory.and ( eq ( "firstName", "firstC10" ), eq ( "firstName", "firstC11" ) ) ),
+                        CriteriaFactory.and ( eq ( "firstName", "firstC20" ), eq ( "firstName", "firstC21" ), eq ( "firstName", "first22" ),
+                                CriteriaFactory.or ( eq ( "firstName", "firstC30" ), eq ( "firstName", "firstC31" ) ) ),
 
                         CriteriaFactory.or (
                                 CriteriaFactory.or (
                                         CriteriaFactory.or (
-                                                CriteriaFactory.eq ( "firstName", "firstC52" ),
+                                                eq ( "firstName", "firstC52" ),
                                                 CriteriaFactory.and (
-                                                        CriteriaFactory.eq ( "firstName", "firstC60" ),
-                                                        CriteriaFactory.eq ( "firstName", "firstC61" )
+                                                        eq ( "firstName", "firstC60" ),
+                                                        eq ( "firstName", "firstC61" )
                                                 )
                                         )
                                 )
@@ -250,7 +249,7 @@ public class MoreTests {
                 CriteriaFactory.or (
                         CriteriaFactory.between ( "salary", 1001, 1002 ),
                         CriteriaFactory.between ( "salary", 1002, 1003 ),
-                        CriteriaFactory.and ( CriteriaFactory.eq ( "firstName", "firstC10" ), CriteriaFactory.eq ( "firstName", "firstC11" ) )
+                        CriteriaFactory.and ( eq ( "firstName", "firstC10" ), eq ( "firstName", "firstC11" ) )
 
                 ) );
 
@@ -265,8 +264,8 @@ public class MoreTests {
                 CriteriaFactory.or (
                         CriteriaFactory.between ( "salary", 1001, 1002 ),
                         CriteriaFactory.between ( "salary", 1002, 1003 ),
-                        CriteriaFactory.eq ( "firstName", "firstC10" ),
-                        CriteriaFactory.eq ( "firstName", "firstC11" )
+                        eq ( "firstName", "firstC10" ),
+                        eq ( "firstName", "firstC11" )
 
                 ) );
 
@@ -280,7 +279,7 @@ public class MoreTests {
         List<Employee> results = sortedQuery ( queryableList, "firstName",
                 CriteriaFactory.or (
                         CriteriaFactory.between ( "salary", 1000, 2000 ),
-                        CriteriaFactory.eq ( "firstName", "firstC1" ),
+                        eq ( "firstName", "firstC1" ),
                         CriteriaFactory.startsWith ( "lastName", "last" ),
                         CriteriaFactory.gt ( "birthDate", toDate ( "5.29.1940" ) ),
                         CriteriaFactory.startsWith ( "id", "ssn" ),
@@ -296,7 +295,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q ( bigList );
         List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or ( CriteriaFactory.between ( "salary", 1000, 2000 ), CriteriaFactory.eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
+                CriteriaFactory.or ( CriteriaFactory.between ( "salary", 1000, 2000 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
 
         assertEquals ( 1000, results.size () );
 
@@ -307,7 +306,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q ( bigList );
         List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.between ( "salary", 1000, 2000 ), CriteriaFactory.eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) );
+                CriteriaFactory.between ( "salary", 1000, 2000 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) );
 
         assertEquals ( 0, results.size () );
 
@@ -340,7 +339,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q ( list );
         List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or ( CriteriaFactory.between ( "salary", 199, 201 ), CriteriaFactory.eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
+                CriteriaFactory.or ( CriteriaFactory.between ( "salary", 199, 201 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
 
         assertEquals ( 1, results.size () );
 
@@ -352,7 +351,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q ( list );
         List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or ( CriteriaFactory.between ( "salary", -1, -1 ), CriteriaFactory.eq ( "firstName", "firstA" ) ) );
+                CriteriaFactory.or ( CriteriaFactory.between ( "salary", -1, -1 ), eq ( "firstName", "firstA" ) ) );
 
         assertEquals ( 1, results.size () );
 
@@ -363,7 +362,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q ( list );
         List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and ( CriteriaFactory.between ( "salary", -1, -1 ), CriteriaFactory.eq ( "firstName", "firstA" ) ) );
+                CriteriaFactory.and ( CriteriaFactory.between ( "salary", -1, -1 ), eq ( "firstName", "firstA" ) ) );
 
         assertEquals ( 0, results.size () );
 
@@ -374,7 +373,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q ( list );
         List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and ( CriteriaFactory.between ( "salary", 0, 1000 ), CriteriaFactory.eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
+                CriteriaFactory.and ( CriteriaFactory.between ( "salary", 0, 1000 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
 
         assertEquals ( 0, results.size () );
 
@@ -385,7 +384,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q ( list );
         List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and ( CriteriaFactory.between ( "salary", 0, 1000 ), CriteriaFactory.eq ( "firstName", "firstA" ) ) );
+                CriteriaFactory.and ( CriteriaFactory.between ( "salary", 0, 1000 ), eq ( "firstName", "firstA" ) ) );
 
         assertEquals ( 1, results.size () );
 
@@ -576,5 +575,35 @@ public class MoreTests {
         assertEquals ( null, e );
     }
 
+
+    @Test
+    public void testQueryAfterUpdate() {
+        String id = "9131971";
+
+        Repo<String, Employee> repo =
+                Repos.builder ().primaryKey ( "id" )
+                        .searchIndex ( "firstName" )
+                        .build ( Typ.string, Employee.class );
+
+        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put ( e );
+        assertEquals ( 1, repo.size() );
+
+        // Find the new employee
+        Criteria exp = eq ( "firstName", "FirstA" );
+        List<Employee> results = repo.query ( exp );
+        assertEquals ( 1, results.size() );
+
+        Employee e2 = repo.get ( id );
+        repo.put ( e2 );
+        assertEquals ( 1, repo.size() );
+
+        Employee e3 = repo.get ( id );
+        repo.put ( e3 );
+        assertEquals ( 1, repo.size() );
+
+        List<Employee> results2 = repo.query ( exp );
+        assertEquals ( 1, results2.size() );
+    }
 
 }

@@ -15,9 +15,18 @@ class MultiValue<T> {
 
     public static <T> MultiValue<T> add(MultiValue<T> org, T newItem, int bucketSize) {
         if (org == null) {
-            return new MultiValue<T>(newItem, bucketSize);
+            return new MultiValue<>(newItem, bucketSize);
         } else {
-            org.add(newItem);
+
+            boolean found = false;
+            for (T value : org.values) {
+                 if (value.equals ( newItem )) {
+                    found = true;
+                 }
+            }
+            if ( ! found ) {
+                org.add(newItem);
+            }
         }
         return org;
     }
