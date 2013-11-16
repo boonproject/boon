@@ -3,6 +3,7 @@ package org.boon.tests;
 import org.boon.Lists;
 import org.boon.core.Typ;
 import org.boon.criteria.Criteria;
+import org.boon.datarepo.DataRepoException;
 import org.boon.datarepo.Repo;
 import org.boon.datarepo.RepoBuilder;
 import org.boon.datarepo.Repos;
@@ -19,6 +20,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 import static org.boon.criteria.CriteriaFactory.*;
 import static org.boon.datarepo.Collections.$q;
 import static org.boon.datarepo.Collections.sortedQuery;
@@ -595,12 +598,50 @@ public class MoreTests {
         assertEquals ( 1, results.size() );
 
         Employee e2 = repo.get ( id );
-        repo.put ( e2 );
+        repo.modify ( e2 );
         assertEquals ( 1, repo.size() );
 
         Employee e3 = repo.get ( id );
-        repo.put ( e3 );
+        repo.modify ( e3 );
         assertEquals ( 1, repo.size() );
+
+        List<Employee> results2 = repo.query ( exp );
+        assertEquals ( 1, results2.size() );
+    }
+
+
+    @Test
+    public void testQueryAfterUpdate2() {
+        String id = "9131971";
+
+        Repo<String, Employee> repo =
+                Repos.builder ().primaryKey ( "id" )
+                        .searchIndex ( "firstName" )
+                        .build ( Typ.string, Employee.class );
+
+        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put ( e );
+        assertEquals ( 1, repo.size() );
+
+        // Find the new employee
+        Criteria exp = eq ( "firstName", "FirstA" );
+        List<Employee> results = repo.query ( exp );
+        assertEquals ( 1, results.size() );
+
+
+        // Add returns true or false based on whether it was able to add
+        // the object to the repo.
+        Employee e2 = repo.get ( id );
+        assertEquals ( false, repo.add ( e2 ) );
+
+
+        try {
+            Employee e3 = repo.get ( id );
+            repo.put ( e3 );
+            die("you never get here") ;
+        }catch (DataRepoException dre) {
+            puts("you tried to put something in the repo that is already there", dre.getMessage ());
+        }
 
         List<Employee> results2 = repo.query ( exp );
         assertEquals ( 1, results2.size() );

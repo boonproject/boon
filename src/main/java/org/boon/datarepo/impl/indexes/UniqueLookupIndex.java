@@ -123,6 +123,14 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     }
 
+    @Override
+    public boolean has ( KEY key ) {
+        if (key==null) {
+            return false;
+        }
+        return this.map.containsKey ( key  );
+    }
+
 
     @Override
     public void setInputKeyTransformer(Function<Object, KEY> func) {

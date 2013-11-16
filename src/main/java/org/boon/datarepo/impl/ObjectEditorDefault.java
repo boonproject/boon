@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl;
 
+import org.boon.datarepo.DataRepoException;
 import org.boon.datarepo.ObjectEditor;
 import org.boon.datarepo.SearchableCollection;
 import org.boon.criteria.Update;
@@ -30,7 +31,9 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
 
     public void put(ITEM item) {
-        this.add(item);
+        if (!this.add(item)) {
+            throw new DataRepoException ( "Unable to add item " + item);
+        }
     }
 
     public void removeByKey(KEY key) {

@@ -39,4 +39,8 @@ public class NestedKeySearchIndex extends BaseIndexWrapper {
         return true;
     }
 
+    @Override
+    public boolean has ( Object o ) {
+        return index.has ( o );
+    }
 }

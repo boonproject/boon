@@ -173,4 +173,9 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     public void setBucketSize(int size) {
         index.setBucketSize(size);
     }
+
+
+    public boolean has(Object key) {
+        return index.has ( key  );
+    }
 }

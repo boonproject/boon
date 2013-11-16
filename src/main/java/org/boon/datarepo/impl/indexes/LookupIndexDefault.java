@@ -64,6 +64,11 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
             return false;
         }
 
+        /* You can not add the same key twice. */
+        if ( this.map.containsKey ( key ) ) {
+            return false;
+        }
+
         put(item, key);
         return true;
 
@@ -233,6 +238,11 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     @Override
     public void init() {
+    }
+
+    @Override
+    public boolean has ( KEY key ) {
+        return this.map.containsKey ( key );
     }
 
 

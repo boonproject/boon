@@ -42,5 +42,7 @@ public interface LookupIndex<KEY, ITEM> extends Bag<ITEM> {
 
     void init();
 
+    boolean has(KEY key);
+
 
 }

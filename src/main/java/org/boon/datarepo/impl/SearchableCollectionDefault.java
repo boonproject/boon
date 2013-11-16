@@ -55,6 +55,14 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     }
 
     public boolean add(ITEM item) {
+
+        Objects.requireNonNull ( item, "No nulls allowed in repo" );
+
+        KEY key = getKey(item);
+        if ( primaryIndex.has(key) ) {
+            return false;
+        }
+
         for (LookupIndex index : indexes) {
             index.add(item);
         }
