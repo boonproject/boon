@@ -157,6 +157,18 @@ public class ReflectionTest {
         ok &= manufacturing.employees.get( 0 ).firstName.equals("Rick") || die();
 
 
+        //Add this for Sellwyn
+        final Map<String, Object> objectMap = Reflection.toMap ( manufacturing );
+
+        ok &= objectMap.get("name").equals ( "manufacturing" ) || die();
+        ok &= Reflection.len(objectMap.get("employees"))==4 || die();
+
+        final Map<String, Object> oMapEmployee =    (Map<String, Object>)
+                Reflection.idx ( objectMap.get("employees"), 0);
+        ok &=   oMapEmployee.get("firstName").equals("Rick") || die();
+
+
+
     }
 
     @Test
