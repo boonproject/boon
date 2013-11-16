@@ -685,7 +685,7 @@ public class MoreTests {
             repo.update ( e4 );
             die("you never get here") ;
         }catch (DataRepoException dre) {
-            puts("you tried to put something in the repo that is already there", dre.getMessage ());
+            puts("you tried to update something but it does not exist", dre.getMessage ());
         }
 
 
