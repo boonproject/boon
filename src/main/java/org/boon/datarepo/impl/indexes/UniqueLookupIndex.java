@@ -42,22 +42,23 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     @Override
     public boolean add(ITEM item) {
 
-
         if (log.isLoggable(Level.FINE)) {
             log.fine(String.format("add item = %s", item));
         }
 
         KEY key = keyGetter.apply(item);
-
-        key = getKey(key);
-
-
         if (key == null) {
+            return false;
+        }
+
+        /* You can not add the same key twice. */
+        if ( this.map.containsKey ( key ) ) {
             return false;
         }
 
         map.put(key, item);
         return true;
+
     }
 
     @Override

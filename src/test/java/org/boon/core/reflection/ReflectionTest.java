@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import  org.boon.Maps;
+
 
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
@@ -18,6 +20,8 @@ import static org.boon.Maps.in;
 import static org.boon.Maps.map;
 import static org.boon.Sets.set;
 import static org.boon.primitive.Int.array;
+
+
 
 public class ReflectionTest {
 
@@ -43,7 +47,7 @@ public class ReflectionTest {
         byte        byte0       = 1;
         int         int0        = 2;
         short       short0      = 3;
-        long        long0      = 3;
+        long        long0       = 3;
         float       float0      = 5.0f;
         double      double0     = 6.0;
         char        char0       = 7;
@@ -123,7 +127,7 @@ public class ReflectionTest {
     public void testFromMap() throws Exception {
 
         final Department engineering =
-                Reflection.fromMap(department, Department.class);
+                Maps.fromMap(department, Department.class);
 
 
         boolean ok = true;
@@ -158,7 +162,7 @@ public class ReflectionTest {
 
 
         //Add this for Sellwyn
-        final Map<String, Object> objectMap = Reflection.toMap ( manufacturing );
+        final Map<String, Object> objectMap = Maps.toMap ( manufacturing );
 
         ok &= objectMap.get("name").equals ( "manufacturing" ) || die();
         ok &= Reflection.len(objectMap.get("employees"))==4 || die();

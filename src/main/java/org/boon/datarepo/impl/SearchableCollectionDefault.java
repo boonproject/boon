@@ -49,7 +49,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     @Override
     public boolean delete(ITEM item) {
         for (LookupIndex index : indexes) {
-            index.delete((ITEM) item);
+            index.delete( item );
         }
         return true;
     }
@@ -63,10 +63,14 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
             return false;
         }
 
+        validateIndexes ( item );
+        return true;
+    }
+
+    public void validateIndexes ( ITEM item ) {
         for (LookupIndex index : indexes) {
             index.add(item);
         }
-        return true;
     }
 
 

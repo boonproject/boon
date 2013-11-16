@@ -6,10 +6,10 @@ import org.boon.datarepo.*;
 import org.boon.datarepo.spi.RepoComposer;
 import org.boon.datarepo.spi.SearchIndex;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Default Repo implementation.
@@ -126,6 +126,11 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     @Override
     public void validateIndex(String property, ITEM item) {
         query.validateIndex(property, item);
+    }
+
+    @Override
+    public void validateIndexes ( ITEM item ) {
+        query.validateIndexes ( item );
     }
 
     @Override
@@ -650,6 +655,11 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
+    public boolean removeIf ( Predicate<? super ITEM> filter ) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public boolean retainAll(Collection<?> c) {
         return query.retainAll(c);
     }
@@ -696,6 +706,11 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
+    public void forEach ( Consumer<? super ITEM> action ) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public Object[] toArray() {
         return query.toArray();
 
@@ -714,6 +729,21 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     @Override
     public void clear() {
         editor.clear();
+    }
+
+    @Override
+    public Spliterator<ITEM> spliterator () {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Stream<ITEM> stream () {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Stream<ITEM> parallelStream () {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

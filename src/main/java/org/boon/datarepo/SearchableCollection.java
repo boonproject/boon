@@ -35,6 +35,7 @@ public interface SearchableCollection<KEY, ITEM> extends Collection<ITEM> {
 
     void validateIndex(String property, ITEM item);
 
+    public void validateIndexes ( ITEM item );
 
     int count(KEY key, String property, int value);
 

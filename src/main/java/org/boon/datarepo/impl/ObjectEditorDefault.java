@@ -87,7 +87,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
             log.warning(String.format("An original item was not in the repo %s", item));
         }
 
-        this.add(item);
+        this.query.validateIndexes ( item );
 
         if (log.isLoggable(Level.FINE)) {
             log.fine(String.format("This item %s was modified like this %s", oldItem, item));

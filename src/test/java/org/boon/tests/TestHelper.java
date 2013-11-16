@@ -22,7 +22,7 @@ public class TestHelper {
             Employee.employee("AAA", "Foo", "777-222-2222", "05.29.70", 10_000, true),
             Employee.employee("Boa", "Smith", "666-222-2222", "05.29.70", 10_000),
             Employee.employee("Bobbie", "Smith", "322-222-2222", "05.29.70", 100_000),
-            Employee.employee("Bob", "Smith", "122-222-2222", "05.29.70", 99_000, true),
+            Employee.employee("Bobs", "Smith", "122-222-2222", "05.29.70", 99_000, true),
             Employee.employee("Bob", "Smith", "222-222-2222", "05.29.70", 199_000),
             Employee.employee("Bobbzie", "Smith", "422-222-2222", "05.29.70", 666_000, true),
             Employee.employee("Boc", "Smith", "1010-222-2222", "05.29.70", 10_000),

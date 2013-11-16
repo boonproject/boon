@@ -152,15 +152,15 @@ public class RepoDefaultTest {
 
     @Test
     public void testEasyFilter2() throws Exception {
-        Employee emp = employee("Diana", "Hightower", "7178599912", "08.15.82", 100_000);
+        Employee emp = employee("Dianazzz", "Hightower", "8178599912", "08.15.82", 100_000);
         repo.add(emp);
-        emp = employee("Diana", "Hightower", "8178599912", "08.15.82", 100_000);
+        emp = employee("Dianazzz", "Hightower", "8178599912", "08.15.82", 100_000);
         repo.add(emp);
 
-        List<Employee> employees = repo.query(CriteriaFactory.eq("firstName", "Diana"));
+        List<Employee> employees = repo.query(CriteriaFactory.eq("firstName", "Dianazzz"));
         assertNotNull(employees);
-        assertEquals(2, employees.size());
-        assertEquals("Diana", employees.get(0).getFirstName());
+        assertEquals(1, employees.size());
+        assertEquals("Dianazzz", employees.get(0).getFirstName());
     }
 
     @Test
@@ -186,11 +186,11 @@ public class RepoDefaultTest {
 
     @Test
     public void testEasySelect() throws Exception {
-        Employee emp = employee("Diana", "Hightower", "2178599966", "08.15.82", 100_000);
-        Employee emp2 = employee("Bob", "Hightower", "21785990", "08.15.82", 100_000);
+        Employee emp = employee("Diana", "Hightower", "21785999661234", "08.15.82", 100_000);
+        Employee emp2 = employee("Bob", "Hightower", "217859901234", "08.15.82", 100_000);
 
-        repo.add(emp);
-        repo.add(emp2);
+        repo.modify ( emp );
+        repo.modify ( emp2 );
 
         List<Map<String, Object>> list = repo.sortedQuery("firstName", selects(select("firstName")), CriteriaFactory.eq("lastName", "Hightower"));
 
@@ -222,8 +222,8 @@ public class RepoDefaultTest {
         Employee emp = employee("Diana", "Hightower", "2178599966", "08.15.82", 100_000);
         Employee emp2 = employee("Bob", "Hightower", "21785990", "08.15.82", 100_000);
 
-        repo.add(emp);
-        repo.add(emp2);
+        repo.modify ( emp );
+        repo.modify ( emp2 );
 
         List<Map<String, Object>> list = repo.query(
                 selects(select("department", "name")),
@@ -339,13 +339,13 @@ public class RepoDefaultTest {
 
     @Test
     public void testHarderFilter() throws Exception {
-        Employee emp = employee("Diana", "Hightower", "217859997", "08.15.82", 100_000);
+        Employee emp = employee("Diana222", "Hightower", "217859997", "08.15.82", 100_000);
         repo.add(emp);
         List<Employee> employees = repo.query(
-                CriteriaFactory.eq("firstName", "Diana"), CriteriaFactory.eq("lastName", "Hightower"), CriteriaFactory.eq("id", "217859997"));
+                CriteriaFactory.eq("firstName", "Diana222"), CriteriaFactory.eq("lastName", "Hightower"), CriteriaFactory.eq("id", "217859997"));
         assertNotNull(employees);
         assertEquals(1, employees.size());
-        assertEquals("Diana", employees.get(0).getFirstName());
+        assertEquals("Diana222", employees.get(0).getFirstName());
     }
 
     @Test
@@ -363,7 +363,9 @@ public class RepoDefaultTest {
     @Test
     public void testFilterLogicalOperators2() throws Exception {
         List<Employee> employees = repo.query(
-                CriteriaFactory.startsWith("firstName", "Bob"), CriteriaFactory.eq("lastName", "Smith"), CriteriaFactory.lt("salary", 200_000),
+                CriteriaFactory.startsWith("firstName", "Bob"),
+                CriteriaFactory.eq("lastName", "Smith"),
+                CriteriaFactory.lt("salary", 200_000),
                 CriteriaFactory.gt("salary", 190_000));
         assertNotNull(employees);
         assertEquals(1, employees.size());

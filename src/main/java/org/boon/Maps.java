@@ -2,6 +2,7 @@ package org.boon;
 
 
 import org.boon.core.reflection.Conversions;
+import org.boon.core.reflection.Reflection;
 
 import java.io.Serializable;
 import java.util.*;
@@ -123,7 +124,6 @@ public class Maps {
         public EntryImpl(EntryImpl<K, V> impl) {
             Objects.requireNonNull(impl);
             Objects.requireNonNull(impl.k);
-            Objects.requireNonNull(impl.v);
 
             this.k = impl.k;
             this.v = impl.v;
@@ -132,7 +132,6 @@ public class Maps {
         public EntryImpl(Entry<K, V> entry) {
             Objects.requireNonNull(entry);
             Objects.requireNonNull(entry.key());
-            Objects.requireNonNull(entry.value());
 
             this.k = entry.key();
             this.v = entry.value();
@@ -140,7 +139,6 @@ public class Maps {
 
         public EntryImpl(K k, V v) {
             Objects.requireNonNull(k);
-            Objects.requireNonNull(v);
 
             this.k = k;
             this.v = v;
@@ -1209,5 +1207,19 @@ public class Maps {
         }
     }
 
+
+
+    public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
+        return Reflection.fromMap (map, clazz);
+    }
+
+    public static Object fromMap( Map<String, Object> map ) {
+        return Reflection.fromMap ( map );
+    }
+
+
+    public static Map<String, Object> toMap(final Object object) {
+        return Reflection.toMap ( object  );
+    }
 
 }
