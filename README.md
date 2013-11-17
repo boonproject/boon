@@ -7,6 +7,9 @@ Low Ceremony. High Productivity.
 
 Boon Home: http://richardhightower.github.io/site/Boon/Welcome.html
 
+There is a maven repo at:
+
+http://richardhightower.github.io/site/releases/mvn/repo/
 
 
 
