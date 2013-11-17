@@ -244,9 +244,21 @@ public class Lists {
     }
 
 
+    public static <T> List<T> listFromProperty(Class<T> propertyType, String propertyPath, Collection<?> list) {
+        List<T> newList = new ArrayList <> (list.size ());
+
+        for (Object item : list) {
+            T newItem = (T) Reflection.idx(item, propertyPath);
+            newList.add ( newItem );
+        }
+
+        return  newList;
+
+    }
+
 
     public static List<Map<String, Object>> toListOfMaps(List<?> list) {
-        return Reflection.toListOfMaps (list);
+        return Reflection.toListOfMaps ( list );
     }
 
 }
