@@ -1,6 +1,7 @@
 package org.boon;
 
 
+import org.boon.core.Typ;
 import org.boon.core.reflection.Conversions;
 import org.boon.core.reflection.Reflection;
 
@@ -131,7 +132,7 @@ public class Maps {
 
         public EntryImpl(Entry<K, V> entry) {
             Objects.requireNonNull(entry);
-            Objects.requireNonNull(entry.key());
+            Objects.requireNonNull(entry.key ());
 
             this.k = entry.key();
             this.v = entry.value();
@@ -1213,13 +1214,66 @@ public class Maps {
         return Reflection.fromMap (map, clazz);
     }
 
-    public static Object fromMap( Map<String, Object> map ) {
+    public static Object fromMap( final Map<String, Object> map ) {
         return Reflection.fromMap ( map );
     }
 
 
-    public static Map<String, Object> toMap(final Object object) {
+    public static Map<String, Object> toMap( final Object object ) {
         return Reflection.toMap ( object  );
+    }
+
+    public static <T> Map<String, T> toMap( final String propertyPath, final Collection<T> collection ) {
+        return map( Typ.string, propertyPath, collection);
+    }
+
+    public static <T> NavigableMap<String, T> toSortedMap( final String propertyPath, final Collection<T> collection ) {
+        return sortedMap( Typ.string, propertyPath, collection);
+    }
+
+    public static <T> NavigableMap<String, T> toSafeSortedMap( final String propertyPath, final Collection<T> collection ) {
+        return safeSortedMap( Typ.string, propertyPath, collection);
+    }
+
+    public static <T> Map<String, T> toSafeMap( final String propertyPath, final Collection<T> collection ) {
+        return safeMap ( Typ.string, propertyPath, collection);
+    }
+
+
+    public static <K,T> Map<K, T> map( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+        LinkedHashMap<K,T> map = new LinkedHashMap<> ( collection.size () );
+        doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
+        return map;
+    }
+
+    public static <K,T> NavigableMap<K, T> sortedMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+        TreeMap<K,T> map = new TreeMap<> ( );
+        doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
+        return map;
+    }
+
+    public static <K,T> NavigableMap<K, T> safeSortedMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+        ConcurrentSkipListMap<K,T> map = new ConcurrentSkipListMap<> ( );
+        doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
+        return map;
+    }
+
+    public static <K,T> Map<K, T> safeMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+        ConcurrentHashMap<K,T> map = new ConcurrentHashMap<> ( );
+        doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
+        return map;
+    }
+
+    private static <K, T> void doPopulateMapWithCollectionAndPropPath ( Class<K> keyType, String propertyPath, Collection<T> collection, Map<K, T> map ) {
+        for ( T item : collection ) {
+            Object oKey = Reflection.idx ( item, propertyPath );
+            if ( oKey == null ) {
+                continue;
+            }
+            K key = Conversions.coerce ( keyType, oKey );
+            map.put ( key, item );
+
+        }
     }
 
 }

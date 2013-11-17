@@ -140,7 +140,7 @@ public class ReflectionTest {
 
 
         final Department hr =
-                Reflection.fromMap(department2, Department.class);
+                Maps.fromMap(department2, Department.class);
 
 
 
@@ -150,7 +150,7 @@ public class ReflectionTest {
 
 
         final Department manufacturing =
-                Reflection.fromMap(department3, Department.class);
+                Maps.fromMap(department3, Department.class);
 
 
 

@@ -1,16 +1,16 @@
 package org.boon;
 
 
-import org.boon.Maps;
 import org.junit.Test;
-
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.SortedMap;
 
+
+import java.util.*;
+
+import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.*;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -31,6 +31,65 @@ public class MapsTest {
     }
 
 
+    Dog dog1 = new Dog("Spot");
+    Dog dog2 = new Dog("Fido");
+
+    final List<Dog> dogs = Lists.list ( dog1, dog2 );
+
+
+
+    @Test
+    public void testToMap( ) {
+
+
+        final Map<String, Dog> dogMap = Maps.toMap ( "name", dogs );
+
+        validateForToMap(dogMap);
+
+    }
+
+    @Test
+    public void testToSafeMap( ) {
+
+
+        final Map<String, Dog> dogMap = Maps.toSafeMap ( "name", dogs );
+
+        validateForToMap(dogMap);
+
+    }
+
+    @Test
+    public void testToSortedMap( ) {
+
+
+        final Map<String, Dog> dogMap = Maps.toSortedMap ( "name", dogs );
+
+        validateForToMap(dogMap);
+
+    }
+
+    @Test
+    public void testToSafeSortedMap( ) {
+
+
+        final Map<String, Dog> dogMap = Maps.toSafeSortedMap ( "name", dogs );
+
+        validateForToMap(dogMap);
+
+    }
+
+    private void validateForToMap(Map<String, Dog> dogMap) {
+        boolean ok = true;
+
+        ok &= dogMap.size() == 2  || die("should be 2 and was " + len(dogMap));
+
+        ok &= dogMap.get("Fido").name.equals ( "Fido" ) || die("No Fido");
+
+        ok &= dogMap.get("Spot").name.equals ( "Spot" ) || die("No Spot");
+
+        System.out.println( ok  );
+
+    }
 
 
     @Test
@@ -108,8 +167,8 @@ public class MapsTest {
         assertEquals("dog2", dogMap.get("dog2").name);
 
         dogMap = Maps.map(
-                Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
-                Arrays.asList(new Dog("dog0"),
+                Lists.list(new String[]{"dog0", "dog1", "dog2"}),
+                Lists.list(new Dog("dog0"),
                         new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
@@ -118,8 +177,8 @@ public class MapsTest {
 
 
         dogMap = Maps.map(
-                (Iterable)Arrays.asList("dog0", "dog1", "dog2"),
-                (Iterable)Arrays.asList(new Dog("dog0"),
+                (Iterable)Lists.list("dog0", "dog1", "dog2"),
+                (Iterable)Lists.list(new Dog("dog0"),
                         new Dog("dog1"), new Dog("dog2"))
         );
         assertEquals("dog0", dogMap.get("dog0").name);
@@ -291,7 +350,7 @@ public class MapsTest {
 
 
         dogMap = sortedMap(
-                Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
+                java.util.Arrays.asList(new String[]{"dog0", "dog1", "dog2"}),
                 Arrays.asList(new Dog("dog0"),
                         new Dog("dog1"), new Dog("dog2"))
         );
