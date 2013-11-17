@@ -61,15 +61,16 @@ public class Typ {
 
     public static boolean isBasicType(Object value) {
         return (value instanceof Number || value instanceof CharSequence
-                || value instanceof Date || value instanceof Calendar);
+                || value instanceof Date || value instanceof Calendar || value instanceof Boolean);
     }
 
     public static boolean isBasicType(Class<?> theClass) {
         return (number.isAssignableFrom(theClass)
                 || chars.isAssignableFrom(theClass)
                 || date.isAssignableFrom(theClass)
-                || calendar.isAssignableFrom(theClass) || theClass
-                .isPrimitive());
+                || calendar.isAssignableFrom(theClass)
+                || bool.isAssignableFrom ( theClass )
+                || theClass.isPrimitive());
     }
 
     public static boolean isMap(Class<?> thisType) {

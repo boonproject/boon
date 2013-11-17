@@ -1,9 +1,12 @@
 package org.boon;
 
 
+import org.boon.core.reflection.Reflection;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.boon.Exceptions.die;
@@ -268,5 +271,13 @@ public class Arrays {
             return null;
         }
     }
+
+
+
+    public static List<Map<String, Object>> toListOfMaps(Object... array) {
+        return Reflection.toListOfMaps ( Lists.list(array) );
+    }
+
+
 
 }

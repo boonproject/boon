@@ -1,6 +1,8 @@
 package org.boon;
 
 
+import org.boon.core.reflection.Reflection;
+
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -75,7 +77,6 @@ public class Lists {
         };
 
     }
-
 
 
     public static <V> List<V> list(Iterator<V> iterator) {
@@ -242,5 +243,10 @@ public class Lists {
         return index;
     }
 
+
+
+    public static List<Map<String, Object>> toListOfMaps(List<?> list) {
+        return Reflection.toListOfMaps (list);
+    }
 
 }

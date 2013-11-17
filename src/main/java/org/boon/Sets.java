@@ -1,6 +1,8 @@
 package org.boon;
 
 
+import org.boon.core.reflection.Reflection;
+
 import java.util.*;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -312,6 +314,15 @@ public class Sets {
             return copy( (LinkedHashSet<V>) collection );
         }
     }
+
+
+    //end universal
+
+    public static List<Map<String, Object>> toListOfMaps(Set<?> list) {
+        return Reflection.toListOfMaps ( list );
+
+    }
+
 
 
 }

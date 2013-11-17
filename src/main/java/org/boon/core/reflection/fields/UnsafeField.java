@@ -112,10 +112,18 @@ public abstract class UnsafeField implements FieldAccess {
         if (type == Typ.intgr) {
             int i = this.getInt(obj);
             return Integer.valueOf(i);
-        } else if (type == Typ.lng) {
+        }
+        else if (type == Typ.lng) {
             long l = this.getLong(obj);
             return Long.valueOf(l);
-        } else if (type == Typ.bt) {
+        }
+        else if (type == Typ.bln) {
+            boolean bool = this.getBoolean (obj);
+            return Boolean.valueOf(bool);
+        }
+
+
+        else if (type == Typ.bt) {
             byte b = this.getByte(obj);
             return Byte.valueOf(b);
         } else if (type == Typ.shrt) {
