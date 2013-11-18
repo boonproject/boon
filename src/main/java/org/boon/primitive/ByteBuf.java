@@ -20,9 +20,10 @@ public class ByteBuf implements Output {
 
     public static ByteBuf createExact ( final int capacity ) {
         return new ByteBuf ( capacity ) {
-            public void add ( byte[] chars ) {
+            public ByteBuf add ( byte[] chars ) {
                 Byt._idx ( buffer, length, chars );
                 length += chars.length;
+                return this;
             }
         };
     }
@@ -52,13 +53,14 @@ public class ByteBuf implements Output {
     }
 
 
-    public void add ( String str ) {
+    public ByteBuf add ( String str ) {
         this.add ( Byt.bytes ( str ) );
+        return this;
 
     }
 
 
-    public void add ( int value ) {
+    public ByteBuf add ( int value ) {
 
         if ( 4 + length < capacity ) {
             Byt.intTo ( buffer, length, value );
@@ -70,12 +72,13 @@ public class ByteBuf implements Output {
         }
 
         length += 4;
+        return this;
 
 
     }
 
 
-    public void add ( float value ) {
+    public ByteBuf add ( float value ) {
 
         if ( 4 + length < capacity ) {
             Byt.floatTo ( buffer, length, value );
@@ -87,12 +90,13 @@ public class ByteBuf implements Output {
         }
 
         length += 4;
+        return this;
 
 
     }
 
 
-    public void add ( char value ) {
+    public ByteBuf add ( char value ) {
 
         if ( 2 + length < capacity ) {
             Byt.charTo ( buffer, length, value );
@@ -104,12 +108,13 @@ public class ByteBuf implements Output {
         }
 
         length += 2;
+        return this;
 
 
     }
 
 
-    public void add ( short value ) {
+    public ByteBuf add ( short value ) {
 
         if ( 2 + length < capacity ) {
             Byt.shortTo ( buffer, length, value );
@@ -121,15 +126,17 @@ public class ByteBuf implements Output {
         }
 
         length += 2;
+        return this;
 
 
     }
 
-    public void addByte ( int value ) {
+    public ByteBuf addByte ( int value ) {
         this.add ( ( byte ) value );
+        return this;
     }
 
-    public void add ( byte value ) {
+    public ByteBuf add ( byte value ) {
 
         if ( 1 + length < capacity ) {
             Byt.idx ( buffer, length, value );
@@ -142,10 +149,11 @@ public class ByteBuf implements Output {
 
         length += 1;
 
+        return this;
 
     }
 
-    public void add ( long value ) {
+    public ByteBuf add ( long value ) {
 
         if ( 8 + length < capacity ) {
             Byt.longTo ( buffer, length, value );
@@ -157,10 +165,11 @@ public class ByteBuf implements Output {
         }
 
         length += 8;
+        return this;
 
     }
 
-    public void addUnsignedInt ( long value ) {
+    public ByteBuf addUnsignedInt ( long value ) {
 
         if ( 4 + length < capacity ) {
             Byt.unsignedIntTo ( buffer, length, value );
@@ -172,10 +181,11 @@ public class ByteBuf implements Output {
         }
 
         length += 4;
+        return this;
 
     }
 
-    public void add ( double value ) {
+    public ByteBuf add ( double value ) {
 
         if ( 8 + length < capacity ) {
             Byt.doubleTo ( buffer, length, value );
@@ -187,11 +197,12 @@ public class ByteBuf implements Output {
         }
 
         length += 8;
+        return this;
 
     }
 
 
-    public void add ( byte[] array ) {
+    public ByteBuf add ( byte[] array ) {
         if ( array.length + length < capacity ) {
             Byt._idx ( buffer, length, array );
         } else {
@@ -202,12 +213,13 @@ public class ByteBuf implements Output {
 
         }
         length += array.length;
+        return this;
     }
 
 
-    public void add ( byte[] array, final int length ) {
-        if ( array.length + length < capacity ) {
-            Byt._idx ( buffer, length, array, length );
+    public ByteBuf add ( final byte[] array, final int length ) {
+        if ( length < capacity ) {
+            Byt._idx ( buffer, this.length, array, length );
         } else {
             buffer = Byt.grow ( buffer, buffer.length * 2 + length );
             capacity = buffer.length;
@@ -216,9 +228,10 @@ public class ByteBuf implements Output {
 
         }
         this.length += length;
+        return this;
     }
 
-    public void add ( byte[] array, final int offset, final int length ) {
+    public ByteBuf add ( byte[] array, final int offset, final int length ) {
         if ( array.length + length < capacity ) {
             Byt._idx ( buffer, length, array, offset, length );
         } else {
@@ -229,6 +242,7 @@ public class ByteBuf implements Output {
 
         }
         this.length += length;
+        return this;
     }
 
     public byte[] readAndReset () {
@@ -246,7 +260,7 @@ public class ByteBuf implements Output {
         return length;
     }
 
-    public void addUrlEncodedByteArray ( byte[] value ) {
+    public ByteBuf addUrlEncodedByteArray ( byte[] value ) {
 
 
         final byte[] encoded = new byte[ 2 ];
@@ -272,8 +286,87 @@ public class ByteBuf implements Output {
             }
 
         }
+        return this;
     }
 
+    public ByteBuf addJSONEncodedByteArray ( byte[] value ) {
+
+        if ( value == null ) {
+             this.add("null");
+             return this;
+        }
+
+
+
+        this.addByte ( '"' );
+
+        for ( int index = 0; index < value.length; index++ ) {
+            int ch = value[ index ];
+
+
+            switch (ch) {
+                case '"':
+                    this.addByte ( '\\' );
+                    this.addByte ( '"' );
+                    break;
+
+                case '\\':
+                    this.addByte ( '\\' );
+                    this.addByte ( '\\' );
+                    break;
+
+                case '/':
+                    this.addByte ( '\\' );
+                    this.addByte ( '/' );
+                    break;
+
+                case '\n':
+                    this.addByte ( '\\' );
+                    this.addByte ( 'n' );
+                    break;
+
+                case '\t':
+                    this.addByte ( '\\' );
+                    this.addByte ( 't' );
+                    break;
+
+                case '\r':
+                    this.addByte ( '\\' );
+                    this.addByte ( 'r' );
+                    break;
+
+                case '\b':
+                    this.addByte ( '\\' );
+                    this.addByte ( 'b' );
+                    break;
+
+                case '\f':
+                    this.addByte ( '\\' );
+                    this.addByte ( 'f' );
+                    break;
+
+
+                default:
+                    if (ch > 127) {
+                        this.addByte ( '\\' );
+                        this.addByte ( 'u' );
+                        this.addByte ( '0' );
+                        this.addByte ( '0' );
+                        final byte[] encoded = new byte [2];
+                        encodeByteIntoTwoAsciiCharBytes(ch, encoded);
+                        this.addByte ( encoded[0] );
+                        this.addByte ( encoded[1] );
+
+                    } else {
+                        this.addByte ( ch );
+                    }
+
+            }
+        }
+
+        this.addByte ( '"' );
+        return this;
+    }
 
     /**
      * Turns a single nibble into an ascii HEX digit.
@@ -329,12 +422,22 @@ public class ByteBuf implements Output {
         encoded[ 1 ] = ( byte ) encodeNibbleToHexAsciiCharByte ( decoded & 0x0F );
     }
 
-    public void addUrlEncoded ( String key ) {
+    public ByteBuf addUrlEncoded ( String key ) {
         try {
             this.addUrlEncodedByteArray ( key.getBytes ( "UTF-8" ) );
         } catch ( UnsupportedEncodingException e ) {
             Exceptions.handle ( e );
         }
+        return this;
+    }
+
+    public ByteBuf addJSONEncodedString ( String value ) {
+        try {
+            this.addJSONEncodedByteArray ( value == null ? null : value.getBytes ( "UTF-8" ) );
+        } catch ( UnsupportedEncodingException e ) {
+            Exceptions.handle ( e );
+        }
+        return this;
     }
 
     @Override
@@ -653,6 +756,17 @@ public class ByteBuf implements Output {
     public String toString() {
         int len  = len();
         return new String (this.buffer, 0, len, StandardCharsets.UTF_8);
+    }
+
+
+
+    public byte[] toBytes() {
+        return Byt.slc(this.buffer, 0, length);
+    }
+
+
+    public byte[] slc(int startIndex, int endIndex) {
+        return Byt.slc(this.buffer, startIndex, endIndex);
     }
 
 }

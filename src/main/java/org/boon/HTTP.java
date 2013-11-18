@@ -1,19 +1,15 @@
 package org.boon;
 
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import org.boon.IO;
 import org.boon.primitive.ByteBuf;
 
 public class HTTP {
@@ -28,8 +24,41 @@ public class HTTP {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doGet(url, null, null, null);
+
+                final Map<String, String> accept = Maps.map (
+                        "Accept", "text/html,application/xhtml+xml,application/xml,application/json,text/plain;"
+                );
+
+                connection = doGet(url, accept, null, null);
                 return extractResponseString(connection);
+            }
+        });
+
+    }
+
+    public static byte[] getBytes(
+            final String url, final String contentType) {
+
+        return Exceptions.tryIt(byte[].class, new Exceptions.TrialWithReturn<byte[]>() {
+            @Override
+            public byte[] tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet(url, null, contentType, null, true);
+                return extractResponseBytes (connection);
+            }
+        });
+
+    }
+
+    public static byte[] getBytesWithHeaders(
+            final String url, final String contentType, final Map<String, ?> headers) {
+
+        return Exceptions.tryIt(byte[].class, new Exceptions.TrialWithReturn<byte[]>() {
+            @Override
+            public byte[] tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet(url, headers, contentType, null, true);
+                return extractResponseBytes (connection);
             }
         });
 
@@ -274,23 +303,29 @@ public class HTTP {
         }
     }
 
-    private static void manageContentTypeHeaders(String contentType, String charset, URLConnection connection) {
-        connection.setRequestProperty("Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset);
+
+    private static void manageContentTypeHeaders ( String contentType, String charset, URLConnection connection, boolean binary ) {
+
+        if (!binary) {
+            connection.setRequestProperty("Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset);
+        }
         if (contentType!=null && !contentType.isEmpty()) {
             connection.setRequestProperty("Content-Type", contentType);
         }
+
     }
 
     private static URLConnection doGet(String url, Map<String, ?> headers,
-                                        String contentType, String charset) throws IOException {
+                                        String contentType, String charset, boolean binary) throws IOException {
         URLConnection connection;/* Handle output. */
         connection = new URL(url).openConnection();
-        manageContentTypeHeaders(contentType, charset, connection);
+        manageContentTypeHeaders(contentType, charset, connection, binary);
 
         manageHeaders(headers, connection);
 
         return connection;
     }
+
 
     private static String extractResponseString(URLConnection connection) throws IOException {
 
@@ -304,6 +339,34 @@ public class HTTP {
         } else {
             return readErrorResponseBody(http, status, charset);
         }
+    }
+
+    private static byte[] extractResponseBytes(URLConnection connection) throws IOException {
+
+        /* Handle input. */
+        HttpURLConnection http = (HttpURLConnection)connection;
+        int status = http.getResponseCode();
+
+        //System.out.println("CONTENT-TYPE" + connection.getHeaderField("Content-Type"));
+
+
+        if (status==200) {
+            return readResponseBodyAsBytes ( http  );
+        } else {
+            String charset = getCharset(connection.getHeaderField("Content-Type"));
+
+            readErrorResponseBody(http, status, charset);
+            return null;
+        }
+    }
+
+    private static byte[] readResponseBodyAsBytes ( HttpURLConnection http ) {
+        try {
+            return IO.input ( http.getInputStream () );
+        } catch ( IOException e ) {
+            return Exceptions.handle ( byte[].class, e );
+        }
+
     }
 
     private static String readErrorResponseBody(HttpURLConnection http, int status, String charset) {
@@ -341,5 +404,24 @@ public class HTTP {
         return charset;
     }
 
+
+
+    private static void manageContentTypeHeaders(String contentType, String charset, URLConnection connection) {
+        connection.setRequestProperty("Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset);
+        if (contentType!=null && !contentType.isEmpty()) {
+            connection.setRequestProperty("Content-Type", contentType);
+        }
+    }
+
+    private static URLConnection doGet(String url, Map<String, ?> headers,
+                                       String contentType, String charset) throws IOException {
+        URLConnection connection;/* Handle output. */
+        connection = new URL(url).openConnection();
+        manageContentTypeHeaders(contentType, charset, connection);
+
+        manageHeaders(headers, connection);
+
+        return connection;
+    }
 
 }

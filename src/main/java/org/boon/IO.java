@@ -2,6 +2,7 @@ package org.boon;
 
 import org.boon.core.Sys;
 import org.boon.core.Typ;
+import org.boon.primitive.ByteBuf;
 import org.boon.primitive.CharBuf;
 
 import java.io.*;
@@ -176,6 +177,32 @@ public class IO {
             return Exceptions.handle ( String.class, ex );
         }
 
+    }
+
+    public static byte[] input ( InputStream inputStream ) {
+
+        try ( InputStream is = inputStream  ) {
+
+            ByteBuf buf = ByteBuf.create ( 1024 );
+            byte [] bytes = new byte[1024];
+
+            int read = -2;
+
+
+            while (read != -1) {
+
+                read = inputStream.read ( bytes );
+
+                if ( read == 1024 ) {
+                    buf.add ( bytes );
+                } else if ( read > 0 ) {
+                   buf.add ( bytes, read );
+                }
+            }
+            return buf.toBytes ();
+        } catch ( Exception ex ) {
+                return Exceptions.handle ( byte[].class, ex );
+       }
     }
 
     public static String read ( Reader reader ) {
@@ -620,6 +647,10 @@ public class IO {
 
     public static void write ( Path file, String contents ) {
         write ( file, contents.getBytes ( DEFAULT_CHARSET ) );
+    }
+
+    public static void output ( Path file, byte[] bytes ) {
+        IO.write(file, bytes);
     }
 
     public static void write ( Path file, byte[] contents ) {

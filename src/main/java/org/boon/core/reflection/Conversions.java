@@ -290,7 +290,10 @@ public class Conversions {
         } else if (clz == Typ.floatWrapper || clz == Typ.flt) {
             Float i = toFloat(value);
             return (T) i;
-        } else if (clz == Typ.stringArray) {
+        } else if ( clz == Typ.string || clz == Typ.chars ) {
+            return (T) value.toString ();
+        }
+        else if (clz == Typ.stringArray) {
             die("Need to fix this");
             return null;
         } else if (clz == Typ.bool || clz == Typ.bln) {

@@ -1223,46 +1223,71 @@ public class Maps {
         return Reflection.toMap ( object  );
     }
 
+
+    public static <T> Map<String, List<T>> toMultiValueMap(final String propertyPath, final Collection<T> collection ) {
+        LinkedHashMap<String, List<T>>  map = new LinkedHashMap<> ( collection.size () );
+
+        for ( T item : collection ) {
+            Object oKey = Reflection.idx ( item, propertyPath );
+            if ( oKey == null ) {
+                continue;
+            }
+            String key = Conversions.coerce ( Typ.string, oKey );
+
+            List <T> list = map.get ( key );
+            if ( list==null ) {
+                list = new ArrayList<>();
+                map.put ( key, list );
+            }
+            list.add ( item );
+
+        }
+        return map;
+
+    }
+
+
     public static <T> Map<String, T> toMap( final String propertyPath, final Collection<T> collection ) {
-        return map( Typ.string, propertyPath, collection);
+        return toMap ( Typ.string, propertyPath, collection );
     }
 
     public static <T> NavigableMap<String, T> toSortedMap( final String propertyPath, final Collection<T> collection ) {
-        return sortedMap( Typ.string, propertyPath, collection);
+        return toSortedMap ( Typ.string, propertyPath, collection );
     }
 
     public static <T> NavigableMap<String, T> toSafeSortedMap( final String propertyPath, final Collection<T> collection ) {
-        return safeSortedMap( Typ.string, propertyPath, collection);
+        return toSafeSortedMap ( Typ.string, propertyPath, collection );
     }
 
     public static <T> Map<String, T> toSafeMap( final String propertyPath, final Collection<T> collection ) {
-        return safeMap ( Typ.string, propertyPath, collection);
+        return toSafeMap ( Typ.string, propertyPath, collection );
     }
 
 
-    public static <K,T> Map<K, T> map( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+    public static <K,T> Map<K, T> toMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
         LinkedHashMap<K,T> map = new LinkedHashMap<> ( collection.size () );
         doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
         return map;
     }
 
-    public static <K,T> NavigableMap<K, T> sortedMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+    public static <K,T> NavigableMap<K, T> toSortedMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
         TreeMap<K,T> map = new TreeMap<> ( );
         doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
         return map;
     }
 
-    public static <K,T> NavigableMap<K, T> safeSortedMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+    public static <K,T> NavigableMap<K, T> toSafeSortedMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
         ConcurrentSkipListMap<K,T> map = new ConcurrentSkipListMap<> ( );
         doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
         return map;
     }
 
-    public static <K,T> Map<K, T> safeMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
+    public static <K,T> Map<K, T> toSafeMap( Class<K> keyType, final String propertyPath, final Collection<T> collection ) {
         ConcurrentHashMap<K,T> map = new ConcurrentHashMap<> ( );
         doPopulateMapWithCollectionAndPropPath ( keyType, propertyPath, collection, map );
         return map;
     }
+
 
     private static <K, T> void doPopulateMapWithCollectionAndPropPath ( Class<K> keyType, String propertyPath, Collection<T> collection, Map<K, T> map ) {
         for ( T item : collection ) {

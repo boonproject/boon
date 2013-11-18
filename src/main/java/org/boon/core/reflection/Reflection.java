@@ -1238,6 +1238,8 @@ public class Reflection {
 
     }
 
+
+
     public static Map<String, Object> toMap(final Object object) {
 
         if (object == null) {
@@ -1567,6 +1569,18 @@ public class Reflection {
                 index++;
         }
         return builder.toString();
+    }
+
+
+
+
+
+    public static List<Map<String,Object>> toListOfMaps ( Collection <?> collection ) {
+        List<Map<String,Object>> list = new ArrayList<> (  );
+        for (Object o : collection) {
+            list.add ( toMap(o) );
+        }
+        return list;
     }
 
 

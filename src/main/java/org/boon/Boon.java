@@ -89,7 +89,13 @@ public class Boon {
 
     public static String sputs(CharBuf buf, Object... messages) {
 
+        int index = 0;
         for (Object message : messages) {
+            if ( index != 0 ){
+                buf.add ( ' ' );
+            }
+            index++;
+
             if (message == null ) {
                 buf.add("<NULL>");
             } else if (message.getClass().isArray()) {
