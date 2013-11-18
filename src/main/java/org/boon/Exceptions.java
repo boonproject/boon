@@ -1,7 +1,12 @@
 package org.boon;
 
+import org.boon.primitive.ByteBuf;
+import org.boon.primitive.CharBuf;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
+
+import static org.boon.Boon.sputs;
 
 public class Exceptions {
 
@@ -156,5 +161,62 @@ public class Exceptions {
                }
            }
        }
+
+
+    public static String toString(Exception ex) {
+        CharBuf buffer = CharBuf.create ( 255 );
+        buffer.addLine ( ex.getLocalizedMessage () );
+
+        final StackTraceElement[] stackTrace = ex.getStackTrace ();
+        for (StackTraceElement element : stackTrace) {
+            buffer.add ( element.getClassName () );
+            sputs(buffer, "class", element.getClassName (),
+                    "method", element.getMethodName (), "line", element.getLineNumber ());
+        }
+
+        return buffer.toString ();
+
+    }
+
+
+
+    public static String toJSON(Exception ex) {
+        ByteBuf buffer = ByteBuf.create ( 255 );
+        buffer.addByte ('{' );
+
+        buffer.add("\n    ").addJSONEncodedString ( "message" ).add ( " : " )
+                .addJSONEncodedString ( ex.getMessage () ).add ( ",\n" );
+
+        buffer.add("    ").addJSONEncodedString ( "localizedMessage" ).add ( " : " )
+                .addJSONEncodedString ( ex.getLocalizedMessage () ).add ( ",\n" );
+
+        buffer.add("    ").addJSONEncodedString ( "stackTrace" ).add ( " : " )
+                .addByte ( '[' ).addByte ( '\n' );
+
+        final StackTraceElement[] stackTrace = ex.getStackTrace ();
+
+        for (int index = 0; index < (stackTrace.length > 10 ? 10 : stackTrace.length); index++) {
+            StackTraceElement element = stackTrace [index];
+            if ( index != 0 ) {
+                buffer.addByte ( ',' );
+                buffer.addByte ( '\n' );
+            }
+            index++;
+            buffer.add("           { ");
+            buffer.add("             ").addJSONEncodedString ( "className" ).add ( " : " )
+                    .addJSONEncodedString ( element.getClassName () ).add ( ",\n" );
+
+            buffer.add("             ").addJSONEncodedString ( "methodName" ).add ( " : " )
+                    .addJSONEncodedString ( element.getMethodName () ).add ( ",\n" );
+
+            buffer.add("             ").addJSONEncodedString ( "lineNumber" ).add ( " : " )
+                    .add ( ""+element.getLineNumber () ).add ( "}\n" );
+
+        }
+
+        buffer.add("\n    ]\n}");
+        return buffer.toString ();
+
+    }
 
 }
