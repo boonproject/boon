@@ -1,19 +1,15 @@
 package org.boon;
 
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import org.boon.IO;
 import org.boon.primitive.ByteBuf;
 
 public class HTTP {

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class HTTPTest {
 
 
-    static class MyHandler implements HttpHandler {
+    static class MyHandler2 implements HttpHandler {
         public void handle ( HttpExchange t ) throws IOException {
 
             String contentType = null;
@@ -115,11 +115,27 @@ public class HTTPTest {
     }
 
 
+
+    static class MyHandler implements HttpHandler {
+        public void handle(HttpExchange t) throws IOException {
+
+            InputStream requestBody = t.getRequestBody();
+            String body = IO.read(requestBody);
+            Headers requestHeaders = t.getRequestHeaders();
+            body = body + "\n" + copy(requestHeaders).toString();
+            t.sendResponseHeaders(200, body.length());
+            OutputStream os = t.getResponseBody();
+            os.write(body.getBytes());
+            os.close();
+        }
+    }
+
+
     @Test
     public void testBinary () throws Exception {
 
         HttpServer server = HttpServer.create ( new InetSocketAddress ( 7212 ), 0 );
-        server.createContext ( "/test", new MyHandler () );
+        server.createContext ( "/test", new MyHandler2 () );
         server.setExecutor ( null ); // creates a default executor
         server.start ();
 
@@ -232,7 +248,7 @@ public class HTTPTest {
 
     }
 
-
+    @Test
     public void testHappyFeet () throws Exception {
 
         HttpServer server = HttpServer.create ( new InetSocketAddress ( 8888 ), 0 );
@@ -251,7 +267,7 @@ public class HTTPTest {
         System.out.println ( response );
 
 
-        response = HTTP.getWithHeaders ( "http://localhost:9212/test", headers );
+        response = HTTP.getWithHeaders ( "http://localhost:8888/test", headers );
 
         System.out.println ( response );
 
@@ -259,7 +275,7 @@ public class HTTPTest {
         assertTrue ( response.contains ( "Foo=[bar]" ) );
 
 
-        response = HTTP.getWithContentType ( "http://localhost:9212/test", headers, "text/plain" );
+        response = HTTP.getWithContentType ( "http://localhost:8888/test", headers, "text/plain" );
 
         System.out.println ( response );
 
@@ -267,7 +283,7 @@ public class HTTPTest {
         assertTrue ( response.contains ( "Foo=[bar]" ) );
 
 
-        response = HTTP.getWithCharSet ( "http://localhost:9212/test", headers, "text/plain", "UTF-8" );
+        response = HTTP.getWithCharSet ( "http://localhost:8888/test", headers, "text/plain", "UTF-8" );
 
         System.out.println ( response );
 

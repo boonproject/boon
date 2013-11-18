@@ -6,7 +6,7 @@
 
     <groupId>org.boon</groupId>
     <artifactId>boon</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
 
     <dependencies>
     <dependency>
