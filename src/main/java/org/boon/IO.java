@@ -199,8 +199,7 @@ public class IO {
                    buf.add ( bytes, read );
                 }
             }
-
-            return buf.readForRecycle ();
+            return buf.toBytes ();
         } catch ( Exception ex ) {
                 return Exceptions.handle ( byte[].class, ex );
        }

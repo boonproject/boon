@@ -28,7 +28,12 @@ public class HTTP {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doGet(url, null, null, null, false);
+
+                final Map<String, String> accept = Maps.map (
+                        "Accept", "text/html,application/xhtml+xml,application/xml,application/json,text/plain;"
+                );
+
+                connection = doGet(url, accept, null, null);
                 return extractResponseString(connection);
             }
         });
@@ -71,7 +76,7 @@ public class HTTP {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doGet(url, headers, null, null, false);
+                connection = doGet(url, headers, null, null);
                 return extractResponseString(connection);
             }
         });
@@ -87,7 +92,7 @@ public class HTTP {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doGet(url, headers, contentType, null, false);
+                connection = doGet(url, headers, contentType, null);
                 return extractResponseString(connection);
             }
         });
@@ -104,7 +109,7 @@ public class HTTP {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doGet(url, headers, contentType, charSet, false);
+                connection = doGet(url, headers, contentType, charSet);
                 return extractResponseString(connection);
             }
         });
@@ -314,11 +319,6 @@ public class HTTP {
 
     }
 
-
-    private static void manageContentTypeHeaders(String contentType, String charset, URLConnection connection) {
-        manageContentTypeHeaders ( contentType, charset, connection, false );
-    }
-
     private static URLConnection doGet(String url, Map<String, ?> headers,
                                         String contentType, String charset, boolean binary) throws IOException {
         URLConnection connection;/* Handle output. */
@@ -408,5 +408,24 @@ public class HTTP {
         return charset;
     }
 
+
+
+    private static void manageContentTypeHeaders(String contentType, String charset, URLConnection connection) {
+        connection.setRequestProperty("Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset);
+        if (contentType!=null && !contentType.isEmpty()) {
+            connection.setRequestProperty("Content-Type", contentType);
+        }
+    }
+
+    private static URLConnection doGet(String url, Map<String, ?> headers,
+                                       String contentType, String charset) throws IOException {
+        URLConnection connection;/* Handle output. */
+        connection = new URL(url).openConnection();
+        manageContentTypeHeaders(contentType, charset, connection);
+
+        manageHeaders(headers, connection);
+
+        return connection;
+    }
 
 }

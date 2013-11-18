@@ -205,9 +205,9 @@ public class ByteBuf implements Output {
     }
 
 
-    public void add ( byte[] array, final int length ) {
-        if ( array.length + length < capacity ) {
-            Byt._idx ( buffer, length, array, length );
+    public void add ( final byte[] array, final int length ) {
+        if ( length < capacity ) {
+            Byt._idx ( buffer, this.length, array, length );
         } else {
             buffer = Byt.grow ( buffer, buffer.length * 2 + length );
             capacity = buffer.length;
@@ -653,6 +653,17 @@ public class ByteBuf implements Output {
     public String toString() {
         int len  = len();
         return new String (this.buffer, 0, len, StandardCharsets.UTF_8);
+    }
+
+
+
+    public byte[] toBytes() {
+        return Byt.slc(this.buffer, 0, length);
+    }
+
+
+    public byte[] slc(int startIndex, int endIndex) {
+        return Byt.slc(this.buffer, startIndex, endIndex);
     }
 
 }
