@@ -1,15 +1,16 @@
 package org.boon.datarepo.impl;
 
-import org.boon.*;
 import org.boon.criteria.*;
 import org.boon.datarepo.*;
 import org.boon.datarepo.spi.RepoComposer;
 import org.boon.datarepo.spi.SearchIndex;
+import org.boon.predicates.Predicate;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Default Repo implementation.
@@ -660,11 +661,6 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-    public boolean removeIf ( Predicate<? super ITEM> filter ) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public boolean retainAll(Collection<?> c) {
         return query.retainAll(c);
     }
@@ -710,10 +706,6 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
         return query.iterator();
     }
 
-    @Override
-    public void forEach ( Consumer<? super ITEM> action ) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     @Override
     public Object[] toArray() {
@@ -736,20 +728,6 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
         editor.clear();
     }
 
-    @Override
-    public Spliterator<ITEM> spliterator () {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Stream<ITEM> stream () {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public Stream<ITEM> parallelStream () {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     @Override
     public void setSearchableCollection(SearchableCollection<KEY, ITEM> searchableCollection) {
