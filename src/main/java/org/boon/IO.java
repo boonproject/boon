@@ -2,6 +2,7 @@ package org.boon;
 
 import org.boon.core.Sys;
 import org.boon.core.Typ;
+import org.boon.predicates.Function;
 import org.boon.primitive.ByteBuf;
 import org.boon.primitive.CharBuf;
 
@@ -31,6 +32,17 @@ public class IO {
     public final static String FILE_SCHEMA = "file";
     public final static String JAR_SCHEMA = "jar";
     public final static String CLASSPATH_SCHEMA = "classpath";
+
+
+    public static class ConvertToPathFunction implements Function<String, Path> {
+
+        @Override
+        public Path apply ( String s ) {
+            return IO.path ( s );
+        }
+    }
+
+    public static ConvertToPathFunction convertToPathFunction = new ConvertToPathFunction ();
 
     public static List<String> list ( final Path path ) {
 
@@ -650,7 +662,7 @@ public class IO {
     }
 
     public static void output ( Path file, byte[] bytes ) {
-        IO.write(file, bytes);
+        IO.write ( file, bytes );
     }
 
     public static void write ( Path file, byte[] contents ) {

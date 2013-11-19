@@ -2,6 +2,7 @@ package org.boon;
 
 
 import org.boon.core.reflection.Reflection;
+import org.boon.predicates.Function;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -86,6 +87,19 @@ public class Lists {
         }
         return list;
     }
+
+    public static <V,N> List<N> list(Function<V, N> function, final V... array) {
+        if (array==null) {
+            return new ArrayList<>();
+        }
+        List<N> list = new ArrayList<>(array.length);
+
+        for ( V v : array ) {
+              list.add( function.apply ( v ));
+        }
+        return list;
+    }
+
 
     @SafeVarargs
     public static <V> List<V> list(final V... array) {

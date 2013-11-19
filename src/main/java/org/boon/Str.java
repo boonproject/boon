@@ -4,6 +4,9 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
+import java.nio.file.Path;
+import java.util.List;
+
 public class Str {
 
 
@@ -150,26 +153,6 @@ public class Str {
     }
 
 
-    public static String lines(String... lines) {
-        return join('\n', lines);
-    }
-
-
-
-    public static String join(char delim, String... args) {
-        CharBuf builder = CharBuf.create(10 * args.length);
-
-        int index = 0;
-        for (String arg : args) {
-                builder.add( arg);
-                if ( ! (index == args.length - 1) ) {
-                    builder.add(delim);
-                }
-                index++;
-        }
-        return builder.toString();
-    }
-
 
     public static String[] split(String str) {
         char[][] split = Chr.split(str.toCharArray());
@@ -260,4 +243,43 @@ public class Str {
         return str.contains ( value );
     }
 
+
+
+    public static String lines(String... lines) {
+        return join('\n', lines);
+    }
+
+
+
+    public static String join(char delim, String... args) {
+        CharBuf builder = CharBuf.create(10 * args.length);
+
+        int index = 0;
+        for (String arg : args) {
+            builder.add( arg);
+            if ( ! (index == args.length - 1) ) {
+                builder.add(delim);
+            }
+            index++;
+        }
+        return builder.toString();
+    }
+
+    public static String joinCollection ( char delim, List<?> args ) {
+        CharBuf builder = CharBuf.create(10 * args.size ());
+
+        int index = 0;
+        for (Object arg : args) {
+            if (arg == null ) {
+                continue;
+            }
+            builder.add( arg.toString () );
+            if ( ! (index == args.size () - 1) ) {
+                builder.add(delim);
+            }
+            index++;
+        }
+        return builder.toString();
+
+    }
 }
