@@ -702,19 +702,14 @@ public class MoreTests {
 
 
         Repo<String, Employee> repo =
-
                 Repos.builder ().primaryKey ( "id" )
-
                         .searchIndex ( "firstName" )
-
                         .build ( Typ.string, Employee.class );
 
 
 
         Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
-
         repo.put ( e );
-
         assertEquals ( 1, repo.size() );
 
 
@@ -722,35 +717,26 @@ public class MoreTests {
         // Find the new employee by first name
 
         Criteria exp = eq ( "firstName", "FirstA" );
-
         List<Employee> results = repo.query ( exp );
-
         assertEquals ( 1, results.size() );
 
 
 
         // Change first name
-
         e.setFirstName ( "NewFirstName" );
-
         repo.update ( e );
 
 
 
         // We should not find any results when searching for the old first name
-
         List<Employee> results2 = repo.query ( exp );
-
         assertEquals ( 1, results2.size() );
 
 
 
         // We should find one result when searching for the new first name
-
         Criteria expNewFirstName = eq ( "firstName", "NewFirstName" );
-
         List<Employee> results3 = repo.query ( expNewFirstName );
-
         assertEquals ( 1, results3.size() );
 
     }
