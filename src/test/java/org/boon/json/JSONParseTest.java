@@ -50,7 +50,7 @@ public class JSONParseTest {
 
         boolean ok = true;
 
-        ok &= obj!=null && die( "" + obj) ;
+        ok &= obj!=null || die( "" + obj) ;
 
     }
 
