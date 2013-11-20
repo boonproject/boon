@@ -1,3 +1,9 @@
 target
 *.iws
 *.ipr
+
+*.iml
+
+.idea/misc.xml
+
+.idea/workspace.xml

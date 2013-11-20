@@ -104,7 +104,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         if (oldItem == null) {
             throw new DataRepoException ( "Unable to perform update, the object does not exist" );
         }
-        this.query.delete ( item );
+        this.query.delete ( oldItem );
         this.query.validateIndexes ( item );
 
         if (log.isLoggable(Level.FINE)) {

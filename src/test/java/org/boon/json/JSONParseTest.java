@@ -28,6 +28,33 @@ public class JSONParseTest {
     }
 
     @Test
+    public void buggyJSON ()  {
+        String badText = "{                                       \n" +
+                "      \"clients\" :  100,                   \n" +
+                "      \"host\"    : \"localhost:7070\",     \n" +
+                "      \"times\"   :  100,                  \n" +
+                "      \"params\"    : \n" +
+                "          {\n" +
+                "             \"videoId\" : \"abc123\",\n" +
+                "             \"userName\" : \"rickHigh\",\n" +
+                "             \"ipAddress\" : \"217.0.0.1\",\n" +
+                "             \"event\" : \"start\",\n" +
+                "             \"eventTime\" : 1234567,\n" +
+                "             \"videoLength\" : 12345678,\n" +
+                "             \"sessionId\" : \"abcsesson123\",\n" +
+                "             \"videoPlayerId\" : \"asdfasdf\"\n" +
+                "          }     \n" +
+                "}  \n";
+
+        Object obj = JSONParser.parse(badText);
+
+        boolean ok = true;
+
+        ok &= obj!=null && die( "" + obj) ;
+
+    }
+
+    @Test
     public void testParserSimpleMapWithNumber() {
 
         Object obj = JSONParser.parse(
