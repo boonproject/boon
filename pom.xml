@@ -78,5 +78,21 @@
         </plugins>
 
     </reporting>
-    
+
+    <profiles>
+    <profile>
+        <id>Windows</id>
+        <activation>
+            <os>
+                <family>Windows</family>
+                <arch>x86</arch>
+            </os>
+        </activation>
+        <properties>
+            <property>
+                <skipTests>true</skipTests>
+            </property>
+        </properties>
+    </profile>
+    </profiles>
 </project>
