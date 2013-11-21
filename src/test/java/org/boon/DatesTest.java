@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static org.boon.Boon.puts;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -28,15 +29,11 @@ public class DatesTest {
     @Test
     public void testBeforeAfter () {
 
+        puts ( TimeZone.getDefault () );
+
+
         long epic = Dates.date( 1970, Calendar.MAY, 29 );
         long forties = Dates.date( 1940, Calendar.MAY, 29 );
-
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Thu May 28 17:00:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
@@ -49,12 +46,6 @@ public class DatesTest {
         long epic = Dates.utcDate(1970, Calendar.MAY, 29);
         long forties = Dates.utcDate(1940, Calendar.MAY, 29);
 
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Thu May 28 17:00:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
@@ -66,12 +57,6 @@ public class DatesTest {
         long epic = Dates.date( 1970, Calendar.MAY, 29 );
         long forties = Dates.date( 1940, Calendar.MAY, 29 );
 
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Thu May 28 17:00:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
@@ -84,12 +69,6 @@ public class DatesTest {
         long epic = Dates.wallTimeDate(1970, Calendar.MAY, 29);
         long forties = Dates.wallTimeDate(1940, Calendar.MAY, 29);
 
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Fri May 29 00:00:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
@@ -103,12 +82,6 @@ public class DatesTest {
         long epic = Dates.wallTimeDate(1970, Calendar.MAY, 29, 5, 5);
         long forties = Dates.wallTimeDate( 1940, Calendar.MAY, 29 );
 
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Fri May 29 05:05:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
@@ -121,13 +94,6 @@ public class DatesTest {
         long epic = Dates.date(TimeZone.getTimeZone("UTC"), 1970, Calendar.MAY, 29);
         long forties = Dates.date(TimeZone.getTimeZone("UTC"), 1940, Calendar.MAY, 29);
 
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Thu May 28 17:00:00 PDT 1970")
-
-        );
-
         testBeforeAfter(epic, forties);
 
     }
@@ -138,12 +104,6 @@ public class DatesTest {
         long epic = Dates.date( 1970, Calendar.MAY, 29, 5, 5 );
         long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
 
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Thu May 28 22:05:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
@@ -158,12 +118,6 @@ public class DatesTest {
         long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
 
         System.out.println("NEGATIVE DATE " + forties);
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Thu May 28 22:05:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
@@ -175,13 +129,6 @@ public class DatesTest {
 
         long epic = Dates.date(1970, Calendar.MAY, 29, 5, 5);
         long forties = Dates.date(1940, Calendar.MAY, 29, 5, 5);
-
-        assertEquals(
-
-                new Date(epic).toString(),
-                ("Thu May 28 22:05:00 PDT 1970")
-
-        );
 
         testBeforeAfter(epic, forties);
 
