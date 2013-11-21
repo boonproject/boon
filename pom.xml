@@ -89,9 +89,7 @@
             </os>
         </activation>
         <properties>
-            <property>
-                <skipTests>true</skipTests>
-            </property>
+            <property><skipTests>true</skipTests></property>
         </properties>
     </profile>
     </profiles>
