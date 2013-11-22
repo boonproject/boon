@@ -423,7 +423,7 @@ public abstract class UnsafeField implements FieldAccess {
 
     @Override
     public void setObject(Object obj, Object value) {
-        die(String.format("Can't call this method on this type %s", this.type));
+        die(String.format("Can't call this method on this type %s name = %s", this.type, this.name));
 
     }
 

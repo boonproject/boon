@@ -282,4 +282,14 @@ public class Str {
         return builder.toString();
 
     }
+
+
+    public static  boolean isEmpty(String str) {
+        if ( str == null ) {
+            return true;
+        } else {
+            return  str.isEmpty();
+        }
+
+    }
 }

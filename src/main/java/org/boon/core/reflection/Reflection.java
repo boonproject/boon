@@ -452,6 +452,71 @@ public class Reflection {
         return object;
     }
 
+    /**
+     * Get property value, loads nested properties
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static void setPropertyValue(final Object root, final Object newValue, final String... properties) {
+        Objects.requireNonNull( root       );
+        Objects.requireNonNull( properties );
+
+
+        Object object = root;
+        Object parent = root;
+
+        int index = 0;
+        for (String property : properties) {
+            Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap(object.getClass());
+
+            FieldAccess field = fields.get(property);
+
+
+            if ( isDigits(property) ) {
+                /* We can index numbers and names. */
+                object = idx(object, Integer.parseInt(property)) ;
+
+            }   else {
+
+                if ( field == null ) {
+                    die (sputs(
+                            "We were unable to access property=", property,
+                            "\nThe properties passed were=", properties,
+                            "\nThe root object is =", root.getClass().getName(),
+                            "\nThe current object is =", object.getClass().getName()
+                    )
+                    );
+                }
+
+
+                if (index == properties.length -1) {
+                    field.setValue( object, newValue );
+                } else {
+                    object = field.getObject( object );
+                }
+            }
+
+            index ++;
+        }
+
+    }
+
+    /**
+     * Get property value, loads nested properties
+     * @param root
+     * @param property
+     * @return
+     */
+    public static Class<?> getPropertyType(final Object root, final String  property) {
+        Objects.requireNonNull( root       );
+        Objects.requireNonNull( property );
+
+            Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap(root.getClass());
+
+            FieldAccess field = fields.get(property);
+            return field.getType();
+     }
 
 
     @SuppressWarnings("unchecked")
@@ -1583,6 +1648,16 @@ public class Reflection {
         return list;
     }
 
+
+
+
+    public static void copyProperties(Object object, Map<String, Object> properties) {
+
+        Set<Map.Entry<String, Object>> props = properties.entrySet();
+        for (Map.Entry<String, Object> entry : props) {
+           setPropertyValue(object, entry.getValue(), entry.getKey());
+        }
+    }
 
 
 

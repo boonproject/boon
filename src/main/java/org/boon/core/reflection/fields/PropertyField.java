@@ -27,16 +27,31 @@ public class PropertyField implements FieldAccess {
 
 
     public PropertyField(String name, Method setter, Method getter) {
-        this.setter = setter;
-        this.getter = getter;
 
-        isStatic = Modifier.isStatic(getter.getModifiers());
-        isFinal = Modifier.isFinal(getter.getModifiers());
+        try {
+            this.setter = setter;
+            this.getter = getter;
+
+            if (getter != null) {
+                isStatic = Modifier.isStatic(getter.getModifiers());
+                isFinal = Modifier.isFinal(getter.getModifiers());
+                type = getter.getReturnType();
+
+            } else {
+                isStatic = Modifier.isStatic(setter.getModifiers());
+                isFinal = Modifier.isFinal(setter.getModifiers());
+                type = setter.getReturnType();
+
+            }
 
 
-        readOnly = setter == null;
-        type = getter.getReturnType();
-        this.name = name;
+
+            readOnly = setter == null;
+            this.name = name;
+        } catch (Exception ex) {
+            Exceptions.handle("name " + name + " setter " + setter + " getter " + getter, ex);
+            throw new RuntimeException( "die");
+        }
     }
 
     @Override
