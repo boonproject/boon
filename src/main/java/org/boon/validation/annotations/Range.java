@@ -8,9 +8,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface Range {
-	String min();
-	String max();
-	String detailMessage() default "";
-	String summaryMessage() default "";
-	
+    String min( );
+
+    String max( );
+
+    String detailMessage( ) default "";
+
+    String summaryMessage( ) default "";
+
 }

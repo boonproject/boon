@@ -6,18 +6,18 @@ import org.boon.validation.ValidatorMessage;
 import org.boon.validation.ValidatorMessageHolder;
 
 /**
- *
  * <p>
  * <small>
  * Required validator.
  * </small>
  * </p>
+ *
  * @author Rick Hightower
  */
 public class StopOnRuleValidator implements FieldValidator {
     private String ruleName;
 
-    public String getRuleName() {
+    public String getRuleName( ) {
         return ruleName;
     }
 
@@ -26,7 +26,7 @@ public class StopOnRuleValidator implements FieldValidator {
     }
 
     public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
-        return new ValidatorMessage();
+        return new ValidatorMessage ( );
     }
-    
+
 }

@@ -2,78 +2,76 @@ package org.boon.core.reflection.fields;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 
 public interface FieldAccess {
-    String getName();
+    String getName( );
 
-    Object getValue(Object obj);
+    Object getValue( Object obj );
 
-    void setValue(Object obj, Object value);
-
-
-    boolean getBoolean(Object obj);
-
-    void setBoolean(Object obj, boolean value);
+    void setValue( Object obj, Object value );
 
 
-    int getInt(Object obj);
+    boolean getBoolean( Object obj );
 
-    void setInt(Object obj, int value);
-
-
-    short getShort(Object obj);
-
-    void setShort(Object obj, short value);
-
-    char getChar(Object obj);
-
-    void setChar(Object obj, char value);
+    void setBoolean( Object obj, boolean value );
 
 
-    long getLong(Object obj);
+    int getInt( Object obj );
 
-    void setLong(Object obj, long value);
-
-
-    double getDouble(Object obj);
-
-    void setDouble(Object obj, double value);
+    void setInt( Object obj, int value );
 
 
-    float getFloat(Object obj);
+    short getShort( Object obj );
 
-    void setFloat(Object obj, float value);
+    void setShort( Object obj, short value );
 
+    char getChar( Object obj );
 
-    byte getByte(Object obj);
-
-    void setByte(Object obj, byte value);
-
-    Object getObject(Object obj);
-
-    void setObject(Object obj, Object value);
+    void setChar( Object obj, char value );
 
 
-    boolean isFinal();
+    long getLong( Object obj );
 
-    boolean isStatic();
-
-    boolean isVolatile();
-
-    boolean isQualified();
-
-    boolean isReadOnly();
-
-    Class<?> getType();
-
-    Field getField();
+    void setLong( Object obj, long value );
 
 
+    double getDouble( Object obj );
 
-    public ParameterizedType getParameterizedType() ;
+    void setDouble( Object obj, double value );
 
 
-    public Class<?> getComponentClass() ;
+    float getFloat( Object obj );
+
+    void setFloat( Object obj, float value );
+
+
+    byte getByte( Object obj );
+
+    void setByte( Object obj, byte value );
+
+    Object getObject( Object obj );
+
+    void setObject( Object obj, Object value );
+
+
+    boolean isFinal( );
+
+    boolean isStatic( );
+
+    boolean isVolatile( );
+
+    boolean isQualified( );
+
+    boolean isReadOnly( );
+
+    Class<?> getType( );
+
+    Field getField( );
+
+
+    public ParameterizedType getParameterizedType( );
+
+
+    public Class<?> getComponentClass( );
 }

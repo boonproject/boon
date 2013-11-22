@@ -11,89 +11,89 @@ import java.util.Set;
 
 public interface ResultSet<T> extends Iterable<T> {
 
-    ResultSet expectOne();
+    ResultSet expectOne( );
 
 
-    <EXPECT> ResultSet <EXPECT> expectOne(Class<EXPECT> clz);
+    <EXPECT> ResultSet<EXPECT> expectOne( Class<EXPECT> clz );
 
 
-    ResultSet expectMany();
+    ResultSet expectMany( );
 
-    ResultSet expectNone();
+    ResultSet expectNone( );
 
-    ResultSet expectOneOrMany();
+    ResultSet expectOneOrMany( );
 
-    ResultSet removeDuplication();
+    ResultSet removeDuplication( );
 
-    ResultSet sort(Sort sort);
+    ResultSet sort( Sort sort );
 
-    Collection<T> filter(Criteria criteria);
+    Collection<T> filter( Criteria criteria );
 
-    ResultSet<List<Map<String, Object>>> select(Selector... selectors);
+    ResultSet<List<Map<String, Object>>> select( Selector... selectors );
 
-    int[] selectInts(Selector selector);
+    int[] selectInts( Selector selector );
 
-    float[] selectFloats(Selector selector);
+    float[] selectFloats( Selector selector );
 
-    short[] selectShorts(Selector selector);
+    short[] selectShorts( Selector selector );
 
-    double[] selectDoubles(Selector selector);
+    double[] selectDoubles( Selector selector );
 
-    byte[] selectBytes(Selector selector);
+    byte[] selectBytes( Selector selector );
 
-    char[] selectChars(Selector selector);
+    char[] selectChars( Selector selector );
 
-    Object[] selectObjects(Selector selector);
+    Object[] selectObjects( Selector selector );
 
-    <OBJ> OBJ[] selectObjects(Class<OBJ> cls, Selector selector);
+    <OBJ> OBJ[] selectObjects( Class<OBJ> cls, Selector selector );
 
-    <OBJ> ResultSet<OBJ> selectObjectsAsResultSet(Class<OBJ> cls, Selector selector);
-
-
-    Collection<T> asCollection();
-
-    String asJSONString();
-
-    List<Map<String, Object>> asListOfMaps();
-
-    List<T> asList();
-
-    Set<T> asSet();
-
-    List<PlanStep> queryPlan();
-
-    T firstItem();
-
-    Map<String, Object> firstMap();
-
-    String firstJSON();
-
-    int firstInt(Selector selector);
-
-    float firstFloat(Selector selector);
-
-    short firstShort(Selector selector);
-
-    double firstDouble(Selector selector);
-
-    byte firstByte(Selector selector);
-
-    char firstChar(Selector selector);
-
-    Object firstObject(Selector selector);
-
-    <OBJ> OBJ firstObject(Class<OBJ> cls, Selector selector);
+    <OBJ> ResultSet<OBJ> selectObjectsAsResultSet( Class<OBJ> cls, Selector selector );
 
 
-    List<T> paginate(int start, int size);
+    Collection<T> asCollection( );
 
-    List<Map<String, Object>> paginateMaps(int start, int size);
+    String asJSONString( );
 
-    String paginateJSON(int start, int size);
+    List<Map<String, Object>> asListOfMaps( );
+
+    List<T> asList( );
+
+    Set<T> asSet( );
+
+    List<PlanStep> queryPlan( );
+
+    T firstItem( );
+
+    Map<String, Object> firstMap( );
+
+    String firstJSON( );
+
+    int firstInt( Selector selector );
+
+    float firstFloat( Selector selector );
+
+    short firstShort( Selector selector );
+
+    double firstDouble( Selector selector );
+
+    byte firstByte( Selector selector );
+
+    char firstChar( Selector selector );
+
+    Object firstObject( Selector selector );
+
+    <OBJ> OBJ firstObject( Class<OBJ> cls, Selector selector );
+
+
+    List<T> paginate( int start, int size );
+
+    List<Map<String, Object>> paginateMaps( int start, int size );
+
+    String paginateJSON( int start, int size );
 
     //Size can vary if you allow duplication.
     //The size can change after removeDuplication.
-    int size();
+    int size( );
 
 
 }

@@ -8,11 +8,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface Regex {
-	
-	String match();
-	String detailMessage() default "";
-	String summaryMessage() default "";
-    boolean negate() default false;
-	
+
+    String match( );
+
+    String detailMessage( ) default "";
+
+    String summaryMessage( ) default "";
+
+    boolean negate( ) default false;
+
 
 }

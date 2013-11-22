@@ -4,7 +4,6 @@ import org.boon.Exceptions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.Conversions;
 
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -23,316 +22,313 @@ public class PropertyField implements FieldAccess {
     private final String name;
     private final Method getter;
     private final Method setter;
-    private final Logger log =  Logger.getLogger(PropertyField.class.getName());
+    private final Logger log = Logger.getLogger ( PropertyField.class.getName ( ) );
 
 
-    public PropertyField(String name, Method setter, Method getter) {
+    public PropertyField( String name, Method setter, Method getter ) {
 
         try {
             this.setter = setter;
             this.getter = getter;
 
-            if (getter != null) {
-                isStatic = Modifier.isStatic(getter.getModifiers());
-                isFinal = Modifier.isFinal(getter.getModifiers());
-                type = getter.getReturnType();
+            if ( getter != null ) {
+                isStatic = Modifier.isStatic ( getter.getModifiers ( ) );
+                isFinal = Modifier.isFinal ( getter.getModifiers ( ) );
+                type = getter.getReturnType ( );
 
             } else {
-                isStatic = Modifier.isStatic(setter.getModifiers());
-                isFinal = Modifier.isFinal(setter.getModifiers());
-                type = setter.getReturnType();
+                isStatic = Modifier.isStatic ( setter.getModifiers ( ) );
+                isFinal = Modifier.isFinal ( setter.getModifiers ( ) );
+                type = setter.getReturnType ( );
 
             }
 
 
-
             readOnly = setter == null;
             this.name = name;
-        } catch (Exception ex) {
-            Exceptions.handle("name " + name + " setter " + setter + " getter " + getter, ex);
-            throw new RuntimeException( "die");
+        } catch ( Exception ex ) {
+            Exceptions.handle ( "name " + name + " setter " + setter + " getter " + getter, ex );
+            throw new RuntimeException ( "die" );
         }
     }
 
     @Override
-    public Object getValue(Object obj) {
+    public Object getValue( Object obj ) {
         try {
-            return getter.invoke(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return getter.invoke ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
     }
 
-    public boolean getBoolean(Object obj) {
+    public boolean getBoolean( Object obj ) {
         try {
-            return (Boolean) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Boolean ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public int getInt(Object obj) {
+    public int getInt( Object obj ) {
         try {
-            return (Integer) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Integer ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
     }
 
     @Override
-    public short getShort(Object obj) {
+    public short getShort( Object obj ) {
         try {
-            return (Short) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Short ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
     }
 
     @Override
-    public char getChar(Object obj) {
+    public char getChar( Object obj ) {
         try {
-            return (Character) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Character ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
     }
 
     @Override
-    public long getLong(Object obj) {
+    public long getLong( Object obj ) {
         try {
-            return (Long) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Long ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
     }
 
     @Override
-    public double getDouble(Object obj) {
+    public double getDouble( Object obj ) {
         try {
-            return (Double) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Double ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public float getFloat(Object obj) {
+    public float getFloat( Object obj ) {
         try {
-            return (Float) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Float ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
     }
 
     @Override
-    public byte getByte(Object obj) {
+    public byte getByte( Object obj ) {
         try {
-            return (Byte) this.getValue(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ( Byte ) this.getValue ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
     }
 
     @Override
-    public Object getObject(Object obj) {
-        return getValue(obj);
+    public Object getObject( Object obj ) {
+        return getValue ( obj );
     }
 
     @Override
-    public Field getField() {
+    public Field getField( ) {
         return null;
     }
 
 
-    public ParameterizedType getParameterizedType() {
+    public ParameterizedType getParameterizedType( ) {
 
 
-	return null;
+        return null;
 
     }
 
 
+    public Class<?> getComponentClass( ) {
+        final ParameterizedType parameterizedType = this.getParameterizedType ( );
+        if ( parameterizedType == null ) {
 
-    public Class<?> getComponentClass() {
-        final ParameterizedType parameterizedType = this.getParameterizedType();
-        if (parameterizedType == null) {
-
-            if (getter != null) return (Class<?>) getter.getGenericParameterTypes()[0];
+            if ( getter != null ) return ( Class<?> ) getter.getGenericParameterTypes ( )[0];
 
         } else {
-            return (Class<?>)(parameterizedType.getActualTypeArguments()[0]);
+            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ( )[0] );
         }
 
         return null;
     }
 
 
-
     @Override
-    public boolean isFinal() {
+    public boolean isFinal( ) {
         return isFinal;
     }
 
 
     @Override
-    public boolean isStatic() {
+    public boolean isStatic( ) {
         return isStatic;
     }
 
     @Override
-    public boolean isVolatile() {
+    public boolean isVolatile( ) {
         return isVolatile;
     }
 
 
     @Override
-    public boolean isQualified() {
+    public boolean isQualified( ) {
         return qualified;
     }
 
     @Override
-    public boolean isReadOnly() {
+    public boolean isReadOnly( ) {
         return readOnly;
     }
 
 
     @Override
-    public Class<?> getType() {
+    public Class<?> getType( ) {
         return type;
     }
 
     @Override
-    public String getName() {
+    public String getName( ) {
         return name;
     }
 
     @Override
-    public void setValue(Object obj, Object value) {
-        if (obj.getClass() == this.type) {
-            this.setObject(obj, value);
+    public void setValue( Object obj, Object value ) {
+        if ( obj.getClass ( ) == this.type ) {
+            this.setObject ( obj, value );
             return;
         }
 
-        if (type == Typ.intgr) {
-            setInt(obj, toInt(value));
-        } else if (type == Typ.lng) {
-            setLong(obj, toLong(value));
-        } else if (type == Typ.bt) {
-            setByte(obj, toByte(value));
+        if ( type == Typ.intgr ) {
+            setInt ( obj, toInt ( value ) );
+        } else if ( type == Typ.lng ) {
+            setLong ( obj, toLong ( value ) );
+        } else if ( type == Typ.bt ) {
+            setByte ( obj, toByte ( value ) );
 
-        } else if (type == Typ.shrt) {
-            setShort(obj, toShort(value));
+        } else if ( type == Typ.shrt ) {
+            setShort ( obj, toShort ( value ) );
 
-        } else if (type == Typ.chr) {
-            setChar(obj, toChar(value));
+        } else if ( type == Typ.chr ) {
+            setChar ( obj, toChar ( value ) );
 
-        } else if (type == Typ.dbl) {
-            setDouble(obj, toDouble(value));
+        } else if ( type == Typ.dbl ) {
+            setDouble ( obj, toDouble ( value ) );
 
-        } else if (type == Typ.flt) {
-            setFloat(obj, toFloat(value));
+        } else if ( type == Typ.flt ) {
+            setFloat ( obj, toFloat ( value ) );
 
         } else {
-            setObject(obj, Conversions.coerce(type, value));
+            setObject ( obj, Conversions.coerce ( type, value ) );
         }
     }
 
     @Override
-    public void setBoolean(Object obj, boolean value) {
+    public void setBoolean( Object obj, boolean value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public void setInt(Object obj, int value) {
+    public void setInt( Object obj, int value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public void setShort(Object obj, short value) {
+    public void setShort( Object obj, short value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public void setChar(Object obj, char value) {
+    public void setChar( Object obj, char value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public void setLong(Object obj, long value) {
+    public void setLong( Object obj, long value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public void setDouble(Object obj, double value) {
+    public void setDouble( Object obj, double value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public void setFloat(Object obj, float value) {
+    public void setFloat( Object obj, float value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
         }
 
     }
 
     @Override
-    public void setByte(Object obj, byte value) {
+    public void setByte( Object obj, byte value ) {
         try {
-            this.setObject(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            this.setObject ( obj, value );
+        } catch ( Exception e ) {
+            throw new RuntimeException ( e );
 
         }
 
     }
 
     @Override
-    public void setObject(Object obj, Object value) {
-        if (readOnly) {
-            log.warning(String.format("You tried to modify property %s of %s for instance %s with set %s",
-                    name, obj.getClass().getSimpleName(), obj, value));
+    public void setObject( Object obj, Object value ) {
+        if ( readOnly ) {
+            log.warning ( String.format ( "You tried to modify property %s of %s for instance %s with set %s",
+                    name, obj.getClass ( ).getSimpleName ( ), obj, value ) );
             return;
         }
         try {
-            setter.invoke(obj, value);
-        } catch (Exception e) {
-            Exceptions.handle(String.format("You tried to modify property %s of %s for instance %s with set %s using %s",
-                    name, obj.getClass().getSimpleName(), obj, value, setter.getName()), e);
+            setter.invoke ( obj, value );
+        } catch ( Exception e ) {
+            Exceptions.handle ( String.format ( "You tried to modify property %s of %s for instance %s with set %s using %s",
+                    name, obj.getClass ( ).getSimpleName ( ), obj, value, setter.getName ( ) ), e );
 
         }
 

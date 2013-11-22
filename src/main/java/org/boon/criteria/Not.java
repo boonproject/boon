@@ -8,22 +8,22 @@ public class Not extends Criteria {
 
     private final Criteria expression;
 
-    public Not(Criteria expression) {
+    public Not( Criteria expression ) {
         this.expression = expression;
     }
 
     @Override
-    public void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
+    public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
 
     }
 
     @Override
-    public void cleanAfterGroupTest () {
+    public void cleanAfterGroupTest( ) {
 
     }
 
     @Override
-    public boolean resolve(Map<String, FieldAccess> fields, Object owner) {
-        return !this.expression.resolve(fields, owner);
+    public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
+        return !this.expression.resolve ( fields, owner );
     }
 }

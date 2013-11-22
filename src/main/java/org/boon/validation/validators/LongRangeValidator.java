@@ -31,19 +31,19 @@ public class LongRangeValidator extends AbstractRangeValidator {
      * @param fieldValue the value to validate
      * @param fieldLabel the logical name of the value used for generating error messages
      */
-    @SuppressWarnings("unchecked")
-    public ValidatorMessageHolder validate(Object fieldValue, String fieldLabel) {
-        ValidatorMessage validatorMessage = new ValidatorMessage();
-        if (fieldValue == null) {
+    @SuppressWarnings( "unchecked" )
+    public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
+        ValidatorMessage validatorMessage = new ValidatorMessage ( );
+        if ( fieldValue == null ) {
             return validatorMessage;
         }
 
-        dynamicallyInitIfNeeded(fieldValue);
+        dynamicallyInitIfNeeded ( fieldValue );
 
-        if (!super.isValueGreaterThanMin((Comparable) fieldValue)) {
-            populateMessage(underMin, validatorMessage, fieldLabel, min);
-        } else if (!super.isValueLessThanMax((Comparable) fieldValue)) {
-            populateMessage(overMax, validatorMessage, fieldLabel, max);
+        if ( !super.isValueGreaterThanMin ( ( Comparable ) fieldValue ) ) {
+            populateMessage ( underMin, validatorMessage, fieldLabel, min );
+        } else if ( !super.isValueLessThanMax ( ( Comparable ) fieldValue ) ) {
+            populateMessage ( overMax, validatorMessage, fieldLabel, max );
         }
 
         return validatorMessage;
@@ -52,35 +52,35 @@ public class LongRangeValidator extends AbstractRangeValidator {
 
 
     /* Initialize this instance. */
-    public void init() {
+    public void init( ) {
         /* If the underMin message was not injected, create a default. */
-        if (underMin == null) {
-            underMin = new MessageSpecification();
-            underMin.setDetailMessage("{validator.range.underMin.detail}");
-            underMin.setSummaryMessage("{validator.range.underMin.summary}");
+        if ( underMin == null ) {
+            underMin = new MessageSpecification ( );
+            underMin.setDetailMessage ( "{validator.range.underMin.detail}" );
+            underMin.setSummaryMessage ( "{validator.range.underMin.summary}" );
         }
-    	/* If the overMax message was not injected, create a default. */
-        if (overMax == null) {
-            overMax = new MessageSpecification();
-            overMax.setDetailMessage("{validator.range.overMax.detail}");
-            overMax.setSummaryMessage("{validator.range.overMax.summary");
+        /* If the overMax message was not injected, create a default. */
+        if ( overMax == null ) {
+            overMax = new MessageSpecification ( );
+            overMax.setDetailMessage ( "{validator.range.overMax.detail}" );
+            overMax.setSummaryMessage ( "{validator.range.overMax.summary" );
         }
-    	/* If the type was not injected, stop initialization. */
-        if (type == null) {
+        /* If the type was not injected, stop initialization. */
+        if ( type == null ) {
             return;
         }
     	/* Initialize based on type for all Integer value
     	 * so that LongRangeValidator can be used
     	 * for int, short, byte, and long. */
-        if (!isInitialized()) {
-            if (type.equals(Integer.class)) {
-                init(new Integer(min.intValue()), new Integer(max.intValue()));
-            } else if (type.equals(Byte.class)) {
-                init(new Byte(min.byteValue()), new Byte(max.byteValue()));
-            } else if (type.equals(Short.class)) {
-                init(new Short(min.byteValue()), new Short(max.byteValue()));
+        if ( !isInitialized ( ) ) {
+            if ( type.equals ( Integer.class ) ) {
+                init ( new Integer ( min.intValue ( ) ), new Integer ( max.intValue ( ) ) );
+            } else if ( type.equals ( Byte.class ) ) {
+                init ( new Byte ( min.byteValue ( ) ), new Byte ( max.byteValue ( ) ) );
+            } else if ( type.equals ( Short.class ) ) {
+                init ( new Short ( min.byteValue ( ) ), new Short ( max.byteValue ( ) ) );
             } else {
-                init(min, max);
+                init ( min, max );
             }
         }
     }
@@ -91,41 +91,41 @@ public class LongRangeValidator extends AbstractRangeValidator {
      *
      * @param value
      */
-    private void dynamicallyInitIfNeeded(Object value) {
+    private void dynamicallyInitIfNeeded( Object value ) {
 		/* Check to see if this class was already initialized,
 		 * if not, initialize it based on the type of the value.
 		 */
-        if (!isInitialized()) {
-            if (value instanceof Integer) {
-                init(new Integer(min.intValue()), new Integer(max.intValue()));
-            } else if (value instanceof Byte) {
-                init(new Byte(min.byteValue()), new Byte(max.byteValue()));
-            } else if (value instanceof Short) {
-                init(new Short(min.shortValue()), new Short(max.shortValue()));
+        if ( !isInitialized ( ) ) {
+            if ( value instanceof Integer ) {
+                init ( new Integer ( min.intValue ( ) ), new Integer ( max.intValue ( ) ) );
+            } else if ( value instanceof Byte ) {
+                init ( new Byte ( min.byteValue ( ) ), new Byte ( max.byteValue ( ) ) );
+            } else if ( value instanceof Short ) {
+                init ( new Short ( min.shortValue ( ) ), new Short ( max.shortValue ( ) ) );
             } else {
-                init(min, max);
+                init ( min, max );
             }
         }
     }
 
-    public void setMax(Long max) {
+    public void setMax( Long max ) {
         this.max = max;
     }
 
 
-    public void setMin(Long min) {
+    public void setMin( Long min ) {
         this.min = min;
     }
 
-    public void setType(Class<?> type) {
+    public void setType( Class<?> type ) {
         this.type = type;
     }
 
-    protected void setOverMax(MessageSpecification overMax) {
+    protected void setOverMax( MessageSpecification overMax ) {
         this.overMax = overMax;
     }
 
-    protected void setUnderMin(MessageSpecification underMin) {
+    protected void setUnderMin( MessageSpecification underMin ) {
         this.underMin = underMin;
     }
 

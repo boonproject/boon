@@ -18,14 +18,15 @@ package org.boon.datarepo;
 import org.boon.criteria.Criteria;
 
 
-/** Allows you to search an data repo.
+/**
+ * Allows you to search an data repo.
  *
- *  @author Rick Hightower
+ * @author Rick Hightower
  */
 public interface Filter {
 
-    ResultSet filter(Criteria... expressions);
+    ResultSet filter( Criteria... expressions );
 
-    void invalidate();
+    void invalidate( );
 
 }

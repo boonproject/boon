@@ -16,33 +16,33 @@ public class StringScanner {
 
 
     public static boolean isDigits( String input ) {
-        return CharScanner.isDigits( input.toCharArray() );
+        return CharScanner.isDigits ( input.toCharArray ( ) );
     }
 
     public static String[] split( final String string,
-                                  final char split) {
+                                  final char split ) {
 
-        char[][] comps = CharScanner.split(string.toCharArray(), split);
+        char[][] comps = CharScanner.split ( string.toCharArray ( ), split );
 
-        return Str.fromCharArrayOfArrayToStringArray(comps);
+        return Str.fromCharArrayOfArrayToStringArray ( comps );
 
     }
 
     public static String[] splitByChars( final String string,
-                                  final char... delimiters) {
+                                         final char... delimiters ) {
 
-        char[][] comps = CharScanner.splitByChars(string.toCharArray(), delimiters);
+        char[][] comps = CharScanner.splitByChars ( string.toCharArray ( ), delimiters );
 
-        return Str.fromCharArrayOfArrayToStringArray(comps);
+        return Str.fromCharArrayOfArrayToStringArray ( comps );
 
     }
 
     public static String[] splitByDelimiters( final String string,
-                                         final String delimiters) {
+                                              final String delimiters ) {
 
-        char[][] comps = CharScanner.splitByChars(string.toCharArray(), delimiters.toCharArray());
+        char[][] comps = CharScanner.splitByChars ( string.toCharArray ( ), delimiters.toCharArray ( ) );
 
-        return Str.fromCharArrayOfArrayToStringArray(comps);
+        return Str.fromCharArrayOfArrayToStringArray ( comps );
 
     }
 

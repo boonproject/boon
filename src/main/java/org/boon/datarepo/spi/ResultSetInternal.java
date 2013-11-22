@@ -1,17 +1,17 @@
 package org.boon.datarepo.spi;
 
-import org.boon.datarepo.ResultSet;
 import org.boon.criteria.Criteria;
+import org.boon.datarepo.ResultSet;
 
 import java.util.List;
 
 public interface ResultSetInternal<T> extends ResultSet<T> {
 
-    void addResults(List<T> results);
+    void addResults( List<T> results );
 
-    void filterAndPrune(Criteria criteria);
+    void filterAndPrune( Criteria criteria );
 
-    void andResults();
+    void andResults( );
 
-    int lastSize();
+    int lastSize( );
 }

@@ -8,11 +8,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface LongRange {
-	
-	long min();
-	long max();
-	String detailMessage() default "";
-	String summaryMessage() default "";
-	
+
+    long min( );
+
+    long max( );
+
+    String detailMessage( ) default "";
+
+    String summaryMessage( ) default "";
+
 
 }

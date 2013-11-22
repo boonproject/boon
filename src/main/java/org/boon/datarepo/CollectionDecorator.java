@@ -20,18 +20,19 @@ import java.util.Collection;
 
 /**
  * Decorates a collection.
- *
+ * <p/>
  * Adds SearchableCollection to a collection.
- *
+ * <p/>
  * <p>
- *
+ * <p/>
  * </p>
+ *
  * @see org.boon.datarepo.Collections.QList
  * @see org.boon.datarepo.Collections.QSet
  * @see Collections
  */
 public interface CollectionDecorator {
-    SearchableCollection searchCollection();
+    SearchableCollection searchCollection( );
 
-    Collection collection();
+    Collection collection( );
 }

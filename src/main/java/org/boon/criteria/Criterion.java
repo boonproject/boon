@@ -2,8 +2,8 @@ package org.boon.criteria;
 
 import org.boon.Exceptions;
 import org.boon.core.Typ;
-import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.Conversions;
+import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.CharBuf;
 
 import java.util.Arrays;
@@ -13,7 +13,6 @@ import java.util.Objects;
 
 import static org.boon.Boon.sputl;
 import static org.boon.Boon.sputs;
-import static org.boon.Exceptions.die;
 
 
 public abstract class Criterion<VALUE> extends Criteria {
@@ -35,39 +34,39 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     private Map<String, FieldAccess> fields;
 
-    public Criterion(String name, Operator operator, VALUE... values) {
-        Objects.requireNonNull( name,       "name cannot be null");
-        Objects.requireNonNull( operator,   "operator cannot be null");
-        Objects.requireNonNull( values,     "values cannot be null");
+    public Criterion( String name, Operator operator, VALUE... values ) {
+        Objects.requireNonNull ( name, "name cannot be null" );
+        Objects.requireNonNull ( operator, "operator cannot be null" );
+        Objects.requireNonNull ( values, "values cannot be null" );
 
         this.name = name;
         this.operator = operator;
-        this.setValues(values);
-        hashCode = doHashCode();
-        toString = doToString();
+        this.setValues ( values );
+        hashCode = doHashCode ( );
+        toString = doToString ( );
     }
 
 
-    public String getName() {
+    public String getName( ) {
         return name;
     }
 
-    public Operator getOperator() {
+    public Operator getOperator( ) {
         return operator;
     }
 
 
-    public VALUE getValue() {
+    public VALUE getValue( ) {
         return value;
     }
 
 
-    public VALUE[] getValues() {
+    public VALUE[] getValues( ) {
         return values;
     }
 
-    public void setValues(VALUE[] values) {
-        if (values.length > 0) {
+    public void setValues( VALUE[] values ) {
+        if ( values.length > 0 ) {
             this.value = values[0];
         }
         this.values = values;
@@ -75,76 +74,74 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Criterion)) return false;
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( !( o instanceof Criterion ) ) return false;
 
-        Criterion criterion = (Criterion) o;
+        Criterion criterion = ( Criterion ) o;
 
-        if (name != null ? !name.equals(criterion.name) : criterion.name != null) return false;
-        if (operator != criterion.operator) return false;
-        if (value != null ? !value.equals(criterion.value) : criterion.value != null) return false;
-        if (!Arrays.equals(values, criterion.values)) return false;
+        if ( name != null ? !name.equals ( criterion.name ) : criterion.name != null ) return false;
+        if ( operator != criterion.operator ) return false;
+        if ( value != null ? !value.equals ( criterion.value ) : criterion.value != null ) return false;
+        if ( !Arrays.equals ( values, criterion.values ) ) return false;
 
         return true;
     }
 
 
     @Override
-    public int hashCode() {
+    public int hashCode( ) {
         return hashCode;
     }
 
-    public int doHashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (operator != null ? operator.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (values != null ? Arrays.hashCode(values) : 0);
+    public int doHashCode( ) {
+        int result = name != null ? name.hashCode ( ) : 0;
+        result = 31 * result + ( operator != null ? operator.hashCode ( ) : 0 );
+        result = 31 * result + ( value != null ? value.hashCode ( ) : 0 );
+        result = 31 * result + ( values != null ? Arrays.hashCode ( values ) : 0 );
         return result;
     }
 
     @Override
-    public String toString() {
+    public String toString( ) {
         return toString;
     }
 
 
-    public String doToString() {
-        CharBuf builder = CharBuf.create( 80 );
-        builder.add("c{");
-        builder.add("\"name\":'");
-        builder.add(String.valueOf(name));
-        builder.add(", \"operator\":");
-        builder.add(String.valueOf(operator));
-        builder.add(", \"set\":");
-        builder.add(String.valueOf(value));
-        builder.add(", \"update\":");
-        builder.add(Arrays.toString(values));
-        builder.add("}");
-        return builder.toString();
+    public String doToString( ) {
+        CharBuf builder = CharBuf.create ( 80 );
+        builder.add ( "c{" );
+        builder.add ( "\"name\":'" );
+        builder.add ( String.valueOf ( name ) );
+        builder.add ( ", \"operator\":" );
+        builder.add ( String.valueOf ( operator ) );
+        builder.add ( ", \"set\":" );
+        builder.add ( String.valueOf ( value ) );
+        builder.add ( ", \"update\":" );
+        builder.add ( Arrays.toString ( values ) );
+        builder.add ( "}" );
+        return builder.toString ( );
     }
 
-    public boolean isInitialized() {
+    public boolean isInitialized( ) {
         return initialized;
     }
 
 
-    public void initByClass ( Class clazz ) {
+    public void initByClass( Class clazz ) {
 
-        this.fields = getFieldsInternal(clazz);
-        initIfNeeded();
+        this.fields = getFieldsInternal ( clazz );
+        initIfNeeded ( );
     }
 
-    public void initByFields(Map<String, FieldAccess> fields) {
+    public void initByFields( Map<String, FieldAccess> fields ) {
         this.fields = fields;
-        initIfNeeded();
+        initIfNeeded ( );
     }
-
-
 
 
     //Only called when part of group.
-    public  void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
+    public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
 
         this.fields = fields;
         this.objectUnderTest = owner;
@@ -152,11 +149,11 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     }
 
-    public  void cleanAfterGroupTest( ) {
-        clean();
+    public void cleanAfterGroupTest( ) {
+        clean ( );
     }
 
-    public  void clean( ) {
+    public void clean( ) {
         this.field = null;
         this.fields = null;
         this.objectUnderTest = null;
@@ -164,8 +161,7 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
     @Override
-    public boolean test(Object o) {
-
+    public boolean test( Object o ) {
 
 
         try {
@@ -174,117 +170,113 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             this.objectUnderTest = o;
 
-            initIfNeeded( );
-            if (this.useDelegate) {
+            initIfNeeded ( );
+            if ( this.useDelegate ) {
 
-                return this.nativeDelegate.resolve(fields, o);
+                return this.nativeDelegate.resolve ( fields, o );
             }
 
 
-            boolean result = resolve(fields, o);
+            boolean result = resolve ( fields, o );
 
-            return  result;
+            return result;
 
-        } catch (Exception ex) {
-            return Exceptions.handle (Typ.bool,
-                    sputl("In class " + this.getClass ().getName (),
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( Typ.bool,
+                    sputl ( "In class " + this.getClass ( ).getName ( ),
                             "the test method is unable to test the following criteria operator",
-                            Objects.toString ( this.getOperator () )   ,
-                            sputs("The field name is          :          ",  this.getName ()),
-                            sputs("The value is               :          ",  this.getValue ()),
-                            sputs("The value type is          :          ",  this.getValue ().getClass ().getName ()),
-                            sputs("The object under test      :          ",  this.objectUnderTest),
-                            sputs("The object under test type :          ",
-                                    this.objectUnderTest == null ? "null" : this.objectUnderTest.getClass ().getName () ),
-                            sputs("Field                      :          ",
+                            Objects.toString ( this.getOperator ( ) ),
+                            sputs ( "The field name is          :          ", this.getName ( ) ),
+                            sputs ( "The value is               :          ", this.getValue ( ) ),
+                            sputs ( "The value type is          :          ", this.getValue ( ).getClass ( ).getName ( ) ),
+                            sputs ( "The object under test      :          ", this.objectUnderTest ),
+                            sputs ( "The object under test type :          ",
+                                    this.objectUnderTest == null ? "null" : this.objectUnderTest.getClass ( ).getName ( ) ),
+                            sputs ( "Field                      :          ",
                                     field ),
-                            sputs("Fields                     :          ",
+                            sputs ( "Fields                     :          ",
                                     fields ),
 
-                            sputs()
+                            sputs ( )
 
                     )
-                    , ex);
+                    , ex );
         }
     }
 
-    private FieldAccess field (  ) {
+    private FieldAccess field( ) {
         if ( field == null ) {
-            field = fields().get ( this.name );
+            field = fields ( ).get ( this.name );
         }
         return field;
     }
 
-    private Map<String, FieldAccess> fields (  ) {
+    private Map<String, FieldAccess> fields( ) {
 
-        if (fields == null) {
-            fields = getFieldsInternal ( this.objectUnderTest ) ;
+        if ( fields == null ) {
+            fields = getFieldsInternal ( this.objectUnderTest );
         }
         return fields;
     }
 
     public static abstract class PrimitiveCriterion extends Criterion {
 
-        public PrimitiveCriterion(String name, Operator operator, Object... objects) {
-            super(name, operator, objects);
+        public PrimitiveCriterion( String name, Operator operator, Object... objects ) {
+            super ( name, operator, objects );
         }
 
         @Override
-        public boolean test(Object o) {
+        public boolean test( Object o ) {
 
-            Map<String, FieldAccess> fields = getFieldsInternal(o);
-            return resolve(fields, o);
+            Map<String, FieldAccess> fields = getFieldsInternal ( o );
+            return resolve ( fields, o );
         }
 
     }
 
 
+    private void initForShortValue( short v ) {
 
+        this.value = ( VALUE ) ( Short ) v;
 
-    private void initForShortValue ( short v ) {
-
-        this.value = (VALUE) (Short)   v;
-
-        switch (operator) {
+        switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqShort( name, v );
+                nativeDelegate = CriteriaFactory.eqShort ( name, v );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqShort(name, v);
+                nativeDelegate = CriteriaFactory.notEqShort ( name, v );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltShort(name, v);
+                nativeDelegate = CriteriaFactory.ltShort ( name, v );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteShort(name, v);
+                nativeDelegate = CriteriaFactory.lteShort ( name, v );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtShort(name, v);
+                nativeDelegate = CriteriaFactory.gtShort ( name, v );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteShort(name, v);
+                nativeDelegate = CriteriaFactory.gteShort ( name, v );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inShorts(name, Conversions.sarray(values));
+                nativeDelegate = CriteriaFactory.inShorts ( name, Conversions.sarray ( values ) );
                 break;
 
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenShort(name, (v),
-                        Conversions.toShort(values[1]));
+                nativeDelegate = CriteriaFactory.betweenShort ( name, ( v ),
+                        Conversions.toShort ( values[1] ) );
                 break;
 
 
-
-
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInShorts(name, Conversions.sarray(values));
+                nativeDelegate = CriteriaFactory.notInShorts ( name, Conversions.sarray ( values ) );
 
                 break;
 
@@ -294,29 +286,28 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
-    private  void initIfNeeded( ) {
+    private void initIfNeeded( ) {
 
-        if (initialized) return;
-            initialized = true;
+        if ( initialized ) return;
+        initialized = true;
 
-        FieldAccess field = field();
-        if (field == null) {
-                return;
+        FieldAccess field = field ( );
+        if ( field == null ) {
+            return;
         }
 
-        Class type = field.getType();
+        Class type = field.getType ( );
 
 
-        if (!type.isPrimitive() && type != Typ.date) {
-                return;
+        if ( !type.isPrimitive ( ) && type != Typ.date ) {
+            return;
         }
 
 
+        if ( type == Typ.date ) {
 
-        if ( type == Typ.date  ) {
-
-            if (!( value instanceof Date )) {
-                initForDate ();
+            if ( !( value instanceof Date ) ) {
+                initForDate ( );
             }
             return;
         }
@@ -325,115 +316,113 @@ public abstract class Criterion<VALUE> extends Criteria {
         useDelegate = true;
 
 
+        if ( type == Typ.intgr ) {
+            int v = Conversions.toInt ( value );
+            initForInt ( v );
+        } else if ( type == Typ.bt ) {
 
-        if (type == Typ.intgr) {
-                int v = Conversions.toInt ( value );
-                initForInt ( v );
-            } else if (type == Typ.bt) {
+            byte v = Conversions.toByte ( value );
 
-                byte v = Conversions.toByte ( value );
+            initForByte ( v );
 
-                initForByte ( v );
+        } else if ( type == Typ.shrt ) {
 
-            } else if (type == Typ.shrt) {
+            short v = Conversions.toShort ( value );
 
-                short v = Conversions.toShort ( value );
+            initForShortValue ( v );
 
-                initForShortValue ( v );
+        } else if ( type == Typ.lng ) {
 
-            } else if (type == Typ.lng) {
+            long v = Conversions.toLong ( value );
 
-                long v = Conversions.toLong ( value );
-
-                initForLong ( v );
-
-
-            } else if (type == Typ.flt) {
-
-                float v = Conversions.toFloat ( value );
+            initForLong ( v );
 
 
+        } else if ( type == Typ.flt ) {
 
-                initForFloat ( v );
-
-            } else if (type == Typ.dbl) {
-
-                double v = Conversions.toDouble ( value );
-
-                initForDouble ( v );
+            float v = Conversions.toFloat ( value );
 
 
-            } else if (type == Typ.bln) {
+            initForFloat ( v );
+
+        } else if ( type == Typ.dbl ) {
+
+            double v = Conversions.toDouble ( value );
+
+            initForDouble ( v );
 
 
-                switch (operator) {
-                    case EQUAL:
-                        nativeDelegate = CriteriaFactory.eqBoolean(name, Conversions.toBoolean(value));
-                        break;
-
-                    case NOT_EQUAL:
-                        nativeDelegate = CriteriaFactory.notEqBoolean(name, Conversions.toBoolean(value));
-                        break;
+        } else if ( type == Typ.bln ) {
 
 
-                    default:
-                        useDelegate = false;
-                }
+            switch ( operator ) {
+                case EQUAL:
+                    nativeDelegate = CriteriaFactory.eqBoolean ( name, Conversions.toBoolean ( value ) );
+                    break;
 
-            } else if (type == Typ.chr) {
+                case NOT_EQUAL:
+                    nativeDelegate = CriteriaFactory.notEqBoolean ( name, Conversions.toBoolean ( value ) );
+                    break;
 
-                char v = Conversions.toChar ( value );
-                initForChar ( v );
 
+                default:
+                    useDelegate = false;
             }
 
+        } else if ( type == Typ.chr ) {
+
+            char v = Conversions.toChar ( value );
+            initForChar ( v );
+
+        }
+
 
     }
 
-    private void initForChar (char value) {
+    private void initForChar( char value ) {
 
 
-        this.value = (VALUE) (Character)value;
+        this.value = ( VALUE ) ( Character ) value;
 
-        switch (operator) {
+        switch ( operator ) {
 
 
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqChar( name, ( value ) );
+                nativeDelegate = CriteriaFactory.eqChar ( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqChar(name, (value));
+                nativeDelegate = CriteriaFactory.notEqChar ( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltChar(name, (value));
+                nativeDelegate = CriteriaFactory.ltChar ( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteChar(name, (value));
+                nativeDelegate = CriteriaFactory.lteChar ( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtChar(name, (value));
+                nativeDelegate = CriteriaFactory.gtChar ( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteChar(name, (value));
+                nativeDelegate = CriteriaFactory.gteChar ( name, ( value ) );
                 break;
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenChar(name, (value),
-                        Conversions.toChar(values[1]));
+                nativeDelegate = CriteriaFactory.betweenChar ( name, ( value ),
+                        Conversions.toChar ( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inChars(name, Conversions.carray ( values ) );
+                nativeDelegate = CriteriaFactory.inChars ( name, Conversions.carray ( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInChars(name, Conversions.carray ( values ) );
+                nativeDelegate = CriteriaFactory.notInChars ( name, Conversions.carray ( values ) );
                 break;
 
             default:
@@ -441,49 +430,49 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForDouble (double value) {
+    private void initForDouble( double value ) {
 
-        this.value = (VALUE) (Double) value;
+        this.value = ( VALUE ) ( Double ) value;
 
-        switch (operator) {
+        switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqDouble( name, ( value ) );
+                nativeDelegate = CriteriaFactory.eqDouble ( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqDouble(name, (value));
+                nativeDelegate = CriteriaFactory.notEqDouble ( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltDouble(name, (value));
+                nativeDelegate = CriteriaFactory.ltDouble ( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteDouble(name, (value));
+                nativeDelegate = CriteriaFactory.lteDouble ( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtDouble(name, (value));
+                nativeDelegate = CriteriaFactory.gtDouble ( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteDouble(name, (value));
+                nativeDelegate = CriteriaFactory.gteDouble ( name, ( value ) );
                 break;
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenDouble(name, (value),
-                        Conversions.toDouble(values[1]));
+                nativeDelegate = CriteriaFactory.betweenDouble ( name, ( value ),
+                        Conversions.toDouble ( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inDoubles(name,
-                        Conversions.darray ( values ));
+                nativeDelegate = CriteriaFactory.inDoubles ( name,
+                        Conversions.darray ( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInDoubles(name,
-                        Conversions.darray ( values ));
+                nativeDelegate = CriteriaFactory.notInDoubles ( name,
+                        Conversions.darray ( values ) );
                 break;
 
             default:
@@ -491,47 +480,47 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForFloat (float value ) {
+    private void initForFloat( float value ) {
 
-        this.value = (VALUE) (Float) value;
+        this.value = ( VALUE ) ( Float ) value;
 
-        switch (operator) {
+        switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqFloat( name,  ( value ) );
+                nativeDelegate = CriteriaFactory.eqFloat ( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqFloat(name, (value));
+                nativeDelegate = CriteriaFactory.notEqFloat ( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltFloat(name, (value));
+                nativeDelegate = CriteriaFactory.ltFloat ( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteFloat(name, (value));
+                nativeDelegate = CriteriaFactory.lteFloat ( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtFloat(name, (value));
+                nativeDelegate = CriteriaFactory.gtFloat ( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteFloat(name, (value));
+                nativeDelegate = CriteriaFactory.gteFloat ( name, ( value ) );
                 break;
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenFloat ( name, ( value ),
-                        Conversions.toFloat ( values[ 1 ] ) );
+                        Conversions.toFloat ( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inFloats(name, Conversions.farray(values));
+                nativeDelegate = CriteriaFactory.inFloats ( name, Conversions.farray ( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInFloats(name, Conversions.farray(values));
+                nativeDelegate = CriteriaFactory.notInFloats ( name, Conversions.farray ( values ) );
 
                 break;
 
@@ -540,49 +529,48 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForLong ( long value ) {
+    private void initForLong( long value ) {
 
-        this.value = (VALUE) (Long) value;
+        this.value = ( VALUE ) ( Long ) value;
 
-        switch (operator) {
+        switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqLong( name,  ( value ) );
+                nativeDelegate = CriteriaFactory.eqLong ( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqLong(name, (value));
+                nativeDelegate = CriteriaFactory.notEqLong ( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltLong(name, (value));
+                nativeDelegate = CriteriaFactory.ltLong ( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteLong(name, (value));
+                nativeDelegate = CriteriaFactory.lteLong ( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtLong(name, (value));
+                nativeDelegate = CriteriaFactory.gtLong ( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteLong(name, (value));
+                nativeDelegate = CriteriaFactory.gteLong ( name, ( value ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inLongs(name, Conversions.larray(values));
+                nativeDelegate = CriteriaFactory.inLongs ( name, Conversions.larray ( values ) );
                 break;
 
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenLong(name, (value),
-                        Conversions.toLong(values[1]));
+                nativeDelegate = CriteriaFactory.betweenLong ( name, ( value ),
+                        Conversions.toLong ( values[1] ) );
                 break;
 
 
-
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInLongs(name, Conversions.larray(values));
+                nativeDelegate = CriteriaFactory.notInLongs ( name, Conversions.larray ( values ) );
 
                 break;
 
@@ -591,51 +579,50 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForByte  ( byte value ) {
+    private void initForByte( byte value ) {
 
-        this.value = (VALUE) (Byte) value;
+        this.value = ( VALUE ) ( Byte ) value;
 
-        switch (operator) {
+        switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqByte( name,  ( value ) );
+                nativeDelegate = CriteriaFactory.eqByte ( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqByte(name, (value));
+                nativeDelegate = CriteriaFactory.notEqByte ( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltByte(name, (value));
+                nativeDelegate = CriteriaFactory.ltByte ( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteByte(name, (value));
+                nativeDelegate = CriteriaFactory.lteByte ( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtByte(name, (value));
+                nativeDelegate = CriteriaFactory.gtByte ( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteByte(name, (value));
+                nativeDelegate = CriteriaFactory.gteByte ( name, ( value ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inBytes(name, Conversions.barray(values));
+                nativeDelegate = CriteriaFactory.inBytes ( name, Conversions.barray ( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInBytes(name, Conversions.barray(values));
+                nativeDelegate = CriteriaFactory.notInBytes ( name, Conversions.barray ( values ) );
 
                 break;
 
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenByte(name, (value),
-                        Conversions.toByte(values[1]));
+                nativeDelegate = CriteriaFactory.betweenByte ( name, ( value ),
+                        Conversions.toByte ( values[1] ) );
                 break;
-
 
 
             default:
@@ -643,59 +630,59 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForDate () {
-        value = (VALUE) Conversions.toDate ( value );
+    private void initForDate( ) {
+        value = ( VALUE ) Conversions.toDate ( value );
 
-        if (operator == Operator.BETWEEN) {
-            values[0] = (VALUE) Conversions.toDate( values[0] );
+        if ( operator == Operator.BETWEEN ) {
+            values[0] = ( VALUE ) Conversions.toDate ( values[0] );
 
-            values[1] = (VALUE) Conversions.toDate( values[1] );
+            values[1] = ( VALUE ) Conversions.toDate ( values[1] );
 
         }
 
     }
 
-    private void initForInt (int v) {
-        this.value = (VALUE) (Integer) v;
+    private void initForInt( int v ) {
+        this.value = ( VALUE ) ( Integer ) v;
 
 
-        switch (operator) {
+        switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqInt( name, v );
+                nativeDelegate = CriteriaFactory.eqInt ( name, v );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqInt(name, v);
+                nativeDelegate = CriteriaFactory.notEqInt ( name, v );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltInt(name, v);
+                nativeDelegate = CriteriaFactory.ltInt ( name, v );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteInt(name, v);
+                nativeDelegate = CriteriaFactory.lteInt ( name, v );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtInt(name, v);
+                nativeDelegate = CriteriaFactory.gtInt ( name, v );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteInt(name, v);
+                nativeDelegate = CriteriaFactory.gteInt ( name, v );
                 break;
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenInt(name, v,
-                        Conversions.toInt(values[1]) );
+                nativeDelegate = CriteriaFactory.betweenInt ( name, v,
+                        Conversions.toInt ( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inInts(name, Conversions.iarray(values));
+                nativeDelegate = CriteriaFactory.inInts ( name, Conversions.iarray ( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInInts(name, Conversions.iarray(values));
+                nativeDelegate = CriteriaFactory.notInInts ( name, Conversions.iarray ( values ) );
 
                 break;
 
