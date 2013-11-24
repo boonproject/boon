@@ -203,7 +203,7 @@ public class ByteBuf implements Output {
 
 
     public ByteBuf add( byte[] array ) {
-        if ( array.length + length < capacity ) {
+        if ( array.length + this.length < capacity ) {
             Byt._idx ( buffer, length, array );
         } else {
             buffer = Byt.grow ( buffer, buffer.length * 2 + array.length );
@@ -218,7 +218,7 @@ public class ByteBuf implements Output {
 
 
     public ByteBuf add( final byte[] array, final int length ) {
-        if ( length < capacity ) {
+        if ( ( this.length + length ) < capacity ) {
             Byt._idx ( buffer, this.length, array, length );
         } else {
             buffer = Byt.grow ( buffer, buffer.length * 2 + length );
@@ -232,7 +232,7 @@ public class ByteBuf implements Output {
     }
 
     public ByteBuf add( byte[] array, final int offset, final int length ) {
-        if ( array.length + length < capacity ) {
+        if ( ( this.length + length ) < capacity ) {
             Byt._idx ( buffer, length, array, offset, length );
         } else {
             buffer = Byt.grow ( buffer, buffer.length * 2 + length );

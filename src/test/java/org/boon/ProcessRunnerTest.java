@@ -44,30 +44,30 @@ public class ProcessRunnerTest {
     }
 
 
-    @Test  (expected = Runner.ProcessException.class)
-    public void execTimeoutFails () {
-        puts ( Runner.exec ( 1, "sleep 20" ) );
-    }
+//    @Test  (expected = Runner.ProcessException.class)
+//    public void execTimeoutFails () {
+//        puts ( Runner.exec ( 1, "sleep 20" ) );
+//    }
 
 
-    @Test
-    public void execComplex() throws InterruptedException {
-        final Runner.ProcessInOut inOut = Runner.launchProcess ( 20, null, false, "lsof" );
-
-        String str ="";
-
-        while (str!=null && !inOut.isDone ()) {
-            str = inOut.getStdOut ().take ();
-            puts (str);
-        }
-
-        str = inOut.getStdErr ().poll (1L, TimeUnit.SECONDS);
-        System.err.println(str);
-
-        System.out.println(inOut.processOut ().getStdout ());
-
-
-    }
+//    @Test
+//    public void execComplex() throws InterruptedException {
+//        final Runner.ProcessInOut inOut = Runner.launchProcess ( 20, null, false, "lsof" );
+//
+//        String str ="";
+//
+//        while (str!=null && !inOut.isDone ()) {
+//            str = inOut.getStdOut ().take ();
+//            puts (str);
+//        }
+//
+//        str = inOut.getStdErr ().poll (1L, TimeUnit.SECONDS);
+//        System.err.println(str);
+//
+//        System.out.println(inOut.processOut ().getStdout ());
+//
+//
+//    }
 
 
     public static void main (String... args) {
