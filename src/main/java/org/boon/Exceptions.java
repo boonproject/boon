@@ -98,6 +98,8 @@ public class Exceptions {
 
         @Override
         public void printStackTrace( PrintStream s ) {
+
+            s.println(this.getMessage ());
             if ( getCause ( ) != null ) {
                 s.println ( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
@@ -141,6 +143,9 @@ public class Exceptions {
 
         @Override
         public void printStackTrace( PrintWriter s ) {
+
+            s.println(this.getMessage ());
+
             if ( getCause ( ) != null ) {
                 s.println ( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
@@ -152,6 +157,9 @@ public class Exceptions {
 
         @Override
         public void printStackTrace( ) {
+
+            System.err.println(this.getMessage ());
+
             if ( getCause ( ) != null ) {
                 System.err.println ( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );

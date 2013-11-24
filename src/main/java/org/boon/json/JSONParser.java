@@ -51,6 +51,27 @@ public class JSONParser {
     }
 
 
+
+
+
+
+    public static Object parse( char[] cs ) {
+        JSONParser p = new JSONParser ( );
+        return p.decode ( cs );
+
+    }
+
+    public static Map<String, Object> parseMap( char [] cs ) {
+        JSONParser p = new JSONParser ( );
+        return ( Map<String, Object> ) p.decode ( cs );
+    }
+
+    public static <T> List<T> parseList( Class<T> type, char [] cs ) {
+        JSONParser p = new JSONParser ( );
+        return ( List<T> ) p.decode ( cs );
+    }
+
+
     public static Number parseNumber( char[] cs ) {
         JSONParser p = new JSONParser ( );
         return ( Number ) p.decode ( cs );
