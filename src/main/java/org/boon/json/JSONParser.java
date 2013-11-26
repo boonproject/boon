@@ -481,6 +481,7 @@ public class JSONParser {
                     charArray[++__index] == 'u' &&
                     charArray[++__index] == 'l' &&
                     charArray[++__index] == 'l' ) {
+                nextChar ();
                 return null;
             }
         }
@@ -517,10 +518,11 @@ public class JSONParser {
                     charArray[++__index] == 'l' &&
                     charArray[++__index] == 's' &&
                     charArray[++__index] == 'e' ) {
-                return true;
+                nextChar ( );
+                return false;
             }
         }
-        throw new JSONException ( "true not parse properly" );
+        throw new JSONException ( "false not parse properly" );
     }
 
     private String decodeString( ) {

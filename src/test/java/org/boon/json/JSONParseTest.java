@@ -73,6 +73,42 @@ public class JSONParseTest {
     }
 
     @Test
+    public void testParseFalse() {
+
+        Object obj = JSONParser.parse(
+                " { 'foo': false }  ".replace('\'', '"')
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Map || die("Object was not a map");
+
+        Map<String, Object> map = (Map<String, Object>)obj;
+
+        System.out.println(obj);
+
+        ok &=  idx(map, "foo").equals( false ) || die("I did not find  false");
+    }
+
+    @Test
+    public void testParseNull() {
+
+        Object obj = JSONParser.parse(
+                " { 'foo': null }  ".replace('\'', '"')
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Map || die("Object was not a map");
+
+        Map<String, Object> map = (Map<String, Object>)obj;
+
+        System.out.println(obj);
+
+        ok &=  idx(map, "foo") == ( null ) || die("I did not find null");
+    }
+
+    @Test
     public void testParserSimpleMapWithBoolean() {
 
         Object obj = JSONParser.parse(

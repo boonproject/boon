@@ -789,5 +789,19 @@ public class IO {
         }
     }
 
+    public static List<String> listByExt( final String path, String ext ) {
+
+        final List<String> list = list ( path );
+        final List<String> newList = new ArrayList<> (  );
+
+        for (String file : list) {
+            if (file.endsWith ( ext )) {
+                newList.add ( file) ;
+            }
+        }
+
+        return newList;
+
+    }
 
 }
