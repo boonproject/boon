@@ -577,12 +577,9 @@ public class JSONParser2 {
         return value;
     }
 
-    private String encodeString( int start, int to ) {
-        return JSONStringParser.decode ( charArray, start, to );
-    }
 
     private String decodeKeyName( ) {
-        return (String) decodeString ( ).toValue();
+        return  decodeString ( ).toString();
 
     }
 
