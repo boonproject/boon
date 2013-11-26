@@ -1,10 +1,9 @@
 package org.boon.json;
 
+import org.boon.json.internal.*;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ import static org.boon.json.ParserState.*;
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
  */
-public class JSONParser {
+public class JSONParser2 {
 
     private char[] charArray;
     private int __index;
@@ -27,24 +26,24 @@ public class JSONParser {
     private ParserState state = START;
     private ParserState lastState = START;
 
-    private JSONParser( ) {
+    private JSONParser2( ) {
 
     }
 
     public static Object parse( String cs ) {
-        JSONParser p = new JSONParser ( );
+        JSONParser2 p = new JSONParser2 ( );
         return p.decode ( cs );
 
     }
 
 
     public static Map<String, Object> parseMap( String cs ) {
-        JSONParser p = new JSONParser ( );
+        JSONParser2 p = new JSONParser2 ( );
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
     public static <T> List<T> parseList( Class<T> type, String cs ) {
-        JSONParser p = new JSONParser ( );
+        JSONParser2 p = new JSONParser2 ( );
         return ( List<T> ) p.decode ( cs );
     }
 
@@ -54,24 +53,24 @@ public class JSONParser {
 
 
     public static Object parse( char[] cs ) {
-        JSONParser p = new JSONParser ( );
+        JSONParser2 p = new JSONParser2 ( );
         return p.decode ( cs );
 
     }
 
     public static Map<String, Object> parseMap( char [] cs ) {
-        JSONParser p = new JSONParser ( );
+        JSONParser2 p = new JSONParser2 ( );
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
     public static <T> List<T> parseList( Class<T> type, char [] cs ) {
-        JSONParser p = new JSONParser ( );
+        JSONParser2 p = new JSONParser2 ( );
         return ( List<T> ) p.decode ( cs );
     }
 
 
     public static Number parseNumber( char[] cs ) {
-        JSONParser p = new JSONParser ( );
+        JSONParser2 p = new JSONParser2 ( );
         return ( Number ) p.decode ( cs );
     }
 
@@ -80,7 +79,7 @@ public class JSONParser {
     private Object decode( char[] cs ) {
         charArray = cs;
         Object root = null;
-        root = decodeValue ( );
+        root = decodeValue ( ).toValue ();
         return root;
     }
 
@@ -88,7 +87,7 @@ public class JSONParser {
     private Object decode( String cs ) {
         charArray = cs.toCharArray ( );
         Object root = null;
-        root = decodeValue ( );
+        root = decodeValue ( ).toValue ();
         return root;
     }
 
@@ -159,7 +158,7 @@ public class JSONParser {
 
         for ( int i = lastLineIndex; i < charArray.length; i++, count++) {
             if ( charArray[i] == '\n' ) {
-                 break;
+                break;
             }
         }
 
@@ -182,7 +181,7 @@ public class JSONParser {
             }
         }
         for ( int i = 0; i < (__index - lastLineIndex -1); i++ ) {
-                buf.add ( '.' );
+            buf.add ( '.' );
         }
         buf.add ( '^' );
 
@@ -214,14 +213,17 @@ public class JSONParser {
 
     }
 
-    private Object decodeJsonObject( ) {
+    private Value decodeJsonObject( ) {
 
         if ( __currentChar == '{' && this.hasMore ( ) )
             this.nextChar ( );
 
-        Map<String, Object> map = new LinkedHashMap<> ( );
+        JSONMap map = new JSONMap ( );
 
         this.lastObject = map;
+
+        Value value = new Value(map);
+
 
         do {
 
@@ -240,12 +242,15 @@ public class JSONParser {
                 skipWhiteSpace ( );
 
                 setState ( START_OBJECT_ITEM );
-                Object value = decodeValue ( );
+                Value item = decodeValue ( );
 
                 skipWhiteSpace ( );
 
-                map.put ( key, value );
 
+                MapItemValue miv = new MapItemValue ();
+                miv.name = key;
+                miv.value = item;
+                map.items.add (miv);
 
                 setState ( END_OBJECT_ITEM );
 
@@ -265,7 +270,7 @@ public class JSONParser {
 
             }
         } while ( this.hasMore ( ) );
-        return map;
+        return value;
     }
 
     private void complain( String complaint ) {
@@ -273,8 +278,8 @@ public class JSONParser {
     }
 
 
-    private Object decodeValue( ) {
-        Object value = null;
+    private Value decodeValue( ) {
+        Value value = null;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
@@ -361,7 +366,7 @@ public class JSONParser {
         this.state = state;
     }
 
-    private Object decodeNumber( ) {
+    private Value decodeNumber( ) {
 
         int startIndex = __index;
 
@@ -456,23 +461,15 @@ public class JSONParser {
 
         __index = index;
 
-        String svalue = new String ( this.charArray, startIndex, count );
+        Value value = new Value();
+        value.buffer = this.charArray;
+        value.startIndex = startIndex;
+        value.endIndex = __index;
 
-
-        Object value = null;
-        try {
-            if ( doubleFloat ) {
-                value = Double.parseDouble ( svalue );
-            } else {
-                value = Integer.parseInt ( svalue );
-            }
-        } catch ( Exception ex ) {
-            try {
-                value = Long.parseLong ( svalue );
-            } catch ( Exception ex2 ) {
-                complain ( "expecting to decode a number but got value of " + svalue );
-            }
-
+        if ( doubleFloat ) {
+                value.type = Type.DOUBLE;
+        } else {
+                value.type = Type.INTEGER;
         }
 
         skipWhiteSpace ( );
@@ -484,7 +481,7 @@ public class JSONParser {
 
     private static char[] NULL = Chr.chars ( "null" );
 
-    private Object decodeNull( ) {
+    private Value decodeNull( ) {
 
         if ( __index + NULL.length <= charArray.length ) {
             if ( charArray[__index] == 'n' &&
@@ -492,7 +489,7 @@ public class JSONParser {
                     charArray[++__index] == 'l' &&
                     charArray[++__index] == 'l' ) {
                 nextChar ();
-                return null;
+                return Value.NULL;
             }
         }
         throw new JSONException ( exceptionDetails( "null not parse properly" ) );
@@ -500,7 +497,7 @@ public class JSONParser {
 
     private static char[] TRUE = Chr.chars ( "true" );
 
-    private boolean decodeTrue( ) {
+    private Value decodeTrue( ) {
 
         if ( __index + TRUE.length <= charArray.length ) {
             if ( charArray[__index] == 't' &&
@@ -509,7 +506,7 @@ public class JSONParser {
                     charArray[++__index] == 'e' ) {
 
                 nextChar ( );
-                return true;
+                return Value.TRUE;
 
             }
         }
@@ -520,7 +517,7 @@ public class JSONParser {
 
     private static char[] FALSE = Chr.chars ( "false" );
 
-    private boolean decodeFalse( ) {
+    private Value decodeFalse( ) {
 
         if ( __index + FALSE.length <= charArray.length ) {
             if ( charArray[__index] == 'f' &&
@@ -529,14 +526,14 @@ public class JSONParser {
                     charArray[++__index] == 's' &&
                     charArray[++__index] == 'e' ) {
                 nextChar ( );
-                return false;
+                return Value.FALSE;
             }
         }
         throw new JSONException (exceptionDetails( "false not parsed properly") );
     }
 
-    private String decodeString( ) {
-        String value = null;
+    private Value decodeString( ) {
+        Value value = new Value(Type.STRING);
 
         final int startIndex = __index;
         if ( __index < charArray.length && __currentChar == '"' ) {
@@ -569,7 +566,9 @@ public class JSONParser {
             }
         }
 
-        value = encodeString ( startIndex, __index );
+        value.startIndex = startIndex;
+        value.endIndex = __index;
+        value.buffer = charArray;
 
         if ( __index < charArray.length ) {
             __index++;
@@ -583,24 +582,26 @@ public class JSONParser {
     }
 
     private String decodeKeyName( ) {
-        return decodeString ( );
+        return (String) decodeString ( ).toValue();
 
     }
 
-    private List decodeJsonArray( ) {
+    private Value decodeJsonArray( ) {
         if ( __currentChar == '[' ) {
             this.nextChar ( );
         }
 
         skipWhiteSpace ( );
 
-        List<Object> list = new ArrayList<> ( );
+        List<Object> list = new JSONList ( );
+        Value value = new Value(list);
+
         this.lastList = list;
 
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
             this.nextChar ( );
-            return list;
+            return value;
         }
 
 
@@ -610,10 +611,10 @@ public class JSONParser {
             skipWhiteSpace ( );
 
             setState ( START_LIST_ITEM );
-            Object arrayItem = decodeValue ( );
+            Value arrayItem = decodeValue ( );
 
             if ( arrayItem == null && state == END_NULL ) {
-                list.add ( null ); //JSON null detected
+                list.add ( Value.NULL ); //JSON null detected
             } else if ( arrayItem == null ) {
                 throw new JSONException ( exceptionDetails ( "array item was null") );
             } else {
@@ -645,7 +646,7 @@ public class JSONParser {
 
             }
         } while ( this.hasMore ( ) );
-        return list;
+        return value;
     }
 
     private String charDescription( char c ) {
