@@ -45,6 +45,10 @@ public class Value {
         return new String(buffer, startIndex, endIndex - startIndex);
     }
 
+    public String toKey() {
+        return new String(buffer, startIndex+1, (endIndex - startIndex) -1  );
+    }
+
     public Object toValue() {
 
         if (value!=null) {

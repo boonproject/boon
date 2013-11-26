@@ -579,7 +579,7 @@ public class JSONParser2 {
 
 
     private String decodeKeyName( ) {
-        return  decodeString ( ).toString();
+        return  decodeString ( ).toKey ();
 
     }
 
