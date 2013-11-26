@@ -580,4 +580,17 @@ public class Chr {
         }
         return false;
     }
+
+
+
+
+    public static boolean contains ( char[] chars, char c, int start, final int length ) {
+        for (int index = start; index < length; index++) {
+            char ch = chars[index];
+            if (ch == c) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
