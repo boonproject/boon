@@ -1,8 +1,6 @@
 For the next 15 minutes, before Cowboy coder wakes up and tunes Jackson, Boon has the fastest JSON parser.
 Boo yah!
 
-Yippe Kayee! Cowboy coder is my b1tch!
-
 https://github.com/RichardHightower/parsers-in-java
 
 
