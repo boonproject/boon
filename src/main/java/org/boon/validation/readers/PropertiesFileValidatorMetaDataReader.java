@@ -89,13 +89,13 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
          * Remove this.
          */
         className = className.split ( "[$]" )[0];
-
+        
         /*
          * The resourceName is as follows: If the class name is com.foo.Foo Then
          * the resource name is com.foo.Foo.properties.
          */
-        String resourceName =
-                ( ( "/" + className ).replace ( '.', '/' ) ) + ".properties";
+        String[] sourceParts = className.split("[.]");
+        String resourceName = (sourceParts[sourceParts.length - 1]) + ".properties";
 
         /* Check to see if this properties file was already loaded. */
         Properties validationMetaDataProps = metaDataPropsCache.get ( resourceName );
@@ -108,8 +108,9 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
                  * Try to load the properties file that contains the validation
                  * meta-data.
                  */
-                validationMetaDataProps.load ( this.getClass ( ).getResourceAsStream (
-                        resourceName ) );
+                validationMetaDataProps.load(this.getClass()
+                                                    .getClassLoader()
+                                                    .getResourceAsStream(resourceName));
             } catch ( IOException ioex ) {
                 /*
                  * This can happen and is not an error. It just means there is
