@@ -19,8 +19,6 @@ public class JSONParser {
 
     private char[] charArray;
     private int __index;
-    private int line;
-    private int lastLineStart;
     private char __currentChar;
     private char __lastChar;
 
@@ -146,30 +144,53 @@ public class JSONParser {
 
 
         buf.addLine ( message );
-        buf.addLine ( "line number " + line );
+
+        int line = 0;
+        int lastLineIndex = 0;
+
+        for ( int i = 0; i < __index; i++) {
+            if ( charArray[i] == '\n' ) {
+                line ++;
+                lastLineIndex = i + 1;
+            }
+        }
+
+        int nextLineIndex = -1;
+        int count = 0;
+
+        for ( int i = lastLineIndex; i < charArray.length; i++, count++) {
+            if ( charArray[i] == '\n' ) {
+                 nextLineIndex = i;
+                 break;
+            }
+        }
+
+        if ( nextLineIndex == -1 ) {
+            nextLineIndex = charArray.length-1;
+        }
+
+
+        buf.addLine ( "line number " + line + 1 );
         buf.addLine ( "index number " + __index );
 
-        int lineLocationCount = __index - lastLineStart;
 
         try {
-            buf.addLine ( new String ( charArray, lastLineStart, __index ) );
+            buf.addLine ( new String ( charArray, lastLineIndex, count ) );
         } catch ( Exception ex ) {
 
             try {
-                int index = ( __index - 20 < 0 ) ? 0 : __index - 20;
+                int index = ( __index - 10 < 0 ) ? 0 : __index - 10;
 
                 buf.addLine ( new String ( charArray, index, __index ) );
             } catch ( Exception ex2 ) {
                 buf.addLine ( new String ( charArray, 0, charArray.length ) );
             }
         }
-        for ( int i = 0; i < lineLocationCount; i++ ) {
-            if ( lineLocationCount - 1 == i ) {
-                buf.add ( '^' );
-            } else {
+        for ( int i = 0; i < (__index - lastLineIndex -1); i++ ) {
                 buf.add ( '.' );
-            }
         }
+        buf.add ( '^' );
+
         return buf.toString ( );
     }
 
@@ -181,12 +202,8 @@ public class JSONParser {
             __currentChar = charArray[__index];
             switch ( __currentChar ) {
                 case '\n':
-                    line++;
-                    lastLineStart = __index + 1;
                     continue label;
                 case '\r':
-                    line++;
-                    lastLineStart = __index + 1;
                     continue label;
 
                 case ' ':
@@ -271,8 +288,6 @@ public class JSONParser {
 
             switch ( __currentChar ) {
                 case '\n':
-                    line++;
-                    lastLineStart = __index + 1;
                     break;
 
                 case '\r':
@@ -380,21 +395,21 @@ public class JSONParser {
                     if ( lastState == START_LIST_ITEM || lastState == START_OBJECT_ITEM ) {
                         break loop;
                     } else {
-                        throw new JSONException ( "Unexpected comma token" );
+                        throw new JSONException ( exceptionDetails("Unexpected comma token in parse number") );
                     }
 
                 case ']':
                     if ( lastState == START_LIST_ITEM ) {
                         break loop;
                     } else {
-                        throw new JSONException ( "Unexpected close bracket token" );
+                        throw new JSONException ( exceptionDetails("Unexpected close bracket token in parse number") );
                     }
 
                 case '}':
                     if ( lastState == START_OBJECT_ITEM ) {
                         break loop;
                     } else {
-                        throw new JSONException ( "Unexpected close curly brace token" );
+                        throw new JSONException ( exceptionDetails("Unexpected close curly brace token in parse number") );
                     }
 
                 case '1':
@@ -414,7 +429,7 @@ public class JSONParser {
                     doubleFloat = true;
                     countDecimalPoint++;
                     if ( countDecimalPoint > 1 ) {
-                        throw new JSONException ( "number has more than one decimal point" );
+                        throw new JSONException (exceptionDetails( "number has more than one decimal point") );
                     }
                     continue loop;
 
@@ -423,7 +438,7 @@ public class JSONParser {
                     doubleFloat = true;
                     eCount++;
                     if ( eCount > 1 ) {
-                        throw new JSONException ( "number has more than one exp definition" );
+                        throw new JSONException ( exceptionDetails("number has more than one exp definition"));
                     }
                     continue loop;
 
@@ -431,10 +446,10 @@ public class JSONParser {
                     doubleFloat = true;
                     plusCount++;
                     if ( plusCount > 1 ) {
-                        throw new JSONException ( "number has more than one plus sign" );
+                        throw new JSONException (exceptionDetails( "number has more than one plus sign") );
                     }
                     if ( eCount == 0 ) {
-                        throw new JSONException ( "plus sign must come after exp" );
+                        throw new JSONException (exceptionDetails ( "plus sign must come after exp") );
 
                     }
                     continue loop;
@@ -485,7 +500,7 @@ public class JSONParser {
                 return null;
             }
         }
-        throw new JSONException ( "null not parse properly" );
+        throw new JSONException ( exceptionDetails( "null not parse properly" ) );
     }
 
     private static char[] TRUE = Chr.chars ( "true" );
@@ -504,7 +519,7 @@ public class JSONParser {
             }
         }
 
-        throw new JSONException ( "true not parse properly" );
+        throw new JSONException ( exceptionDetails ( "true not parsed properly" ) );
     }
 
 
@@ -522,7 +537,7 @@ public class JSONParser {
                 return false;
             }
         }
-        throw new JSONException ( "false not parse properly" );
+        throw new JSONException (exceptionDetails( "false not parsed properly") );
     }
 
     private String decodeString( ) {
@@ -547,7 +562,7 @@ public class JSONParser {
                 case '\r':
                 case '\f':
                 case '\b':
-                    throw new JSONException ( "illegal control character found " + __currentChar );
+                    throw new JSONException ( exceptionDetails("illegal control character found " + __currentChar ));
 
 
                 case '\\':
@@ -605,7 +620,7 @@ public class JSONParser {
             if ( arrayItem == null && state == END_NULL ) {
                 list.add ( null ); //JSON null detected
             } else if ( arrayItem == null ) {
-                throw new JSONException ( "array item was null" );
+                throw new JSONException ( exceptionDetails ( "array item was null") );
             } else {
                 list.add ( arrayItem );
             }
