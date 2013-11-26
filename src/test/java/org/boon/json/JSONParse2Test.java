@@ -125,7 +125,8 @@ public class JSONParse2Test {
 
         System.out.println(obj);
 
-        ok &=  idx(map, "foo").equals("str ") || die("I did not find 'str'");
+        final Object foo = idx ( map, "foo" );
+        ok &=  foo.equals("str ") || die("I did not find 'str'" + foo);
     }
 
 

@@ -1,11 +1,14 @@
 package org.boon.json;
 
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.Chr;
 
 public class JSONStringParser {
 
     public static String decode( String string ) {
-
+        if ( !string.contains ( "\\" )) {
+            return string;
+        }
         char[] cs = string.toCharArray ( );
         return decode ( cs, 0, cs.length );
     }
@@ -17,8 +20,11 @@ public class JSONStringParser {
 
     public static String decode( char[] chars, int start, int to ) {
 
+        if (!Chr.contains ( chars, '\\' ) ) {
+            return new String (chars, start+1, to - start-1);
+        }
+
         final char[] cs = chars;
-        final int length = cs.length;
 
         if ( cs[start] == '"' ) {
             start++;

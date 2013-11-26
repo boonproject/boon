@@ -571,4 +571,13 @@ public class Chr {
     }
 
 
+    public static boolean contains ( char[] chars, char c ) {
+        for (int index = 0; index < chars.length; index++) {
+            char ch = chars[index];
+            if (ch == c) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
