@@ -204,6 +204,10 @@ public class Maps {
         return new LinkedHashMap<> ( 10 );
     }
 
+    public static <K, V> Map<K, V> safeMap( Class<K> keyClass, Class<V> valueClass ) {
+        return new ConcurrentHashMap<> ( 10 );
+    }
+
     public static <K, V> Map<K, V> map( K k0, V v0 ) {
         Map<K, V> map = new LinkedHashMap<> ( 10 );
         map.put ( k0, v0 );

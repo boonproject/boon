@@ -15,7 +15,7 @@ import java.util.Set;
 public class HTTP {
 
     public static final int DEFAULT_TIMEOUT_SECONDS =
-            Integer.parseInt ( System.getProperty ( "org.boon.HTTP.timeout", "5" ) );
+            Integer.parseInt ( System.getProperty ( "org.boon.HTTP.timeout.seconds", "5" ) );
 
     public static String get(
             final String url ) {
