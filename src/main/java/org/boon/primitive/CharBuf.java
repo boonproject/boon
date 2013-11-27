@@ -47,6 +47,25 @@ public class CharBuf {
         return this;
     }
 
+
+
+    public CharBuf addChar( byte i ) {
+        add ((char) i );
+        return this;
+    }
+
+
+    public CharBuf addChar( short i ) {
+        add ((char) i );
+        return this;
+    }
+
+
+    public CharBuf addChar( char c ) {
+        add (c );
+        return this;
+    }
+
     public CharBuf addLine( String str ) {
         add ( str.toCharArray ( ) );
         add ( '\n' );

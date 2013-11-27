@@ -1,23 +1,23 @@
 package org.boon.json;
 
-public class JSONException extends RuntimeException {
+public class JsonException extends RuntimeException {
 
     static void handleException( Exception ex ) {
-        throw new JSONException ( ex );
+        throw new JsonException ( ex );
     }
 
-    public JSONException( ) {
+    public JsonException () {
     }
 
-    public JSONException( String message, Throwable cause ) {
+    public JsonException ( String message, Throwable cause ) {
         super ( message, cause );
     }
 
-    public JSONException( String message ) {
+    public JsonException ( String message ) {
         super ( message );
     }
 
-    public JSONException( Throwable cause ) {
+    public JsonException ( Throwable cause ) {
         super ( cause );
     }
 

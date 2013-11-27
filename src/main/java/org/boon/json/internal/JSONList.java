@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class JSONList extends AbstractList<Object> implements List<Object> {
+public class JsonList extends AbstractList<Object> implements List<Object> {
 
     List<Object> list = new ArrayList<> ( 5 );
 

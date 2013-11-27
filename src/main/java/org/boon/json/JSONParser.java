@@ -15,7 +15,7 @@ import static org.boon.json.ParserState.*;
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
  */
-public class JSONParser {
+public class JsonParser {
 
     private char[] charArray;
     private int __index;
@@ -27,52 +27,62 @@ public class JSONParser {
     private ParserState state = START;
     private ParserState lastState = START;
 
-    private JSONParser( ) {
+    private final boolean encodeStrings;
+
+    private JsonParser (boolean encodeStrings) {
+        this.encodeStrings = encodeStrings;
 
     }
 
     public static Object parse( String cs ) {
-        JSONParser p = new JSONParser ( );
+        JsonParser p = new JsonParser ( false );
         return p.decode ( cs );
 
     }
 
 
     public static Map<String, Object> parseMap( String cs ) {
-        JSONParser p = new JSONParser ( );
+        JsonParser p = new JsonParser ( false );
         return ( Map<String, Object> ) p.decode ( cs );
     }
-
-    public static <T> List<T> parseList( Class<T> type, String cs ) {
-        JSONParser p = new JSONParser ( );
-        return ( List<T> ) p.decode ( cs );
-    }
-
-
-
 
 
 
     public static Object parse( char[] cs ) {
-        JSONParser p = new JSONParser ( );
+        JsonParser p = new JsonParser ( false  );
         return p.decode ( cs );
 
     }
 
     public static Map<String, Object> parseMap( char [] cs ) {
-        JSONParser p = new JSONParser ( );
+        JsonParser p = new JsonParser ( false );
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
-    public static <T> List<T> parseList( Class<T> type, char [] cs ) {
-        JSONParser p = new JSONParser ( );
-        return ( List<T> ) p.decode ( cs );
+
+    public static Object fullParse( String cs ) {
+        JsonParser p = new JsonParser ( true );
+        return p.decode ( cs );
+
     }
 
 
-    public static Number parseNumber( char[] cs ) {
-        JSONParser p = new JSONParser ( );
-        return ( Number ) p.decode ( cs );
+    public static Map<String, Object> fullParseMap( String cs ) {
+        JsonParser p = new JsonParser ( true );
+        return ( Map<String, Object> ) p.decode ( cs );
+    }
+
+
+
+    public static Object fullParse( char[] cs ) {
+        JsonParser p = new JsonParser ( true  );
+        return p.decode ( cs );
+
+    }
+
+    public static Map<String, Object> fullParseMap( char [] cs ) {
+        JsonParser p = new JsonParser ( true );
+        return ( Map<String, Object> ) p.decode ( cs );
     }
 
 
@@ -269,7 +279,7 @@ public class JSONParser {
     }
 
     private void complain( String complaint ) {
-        throw new JSONException ( exceptionDetails ( complaint ) );
+        throw new JsonException ( exceptionDetails ( complaint ) );
     }
 
 
@@ -346,7 +356,7 @@ public class JSONParser {
                     break done;
 
                 default:
-                    throw new JSONException ( exceptionDetails ( "Unable to determine the " +
+                    throw new JsonException ( exceptionDetails ( "Unable to determine the " +
                             "current character, it is not a string, number, array, or object" ) );
 
             }
@@ -390,21 +400,21 @@ public class JSONParser {
                     if ( lastState == START_LIST_ITEM || lastState == START_OBJECT_ITEM ) {
                         break loop;
                     } else {
-                        throw new JSONException ( exceptionDetails("Unexpected comma token in parse number") );
+                        throw new JsonException ( exceptionDetails("Unexpected comma token in parse number") );
                     }
 
                 case ']':
                     if ( lastState == START_LIST_ITEM ) {
                         break loop;
                     } else {
-                        throw new JSONException ( exceptionDetails("Unexpected close bracket token in parse number") );
+                        throw new JsonException ( exceptionDetails("Unexpected close bracket token in parse number") );
                     }
 
                 case '}':
                     if ( lastState == START_OBJECT_ITEM ) {
                         break loop;
                     } else {
-                        throw new JSONException ( exceptionDetails("Unexpected close curly brace token in parse number") );
+                        throw new JsonException ( exceptionDetails("Unexpected close curly brace token in parse number") );
                     }
 
                 case '1':
@@ -424,7 +434,7 @@ public class JSONParser {
                     doubleFloat = true;
                     countDecimalPoint++;
                     if ( countDecimalPoint > 1 ) {
-                        throw new JSONException (exceptionDetails( "number has more than one decimal point") );
+                        throw new JsonException (exceptionDetails( "number has more than one decimal point") );
                     }
                     continue loop;
 
@@ -433,7 +443,7 @@ public class JSONParser {
                     doubleFloat = true;
                     eCount++;
                     if ( eCount > 1 ) {
-                        throw new JSONException ( exceptionDetails("number has more than one exp definition"));
+                        throw new JsonException ( exceptionDetails("number has more than one exp definition"));
                     }
                     continue loop;
 
@@ -441,10 +451,10 @@ public class JSONParser {
                     doubleFloat = true;
                     plusCount++;
                     if ( plusCount > 1 ) {
-                        throw new JSONException (exceptionDetails( "number has more than one plus sign") );
+                        throw new JsonException (exceptionDetails( "number has more than one plus sign") );
                     }
                     if ( eCount == 0 ) {
-                        throw new JSONException (exceptionDetails ( "plus sign must come after exp") );
+                        throw new JsonException (exceptionDetails ( "plus sign must come after exp") );
 
                     }
                     continue loop;
@@ -495,7 +505,7 @@ public class JSONParser {
                 return null;
             }
         }
-        throw new JSONException ( exceptionDetails( "null not parse properly" ) );
+        throw new JsonException ( exceptionDetails( "null not parse properly" ) );
     }
 
     private static char[] TRUE = Chr.chars ( "true" );
@@ -514,7 +524,7 @@ public class JSONParser {
             }
         }
 
-        throw new JSONException ( exceptionDetails ( "true not parsed properly" ) );
+        throw new JsonException ( exceptionDetails ( "true not parsed properly" ) );
     }
 
 
@@ -532,7 +542,7 @@ public class JSONParser {
                 return false;
             }
         }
-        throw new JSONException (exceptionDetails( "false not parsed properly") );
+        throw new JsonException (exceptionDetails( "false not parsed properly") );
     }
 
     private String decodeString( ) {
@@ -557,7 +567,7 @@ public class JSONParser {
                 case '\r':
                 case '\f':
                 case '\b':
-                    throw new JSONException ( exceptionDetails("illegal control character found " + __currentChar ));
+                    throw new JsonException ( exceptionDetails("illegal control character found " + __currentChar ));
 
 
                 case '\\':
@@ -579,7 +589,10 @@ public class JSONParser {
     }
 
     private String encodeString( int start, int to ) {
-        return JSONStringParser.decode ( charArray, start, to );
+        return  encodeStrings  ?
+            JsonStringDecoder.decode ( charArray, start, to )
+            :  new String ( charArray, start + 1, (to - start)-1 );
+
     }
 
     private String decodeKeyName( ) {
@@ -615,7 +628,7 @@ public class JSONParser {
             if ( arrayItem == null && state == END_NULL ) {
                 list.add ( null ); //JSON null detected
             } else if ( arrayItem == null ) {
-                throw new JSONException ( exceptionDetails ( "array item was null") );
+                throw new JsonException ( exceptionDetails ( "array item was null") );
             } else {
                 list.add ( arrayItem );
             }

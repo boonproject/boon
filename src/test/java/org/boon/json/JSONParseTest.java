@@ -21,7 +21,7 @@ public class JSONParseTest {
     @Test
     public void bug() {
         String badText = "{\"result\":[],\"_expire\":\"-1\"}";
-        Object obj = JSONParser.parse(badText);
+        Object obj = JsonParser.parse ( badText );
 
 
 
@@ -46,7 +46,7 @@ public class JSONParseTest {
                 "          }     \n" +
                 "}  \n";
 
-        Object obj = JSONParser.parse(badText);
+        Object obj = JsonParser.parse ( badText );
 
         boolean ok = true;
 
@@ -57,8 +57,8 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithNumber() {
 
-        Object obj = JSONParser.parse(
-                " { 'foo': 1 }  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                " { 'foo': 1 }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -75,8 +75,8 @@ public class JSONParseTest {
     @Test
     public void testParseFalse() {
 
-        Object obj = JSONParser.parse(
-                " { 'foo': false }  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                " { 'foo': false }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -93,8 +93,8 @@ public class JSONParseTest {
     @Test
     public void testParseNull() {
 
-        Object obj = JSONParser.parse(
-                " { 'foo': null }  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                " { 'foo': null }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -111,8 +111,8 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithBoolean() {
 
-        Object obj = JSONParser.parse(
-                " { 'foo': true }  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                " { 'foo': true }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -130,8 +130,8 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithList() {
 
-        Object obj = JSONParser.parse(
-                " { 'foo': [0,1,2] }  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -148,8 +148,8 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithString() {
 
-        Object obj = JSONParser.parse(
-                " { 'foo': 'str ' }  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                " { 'foo': 'str ' }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -300,7 +300,7 @@ public class JSONParseTest {
             String name = tests[index][0];
             String json = tests[index][1];
 
-                    Object obj = JSONParser.parse( json );
+                    Object obj = JsonParser.parse ( json );
 
 
             boolean ok = true;
@@ -316,8 +316,8 @@ public class JSONParseTest {
 
         System.out.printf("%s, %s, %s", name, json, compareTo);
 
-        Object obj = JSONParser.parse(
-                json.replace('\'', '"')
+        Object obj = JsonParser.parse (
+                json.replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -333,8 +333,8 @@ public class JSONParseTest {
     @Test
     public void testNumber() {
 
-        Object obj = JSONParser.parse(
-                "1".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                "1".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -351,8 +351,8 @@ public class JSONParseTest {
     @Test
     public void testBoolean() {
 
-        Object obj = JSONParser.parse(
-                "  true  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                "  true  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -366,11 +366,11 @@ public class JSONParseTest {
         System.out.println(obj.getClass());
     }
 
-    @Test(expected = JSONException.class)
+    @Test(expected = JsonException.class)
     public void testBooleanParseError() {
 
-        Object obj = JSONParser.parse(
-                "  tbone  ".replace('\'', '"')
+        Object obj = JsonParser.parse (
+                "  tbone  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -392,7 +392,7 @@ public class JSONParseTest {
             "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JSONParser.parse(testString);
+        Object obj = JsonParser.fullParse ( testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -416,11 +416,8 @@ public class JSONParseTest {
                         "   do you think it is \\'cool\\' '] ").replace('\'', '"');
 
 
-        System.out.println(JSONStringParser.decode(testString)
-        );
 
-
-        Object obj = JSONParser.parse(testString);
+        Object obj = JsonParser.fullParse ( testString );
 
 
 
@@ -446,11 +443,11 @@ public class JSONParseTest {
                 "[ 'abc','def' ]".replace('\'', '"');
 
         System.out.println(
-                JSONStringParser.decode(testString)
+                JsonStringDecoder.decode ( testString )
         );
 
 
-        Object obj = JSONParser.parse(testString);
+        Object obj = JsonParser.parse ( testString );
         System.out.println("here is what I got " + obj);
 
         boolean ok = true;
@@ -470,9 +467,9 @@ public class JSONParseTest {
     public void textInMiddleOfArray() {
 
         try {
-            Object obj = JSONParser.parse(
-                    lines("[A, 0]"
-                    ).replace('\'', '"')
+            Object obj = JsonParser.parse (
+                    lines ( "[A, 0]"
+                    ).replace ( '\'', '"' )
             );
 
         } catch (Exception ex) {
@@ -486,9 +483,9 @@ public class JSONParseTest {
     @Test
     public void oddlySpaced2() {
 
-        Object obj = JSONParser.parse(
-                lines("[   2   ,    1, 0]"
-                ).replace('\'', '"')
+        Object obj = JsonParser.parse (
+                lines ( "[   2   ,    1, 0]"
+                ).replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -500,13 +497,13 @@ public class JSONParseTest {
     @Test
     public void complex() {
 
-        Object obj = JSONParser.parse(
-                lines(
+        Object obj = JsonParser.parse (
+                lines (
 
                         "{    'num' : 1   , ",
                         "     'bar' : { 'foo': 1  },  ",
                         "     'nums': [0  ,1,2,3,4,5,'abc'] } "
-                ).replace('\'', '"')
+                ).replace ( '\'', '"' )
         );
 
         boolean ok = true;

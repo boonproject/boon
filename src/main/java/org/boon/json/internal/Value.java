@@ -1,7 +1,8 @@
 package org.boon.json.internal;
 
-import org.boon.json.JSONStringParser;
+import org.boon.json.JsonStringDecoder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -71,10 +72,35 @@ public class Value {
                     return Long.parseLong ( str  );
                 }
             case STRING:
-                return JSONStringParser.decode ( buffer, startIndex, endIndex );
+                return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
         }
         die();
         return null;
     }
 
+    @Override
+    public boolean equals ( Object o ) {
+        if ( this == o ) return true;
+        if ( !( o instanceof Value ) ) return false;
+
+        Value value1 = ( Value ) o;
+
+        if ( endIndex != value1.endIndex ) return false;
+        if ( startIndex != value1.startIndex ) return false;
+        if ( !Arrays.equals ( buffer, value1.buffer ) ) return false;
+        if ( type != value1.type ) return false;
+        if ( value != null ? !value.equals ( value1.value ) : value1.value != null ) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode () {
+        int result = type != null ? type.hashCode () : 0;
+        result = 31 * result + ( buffer != null ? Arrays.hashCode ( buffer ) : 0 );
+        result = 31 * result + startIndex;
+        result = 31 * result + endIndex;
+        result = 31 * result + ( value != null ? value.hashCode () : 0 );
+        return result;
+    }
 }

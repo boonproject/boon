@@ -11,6 +11,8 @@ import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.idx;
 import static org.boon.Maps.map;
+import static org.boon.Str.lines;
+import static org.junit.Assert.assertEquals;
 
 public class JSONParse2Test {
 
@@ -18,8 +20,8 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithNumber() {
 
-        Object obj = JSONParser2.parse(
-                " { 'foo': 1 }  ".replace('\'', '"')
+        Object obj = JsonLazyEncodeParser.parse (
+                " { 'foo': 1 }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -38,8 +40,8 @@ public class JSONParse2Test {
     @Test
     public void testParseFalse() {
 
-        Object obj = JSONParser2.parse(
-                " { 'foo': false }  ".replace('\'', '"')
+        Object obj = JsonLazyEncodeParser.parse (
+                " { 'foo': false }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -56,8 +58,8 @@ public class JSONParse2Test {
     @Test
     public void testParseNull() {
 
-        Object obj = JSONParser2.parse(
-                " { 'foo': null }  ".replace('\'', '"')
+        Object obj = JsonLazyEncodeParser.parse (
+                " { 'foo': null }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -74,8 +76,8 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithBoolean() {
 
-        Object obj = JSONParser2.parse(
-                " { 'foo': true }  ".replace('\'', '"')
+        Object obj = JsonLazyEncodeParser.parse (
+                " { 'foo': true }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -93,8 +95,8 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithList() {
 
-        Object obj = JSONParser2.parse(
-                " { 'foo': [0,1,2] }  ".replace('\'', '"')
+        Object obj = JsonLazyEncodeParser.parse (
+                " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -111,8 +113,8 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithString() {
 
-        Object obj = JSONParser2.parse(
-                " { 'foo': 'str ' }  ".replace('\'', '"')
+        Object obj = JsonLazyEncodeParser.parse (
+                " { 'foo': 'str ' }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -176,8 +178,8 @@ public class JSONParse2Test {
 
         System.out.printf("%s, %s, %s", name, json, compareTo);
 
-        Object obj = JSONParser2.parse(
-                json.replace('\'', '"')
+        Object obj = JsonLazyEncodeParser.parse (
+                json.replace ( '\'', '"' )
         );
 
         boolean ok = true;
@@ -188,6 +190,186 @@ public class JSONParse2Test {
         ok &= compareTo.equals(obj) || die(name + " :: List has items " + json);
 
 
+    }
+
+
+    @Test
+    public void testNumber() {
+
+        Object obj = JsonLazyEncodeParser.parse (
+                "1".replace ( '\'', '"' )
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Integer || die("Object was not an Integer");
+
+        int i = (Integer) obj;
+
+        ok &=  i == 1 || die("I did see i equal to 1");
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test
+    public void testBoolean() {
+
+        Object obj = JsonLazyEncodeParser.parse (
+                "  true  ".replace ( '\'', '"' )
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Boolean || die("Object was not a Boolean");
+
+        boolean value = (Boolean) obj;
+
+        ok &=  value == true || die("I did see value equal to true");
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test(expected = JsonException.class)
+    public void testBooleanParseError() {
+
+        Object obj = JsonLazyEncodeParser.parse (
+                "  tbone  ".replace ( '\'', '"' )
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Boolean || die("Object was not a Boolean");
+
+        boolean value = (Boolean) obj;
+
+        ok &=  value == true || die("I did see value equal to true");
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test
+    public void testString() {
+
+        String testString =
+                ("  'this is all sort of text, " +
+                        "   do you think it is \\'cool\\' '").replace('\'', '"');
+
+
+        Object obj = JsonLazyEncodeParser.parse ( testString );
+
+        System.out.println("here is what I got " + obj);
+
+        boolean ok = true;
+
+        ok &= obj instanceof String || die("Object was not a String");
+
+        String value = (String) obj;
+
+        assertEquals("this is all sort of text,    do you think it is \"cool\" ", obj);
+
+        System.out.println(obj.getClass());
+    }
+
+
+    @Test
+    public void testStringInsideOfList() {
+
+        String testString = (
+                "  [ 'this is all sort of text, " +
+                        "   do you think it is \\'cool\\' '] ").replace('\'', '"');
+
+
+
+        Object obj = JsonLazyEncodeParser.parse ( testString );
+
+
+
+        System.out.println("here is what I got " + obj);
+
+        boolean ok = true;
+
+        ok &= obj instanceof List || die("Object was not a List");
+
+        List<String> value = (List<String>) obj;
+
+
+        assertEquals("this is all sort of text,    do you think it is \"cool\" ",
+                Lists.idx ( value, 0 ));
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test
+    public void testStringInsideOfList2() {
+
+        String testString =
+                "[ 'abc','def' ]".replace('\'', '"');
+
+
+
+        Object obj = JsonLazyEncodeParser.parse ( testString );
+        System.out.println("here is what I got " + obj);
+
+        boolean ok = true;
+
+        ok &= obj instanceof List || die("Object was not a List");
+
+        List<String> value = (List<String>) obj;
+
+
+        assertEquals("abc",
+                Lists.idx ( value, 0 ));
+
+        System.out.println(obj.getClass());
+    }
+
+    @Test
+    public void textInMiddleOfArray() {
+
+        try {
+            Object obj = JsonLazyEncodeParser.parse (
+                    lines ( "[A, 0]"
+                    ).replace ( '\'', '"' )
+            );
+
+        } catch (Exception ex) {
+            //success
+            return;
+        }
+        die("The above should cause an exception");
+
+    }
+
+    @Test
+    public void oddlySpaced2() {
+
+        Object obj = JsonLazyEncodeParser.parse (
+                lines ( "[   2   ,    1, 0]"
+                ).replace ( '\'', '"' )
+        );
+
+        boolean ok = true;
+
+        System.out.println(obj);
+
+    }
+
+    @Test
+    public void complex() {
+
+        Object obj = JsonLazyEncodeParser.parse (
+                lines (
+
+                        "{    'num' : 1   , ",
+                        "     'bar' : { 'foo': 1  },  ",
+                        "     'nums': [0  ,1,2,3,4,5,'abc'] } "
+                ).replace ( '\'', '"' )
+        );
+
+        boolean ok = true;
+
+        System.out.println(obj);
+        //die();
     }
 
 }

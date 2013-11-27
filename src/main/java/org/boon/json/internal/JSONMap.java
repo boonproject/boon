@@ -2,7 +2,7 @@ package org.boon.json.internal;
 
 import java.util.*;
 
-public class JSONMap extends AbstractMap<String, Object> implements Map<String, Object> {
+public class JsonMap extends AbstractMap<String, Object> implements Map<String, Object> {
   
     Map<String, Object> map = null;
 
@@ -27,13 +27,25 @@ public class JSONMap extends AbstractMap<String, Object> implements Map<String, 
 
     @Override
     public Object put ( String key, Object value ) {
-        buildIfNeededMap();
         return map.put ( key, value );
     }
 
+
+    boolean converted = false;
     @Override
     public Set<Entry<String, Object>> entrySet () {
         buildIfNeededMap();
+        if ( !converted ) {
+            Set<Entry<String, Object>> entries = map.entrySet ();
+
+            for (Entry<String, Object> entry : entries) {
+                if (entry.getValue () instanceof  MapItemValue) {
+                    get(entry.getKey ());
+                }
+            }
+            converted = true;
+        }
+
         return map.entrySet ();
     }
 
@@ -44,5 +56,19 @@ public class JSONMap extends AbstractMap<String, Object> implements Map<String, 
                 map.put ( miv.name, miv );
             }
         }
+    }
+
+
+    public Collection<Object> values() {
+        buildIfNeededMap ();
+        if ( !converted ) {
+            this.entrySet ();
+        }
+        return map.values ();
+    }
+
+
+    public int size() {
+        return this.items.size ();
     }
 }
