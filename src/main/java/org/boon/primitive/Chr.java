@@ -67,17 +67,6 @@ public class Chr {
         _idx ( array, i, input );
     }
 
-
-    public static void _idx( final char[] array, int startIndex, char[] input ) {
-        try {
-
-            System.arraycopy ( input, 0, array, startIndex, input.length );
-        } catch ( Exception ex ) {
-            Exceptions.handle ( String.format ( "array size %d, startIndex %d, input length %d",
-                    array.length, startIndex, input.length ), ex );
-        }
-    }
-
     @Universal
     public static char[] slc( char[] array, int startIndex, int endIndex ) {
         Objects.requireNonNull ( array );
@@ -592,5 +581,36 @@ public class Chr {
             }
         }
         return false;
+    }
+
+    public static void _idx( char[] buffer, int location, byte[] chars ) {
+        int index2 = 0;
+        int endLocation =  (location + chars.length);
+        for (int index = location; index < endLocation; index++, index2++ ) {
+            buffer[index] = (char) chars [index2];
+        }
+    }
+
+
+
+
+    public static void _idx( final char[] array, int startIndex, char[] input ) {
+        try {
+
+            System.arraycopy ( input, 0, array, startIndex, input.length );
+        } catch ( Exception ex ) {
+            Exceptions.handle ( String.format ( "array size %d, startIndex %d, input length %d",
+                    array.length, startIndex, input.length ), ex );
+        }
+    }
+
+    public static void _idx( char[] buffer, int location, byte[] chars, int start, int end ) {
+
+        int index2 = start;
+        int endLocation =  (location + (end - start));
+        for (int index = location; index < endLocation; index++, index2++ ) {
+            buffer[index] = (char) chars [index2];
+        }
+
     }
 }

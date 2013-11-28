@@ -42,16 +42,6 @@ public class JsonLazyEncodeParser {
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
-    public static <T> List<T> parseList( Class<T> type, String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
-        return ( List<T> ) p.decode ( cs );
-    }
-
-
-
-
-
-
     public static Object parse( char[] cs ) {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
         return p.decode ( cs );
@@ -61,17 +51,6 @@ public class JsonLazyEncodeParser {
     public static Map<String, Object> parseMap( char [] cs ) {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
         return ( Map<String, Object> ) p.decode ( cs );
-    }
-
-    public static <T> List<T> parseList( Class<T> type, char [] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
-        return ( List<T> ) p.decode ( cs );
-    }
-
-
-    public static Number parseNumber( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
-        return ( Number ) p.decode ( cs );
     }
 
 
@@ -222,7 +201,7 @@ public class JsonLazyEncodeParser {
 
         this.lastObject = map;
 
-        Value value = new Value(map);
+        Value value = new ValueBase (map);
 
 
         do {
@@ -231,7 +210,7 @@ public class JsonLazyEncodeParser {
 
 
             if ( __currentChar == '"' ) {
-                String key = decodeKeyName ( );
+                Value key = decodeKeyName ( );
                 skipWhiteSpace ( );
 
                 if ( __currentChar != ':' ) {
@@ -461,7 +440,7 @@ public class JsonLazyEncodeParser {
 
         __index = index;
 
-        Value value = new Value();
+        ValueInCharBuf value = new ValueInCharBuf ();
         value.buffer = this.charArray;
         value.startIndex = startIndex;
         value.endIndex = __index;
@@ -533,7 +512,7 @@ public class JsonLazyEncodeParser {
     }
 
     private Value decodeString( ) {
-        Value value = new Value(Type.STRING);
+        ValueInCharBuf value = new ValueInCharBuf (Type.STRING);
 
         final int startIndex = __index;
         if ( __index < charArray.length && __currentChar == '"' ) {
@@ -548,13 +527,6 @@ public class JsonLazyEncodeParser {
 
                 case '"':
                     break done;
-
-                case '\t':
-                case '\n':
-                case '\r':
-                case '\f':
-                case '\b':
-                    throw new JsonException ( exceptionDetails("illegal control character found " + __currentChar ));
 
 
                 case '\\':
@@ -578,8 +550,8 @@ public class JsonLazyEncodeParser {
     }
 
 
-    private String decodeKeyName( ) {
-        return  decodeString ( ).toKey ();
+    private Value decodeKeyName( ) {
+        return  decodeString ( );
 
     }
 
@@ -591,7 +563,7 @@ public class JsonLazyEncodeParser {
         skipWhiteSpace ( );
 
         List<Object> list = new JsonList ( );
-        Value value = new Value(list);
+        Value value = new ValueBase (list);
 
         this.lastList = list;
 
@@ -611,7 +583,7 @@ public class JsonLazyEncodeParser {
             Value arrayItem = decodeValue ( );
 
             if ( arrayItem == null && state == END_NULL ) {
-                list.add ( Value.NULL ); //JSON null detected
+                list.add ( ValueBase.NULL ); //JSON null detected
             } else if ( arrayItem == null ) {
                 throw new JsonException ( exceptionDetails ( "array item was null") );
             } else {

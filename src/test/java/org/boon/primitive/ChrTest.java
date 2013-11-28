@@ -3,6 +3,7 @@ package org.boon.primitive;
 
 import org.junit.Test;
 
+import static org.boon.Exceptions.die;
 import static org.boon.primitive.Chr.*;
 import static org.junit.Assert.*;
 
@@ -489,6 +490,53 @@ public class ChrTest {
 
     }
 
+
+    @Test public void testByteCopyIntoCharArray () {
+
+        char [] charArray = new char[1000];
+        byte [] bytes = Byt.bytes ( "0123456789000" );
+
+        Chr._idx ( charArray, 0, bytes );
+
+        boolean ok = true;
+
+        char ch = charArray[0];
+        ok |= ch == '0' || die( " not '0'");
+
+        ch = charArray[9];
+        ok |= ch == '9' || die( " not '9'" +ch);
+
+
+        Chr._idx ( charArray, 100, bytes, 0, 3 );
+
+        ch = charArray[100];
+        ok |= ch == '0' || die( " not '0' " + ch);
+
+
+        ch = charArray[101];
+        ok |= ch == '1' || die( " not '1' " + ch);
+
+
+        ch = charArray[102];
+        ok |= ch == '2' || die( " not '2' " + ch);
+
+
+
+        Chr._idx ( charArray, 200, bytes, 3, 6 );
+
+        ch = charArray[200];
+        ok |= ch == '3' || die( " not '3' " + ch);
+
+
+        ch = charArray[201];
+        ok |= ch == '4' || die( " not '4' " + ch);
+
+
+        ch = charArray[202];
+        ok |= ch == '5' || die( " not '5' " + ch);
+
+
+    }
 
 
 

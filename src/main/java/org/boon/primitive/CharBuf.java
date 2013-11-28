@@ -85,6 +85,33 @@ public class CharBuf {
         return this;
     }
 
+    public CharBuf add( byte[] chars ) {
+        if ( chars.length + location < capacity ) {
+            Chr._idx ( buffer, location, chars );
+        } else {
+            buffer = Chr.grow ( buffer, buffer.length * 2 + chars.length );
+            Chr._idx ( buffer, location, chars );
+            capacity = buffer.length;
+        }
+        location += chars.length;
+        return this;
+    }
+
+
+    public CharBuf add( byte[] chars, int start, int end ) {
+
+        int charsLength = start - end;
+        if ( charsLength + location < capacity ) {
+            Chr._idx ( buffer, location, chars, start, end );
+        } else {
+            buffer = Chr.grow ( buffer, buffer.length * 2 + charsLength );
+            Chr._idx ( buffer, location, chars, start, end );
+            capacity = buffer.length;
+        }
+        location += (end - start);
+        return this;
+    }
+
 
     public void add( char ch ) {
         if ( 1 + location < capacity ) {

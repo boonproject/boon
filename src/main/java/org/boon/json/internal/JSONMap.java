@@ -53,7 +53,7 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
         if (map==null) {
             map = new LinkedHashMap<> ( this.items.size () );
             for (MapItemValue miv : items ) {
-                map.put ( miv.name, miv );
+                map.put ( miv.name.toKey (), miv );
             }
         }
     }

@@ -14,8 +14,8 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
 
         Object obj = list.get ( index );
 
-        if ( obj instanceof Value ) {
-            obj = convert ( ( Value ) obj );
+        if ( obj instanceof ValueBase ) {
+            obj = convert ( ( ValueBase ) obj );
             list.set ( index, obj );
         }
         return obj;
@@ -23,7 +23,7 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
     }
 
 
-    private Object convert ( Value value ) {
+    private Object convert ( ValueBase value ) {
         return value.toValue ();
     }
 
