@@ -117,6 +117,10 @@ public class JsonAsciiParser {
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
+    public static Map<String, Object> fullParseMap ( byte[] cs ) {
+        JsonAsciiParser p = new JsonAsciiParser ( true );
+        return ( Map<String, Object> ) p.decode ( cs );
+    }
 
 
     public static Map<String, Object> parseMap ( String cs ) {
