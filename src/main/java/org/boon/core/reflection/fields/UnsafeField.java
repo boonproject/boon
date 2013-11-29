@@ -1,6 +1,7 @@
 package org.boon.core.reflection.fields;
 
 import org.boon.core.Typ;
+import org.boon.core.Value;
 import org.boon.core.reflection.Conversions;
 import sun.misc.Unsafe;
 
@@ -141,15 +142,22 @@ public abstract class UnsafeField implements FieldAccess {
 
     @Override
     public void setValue( Object obj, Object value ) {
-        if ( obj.getClass ( ) == this.type ) {
+        if ( value != null && value.getClass () == this.type ) {
             this.setObject ( obj, value );
             return;
         }
 
-
-        if ( type == Typ.intgr ) {
+        if ( value instanceof Value) {
+            setFromValue( obj, (Value)value);
+        }
+        else if ( type == Typ.string  ) {
+            setObject ( obj, Conversions.coerce ( type, value ) );
+        } else if ( type == Typ.intgr ) {
             setInt ( obj, toInt ( value ) );
-        } else if ( type == Typ.lng ) {
+        } else if ( type == Typ.bln )  {
+            setBoolean ( obj, toBoolean ( value ) );
+        }
+        else if ( type == Typ.lng ) {
             setLong ( obj, toLong ( value ) );
         } else if ( type == Typ.bt ) {
             setByte ( obj, toByte ( value ) );
@@ -170,6 +178,49 @@ public abstract class UnsafeField implements FieldAccess {
             setObject ( obj, Conversions.coerce ( type, value ) );
         }
 
+    }
+
+    private void setFromValue( Object obj, Value value ) {
+
+        if ( type == Typ.string ) {
+            setObject ( obj, value.stringValue () );
+        } else if ( type == Typ.intgr ) {
+            setInt ( obj, value.intValue () );
+        } else if ( type == Typ.flt ) {
+            setFloat ( obj, value.floatValue () );
+        } else if ( type == Typ.dbl ) {
+            setDouble ( obj, value.doubleValue () );
+        } else if ( type == Typ.lng ) {
+            setDouble ( obj, value.longValue () );
+        } else if ( type == Typ.bt)  {
+            setByte ( obj, value.byteValue () );
+        } else if ( type == Typ.bln ) {
+            setBoolean ( obj, value.booleanValue () );
+        } else if ( type == Typ.shrt ) {
+            setObject ( obj, value.shortValue () );
+        } else if ( type == Typ.integer ) {
+            setObject ( obj, value.intValue () );
+        } else if ( type == Typ.floatWrapper ) {
+            setObject ( obj, value.floatValue () );
+        } else if ( type == Typ.doubleWrapper ) {
+            setObject ( obj, value.doubleValue () );
+        } else if ( type == Typ.longWrapper ) {
+            setObject ( obj, value.longValue () );
+        } else if ( type == Typ.byteWrapper)  {
+            setObject ( obj, value.byteValue () );
+        } else if ( type == Typ.bool ) {
+            setObject ( obj, value.booleanValue () );
+        } else if ( type == Typ.shortWrapper ) {
+            setObject ( obj, value.shortValue () );
+        } else if ( type == Typ.bigDecimal ) {
+            setObject ( obj, value.bigDecimalValue () );
+        } else if ( type == Typ.bigInteger ) {
+            setObject ( obj, value.bigIntegerValue () );
+        } else if (type == Typ.date) {
+            setObject ( obj, value.dateValue() );
+        } else {
+            setValue (obj, coerce ( type, value ));
+        }
     }
 
 
@@ -414,7 +465,7 @@ public abstract class UnsafeField implements FieldAccess {
 
     @Override
     public void setObject( Object obj, Object value ) {
-        die ( String.format ( "Can't call this method on this type %s name = %s", this.type, this.name ) );
+        die ( String.format ( "Can't call this method on this type %s name = %s expecting ", this.type, this.name ) );
 
     }
 

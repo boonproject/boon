@@ -1143,21 +1143,21 @@ public class Reflection {
     @SuppressWarnings( "unchecked" )
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
 
-        if ( map.get ( "class" ) == null ) {
-            map.put ( "class", clazz.getName ( ) );
-        }
-        return ( T ) fromMap ( map );
+        return ( T ) fromMap ( map, newInstance ( clazz ) );
     }
 
     @SuppressWarnings( "unchecked" )
-    public static Object fromMap( Map<String, Object> map ) {
+    public static Object fromMap( Map<String, Object> map  ) {
         String className = ( String ) map.get ( "class" );
         Object newInstance = newInstance ( className );
+        return fromMap (map, newInstance);
+    }
 
-        if ( newInstance == null ) {
-            log.info ( "we were not able to load the class so we are leaving this as a map" );
-            return map;
-        }
+    @SuppressWarnings( "unchecked" )
+    public static <T> T fromMap( Map<String, Object> map, T newInstance  ) {
+
+
+        Objects.requireNonNull ( newInstance );
 
         Collection<FieldAccess> fields = getAllAccessorFields ( newInstance.getClass ( ) ).values ( );
 
@@ -1172,7 +1172,8 @@ public class Reflection {
 
             /* See if it is a map<string, object>, and if it is then process it. */
             if ( value instanceof Map && Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string ) {
-                value = fromMap ( ( Map<String, Object> ) value );
+                value = fromMap ( ( Map<String, Object> ) value, field.getType () );
+
             } else if ( value instanceof Collection ) {
                 /*It is a collection so process it that way. */
                 processCollectionFromMap ( newInstance, field, ( Collection ) value );
@@ -1180,9 +1181,11 @@ public class Reflection {
             } else if ( value instanceof Map[] ) {
                 /* It is an array of maps so, we need to process it as such. */
                 processArrayOfMaps ( newInstance, field, value );
+                continue;
             }
 
             field.setValue ( newInstance, value );
+
         }
 
         return newInstance;

@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
@@ -44,6 +45,76 @@ public class JsonParser {
     public static Map<String, Object> parseMap( String cs ) {
         JsonParser p = new JsonParser ( false );
         return ( Map<String, Object> ) p.decode ( cs );
+    }
+
+    public static <T> T parseInto( T object, String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap (objectMap, object);
+    }
+
+    public static <T> T parseInto( Class<T> clz, String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap (objectMap, clz);
+    }
+
+
+    public static Object parseIntoJavaObject(  String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
+
+    public static <T> T fullParseInto( T object, String cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap (objectMap, object);
+    }
+
+    public static <T> T fullParseInto( Class<T> clz, String cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap (objectMap, clz);
+    }
+
+
+    public static Object fullParseIntoJavaObject(  String cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
+
+
+
+
+    public static <T> T parseInto( T object, char [] cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap (objectMap, object);
+    }
+
+    public static <T> T parseInto( Class<T> clz, char [] cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap (objectMap, clz);
+    }
+
+
+    public static Object parseIntoJavaObject(  char [] cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
+
+    public static <T> T fullParseInto( T object, char [] cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap (objectMap, object);
+    }
+
+    public static <T> T fullParseInto( Class<T> clz, char [] cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap (objectMap, clz);
+    }
+
+
+    public static Object fullParseIntoJavaObject(  char [] cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap );
     }
 
 

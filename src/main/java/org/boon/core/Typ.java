@@ -2,6 +2,8 @@ package org.boon.core;
 
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -23,6 +25,11 @@ public class Typ {
     public static final Class<Long> longWrapper = Long.class;
     public static final Class<Double> doubleWrapper = Double.class;
     public static final Class<Float> floatWrapper = Float.class;
+    public static final Class<Byte> byteWrapper = Byte.class;
+    public static final Class<Short> shortWrapper = Short.class;
+    public static final Class<BigInteger> bigInteger = BigInteger.class;
+    public static final Class<BigDecimal> bigDecimal = BigDecimal.class;
+
     public static final Class<Number> number = Number.class;
 
 

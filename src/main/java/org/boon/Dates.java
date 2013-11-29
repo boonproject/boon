@@ -3,8 +3,11 @@ package org.boon;
 import org.boon.core.Sys;
 import org.boon.primitive.CharBuf;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class Dates {
@@ -28,6 +31,15 @@ public class Dates {
         calendar.setTimeZone ( UTC_TIME_ZONE );
         long utcNow = calendar.getTime ( ).getTime ( );
         lastNow = now;
+        return utcNow;
+    }
+
+    public static long utc( long time ) {
+        Calendar calendar = Calendar.getInstance ( );
+        calendar.setTimeInMillis ( time );
+        calendar.setTimeZone ( UTC_TIME_ZONE );
+        long utcNow = calendar.getTime ( ).getTime ( );
+        lastNow = time;
         return utcNow;
     }
 
@@ -277,4 +289,14 @@ public class Dates {
     }
 
 
+    public static Date fromISO8601( String string ) {
+
+        try {
+            return new SimpleDateFormat ( "yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH).parse ( string );
+        } catch ( ParseException e ) {
+            return Exceptions.handle (Date.class, "Not a valid ISO8601", e);
+        }
+
+
+    }
 }

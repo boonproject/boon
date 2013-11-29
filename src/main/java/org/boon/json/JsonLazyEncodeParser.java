@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.Reflection;
 import org.boon.json.internal.*;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
@@ -52,6 +53,42 @@ public class JsonLazyEncodeParser {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
         return ( Map<String, Object> ) p.decode ( cs );
     }
+
+
+    public static <T> T parseInto( T object, String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap, object );
+    }
+
+    public static <T> T parseInto( Class<T> clz, String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap (objectMap, clz);
+    }
+
+
+    public static Object parseIntoJavaObject(  String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
+
+
+    public static <T> T parseInto( T object, char[] cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap, object );
+    }
+
+    public static <T> T parseInto( Class<T> clz, char[] cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap (objectMap, clz);
+    }
+
+
+    public static Object parseIntoJavaObject(  char[] cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
 
 
     @SuppressWarnings("unchecked")

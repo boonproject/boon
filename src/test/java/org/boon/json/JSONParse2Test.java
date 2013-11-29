@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.IO;
 import org.boon.Lists;
 import org.junit.Test;
 
@@ -15,6 +16,53 @@ import static org.boon.Str.lines;
 import static org.junit.Assert.assertEquals;
 
 public class JSONParse2Test {
+
+
+    @Test public void objectSerialization() {
+
+
+        //        {
+        //
+        //            "myInt" : 1,
+        //                "myFloat" : 1.1,
+        //                "myDouble" : 1.2,
+        //                "myShort" : 1,
+        //                "myBoolean" : true,
+        //                "string" : "test"
+        //        }
+        String fileContents = IO.read ( "files/AllTypes.json" );
+        AllTypes types = JsonParser.parseInto ( AllTypes.class, fileContents );
+        validateAllTypes ( types );
+
+        validateAllTypes ( types.getAllType () );
+
+        boolean ok = true;
+        ok |=  types.getAllTypes ().size () == 3 || die ("" + types.getAllTypes ().size());
+
+        for (AllTypes allType : types.getAllTypes ()) {
+            validateAllTypes ( allType );
+        }
+
+
+    }
+
+    private void validateAllTypes( AllTypes types ) {
+        boolean ok = true;
+        ok |= types.getMyInt () == 1 || die("" + types.getMyInt ());
+
+        ok |= types.getMyFloat () == 1.1f || die("" + types.getMyFloat ());
+
+        ok |= types.getMyDouble () == 1.2 || die("" + types.getMyDouble ());
+
+        ok |= types.isMyBoolean () == true || die("" + types.isMyBoolean ());
+
+        ok |= types.getMyShort () == 2 || die("" + types.getMyShort ());
+
+        ok |= types.getMyByte () == 3 || die("" + types.getMyByte ());
+
+        ok |= types.getString ().equals ("test") || die("" + types.getString ());
+    }
+
 
 
     @Test

@@ -11,6 +11,26 @@ public class ValueInByteArray extends ValueBase {
 
     public byte [] buffer;
 
+
+
+    private static final int LETTER_L = 'l';
+
+    private static final int LETTER_T = 't';
+
+    private static final int LETTER_R = 'r';
+
+    private static final int LETTER_E = 'e';
+
+    private static final int LETTER_U = 'u';
+
+    private static final int LETTER_F = 'f';
+
+    private static final int LETTER_A = 'a';
+
+
+    private static final int LETTER_S = 's';
+
+
     public ValueInByteArray( Type type ) {
         this.type = type;
     }
@@ -21,18 +41,16 @@ public class ValueInByteArray extends ValueBase {
 
 
     public String toString() {
-        CharBuf charBuf = CharBuf.create ( endIndex - startIndex );
-        charBuf.add ( buffer, startIndex, endIndex) ;
-        return charBuf.toString ();
-    }
+        if (type == Type.STRING) {
+            CharBuf charBuf = CharBuf.create ( (endIndex - startIndex)  );
+            charBuf.add ( buffer, startIndex+1, endIndex) ;
+            return charBuf.toString ();
+        } else {
+            CharBuf charBuf = CharBuf.create ( (endIndex - startIndex)  );
+            charBuf.add ( buffer, startIndex, endIndex) ;
+            return charBuf.toString ();
 
-
-    @Override
-    public String toKey() {
-        CharBuf charBuf = CharBuf.create ( (endIndex - startIndex)  );
-        charBuf.add ( buffer, startIndex+1, endIndex) ;
-        return charBuf.toString ();
-
+        }
     }
 
     @Override
@@ -93,28 +111,6 @@ public class ValueInByteArray extends ValueBase {
 
 
 
-    @Override
-    public int intValue() {
-        return Integer.parseInt ( toString () );
-    }
-
-    @Override
-    public long longValue() {
-        return Long.parseLong ( toString ()  );
-    }
-
-    @Override
-    public float floatValue() {
-        return Float.parseFloat ( toString ()  );
-
-    }
-
-    @Override
-    public double doubleValue() {
-        return Double.parseDouble ( toString ()  );
-    }
-
-
 
 
     @Override
@@ -135,5 +131,53 @@ public class ValueInByteArray extends ValueBase {
         b.endIndex = end;
         return b;
     }
+
+
+
+    public boolean booleanValue() {
+
+        if (type == Type.STRING)  {
+            final int length = this.endIndex - this.startIndex;
+            if (length  == 4
+                    && buffer[ startIndex ] == LETTER_T
+                    && buffer[ startIndex + 1 ] == LETTER_R
+                    && buffer[ startIndex + 2 ] == LETTER_U
+                    && buffer[ startIndex + 3 ] == LETTER_E
+                    ) {
+                return true;
+            } else if (length  == 5
+                    && buffer[ startIndex ] == LETTER_F
+                    && buffer[ startIndex + 1 ] == LETTER_A
+                    && buffer[ startIndex + 2 ] == LETTER_L
+                    && buffer[ startIndex + 3 ] == LETTER_S
+                    && buffer[ startIndex + 4 ] == LETTER_E
+                    ){
+                return false;
+            }
+        } else {
+
+                int i = intValue ();
+                if (i==0) {
+                    return false;
+                } else {
+                    return true;
+                }
+
+        }
+
+        die ("Unable to parse " + toString () + " into a boolean ");
+        return false;
+
+
+    }
+
+
+    @Override
+    public String stringValueEncoded() {
+        return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
+    }
+
+
+
 
 }

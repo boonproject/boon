@@ -1,16 +1,37 @@
 package org.boon.json.internal;
 
+import org.boon.Exceptions;
 import org.boon.json.JsonStringDecoder;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.boon.Exceptions.die;
 
 public class ValueInCharBuf extends ValueBase {
 
     public char [] buffer;
+
+    private static final int LETTER_L = 'l';
+
+    private static final int LETTER_T = 't';
+
+    private static final int LETTER_R = 'r';
+
+    private static final int LETTER_E = 'e';
+
+    private static final int LETTER_U = 'u';
+
+    private static final int LETTER_F = 'f';
+
+    private static final int LETTER_A = 'a';
+
+
+    private static final int LETTER_S = 's';
+
 
     public ValueInCharBuf( Type type ) {
         this.type = type;
@@ -22,13 +43,15 @@ public class ValueInCharBuf extends ValueBase {
 
 
     public String toString() {
-        return new String(buffer, startIndex, endIndex - startIndex);
+
+        if (type == Type.STRING ) {
+            return new String(buffer, startIndex+1, (endIndex - startIndex) -1  );
+        } else {
+            return new String(buffer, startIndex, (endIndex - startIndex)  );
+        }
     }
 
-    @Override
-    public String toKey() {
-        return new String(buffer, startIndex+1, (endIndex - startIndex) -1  );
-    }
+
 
     @Override
     public Object toValue() {
@@ -88,28 +111,6 @@ public class ValueInCharBuf extends ValueBase {
 
 
     @Override
-    public int intValue() {
-        return Integer.parseInt ( toString () );
-    }
-
-    @Override
-    public long longValue() {
-        return Long.parseLong ( toString () );
-    }
-
-    @Override
-    public float floatValue() {
-        return Float.parseFloat ( toString () );
-
-    }
-
-    @Override
-    public double doubleValue() {
-        return Double.parseDouble ( toString ()  );
-    }
-
-
-    @Override
     public int length() {
         return buffer.length;
     }
@@ -127,6 +128,57 @@ public class ValueInCharBuf extends ValueBase {
         b.endIndex = end;
         return b;
     }
+
+
+
+
+    public BigDecimal bigDecimalValue() {
+        return new BigDecimal ( buffer, startIndex, endIndex - startIndex );
+    }
+
+    public BigInteger bigIntegerValue() {
+        return new BigInteger ( toString () );
+    }
+
+    public boolean booleanValue() {
+        final int length = this.endIndex - this.startIndex;
+        if (length  == 4
+                && buffer[ startIndex ] == LETTER_T
+                && buffer[ startIndex + 1 ] == LETTER_R
+                && buffer[ startIndex + 2 ] == LETTER_U
+                && buffer[ startIndex + 3 ] == LETTER_E
+                ) {
+            return true;
+        } else if (length  == 5
+                && buffer[ startIndex ] == LETTER_F
+                && buffer[ startIndex + 1 ] == LETTER_A
+                && buffer[ startIndex + 2 ] == LETTER_L
+                && buffer[ startIndex + 3 ] == LETTER_S
+                && buffer[ startIndex + 4 ] == LETTER_E
+                ){
+            return false;
+        } else {
+            int i = intValue ();
+            if (i==0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public String stringValue() {
+        return toString ();
+    }
+
+
+
+    @Override
+    public String stringValueEncoded() {
+        return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
+    }
+
+
 
 
 }

@@ -4,6 +4,7 @@ import org.boon.Dates;
 import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.Typ;
+import org.boon.core.Value;
 import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
@@ -272,7 +273,10 @@ public class Conversions {
 
     @SuppressWarnings("unchecked")
     public static <T> T coerce( Class<T> clz, Object value ) {
-        if ( clz == Typ.integer || clz == Typ.intgr ) {
+
+        if ( clz == Typ.string || clz == Typ.chars ) {
+            return ( T ) value.toString ( );
+        } else if ( clz == Typ.integer || clz == Typ.intgr ) {
             Integer i = toInt ( value );
             return ( T ) i;
         } else if ( clz == Typ.longWrapper || clz == Typ.lng ) {
@@ -284,19 +288,13 @@ public class Conversions {
         } else if ( clz == Typ.floatWrapper || clz == Typ.flt ) {
             Float i = toFloat ( value );
             return ( T ) i;
-        } else if ( clz == Typ.string || clz == Typ.chars ) {
-            return ( T ) value.toString ( );
         } else if ( clz == Typ.stringArray ) {
             die ( "Need to fix this" );
             return null;
         } else if ( clz == Typ.bool || clz == Typ.bln ) {
             Boolean b = toBoolean ( value );
             return ( T ) b;
-        } else if ( clz == Typ.file ) {
-            //return (T) toFile(set);
-            die ( "Need to fix this" );
-            return null;
-        } else if ( Typ.isMap ( clz ) ) {
+        }  else if ( Typ.isMap ( clz ) ) {
             if ( value instanceof Map ) {
                 return ( T ) value;
             }
@@ -308,8 +306,48 @@ public class Conversions {
         } else if ( clz != null && clz.getPackage ( ) != null && !clz.getPackage ( ).getName ( ).startsWith ( "java" )
                 && Typ.isMap ( value.getClass ( ) ) && Typ.doesMapHaveKeyTypeString ( value ) ) {
             return ( T ) Reflection.fromMap ( ( Map<String, Object> ) value );
+        } else if ( clz.isEnum () ) {
+            return toEnum (  clz, value );
+
         } else {
             return ( T ) value;
+        }
+    }
+
+    public static <T> T toEnum(Class<? extends Enum> cls ,  String value ) {
+        return (T) Enum.valueOf ( cls,  value );
+
+    }
+
+
+    public static <T> T toEnum(Class<? extends Enum> cls ,  int value ) {
+        Class<? extends Enum> clsEnum = ( Class<? extends Enum> ) cls;
+
+        Enum[] enumConstants = clsEnum.getEnumConstants ();
+        for (Enum e : enumConstants) {
+            if (e.ordinal () == value) {
+                return (T)e;
+            }
+        }
+
+        die ("Can't convert ordinal value " + value + " into enum of type " + clsEnum);
+        return (T)null;
+
+
+    }
+
+
+    public static <T> T toEnum(  Class<?> cls, Object value ) {
+
+        if ( value instanceof CharSequence ) {
+            return toEnum ( cls, value.toString () );
+        } else if (value instanceof Number || value.getClass ().isPrimitive ()) {
+
+            int i = toInt ( value );
+            return toEnum ( cls, i );
+        } else {
+            die ("Can't convert  value " + value + " into enum of type " + cls);
+            return (T)null;
         }
     }
 

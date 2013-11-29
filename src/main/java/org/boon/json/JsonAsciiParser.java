@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.Reflection;
 import org.boon.primitive.Byt;
 import org.boon.primitive.CharBuf;
 
@@ -122,6 +123,41 @@ public class JsonAsciiParser {
         JsonAsciiParser p = new JsonAsciiParser (  );
         return ( Map<String, Object> ) p.decode ( cs );
     }
+
+
+
+    public static <T> T parseInto( T object, String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap, object );
+    }
+
+    public static <T> T parseInto( Class<T> clz, String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap, clz );
+    }
+
+
+    public static Object parseIntoJavaObject( String cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
+    public static <T> T parseInto( T object, byte[] cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap, object );
+    }
+
+    public static <T> T parseInto( Class<T> clz, byte[]  cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap, clz );
+    }
+
+
+    public static Object parseIntoJavaObject( byte[]  cs ) {
+        Map<String, Object> objectMap = parseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
 
     public static Object parse ( byte[] cs ) {
         JsonAsciiParser p = new JsonAsciiParser ();
