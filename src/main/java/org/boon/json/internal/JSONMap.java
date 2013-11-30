@@ -10,14 +10,22 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     @Override
     public Object get ( Object key ) {
-        buildIfNeededMap ();
-        Object obj = map.get (key);
 
-        if (obj instanceof MapItemValue) {
-            obj = convert((MapItemValue) obj);
-            map.put(key.toString (), obj);
+
+        if ( !converted ) {
+
+            buildIfNeededMap ();
+            Object obj = map.get (key);
+
+            if (obj instanceof MapItemValue) {
+                obj = convert((MapItemValue) obj);
+                map.put(key.toString (), obj);
+            }
+            return obj;
+
+        } else {
+            return map.get ( key );
         }
-        return obj;
     }
 
     private Object convert ( MapItemValue miv ) {
@@ -34,8 +42,9 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
     boolean converted = false;
     @Override
     public Set<Entry<String, Object>> entrySet () {
-        buildIfNeededMap();
         if ( !converted ) {
+            buildIfNeededMap();
+
             Set<Entry<String, Object>> entries = map.entrySet ();
 
             for (Entry<String, Object> entry : entries) {
@@ -45,22 +54,20 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
             }
             converted = true;
         }
-
         return map.entrySet ();
     }
 
     private void buildIfNeededMap () {
-        if (map==null) {
+        if ( map==null ) {
             map = new LinkedHashMap<> ( this.items.size () );
             for (MapItemValue miv : items ) {
-                map.put ( miv.name.toString (), miv );
+                map.put ( miv.name.stringValue (), miv );
             }
         }
     }
 
 
     public Collection<Object> values() {
-        buildIfNeededMap ();
         if ( !converted ) {
             this.entrySet ();
         }

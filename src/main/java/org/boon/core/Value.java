@@ -36,4 +36,6 @@ public interface Value {
 
     Enum toEnum(Class<? extends Enum> cls);
 
+    boolean isContainer(); //either a map or a collection
+
 }

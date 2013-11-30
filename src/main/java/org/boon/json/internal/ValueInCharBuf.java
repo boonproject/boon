@@ -56,9 +56,6 @@ public class ValueInCharBuf extends ValueBase {
     @Override
     public Object toValue() {
 
-        if (value!=null) {
-            return value;
-        }
         switch ( type ) {
             case FALSE:
                 return false;

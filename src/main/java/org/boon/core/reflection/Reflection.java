@@ -2,6 +2,7 @@ package org.boon.core.reflection;
 
 import org.boon.*;
 import org.boon.core.Typ;
+import org.boon.core.Value;
 import org.boon.core.reflection.fields.*;
 import org.boon.primitive.CharBuf;
 
@@ -27,7 +28,7 @@ public class Reflection {
     private static boolean _inContainer;
 
     private final static Context _context;
-    private static WeakReference<Context> weakContext = new WeakReference<Context> ( null );
+    private static WeakReference<Context> weakContext = new WeakReference<> ( null );
 
 
     static {
@@ -1170,21 +1171,32 @@ public class Reflection {
                 continue;
             }
 
-            /* See if it is a map<string, object>, and if it is then process it. */
-            if ( value instanceof Map && Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string ) {
-                value = fromMap ( ( Map<String, Object> ) value, field.getType () );
+            if ( value instanceof Value ) {
+                if (( ( Value ) value ).isContainer ())  {
+                    value =  ((Value)value).toValue ();
+                }
+            }
 
+
+            if (Typ.isBasicType ( value )) {
+
+                 field.setValue ( newInstance, value );
+            } else if (value instanceof  Value) {
+                field.setValue ( newInstance, value );
+            }
+            /* See if it is a map<string, object>, and if it is then process it. */
+            else if ( value instanceof Map && Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string ) {
+                value = fromMap ( ( Map<String, Object> ) value, field.getType () );
+                field.setObject ( newInstance, value );
             } else if ( value instanceof Collection ) {
                 /*It is a collection so process it that way. */
                 processCollectionFromMap ( newInstance, field, ( Collection ) value );
-                continue;
             } else if ( value instanceof Map[] ) {
                 /* It is an array of maps so, we need to process it as such. */
                 processArrayOfMaps ( newInstance, field, value );
-                continue;
+            } else {
+                field.setValue ( newInstance, value );
             }
-
-            field.setValue ( newInstance, value );
 
         }
 
@@ -1202,7 +1214,12 @@ public class Reflection {
         if ( Typ.isMap ( componentType ) ) {
             handleCollectionOfMaps ( newInstance, field,
                     ( Collection<Map<String, Object>> ) collection );
-        } else {
+        } else if (Typ.isValue ( componentType )) {
+            handleCollectionOfValues ( newInstance, field,
+                    ( Collection<Value> ) collection );
+
+        }
+        else {
 
             /* It might be a collection of regular types. */
 
@@ -1251,7 +1268,41 @@ public class Reflection {
                 newCollection.add ( fromMap ( mapComponent, componentClass ) );
 
             }
-            field.setValue ( newInstance, newCollection );
+            field.setObject ( newInstance, newCollection );
+
+        }
+
+    }
+
+
+    @SuppressWarnings( "unchecked" )
+    private static void handleCollectionOfValues( Object newInstance,
+                                                FieldAccess field, Collection<Value> collectionOfValues ) {
+
+        Collection<Object> newCollection = createCollection ( field.getType ( ), collectionOfValues.size ( ) );
+
+
+        Class<?> componentClass = field.getComponentClass ( );
+
+        if ( componentClass != null ) {
+
+
+            for ( Value value : collectionOfValues ) {
+
+                if (value.isContainer ()) {
+                    Object oValue = value.toValue ();
+                    if (oValue instanceof  Map) {
+                        newCollection.add ( fromMap ( (Map) oValue, componentClass ) );
+                    } else if  (oValue instanceof Collection) {
+                      //not sure
+                    }
+                } else {
+                    newCollection.add ( Conversions.coerce( componentClass, value.toValue() ));
+                }
+
+
+            }
+            field.setObject ( newInstance, newCollection );
 
         }
 

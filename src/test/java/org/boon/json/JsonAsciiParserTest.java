@@ -32,7 +32,7 @@ public class JsonAsciiParserTest {
         //                "string" : "test"
         //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonParser.parseInto ( AllTypes.class, fileContents );
+        AllTypes types = JsonAsciiParser.parseInto ( AllTypes.class, fileContents );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );

@@ -5,6 +5,7 @@ import org.boon.json.internal.*;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +25,17 @@ public class JsonLazyEncodeParser {
 
     private Map<String, Object> lastObject;
     private List<Object> lastList;
-    private ParserState state = START;
-    private ParserState lastState = START;
+
+    private final boolean useValues;
 
     private JsonLazyEncodeParser () {
+        useValues=false;
+
+    }
+
+
+    private JsonLazyEncodeParser (boolean useValues) {
+        this.useValues = useValues;
 
     }
 
@@ -35,6 +43,18 @@ public class JsonLazyEncodeParser {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
         return p.decode ( cs );
 
+    }
+
+
+    public static Map<String, Value> parseMapUseValue( String cs  ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser (true );
+        return ( Map<String, Value> ) p.decode ( cs );
+    }
+
+
+    public static Map<String, Value> parseMapUseValue( char [] cs  ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser (true );
+        return ( Map<String, Value> ) p.decode ( cs  );
     }
 
 
@@ -56,36 +76,36 @@ public class JsonLazyEncodeParser {
 
 
     public static <T> T parseInto( T object, String cs ) {
-        Map<String, Object> objectMap = parseMap ( cs );
-        return Reflection.fromMap ( objectMap, object );
+        Map objectMap = parseMapUseValue ( cs );
+        return (T) Reflection.fromMap ( (Map)objectMap, object );
     }
 
     public static <T> T parseInto( Class<T> clz, String cs ) {
-        Map<String, Object> objectMap = parseMap ( cs );
-        return Reflection.fromMap (objectMap, clz);
+        Map  objectMap = parseMapUseValue ( cs );
+        return (T) Reflection.fromMap ( (Map)objectMap, clz);
     }
 
 
     public static Object parseIntoJavaObject(  String cs ) {
-        Map<String, Object> objectMap = parseMap ( cs );
-        return Reflection.fromMap ( objectMap );
+        Map  objectMap = parseMapUseValue ( cs );
+        return Reflection.fromMap ( (Map)objectMap );
     }
 
 
 
     public static <T> T parseInto( T object, char[] cs ) {
-        Map<String, Object> objectMap = parseMap ( cs );
-        return Reflection.fromMap ( objectMap, object );
+        Map  objectMap = parseMapUseValue ( cs );
+        return (T) Reflection.fromMap ( objectMap, object );
     }
 
     public static <T> T parseInto( Class<T> clz, char[] cs ) {
-        Map<String, Object> objectMap = parseMap ( cs );
-        return Reflection.fromMap (objectMap, clz);
+        Map  objectMap = parseMapUseValue ( cs );
+        return (T) Reflection.fromMap (objectMap, clz);
     }
 
 
     public static Object parseIntoJavaObject(  char[] cs ) {
-        Map<String, Object> objectMap = parseMap ( cs );
+        Map  objectMap = parseMapUseValue ( cs );
         return Reflection.fromMap ( objectMap );
     }
 
@@ -103,7 +123,7 @@ public class JsonLazyEncodeParser {
     private Object decode( String cs ) {
         charArray = cs.toCharArray ( );
         Object root = null;
-        root = decodeValue ( ).toValue ();
+        root = decodeValue ().toValue ();
         return root;
     }
 
@@ -134,9 +154,6 @@ public class JsonLazyEncodeParser {
         CharBuf buf = CharBuf.create ( 255 );
 
         buf.addLine ( message );
-
-        buf.add ( state.toString ( ) ).addLine ( " is CURRENT STATE" );
-        buf.add ( lastState.toString ( ) ).addLine ( " is LAST STATE" );
 
         buf.addLine ( "" );
         buf.addLine ( "The last character read was " + charDescription ( __lastChar ) );
@@ -234,11 +251,20 @@ public class JsonLazyEncodeParser {
         if ( __currentChar == '{' && this.hasMore ( ) )
             this.nextChar ( );
 
-        JsonMap map = new JsonMap ( );
+        JsonMap map = null;
+        JsonValueMap valueMap = null;
+        Value value = null;
+        if (useValues )  {
+            valueMap = new JsonValueMap ();
+            value = new ValueBase ((Map)valueMap);
+            this.lastObject = (Map)valueMap;
+        } else {
+            map = new JsonMap ( );
+            value = new ValueBase (map);
+            this.lastObject = map;
+        }
 
-        this.lastObject = map;
 
-        Value value = new ValueBase (map);
 
 
         do {
@@ -257,7 +283,6 @@ public class JsonLazyEncodeParser {
                 this.nextChar ( ); // skip past ':'
                 skipWhiteSpace ( );
 
-                setState ( START_OBJECT_ITEM );
                 Value item = decodeValue ( );
 
                 skipWhiteSpace ( );
@@ -266,9 +291,14 @@ public class JsonLazyEncodeParser {
                 MapItemValue miv = new MapItemValue ();
                 miv.name = key;
                 miv.value = item;
-                map.items.add (miv);
 
-                setState ( END_OBJECT_ITEM );
+
+                if (useValues )  {
+                    valueMap.items.add(miv);
+                } else {
+                    map.items.add (miv);
+                }
+
 
                 if ( !( __currentChar == '}' || __currentChar == ',' ) ) {
                     complain ( "expecting '}' or ',' but got current char " + charDescription ( __currentChar ) );
@@ -314,40 +344,28 @@ public class JsonLazyEncodeParser {
                     break;
 
                 case '"':
-                    setState ( START_STRING );
                     value = decodeString ( );
-                    setState ( END_STRING );
                     break done;
 
 
                 case 't':
-                    setState ( START_BOOLEAN );
                     value = decodeTrue ( );
-                    setState ( END_BOOLEAN );
                     break done;
 
                 case 'f':
-                    setState ( START_BOOLEAN );
                     value = decodeFalse ( );
-                    setState ( END_BOOLEAN );
                     break done;
 
                 case 'n':
-                    setState ( START_NULL );
                     value = decodeNull ( );
-                    setState ( END_NULL );
                     break done;
 
                 case '[':
-                    setState ( START_LIST );
                     value = decodeJsonArray ( );
-                    setState ( END_LIST );
                     break done;
 
                 case '{':
-                    setState ( START_OBJECT );
                     value = decodeJsonObject ( );
-                    setState ( END_OBJECT );
                     break done;
 
                 case '1':
@@ -361,9 +379,7 @@ public class JsonLazyEncodeParser {
                 case '9':
                 case '0':
                 case '-':
-                    setState ( START_NUMBER );
                     value = decodeNumber ( );
-                    setState ( END_NUMBER );
                     break done;
 
                 default:
@@ -377,10 +393,6 @@ public class JsonLazyEncodeParser {
     }
 
 
-    private void setState( ParserState state ) {
-        this.lastState = this.state;
-        this.state = state;
-    }
 
     private Value decodeNumber( ) {
 
@@ -408,25 +420,13 @@ public class JsonLazyEncodeParser {
                     break loop;
 
                 case ',':
-                    if ( lastState == START_LIST_ITEM || lastState == START_OBJECT_ITEM ) {
                         break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails("Unexpected comma token in parse number") );
-                    }
 
                 case ']':
-                    if ( lastState == START_LIST_ITEM ) {
                         break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails("Unexpected close bracket token in parse number") );
-                    }
 
                 case '}':
-                    if ( lastState == START_OBJECT_ITEM ) {
-                        break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails("Unexpected close curly brace token in parse number") );
-                    }
+                    break loop;
 
                 case '1':
                 case '2':
@@ -556,6 +556,7 @@ public class JsonLazyEncodeParser {
             __index++;
         }
 
+        boolean escape=false;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
@@ -563,16 +564,16 @@ public class JsonLazyEncodeParser {
             switch ( __currentChar ) {
 
                 case '"':
+                    if (!escape)
                     break done;
 
 
                 case '\\':
-                    if ( __index < charArray.length ) {
-                        __index++;
-                    }
+                    escape = true;
                     continue;
 
             }
+            escape = false;
         }
 
         value.startIndex = startIndex;
@@ -599,7 +600,15 @@ public class JsonLazyEncodeParser {
 
         skipWhiteSpace ( );
 
-        List<Object> list = new JsonList ( );
+
+        List<Object> list = null;
+
+        if (useValues )  {
+            list = new ArrayList<> (  );
+        }   else {
+            list = new JsonList ( );
+        }
+
         Value value = new ValueBase (list);
 
         this.lastList = list;
@@ -616,20 +625,15 @@ public class JsonLazyEncodeParser {
         do {
             skipWhiteSpace ( );
 
-            setState ( START_LIST_ITEM );
             Value arrayItem = decodeValue ( );
 
-            if ( arrayItem == null && state == END_NULL ) {
+            if ( arrayItem == null  ) {
                 list.add ( ValueBase.NULL ); //JSON null detected
-            } else if ( arrayItem == null ) {
-                throw new JsonException ( exceptionDetails ( "array item was null") );
-            } else {
+            }  else {
                 list.add ( arrayItem );
             }
 
             arrayIndex++;
-
-            setState ( END_LIST_ITEM );
 
             skipWhiteSpace ( );
 

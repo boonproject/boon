@@ -197,7 +197,7 @@ public abstract class UnsafeField implements FieldAccess {
         } else if ( type == Typ.bln ) {
             setBoolean ( obj, value.booleanValue () );
         } else if ( type == Typ.shrt ) {
-            setObject ( obj, value.shortValue () );
+            setShort ( obj, value.shortValue () );
         } else if ( type == Typ.integer ) {
             setObject ( obj, value.intValue () );
         } else if ( type == Typ.floatWrapper ) {
@@ -219,7 +219,7 @@ public abstract class UnsafeField implements FieldAccess {
         } else if (type == Typ.date) {
             setObject ( obj, value.dateValue() );
         } else {
-            setValue (obj, coerce ( type, value ));
+            setObject (obj, coerce ( type, value ));
         }
     }
 
@@ -465,7 +465,8 @@ public abstract class UnsafeField implements FieldAccess {
 
     @Override
     public void setObject( Object obj, Object value ) {
-        die ( String.format ( "Can't call this method on this type %s name = %s expecting ", this.type, this.name ) );
+        die ( String.format ( "Can't call this method on this type %s name = %s  value type = %s", this.type, this.name,
+                value == null ? "null" : value.getClass ()) );
 
     }
 

@@ -31,7 +31,7 @@ public class JSONParse2Test {
         //                "string" : "test"
         //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonParser.parseInto ( AllTypes.class, fileContents );
+        AllTypes types = JsonLazyEncodeParser.parseInto ( AllTypes.class, fileContents );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -78,9 +78,9 @@ public class JSONParse2Test {
 
         Map<String, Object> map = (Map<String, Object>)obj;
 
-        System.out.println(obj);
+        Object foo = idx(map, "foo");
 
-        ok &=  idx(map, "foo").equals(1) || die("I did not find 1");
+        ok &=  foo.equals(1) || die("I did not find 1 foo=" + foo);
     }
 
 

@@ -56,9 +56,6 @@ public class ValueInByteArray extends ValueBase {
     @Override
     public Object toValue() {
 
-        if (value!=null) {
-            return value;
-        }
         switch ( type ) {
             case FALSE:
                 return false;
@@ -176,6 +173,13 @@ public class ValueInByteArray extends ValueBase {
     public String stringValueEncoded() {
         return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
     }
+
+
+
+    public String stringValue() {
+        return toString ();
+    }
+
 
 
 

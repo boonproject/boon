@@ -163,6 +163,39 @@ public class JsonAsciiParser {
     }
 
 
+
+    public static <T> T fullParseInto( T object, String cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap, object );
+    }
+
+    public static <T> T fullParseInto( Class<T> clz, String cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap, clz );
+    }
+
+
+    public static Object fullParseIntoJavaObject( String cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
+    public static <T> T fullParseInto( T object, byte[] cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap, object );
+    }
+
+    public static <T> T fullParseInto( Class<T> clz, byte[]  cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap, clz );
+    }
+
+
+    public static Object fullParseIntoJavaObject( byte[]  cs ) {
+        Map<String, Object> objectMap = fullParseMap ( cs );
+        return Reflection.fromMap ( objectMap );
+    }
+
     public static Object parse ( byte[] cs ) {
         JsonAsciiParser p = new JsonAsciiParser ();
         return p.decode ( cs );

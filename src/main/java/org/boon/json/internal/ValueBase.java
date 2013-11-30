@@ -19,8 +19,7 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     public Object value;
 
     public Type type;
-
-
+    private boolean container;
 
 
     public ValueBase( Type type ) {
@@ -30,11 +29,14 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     public ValueBase( Map<String, Object> map ) {
         this.value = map;
         this.type = Type.MAP;
+        this.container = true;
     }
 
     public ValueBase( List<Object> list ) {
         this.value = list;
         this.type = Type.LIST;
+
+        this.container = true;
     }
 
     public ValueBase() {
@@ -60,7 +62,16 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
 
     @Override
     public boolean booleanValue() {
+
+        switch ( type ) {
+            case FALSE:
+                return false;
+            case TRUE:
+                return true;
+        }
+        die();
         return false;
+
     }
 
 
@@ -110,6 +121,12 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
         }
         die("toEnum " + cls + " value was " + stringValue ());
         return null;
+
+    }
+
+    @Override
+    public boolean isContainer() {
+        return container;
 
     }
 

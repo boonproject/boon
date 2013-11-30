@@ -84,6 +84,11 @@ public class Typ {
         return isSuperType ( thisType, Map.class );
     }
 
+
+    public static boolean isValue( Class<?> thisType ) {
+        return isSuperType ( thisType, Value.class );
+    }
+
     public static boolean isCharSequence( Class<?> thisType ) {
         return isSuperType ( thisType, CharSequence.class );
     }
