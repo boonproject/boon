@@ -22,8 +22,10 @@ public class JsonStringDecoder {
 
     public static String decode( char[] chars, int start, int to ) {
 
+
+
         if (!Chr.contains ( chars, '\\' , start, to - start) ) {
-            return new String (chars, start+1, to - start-1);
+            return new String (chars, start, to - start);
         }
 
         final char[] cs = chars;

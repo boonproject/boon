@@ -1201,7 +1201,8 @@ public class Reflection {
                 field.setValue ( newInstance, value );
             }
             /* See if it is a map<string, object>, and if it is then process it. */
-            else if ( value instanceof Map && Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string ) {
+            //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
+            else if ( value instanceof Map  ) {
                 value = fromMap ( ( Map<String, Object> ) value, field.getType () );
                 field.setObject ( newInstance, value );
             } else if ( value instanceof Collection ) {

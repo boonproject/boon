@@ -1,12 +1,9 @@
 package org.boon.json.internal;
 
-import org.boon.Exceptions;
 import org.boon.json.JsonStringDecoder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
@@ -44,17 +41,23 @@ public class ValueInCharBuf extends ValueBase {
 
     public String toString() {
 
-        if (type == Type.STRING ) {
-            return new String(buffer, startIndex+1, (endIndex - startIndex) -1  );
-        } else {
-            return new String(buffer, startIndex, (endIndex - startIndex)  );
-        }
+      return new String(buffer, startIndex, (endIndex - startIndex)  );
     }
 
 
 
     @Override
-    public Object toValue() {
+    public final Object toValue() {
+
+        if (value != null) {
+             return value;
+        } else {
+            value = doToValue ();
+            return value;
+        }
+    }
+
+    private final Object doToValue() {
 
         switch ( type ) {
             case FALSE:

@@ -10,36 +10,44 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     Map<String, Value> map = null;
 
-    public List<MapItemValue> items = new ArrayList<> ( 10 );
+    public List<MapItemValue> items = new ArrayList<> ( 20 );
 
     @Override
     public Value get( Object key ) {
-            if (map == null) buildIfNeededMap ();
-            return  map.get ( key );
+        if ( map == null && items.size () < 20 ) {
+            for ( MapItemValue miv : items ) {
+                if ( key.equals ( miv.name.toValue () ) ) {
+                    return miv.value;
+                }
+            }
+            return null;
+        } else {
+            if ( map == null ) buildIfNeededMap ();
+            return map.get ( key );
+        }
     }
-
 
 
     @Override
     public Value put( String key, Value value ) {
-        die ("Not that kind of map");
+        die ( "Not that kind of map" );
         return null;
     }
 
 
     @Override
     public Set<Entry<String, Value>> entrySet() {
-        if (map == null) buildIfNeededMap ();
+        if ( map == null ) buildIfNeededMap ();
         return map.entrySet ();
     }
 
     private final void buildIfNeededMap() {
 
-                map = new HashMap<> ( items.size (), 90.f );
+        map = new HashMap<> ( items.size () );
 
-                for ( MapItemValue miv : items ) {
-                    map.put ( miv.name.stringValue (), miv.value );
-                }
+        for ( MapItemValue miv : items ) {
+            map.put ( miv.name.stringValue (), miv.value );
+        }
     }
 
 

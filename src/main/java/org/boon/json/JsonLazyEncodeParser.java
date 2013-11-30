@@ -252,6 +252,7 @@ public class JsonLazyEncodeParser {
 
 
             if ( __currentChar == '"' ) {
+                this.nextChar ();
                 Value key = decodeKeyName ( );
                 skipWhiteSpace ( );
 
@@ -530,10 +531,15 @@ public class JsonLazyEncodeParser {
     private Value decodeString( ) {
         ValueInCharBuf value = new ValueInCharBuf (Type.STRING);
 
-        final int startIndex = __index;
+
+        __currentChar = charArray[__index];
+
         if ( __index < charArray.length && __currentChar == '"' ) {
             __index++;
         }
+
+        final int startIndex = __index;
+
 
         boolean escape=false;
 
@@ -555,7 +561,7 @@ public class JsonLazyEncodeParser {
             escape = false;
         }
 
-        value.startIndex = startIndex;
+            value.startIndex = startIndex;
         value.endIndex = __index;
         value.buffer = charArray;
 
