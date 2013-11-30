@@ -21,6 +21,8 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     public Type type;
     private boolean container;
 
+    public boolean decodeStrings;
+
 
     public ValueBase( Type type ) {
         this.type = type;
@@ -45,17 +47,17 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
 
 
     @Override
-    public int intValue() {
+    public final int intValue() {
         return Integer.parseInt ( toString () );
     }
 
     @Override
-    public long longValue() {
+    public final  long longValue() {
         return Long.parseLong ( toString ()  );
     }
 
     @Override
-    public float floatValue() {
+    public final  float floatValue() {
         return Float.parseFloat ( toString ()  );
 
     }
@@ -165,25 +167,25 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
 
 
 
-    public byte byteValue() {
+    public   byte byteValue() {
         return Byte.parseByte ( toString () );
     }
 
-    public short shortValue() {
+    public  final short shortValue() {
         return Short.parseShort ( toString () );
     }
 
 
-    public BigDecimal bigDecimalValue() {
+    public   BigDecimal bigDecimalValue() {
         return new BigDecimal ( toString () );
     }
 
-    public BigInteger bigIntegerValue() {
+    public   BigInteger bigIntegerValue() {
         return new BigInteger ( toString () );
     }
 
     @Override
-    public double doubleValue() {
+    public  final double doubleValue() {
         return Double.parseDouble ( toString ()  );
     }
 

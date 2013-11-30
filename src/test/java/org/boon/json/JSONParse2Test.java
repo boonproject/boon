@@ -303,7 +303,7 @@ public class JSONParse2Test {
                         "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JsonLazyEncodeParser.parse ( testString );
+        Object obj = JsonLazyEncodeParser.fullParse ( testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -328,7 +328,7 @@ public class JSONParse2Test {
 
 
 
-        Object obj = JsonLazyEncodeParser.parse ( testString );
+        Object obj = JsonLazyEncodeParser.fullParse ( testString );
 
 
 

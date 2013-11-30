@@ -5,6 +5,7 @@ import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.*;
 import org.boon.primitive.CharBuf;
+import sun.misc.Unsafe;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
@@ -29,6 +30,24 @@ public class Reflection {
 
     private final static Context _context;
     private static WeakReference<Context> weakContext = new WeakReference<> ( null );
+
+
+
+
+    private static Unsafe getUnsafe( ) {
+        if (context ().control==null) {
+            try {
+                Field f = Unsafe.class.getDeclaredField ( "theUnsafe" );
+                f.setAccessible ( true );
+                context().control = ( Unsafe ) f.get ( null );
+                return context().control;
+            } catch ( Exception e ) {
+                return null;
+            }
+        } else {
+            return context().control;
+        }
+    }
 
 
     static {
@@ -98,6 +117,7 @@ public class Reflection {
 
     private static class Context {
 
+        private Unsafe control;
         private Map<String, String> _sortableFields = new ConcurrentHashMap<> ( );
 
         private Map<Class<?>, Map<String, FieldAccess>> _allAccessorReflectionFieldsCache = new ConcurrentHashMap<> (200 );
@@ -1135,7 +1155,11 @@ public class Reflection {
 
         try {
             clazz = Class.forName ( className );
+
+
             return newInstance ( clazz );
+
+
         } catch ( Exception ex ) {
             log.info ( String.format ( "Unable to create this class %s", className ) );
             return null;
@@ -1146,8 +1170,11 @@ public class Reflection {
         T newInstance = null;
 
         try {
-
-            newInstance = clazz.newInstance ( );
+            if (_useUnsafe) {
+                newInstance = (T) getUnsafe ().allocateInstance(clazz);
+            }else {
+                newInstance = clazz.newInstance ( );
+            }
         } catch ( Exception ex ) {
             handle ( ex );
         }

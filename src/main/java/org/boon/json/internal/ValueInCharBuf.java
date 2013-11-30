@@ -76,7 +76,11 @@ public class ValueInCharBuf extends ValueBase {
                     return Long.parseLong ( str  );
                 }
             case STRING:
-                return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
+                if (this.decodeStrings) {
+                    return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
+                } else {
+                    return toString ();
+                }
         }
         die();
         return null;
@@ -111,17 +115,17 @@ public class ValueInCharBuf extends ValueBase {
 
 
     @Override
-    public int length() {
+    public final int length() {
         return buffer.length;
     }
 
     @Override
-    public char charAt( int index ) {
+    public final char charAt( int index ) {
         return buffer[index];
     }
 
     @Override
-    public CharSequence subSequence( int start, int end ) {
+    public final CharSequence subSequence( int start, int end ) {
 
         ValueInCharBuf b = new ValueInCharBuf (  );
         b.startIndex = start;
