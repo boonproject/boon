@@ -63,10 +63,10 @@ public class Reflection {
         if ( noStatics || inContainer ) {
 
             _context = null;
-            weakContext = new WeakReference<Context> ( new Context ( ) );
+            weakContext = new WeakReference<> ( new Context ( ) );
 
         } else {
-
+;
             _context = new Context ( );
         }
     }
@@ -100,27 +100,42 @@ public class Reflection {
 
         private Map<String, String> _sortableFields = new ConcurrentHashMap<> ( );
 
-        private Map<String, Map<String, FieldAccess>> _allAccessorFieldsCache = new ConcurrentHashMap<> ( );
+        private Map<Class<?>, Map<String, FieldAccess>> _allAccessorReflectionFieldsCache = new ConcurrentHashMap<> (200 );
+        private Map<Class<?>, Map<String, FieldAccess>> _allAccessorPropertyFieldsCache = new ConcurrentHashMap<> (200 );
+        private Map<Class<?>, Map<String, FieldAccess>> _allAccessorUnsafeFieldsCache = new ConcurrentHashMap<> (200 );
 
 
     }
 
 
     private static void setAccessorFieldInCache( Class<? extends Object> theClass, boolean useUnsafe, Map<String, FieldAccess> map ) {
-        context ( )._allAccessorFieldsCache.put ( theClass.getName ( ) + useUnsafe, map );
+        if (useUnsafe)  {
+            context ( )._allAccessorUnsafeFieldsCache.put ( theClass, map );
+        } else {
+            context ( )._allAccessorReflectionFieldsCache.put ( theClass, map );
+
+        }
     }
 
-    private static Map<String, FieldAccess> getAccesorFieldFromCache( String key ) {
-        return context ( )._allAccessorFieldsCache.get ( key );
+    private static void setPropertyAccessorFieldsInCache( Class<? extends Object> theClass,  Map<String, FieldAccess> map ) {
+            context ( )._allAccessorPropertyFieldsCache.put ( theClass, map );
+    }
+
+
+    private static Map<String, FieldAccess> getPropertyAccessorFieldsFromCache( Class<? extends Object> theClass) {
+        return context ( )._allAccessorPropertyFieldsCache.get ( theClass  );
     }
 
     private static Map<String, FieldAccess> getAccesorFieldFromCache( Class<? extends Object> theClass, boolean useUnsafe ) {
-        return context ( )._allAccessorFieldsCache.get ( theClass.getName ( ) + useUnsafe );
+
+        if (useUnsafe)  {
+            return context ( )._allAccessorUnsafeFieldsCache.get ( theClass   );
+        } else {
+            return context ( )._allAccessorReflectionFieldsCache.get ( theClass   );
+
+        }
     }
 
-    private static void setAccessorFieldInCache( String key, Map<String, FieldAccess> map ) {
-        context ( )._allAccessorFieldsCache.put ( key, map );
-    }
 
 
     /**
@@ -431,7 +446,8 @@ public class Reflection {
         Object object = root;
 
         for ( String property : properties ) {
-            Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( object.getClass ( ) );
+
+            Map<String, FieldAccess> fields = Reflection.getFieldsFromObject ( object );
 
             FieldAccess field = fields.get ( property );
 
@@ -1144,7 +1160,7 @@ public class Reflection {
     @SuppressWarnings( "unchecked" )
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
 
-        return ( T ) fromMap ( map, newInstance ( clazz ) );
+        return fromMap ( map, newInstance ( clazz ) );
     }
 
     @SuppressWarnings( "unchecked" )
@@ -1506,7 +1522,7 @@ public class Reflection {
             Class<? extends Object> theClass ) {
 
 
-        Map<String, FieldAccess> fields = getAccesorFieldFromCache ( theClass.getName ( ) + "PROPS" );
+        Map<String, FieldAccess> fields = getPropertyAccessorFieldsFromCache ( theClass );
         if ( fields == null ) {
             Map<String, Pair<Method>> methods = getPropertySetterGetterMethods ( theClass );
 
@@ -1524,7 +1540,7 @@ public class Reflection {
 
             }
 
-            setAccessorFieldInCache ( theClass.getName ( ) + "PROPS", fields );
+            setPropertyAccessorFieldsInCache ( theClass, fields );
         }
 
 

@@ -21,10 +21,7 @@ public class JsonLazyEncodeParser {
     private char[] charArray;
     private int __index;
     private char __currentChar;
-    private char __lastChar;
 
-    private Map<String, Object> lastObject;
-    private List<Object> lastList;
 
     private final boolean useValues;
 
@@ -135,13 +132,12 @@ public class JsonLazyEncodeParser {
     private final char nextChar( ) {
 
         try {
-            if ( hasMore ( ) ) {
-                __lastChar = __currentChar;
+            if (  __index + 1 < charArray.length ) {
                 __index++;
                 return __currentChar = charArray[__index];
+            } else {
+                return '\u0000';
             }
-            return __currentChar;
-
         } catch ( Exception ex ) {
             throw new RuntimeException ( exceptionDetails ( "failure in next " +
                     ex.getLocalizedMessage ( ) ), ex );
@@ -156,23 +152,8 @@ public class JsonLazyEncodeParser {
         buf.addLine ( message );
 
         buf.addLine ( "" );
-        buf.addLine ( "The last character read was " + charDescription ( __lastChar ) );
         buf.addLine ( "The current character read is " + charDescription ( __currentChar ) );
 
-
-        if ( lastObject != null ) {
-            buf.addLine ( "The last object read was" );
-            buf.addLine ( "------------------------" );
-            buf.addLine ( lastObject.toString ( ) );
-            buf.addLine ( "------------------------" );
-        }
-
-        if ( lastList != null ) {
-            buf.addLine ( "The last array read was" );
-            buf.addLine ( "------------------------" );
-            buf.addLine ( lastList.toString ( ) );
-            buf.addLine ( "------------------------" );
-        }
 
 
         buf.addLine ( message );
@@ -230,14 +211,14 @@ public class JsonLazyEncodeParser {
             switch ( __currentChar ) {
                 case '\n':
                     continue label;
+
                 case '\r':
                     continue label;
 
                 case ' ':
                 case '\t':
-                case '\b':
-                case '\f':
                     continue label;
+
                 default:
                     break label;
 
@@ -257,11 +238,9 @@ public class JsonLazyEncodeParser {
         if (useValues )  {
             valueMap = new JsonValueMap ();
             value = new ValueBase ((Map)valueMap);
-            this.lastObject = (Map)valueMap;
         } else {
             map = new JsonMap ( );
             value = new ValueBase (map);
-            this.lastObject = map;
         }
 
 
@@ -611,7 +590,6 @@ public class JsonLazyEncodeParser {
 
         Value value = new ValueBase (list);
 
-        this.lastList = list;
 
         /* the list might be empty  */
         if ( __currentChar == ']' ) {

@@ -2,6 +2,7 @@ package org.boon.json.internal;
 
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Exceptions.die;
 
@@ -13,7 +14,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     @Override
     public Value get( Object key ) {
-            buildIfNeededMap ();
+            if (map == null) buildIfNeededMap ();
             return  map.get ( key );
     }
 
@@ -28,17 +29,17 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     @Override
     public Set<Entry<String, Value>> entrySet() {
-        buildIfNeededMap ();
+        if (map == null) buildIfNeededMap ();
         return map.entrySet ();
     }
 
     private final void buildIfNeededMap() {
-        if ( map == null ) {
-            map = new HashMap<> ( this.items.size () );
-            for ( MapItemValue miv : items ) {
-                map.put ( miv.name.stringValue (), miv.value );
-            }
-        }
+
+                map = new HashMap<> ( items.size (), 90.f );
+
+                for ( MapItemValue miv : items ) {
+                    map.put ( miv.name.stringValue (), miv.value );
+                }
     }
 
 
