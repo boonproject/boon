@@ -1,5 +1,7 @@
 package org.boon.core.reflection.fields;
 
+import org.boon.core.Value;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 
@@ -11,6 +13,7 @@ public interface FieldAccess {
 
     void setValue( Object obj, Object value );
 
+    public  void setFromValue( Object obj, Value value );
 
     boolean getBoolean( Object obj );
 

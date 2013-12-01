@@ -34,7 +34,7 @@ public class Reflection {
 
 
 
-    private static Unsafe getUnsafe( ) {
+    public static Unsafe getUnsafe( ) {
         if (context ().control==null) {
             try {
                 Field f = Unsafe.class.getDeclaredField ( "theUnsafe" );
@@ -1222,6 +1222,9 @@ public class Reflection {
             if ( value instanceof Value ) {
                 if (( ( Value ) value ).isContainer ())  {
                     value =  ((Value)value).toValue ();
+                } else {
+                    field.setFromValue ( newInstance, (Value) value );
+                    continue;
                 }
             }
 
@@ -1246,6 +1249,52 @@ public class Reflection {
             } else {
                 field.setValue ( newInstance, value );
             }
+
+        }
+
+        return newInstance;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public static <T> T fromValueMap( Map<String, Value> map, Class<T> clazz ) {
+        return fromValueMap ( map, newInstance ( clazz ) );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public static <T> T fromValueMap( Map<String, Value> map, T newInstance  ) {
+
+
+
+        Map<String, FieldAccess> fields = getAllAccessorFields ( newInstance.getClass () );
+        Set<Map.Entry<String, Value>> entrySet = map.entrySet ();
+
+
+        for (Map.Entry <String, Value> entry :  entrySet) {
+
+
+            FieldAccess field  = fields.get ( entry.getKey () );
+            Value value = entry.getValue ();
+
+
+            if ( field == null ) {
+                continue;
+            }
+
+           if (value .isContainer ())  {
+               Object objValue;
+
+               objValue =  value.toValue ();
+               if ( objValue instanceof Map  ) {
+                   objValue = fromValueMap ( ( Map<String, Value> ) objValue, field.getType () );
+                   field.setObject ( newInstance, objValue );
+               } else if ( objValue instanceof Collection ) {
+                   handleCollectionOfValues ( newInstance, field,
+                           ( Collection<Value> ) objValue );
+               }
+
+           } else {
+                    field.setFromValue ( newInstance,  value );
+           }
 
         }
 
@@ -1291,6 +1340,7 @@ public class Reflection {
         }
 
     }
+
 
     private static void processArrayOfMaps( Object newInstance, FieldAccess field, Object value ) {
         Map<String, Object>[] maps = ( Map<String, Object>[] ) value;
@@ -1341,9 +1391,7 @@ public class Reflection {
                 if (value.isContainer ()) {
                     Object oValue = value.toValue ();
                     if (oValue instanceof  Map) {
-                        newCollection.add ( fromMap ( (Map) oValue, componentClass ) );
-                    } else if  (oValue instanceof Collection) {
-                      //not sure
+                        newCollection.add ( fromValueMap ( (Map) oValue, componentClass ) );
                     }
                 } else {
                     newCollection.add ( Conversions.coerce( componentClass, value.toValue() ));

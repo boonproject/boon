@@ -147,10 +147,7 @@ public abstract class UnsafeField implements FieldAccess {
             return;
         }
 
-        if ( value instanceof Value) {
-            setFromValue( obj, (Value)value);
-        }
-        else if ( type == Typ.string  ) {
+        if ( type == Typ.string  ) {
             setObject ( obj, Conversions.coerce ( type, value ) );
         } else if ( type == Typ.intgr ) {
             setInt ( obj, toInt ( value ) );
@@ -180,7 +177,7 @@ public abstract class UnsafeField implements FieldAccess {
 
     }
 
-    private void setFromValue( Object obj, Value value ) {
+    public  void setFromValue( Object obj, Value value ) {
 
         if ( type == Typ.string ) {
             setObject ( obj, value.stringValue () );
@@ -361,7 +358,17 @@ public abstract class UnsafeField implements FieldAccess {
     }
 
 
+    private Class<?> componentClass;
+
     public Class<?> getComponentClass( ) {
+        if (componentClass==null) {
+            componentClass = doGetComponentClass ();
+        }
+        return componentClass;
+    }
+
+
+    private Class<?> doGetComponentClass( ) {
         final ParameterizedType parameterizedType = this.getParameterizedType ( );
         if ( parameterizedType == null ) {
             return null;
@@ -369,7 +376,6 @@ public abstract class UnsafeField implements FieldAccess {
             return ( Class<?> ) ( parameterizedType.getActualTypeArguments ( )[0] );
         }
     }
-
 
     @Override
     public boolean isStatic( ) {

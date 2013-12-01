@@ -1,5 +1,6 @@
 package org.boon.core.reflection.fields;
 
+import org.boon.core.Value;
 import org.boon.core.reflection.Conversions;
 
 import java.lang.reflect.Field;
@@ -41,6 +42,11 @@ public class MapField implements FieldAccess {
             map.put ( name, value );
         }
         die ( "Object must be a map" );
+    }
+
+    @Override
+    public void setFromValue( Object obj, Value value ) {
+        setValue ( obj, value.toValue () );
     }
 
     @Override

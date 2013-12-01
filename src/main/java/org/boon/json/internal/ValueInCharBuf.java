@@ -12,23 +12,6 @@ public class ValueInCharBuf extends ValueBase {
 
     public char [] buffer;
 
-    private static final int LETTER_L = 'l';
-
-    private static final int LETTER_T = 't';
-
-    private static final int LETTER_R = 'r';
-
-    private static final int LETTER_E = 'e';
-
-    private static final int LETTER_U = 'u';
-
-    private static final int LETTER_F = 'f';
-
-    private static final int LETTER_A = 'a';
-
-
-    private static final int LETTER_S = 's';
-
 
     public ValueInCharBuf( Type type ) {
         this.type = type;
@@ -60,12 +43,6 @@ public class ValueInCharBuf extends ValueBase {
     private final Object doToValue() {
 
         switch ( type ) {
-            case FALSE:
-                return false;
-            case TRUE:
-                return true;
-            case NULL:
-                return null;
             case DOUBLE:
                 return Double.parseDouble ( toString ()  );
             case INTEGER:
@@ -143,39 +120,13 @@ public class ValueInCharBuf extends ValueBase {
     public BigInteger bigIntegerValue() {
         return new BigInteger ( toString () );
     }
-
-    public boolean booleanValue() {
-        final int length = this.endIndex - this.startIndex;
-        if (length  == 4
-                && buffer[ startIndex ] == LETTER_T
-                && buffer[ startIndex + 1 ] == LETTER_R
-                && buffer[ startIndex + 2 ] == LETTER_U
-                && buffer[ startIndex + 3 ] == LETTER_E
-                ) {
-            return true;
-        } else if (length  == 5
-                && buffer[ startIndex ] == LETTER_F
-                && buffer[ startIndex + 1 ] == LETTER_A
-                && buffer[ startIndex + 2 ] == LETTER_L
-                && buffer[ startIndex + 3 ] == LETTER_S
-                && buffer[ startIndex + 4 ] == LETTER_E
-                ){
-            return false;
+    public String stringValue() {
+        if (this.decodeStrings) {
+            return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
         } else {
-            int i = intValue ();
-            if (i==0) {
-                return false;
-            } else {
-                return true;
-            }
+            return toString ();
         }
     }
-
-    public String stringValue() {
-        return toString ();
-    }
-
-
 
     @Override
     public String stringValueEncoded() {

@@ -243,7 +243,7 @@ public class PropertyField implements FieldAccess {
     }
 
 
-    private void setFromValue( Object obj, Value value ) {
+    public final  void setFromValue( Object obj, Value value ) {
 
         if ( type == Typ.string ) {
             setObject ( obj, value.stringValue () );

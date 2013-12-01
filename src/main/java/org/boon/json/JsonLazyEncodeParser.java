@@ -118,22 +118,22 @@ public class JsonLazyEncodeParser {
 
     public static <T> T parseInto( T object, String cs ) {
         Map objectMap = parseMapUseValue ( cs );
-        return (T) Reflection.fromMap ( (Map)objectMap, object );
+        return (T) Reflection.fromValueMap ( (Map)objectMap, object );
     }
 
     public static <T> T fullParseInto( T object, String cs ) {
         Map objectMap = fullParseMapUseValue ( cs );
-        return (T)Reflection.fromMap ( (Map)objectMap, object );
+        return (T)Reflection.fromValueMap ( (Map)objectMap, object );
     }
 
     public static <T> T parseInto( Class<T> clz, String cs ) {
         Map  objectMap = parseMapUseValue ( cs );
-        return (T)Reflection.fromMap ( (Map)objectMap, clz);
+        return (T)Reflection.fromValueMap ( (Map)objectMap, clz);
     }
 
     public static <T> T fullParseInto( Class<T> clz, String cs ) {
         Map  objectMap = fullParseMapUseValue ( cs );
-        return (T)Reflection.fromMap ( (Map)objectMap, clz);
+        return (T)Reflection.fromValueMap ( (Map)objectMap, clz);
     }
 
 
@@ -152,24 +152,24 @@ public class JsonLazyEncodeParser {
 
     public static <T> T parseInto( T object, char[] cs ) {
         Map  objectMap = parseMapUseValue ( cs );
-        return (T) Reflection.fromMap ( objectMap, object );
+        return (T) Reflection.fromValueMap ( objectMap, object );
     }
 
 
 
     public static <T> T fullParseInto( T object, char[] cs ) {
         Map  objectMap = fullParseMapUseValue ( cs );
-        return (T) Reflection.fromMap ( objectMap, object );
+        return (T) Reflection.fromValueMap ( objectMap, object );
     }
 
     public static <T> T parseInto( Class<T> clz, char[] cs ) {
         Map  objectMap = parseMapUseValue ( cs );
-        return (T) Reflection.fromMap (objectMap, clz);
+        return (T) Reflection.fromValueMap (objectMap, clz);
     }
 
     public static <T> T fullParseInto( Class<T> clz, char[] cs ) {
         Map  objectMap = fullParseMapUseValue ( cs );
-        return (T)Reflection.fromMap (objectMap, clz);
+        return (T)Reflection.fromValueMap (objectMap, clz);
     }
 
     public static Object parseIntoJavaObject(  char[] cs ) {
@@ -273,7 +273,7 @@ public class JsonLazyEncodeParser {
                 buf.addLine ( new String ( charArray, 0, charArray.length ) );
             }
         }
-        for ( int i = 0; i < (__index - lastLineIndex -1); i++ ) {
+        for ( int i = 0; i < ( __index - lastLineIndex ); i++ ) {
             buf.add ( '.' );
         }
         buf.add ( '^' );
@@ -313,7 +313,7 @@ public class JsonLazyEncodeParser {
 
         JsonMap map = null;
         JsonValueMap valueMap = null;
-        Value value = null;
+        Value value;
         if (useValues )  {
             valueMap = new JsonValueMap ();
             value = new ValueBase ((Map)valueMap);
@@ -325,7 +325,7 @@ public class JsonLazyEncodeParser {
 
 
 
-        do {
+        for (; __index < this.charArray.length; __index++ ) {
 
             skipWhiteSpace ( );
 
@@ -361,14 +361,13 @@ public class JsonLazyEncodeParser {
                 __index++;
                 break;
             } else if ( __currentChar == ',' ) {
-                nextChar ();
-                __index++;
+                 continue;
             } else {
                 complain (
                         "expecting '}' or ',' but got current char " + charDescription ( __currentChar ) );
 
             }
-        } while ( __index + 1 < charArray.length );
+        }
         return value;
     }
 
