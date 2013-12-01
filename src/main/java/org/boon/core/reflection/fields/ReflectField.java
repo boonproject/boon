@@ -78,8 +78,17 @@ public class ReflectField implements FieldAccess {
 
     }
 
+    private Class<?> componentClass;
 
     public Class<?> getComponentClass( ) {
+        if (componentClass==null) {
+            componentClass = doGetComponentClass ();
+        }
+        return componentClass;
+    }
+
+
+    private Class<?> doGetComponentClass( ) {
         final ParameterizedType parameterizedType = this.getParameterizedType ( );
         if ( parameterizedType == null ) {
             return null;

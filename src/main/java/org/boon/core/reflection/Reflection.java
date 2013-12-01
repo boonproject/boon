@@ -1265,7 +1265,7 @@ public class Reflection {
 
 
 
-        Map<String, FieldAccess> fields = getAllAccessorFields ( newInstance.getClass () );
+        Map<String, FieldAccess> fields = getAllAccessorFields ( newInstance.getClass (), false );
         Set<Map.Entry<String, Value>> entrySet = map.entrySet ();
 
 

@@ -154,17 +154,23 @@ public class PropertyField implements FieldAccess {
     }
 
 
+    private Class<?> componentClass;
+
     public Class<?> getComponentClass( ) {
+        if (componentClass==null) {
+            componentClass = doGetComponentClass ();
+        }
+        return componentClass;
+    }
+
+
+    private Class<?> doGetComponentClass( ) {
         final ParameterizedType parameterizedType = this.getParameterizedType ( );
         if ( parameterizedType == null ) {
-
-            if ( getter != null ) return ( Class<?> ) getter.getGenericParameterTypes ( )[0];
-
+            return null;
         } else {
             return ( Class<?> ) ( parameterizedType.getActualTypeArguments ( )[0] );
         }
-
-        return null;
     }
 
 
