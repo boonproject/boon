@@ -1203,14 +1203,19 @@ public class Reflection {
 
         Objects.requireNonNull ( newInstance );
 
-        Collection<FieldAccess> fields = getAllAccessorFields ( newInstance.getClass ( ) ).values ( );
+
+        Map<String, FieldAccess> fields = getAllAccessorFields ( newInstance.getClass () );
+        Set<Map.Entry<String, Object>> entrySet = map.entrySet ();
 
         /* Iterate through the fields. */
-        for ( FieldAccess field : fields ) {
-            String name = field.getName ( );
-            Object value = map.get ( name );
+        //for ( FieldAccess field : fields ) {
+        for (Map.Entry <String, Object> entry :  entrySet) {
 
-            if ( value == null ) {
+
+            FieldAccess field  = fields.get ( entry.getKey () );
+            Object value = entry.getValue ();
+
+            if ( field == null ) {
                 continue;
             }
 

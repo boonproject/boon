@@ -313,10 +313,8 @@ public class JsonLazyAsciiEncodeParser {
                 skipWhiteSpace ();
 
 
-                MapItemValue miv = new MapItemValue ();
+                MapItemValue miv = new MapItemValue (key, value);
 
-                miv.name = key;
-                miv.value = value;
                 map.items.add ( miv );
 
                 setState ( END_OBJECT_ITEM );

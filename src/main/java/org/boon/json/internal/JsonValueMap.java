@@ -10,13 +10,38 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     Map<String, Value> map = null;
 
-    public List<MapItemValue> items = new ArrayList<> ( 20 );
+    public List<Entry<String, Value>> items = new ArrayList<> ( 20 );
+
+
+    static class FakeSet extends AbstractSet <Entry<String, Value>> {
+
+
+
+        public List<Entry<String, Value>> items;
+
+        FakeSet (List<Entry<String, Value>> items ) {
+
+            this.items = items;
+        }
+        @Override
+        public Iterator<Entry<String, Value>> iterator() {
+            return  items.iterator ();
+        }
+
+        @Override
+        public int size() {
+            return items.size ();
+        }
+    }
+
+    private FakeSet set = new FakeSet ( items );
 
     @Override
     public Value get( Object key ) {
         if ( map == null && items.size () < 20 ) {
-            for ( MapItemValue miv : items ) {
-                if ( key.equals ( miv.name.toValue () ) ) {
+            for ( Object item : items ) {
+                MapItemValue miv = ( MapItemValue) item;
+                if ( key.equals ( miv.name().toValue () ) ) {
                     return miv.value;
                 }
             }
@@ -37,16 +62,19 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     @Override
     public Set<Entry<String, Value>> entrySet() {
-        if ( map == null ) buildIfNeededMap ();
-        return map.entrySet ();
+        if ( map == null )  {
+            return set;
+        } else {
+            return map.entrySet ();
+        }
     }
 
     private final void buildIfNeededMap() {
 
         map = new HashMap<> ( items.size () );
 
-        for ( MapItemValue miv : items ) {
-            map.put ( miv.name.stringValue (), miv.value );
+        for ( Entry<String, Value> miv : items ) {
+            map.put ( miv.getKey (), miv.getValue () );
         }
     }
 

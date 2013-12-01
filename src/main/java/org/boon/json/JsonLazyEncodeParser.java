@@ -346,9 +346,7 @@ public class JsonLazyEncodeParser {
                 skipWhiteSpace ( );
 
 
-                MapItemValue miv = new MapItemValue ();
-                miv.name = key;
-                miv.value = item;
+                MapItemValue miv = new MapItemValue (key, item);
 
 
                 if (useValues )  {
