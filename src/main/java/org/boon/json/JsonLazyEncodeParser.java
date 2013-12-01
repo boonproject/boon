@@ -27,28 +27,28 @@ public class JsonLazyEncodeParser {
 
     private final boolean useValues;
 
-    private JsonLazyEncodeParser () {
-        useValues=false;
-        decodeStrings=false;
+    private JsonLazyEncodeParser() {
+        useValues = false;
+        decodeStrings = false;
 
     }
 
 
-    private JsonLazyEncodeParser (boolean useValues) {
+    private JsonLazyEncodeParser( boolean useValues ) {
         this.useValues = useValues;
         this.decodeStrings = false;
 
     }
 
 
-    private JsonLazyEncodeParser (boolean useValues, boolean decodeStrings) {
+    private JsonLazyEncodeParser( boolean useValues, boolean decodeStrings ) {
         this.useValues = useValues;
         this.decodeStrings = decodeStrings;
 
     }
 
     public static Object parse( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
         return p.decode ( cs );
 
     }
@@ -60,126 +60,122 @@ public class JsonLazyEncodeParser {
     }
 
 
-    public static Map<String, Value> parseMapUseValue( String cs  ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser (true );
+    public static Map<String, Value> parseMapUseValue( String cs ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true );
         return ( Map<String, Value> ) p.decode ( cs );
     }
 
 
-    public static Map<String, Value> parseMapUseValue( char [] cs  ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser (true );
-        return ( Map<String, Value> ) p.decode ( cs  );
-    }
-
-
-
-    public static Map<String, Value> fullParseMapUseValue( String cs  ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser (true, true );
+    public static Map<String, Value> parseMapUseValue( char[] cs ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true );
         return ( Map<String, Value> ) p.decode ( cs );
     }
 
 
-    public static Map<String, Value> fullParseMapUseValue( char [] cs  ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser (true, true );
-        return ( Map<String, Value> ) p.decode ( cs  );
+    public static Map<String, Value> fullParseMapUseValue( String cs ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true, true );
+        return ( Map<String, Value> ) p.decode ( cs );
+    }
+
+
+    public static Map<String, Value> fullParseMapUseValue( char[] cs ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true, true );
+        return ( Map<String, Value> ) p.decode ( cs );
     }
 
 
     public static Map<String, Object> parseMap( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
 
-
     public static Map<String, Object> fullParseMap( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser (false, true );
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true );
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
     public static Object parse( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
         return p.decode ( cs );
 
     }
 
 
     public static Object fullParse( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true);
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true );
         return p.decode ( cs );
 
     }
 
-    public static Map<String, Object> parseMap( char [] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( );
+    public static Map<String, Object> parseMap( char[] cs ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
 
     public static <T> T parseInto( T object, String cs ) {
         Map objectMap = parseMapUseValue ( cs );
-        return (T) Reflection.fromValueMap ( (Map)objectMap, object );
+        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, object );
     }
 
     public static <T> T fullParseInto( T object, String cs ) {
         Map objectMap = fullParseMapUseValue ( cs );
-        return (T)Reflection.fromValueMap ( (Map)objectMap, object );
+        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, object );
     }
 
     public static <T> T parseInto( Class<T> clz, String cs ) {
-        Map  objectMap = parseMapUseValue ( cs );
-        return (T)Reflection.fromValueMap ( (Map)objectMap, clz);
+        Map objectMap = parseMapUseValue ( cs );
+        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, clz );
     }
 
     public static <T> T fullParseInto( Class<T> clz, String cs ) {
-        Map  objectMap = fullParseMapUseValue ( cs );
-        return (T)Reflection.fromValueMap ( (Map)objectMap, clz);
+        Map objectMap = fullParseMapUseValue ( cs );
+        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, clz );
     }
 
 
-    public static Object parseIntoJavaObject(  String cs ) {
-        Map  objectMap = parseMapUseValue ( cs );
-        return Reflection.fromMap ( (Map)objectMap );
+    public static Object parseIntoJavaObject( String cs ) {
+        Map objectMap = parseMapUseValue ( cs );
+        return Reflection.fromMap ( ( Map ) objectMap );
     }
 
 
-    public static Object fullParseIntoJavaObject(  String cs ) {
-        Map  objectMap = fullParseMapUseValue ( cs );
-        return Reflection.fromMap ( (Map)objectMap );
+    public static Object fullParseIntoJavaObject( String cs ) {
+        Map objectMap = fullParseMapUseValue ( cs );
+        return Reflection.fromMap ( ( Map ) objectMap );
     }
-
 
 
     public static <T> T parseInto( T object, char[] cs ) {
-        Map  objectMap = parseMapUseValue ( cs );
-        return (T) Reflection.fromValueMap ( objectMap, object );
+        Map objectMap = parseMapUseValue ( cs );
+        return ( T ) Reflection.fromValueMap ( objectMap, object );
     }
-
 
 
     public static <T> T fullParseInto( T object, char[] cs ) {
-        Map  objectMap = fullParseMapUseValue ( cs );
-        return (T) Reflection.fromValueMap ( objectMap, object );
+        Map objectMap = fullParseMapUseValue ( cs );
+        return ( T ) Reflection.fromValueMap ( objectMap, object );
     }
 
     public static <T> T parseInto( Class<T> clz, char[] cs ) {
-        Map  objectMap = parseMapUseValue ( cs );
-        return (T) Reflection.fromValueMap (objectMap, clz);
+        Map objectMap = parseMapUseValue ( cs );
+        return ( T ) Reflection.fromValueMap ( objectMap, clz );
     }
 
     public static <T> T fullParseInto( Class<T> clz, char[] cs ) {
-        Map  objectMap = fullParseMapUseValue ( cs );
-        return (T)Reflection.fromValueMap (objectMap, clz);
+        Map objectMap = fullParseMapUseValue ( cs );
+        return ( T ) Reflection.fromValueMap ( objectMap, clz );
     }
 
-    public static Object parseIntoJavaObject(  char[] cs ) {
-        Map  objectMap = parseMapUseValue ( cs );
+    public static Object parseIntoJavaObject( char[] cs ) {
+        Map objectMap = parseMapUseValue ( cs );
         return Reflection.fromMap ( objectMap );
     }
 
 
-    public static Object fullParseIntoJavaObject(  char[] cs ) {
-        Map  objectMap = fullParseMapUseValue ( cs );
+    public static Object fullParseIntoJavaObject( char[] cs ) {
+        Map objectMap = fullParseMapUseValue ( cs );
         return Reflection.fromMap ( objectMap );
     }
 
@@ -187,31 +183,31 @@ public class JsonLazyEncodeParser {
     //
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     private Object decode( char[] cs ) {
         charArray = cs;
-        Object root = null;
-        root = decodeValue ( ).toValue ();
-        return root;
-    }
-
-
-    private Object decode( String cs ) {
-        charArray = cs.toCharArray ( );
         Object root = null;
         root = decodeValue ().toValue ();
         return root;
     }
 
 
-    private final boolean hasMore( ) {
+    private Object decode( String cs ) {
+        charArray = cs.toCharArray ();
+        Object root = null;
+        root = decodeValue ().toValue ();
+        return root;
+    }
+
+
+    private final boolean hasMore() {
         return __index + 1 < charArray.length;
     }
 
-    private final char nextChar( ) {
+    private final char nextChar() {
 
         try {
-            if (  __index + 1 < charArray.length ) {
+            if ( __index + 1 < charArray.length ) {
                 __index++;
                 return __currentChar = charArray[__index];
             } else {
@@ -219,7 +215,7 @@ public class JsonLazyEncodeParser {
             }
         } catch ( Exception ex ) {
             throw new RuntimeException ( exceptionDetails ( "failure in next " +
-                    ex.getLocalizedMessage ( ) ), ex );
+                    ex.getLocalizedMessage () ), ex );
 
         }
     }
@@ -234,27 +230,25 @@ public class JsonLazyEncodeParser {
         buf.addLine ( "The current character read is " + charDescription ( __currentChar ) );
 
 
-
         buf.addLine ( message );
 
         int line = 0;
         int lastLineIndex = 0;
 
-        for ( int i = 0; i < __index; i++) {
+        for ( int i = 0; i < __index; i++ ) {
             if ( charArray[i] == '\n' ) {
-                line ++;
+                line++;
                 lastLineIndex = i + 1;
             }
         }
 
         int count = 0;
 
-        for ( int i = lastLineIndex; i < charArray.length; i++, count++) {
+        for ( int i = lastLineIndex; i < charArray.length; i++, count++ ) {
             if ( charArray[i] == '\n' ) {
                 break;
             }
         }
-
 
 
         buf.addLine ( "line number " + line + 1 );
@@ -278,10 +272,10 @@ public class JsonLazyEncodeParser {
         }
         buf.add ( '^' );
 
-        return buf.toString ( );
+        return buf.toString ();
     }
 
-    private void skipWhiteSpace( ) {
+    private void skipWhiteSpace() {
 
 
         label:
@@ -295,6 +289,8 @@ public class JsonLazyEncodeParser {
                     continue label;
 
                 case ' ':
+                    continue label;
+
                 case '\t':
                     continue label;
 
@@ -306,53 +302,50 @@ public class JsonLazyEncodeParser {
 
     }
 
-    private final  Value decodeJsonObject( ) {
+    private final Value decodeJsonObject() {
 
-        if ( __currentChar == '{'  )
-            this.nextChar ( );
+        if ( __currentChar == '{' )
+            this.nextChar ();
 
         JsonMap map = null;
         JsonValueMap valueMap = null;
         Value value;
-        if (useValues )  {
+        if ( useValues ) {
             valueMap = new JsonValueMap ();
-            value = new ValueBase ((Map)valueMap);
+            value = new ValueBase ( ( Map ) valueMap );
         } else {
-            map = new JsonMap ( );
-            value = new ValueBase (map);
+            map = new JsonMap ();
+            value = new ValueBase ( map );
         }
-
-
 
 
         for (; __index < this.charArray.length; __index++ ) {
 
-            skipWhiteSpace ( );
+            skipWhiteSpace ();
 
 
             if ( __currentChar == '"' ) {
-                Value key = decodeKeyName ( );
-                skipWhiteSpace ( );
+                Value key = decodeString ();
+                skipWhiteSpace ();
 
                 if ( __currentChar != ':' ) {
 
                     complain ( "expecting current character to be " + charDescription ( __currentChar ) + "\n" );
                 }
-                this.nextChar ( ); // skip past ':'
-                skipWhiteSpace ( );
+                this.nextChar (); // skip past ':'
 
-                Value item = decodeValue ( );
+                Value item = decodeValue ();
 
-                skipWhiteSpace ( );
-
-
-                MapItemValue miv = new MapItemValue (key, item);
+                skipWhiteSpace ();
 
 
-                if (useValues )  {
-                    valueMap.items.add(miv);
+                MapItemValue miv = new MapItemValue ( key, item );
+
+
+                if ( useValues ) {
+                    valueMap.items.add ( miv );
                 } else {
-                    map.items.add (miv);
+                    map.items.add ( miv );
                 }
 
 
@@ -361,7 +354,7 @@ public class JsonLazyEncodeParser {
                 __index++;
                 break;
             } else if ( __currentChar == ',' ) {
-                 continue;
+                continue;
             } else {
                 complain (
                         "expecting '}' or ',' but got current char " + charDescription ( __currentChar ) );
@@ -376,77 +369,111 @@ public class JsonLazyEncodeParser {
     }
 
 
-    private Value decodeValue( ) {
+    private Value decodeValue() {
         Value value = null;
 
-        done:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
+        skipWhiteSpace ();
+
+        switch ( __currentChar ) {
+            case '\n':
+                break;
+
+            case '\r':
+                break;
+
+            case ' ':
+                break;
+
+            case '\t':
+                break;
+
+            case '\b':
+                break;
+
+            case '\f':
+                break;
+
+            case '"':
+                value = decodeString ();
+                break;
 
 
-            switch ( __currentChar ) {
-                case '\n':
-                    break;
+            case 't':
+                value = decodeTrue ();
+                break;
 
-                case '\r':
-                case ' ':
-                case '\t':
-                case '\b':
-                case '\f':
-                    break;
+            case 'f':
+                value = decodeFalse ();
+                break;
 
-                case '"':
-                    value = decodeString ( );
-                    break done;
+            case 'n':
+                value = decodeNull ();
+                break;
 
+            case '[':
+                value = decodeJsonArray ();
+                break;
 
-                case 't':
-                    value = decodeTrue ( );
-                    break done;
+            case '{':
+                value = decodeJsonObject ();
+                break;
 
-                case 'f':
-                    value = decodeFalse ( );
-                    break done;
+            case '1':
+                value = decodeNumber ();
+                break;
 
-                case 'n':
-                    value = decodeNull ( );
-                    break done;
+            case '2':
+                value = decodeNumber ();
+                break;
 
-                case '[':
-                    value = decodeJsonArray ( );
-                    break done;
+            case '3':
+                value = decodeNumber ();
+                break;
 
-                case '{':
-                    value = decodeJsonObject ( );
-                    break done;
+            case '4':
+                value = decodeNumber ();
+                break;
 
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '0':
-                case '-':
-                    value = decodeNumber ( );
-                    break done;
+            case '5':
+                value = decodeNumber ();
+                break;
 
-                default:
-                    throw new JsonException ( exceptionDetails ( "Unable to determine the " +
-                            "current character, it is not a string, number, array, or object" ) );
+            case '6':
+                value = decodeNumber ();
+                break;
 
-            }
+            case '7':
+                value = decodeNumber ();
+                break;
+
+            case '8':
+                value = decodeNumber ();
+                break;
+
+            case '9':
+                value = decodeNumber ();
+                break;
+
+            case '0':
+                value = decodeNumber ();
+                break;
+
+            case '-':
+                value = decodeNumber ();
+                break;
+
+            default:
+                throw new JsonException ( exceptionDetails ( "Unable to determine the " +
+                        "current character, it is not a string, number, array, or object" ) );
+
         }
+
 
         return value;
     }
 
 
-
-    private Value decodeNumberHarsh( ) {
+    private Value decodeNumberHarsh() {
 
         int startIndex = __index;
 
@@ -472,10 +499,10 @@ public class JsonLazyEncodeParser {
                     break loop;
 
                 case ',':
-                        break loop;
+                    break loop;
 
                 case ']':
-                        break loop;
+                    break loop;
 
                 case '}':
                     break loop;
@@ -497,7 +524,7 @@ public class JsonLazyEncodeParser {
                     doubleFloat = true;
                     countDecimalPoint++;
                     if ( countDecimalPoint > 1 ) {
-                        throw new JsonException (exceptionDetails( "number has more than one decimal point") );
+                        throw new JsonException ( exceptionDetails ( "number has more than one decimal point" ) );
                     }
                     continue loop;
 
@@ -506,7 +533,7 @@ public class JsonLazyEncodeParser {
                     doubleFloat = true;
                     eCount++;
                     if ( eCount > 1 ) {
-                        throw new JsonException ( exceptionDetails("number has more than one exp definition"));
+                        throw new JsonException ( exceptionDetails ( "number has more than one exp definition" ) );
                     }
                     continue loop;
 
@@ -514,10 +541,10 @@ public class JsonLazyEncodeParser {
                     doubleFloat = true;
                     plusCount++;
                     if ( plusCount > 1 ) {
-                        throw new JsonException (exceptionDetails( "number has more than one plus sign") );
+                        throw new JsonException ( exceptionDetails ( "number has more than one plus sign" ) );
                     }
                     if ( eCount == 0 ) {
-                        throw new JsonException (exceptionDetails ( "plus sign must come after exp") );
+                        throw new JsonException ( exceptionDetails ( "plus sign must come after exp" ) );
 
                     }
                     continue loop;
@@ -535,20 +562,19 @@ public class JsonLazyEncodeParser {
         value.endIndex = __index;
 
         if ( doubleFloat ) {
-                value.type = Type.DOUBLE;
+            value.type = Type.DOUBLE;
         } else {
-                value.type = Type.INTEGER;
+            value.type = Type.INTEGER;
         }
 
-        skipWhiteSpace ( );
+        skipWhiteSpace ();
 
         return value;
 
     }
 
 
-
-    private Value decodeNumber( ) {
+    private Value decodeNumber() {
 
         int startIndex = __index;
 
@@ -562,34 +588,76 @@ public class JsonLazyEncodeParser {
 
             switch ( __currentChar ) {
                 case ' ':
+                    __index = index + 1;
+                    break loop;
+
                 case '\t':
+                    __index = index + 1;
+                    break loop;
+
                 case '\n':
+                    __index = index + 1;
+                    break loop;
+
                 case '\r':
                     __index = index + 1;
                     break loop;
 
                 case ',':
+                    break loop;
+
                 case ']':
+                    break loop;
+
                 case '}':
                     break loop;
 
                 case '1':
+                    continue loop;
+
                 case '2':
+                    continue loop;
+
                 case '3':
+                    continue loop;
+
                 case '4':
+                    continue loop;
+
                 case '5':
+                    continue loop;
+
                 case '6':
+                    continue loop;
+
                 case '7':
+                    continue loop;
+
                 case '8':
+                    continue loop;
+
                 case '9':
+                    continue loop;
+
                 case '0':
+                    continue loop;
+
                 case '-':
                     continue loop;
 
 
                 case '+':
+                    doubleFloat = true;
+                    continue loop;
+
                 case 'e':
+                    doubleFloat = true;
+                    continue loop;
+
                 case 'E':
+                    doubleFloat = true;
+                    continue loop;
+
                 case '.':
                     doubleFloat = true;
                     continue loop;
@@ -612,7 +680,7 @@ public class JsonLazyEncodeParser {
             value.type = Type.INTEGER;
         }
 
-        skipWhiteSpace ( );
+        skipWhiteSpace ();
 
         return value;
 
@@ -622,7 +690,7 @@ public class JsonLazyEncodeParser {
     private static char[] NULL = Chr.chars ( "null" );
 
 
-    private Value decodeNull( ) {
+    private Value decodeNull() {
 
         if ( __index + NULL.length <= charArray.length ) {
             if ( charArray[__index] == 'n' &&
@@ -633,35 +701,33 @@ public class JsonLazyEncodeParser {
                 return Value.NULL;
             }
         }
-        throw new JsonException ( exceptionDetails( "null not parse properly" ) );
+        throw new JsonException ( exceptionDetails ( "null not parse properly" ) );
     }
 
     private static char[] TRUE = Chr.chars ( "true" );
 
 
-        private Value decodeTrue( ) {
+    private Value decodeTrue() {
 
-            if ( __index + TRUE.length <= charArray.length ) {
-                if ( charArray[__index] == 't' &&
-                        charArray[++__index] == 'r' &&
-                        charArray[++__index] == 'u' &&
-                        charArray[++__index] == 'e' ) {
+        if ( __index + TRUE.length <= charArray.length ) {
+            if ( charArray[__index] == 't' &&
+                    charArray[++__index] == 'r' &&
+                    charArray[++__index] == 'u' &&
+                    charArray[++__index] == 'e' ) {
 
-                    nextChar ( );
-                    return Value.TRUE;
+                nextChar ();
+                return Value.TRUE;
 
-                }
             }
-
-            throw new JsonException ( exceptionDetails ( "true not parsed properly" ) );
         }
 
-
+        throw new JsonException ( exceptionDetails ( "true not parsed properly" ) );
+    }
 
 
     private static char[] FALSE = Chr.chars ( "false" );
 
-    private Value decodeFalse( ) {
+    private Value decodeFalse() {
 
         if ( __index + FALSE.length <= charArray.length ) {
             if ( charArray[__index] == 'f' &&
@@ -669,15 +735,15 @@ public class JsonLazyEncodeParser {
                     charArray[++__index] == 'l' &&
                     charArray[++__index] == 's' &&
                     charArray[++__index] == 'e' ) {
-                nextChar ( );
+                nextChar ();
                 return Value.FALSE;
             }
         }
-        throw new JsonException (exceptionDetails( "false not parsed properly") );
+        throw new JsonException ( exceptionDetails ( "false not parsed properly" ) );
     }
 
-    private Value decodeString( ) {
-        ValueInCharBuf value = new ValueInCharBuf (Type.STRING);
+    private Value decodeString() {
+        ValueInCharBuf value = new ValueInCharBuf ( Type.STRING );
 
 
         __currentChar = charArray[__index];
@@ -689,7 +755,7 @@ public class JsonLazyEncodeParser {
         final int startIndex = __index;
 
 
-        boolean escape=false;
+        boolean escape = false;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
@@ -697,8 +763,8 @@ public class JsonLazyEncodeParser {
             switch ( __currentChar ) {
 
                 case '"':
-                    if (!escape)
-                    break done;
+                    if ( !escape )
+                        break done;
 
 
                 case '\\':
@@ -722,33 +788,29 @@ public class JsonLazyEncodeParser {
     }
 
 
-    private final Value decodeKeyName( ) {
-        return  decodeString ( );
 
-    }
-
-    private Value decodeJsonArray( ) {
+    private Value decodeJsonArray() {
         if ( __currentChar == '[' ) {
-            this.nextChar ( );
+            this.nextChar ();
         }
 
-        skipWhiteSpace ( );
+        skipWhiteSpace ();
 
 
         List<Object> list = null;
 
-        if (useValues )  {
-            list = new ArrayList<> (  );
-        }   else {
-            list = new JsonList ( );
+        if ( useValues ) {
+            list = new ArrayList<> ();
+        } else {
+            list = new JsonList ();
         }
 
-        Value value = new ValueBase (list);
+        Value value = new ValueBase ( list );
 
 
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
-            this.nextChar ( );
+            this.nextChar ();
             return value;
         }
 
@@ -756,27 +818,25 @@ public class JsonLazyEncodeParser {
         int arrayIndex = 0;
 
         do {
-            skipWhiteSpace ( );
+            Value arrayItem = decodeValue ();
 
-            Value arrayItem = decodeValue ( );
-
-            if ( arrayItem == null  ) {
+            if ( arrayItem == null ) {
                 list.add ( ValueBase.NULL ); //JSON null detected
-            }  else {
+            } else {
                 list.add ( arrayItem );
             }
 
             arrayIndex++;
 
-            skipWhiteSpace ( );
+            skipWhiteSpace ();
 
             char c = __currentChar;
 
             if ( c == ',' ) {
-                this.nextChar ( );
+                this.nextChar ();
                 continue;
             } else if ( c == ']' ) {
-                this.nextChar ( );
+                this.nextChar ();
                 break;
             } else {
                 String charString = charDescription ( c );
@@ -788,7 +848,7 @@ public class JsonLazyEncodeParser {
                 );
 
             }
-        } while ( this.hasMore ( ) );
+        } while ( this.hasMore () );
         return value;
     }
 
