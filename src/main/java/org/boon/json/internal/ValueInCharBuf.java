@@ -3,7 +3,6 @@ package org.boon.json.internal;
 import org.boon.json.JsonStringDecoder;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
@@ -30,7 +29,7 @@ public class ValueInCharBuf extends ValueBase {
 
 
     @Override
-    public final Object toValue() {
+    public  Object toValue() {
 
         if (value != null) {
              return value;
@@ -40,24 +39,19 @@ public class ValueInCharBuf extends ValueBase {
         }
     }
 
-    private final Object doToValue() {
+    private  Object doToValue() {
 
         switch ( type ) {
             case DOUBLE:
-                return Double.parseDouble ( toString ()  );
+                return doubleValue ();
             case INTEGER:
-                String str = toString ();
                 try {
-                    return Integer.parseInt ( str );
+                    return intValue ();
                 } catch (Exception ex) {
-                    return Long.parseLong ( str  );
+                    return longValue ();
                 }
             case STRING:
-                if (this.decodeStrings) {
-                    return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
-                } else {
-                    return toString ();
-                }
+                return stringValue ();
         }
         die();
         return null;
@@ -117,9 +111,6 @@ public class ValueInCharBuf extends ValueBase {
         return new BigDecimal ( buffer, startIndex, endIndex - startIndex );
     }
 
-    public BigInteger bigIntegerValue() {
-        return new BigInteger ( toString () );
-    }
     public String stringValue() {
         if (this.decodeStrings) {
             return JsonStringDecoder.decode ( buffer, startIndex, endIndex );

@@ -5,11 +5,14 @@ import org.boon.Dates;
 import org.boon.core.reflection.Conversions;
 
 
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.boon.Exceptions.die;
 
@@ -56,11 +59,6 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
         return Long.parseLong ( toString ()  );
     }
 
-    @Override
-    public   float floatValue() {
-        return Float.parseFloat ( toString ()  );
-
-    }
 
     @Override
     public boolean booleanValue() {
@@ -184,10 +182,23 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
         return new BigInteger ( toString () );
     }
 
+
     @Override
     public   double doubleValue() {
-        return Double.parseDouble ( toString ()  );
+        return Double.parseDouble ( toString () );
+
     }
+
+
+    @Override
+    public   float floatValue() {
+        return Float.parseFloat ( toString () );
+    }
+
+
+
+
+
 
 
 }
