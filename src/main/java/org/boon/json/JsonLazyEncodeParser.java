@@ -446,13 +446,14 @@ public class JsonLazyEncodeParser {
 
 
 
-    private Value decodeNumber( ) {
+    private Value decodeNumberHarsh( ) {
 
         int startIndex = __index;
 
         boolean doubleFloat = false;
 
         int index;
+
         int count = 0;
         int countDecimalPoint = 0;
         int eCount = 0;
@@ -461,7 +462,6 @@ public class JsonLazyEncodeParser {
         loop:
         for ( index = __index; index < charArray.length; index++, count++ ) {
             __currentChar = charArray[index];
-            char c = __currentChar;
 
             switch ( __currentChar ) {
                 case ' ':
@@ -524,7 +524,7 @@ public class JsonLazyEncodeParser {
 
             }
 
-            complain ( "expecting number char but got current char " + charDescription ( c ) );
+            complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
         }
 
         __index = index;
@@ -547,7 +547,80 @@ public class JsonLazyEncodeParser {
     }
 
 
+
+    private Value decodeNumber( ) {
+
+        int startIndex = __index;
+
+        boolean doubleFloat = false;
+
+        int index;
+
+        loop:
+        for ( index = __index; index < charArray.length; index++ ) {
+            __currentChar = charArray[index];
+
+            switch ( __currentChar ) {
+                case ' ':
+                case '\t':
+                case '\n':
+                case '\r':
+                    __index = index + 1;
+                    break loop;
+
+                case ',':
+                case ']':
+                case '}':
+                    break loop;
+
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':
+                case '-':
+                    continue loop;
+
+
+                case '+':
+                case 'e':
+                case 'E':
+                case '.':
+                    doubleFloat = true;
+                    continue loop;
+
+            }
+
+            complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
+        }
+
+        __index = index;
+
+        ValueInCharBuf value = new ValueInCharBuf ();
+        value.buffer = this.charArray;
+        value.startIndex = startIndex;
+        value.endIndex = __index;
+
+        if ( doubleFloat ) {
+            value.type = Type.DOUBLE;
+        } else {
+            value.type = Type.INTEGER;
+        }
+
+        skipWhiteSpace ( );
+
+        return value;
+
+    }
+
+
     private static char[] NULL = Chr.chars ( "null" );
+
 
     private Value decodeNull( ) {
 
@@ -565,22 +638,25 @@ public class JsonLazyEncodeParser {
 
     private static char[] TRUE = Chr.chars ( "true" );
 
-    private Value decodeTrue( ) {
 
-        if ( __index + TRUE.length <= charArray.length ) {
-            if ( charArray[__index] == 't' &&
-                    charArray[++__index] == 'r' &&
-                    charArray[++__index] == 'u' &&
-                    charArray[++__index] == 'e' ) {
+        private Value decodeTrue( ) {
 
-                nextChar ( );
-                return Value.TRUE;
+            if ( __index + TRUE.length <= charArray.length ) {
+                if ( charArray[__index] == 't' &&
+                        charArray[++__index] == 'r' &&
+                        charArray[++__index] == 'u' &&
+                        charArray[++__index] == 'e' ) {
 
+                    nextChar ( );
+                    return Value.TRUE;
+
+                }
             }
+
+            throw new JsonException ( exceptionDetails ( "true not parsed properly" ) );
         }
 
-        throw new JsonException ( exceptionDetails ( "true not parsed properly" ) );
-    }
+
 
 
     private static char[] FALSE = Chr.chars ( "false" );
