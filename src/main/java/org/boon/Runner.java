@@ -46,15 +46,33 @@ public class Runner {
         return run ( timeout, null, args );
     }
 
+
+
+    public static String runAt( String cwd, int timeout, String... args ) {
+
+        return runAt ( cwd, timeout, null, args );
+    }
+
+
     public static String run( int timeout, List<Path> path, String... args ) {
         return doRun ( timeout, path, false, args );
     }
 
+
+    public static String runAt( String cwd, int timeout, List<Path> path, String... args ) {
+        return doRunAt (  cwd, timeout, path, false, args );
+    }
+
     public static ProcessOut runProcess( int timeout, List<Path> path, boolean verbose, String... args ) {
+        return runProcessAt ( null, timeout, path, verbose, args );
+    }
+
+    public static ProcessOut runProcessAt( String cwd, int timeout, List<Path> path, boolean verbose, String... args ) {
 
 
         ProcessOut out = new ProcessOut ( );
         ProcessRunner runner = new ProcessRunner ( null, null, timeout, path, verbose, args );
+        runner.cwd = cwd;
         out.exit = runner.exec ( );
         out.stdout = runner.stdOut ( );
         out.stderr = runner.stdErr ( );
@@ -76,6 +94,21 @@ public class Runner {
 
     }
 
+
+
+
+    private static String doRunAt( String cwd, int timeout, List<Path> path, boolean verbose, String... args ) {
+
+
+        ProcessOut out = runProcessAt (  cwd, timeout, path, verbose, args );
+        if ( out.getExit ( ) != 0 ) {
+            throw new ProcessException ( sputs ( "EXIT CODE", out.getExit ( ), out.getStderr ( ) ) );
+        } else {
+            return out.getStdout ( );
+        }
+
+
+    }
     public static ProcessInOut launchProcess( int timeout, List<Path> path, boolean verbose, String... args ) {
 
         ProcessInOut process = new ProcessInOut ( );
@@ -88,6 +121,12 @@ public class Runner {
     public static String run( String... args ) {
         return run ( 0, args );
     }
+
+
+    public static String runAt( String cwd, String... args ) {
+        return runAt (cwd,  0, args );
+    }
+
 
     public static String runShell( String... args ) {
 
@@ -287,6 +326,7 @@ public class Runner {
 
         private ScheduledExecutorService scheduledExecutorService;
 
+        private String cwd;
 
         public ProcessRunner( ProcessInOut inout, String password, int timeoutInSeconds,
                               List<Path> path, boolean verbose, String... cmdLine ) {
@@ -320,6 +360,10 @@ public class Runner {
 
 
             ProcessBuilder processBuilder = new ProcessBuilder ( commandLine );
+
+            if (cwd!=null) {
+                processBuilder.directory (new File(cwd));
+            }
 
             String envPath = Str.joinCollection ( File.pathSeparatorChar, path );
             processBuilder.environment ( ).put ( "PATH", envPath );
