@@ -28,8 +28,10 @@ public class JSONParse2Test {
         //                "myDouble" : 1.2,
         //                "myShort" : 1,
         //                "myBoolean" : true,
-        //                "string" : "test"
-        //        }
+        //                "string" : "test",
+        //                "string2" : "test \"I love bacon \", do you?",
+        //
+         //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
         AllTypes types = JsonLazyEncodeParser.parseInto ( AllTypes.class, fileContents );
         validateAllTypes ( types );
@@ -43,6 +45,40 @@ public class JSONParse2Test {
             validateAllTypes ( allType );
         }
 
+        ok |= types.getString2 ().equals ( "test \\\"I love bacon \\\", do you?" ) || die("bacon hater");;
+
+    }
+
+    @Test public void objectSerializationEncodeStrings() {
+
+
+        //        {
+        //
+        //            "myInt" : 1,
+        //                "myFloat" : 1.1,
+        //                "myDouble" : 1.2,
+        //                "myShort" : 1,
+        //                "myBoolean" : true,
+        //                "string" : "test"
+        //        }
+        String fileContents = IO.read ( "files/AllTypes.json" );
+        AllTypes types = JsonLazyEncodeParser.fullParseInto ( AllTypes.class, fileContents );
+
+
+        validateAllTypes ( types );
+
+        validateAllTypes ( types.getAllType () );
+
+        boolean ok = true;
+
+
+        ok |=  types.getAllTypes ().size () == 3 || die ("" + types.getAllTypes ().size());
+
+        for (AllTypes allType : types.getAllTypes ()) {
+            validateAllTypes ( allType );
+        }
+
+        ok |= types.getString2 ().equals ( "test \"I love bacon \", do you?" ) || die("bacon hater " + types.getString2 ());
 
     }
 

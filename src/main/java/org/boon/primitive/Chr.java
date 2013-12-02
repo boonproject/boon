@@ -574,7 +574,8 @@ public class Chr {
 
 
     public static boolean contains ( char[] chars, char c, int start, final int length ) {
-        for (int index = start; index < length; index++) {
+        final int to = length + start;
+        for (int index = start; index < to; index++) {
             char ch = chars[index];
             if (ch == c) {
                 return true;

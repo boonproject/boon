@@ -10,6 +10,8 @@ public class AllTypes {
     short myShort;
     long myLong;
     String string;
+    String string2;
+
     float myFloat;
     double myDouble;
     byte myByte;
@@ -18,6 +20,14 @@ public class AllTypes {
 
     List<AllTypes> allTypes;
 
+
+    public String getString2() {
+        return string2;
+    }
+
+    public void setString2( String string2 ) {
+        this.string2 = string2;
+    }
 
     public List<AllTypes> getAllTypes() {
         return allTypes;

@@ -5,7 +5,6 @@ import org.boon.json.JsonStringDecoder;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
 

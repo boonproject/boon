@@ -6,6 +6,7 @@
     "myShort" : 2,
     "myBoolean" : true,
     "string" : "test",
+    "string2" : "test \"I love bacon \", do you?",
     "myByte" : 3 ,
 
     "allType" : {
