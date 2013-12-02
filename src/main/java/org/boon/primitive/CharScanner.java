@@ -316,6 +316,7 @@ public class CharScanner {
 
 
 
+
     public static int parseIntIgnoreDot(char[] digitChars, int offset, int len) {
         int num = digitChars[offset] - '0';
         int to =   len + offset;

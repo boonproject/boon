@@ -1265,14 +1265,16 @@ public class Reflection {
 
 
 
-        Map<String, FieldAccess> fields = getAllAccessorFields ( newInstance.getClass (), false );
-        Set<Map.Entry<String, Value>> entrySet = map.entrySet ();
+        Map<String, FieldAccess> fields = getAllAccessorFields ( newInstance.getClass (), true );
+        Map.Entry<String, Value>[] entries  = map.entrySet ().toArray (null);
+        int size = map.size ();
 
 
-        for (Map.Entry <String, Value> entry :  entrySet) {
+        for (int index = 0; index < size; index++) {
+            Map.Entry<String, Value> entry = entries[index];
 
-
-            FieldAccess field  = fields.get ( entry.getKey () );
+            String key = entry.getKey ();
+            FieldAccess field  = fields.get ( key );
             Value value = entry.getValue ();
 
 
@@ -1407,7 +1409,6 @@ public class Reflection {
 
     public static Collection<Object> createCollection( Class<?> type, int size ) {
 
-        if ( type.isInterface ( ) ) {
             if ( type == List.class ) {
                 return new ArrayList<> ( size );
             } else if ( type == SortedSet.class ) {
@@ -1421,26 +1422,8 @@ public class Reflection {
             } else if ( Typ.isSet ( type ) ) {
                 return new LinkedHashSet<> ( size );
             } else {
-                new ArrayList ( size );
+                return new ArrayList ( size );
             }
-
-        } else {
-            try {
-                Collection<Object> collection = ( Collection<Object> ) type.newInstance ( );
-                return collection;
-            } catch ( Exception ex ) {
-                if ( Typ.isList ( type ) ) {
-                    return new ArrayList<> ( );
-                } else if ( Typ.isSortedSet ( type ) ) {
-                    return new TreeSet<> ( );
-                } else if ( Typ.isSet ( type ) ) {
-                    return new LinkedHashSet<> ( size );
-                } else {
-                    return new ArrayList ( size );
-                }
-            }
-        }
-        return new ArrayList ( size );
 
     }
 

@@ -343,7 +343,7 @@ public class JsonLazyEncodeParser {
 
 
                 if ( useValues ) {
-                    valueMap.items.add ( miv );
+                    valueMap.add ( miv );
                 } else {
                     map.items.add ( miv );
                 }
