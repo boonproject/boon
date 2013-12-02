@@ -2,12 +2,14 @@ package org.boon.json;
 
 import org.boon.IO;
 import org.boon.Lists;
+import org.boon.Str;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.idx;
@@ -17,6 +19,76 @@ import static org.junit.Assert.assertEquals;
 
 public class JSONParse2Test {
 
+
+    @Test
+    public void testStringEscaped() {
+
+        String testString =
+                ("  'this is all sort of text, " +
+                        "   do you think it is \\'cool\\' '").replace('\'', '"');
+
+
+        Object obj = JsonLazyEncodeParser.parse ( testString );
+
+        System.out.println("here is what I got " + obj);
+
+        boolean ok = true;
+
+        ok &= obj instanceof String || die("Object was not a String");
+
+        String value = (String) obj;
+
+        assertEquals("this is all sort of text,    do you think it is \\\"cool\\\" ", obj);
+
+        System.out.println(obj.getClass());
+    }
+
+
+
+    @Test public void bugFix () {
+        String json =
+        Str.lines ( "      {                                                         ",
+                    "        'name': 'Festival Présences 2014 \\'Paris Berlin\\'',    ",
+                    "         'subTopicIds': [                                       ",
+                    "             337184288,                                         ",
+                    "             337184283                                          ",
+                    "         ]                                                      ",
+                    "      }                                                        ").replace ( '\'', '\"' );
+
+        puts (json);
+
+        Map<String, Object> parser = JsonLazyEncodeParser.fullParseMap  ( json );
+        boolean ok = true;
+
+        puts (parser);
+        ok |=  idx (parser, "subTopicIds").equals ( list(337184288, 337184283) ) || die ( "err subtopics " + parser);
+
+        ok |=  idx (parser, "name").equals ( "Festival Présences 2014 \"Paris Berlin\"" ) || die ( "err name" + idx( parser, "name"));
+        puts ("ok", ok);
+    }
+
+
+    @Test public void bugFix2 () {
+        String json =
+                Str.lines ( "      {                                                         ",
+                        "        'name': 'Festival Présences 2014 \\'Paris Berlin\\'',    ",
+                        "         'subTopicIds': [                                       ",
+                        "             337184288,                                         ",
+                        "             337184283                                          ",
+                        "         ]                                                      ",
+                        "      }                                                        ").replace ( '\'', '\"' );
+
+        puts (json);
+
+        Map<String, Object> parser = JsonLazyEncodeParser.parseMap  ( json );
+        boolean ok = true;
+
+        puts (parser);
+        ok |=  idx (parser, "subTopicIds").equals ( list(337184288, 337184283) ) || die ( "err subtopics " + parser);
+
+        ok |=  idx (parser, "name").equals ( "Festival Présences 2014 \\\"Paris Berlin\\\"" ) || die ( "err name" + idx( parser, "name"));
+        puts ("ok", ok);
+    }
 
     @Test public void objectSerialization() {
 

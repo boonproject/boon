@@ -763,8 +763,12 @@ public class JsonLazyEncodeParser {
             switch ( __currentChar ) {
 
                 case '"':
-                    if ( !escape )
+                    if ( !escape )  {
                         break done;
+                    } else {
+                        escape = false;
+                        continue;
+                    }
 
 
                 case '\\':
