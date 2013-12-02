@@ -50,9 +50,12 @@ public class JSONParse2Test {
         boolean ok = true;
         ok |= types.getMyInt () == 1 || die("" + types.getMyInt ());
 
+
+
         ok |= types.getMyFloat () == 1.1f || die("" + types.getMyFloat ());
 
         ok |= types.getMyDouble () == 1.2 || die("" + types.getMyDouble ());
+
 
         ok |= types.isMyBoolean () == true || die("" + types.isMyBoolean ());
 

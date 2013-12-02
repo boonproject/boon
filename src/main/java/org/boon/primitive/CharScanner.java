@@ -241,4 +241,127 @@ public class CharScanner {
         System.arraycopy ( array, 0, ( char[][] ) newArray, 0, array.length - size );
         return newArray;
     }
+
+
+
+    final static String MIN_LONG_STR_NO_SIGN = String.valueOf(Long.MIN_VALUE).substring(1);
+    final static String MAX_LONG_STR = String.valueOf(Long.MAX_VALUE);
+
+
+    final static String MIN_INT_STR_NO_SIGN = String.valueOf(Integer.MIN_VALUE).substring(1);
+    final static String MAX_INT_STR = String.valueOf(Integer.MAX_VALUE);
+
+    public static boolean isLong(char[] digitChars, int offset, int len,
+                                      boolean negative) {
+        String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
+        int cmpLen = cmpStr.length();
+        if (len < cmpLen) return true;
+        if (len > cmpLen) return false;
+
+        for (int i = 0; i < cmpLen; ++i) {
+            int diff = digitChars[offset+i] - cmpStr.charAt(i);
+            if (diff != 0) {
+                return (diff < 0);
+            }
+        }
+        return true;
+    }
+
+    public static boolean isInteger(char[] digitChars, int offset, int len,
+                                 boolean negative) {
+        String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
+        int cmpLen = cmpStr.length();
+        if (len < cmpLen) return true;
+        if (len > cmpLen) return false;
+
+        for (int i = 0; i < cmpLen; ++i) {
+            int diff = digitChars[offset+i] - cmpStr.charAt(i);
+            if (diff != 0) {
+                return (diff < 0);
+            }
+        }
+        return true;
+    }
+
+    public static int parseInt(char[] digitChars, int offset, int len) {
+        int num = digitChars[offset] - '0';
+        int to =   len + offset;
+        // This looks ugly, but appears the fastest way (as per measurements)
+        if (++offset < to) {
+            num = (num * 10) + (digitChars[offset] - '0');
+            if (++offset < to) {
+                num = (num * 10) + (digitChars[offset] - '0');
+                if (++offset < to) {
+                    num = (num * 10) + (digitChars[offset] - '0');
+                    if (++offset < to) {
+                        num = (num * 10) + (digitChars[offset] - '0');
+                        if (++offset < to) {
+                            num = (num * 10) + (digitChars[offset] - '0');
+                            if (++offset < to) {
+                                num = (num * 10) + (digitChars[offset] - '0');
+                                if (++offset < to) {
+                                    num = (num * 10) + (digitChars[offset] - '0');
+                                    if (++offset < to) {
+                                        num = (num * 10) + (digitChars[offset] - '0');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return num;
+    }
+
+
+
+    public static int parseIntIgnoreDot(char[] digitChars, int offset, int len) {
+        int num = digitChars[offset] - '0';
+        int to =   len + offset;
+        // This looks ugly, but appears the fastest way (as per measurements)
+        if (++offset < to) {
+            num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+            if (++offset < to) {
+                num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                if (++offset < to) {
+                    num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                    if (++offset < to) {
+                        num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                        if (++offset < to) {
+                            num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                            if (++offset < to) {
+                                num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                                if (++offset < to) {
+                                    num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                                    if (++offset < to) {
+                                        num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                                        if (++offset < to) {
+                                            num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return num;
+    }
+
+    public static long parseLong(char[] digitChars, int offset, int len) {
+        int len1 = len-9;
+        long val = parseInt(digitChars, offset, len1) * L_BILLION;
+        return val + (long) parseInt(digitChars, offset+len1, 9);
+    }
+
+    public static long parseLongIgnoreDot(char[] digitChars, int offset, int len) {
+        int len1 = len-9;
+        long val = parseIntIgnoreDot (digitChars, offset, len1) * L_BILLION;
+        return val + (long) parseIntIgnoreDot(digitChars, offset+len1, 9);
+    }
+
+    private final static long L_BILLION = 1000000000;
+
 }
