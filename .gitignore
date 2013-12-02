@@ -9,3 +9,7 @@ target
 .idea/workspace.xml
 
 .idea/misc.xml
+
+.classpath
+.project
+.settings
