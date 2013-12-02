@@ -95,6 +95,11 @@ public class JsonLazyEncodeParser {
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
+    public static Map<String, Object> fullParseMap( char [] cs ) {
+        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true );
+        return ( Map<String, Object> ) p.decode ( cs );
+    }
+
     public static Object parse( char[] cs ) {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
         return p.decode ( cs );

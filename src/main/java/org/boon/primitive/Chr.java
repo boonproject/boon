@@ -605,6 +605,16 @@ public class Chr {
         }
     }
 
+    public static void _idx( final char[] array, int startIndex, char[] input, final int inputLength ) {
+        try {
+
+            System.arraycopy ( input, 0, array, startIndex, inputLength );
+        } catch ( Exception ex ) {
+            Exceptions.handle ( String.format ( "array size %d, startIndex %d, input length %d",
+                    array.length, startIndex, input.length ), ex );
+        }
+    }
+
     public static void _idx( char[] buffer, int location, byte[] chars, int start, int end ) {
 
         int index2 = start;

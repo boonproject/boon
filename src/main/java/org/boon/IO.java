@@ -171,6 +171,17 @@ public class IO {
         }
     }
 
+    public static char [] readCharBuffer( Path path ) {
+        try {
+
+            long bufSize = Files.size ( path );
+            return readCharBuffer ( Files.newBufferedReader ( path, DEFAULT_CHARSET ), (int) bufSize );
+
+        } catch ( IOException ex ) {
+            return Exceptions.handle ( char[].class, ex );
+        }
+    }
+
     public static String read( InputStream inputStream, String charset ) {
 
         try ( Reader reader = new InputStreamReader ( inputStream, charset ) ) {
@@ -237,6 +248,26 @@ public class IO {
         return builder.toString ( );
 
     }
+
+
+    public static char[] readCharBuffer( Reader reader, int size ) {
+
+
+        char [] buffer = new char [size];
+
+        try ( Reader r = reader ) {
+
+             reader.read ( buffer );
+
+
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( char[].class, ex );
+        }
+
+        return buffer;
+
+    }
+
 
     public static String read( File file ) {
         try ( Reader reader = new FileReader ( file ) ) {
