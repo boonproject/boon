@@ -63,7 +63,7 @@ public class JsonAsciiParserLazyEncodeTest {
 
         ok |= types.getMyByte () == 3 || die("" + types.getMyByte ());
 
-        ok |= types.getString ().equals ("test") || die("" + types.getString ());
+        ok |= types.getString ().equals ("test") || die("$" + types.getString () + "$");
     }
 
 

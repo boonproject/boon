@@ -754,7 +754,13 @@ public class ByteBuf implements Output {
 
     public String toString( ) {
         int len = len ( );
-        return new String ( this.buffer, 0, len, StandardCharsets.UTF_8 );
+
+        char [] chars = new char[buffer.length];
+        for (int index = 0; index < chars.length; index++) {
+            chars[index] = (char) buffer[index];
+        }
+        return new String(chars, 0, len);
+        //return new String ( this.buffer, 0, len, StandardCharsets.UTF_8 );
     }
 
 

@@ -2,6 +2,7 @@ package org.boon.json;
 
 import org.boon.core.reflection.Reflection;
 import org.boon.primitive.Byt;
+import org.boon.primitive.ByteBuf;
 import org.boon.primitive.CharBuf;
 
 import java.nio.charset.StandardCharsets;
@@ -25,11 +26,16 @@ public class JsonAsciiParser {
     private ParserState state = START;
     private ParserState lastState = START;
 
+
+
+    private static final int LETTER_B = 'b';
     private static final int NEW_LINE = '\n';
 
     private static final int RETURN = '\r';
 
     private static final int SPACE = ' ';
+    private static final int ESCAPE = '\\';
+    private static final int FORWARD_SLASH = '/';
 
 
     private static final int TAB = '\t';
@@ -46,6 +52,7 @@ public class JsonAsciiParser {
     private static final int OPEN_BRACKET = '[';
 
     private static final int CLOSED_BRACKET = ']';
+
 
     private static final int DOUBLE_QUOTE = '"';
 
@@ -333,9 +340,8 @@ public class JsonAsciiParser {
                     continue label;
 
                 case SPACE:
+                    continue label;
                 case TAB:
-                case BELL:
-                case FORM_FEED:
                     continue label;
                 default:
                     break label;
@@ -504,6 +510,8 @@ public class JsonAsciiParser {
         int eCount = 0;
         int plusCount = 0;
 
+        CharBuf buf =  CharBuf.create ( 20 );
+
         loop:
         for ( index = __index; index < charArray.length; index++, count++ ) {
             __currentChar = charArray[ index ];
@@ -548,14 +556,18 @@ public class JsonAsciiParser {
                 case ALPHA_9:
                 case ALPHA_0:
                 case MINUS:
+                    buf.addChar ( __currentChar );
                     continue loop;
 
                 case DECIMAL_POINT:
                     doubleFloat = true;
                     countDecimalPoint++;
+
                     if ( countDecimalPoint > 1 ) {
                         throw new JsonException ( exceptionDetails ( "number has more than one decimal point" ) );
                     }
+
+                    buf.addChar ( __currentChar );
                     continue loop;
 
                 case LETTER_E:
@@ -565,6 +577,8 @@ public class JsonAsciiParser {
                     if ( eCount > 1 ) {
                         throw new JsonException ( exceptionDetails ( "number has more than one exp definition" ) );
                     }
+
+                    buf.addChar ( __currentChar );
                     continue loop;
 
                 case PLUS:
@@ -577,6 +591,8 @@ public class JsonAsciiParser {
                         throw new JsonException ( exceptionDetails ( "plus sign must come after exp" ) );
 
                     }
+
+                    buf.addChar ( __currentChar );
                     continue loop;
 
             }
@@ -586,23 +602,12 @@ public class JsonAsciiParser {
 
         __index = index;
 
-        String svalue = new String ( this.charArray, startIndex, count, StandardCharsets.UTF_8 );
-
 
         Object value = null;
-        try {
-            if ( doubleFloat ) {
-                value = Double.parseDouble ( svalue );
-            } else {
-                value = Integer.parseInt ( svalue );
-            }
-        } catch ( Exception ex ) {
-            try {
-                value = Long.parseLong ( svalue );
-            } catch ( Exception ex2 ) {
-                complain ( "expecting to decode a number but got value of " + svalue );
-            }
-
+        if ( doubleFloat ) {
+                value = buf.doubleValue ();
+        } else {
+                value = buf.toIntegerWrapper ();
         }
 
         skipWhiteSpace ();
@@ -665,44 +670,92 @@ public class JsonAsciiParser {
         throw new JsonException ( exceptionDetails ( "false not parsed properly" ) );
     }
 
-    private String decodeString () {
-        String value = null;
+    private final String decodeString () {
 
-        final int startIndex = __index;
-        if ( __index < charArray.length && __currentChar == '"' ) {
+        if ( __index < charArray.length && __currentChar == DOUBLE_QUOTE ) {
             __index++;
         }
 
+        CharBuf builder = CharBuf.create (  20 );
 
-        done:
+        loop:
         for (; __index < this.charArray.length; __index++ ) {
             __currentChar = charArray[ __index ];
             switch ( __currentChar ) {
 
-                case '"':
-                    break done;
+                case DOUBLE_QUOTE:
+                    break loop;
 
                 case '\\':
                     if ( __index < charArray.length ) {
                         __index++;
                     }
-                    continue;
+                    __currentChar = charArray[ __index ];
+
+                    switch ( __currentChar ) {
+
+                        case LETTER_N:
+                            builder.addChar ( '\n' );
+                            continue loop;
+
+                        case FORWARD_SLASH:
+                            builder.addChar ( '/' );
+                            continue loop;
+
+                        case DOUBLE_QUOTE:
+                            builder.addChar ( '"' );
+                            continue loop;
+
+                        case LETTER_F:
+                            builder.addChar ( '\f' );
+                            continue loop;
+
+                        case LETTER_T:
+                            builder.addChar ( '\t' );
+                            continue loop;
+
+                        case ESCAPE:
+                            builder.addChar ( '\\' );
+                            continue loop;
+
+                        case LETTER_B:
+                            builder.addChar ( '\b' );
+                            continue loop;
+
+                        case LETTER_R:
+                            builder.addChar ( '\r' );
+                            continue loop;
+
+                        case LETTER_U:
+
+                            if ( __index + 4 < charArray.length ) {
+
+                                CharBuf hex = CharBuf.create ( 4 );
+                                hex.addChar ( charArray[__index +1] );
+
+                                hex.addChar ( charArray[__index +2] );
+
+                                hex.addChar ( charArray[__index +3] );
+
+                                hex.addChar ( charArray[__index +4] );
+                                char unicode = ( char ) Integer.parseInt ( hex.toString (), 16 );
+                                builder.add ( unicode );
+                                __index += 4;
+                            }
+                            continue loop;
+                    }
+               default:
+                   builder.addChar ( __currentChar );
 
             }
         }
 
-        value = encodeString ( startIndex, __index );
 
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return value;
-    }
-
-    private String encodeString ( int start, int to ) {
-        return (encodeStrings) ? JsonStringDecoder.decode ( charArray, start, to ) :
-                 new String( charArray, start + 1, ( to - start )-1 );
+        return builder.toString ();
     }
 
     private String decodeKeyName () {

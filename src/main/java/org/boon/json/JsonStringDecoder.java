@@ -100,17 +100,13 @@ public class JsonStringDecoder {
 
     public static String decode( final byte[] chars, int start, int to ) {
 
-        if (!Byt.in ( '\\', start, to, chars ) ) {
-            return new String (chars, start+1, to - start-1);
-        }
-
         final byte[] cs = chars;
 
         if ( cs[start] == '"' ) {
             start++;
         }
 
-        ByteBuf builder = ByteBuf.create ( cs.length );
+        CharBuf builder = CharBuf.create (  to - start );
         for ( int index = start; index < to; index++ ) {
             byte c = cs[index];
             if ( c == '\\' ) {
@@ -120,35 +116,35 @@ public class JsonStringDecoder {
                     switch ( c ) {
 
                         case 'n':
-                            builder.addByte ( '\n' );
+                            builder.addChar ( '\n' );
                             break;
 
                         case '/':
-                            builder.addByte ( '/' );
+                            builder.addChar ( '/' );
                             break;
 
                         case '"':
-                            builder.addByte ( '"' );
+                            builder.addChar ( '"' );
                             break;
 
                         case 'f':
-                            builder.addByte ( '\f' );
+                            builder.addChar ( '\f' );
                             break;
 
                         case 't':
-                            builder.addByte ( '\t' );
+                            builder.addChar ( '\t' );
                             break;
 
                         case '\\':
-                            builder.addByte ( '\\' );
+                            builder.addChar ( '\\' );
                             break;
 
                         case 'b':
-                            builder.addByte ( '\b' );
+                            builder.addChar ( '\b' );
                             break;
 
                         case 'r':
-                            builder.addByte ( '\r' );
+                            builder.addChar ( '\r' );
                             break;
 
                         case 'u':
@@ -165,7 +161,7 @@ public class JsonStringDecoder {
                     }
                 }
             } else {
-                builder.addByte ( c );
+                builder.addChar ( c );
             }
         }
         return builder.toString ( );

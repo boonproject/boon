@@ -80,7 +80,7 @@ public class JsonAsciiParserTest {
 
             System.out.println(obj);
 
-            ok &=  idx(map, "foo").equals(1) || die("I did not find 1");
+            ok &=  idx(map, "foo").equals(1) || die("I did not find 1" +  idx(map, "foo"));
         }
 
 
