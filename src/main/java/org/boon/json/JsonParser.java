@@ -1,9 +1,7 @@
 package org.boon.json;
 
 import org.boon.core.reflection.Reflection;
-import org.boon.json.internal.MapItemValue;
 import org.boon.json.internal.Type;
-import org.boon.json.internal.Value;
 import org.boon.json.internal.ValueInCharBuf;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
@@ -12,8 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.boon.json.ParserState.*;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
