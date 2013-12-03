@@ -592,8 +592,6 @@ public class JsonParser {
     }
 
     private String decodeString() {
-        ValueInCharBuf value = new ValueInCharBuf ( Type.STRING );
-
 
         __currentChar = charArray[__index];
 
@@ -628,16 +626,18 @@ public class JsonParser {
             escape = false;
         }
 
-        value.startIndex = startIndex;
-        value.endIndex = __index;
-        value.buffer = charArray;
-        value.decodeStrings = this.encodeStrings;
+        String value = null;
+        if (encodeStrings) {
+            value = JsonStringDecoder.decode ( charArray, startIndex, __index );
+        } else {
+            value = new String ( charArray, startIndex, ( __index - startIndex ) );
+        }
 
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return value.stringValue ();
+        return value;
     }
 
     private List decodeJsonArray( ) {
