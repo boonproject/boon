@@ -15,7 +15,7 @@ import static org.boon.Maps.map;
 import static org.boon.Str.lines;
 import static org.junit.Assert.assertEquals;
 
-public class JsonAsciiParserLazyEncodeTest {
+public class JsonCharSeqParserTest {
 
 
 
@@ -32,7 +32,7 @@ public class JsonAsciiParserLazyEncodeTest {
         //                "string" : "test"
         //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonLazyAsciiEncodeParser.parseInto ( AllTypes.class, fileContents );
+        AllTypes types = JsonParserArrayCharSequence.parseInto ( AllTypes.class, fileContents );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -70,7 +70,7 @@ public class JsonAsciiParserLazyEncodeTest {
     @Test
         public void testParserSimpleMapWithNumber() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     " { 'foo': 1 }  ".replace ( '\'', '"' )
             );
 
@@ -90,7 +90,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void testParseFalse() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     " { 'foo': false }  ".replace ( '\'', '"' )
             );
 
@@ -107,7 +107,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void testParseNull() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     " { 'foo': null }  ".replace ( '\'', '"' )
             );
 
@@ -125,7 +125,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void testParserSimpleMapWithBoolean() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     " { 'foo': true }  ".replace ( '\'', '"' )
             );
 
@@ -143,7 +143,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void testParserSimpleMapWithList() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
             );
 
@@ -160,7 +160,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void testParserSimpleMapWithString() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     " { 'foo': 'str ' }  ".replace ( '\'', '"' )
             );
 
@@ -224,7 +224,7 @@ public class JsonAsciiParserLazyEncodeTest {
 
             System.out.printf("%s, %s, %s", name, json, compareTo);
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     json.replace ( '\'', '"' )
             );
 
@@ -244,7 +244,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void testNumber() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     "1".replace ( '\'', '"' )
             );
 
@@ -262,7 +262,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void testBoolean() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     "  true  ".replace ( '\'', '"' )
             );
 
@@ -280,7 +280,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test(expected = JsonException.class)
         public void testBooleanParseError() {
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonParserArrayCharSequence.parse (
                     "  tbone  ".replace ( '\'', '"' )
             );
 
@@ -303,7 +303,7 @@ public class JsonAsciiParserLazyEncodeTest {
                             "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-            Object obj = JsonLazyAsciiEncodeParser.parse ( testString );
+            Object obj = JsonParserArrayCharSequence.fullParse ( testString );
 
             System.out.println("here is what I got " + obj);
 
@@ -328,7 +328,7 @@ public class JsonAsciiParserLazyEncodeTest {
 
 
 
-            Object obj = JsonLazyAsciiEncodeParser.parse  ( testString );
+            Object obj = JsonParserArrayCharSequence.fullParse  ( testString );
 
 
 
@@ -355,7 +355,7 @@ public class JsonAsciiParserLazyEncodeTest {
 
 
 
-            Object obj = JsonLazyAsciiEncodeParser.parse  ( testString );
+            Object obj = JsonParserArrayCharSequence.parse  ( testString );
             System.out.println("here is what I got " + obj);
 
             boolean ok = true;
@@ -375,7 +375,7 @@ public class JsonAsciiParserLazyEncodeTest {
         public void textInMiddleOfArray() {
 
             try {
-                Object obj = JsonLazyAsciiEncodeParser.parse  (
+                Object obj = JsonParserArrayCharSequence.parse  (
                         lines ( "[A, 0]"
                         ).replace ( '\'', '"' )
                 );
@@ -391,7 +391,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void oddlySpaced2() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse  (
+            Object obj = JsonParserArrayCharSequence.parse  (
                     lines ( "[   2   ,    1, 0]"
                     ).replace ( '\'', '"' )
             );
@@ -405,7 +405,7 @@ public class JsonAsciiParserLazyEncodeTest {
         @Test
         public void complex() {
 
-            Object obj = JsonLazyAsciiEncodeParser.parse  (
+            Object obj = JsonParserArrayCharSequence.parse  (
                     lines (
 
                             "{    'num' : 1   , ",

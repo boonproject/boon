@@ -1,6 +1,10 @@
 package org.boon.json;
 
 import org.boon.core.reflection.Reflection;
+import org.boon.json.internal.MapItemValue;
+import org.boon.json.internal.Type;
+import org.boon.json.internal.Value;
+import org.boon.json.internal.ValueInCharBuf;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
@@ -22,12 +26,6 @@ public class JsonParser {
     private char[] charArray;
     private int __index;
     private char __currentChar;
-    private char __lastChar;
-
-    private Map<String, Object> lastObject;
-    private List<Object> lastList;
-    private ParserState state = START;
-    private ParserState lastState = START;
 
     private final boolean encodeStrings;
 
@@ -168,10 +166,8 @@ public class JsonParser {
 
 
     private Object decode( String cs ) {
-        charArray = cs.toCharArray ( );
-        Object root = null;
-        root = decodeValue ( );
-        return root;
+        charArray = cs.toCharArray ();
+        return decodeValue ();
     }
 
 
@@ -179,20 +175,17 @@ public class JsonParser {
         return __index + 1 < charArray.length;
     }
 
-    private final char nextChar( ) {
+    private final char nextChar() {
 
         try {
-            if ( hasMore ( ) ) {
-                __lastChar = __currentChar;
+            if ( __index + 1 < charArray.length ) {
                 __index++;
                 return __currentChar = charArray[__index];
+            } else {
+                return '\u0000';
             }
-            return __currentChar;
-
         } catch ( Exception ex ) {
-            throw new RuntimeException ( exceptionDetails ( "failure in next " +
-                    ex.getLocalizedMessage ( ) ), ex );
-
+             throw new JsonException (  exceptionDetails ( "unable to advance character"), ex);
         }
     }
 
@@ -202,27 +195,11 @@ public class JsonParser {
 
         buf.addLine ( message );
 
-        buf.add ( state.toString ( ) ).addLine ( " is CURRENT STATE" );
-        buf.add ( lastState.toString ( ) ).addLine ( " is LAST STATE" );
 
         buf.addLine ( "" );
-        buf.addLine ( "The last character read was " + charDescription ( __lastChar ) );
         buf.addLine ( "The current character read is " + charDescription ( __currentChar ) );
 
 
-        if ( lastObject != null ) {
-            buf.addLine ( "The last object read was" );
-            buf.addLine ( "------------------------" );
-            buf.addLine ( lastObject.toString ( ) );
-            buf.addLine ( "------------------------" );
-        }
-
-        if ( lastList != null ) {
-            buf.addLine ( "The last array read was" );
-            buf.addLine ( "------------------------" );
-            buf.addLine ( lastList.toString ( ) );
-            buf.addLine ( "------------------------" );
-        }
 
 
         buf.addLine ( message );
@@ -271,7 +248,7 @@ public class JsonParser {
         return buf.toString ( );
     }
 
-    private void skipWhiteSpace( ) {
+    private void skipWhiteSpace() {
 
 
         label:
@@ -280,14 +257,16 @@ public class JsonParser {
             switch ( __currentChar ) {
                 case '\n':
                     continue label;
+
                 case '\r':
                     continue label;
 
                 case ' ':
-                case '\t':
-                case '\b':
-                case '\f':
                     continue label;
+
+                case '\t':
+                    continue label;
+
                 default:
                     break label;
 
@@ -298,55 +277,45 @@ public class JsonParser {
 
     private Object decodeJsonObject( ) {
 
-        if ( __currentChar == '{' && this.hasMore ( ) )
-            this.nextChar ( );
+        if ( __currentChar == '{' )
+            this.nextChar ();
 
         Map<String, Object> map = new LinkedHashMap<> ( );
 
-        this.lastObject = map;
 
-        do {
+        for (; __index < this.charArray.length; __index++ ) {
 
-            skipWhiteSpace ( );
+            skipWhiteSpace ();
 
 
             if ( __currentChar == '"' ) {
-                String key = decodeKeyName ( );
-                skipWhiteSpace ( );
+                String key = decodeString ();
+                skipWhiteSpace ();
 
                 if ( __currentChar != ':' ) {
 
                     complain ( "expecting current character to be " + charDescription ( __currentChar ) + "\n" );
                 }
-                this.nextChar ( ); // skip past ':'
-                skipWhiteSpace ( );
+                this.nextChar (); // skip past ':'
 
-                setState ( START_OBJECT_ITEM );
-                Object value = decodeValue ( );
+                Object value = decodeValue ();
 
-                skipWhiteSpace ( );
-
-                map.put ( key, value );
+                skipWhiteSpace ();
+                map.put(key, value);
 
 
-                setState ( END_OBJECT_ITEM );
-
-                if ( !( __currentChar == '}' || __currentChar == ',' ) ) {
-                    complain ( "expecting '}' or ',' but got current char " + charDescription ( __currentChar ) );
-                }
             }
             if ( __currentChar == '}' ) {
-                this.nextChar ( );
+                __index++;
                 break;
             } else if ( __currentChar == ',' ) {
-                this.nextChar ( );
                 continue;
             } else {
                 complain (
                         "expecting '}' or ',' but got current char " + charDescription ( __currentChar ) );
 
             }
-        } while ( this.hasMore ( ) );
+        }
         return map;
     }
 
@@ -358,208 +327,215 @@ public class JsonParser {
     private Object decodeValue( ) {
         Object value = null;
 
-        done:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
+        skipWhiteSpace ();
+
+        switch ( __currentChar ) {
+            case '\n':
+                break;
+
+            case '\r':
+                break;
+
+            case ' ':
+                break;
+
+            case '\t':
+                break;
+
+            case '\b':
+                break;
+
+            case '\f':
+                break;
+
+            case '"':
+                value = decodeString ();
+                break;
 
 
-            switch ( __currentChar ) {
-                case '\n':
-                    break;
+            case 't':
+                value = decodeTrue ();
+                break;
 
-                case '\r':
-                case ' ':
-                case '\t':
-                case '\b':
-                case '\f':
-                    break;
+            case 'f':
+                value = decodeFalse ();
+                break;
 
-                case '"':
-                    setState ( START_STRING );
-                    value = decodeString ( );
-                    setState ( END_STRING );
-                    break done;
+            case 'n':
+                value = decodeNull ();
+                break;
 
+            case '[':
+                value = decodeJsonArray ();
+                break;
 
-                case 't':
-                    setState ( START_BOOLEAN );
-                    value = decodeTrue ( );
-                    setState ( END_BOOLEAN );
-                    break done;
+            case '{':
+                value = decodeJsonObject ();
+                break;
 
-                case 'f':
-                    setState ( START_BOOLEAN );
-                    value = decodeFalse ( );
-                    setState ( END_BOOLEAN );
-                    break done;
+            case '1':
+                value = decodeNumber ();
+                break;
 
-                case 'n':
-                    setState ( START_NULL );
-                    value = decodeNull ( );
-                    setState ( END_NULL );
-                    break done;
+            case '2':
+                value = decodeNumber ();
+                break;
 
-                case '[':
-                    setState ( START_LIST );
-                    value = decodeJsonArray ( );
-                    setState ( END_LIST );
-                    break done;
+            case '3':
+                value = decodeNumber ();
+                break;
 
-                case '{':
-                    setState ( START_OBJECT );
-                    value = decodeJsonObject ( );
-                    setState ( END_OBJECT );
-                    break done;
+            case '4':
+                value = decodeNumber ();
+                break;
 
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '0':
-                case '-':
-                    setState ( START_NUMBER );
-                    value = decodeNumber ( );
-                    setState ( END_NUMBER );
-                    break done;
+            case '5':
+                value = decodeNumber ();
+                break;
 
-                default:
-                    throw new JsonException ( exceptionDetails ( "Unable to determine the " +
-                            "current character, it is not a string, number, array, or object" ) );
+            case '6':
+                value = decodeNumber ();
+                break;
 
-            }
+            case '7':
+                value = decodeNumber ();
+                break;
+
+            case '8':
+                value = decodeNumber ();
+                break;
+
+            case '9':
+                value = decodeNumber ();
+                break;
+
+            case '0':
+                value = decodeNumber ();
+                break;
+
+            case '-':
+                value = decodeNumber ();
+                break;
+
+            default:
+                throw new JsonException ( exceptionDetails ( "Unable to determine the " +
+                        "current character, it is not a string, number, array, or object" ) );
+
         }
 
         return value;
     }
 
 
-    private void setState( ParserState state ) {
-        this.lastState = this.state;
-        this.state = state;
-    }
-
-    private Object decodeNumber( ) {
+    private Object decodeNumber() {
 
         int startIndex = __index;
 
         boolean doubleFloat = false;
 
         int index;
-        int count = 0;
-        int countDecimalPoint = 0;
-        int eCount = 0;
-        int plusCount = 0;
 
         loop:
-        for ( index = __index; index < charArray.length; index++, count++ ) {
+        for ( index = __index; index < charArray.length; index++ ) {
             __currentChar = charArray[index];
-            char c = __currentChar;
 
             switch ( __currentChar ) {
                 case ' ':
+                    __index = index + 1;
+                    break loop;
+
                 case '\t':
+                    __index = index + 1;
+                    break loop;
+
                 case '\n':
+                    __index = index + 1;
+                    break loop;
+
                 case '\r':
                     __index = index + 1;
                     break loop;
 
                 case ',':
-                    if ( lastState == START_LIST_ITEM || lastState == START_OBJECT_ITEM ) {
-                        break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails("Unexpected comma token in parse number") );
-                    }
+                    break loop;
 
                 case ']':
-                    if ( lastState == START_LIST_ITEM ) {
-                        break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails("Unexpected close bracket token in parse number") );
-                    }
+                    break loop;
 
                 case '}':
-                    if ( lastState == START_OBJECT_ITEM ) {
-                        break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails("Unexpected close curly brace token in parse number") );
-                    }
+                    break loop;
 
                 case '1':
+                    continue loop;
+
                 case '2':
+                    continue loop;
+
                 case '3':
+                    continue loop;
+
                 case '4':
+                    continue loop;
+
                 case '5':
+                    continue loop;
+
                 case '6':
+                    continue loop;
+
                 case '7':
+                    continue loop;
+
                 case '8':
+                    continue loop;
+
                 case '9':
+                    continue loop;
+
                 case '0':
+                    continue loop;
+
                 case '-':
+                    continue loop;
+
+
+                case '+':
+                    doubleFloat = true;
+                    continue loop;
+
+                case 'e':
+                    doubleFloat = true;
+                    continue loop;
+
+                case 'E':
+                    doubleFloat = true;
                     continue loop;
 
                 case '.':
                     doubleFloat = true;
-                    countDecimalPoint++;
-                    if ( countDecimalPoint > 1 ) {
-                        throw new JsonException (exceptionDetails( "number has more than one decimal point") );
-                    }
-                    continue loop;
-
-                case 'e':
-                case 'E':
-                    doubleFloat = true;
-                    eCount++;
-                    if ( eCount > 1 ) {
-                        throw new JsonException ( exceptionDetails("number has more than one exp definition"));
-                    }
-                    continue loop;
-
-                case '+':
-                    doubleFloat = true;
-                    plusCount++;
-                    if ( plusCount > 1 ) {
-                        throw new JsonException (exceptionDetails( "number has more than one plus sign") );
-                    }
-                    if ( eCount == 0 ) {
-                        throw new JsonException (exceptionDetails ( "plus sign must come after exp") );
-
-                    }
                     continue loop;
 
             }
 
-            complain ( "expecting number char but got current char " + charDescription ( c ) );
+            complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
         }
 
         __index = index;
 
-        String svalue = new String ( this.charArray, startIndex, count );
+        ValueInCharBuf value = new ValueInCharBuf ();
+        value.buffer = this.charArray;
+        value.startIndex = startIndex;
+        value.endIndex = __index;
 
-
-        Object value = null;
-        try {
-            if ( doubleFloat ) {
-                value = Double.parseDouble ( svalue );
-            } else {
-                value = Integer.parseInt ( svalue );
-            }
-        } catch ( Exception ex ) {
-            try {
-                value = Long.parseLong ( svalue );
-            } catch ( Exception ex2 ) {
-                complain ( "expecting to decode a number but got value of " + svalue );
-            }
-
+        if ( doubleFloat ) {
+            value.type = Type.DOUBLE;
+        } else {
+            value.type = Type.INTEGER;
         }
 
-        skipWhiteSpace ( );
+        skipWhiteSpace ();
 
-        return value;
+        return value.toValue ();
 
     }
 
@@ -617,14 +593,20 @@ public class JsonParser {
         throw new JsonException (exceptionDetails( "false not parsed properly") );
     }
 
-    private String decodeString( ) {
-        String value = null;
+    private String decodeString() {
+        ValueInCharBuf value = new ValueInCharBuf ( Type.STRING );
 
-        final int startIndex = __index;
+
+        __currentChar = charArray[__index];
+
         if ( __index < charArray.length && __currentChar == '"' ) {
             __index++;
         }
 
+        final int startIndex = __index;
+
+
+        boolean escape = false;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
@@ -632,44 +614,32 @@ public class JsonParser {
             switch ( __currentChar ) {
 
                 case '"':
-                    break done;
-
-                case '\t':
-                case '\n':
-                case '\r':
-                case '\f':
-                case '\b':
-                    throw new JsonException ( exceptionDetails("illegal control character found " + __currentChar ));
+                    if ( !escape )  {
+                        break done;
+                    } else {
+                        escape = false;
+                        continue;
+                    }
 
 
                 case '\\':
-                    if ( __index < charArray.length ) {
-                        __index++;
-                    }
+                    escape = true;
                     continue;
 
             }
+            escape = false;
         }
 
-        value = encodeString ( startIndex, __index );
+        value.startIndex = startIndex;
+        value.endIndex = __index;
+        value.buffer = charArray;
+        value.decodeStrings = this.encodeStrings;
 
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return value;
-    }
-
-    private String encodeString( int start, int to ) {
-        return  encodeStrings  ?
-            JsonStringDecoder.decode ( charArray, start, to )
-            :  new String ( charArray, start + 1, (to - start)-1 );
-
-    }
-
-    private String decodeKeyName( ) {
-        return decodeString ( );
-
+        return value.stringValue ();
     }
 
     private List decodeJsonArray( ) {
@@ -680,7 +650,6 @@ public class JsonParser {
         skipWhiteSpace ( );
 
         List<Object> list = new ArrayList<> ( );
-        this.lastList = list;
 
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
@@ -694,20 +663,16 @@ public class JsonParser {
         do {
             skipWhiteSpace ( );
 
-            setState ( START_LIST_ITEM );
             Object arrayItem = decodeValue ( );
 
-            if ( arrayItem == null && state == END_NULL ) {
+            if ( arrayItem == null ) {
                 list.add ( null ); //JSON null detected
-            } else if ( arrayItem == null ) {
-                throw new JsonException ( exceptionDetails ( "array item was null") );
             } else {
                 list.add ( arrayItem );
             }
 
             arrayIndex++;
 
-            setState ( END_LIST_ITEM );
 
             skipWhiteSpace ( );
 

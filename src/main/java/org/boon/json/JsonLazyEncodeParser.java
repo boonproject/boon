@@ -199,9 +199,7 @@ public class JsonLazyEncodeParser {
 
     private Object decode( String cs ) {
         charArray = cs.toCharArray ();
-        Object root = null;
-        root = decodeValue ().toValue ();
-        return root;
+        return decodeValue ().toValue ();
     }
 
 
@@ -219,11 +217,10 @@ public class JsonLazyEncodeParser {
                 return '\u0000';
             }
         } catch ( Exception ex ) {
-            throw new RuntimeException ( exceptionDetails ( "failure in next " +
-                    ex.getLocalizedMessage () ), ex );
-
+            throw new JsonException (  exceptionDetails ( "unable to advance character"), ex);
         }
     }
+
 
 
     private String exceptionDetails( String message ) {
@@ -475,107 +472,6 @@ public class JsonLazyEncodeParser {
 
 
         return value;
-    }
-
-
-    private Value decodeNumberHarsh() {
-
-        int startIndex = __index;
-
-        boolean doubleFloat = false;
-
-        int index;
-
-        int count = 0;
-        int countDecimalPoint = 0;
-        int eCount = 0;
-        int plusCount = 0;
-
-        loop:
-        for ( index = __index; index < charArray.length; index++, count++ ) {
-            __currentChar = charArray[index];
-
-            switch ( __currentChar ) {
-                case ' ':
-                case '\t':
-                case '\n':
-                case '\r':
-                    __index = index + 1;
-                    break loop;
-
-                case ',':
-                    break loop;
-
-                case ']':
-                    break loop;
-
-                case '}':
-                    break loop;
-
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '0':
-                case '-':
-                    continue loop;
-
-                case '.':
-                    doubleFloat = true;
-                    countDecimalPoint++;
-                    if ( countDecimalPoint > 1 ) {
-                        throw new JsonException ( exceptionDetails ( "number has more than one decimal point" ) );
-                    }
-                    continue loop;
-
-                case 'e':
-                case 'E':
-                    doubleFloat = true;
-                    eCount++;
-                    if ( eCount > 1 ) {
-                        throw new JsonException ( exceptionDetails ( "number has more than one exp definition" ) );
-                    }
-                    continue loop;
-
-                case '+':
-                    doubleFloat = true;
-                    plusCount++;
-                    if ( plusCount > 1 ) {
-                        throw new JsonException ( exceptionDetails ( "number has more than one plus sign" ) );
-                    }
-                    if ( eCount == 0 ) {
-                        throw new JsonException ( exceptionDetails ( "plus sign must come after exp" ) );
-
-                    }
-                    continue loop;
-
-            }
-
-            complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
-        }
-
-        __index = index;
-
-        ValueInCharBuf value = new ValueInCharBuf ();
-        value.buffer = this.charArray;
-        value.startIndex = startIndex;
-        value.endIndex = __index;
-
-        if ( doubleFloat ) {
-            value.type = Type.DOUBLE;
-        } else {
-            value.type = Type.INTEGER;
-        }
-
-        skipWhiteSpace ();
-
-        return value;
-
     }
 
 
