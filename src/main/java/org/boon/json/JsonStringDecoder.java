@@ -1,7 +1,5 @@
 package org.boon.json;
 
-import org.boon.primitive.Byt;
-import org.boon.primitive.ByteBuf;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
@@ -25,25 +23,21 @@ public class JsonStringDecoder {
 
     public static String decode( char[] chars, int start, int to ) {
 
-
-
         if (!Chr.contains ( chars, '\\' , start, to - start) ) {
             return new String (chars, start, to - start);
         }
+        return decodeForSure(chars, start, to);
+    }
+        
+   public static String decodeForSure( char[] chars, int start, int to ) {
 
-        final char[] cs = chars;
-
-        if ( cs[start] == '"' ) {
-            start++;
-        }
-
-        CharBuf builder = CharBuf.create ( cs.length );
+        CharBuf builder = CharBuf.create ( to - start );
         for ( int index = start; index < to; index++ ) {
-            char c = cs[index];
+            char c = chars[index];
             if ( c == '\\' ) {
-                if ( index < cs.length ) {
+                if ( index < to ) {
                     index++;
-                    c = cs[index];
+                    c = chars[index];
                     switch ( c ) {
 
                         case 'n':
@@ -80,8 +74,8 @@ public class JsonStringDecoder {
 
                         case 'u':
 
-                            if ( index + 4 < cs.length ) {
-                                String hex = new String ( cs, index + 1, index + 5 );
+                            if ( index + 4 < to ) {
+                                String hex = new String ( chars, index + 1, index + 5 );
                                 char unicode = ( char ) Integer.parseInt ( hex, 16 );
                                 builder.add ( unicode );
                                 index += 4;

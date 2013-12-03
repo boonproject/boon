@@ -1,9 +1,7 @@
 package org.boon.json;
 
 import org.boon.core.reflection.Reflection;
-import org.boon.json.internal.MapItemValue;
 import org.boon.json.internal.Type;
-import org.boon.json.internal.Value;
 import org.boon.json.internal.ValueInCharBuf;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
@@ -12,8 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.boon.json.ParserState.*;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
@@ -159,9 +155,7 @@ public class JsonParser {
     @SuppressWarnings("unchecked")
     private Object decode( char[] cs ) {
         charArray = cs;
-        Object root = null;
-        root = decodeValue ( );
-        return root;
+        return decodeValue ( );
     }
 
 
@@ -178,7 +172,7 @@ public class JsonParser {
     private final char nextChar() {
 
         try {
-            if ( __index + 1 < charArray.length ) {
+            if ( hasMore( ) ) {
                 __index++;
                 return __currentChar = charArray[__index];
             } else {
@@ -594,8 +588,6 @@ public class JsonParser {
     }
 
     private String decodeString() {
-        ValueInCharBuf value = new ValueInCharBuf ( Type.STRING );
-
 
         __currentChar = charArray[__index];
 
@@ -607,6 +599,7 @@ public class JsonParser {
 
 
         boolean escape = false;
+        boolean hasEscaped = false;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
@@ -623,6 +616,7 @@ public class JsonParser {
 
 
                 case '\\':
+                    hasEscaped = true;
                     escape = true;
                     continue;
 
@@ -630,16 +624,18 @@ public class JsonParser {
             escape = false;
         }
 
-        value.startIndex = startIndex;
-        value.endIndex = __index;
-        value.buffer = charArray;
-        value.decodeStrings = this.encodeStrings;
+        String value = null;
+        if (encodeStrings && hasEscaped) {
+            value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index );
+        } else {
+            value = new String ( charArray, startIndex, ( __index - startIndex ) );
+        }
 
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return value.stringValue ();
+        return value;
     }
 
     private List decodeJsonArray( ) {
