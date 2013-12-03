@@ -10,6 +10,11 @@ public class CharBuf {
 
     protected char[] buffer;
 
+    public CharBuf ( char[] buffer ) {
+        this.buffer = buffer;
+        this.capacity = buffer.length;
+    }
+
 
     public static CharBuf createExact( final int capacity ) {
         return new CharBuf ( capacity ) {
@@ -23,6 +28,10 @@ public class CharBuf {
 
     public static CharBuf create( int capacity ) {
         return new CharBuf ( capacity );
+    }
+
+    public static CharBuf create( char[] buffer ) {
+        return new CharBuf ( buffer );
     }
 
     protected CharBuf( int capacity ) {

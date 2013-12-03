@@ -191,9 +191,7 @@ public class JsonLazyEncodeParser {
     @SuppressWarnings( "unchecked" )
     private Object decode( char[] cs ) {
         charArray = cs;
-        Object root = null;
-        root = decodeValue ().toValue ();
-        return root;
+        return decodeValue ().toValue ();
     }
 
 

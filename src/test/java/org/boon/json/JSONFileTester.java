@@ -25,11 +25,10 @@ public class JSONFileTester {
             final Map<String,Object> map =  JsonParser.parseMap ( IO.read ( file ) );
             final Map<String,Object> map2 = JsonLazyEncodeParser.parseMap ( IO.read ( file ) );
             final Map<String,Object> map3 = JsonAsciiParser.parseMap ( IO.read ( file ) );
-            final Map<String,Object> map4 = JsonLazyAsciiEncodeParser.parseMap ( IO.read ( file ) );
+            final Map<String,Object> map4 = JsonParserCharSequence.parseMap ( IO.read ( file ) );
 
             boolean ok = true;
 
-            ok |=  map2.equals ( map3 ) || die( "maps not equal");
             ok |=  map2.equals ( map4 ) || die( "maps not equal");
             ok |=  map.size (  ) == map2.size () || die( "maps not equal");
 
