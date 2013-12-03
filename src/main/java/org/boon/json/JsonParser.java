@@ -599,6 +599,7 @@ public class JsonParser {
 
 
         boolean escape = false;
+        boolean hasEscaped = false;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
@@ -615,6 +616,7 @@ public class JsonParser {
 
 
                 case '\\':
+                    hasEscaped = true;
                     escape = true;
                     continue;
 
@@ -623,8 +625,8 @@ public class JsonParser {
         }
 
         String value = null;
-        if (encodeStrings) {
-            value = JsonStringDecoder.decode ( charArray, startIndex, __index );
+        if (encodeStrings && hasEscaped) {
+            value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index );
         } else {
             value = new String ( charArray, startIndex, ( __index - startIndex ) );
         }
