@@ -159,9 +159,7 @@ public class JsonParser {
     @SuppressWarnings("unchecked")
     private Object decode( char[] cs ) {
         charArray = cs;
-        Object root = null;
-        root = decodeValue ( );
-        return root;
+        return decodeValue ( );
     }
 
 
@@ -178,7 +176,7 @@ public class JsonParser {
     private final char nextChar() {
 
         try {
-            if ( __index + 1 < charArray.length ) {
+            if ( hasMore( ) ) {
                 __index++;
                 return __currentChar = charArray[__index];
             } else {
