@@ -34,7 +34,7 @@ public class JSONParseTest {
         //                "string" : "test"
         //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonParserCharArray.parseInto ( AllTypes.class, fileContents );
+        AllTypes types = JsonParser.parseInto ( AllTypes.class, fileContents );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -69,7 +69,7 @@ public class JSONParseTest {
     @Test
     public void bug() {
         String badText = "{\"result\":[],\"_expire\":\"-1\"}";
-        Object obj = JsonParserCharArray.parse ( badText );
+        Object obj = JsonParser.parse ( badText );
 
 
 
@@ -94,7 +94,7 @@ public class JSONParseTest {
                 "          }     \n" +
                 "}  \n";
 
-        Object obj = JsonParserCharArray.parse ( badText );
+        Object obj = JsonParser.parse ( badText );
 
         boolean ok = true;
 
@@ -105,7 +105,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithNumber() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 " { 'foo': 1 }  ".replace ( '\'', '"' )
         );
 
@@ -123,7 +123,7 @@ public class JSONParseTest {
     @Test
     public void testParseFalse() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 " { 'foo': false }  ".replace ( '\'', '"' )
         );
 
@@ -141,7 +141,7 @@ public class JSONParseTest {
     @Test
     public void testParseNull() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 " { 'foo': null }  ".replace ( '\'', '"' )
         );
 
@@ -159,7 +159,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithBoolean() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 " { 'foo': true }  ".replace ( '\'', '"' )
         );
 
@@ -178,7 +178,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithList() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
         );
 
@@ -196,7 +196,7 @@ public class JSONParseTest {
     @Test
     public void testParserSimpleMapWithString() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 " { 'foo': 'str ' }  ".replace ( '\'', '"' )
         );
 
@@ -348,7 +348,7 @@ public class JSONParseTest {
             String name = tests[index][0];
             String json = tests[index][1];
 
-                    Object obj = JsonParserCharArray.parse ( json );
+                    Object obj = JsonParser.parse ( json );
 
 
             boolean ok = true;
@@ -364,7 +364,7 @@ public class JSONParseTest {
 
         System.out.printf("%s, %s, %s", name, json, compareTo);
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 json.replace ( '\'', '"' )
         );
 
@@ -381,7 +381,7 @@ public class JSONParseTest {
     @Test
     public void testNumber() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 "1".replace ( '\'', '"' )
         );
 
@@ -399,7 +399,7 @@ public class JSONParseTest {
     @Test
     public void testBoolean() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 "  true  ".replace ( '\'', '"' )
         );
 
@@ -417,7 +417,7 @@ public class JSONParseTest {
     @Test(expected = JsonException.class)
     public void testBooleanParseError() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 "  tbone  ".replace ( '\'', '"' )
         );
 
@@ -440,7 +440,7 @@ public class JSONParseTest {
             "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JsonParserCharArray.fullParse ( testString );
+        Object obj = JsonParser.fullParse ( testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -465,7 +465,7 @@ public class JSONParseTest {
 
 
 
-        Object obj = JsonParserCharArray.fullParse ( testString );
+        Object obj = JsonParser.fullParse ( testString );
 
 
 
@@ -495,7 +495,7 @@ public class JSONParseTest {
         );
 
 
-        Object obj = JsonParserCharArray.parse ( testString );
+        Object obj = JsonParser.parse ( testString );
         System.out.println("here is what I got " + obj);
 
         boolean ok = true;
@@ -515,7 +515,7 @@ public class JSONParseTest {
     public void textInMiddleOfArray() {
 
         try {
-            Object obj = JsonParserCharArray.parse (
+            Object obj = JsonParser.parse (
                     lines ( "[A, 0]"
                     ).replace ( '\'', '"' )
             );
@@ -531,7 +531,7 @@ public class JSONParseTest {
     @Test
     public void oddlySpaced2() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 lines ( "[   2   ,    1, 0]"
                 ).replace ( '\'', '"' )
         );
@@ -545,7 +545,7 @@ public class JSONParseTest {
     @Test
     public void complex() {
 
-        Object obj = JsonParserCharArray.parse (
+        Object obj = JsonParser.parse (
                 lines (
 
                         "{    'num' : 1   , ",

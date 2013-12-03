@@ -22,7 +22,7 @@ public class JSONFileTester {
 
             puts ( "testing", file );
 
-            final Map<String,Object> map =  JsonParserCharArray.parseMap ( IO.read ( file ) );
+            final Map<String,Object> map =  JsonParser.parseMap ( IO.read ( file ) );
             final Map<String,Object> map2 = JsonLazyEncodeParser.parseMap ( IO.read ( file ) );
             final Map<String,Object> map3 = JsonAsciiParser.parseMap ( IO.read ( file ) );
             final Map<String,Object> map4 = JsonLazyAsciiEncodeParser.parseMap ( IO.read ( file ) );
