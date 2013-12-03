@@ -83,6 +83,12 @@ public class CharBuf {
     }
 
 
+    public CharBuf addLine( CharSequence str ) {
+        add ( str.toString ( ) );
+        add ( '\n' );
+        return this;
+    }
+
     public CharBuf add( char[] chars ) {
         if ( chars.length + location < capacity ) {
             Chr._idx ( buffer, location, chars );
