@@ -5,6 +5,7 @@ import org.boon.json.internal.*;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,13 +29,13 @@ public class JsonIndexOverlayParser {
 
     private final boolean useValues;
 
-    private JsonIndexOverlayParser () {
+    public JsonIndexOverlayParser () {
         useValues = false;
 
     }
 
 
-    private JsonIndexOverlayParser ( boolean useValues ) {
+    public JsonIndexOverlayParser ( boolean useValues ) {
         this.useValues = useValues;
 
     }
@@ -122,17 +123,25 @@ public class JsonIndexOverlayParser {
 
 
     @SuppressWarnings( "unchecked" )
-    private Object decode( char[] cs ) {
+    public Object decode( char[] cs ) {
+        __index = 0;
         charArray = cs;
         return decodeValue ().toValue ();
     }
 
 
-    private Object decode( String cs ) {
-        this.charArray = (char[]) Reflection.idx(cs, "value");
+    public Object decode( String cs ) {
+        __index = 0;
+        this.charArray =  Reflection.toCharArray ( cs );
         return decodeValue ().toValue ();
     }
 
+
+    public Object decode( byte[] bytes ) {
+        __index = 0;
+        this.charArray =  Reflection.toCharArray ( bytes );
+        return decodeValue ().toValue ();
+    }
 
     private final boolean hasMore() {
         return __index + 1 < charArray.length;

@@ -9,6 +9,7 @@ import sun.misc.Unsafe;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -124,6 +125,12 @@ public class Reflection {
         private Map<Class<?>, Map<String, FieldAccess>> _allAccessorPropertyFieldsCache = new ConcurrentHashMap<> (200 );
         private Map<Class<?>, Map<String, FieldAccess>> _allAccessorUnsafeFieldsCache = new ConcurrentHashMap<> (200 );
 
+
+        private FieldAccess stringValueField;
+    }
+
+    static {
+        context().stringValueField = Reflection.getPropertyFieldAccessMap ( String.class ).get ( "value" );
 
     }
 
@@ -433,6 +440,16 @@ public class Reflection {
         }
         return fields;
 
+    }
+
+
+    public static  char[] toCharArray( String str ) {
+        return (char[]) _context.stringValueField.getObject ( str );
+    }
+
+
+    public static  char[] toCharArray( byte [] bytes ) {
+        return (char[]) _context.stringValueField.getObject ( new String(bytes, StandardCharsets.UTF_8) );
     }
 
     /**

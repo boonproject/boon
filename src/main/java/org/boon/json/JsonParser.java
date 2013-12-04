@@ -90,15 +90,26 @@ public class JsonParser {
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
-    @SuppressWarnings("unchecked")
-    private Object decode( char[] cs ) {
+
+
+    @SuppressWarnings( "unchecked" )
+    public Object decode( char[] cs ) {
+        __index = 0;
         charArray = cs;
-        return decodeValue ( );
+        return decodeValue ();
     }
 
 
-    private Object decode( String cs ) {
-        charArray = (char[]) Reflection.idx ( cs, "value" );
+    public Object decode( String cs ) {
+        __index = 0;
+        this.charArray =  Reflection.toCharArray ( cs );
+        return decodeValue ();
+    }
+
+
+    public Object decode( byte[] bytes ) {
+        __index = 0;
+        this.charArray =  Reflection.toCharArray ( bytes );
         return decodeValue ();
     }
 

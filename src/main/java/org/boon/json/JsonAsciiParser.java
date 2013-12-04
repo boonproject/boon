@@ -95,7 +95,7 @@ public class JsonAsciiParser {
     private static final int DECIMAL_POINT = '.';
 
 
-    private JsonAsciiParser () {
+    public JsonAsciiParser () {
 
     }
 
@@ -161,11 +161,9 @@ public class JsonAsciiParser {
 
 
     @SuppressWarnings ( "unchecked" )
-    private Object decode ( byte[] cs ) {
+    public Object decode ( byte[] cs ) {
         charArray = cs;
-        Object root = null;
-        root = decodeValue ();
-        return root;
+        return decodeValue ();
     }
 
 
