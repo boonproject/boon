@@ -444,12 +444,20 @@ public class Reflection {
 
 
     public static  char[] toCharArray( String str ) {
-        return (char[]) _context.stringValueField.getObject ( str );
+        if (_useUnsafe) {
+            return (char[]) _context.stringValueField.getObject ( str );
+        } else {
+            return str.toCharArray ();
+        }
     }
 
 
     public static  char[] toCharArray( byte [] bytes ) {
-        return (char[]) _context.stringValueField.getObject ( new String(bytes, StandardCharsets.UTF_8) );
+        if (_useUnsafe) {
+            return (char[]) _context.stringValueField.getObject ( new String(bytes, StandardCharsets.UTF_8) );
+        } else {
+            return new String(bytes, StandardCharsets.UTF_8).toCharArray ();
+        }
     }
 
     /**
