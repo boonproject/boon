@@ -1,6 +1,7 @@
 package org.boon.json.internal;
 
 import org.boon.json.JsonStringDecoder;
+import org.boon.primitive.CharScanner;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -24,7 +25,7 @@ public class ValueInCharBuf extends ValueBase {
 
     public String toString() {
 
-        return new String ( buffer, startIndex, ( endIndex - startIndex ) );
+        return  new String ( buffer, startIndex, ( endIndex - startIndex ) );
     }
 
 
@@ -165,25 +166,6 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-    private static double powersOf10[] = {
-            1.0,
-            10.0,
-            100.0,
-            1_000.0,
-            10_000.0,
-            100_000.0,
-            1_000_000.0,
-            10_000_000.0,
-            100_000_000.0,
-            1_000_000_000.0,
-            10_000_000_000.0,
-            100_000_000_000.0,
-            1_000_000_000_000.0,
-            10_000_000_000_000.0,
-            100_000_000_000_000.0,
-    };
-
-
     private static  float fpowersOf10[] = {
             1.0f,
             10.0f,
@@ -199,73 +181,9 @@ public class ValueInCharBuf extends ValueBase {
 
     @Override
     public double doubleValue() {
+        return CharScanner.doubleValue ( this.buffer, startIndex, endIndex );
 
-        boolean simple = true;
-        int digitsPastPoint = 0;
-        boolean foundPoint = false;
-        boolean negative = false;
-
-        double sign ;
-
-        if ( buffer[startIndex] == '-' ) {
-            startIndex++;
-            negative = true;
-            sign = -1.0;
-        } else {
-            negative = false;
-            sign = 1.0;
-        }
-
-        loop:
-        for ( int index = startIndex; index < endIndex; index++ ) {
-            char ch = buffer[index];
-            switch ( ch ) {
-                case 'e':
-                    simple = false;
-                    break loop;
-                case 'E':
-                    simple = false;
-                    break loop;
-                case 'F':
-                    simple = false;
-                    break loop;
-                case 'f':
-                    simple = false;
-                    break loop;
-                case '.':
-                    foundPoint = true;
-                    continue loop;
-            }
-            if ( foundPoint ) {
-                digitsPastPoint++;
-                if (digitsPastPoint >= powersOf10.length) {
-                    simple = true;
-                    break;
-                }
-            }
-        }
-
-        if ( simple ) {
-            long value;
-            final int length = endIndex - startIndex;
-
-            if ( isInteger ( buffer, startIndex, length, negative ) ) {
-                value = parseIntIgnoreDot ( buffer, startIndex, length );
-            } else {
-                value = parseLongIgnoreDot ( buffer, startIndex, length );
-            }
-            if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[digitsPastPoint] * sign;
-                return value / power;
-
-            }
-
-
-        }
-
-        return Double.parseDouble ( toString () ) * sign;
     }
-
 
     @Override
     public float floatValue() {
@@ -310,7 +228,7 @@ public class ValueInCharBuf extends ValueBase {
             }
             if ( foundPoint ) {
                 digitsPastPoint++;
-                if (digitsPastPoint >= powersOf10.length) {
+                if (digitsPastPoint >= fpowersOf10.length) {
                     simple = true;
                     break;
                 }
@@ -321,7 +239,7 @@ public class ValueInCharBuf extends ValueBase {
             int value;
 
             value = parseIntIgnoreDot ( buffer, startIndex, length );
-            if ( digitsPastPoint < powersOf10.length ) {
+            if ( digitsPastPoint < fpowersOf10.length ) {
                 float power = fpowersOf10[digitsPastPoint] * sign;
                 return value / power;
 

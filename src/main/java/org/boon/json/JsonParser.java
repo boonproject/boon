@@ -4,12 +4,17 @@ import org.boon.core.reflection.Reflection;
 import org.boon.json.internal.Type;
 import org.boon.json.internal.ValueInCharBuf;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.boon.primitive.CharScanner.isInteger;
+import static org.boon.primitive.CharScanner.parseInt;
+import static org.boon.primitive.CharScanner.parseLong;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
@@ -23,22 +28,17 @@ public class JsonParser {
     private int __index;
     private char __currentChar;
 
-    private final boolean encodeStrings;
 
-    private JsonParser ( boolean encodeStrings ) {
-        this.encodeStrings = encodeStrings;
-
-    }
 
     public static Object parse( String cs ) {
-        JsonParser p = new JsonParser ( false );
+        JsonParser p = new JsonParser (  );
         return p.decode ( cs );
 
     }
 
 
     public static Map<String, Object> parseMap( String cs ) {
-        JsonParser p = new JsonParser ( false );
+        JsonParser p = new JsonParser (  );
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
@@ -57,24 +57,6 @@ public class JsonParser {
         Map<String, Object> objectMap = parseMap ( cs );
         return Reflection.fromMap ( objectMap );
     }
-
-
-    public static <T> T fullParseInto( T object, String cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap (objectMap, object);
-    }
-
-    public static <T> T fullParseInto( Class<T> clz, String cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap (objectMap, clz);
-    }
-
-
-    public static Object fullParseIntoJavaObject(  String cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap );
-    }
-
 
 
 
@@ -96,61 +78,17 @@ public class JsonParser {
     }
 
 
-    public static <T> T fullParseInto( T object, char [] cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap (objectMap, object);
-    }
-
-    public static <T> T fullParseInto( Class<T> clz, char [] cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap (objectMap, clz);
-    }
-
-
-    public static Object fullParseIntoJavaObject(  char [] cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap );
-    }
-
-
 
     public static Object parse( char[] cs ) {
-        JsonParser p = new JsonParser ( false  );
+        JsonParser p = new JsonParser (   );
         return p.decode ( cs );
 
     }
 
     public static Map<String, Object> parseMap( char [] cs ) {
-        JsonParser p = new JsonParser ( false );
+        JsonParser p = new JsonParser (  );
         return ( Map<String, Object> ) p.decode ( cs );
     }
-
-
-    public static Object fullParse( String cs ) {
-        JsonParser p = new JsonParser ( true );
-        return p.decode ( cs );
-
-    }
-
-
-    public static Map<String, Object> fullParseMap( String cs ) {
-        JsonParser p = new JsonParser ( true );
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
-
-
-
-    public static Object fullParse( char[] cs ) {
-        JsonParser p = new JsonParser ( true  );
-        return p.decode ( cs );
-
-    }
-
-    public static Map<String, Object> fullParseMap( char [] cs ) {
-        JsonParser p = new JsonParser ( true );
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
-
 
     @SuppressWarnings("unchecked")
     private Object decode( char[] cs ) {
@@ -160,7 +98,7 @@ public class JsonParser {
 
 
     private Object decode( String cs ) {
-        charArray = cs.toCharArray ();
+        charArray = (char[]) Reflection.idx ( cs, "value" );
         return decodeValue ();
     }
 
@@ -427,11 +365,25 @@ public class JsonParser {
 
         boolean doubleFloat = false;
 
+        boolean minus = false;
+
+        boolean simple = true;
+
+        int sign = 1;
+
         int index;
+
+        int digitsPastPoint = 0;
 
         loop:
         for ( index = __index; index < charArray.length; index++ ) {
             __currentChar = charArray[index];
+
+            if (doubleFloat) {
+                digitsPastPoint++;
+            }
+
+
 
             switch ( __currentChar ) {
                 case ' ':
@@ -490,18 +442,25 @@ public class JsonParser {
                     continue loop;
 
                 case '-':
+                    minus = true;
+                    sign = -1;
                     continue loop;
 
 
                 case '+':
+
+                    simple = false;
                     doubleFloat = true;
                     continue loop;
 
                 case 'e':
+                    simple = false;
                     doubleFloat = true;
                     continue loop;
 
                 case 'E':
+
+                    simple = false;
                     doubleFloat = true;
                     continue loop;
 
@@ -516,20 +475,26 @@ public class JsonParser {
 
         __index = index;
 
-        ValueInCharBuf value = new ValueInCharBuf ();
-        value.buffer = this.charArray;
-        value.startIndex = startIndex;
-        value.endIndex = __index;
+        if (minus) {
+            startIndex++;
+        }
 
+        Object value;
         if ( doubleFloat ) {
-            value.type = Type.DOUBLE;
+            value =  CharScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint-1, startIndex, __index );
         } else {
-            value.type = Type.INTEGER;
+
+            if (isInteger(this.charArray, startIndex, __index - startIndex, minus)) {
+                value =  parseInt ( charArray, startIndex, __index - startIndex ) * sign;
+            } else {
+                value =  parseLong ( charArray, startIndex, __index - startIndex ) * sign;
+            }
+
         }
 
         skipWhiteSpace ();
 
-        return value.toValue ();
+        return value;
 
     }
 
@@ -625,7 +590,7 @@ public class JsonParser {
         }
 
         String value = null;
-        if (encodeStrings && hasEscaped) {
+        if ( hasEscaped ) {
             value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index );
         } else {
             value = new String ( charArray, startIndex, ( __index - startIndex ) );

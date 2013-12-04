@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
@@ -9,7 +10,7 @@ public class JsonStringDecoder {
         if ( !string.contains ( "\\" )) {
             return string;
         }
-        char[] cs = string.toCharArray ( );
+        char[] cs = (char[]) Reflection.idx ( string, "value" );
         return decode ( cs, 0, cs.length );
     }
 
@@ -28,8 +29,25 @@ public class JsonStringDecoder {
         }
         return decodeForSure(chars, start, to);
     }
-        
-   public static String decodeForSure( char[] chars, int start, int to ) {
+
+
+
+    public static String decodeForSure( CharSequence cs, int start, int to ) {
+             if (cs instanceof String) {
+                 return decodeForSure ( (String)cs, start, to );
+             } else {
+                 return decode ( cs.subSequence ( start, to ).toString () );
+             }
+
+    }
+
+
+    public static String decodeForSure( String string, int start, int to ) {
+        char[] cs = (char[]) Reflection.idx ( string, "value" );
+        return decodeForSure ( cs, start, to );
+    }
+
+    public static String decodeForSure( char[] chars, int start, int to ) {
 
         CharBuf builder = CharBuf.create ( to - start );
         for ( int index = start; index < to; index++ ) {

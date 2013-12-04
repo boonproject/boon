@@ -305,7 +305,7 @@ public class JsonAsciiParserTest {
                         "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JsonAsciiParser.fullParse ( testString );
+        Object obj = JsonAsciiParser.parse ( testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -330,7 +330,7 @@ public class JsonAsciiParserTest {
 
 
 
-        Object obj = JsonAsciiParser.fullParse ( testString );
+        Object obj = JsonAsciiParser.parse ( testString );
 
 
 

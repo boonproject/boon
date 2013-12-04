@@ -485,7 +485,6 @@ public class JsonParserCharSequence {
     }
 
     private String decodeString () {
-        ValueInCharBuf value = new ValueInCharBuf ( Type.STRING );
 
         __currentChar = charSequence.charAt ( __index);
 
@@ -497,7 +496,7 @@ public class JsonParserCharSequence {
 
         boolean escape = false;
 
-        boolean encoded = false;
+        boolean hasEscaped = false;
 
         done:
         for (; __index < this.charSequence.length (); __index++ ) {
@@ -514,7 +513,7 @@ public class JsonParserCharSequence {
 
 
                 case '\\':
-                    encoded = true;
+                    hasEscaped = true;
                     escape = true;
                     continue;
 
@@ -523,19 +522,20 @@ public class JsonParserCharSequence {
         }
 
 
+                String value = null;
+                if (hasEscaped) {
+                    value = JsonStringDecoder.decodeForSure ( charSequence, startIndex, __index );
+                } else {
+                    value = charSequence.subSequence ( startIndex, __index ).toString ();
 
-
-        value.startIndex = 0;
-        value.endIndex = __index - startIndex;
-        value.buffer = charSequence.subSequence ( startIndex, __index ).toString ().toCharArray ();
-        value.decodeStrings = encoded;
+                }
 
         if ( __index < charSequence.length () ) {
             __index++;
         }
 
 
-        return value.stringValue ();
+        return value;
     }
 
     private List decodeJsonArray () {

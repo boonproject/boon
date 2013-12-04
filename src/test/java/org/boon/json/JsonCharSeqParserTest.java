@@ -304,7 +304,7 @@ public class JsonCharSeqParserTest {
                             "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-            Object obj = JsonParserCharSequence.fullParse ( testString );
+            Object obj = JsonParserCharSequence.parse ( testString );
 
             System.out.println("here is what I got " + obj);
 
@@ -329,7 +329,7 @@ public class JsonCharSeqParserTest {
 
 
 
-            Object obj = JsonParserCharSequence.fullParse ( testString );
+            Object obj = JsonParserCharSequence.parse ( testString );
 
 
 

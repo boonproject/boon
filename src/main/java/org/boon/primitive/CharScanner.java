@@ -365,4 +365,129 @@ public class CharScanner {
 
     private final static long L_BILLION = 1000000000;
 
+
+
+
+    public static double doubleValue(char [] buffer, int startIndex, int endIndex) {
+
+        boolean simple = true;
+        int digitsPastPoint = 0;
+        boolean foundPoint = false;
+        boolean negative = false;
+
+        double sign ;
+
+        if ( buffer[startIndex] == '-' ) {
+            startIndex++;
+            negative = true;
+            sign = -1.0;
+        } else {
+            negative = false;
+            sign = 1.0;
+        }
+
+        loop:
+        for ( int index = startIndex; index < endIndex; index++ ) {
+            char ch = buffer[index];
+            switch ( ch ) {
+                case 'e':
+                    simple = false;
+                    break loop;
+                case 'E':
+                    simple = false;
+                    break loop;
+                case 'F':
+                    simple = false;
+                    break loop;
+                case 'f':
+                    simple = false;
+                    break loop;
+                case '.':
+                    foundPoint = true;
+                    continue loop;
+            }
+            if ( foundPoint ) {
+                digitsPastPoint++;
+                if (digitsPastPoint >= powersOf10.length) {
+                    simple = true;
+                    break;
+                }
+            }
+        }
+
+        if ( simple ) {
+            long value;
+            final int length = endIndex - startIndex;
+
+            if ( isInteger ( buffer, startIndex, length, negative ) ) {
+                value = parseIntIgnoreDot ( buffer, startIndex, length );
+            } else {
+                value = parseLongIgnoreDot ( buffer, startIndex, length );
+            }
+            if ( digitsPastPoint < powersOf10.length ) {
+                double power = powersOf10[digitsPastPoint] * sign;
+                return value / power;
+
+            }
+
+
+        }
+
+        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) )) * sign;
+    }
+
+
+
+    public static double simpleDouble(char [] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex) {
+
+        double sign ;
+
+        if ( negative ) {
+            sign = -1.0;
+        } else {
+            sign = 1.0;
+        }
+
+
+        if ( simple ) {
+            long value;
+            final int length = endIndex - startIndex;
+
+            if ( isInteger ( buffer, startIndex, length, negative ) ) {
+                value = parseIntIgnoreDot ( buffer, startIndex, length );
+            } else {
+                value = parseLongIgnoreDot ( buffer, startIndex, length );
+            }
+            if ( digitsPastPoint < powersOf10.length ) {
+                double power = powersOf10[digitsPastPoint] * sign;
+                return value / power;
+
+            }
+
+
+        }
+
+        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) )) * sign;
+    }
+
+
+    private static double powersOf10[] = {
+            1.0,
+            10.0,
+            100.0,
+            1_000.0,
+            10_000.0,
+            100_000.0,
+            1_000_000.0,
+            10_000_000.0,
+            100_000_000.0,
+            1_000_000_000.0,
+            10_000_000_000.0,
+            100_000_000_000.0,
+            1_000_000_000_000.0,
+            10_000_000_000_000.0,
+            100_000_000_000_000.0,
+    };
+
+
 }

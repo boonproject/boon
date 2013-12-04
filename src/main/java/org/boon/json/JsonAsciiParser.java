@@ -2,9 +2,8 @@ package org.boon.json;
 
 import org.boon.core.reflection.Reflection;
 import org.boon.primitive.Byt;
-import org.boon.primitive.ByteBuf;
+import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -13,6 +12,9 @@ import java.util.Map;
 
 import static org.boon.json.ParserState.*;
 import static org.boon.json.ParserState.END_LIST_ITEM;
+import static org.boon.primitive.ByteScanner.isInteger;
+import static org.boon.primitive.ByteScanner.parseInt;
+import static org.boon.primitive.ByteScanner.parseLong;
 
 public class JsonAsciiParser {
 
@@ -93,40 +95,15 @@ public class JsonAsciiParser {
     private static final int DECIMAL_POINT = '.';
 
 
-    private final boolean encodeStrings;
-
-
     private JsonAsciiParser () {
-        encodeStrings = false;
 
     }
 
-    private JsonAsciiParser (boolean encodeStrings) {
-        this.encodeStrings = encodeStrings;
-
-    }
 
     public static Object parse ( String cs ) {
         JsonAsciiParser p = new JsonAsciiParser ();
         return p.decode ( cs );
 
-    }
-
-
-    public static Object fullParse ( String cs ) {
-        JsonAsciiParser p = new JsonAsciiParser (true);
-        return p.decode ( cs );
-
-    }
-
-    public static Map<String, Object> fullParseMap ( String cs ) {
-        JsonAsciiParser p = new JsonAsciiParser ( true );
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
-
-    public static Map<String, Object> fullParseMap ( byte[] cs ) {
-        JsonAsciiParser p = new JsonAsciiParser ( true );
-        return ( Map<String, Object> ) p.decode ( cs );
     }
 
 
@@ -170,38 +147,6 @@ public class JsonAsciiParser {
     }
 
 
-
-    public static <T> T fullParseInto( T object, String cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap, object );
-    }
-
-    public static <T> T fullParseInto( Class<T> clz, String cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap, clz );
-    }
-
-
-    public static Object fullParseIntoJavaObject( String cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap );
-    }
-
-    public static <T> T fullParseInto( T object, byte[] cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap, object );
-    }
-
-    public static <T> T fullParseInto( Class<T> clz, byte[]  cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap, clz );
-    }
-
-
-    public static Object fullParseIntoJavaObject( byte[]  cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap );
-    }
 
     public static Object parse ( byte[] cs ) {
         JsonAsciiParser p = new JsonAsciiParser ();
@@ -510,11 +455,25 @@ public class JsonAsciiParser {
         int eCount = 0;
         int plusCount = 0;
 
-        CharBuf buf =  CharBuf.create ( 20 );
+
+        boolean minus = false;
+
+        boolean simple = true;
+
+        int sign = 1;
+
+
+        int digitsPastPoint = 0;
+
 
         loop:
         for ( index = __index; index < charArray.length; index++, count++ ) {
             __currentChar = charArray[ index ];
+
+            if (doubleFloat) {
+                digitsPastPoint++;
+            }
+
 
             switch ( __currentChar ) {
                 case SPACE:
@@ -555,8 +514,9 @@ public class JsonAsciiParser {
                 case ALPHA_8:
                 case ALPHA_9:
                 case ALPHA_0:
+                    continue loop;
                 case MINUS:
-                    buf.addChar ( __currentChar );
+                    minus = true;
                     continue loop;
 
                 case DECIMAL_POINT:
@@ -566,22 +526,20 @@ public class JsonAsciiParser {
                     if ( countDecimalPoint > 1 ) {
                         throw new JsonException ( exceptionDetails ( "number has more than one decimal point" ) );
                     }
-
-                    buf.addChar ( __currentChar );
                     continue loop;
 
                 case LETTER_E:
                 case LETTER_BIG_E:
+                    simple = false;
                     doubleFloat = true;
                     eCount++;
                     if ( eCount > 1 ) {
                         throw new JsonException ( exceptionDetails ( "number has more than one exp definition" ) );
                     }
-
-                    buf.addChar ( __currentChar );
                     continue loop;
 
                 case PLUS:
+                    simple = false;
                     doubleFloat = true;
                     plusCount++;
                     if ( plusCount > 1 ) {
@@ -591,8 +549,6 @@ public class JsonAsciiParser {
                         throw new JsonException ( exceptionDetails ( "plus sign must come after exp" ) );
 
                     }
-
-                    buf.addChar ( __currentChar );
                     continue loop;
 
             }
@@ -602,12 +558,17 @@ public class JsonAsciiParser {
 
         __index = index;
 
-
-        Object value = null;
+        Object value;
         if ( doubleFloat ) {
-                value = buf.doubleValue ();
+            value = ByteScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
         } else {
-                value = buf.toIntegerWrapper ();
+
+            if (isInteger(this.charArray, startIndex, __index - startIndex, minus)) {
+                value =  parseInt ( charArray, startIndex, __index - startIndex ) * sign;
+            } else {
+                value =  parseLong ( charArray, startIndex, __index - startIndex ) * sign;
+            }
+
         }
 
         skipWhiteSpace ();

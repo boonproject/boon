@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.boon.json.ParserState.*;
-
 /**
  * Converts an input JSON String into Java objects works with String or char array
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
  */
-public class JsonLazyEncodeParser {
+public class JsonIndexOverlayParser {
 
     private char[] charArray;
     private int __index;
@@ -26,45 +24,45 @@ public class JsonLazyEncodeParser {
 
     private final boolean useValues;
 
-    private JsonLazyEncodeParser() {
+    private JsonIndexOverlayParser () {
         useValues = false;
 
     }
 
 
-    private JsonLazyEncodeParser( boolean useValues ) {
+    private JsonIndexOverlayParser ( boolean useValues ) {
         this.useValues = useValues;
 
     }
 
 
     public static Object parse( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
+        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
         return p.decode ( cs );
 
     }
 
 
     public static Map<String, Value> parseMapUseValue( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true );
+        JsonIndexOverlayParser p = new JsonIndexOverlayParser ( true );
         return ( Map<String, Value> ) p.decode ( cs );
     }
 
 
     public static Map<String, Value> parseMapUseValue( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true );
+        JsonIndexOverlayParser p = new JsonIndexOverlayParser ( true );
         return ( Map<String, Value> ) p.decode ( cs );
     }
 
 
     public static Map<String, Object> parseMap( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
+        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
 
     public static Object parse( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
+        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
         return p.decode ( cs );
 
     }
@@ -72,7 +70,7 @@ public class JsonLazyEncodeParser {
 
 
     public static Map<String, Object> parseMap( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
+        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
         return ( Map<String, Object> ) p.decode ( cs );
     }
 

@@ -28,7 +28,7 @@ public class JSONParse2Test {
                         "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JsonLazyEncodeParser.parse ( testString );
+        Object obj = JsonIndexOverlayParser.parse ( testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -38,9 +38,9 @@ public class JSONParse2Test {
 
         String value = (String) obj;
 
-        assertEquals("this is all sort of text,    do you think it is \\\"cool\\\" ", obj);
+        assertEquals("this is all sort of text,    do you think it is \"cool\" ", obj);
 
-        System.out.println(obj.getClass());
+        System.out.println ( obj.getClass () );
     }
 
 
@@ -57,7 +57,7 @@ public class JSONParse2Test {
 
         puts (json);
 
-        Map<String, Object> parser = JsonLazyEncodeParser.fullParseMap  ( json );
+        Map<String, Object> parser = JsonIndexOverlayParser.parseMap ( json );
         boolean ok = true;
 
         puts (parser);
@@ -80,13 +80,13 @@ public class JSONParse2Test {
 
         puts (json);
 
-        Map<String, Object> parser = JsonLazyEncodeParser.parseMap  ( json );
+        Map<String, Object> parser = JsonIndexOverlayParser.parseMap ( json );
         boolean ok = true;
 
         puts (parser);
         ok |=  idx (parser, "subTopicIds").equals ( list(337184288, 337184283) ) || die ( "err subtopics " + parser);
 
-        ok |=  idx (parser, "name").equals ( "Festival Présences 2014 \\\"Paris Berlin\\\"" ) || die ( "err name" + idx( parser, "name"));
+        ok |=  idx (parser, "name").equals ( "Festival Présences 2014 \"Paris Berlin\"" ) || die ( "err name" + idx( parser, "name"));
         puts ("ok", ok);
     }
 
@@ -105,7 +105,7 @@ public class JSONParse2Test {
         //
          //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonLazyEncodeParser.parseInto ( AllTypes.class, fileContents );
+        AllTypes types = JsonIndexOverlayParser.parseInto ( AllTypes.class, fileContents );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -117,7 +117,7 @@ public class JSONParse2Test {
             validateAllTypes ( allType );
         }
 
-        ok |= types.getString2 ().equals ( "test \\\"I love bacon \\\", do you?" ) || die("bacon hater");;
+        ok |= types.getString2 ().equals ( "test \"I love bacon \", do you?" ) || die("bacon hater");;
 
     }
 
@@ -134,7 +134,7 @@ public class JSONParse2Test {
         //                "string" : "test"
         //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonLazyEncodeParser.fullParseInto ( AllTypes.class, fileContents );
+        AllTypes types = JsonIndexOverlayParser.parseInto ( AllTypes.class, fileContents );
 
 
         validateAllTypes ( types );
@@ -179,7 +179,7 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithNumber() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 " { 'foo': 1 }  ".replace ( '\'', '"' )
         );
 
@@ -199,7 +199,7 @@ public class JSONParse2Test {
     @Test
     public void testParseFalse() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 " { 'foo': false }  ".replace ( '\'', '"' )
         );
 
@@ -217,7 +217,7 @@ public class JSONParse2Test {
     @Test
     public void testParseNull() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 " { 'foo': null }  ".replace ( '\'', '"' )
         );
 
@@ -235,7 +235,7 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithBoolean() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 " { 'foo': true }  ".replace ( '\'', '"' )
         );
 
@@ -254,7 +254,7 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithList() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
         );
 
@@ -272,7 +272,7 @@ public class JSONParse2Test {
     @Test
     public void testParserSimpleMapWithString() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 " { 'foo': 'str ' }  ".replace ( '\'', '"' )
         );
 
@@ -337,7 +337,7 @@ public class JSONParse2Test {
 
         System.out.printf("%s, %s, %s", name, json, compareTo);
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 json.replace ( '\'', '"' )
         );
 
@@ -355,7 +355,7 @@ public class JSONParse2Test {
     @Test
     public void testNumber() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 "1".replace ( '\'', '"' )
         );
 
@@ -373,7 +373,7 @@ public class JSONParse2Test {
     @Test
     public void testBoolean() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 "  true  ".replace ( '\'', '"' )
         );
 
@@ -391,7 +391,7 @@ public class JSONParse2Test {
     @Test(expected = JsonException.class)
     public void testBooleanParseError() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 "  tbone  ".replace ( '\'', '"' )
         );
 
@@ -414,7 +414,7 @@ public class JSONParse2Test {
                         "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JsonLazyEncodeParser.fullParse ( testString );
+        Object obj = JsonIndexOverlayParser.parse ( testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -439,7 +439,7 @@ public class JSONParse2Test {
 
 
 
-        Object obj = JsonLazyEncodeParser.fullParse ( testString );
+        Object obj = JsonIndexOverlayParser.parse ( testString );
 
 
 
@@ -466,7 +466,7 @@ public class JSONParse2Test {
 
 
 
-        Object obj = JsonLazyEncodeParser.parse ( testString );
+        Object obj = JsonIndexOverlayParser.parse ( testString );
         System.out.println("here is what I got " + obj);
 
         boolean ok = true;
@@ -486,7 +486,7 @@ public class JSONParse2Test {
     public void textInMiddleOfArray() {
 
         try {
-            Object obj = JsonLazyEncodeParser.parse (
+            Object obj = JsonIndexOverlayParser.parse (
                     lines ( "[A, 0]"
                     ).replace ( '\'', '"' )
             );
@@ -502,7 +502,7 @@ public class JSONParse2Test {
     @Test
     public void oddlySpaced2() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 lines ( "[   2   ,    1, 0]"
                 ).replace ( '\'', '"' )
         );
@@ -516,7 +516,7 @@ public class JSONParse2Test {
     @Test
     public void complex() {
 
-        Object obj = JsonLazyEncodeParser.parse (
+        Object obj = JsonIndexOverlayParser.parse (
                 lines (
 
                         "{    'num' : 1   , ",
