@@ -20,25 +20,13 @@ public class JsonParserCharSequence {
     private char __currentChar;
 
 
-    private final boolean decodeStrings;
-
-    private JsonParserCharSequence ( boolean decodeStrings ) {
-        this.decodeStrings = decodeStrings;
-
-    }
 
     public static Object parse ( CharSequence cs ) {
-        JsonParserCharSequence p = new JsonParserCharSequence ( false );
+        JsonParserCharSequence p = new JsonParserCharSequence (  );
         return p.decode ( cs );
 
     }
 
-
-    public static Object fullParse ( CharSequence cs ) {
-        JsonParserCharSequence p = new JsonParserCharSequence ( true );
-        return p.decode ( cs );
-
-    }
 
     public static <T> T parseInto ( T object, CharSequence cs ) {
         Map<String, Object> objectMap = parseMap ( cs );
@@ -57,31 +45,9 @@ public class JsonParserCharSequence {
     }
 
 
-    public static <T> T fullParseInto ( T object, CharSequence cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap, object );
-    }
-
-    public static <T> T fullParseInto ( Class<T> clz, CharSequence cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap, clz );
-    }
-
-
-    public static Object fullParseIntoJavaObject ( CharSequence cs ) {
-        Map<String, Object> objectMap = fullParseMap ( cs );
-        return Reflection.fromMap ( objectMap );
-    }
-
-
-    public static Map<String, Object> fullParseMap ( CharSequence cs ) {
-        JsonParserCharSequence p = new JsonParserCharSequence ( true );
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
-
 
     public static Map<String, Object> parseMap ( CharSequence cs ) {
-        JsonParserCharSequence p = new JsonParserCharSequence ( false );
+        JsonParserCharSequence p = new JsonParserCharSequence (  );
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
@@ -531,6 +497,8 @@ public class JsonParserCharSequence {
 
         boolean escape = false;
 
+        boolean encoded = false;
+
         done:
         for (; __index < this.charSequence.length (); __index++ ) {
             __currentChar = charSequence.charAt ( __index );
@@ -546,6 +514,7 @@ public class JsonParserCharSequence {
 
 
                 case '\\':
+                    encoded = true;
                     escape = true;
                     continue;
 
@@ -559,7 +528,7 @@ public class JsonParserCharSequence {
         value.startIndex = 0;
         value.endIndex = __index - startIndex;
         value.buffer = charSequence.subSequence ( startIndex, __index ).toString ().toCharArray ();
-        value.decodeStrings = decodeStrings;
+        value.decodeStrings = encoded;
 
         if ( __index < charSequence.length () ) {
             __index++;

@@ -22,39 +22,24 @@ public class JsonLazyEncodeParser {
     private int __index;
     private char __currentChar;
 
-    private final boolean decodeStrings;
 
 
     private final boolean useValues;
 
     private JsonLazyEncodeParser() {
         useValues = false;
-        decodeStrings = false;
 
     }
 
 
     private JsonLazyEncodeParser( boolean useValues ) {
         this.useValues = useValues;
-        this.decodeStrings = false;
 
     }
 
-
-    private JsonLazyEncodeParser( boolean useValues, boolean decodeStrings ) {
-        this.useValues = useValues;
-        this.decodeStrings = decodeStrings;
-
-    }
 
     public static Object parse( String cs ) {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
-        return p.decode ( cs );
-
-    }
-
-    public static Object fullParse( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true );
         return p.decode ( cs );
 
     }
@@ -72,33 +57,11 @@ public class JsonLazyEncodeParser {
     }
 
 
-    public static Map<String, Value> fullParseMapUseValue( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true, true );
-        return ( Map<String, Value> ) p.decode ( cs );
-    }
-
-
-    public static Map<String, Value> fullParseMapUseValue( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( true, true );
-        return ( Map<String, Value> ) p.decode ( cs );
-    }
-
-
     public static Map<String, Object> parseMap( String cs ) {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
-
-    public static Map<String, Object> fullParseMap( String cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true );
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
-
-    public static Map<String, Object> fullParseMap( char [] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true );
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
 
     public static Object parse( char[] cs ) {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
@@ -107,11 +70,6 @@ public class JsonLazyEncodeParser {
     }
 
 
-    public static Object fullParse( char[] cs ) {
-        JsonLazyEncodeParser p = new JsonLazyEncodeParser ( false, true );
-        return p.decode ( cs );
-
-    }
 
     public static Map<String, Object> parseMap( char[] cs ) {
         JsonLazyEncodeParser p = new JsonLazyEncodeParser ();
@@ -124,18 +82,9 @@ public class JsonLazyEncodeParser {
         return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, object );
     }
 
-    public static <T> T fullParseInto( T object, String cs ) {
-        Map objectMap = fullParseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, object );
-    }
 
     public static <T> T parseInto( Class<T> clz, String cs ) {
         Map objectMap = parseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, clz );
-    }
-
-    public static <T> T fullParseInto( Class<T> clz, String cs ) {
-        Map objectMap = fullParseMapUseValue ( cs );
         return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, clz );
     }
 
@@ -146,32 +95,18 @@ public class JsonLazyEncodeParser {
     }
 
 
-    public static Object fullParseIntoJavaObject( String cs ) {
-        Map objectMap = fullParseMapUseValue ( cs );
-        return Reflection.fromMap ( ( Map ) objectMap );
-    }
-
-
     public static <T> T parseInto( T object, char[] cs ) {
         Map objectMap = parseMapUseValue ( cs );
         return ( T ) Reflection.fromValueMap ( objectMap, object );
     }
 
 
-    public static <T> T fullParseInto( T object, char[] cs ) {
-        Map objectMap = fullParseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( objectMap, object );
-    }
 
     public static <T> T parseInto( Class<T> clz, char[] cs ) {
         Map objectMap = parseMapUseValue ( cs );
         return ( T ) Reflection.fromValueMap ( objectMap, clz );
     }
 
-    public static <T> T fullParseInto( Class<T> clz, char[] cs ) {
-        Map objectMap = fullParseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( objectMap, clz );
-    }
 
     public static Object parseIntoJavaObject( char[] cs ) {
         Map objectMap = parseMapUseValue ( cs );
@@ -179,10 +114,6 @@ public class JsonLazyEncodeParser {
     }
 
 
-    public static Object fullParseIntoJavaObject( char[] cs ) {
-        Map objectMap = fullParseMapUseValue ( cs );
-        return Reflection.fromMap ( objectMap );
-    }
 
 
     //
@@ -196,7 +127,7 @@ public class JsonLazyEncodeParser {
 
 
     private Object decode( String cs ) {
-        charArray = cs.toCharArray ();
+        this.charArray = (char[]) Reflection.idx(cs, "value");
         return decodeValue ().toValue ();
     }
 
@@ -345,7 +276,7 @@ public class JsonLazyEncodeParser {
                 if ( useValues ) {
                     valueMap.add ( miv );
                 } else {
-                    map.items.add ( miv );
+                    map.add ( miv );
                 }
 
 
@@ -656,6 +587,8 @@ public class JsonLazyEncodeParser {
 
         boolean escape = false;
 
+        boolean encoded = false;
+
         done:
         for (; __index < this.charArray.length; __index++ ) {
             __currentChar = charArray[__index];
@@ -671,6 +604,7 @@ public class JsonLazyEncodeParser {
 
 
                 case '\\':
+                    encoded = true;
                     escape = true;
                     continue;
 
@@ -681,7 +615,7 @@ public class JsonLazyEncodeParser {
         value.startIndex = startIndex;
         value.endIndex = __index;
         value.buffer = charArray;
-        value.decodeStrings = decodeStrings;
+        value.decodeStrings = encoded;
 
         if ( __index < charArray.length ) {
             __index++;

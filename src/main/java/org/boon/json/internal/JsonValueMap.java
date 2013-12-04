@@ -10,7 +10,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     Map<String, Value> map = null;
 
-    public Entry<String, Value>[] items = new  Entry[20];
+    public Entry<String, Value>[] items = new  Entry[ 20 ];
 
     int len = 0;
 
