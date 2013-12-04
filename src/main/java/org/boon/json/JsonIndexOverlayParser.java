@@ -6,6 +6,7 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,9 @@ public class JsonIndexOverlayParser {
     private char[] charArray;
     private int __index;
     private char __currentChar;
+
+
+    private static ValueBase EMPTY_LIST = new ValueBase ( Collections.EMPTY_LIST );
 
 
 
@@ -299,106 +303,93 @@ public class JsonIndexOverlayParser {
 
 
     private Value decodeValue() {
-        Value value = null;
 
-        skipWhiteSpace ();
+        label:
+        for (; __index < this.charArray.length; __index++ ) {
+            __currentChar = charArray[__index];
 
-        switch ( __currentChar ) {
+            switch ( __currentChar ) {
+
             case '\n':
-                break;
+                continue label;
 
             case '\r':
-                break;
+                continue label;
 
             case ' ':
-                break;
+                continue label;
 
             case '\t':
-                break;
+                continue label;
 
-            case '\b':
-                break;
-
-            case '\f':
-                break;
 
             case '"':
-                value = decodeString ();
-                break;
+                return  decodeString ();
 
 
             case 't':
-                value = decodeTrue ();
-                break;
+                return decodeTrue ();
 
             case 'f':
-                value = decodeFalse ();
-                break;
+                return decodeFalse ();
+
 
             case 'n':
-                value = decodeNull ();
-                break;
+                return decodeNull ();
 
             case '[':
-                value = decodeJsonArray ();
-                break;
+                return  decodeJsonArray ();
 
             case '{':
-                value = decodeJsonObject ();
-                break;
+                return decodeJsonObject ();
 
             case '1':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '2':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '3':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '4':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '5':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '6':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '7':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '8':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '9':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '0':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
             case '-':
-                value = decodeNumber ();
-                break;
+                return decodeNumber ();
 
-            default:
-                throw new JsonException ( exceptionDetails ( "Unable to determine the " +
-                        "current character, it is not a string, number, array, or object" ) );
 
+                default :
+
+                    throw new JsonException ( exceptionDetails ( "Unable to determine the " +
+                            "current character, it is not a string, number, array, or object" ) );
+
+
+
+            }
         }
 
+        throw new JsonException ( exceptionDetails ( "Unable to determine the " +
+                "current character, it is not a string, number, array, or object" ) );
 
-        return value;
     }
 
 
@@ -632,6 +623,15 @@ public class JsonIndexOverlayParser {
         skipWhiteSpace ();
 
 
+
+
+        /* the list might be empty  */
+        if ( __currentChar == ']' ) {
+            this.nextChar ();
+            return EMPTY_LIST;
+        }
+
+
         List<Object> list = null;
 
         if ( useValues ) {
@@ -641,14 +641,6 @@ public class JsonIndexOverlayParser {
         }
 
         Value value = new ValueBase ( list );
-
-
-        /* the list might be empty  */
-        if ( __currentChar == ']' ) {
-            this.nextChar ();
-            return value;
-        }
-
 
         int arrayIndex = 0;
 

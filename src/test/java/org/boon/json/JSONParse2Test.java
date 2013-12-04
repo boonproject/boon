@@ -491,6 +491,8 @@ public class JSONParse2Test {
                     ).replace ( '\'', '"' )
             );
 
+            puts (obj);
+
         } catch (Exception ex) {
             //success
             return;
