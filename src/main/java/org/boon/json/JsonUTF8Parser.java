@@ -10,13 +10,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Exceptions.die;
 import static org.boon.json.ParserState.*;
 import static org.boon.json.ParserState.END_LIST_ITEM;
 import static org.boon.primitive.ByteScanner.isInteger;
 import static org.boon.primitive.ByteScanner.parseInt;
 import static org.boon.primitive.ByteScanner.parseLong;
 
-public class JsonAsciiParser {
+public class JsonUTF8Parser {
 
     private byte[] charArray;
     private int __index;
@@ -95,20 +96,20 @@ public class JsonAsciiParser {
     private static final int DECIMAL_POINT = '.';
 
 
-    public JsonAsciiParser () {
+    public JsonUTF8Parser () {
 
     }
 
 
     public static Object parse ( String cs ) {
-        JsonAsciiParser p = new JsonAsciiParser ();
+        JsonUTF8Parser p = new JsonUTF8Parser ();
         return p.decode ( cs );
 
     }
 
 
     public static Map<String, Object> parseMap ( String cs ) {
-        JsonAsciiParser p = new JsonAsciiParser (  );
+        JsonUTF8Parser p = new JsonUTF8Parser (  );
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
@@ -149,13 +150,13 @@ public class JsonAsciiParser {
 
 
     public static Object parse ( byte[] cs ) {
-        JsonAsciiParser p = new JsonAsciiParser ();
+        JsonUTF8Parser p = new JsonUTF8Parser ();
         return p.decode ( cs );
 
     }
 
     public static Map<String, Object> parseMap ( byte[] cs ) {
-        JsonAsciiParser p = new JsonAsciiParser ();
+        JsonUTF8Parser p = new JsonUTF8Parser ();
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
@@ -629,13 +630,14 @@ public class JsonAsciiParser {
         throw new JsonException ( exceptionDetails ( "false not parsed properly" ) );
     }
 
+    CharBuf builder = CharBuf.create (  20 );
+
     private final String decodeString () {
 
         if ( __index < charArray.length && __currentChar == DOUBLE_QUOTE ) {
             __index++;
         }
 
-        CharBuf builder = CharBuf.create (  20 );
 
         loop:
         for (; __index < this.charArray.length; __index++ ) {
@@ -704,7 +706,11 @@ public class JsonAsciiParser {
                             continue loop;
                     }
                default:
-                   builder.addChar ( __currentChar );
+                   if (this.charArray[ __index ]>=0) {
+                       builder.addChar ( this.charArray[ __index ]);
+                   } else {
+                        builder.addChar ( utf8Char () );
+                   }
 
             }
         }
@@ -714,7 +720,10 @@ public class JsonAsciiParser {
             __index++;
         }
 
-        return builder.toString ();
+        String str =  builder.toString ();
+
+        builder.readForRecycle ();
+        return  str;
     }
 
     private String decodeKeyName () {
@@ -798,6 +807,63 @@ public class JsonAsciiParser {
 
         charString = charString + " with an int value of " + ( ( int ) c );
         return charString;
+    }
+
+
+
+
+    private final int utf8Char () {
+
+
+
+
+        int b1 =  this.charArray[ __index ];
+        boolean ok = true;
+
+        if ( ( b1 >> 5 ) == -2 ) {
+            int b2;
+
+            ok = hasMore () || die ( "unable to parse 2 byte utf 8 - b2" );
+            __index++;
+            b2 = this.charArray[ __index ];
+            return ( ( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 ) );
+        } else if ( ( b1 >> 4 ) == -2 ) {
+            int b2;
+            int b3;
+
+            ok = hasMore () || die ( "unable to parse 3 byte utf 8 - b2" );
+            __index++;
+            b2 = this.charArray[ __index ];
+            ok = hasMore () || die ( "unable to parse 3 byte utf 8 - b3" );
+            __index++;
+            b3 = this.charArray[ __index ];
+            return ( ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 ) );
+        } else if ( ( b1 >> 3 ) == -2 ) {
+            int b2;
+            int b3;
+            int b4;
+
+            ok = hasMore () || die ( "unable to parse 4 byte utf 8 - b2" );
+            __index++;
+            b2 = this.charArray[ __index ];
+            ok = hasMore () || die ( "unable to parse 4 byte utf 8 - b3" );
+            __index++;
+            b3 = this.charArray[ __index ];
+            ok = hasMore () || die ( "unable to parse 4 byte utf 8 - b4" );
+            __index++;
+            b4 = this.charArray[ __index ];
+
+            int uc = ( ( b1 & 0x07 ) << 18 ) |
+                    ( ( b2 & 0x3f ) << 12 ) |
+                    ( ( b3 & 0x3f ) << 6 ) |
+                    ( b4 & 0x3f );
+            //TODO use surrogate
+            return ( char ) uc;
+        } else {
+            die ( "Unable to proceed" );
+            return '0';
+        }
+
     }
 
 

@@ -15,7 +15,7 @@ import static org.boon.Maps.map;
 import static org.boon.Str.lines;
 import static org.junit.Assert.assertEquals;
 
-public class JsonAsciiParserTest {
+public class JsonUTF8ParserTest {
 
 
 
@@ -32,7 +32,7 @@ public class JsonAsciiParserTest {
         //                "string" : "test"
         //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonAsciiParser.parseInto ( AllTypes.class, fileContents );
+        AllTypes types = JsonUTF8Parser.parseInto ( AllTypes.class, fileContents );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -68,7 +68,7 @@ public class JsonAsciiParserTest {
     @Test
         public void testParserSimpleMapWithNumber() {
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     " { 'foo': 1 }  ".replace ( '\'', '"' )
             );
 
@@ -88,7 +88,7 @@ public class JsonAsciiParserTest {
         @Test
         public void testParseFalse() {
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     " { 'foo': false }  ".replace ( '\'', '"' )
             );
 
@@ -106,7 +106,7 @@ public class JsonAsciiParserTest {
         @Test
         public void testParseNull() {
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     " { 'foo': null }  ".replace ( '\'', '"' )
             );
 
@@ -124,7 +124,7 @@ public class JsonAsciiParserTest {
         @Test
         public void testParserSimpleMapWithBoolean() {
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     " { 'foo': true }  ".replace ( '\'', '"' )
             );
 
@@ -143,7 +143,7 @@ public class JsonAsciiParserTest {
         @Test
         public void testParserSimpleMapWithList() {
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
             );
 
@@ -161,7 +161,7 @@ public class JsonAsciiParserTest {
         @Test
         public void testParserSimpleMapWithString() {
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     " { 'foo': 'str ' }  ".replace ( '\'', '"' )
             );
 
@@ -226,7 +226,7 @@ public class JsonAsciiParserTest {
 
             System.out.printf("%s, %s, %s", name, json, compareTo);
 
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     json.replace ( '\'', '"' )
             );
 
@@ -246,7 +246,7 @@ public class JsonAsciiParserTest {
     @Test
     public void testNumber() {
 
-        Object obj = JsonAsciiParser.parse (
+        Object obj = JsonUTF8Parser.parse (
                 "1".replace ( '\'', '"' )
         );
 
@@ -264,7 +264,7 @@ public class JsonAsciiParserTest {
     @Test
     public void testBoolean() {
 
-        Object obj = JsonAsciiParser.parse (
+        Object obj = JsonUTF8Parser.parse (
                 "  true  ".replace ( '\'', '"' )
         );
 
@@ -282,7 +282,7 @@ public class JsonAsciiParserTest {
     @Test(expected = JsonException.class)
     public void testBooleanParseError() {
 
-        Object obj = JsonAsciiParser.parse (
+        Object obj = JsonUTF8Parser.parse (
                 "  tbone  ".replace ( '\'', '"' )
         );
 
@@ -305,7 +305,7 @@ public class JsonAsciiParserTest {
                         "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JsonAsciiParser.parse ( testString );
+        Object obj = JsonUTF8Parser.parse ( testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -330,7 +330,7 @@ public class JsonAsciiParserTest {
 
 
 
-        Object obj = JsonAsciiParser.parse ( testString );
+        Object obj = JsonUTF8Parser.parse ( testString );
 
 
 
@@ -357,7 +357,7 @@ public class JsonAsciiParserTest {
 
 
 
-        Object obj = JsonAsciiParser.parse ( testString );
+        Object obj = JsonUTF8Parser.parse ( testString );
         System.out.println("here is what I got " + obj);
 
         boolean ok = true;
@@ -377,7 +377,7 @@ public class JsonAsciiParserTest {
     public void textInMiddleOfArray() {
 
         try {
-            Object obj = JsonAsciiParser.parse (
+            Object obj = JsonUTF8Parser.parse (
                     lines ( "[A, 0]"
                     ).replace ( '\'', '"' )
             );
@@ -393,7 +393,7 @@ public class JsonAsciiParserTest {
     @Test
     public void oddlySpaced2() {
 
-        Object obj = JsonAsciiParser.parse (
+        Object obj = JsonUTF8Parser.parse (
                 lines ( "[   2   ,    1, 0]"
                 ).replace ( '\'', '"' )
         );
@@ -407,7 +407,7 @@ public class JsonAsciiParserTest {
     @Test
     public void complex() {
 
-        Object obj = JsonAsciiParser.parse (
+        Object obj = JsonUTF8Parser.parse (
                 lines (
 
                         "{    'num' : 1   , ",
@@ -421,6 +421,9 @@ public class JsonAsciiParserTest {
         System.out.println(obj);
         //die();
     }
+
+
+
 
 
 }

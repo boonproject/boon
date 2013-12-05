@@ -475,53 +475,6 @@ public class ByteScanner {
     };
 
 
-    public char unicodeCharFromUTF8 (byte[] buffer, int startIndex) {
-
-        int b1;
-        int b2 ;
-        int b3 ;
-        int b4 ;
-
-        int index = 0;
-        int codePoint =  buffer [index];
-
-        if (codePoint >= 0) {
-            b1 = codePoint;
-            return (char) b1;
-        } else if ((codePoint >> 5) == -2) {
-            b1 = codePoint;
-            index++;
-            b2 = buffer[index];
-            return ((char) (((b1 << 6) ^ b2) ^ 0x0f80));
-        } else if ((codePoint >> 4) == -2) {
-             b1 = codePoint;
-            index++;
-             b2 = buffer[index];
-            index++;
-            b3 = buffer[index];
-            return ((char) (((b1 << 12) ^ (b2 << 6) ^ b3) ^ 0x1f80));
-        } else if ((codePoint >> 3) == -2) {
-            b1 = codePoint;
-            index++;
-            b2 = buffer[index];
-            index++;
-            b3 = buffer[index];
-
-            index++;
-            b4 = buffer[index];
-
-            int uc = ((b1 & 0x07) << 18) |
-                    ((b2 & 0x3f) << 12) |
-                    ((b3 & 0x3f) << 6) |
-                    (b4 & 0x3f);
-            //TODO use surrogate
-            return (char) uc;
-        } else {
-            die("Unable to proceed");
-            return '0';
-        }
-
-    }
 
 
 }

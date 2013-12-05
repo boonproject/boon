@@ -24,7 +24,7 @@ public class JSONFileTester {
 
             final Map<String,Object> map =  JsonParser.parseMap ( IO.read ( file ) );
             final Map<String,Object> map2 = JsonIndexOverlayParser.parseMap ( IO.read ( file ) );
-            final Map<String,Object> map3 = JsonAsciiParser.parseMap ( IO.read ( file ) );
+            final Map<String,Object> map3 = JsonUTF8Parser.parseMap ( IO.read ( file ) );
             final Map<String,Object> map4 = JsonParserCharSequence.parseMap ( IO.read ( file ) );
 
             boolean ok = true;

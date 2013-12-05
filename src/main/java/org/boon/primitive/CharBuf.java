@@ -177,6 +177,12 @@ public class CharBuf {
 
 
 
+    public char[] readForRecycle( ) {
+        this.location = 0;
+        return this.buffer;
+    }
+
+
     private static double powersOf10[] = {
             1.0,
             10.0,
