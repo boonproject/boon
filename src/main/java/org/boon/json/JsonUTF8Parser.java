@@ -4,6 +4,8 @@ import org.boon.core.reflection.Reflection;
 import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
+import sun.nio.cs.Surrogate;
+
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -709,7 +711,7 @@ public class JsonUTF8Parser {
                    if (this.charArray[ __index ]>=0) {
                        builder.addChar ( this.charArray[ __index ]);
                    } else {
-                        builder.addChar ( utf8Char () );
+                        builder.addChar ( utf8Char (builder) );
                    }
 
             }
@@ -812,7 +814,29 @@ public class JsonUTF8Parser {
 
 
 
-    private final int utf8Char () {
+    //  [C2..DF] [80..BF]
+    private static boolean isMalformed2(int b1, int b2) {
+        return (b1 & 0x1e) == 0x0 || (b2 & 0xc0) != 0x80;
+    }
+
+    //  [E0]     [A0..BF] [80..BF]
+    //  [E1..EF] [80..BF] [80..BF]
+    private static boolean isMalformed3(int b1, int b2, int b3) {
+        return (b1 == (byte)0xe0 && (b2 & 0xe0) == 0x80) ||
+                (b2 & 0xc0) != 0x80 || (b3 & 0xc0) != 0x80;
+    }
+
+    //  [F0]     [90..BF] [80..BF] [80..BF]
+    //  [F1..F3] [80..BF] [80..BF] [80..BF]
+    //  [F4]     [80..8F] [80..BF] [80..BF]
+    //  only check 80-be range here, the [0xf0,0x80...] and [0xf4,0x90-...]
+    //  will be checked by Surrogate.neededFor(uc)
+    private static boolean isMalformed4(int b2, int b3, int b4) {
+        return (b2 & 0xc0) != 0x80 || (b3 & 0xc0) != 0x80 ||
+                (b4 & 0xc0) != 0x80;
+    }
+
+    private final int utf8Char (CharBuf builder) {
 
 
 
@@ -826,6 +850,9 @@ public class JsonUTF8Parser {
             ok = hasMore () || die ( "unable to parse 2 byte utf 8 - b2" );
             __index++;
             b2 = this.charArray[ __index ];
+
+            if (isMalformed2(b1, b2))
+                return '#';
             return ( ( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 ) );
         } else if ( ( b1 >> 4 ) == -2 ) {
             int b2;
@@ -837,6 +864,9 @@ public class JsonUTF8Parser {
             ok = hasMore () || die ( "unable to parse 3 byte utf 8 - b3" );
             __index++;
             b3 = this.charArray[ __index ];
+
+            if (isMalformed3 ( b1, b2, b3 ))
+                return '#';
             return ( ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 ) );
         } else if ( ( b1 >> 3 ) == -2 ) {
             int b2;
@@ -857,10 +887,19 @@ public class JsonUTF8Parser {
                     ( ( b2 & 0x3f ) << 12 ) |
                     ( ( b3 & 0x3f ) << 6 ) |
                     ( b4 & 0x3f );
-            //TODO use surrogate
-            return ( char ) uc;
+
+            if (isMalformed4( b2, b3, b4) && !Surrogate.neededFor ( uc ))
+                return '#';
+
+
+            final char high = Surrogate.high ( uc );
+            final char low = Surrogate.low ( uc );
+
+            builder.addChar ( high );
+
+            return low;
         } else {
-            die ( "Unable to proceed" );
+            complain ( "Unable to process utf character " + b1 );
             return '0';
         }
 
