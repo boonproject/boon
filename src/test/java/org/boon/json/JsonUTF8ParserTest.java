@@ -4,6 +4,7 @@ import org.boon.IO;
 import org.boon.Lists;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -376,10 +377,13 @@ public class JsonUTF8ParserTest {
     @Test
     public void textInMiddleOfArray() {
 
+        final JsonUTF8Parser parser = new JsonUTF8Parser ();
+
+
         try {
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = parser.decode (
                     lines ( "[A, 0]"
-                    ).replace ( '\'', '"' )
+                    ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
             );
 
         } catch (Exception ex) {
@@ -407,13 +411,15 @@ public class JsonUTF8ParserTest {
     @Test
     public void complex() {
 
-        Object obj = JsonUTF8Parser.parse (
+        final JsonUTF8Parser parser = new JsonUTF8Parser ();
+
+        Object obj = parser.decode (
                 lines (
 
                         "{    'num' : 1   , ",
                         "     'bar' : { 'foo': 1  },  ",
                         "     'nums': [0  ,1,2,3,4,5,'abc'] } "
-                ).replace ( '\'', '"' )
+                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
         );
 
         boolean ok = true;

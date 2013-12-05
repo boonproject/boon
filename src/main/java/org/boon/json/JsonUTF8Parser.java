@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.boon.Exceptions.die;
-import static org.boon.json.ParserState.*;
-import static org.boon.json.ParserState.END_LIST_ITEM;
 import static org.boon.primitive.ByteScanner.isInteger;
 import static org.boon.primitive.ByteScanner.parseInt;
 import static org.boon.primitive.ByteScanner.parseLong;
@@ -24,13 +22,6 @@ public class JsonUTF8Parser {
     private byte[] charArray;
     private int __index;
     private int __currentChar;
-    private int __lastChar;
-
-    private Map<String, Object> lastObject;
-    private List<Object> lastList;
-    private ParserState state = START;
-    private ParserState lastState = START;
-
 
 
     private static final int LETTER_B = 'b';
@@ -97,6 +88,11 @@ public class JsonUTF8Parser {
 
     private static final int DECIMAL_POINT = '.';
 
+    private final CharBuf builder = CharBuf.create ( 20 );
+
+
+
+
 
     public JsonUTF8Parser () {
 
@@ -111,44 +107,42 @@ public class JsonUTF8Parser {
 
 
     public static Map<String, Object> parseMap ( String cs ) {
-        JsonUTF8Parser p = new JsonUTF8Parser (  );
+        JsonUTF8Parser p = new JsonUTF8Parser ();
         return ( Map<String, Object> ) p.decode ( cs );
     }
 
 
-
-    public static <T> T parseInto( T object, String cs ) {
+    public static <T> T parseInto ( T object, String cs ) {
         Map<String, Object> objectMap = parseMap ( cs );
         return Reflection.fromMap ( objectMap, object );
     }
 
-    public static <T> T parseInto( Class<T> clz, String cs ) {
+    public static <T> T parseInto ( Class<T> clz, String cs ) {
         Map<String, Object> objectMap = parseMap ( cs );
         return Reflection.fromMap ( objectMap, clz );
     }
 
 
-    public static Object parseIntoJavaObject( String cs ) {
+    public static Object parseIntoJavaObject ( String cs ) {
         Map<String, Object> objectMap = parseMap ( cs );
         return Reflection.fromMap ( objectMap );
     }
 
-    public static <T> T parseInto( T object, byte[] cs ) {
+    public static <T> T parseInto ( T object, byte[] cs ) {
         Map<String, Object> objectMap = parseMap ( cs );
         return Reflection.fromMap ( objectMap, object );
     }
 
-    public static <T> T parseInto( Class<T> clz, byte[]  cs ) {
+    public static <T> T parseInto ( Class<T> clz, byte[] cs ) {
         Map<String, Object> objectMap = parseMap ( cs );
         return Reflection.fromMap ( objectMap, clz );
     }
 
 
-    public static Object parseIntoJavaObject( byte[]  cs ) {
+    public static Object parseIntoJavaObject ( byte[] cs ) {
         Map<String, Object> objectMap = parseMap ( cs );
         return Reflection.fromMap ( objectMap );
     }
-
 
 
     public static Object parse ( byte[] cs ) {
@@ -166,6 +160,7 @@ public class JsonUTF8Parser {
     @SuppressWarnings ( "unchecked" )
     public Object decode ( byte[] cs ) {
         charArray = cs;
+        __index = 0;
         return decodeValue ();
     }
 
@@ -186,7 +181,6 @@ public class JsonUTF8Parser {
 
         try {
             if ( hasMore () ) {
-                __lastChar = __currentChar;
                 __index++;
                 return __currentChar = charArray[ __index ];
             }
@@ -205,27 +199,8 @@ public class JsonUTF8Parser {
 
         buf.addLine ( message );
 
-        buf.add ( state.toString () ).addLine ( " is CURRENT STATE" );
-        buf.add ( lastState.toString () ).addLine ( " is LAST STATE" );
-
         buf.addLine ( "" );
-        buf.addLine ( "The last character read was " + charDescription ( __lastChar ) );
         buf.addLine ( "The current character read is " + charDescription ( __currentChar ) );
-
-
-        if ( lastObject != null ) {
-            buf.addLine ( "The last object read was" );
-            buf.addLine ( "------------------------" );
-            buf.addLine ( lastObject.toString () );
-            buf.addLine ( "------------------------" );
-        }
-
-        if ( lastList != null ) {
-            buf.addLine ( "The last array read was" );
-            buf.addLine ( "------------------------" );
-            buf.addLine ( lastList.toString () );
-            buf.addLine ( "------------------------" );
-        }
 
 
         buf.addLine ( message );
@@ -304,7 +279,6 @@ public class JsonUTF8Parser {
 
         Map<String, Object> map = new LinkedHashMap<> ();
 
-        this.lastObject = map;
 
         do {
 
@@ -322,7 +296,6 @@ public class JsonUTF8Parser {
                 this.nextChar (); // skip past COLON
                 skipWhiteSpace ();
 
-                setState ( START_OBJECT_ITEM );
                 Object value = decodeValue ();
 
                 skipWhiteSpace ();
@@ -330,9 +303,7 @@ public class JsonUTF8Parser {
                 map.put ( key, value );
 
 
-                setState ( END_OBJECT_ITEM );
-
-                if ( !( __currentChar == CLOSED_CURLY || __currentChar == COMMA) ) {
+                if ( !( __currentChar == CLOSED_CURLY || __currentChar == COMMA ) ) {
                     complain ( "expecting '}' or ',' but got current char " + charDescription ( __currentChar ) );
                 }
             }
@@ -376,40 +347,28 @@ public class JsonUTF8Parser {
                     break;
 
                 case DOUBLE_QUOTE:
-                    setState ( START_STRING );
                     value = decodeString ();
-                    setState ( END_STRING );
                     break done;
 
 
                 case LETTER_T:
-                    setState ( START_BOOLEAN );
                     value = decodeTrue ();
-                    setState ( END_BOOLEAN );
                     break done;
 
                 case LETTER_F:
-                    setState ( START_BOOLEAN );
                     value = decodeFalse ();
-                    setState ( END_BOOLEAN );
                     break done;
 
                 case LETTER_N:
-                    setState ( START_NULL );
                     value = decodeNull ();
-                    setState ( END_NULL );
                     break done;
 
                 case OPEN_BRACKET:
-                    setState ( START_LIST );
                     value = decodeJsonArray ();
-                    setState ( END_LIST );
                     break done;
 
                 case OPEN_CURLY:
-                    setState ( START_OBJECT );
                     value = decodeJsonObject ();
-                    setState ( END_OBJECT );
                     break done;
 
                 case ALPHA_1:
@@ -423,9 +382,7 @@ public class JsonUTF8Parser {
                 case ALPHA_9:
                 case ALPHA_0:
                 case MINUS:
-                    setState ( START_NUMBER );
                     value = decodeNumber ();
-                    setState ( END_NUMBER );
                     break done;
 
                 default:
@@ -438,11 +395,6 @@ public class JsonUTF8Parser {
         return value;
     }
 
-
-    private void setState ( ParserState state ) {
-        this.lastState = this.state;
-        this.state = state;
-    }
 
     private Object decodeNumber () {
 
@@ -466,12 +418,19 @@ public class JsonUTF8Parser {
 
         int digitsPastPoint = 0;
 
+        __currentChar = charArray[ __index ];
+
+        if ( __currentChar == MINUS ) {
+            minus = true;
+            __index++;
+        }
+
 
         loop:
         for ( index = __index; index < charArray.length; index++, count++ ) {
             __currentChar = charArray[ index ];
 
-            if (doubleFloat) {
+            if ( doubleFloat ) {
                 digitsPastPoint++;
             }
 
@@ -481,29 +440,10 @@ public class JsonUTF8Parser {
                 case TAB:
                 case NEW_LINE:
                 case RETURN:
-                    __index = index + 1;
-                    break loop;
-
                 case COMMA:
-                    if ( lastState == START_LIST_ITEM || lastState == START_OBJECT_ITEM ) {
-                        break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails ( "Unexpected comma token in parse number" ) );
-                    }
-
                 case CLOSED_BRACKET:
-                    if ( lastState == START_LIST_ITEM ) {
-                        break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails ( "Unexpected close bracket token in parse number" ) );
-                    }
-
                 case CLOSED_CURLY:
-                    if ( lastState == START_OBJECT_ITEM ) {
-                        break loop;
-                    } else {
-                        throw new JsonException ( exceptionDetails ( "Unexpected close curly brace token in parse number" ) );
-                    }
+                    break loop;
 
                 case ALPHA_1:
                 case ALPHA_2:
@@ -516,9 +456,7 @@ public class JsonUTF8Parser {
                 case ALPHA_9:
                 case ALPHA_0:
                     continue loop;
-                case MINUS:
-                    minus = true;
-                    continue loop;
+
 
                 case DECIMAL_POINT:
                     doubleFloat = true;
@@ -564,15 +502,14 @@ public class JsonUTF8Parser {
             value = ByteScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
         } else {
 
-            if (isInteger(this.charArray, startIndex, __index - startIndex, minus)) {
-                value =  parseInt ( charArray, startIndex, __index - startIndex ) * sign;
+            if ( isInteger ( this.charArray, startIndex, __index - startIndex, minus ) ) {
+                value = parseInt ( charArray, startIndex, __index - startIndex ) * sign;
             } else {
-                value =  parseLong ( charArray, startIndex, __index - startIndex ) * sign;
+                value = parseLong ( charArray, startIndex, __index - startIndex ) * sign;
             }
 
         }
 
-        skipWhiteSpace ();
 
         return value;
 
@@ -585,14 +522,14 @@ public class JsonUTF8Parser {
 
         if ( __index + NULL.length <= charArray.length ) {
             if ( charArray[ __index ] == LETTER_N &&
-                    charArray[ ++__index ] ==  LETTER_U &&
-                    charArray[ ++__index ] ==  LETTER_L &&
-                    charArray[ ++__index ] ==  LETTER_L ) {
+                    charArray[ ++__index ] == LETTER_U &&
+                    charArray[ ++__index ] == LETTER_L &&
+                    charArray[ ++__index ] == LETTER_L ) {
                 nextChar ();
                 return null;
             }
         }
-        throw new JsonException ( exceptionDetails ( "null not parse properly" ) );
+        throw new JsonException ( exceptionDetails ( "null not parsed properly" ) );
     }
 
     private static byte[] TRUE = Byt.bytes ( "true" );
@@ -632,9 +569,10 @@ public class JsonUTF8Parser {
         throw new JsonException ( exceptionDetails ( "false not parsed properly" ) );
     }
 
-    CharBuf builder = CharBuf.create (  20 );
-
     private final String decodeString () {
+
+
+
 
         if ( __index < charArray.length && __currentChar == DOUBLE_QUOTE ) {
             __index++;
@@ -694,25 +632,27 @@ public class JsonUTF8Parser {
                             if ( __index + 4 < charArray.length ) {
 
                                 CharBuf hex = CharBuf.create ( 4 );
-                                hex.addChar ( charArray[__index +1] );
+                                hex.addChar ( charArray[ __index + 1 ] );
 
-                                hex.addChar ( charArray[__index +2] );
+                                hex.addChar ( charArray[ __index + 2 ] );
 
-                                hex.addChar ( charArray[__index +3] );
+                                hex.addChar ( charArray[ __index + 3 ] );
 
-                                hex.addChar ( charArray[__index +4] );
+                                hex.addChar ( charArray[ __index + 4 ] );
                                 char unicode = ( char ) Integer.parseInt ( hex.toString (), 16 );
                                 builder.add ( unicode );
                                 __index += 4;
                             }
                             continue loop;
                     }
-               default:
-                   if (this.charArray[ __index ]>=0) {
-                       builder.addChar ( this.charArray[ __index ]);
-                   } else {
-                        builder.addChar ( utf8Char (builder) );
-                   }
+                default:
+
+
+                    if ( __currentChar >= 0 ) {
+                        builder.addChar ( __currentChar );
+                    } else {
+                        utf8MultiByte ( __currentChar, builder );
+                    }
 
             }
         }
@@ -722,10 +662,10 @@ public class JsonUTF8Parser {
             __index++;
         }
 
-        String str =  builder.toString ();
+        String str = builder.toString ();
 
         builder.readForRecycle ();
-        return  str;
+        return str;
     }
 
     private String decodeKeyName () {
@@ -741,7 +681,6 @@ public class JsonUTF8Parser {
         skipWhiteSpace ();
 
         List<Object> list = new ArrayList<> ();
-        this.lastList = list;
 
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
@@ -755,20 +694,12 @@ public class JsonUTF8Parser {
         do {
             skipWhiteSpace ();
 
-            setState ( START_LIST_ITEM );
             Object arrayItem = decodeValue ();
 
-            if ( arrayItem == null && state == END_NULL ) {
-                list.add ( null ); //JSON null detected
-            } else if ( arrayItem == null ) {
-                throw new JsonException ( exceptionDetails ( "array item was null" ) );
-            } else {
-                list.add ( arrayItem );
-            }
+            list.add ( arrayItem );
 
             arrayIndex++;
 
-            setState ( END_LIST_ITEM );
 
             skipWhiteSpace ();
 
@@ -804,7 +735,7 @@ public class JsonUTF8Parser {
             charString = "[NEWLINE]";
 
         } else {
-            charString = "'" + (char)c + "'";
+            charString = "'" + ( char ) c + "'";
         }
 
         charString = charString + " with an int value of " + ( ( int ) c );
@@ -812,18 +743,16 @@ public class JsonUTF8Parser {
     }
 
 
-
-
     //  [C2..DF] [80..BF]
-    private static boolean isMalformed2(int b1, int b2) {
-        return (b1 & 0x1e) == 0x0 || (b2 & 0xc0) != 0x80;
+    private static boolean isMalformed2 ( int b1, int b2 ) {
+        return ( b1 & 0x1e ) == 0x0 || ( b2 & 0xc0 ) != 0x80;
     }
 
     //  [E0]     [A0..BF] [80..BF]
     //  [E1..EF] [80..BF] [80..BF]
-    private static boolean isMalformed3(int b1, int b2, int b3) {
-        return (b1 == (byte)0xe0 && (b2 & 0xe0) == 0x80) ||
-                (b2 & 0xc0) != 0x80 || (b3 & 0xc0) != 0x80;
+    private static boolean isMalformed3 ( int b1, int b2, int b3 ) {
+        return ( b1 == ( byte ) 0xe0 && ( b2 & 0xe0 ) == 0x80 ) ||
+                ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80;
     }
 
     //  [F0]     [90..BF] [80..BF] [80..BF]
@@ -831,17 +760,15 @@ public class JsonUTF8Parser {
     //  [F4]     [80..8F] [80..BF] [80..BF]
     //  only check 80-be range here, the [0xf0,0x80...] and [0xf4,0x90-...]
     //  will be checked by Surrogate.neededFor(uc)
-    private static boolean isMalformed4(int b2, int b3, int b4) {
-        return (b2 & 0xc0) != 0x80 || (b3 & 0xc0) != 0x80 ||
-                (b4 & 0xc0) != 0x80;
+    private static boolean isMalformed4 ( int b2, int b3, int b4 ) {
+        return ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80 ||
+                ( b4 & 0xc0 ) != 0x80;
     }
 
-    private final int utf8Char (CharBuf builder) {
 
 
+    private final void utf8MultiByte (final int b1, final CharBuf builder) {
 
-
-        int b1 =  this.charArray[ __index ];
         boolean ok = true;
 
         if ( ( b1 >> 5 ) == -2 ) {
@@ -851,9 +778,11 @@ public class JsonUTF8Parser {
             __index++;
             b2 = this.charArray[ __index ];
 
-            if (isMalformed2(b1, b2))
-                return '#';
-            return ( ( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 ) );
+            if ( isMalformed2 ( b1, b2 ) ) {
+                builder.addChar ( '#' );
+            } else {
+                builder.addChar ( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 );
+            }
         } else if ( ( b1 >> 4 ) == -2 ) {
             int b2;
             int b3;
@@ -865,9 +794,11 @@ public class JsonUTF8Parser {
             __index++;
             b3 = this.charArray[ __index ];
 
-            if (isMalformed3 ( b1, b2, b3 ))
-                return '#';
-            return ( ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 ) );
+            if ( isMalformed3 ( b1, b2, b3 ) ) {
+                builder.addChar ( '#' );
+            } else {
+                builder.addChar ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 );
+            }
         } else if ( ( b1 >> 3 ) == -2 ) {
             int b2;
             int b3;
@@ -888,23 +819,20 @@ public class JsonUTF8Parser {
                     ( ( b3 & 0x3f ) << 6 ) |
                     ( b4 & 0x3f );
 
-            if (isMalformed4( b2, b3, b4) && !Surrogate.neededFor ( uc ))
-                return '#';
+            if ( isMalformed4 ( b2, b3, b4 ) && !Surrogate.neededFor ( uc ) ) {
+                builder.addChar ( '#' );
+            } else {
 
+                final char high = Surrogate.high ( uc );
+                final char low = Surrogate.low ( uc );
 
-            final char high = Surrogate.high ( uc );
-            final char low = Surrogate.low ( uc );
+                builder.addChar ( high );
+                builder.addChar ( low );
 
-            builder.addChar ( high );
-
-            return low;
-        } else {
-            complain ( "Unable to process utf character " + b1 );
-            return '0';
+            }
         }
 
     }
-
 
 }
 

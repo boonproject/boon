@@ -1795,6 +1795,4 @@ public class Reflection {
             setPropertyValue ( object, entry.getValue ( ), entry.getKey ( ) );
         }
     }
-
-
 }

@@ -1,6 +1,10 @@
 package org.boon.primitive;
 
 
+import org.boon.core.reflection.Reflection;
+
+import java.util.Arrays;
+
 import static org.boon.primitive.CharScanner.*;
 import static org.boon.primitive.CharScanner.parseLong;
 
