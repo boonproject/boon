@@ -253,18 +253,22 @@ public class CharScanner {
                 split = delims[j];
                 if ( c == split ) {
 
-                    if ( resultIndex == results.length ) {
-
-                        results = _grow ( results );
-                    }
 
 
                     int len = startCurrentLineIndex - (currentLineLength-1);
 
                     if (len > 0) {
-                        results[resultIndex] = Chr.copy (
-                            inputArray, startCurrentLineIndex, currentLineLength - 1 );
-                        resultIndex++;
+                        if ( resultIndex == results.length ) {
+
+                            results = _grow ( results );
+                        }
+                        final char[] copy = Chr.copy (
+                                inputArray, startCurrentLineIndex, currentLineLength - 1 );
+
+                        if (copy.length > 0) {
+                            results[resultIndex] = copy;
+                            resultIndex++;
+                        }
 
                     }
                     startCurrentLineIndex = index + 1; //skip the char
