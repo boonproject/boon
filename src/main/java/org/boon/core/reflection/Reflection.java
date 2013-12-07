@@ -127,11 +127,19 @@ public class Reflection {
 
 
         private FieldAccess stringValueField;
+
     }
 
-    static {
-        context().stringValueField = Reflection.getPropertyFieldAccessMap ( String.class ).get ( "value" );
 
+    static {
+        try {
+            if (_useUnsafe) {
+                Field field = String.class.getDeclaredField ( "value" );
+                context().stringValueField =   UnsafeField.createUnsafeField ( field );
+            }
+        } catch (Exception ex) {
+            Exceptions.handle(ex);
+        }
     }
 
 
@@ -444,8 +452,9 @@ public class Reflection {
 
 
     public static  char[] toCharArray( String str ) {
+
         if (_useUnsafe) {
-            return (char[]) _context.stringValueField.getObject ( str );
+            return (char[]) context().stringValueField.getObject ( str );
         } else {
             return str.toCharArray ();
         }
@@ -454,7 +463,7 @@ public class Reflection {
 
     public static  char[] toCharArray( byte [] bytes ) {
         if (_useUnsafe) {
-            return (char[]) _context.stringValueField.getObject ( new String(bytes, StandardCharsets.UTF_8) );
+            return (char[]) context().stringValueField.getObject ( new String(bytes, StandardCharsets.UTF_8) );
         } else {
             return new String(bytes, StandardCharsets.UTF_8).toCharArray ();
         }
@@ -1578,7 +1587,11 @@ public class Reflection {
         Map<String, FieldAccess> map = getAccesorFieldFromCache ( theClass, useUnsafe );
         if ( map == null ) {
             List<FieldAccess> list = Conversions.map ( new FieldConverter ( useUnsafe ), getAllFields ( theClass ) );
-            map = collectionToMap ( "name", list );
+            map = new LinkedHashMap<> ( list.size ()  );
+            for (FieldAccess fieldAccess : list) {
+                map.put ( fieldAccess.getName (), fieldAccess );
+            }
+
             setAccessorFieldInCache ( theClass, useUnsafe, map );
 
         }
@@ -1672,16 +1685,16 @@ public class Reflection {
             String name = method.getName ( );
             String propertyName = null;
             if ( name.startsWith ( "is" ) ) {
-                propertyName = slc ( name, 2 );
+                propertyName = name.substring ( 2 );
             } else if ( name.startsWith ( "get" ) ) {
-                propertyName = slc ( name, 3 );
+                propertyName = name.substring ( 3 );
             }
 
-            propertyName = lower ( slc ( propertyName, 0, 1 ) ) + slc ( propertyName, 1 );
+            propertyName = lower ( propertyName.substring (  0, 1 ))  +  propertyName.substring (  1 ) ;
 
             Pair<Method> pair = methodMap.get ( propertyName );
             if ( pair == null ) {
-                pair = new Pair<Method> ( );
+                pair = new Pair<> ( );
                 methodMap.put ( propertyName, pair );
             }
             pair.setSecond ( method );

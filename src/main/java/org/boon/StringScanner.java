@@ -1,18 +1,12 @@
 package org.boon;
 
+import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharScanner;
 
 public class StringScanner {
 
 
-//    char[][] split = Chr.splitLine(str.toCharArray());
-//    return fromCharArrayOfArrayToStringArray(split);
-//
-//
-//    public static char[][] split( final char[] inputArray,
-//                                  final char split) {
-//
-//    }
+
 
 
     public static boolean isDigits( String input ) {
@@ -40,10 +34,16 @@ public class StringScanner {
     public static String[] splitByDelimiters( final String string,
                                               final String delimiters ) {
 
-        char[][] comps = CharScanner.splitByChars ( string.toCharArray ( ), delimiters.toCharArray ( ) );
+        char[][] comps = CharScanner.splitByChars ( string.toCharArray ( ), delimiters.toCharArray () );
 
         return Str.fromCharArrayOfArrayToStringArray ( comps );
 
+    }
+
+
+    public static String[] splitByCharsNoneEmpty( final String string, final char... delimiters)  {
+        char[][] comps = CharScanner.splitByCharsNoneEmpty ( string.toCharArray (), delimiters );
+        return Str.fromCharArrayOfArrayToStringArray ( comps );
     }
 
 }

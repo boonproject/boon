@@ -11,6 +11,9 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.logging.Logger;
 
+import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
 import static org.boon.core.reflection.Conversions.*;
 
 public class PropertyField implements FieldAccess {
@@ -28,20 +31,19 @@ public class PropertyField implements FieldAccess {
 
     public PropertyField( String name, Method setter, Method getter ) {
 
+
         try {
             this.setter = setter;
             this.getter = getter;
 
-            if ( getter != null ) {
+            if (getter != null) {
                 isStatic = Modifier.isStatic ( getter.getModifiers ( ) );
                 isFinal = Modifier.isFinal ( getter.getModifiers ( ) );
                 type = getter.getReturnType ( );
-
-            } else {
+            }  else {
                 isStatic = Modifier.isStatic ( setter.getModifiers ( ) );
                 isFinal = Modifier.isFinal ( setter.getModifiers ( ) );
-                type = setter.getReturnType ( );
-
+                type = setter.getParameterTypes ()[0];
             }
 
 
@@ -58,7 +60,8 @@ public class PropertyField implements FieldAccess {
         try {
             return getter.invoke ( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            return  Exceptions.handle ( Object.class, sputs ( "unable to call getValue for property ", this.name,
+                    "for class ", this.type), e );
         }
     }
 
@@ -66,7 +69,7 @@ public class PropertyField implements FieldAccess {
         try {
             return ( Boolean ) this.getValue ( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            return  Exceptions.handle ( boolean.class, sputs ( "unable to call getValue for property", this.name ), e );
         }
 
     }
@@ -76,7 +79,7 @@ public class PropertyField implements FieldAccess {
         try {
             return ( Integer ) this.getValue ( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            return  Exceptions.handle ( int.class, sputs ( "unable to call getValue for property", this.name ), e );
         }
     }
 
@@ -85,7 +88,7 @@ public class PropertyField implements FieldAccess {
         try {
             return ( Short ) this.getValue ( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            return  Exceptions.handle ( short.class, sputs ( "unable to call getValue for property", this.name ), e );
         }
     }
 
@@ -94,7 +97,7 @@ public class PropertyField implements FieldAccess {
         try {
             return ( Character ) this.getValue ( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            return  Exceptions.handle ( char.class, sputs ( "unable to call getValue for property", this.name ), e );
         }
     }
 

@@ -23,4 +23,9 @@ public class SalesEmployee extends Employee implements Comparable<SalesEmployee>
     public int compareTo(SalesEmployee o) {
         return 0;
     }
+
+    public String getLastName() {
+        return super.getLastName ();
+    }
+
 }

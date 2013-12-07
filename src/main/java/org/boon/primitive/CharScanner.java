@@ -226,6 +226,71 @@ public class CharScanner {
         return results;
     }
 
+
+
+    public static char[][] splitByCharsNoneEmpty( final char[] inputArray,
+                                         final char... delims ) {
+        /** Holds the results. */
+        char[][] results = new char[16][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex = 0;
+        int currentLineLength = 1;
+
+
+        char c = '\u0000';
+        int index = 0;
+        int j;
+        char split;
+
+
+        for (; index < inputArray.length; index++, currentLineLength++ ) {
+
+            c = inputArray[index];
+
+            inner:
+            for ( j = 0; j < delims.length; j++ ) {
+                split = delims[j];
+                if ( c == split ) {
+
+                    if ( resultIndex == results.length ) {
+
+                        results = _grow ( results );
+                    }
+
+
+                    int len = startCurrentLineIndex - (currentLineLength-1);
+
+                    if (len > 0) {
+                        results[resultIndex] = Chr.copy (
+                            inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                        resultIndex++;
+
+                    }
+                    startCurrentLineIndex = index + 1; //skip the char
+
+                    currentLineLength = 0;
+                    break inner;
+                }
+            }
+        }
+
+        if ( !Chr.in ( c, delims ) ) {
+
+            results[resultIndex] = Chr.copy (
+                    inputArray, startCurrentLineIndex, currentLineLength - 1 );
+            resultIndex++;
+        }
+
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length ) {
+            final int newSize = results.length - actualLength;
+            results = __shrink ( results, newSize );
+        }
+        return results;
+    }
+
     private static char[][] _grow( char[][] array ) {
         Objects.requireNonNull ( array );
 
