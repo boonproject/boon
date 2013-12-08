@@ -255,6 +255,15 @@ public class Str {
         return builder.toString ( );
     }
 
+    public static String join(  String... args ) {
+        CharBuf builder = CharBuf.create ( 10 * args.length );
+
+        for ( String arg : args ) {
+            builder.add ( arg );
+        }
+        return builder.toString ( );
+    }
+
     public static String joinCollection( char delim, List<?> args ) {
         CharBuf builder = CharBuf.create ( 10 * args.size ( ) );
 
