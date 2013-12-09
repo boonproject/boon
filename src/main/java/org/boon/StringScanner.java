@@ -3,6 +3,8 @@ package org.boon;
 import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharScanner;
 
+import java.util.Objects;
+
 public class StringScanner {
 
 
@@ -42,6 +44,8 @@ public class StringScanner {
 
 
     public static String[] splitByCharsNoneEmpty( final String string, final char... delimiters)  {
+        Objects.requireNonNull ( string );
+
         char[][] comps = CharScanner.splitByCharsNoneEmpty ( Reflection.toCharArray ( string), delimiters );
         return Str.fromCharArrayOfArrayToStringArray ( comps );
     }
