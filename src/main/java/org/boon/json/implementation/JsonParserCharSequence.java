@@ -1,18 +1,16 @@
-package org.boon.json;
+package org.boon.json.implementation;
 
 import org.boon.core.reflection.Reflection;
-import org.boon.json.internal.Type;
-import org.boon.json.internal.ValueInCharBuf;
+import org.boon.json.JsonException;
+import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
 import java.util.*;
 
-import static org.boon.Boon.puts;
-import static org.boon.json.ParserState.*;
-import static org.boon.json.ParserState.END_LIST_ITEM;
+import static org.boon.Exceptions.die;
 
-public class JsonParserCharSequence {
+public class JsonParserCharSequence implements JsonParser {
 
 
     private CharSequence charSequence;
@@ -404,7 +402,6 @@ public class JsonParserCharSequence {
             complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
         }
 
- ;
 
         Number number;
         if ( doubleFloat ) {
@@ -611,6 +608,31 @@ public class JsonParserCharSequence {
 
         charString = charString + " with an int value of " + ( ( int ) c );
         return charString;
+    }
+
+
+
+
+    @Override
+    public <T> T parse( Class<T> type, String str ) {
+        return (T) this.decode ( str  );
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, byte[] bytes ) {
+        die ("not supported by this parser byte[] bytes");
+        return null;
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, CharSequence charSequence ) {
+        return parse(type, charSequence);
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, char[] chars ) {
+        die ("not supported by this parser char[] chars");
+        return null;
     }
 
 

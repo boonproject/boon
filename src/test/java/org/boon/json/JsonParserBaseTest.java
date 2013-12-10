@@ -2,6 +2,7 @@ package org.boon.json;
 
 import org.boon.IO;
 import org.boon.Lists;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.idx;
@@ -16,24 +18,29 @@ import static org.boon.Maps.map;
 import static org.boon.Str.lines;
 import static org.junit.Assert.assertEquals;
 
-public class JsonUTF8ParserTest {
+public class JsonParserBaseTest {
 
+
+    JsonParser jsonParser;
+
+
+    public JsonParserFactory factory () {
+        return new JsonParserFactory ();
+    }
+
+    @Before public void setup() {
+
+        jsonParser = factory().create();
+
+    }
 
 
     @Test public void objectSerialization() {
 
 
-        //        {
-        //
-        //            "myInt" : 1,
-        //                "myFloat" : 1.1,
-        //                "myDouble" : 1.2,
-        //                "myShort" : 1,
-        //                "myBoolean" : true,
-        //                "string" : "test"
-        //        }
         String fileContents = IO.read ( "files/AllTypes.json" );
-        AllTypes types = JsonUTF8Parser.parseInto ( AllTypes.class, fileContents );
+
+        AllTypes types = jsonParser.parse ( AllTypes.class, fileContents );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -43,6 +50,27 @@ public class JsonUTF8ParserTest {
 
         for (AllTypes allType : types.getAllTypes ()) {
             validateAllTypes ( allType );
+        }
+
+
+    }
+
+    @Test
+    public  void testFiles () {
+
+
+
+        final List<String> list = IO.listByExt ( "files", ".json" );
+
+        for ( String file : list ) {
+
+
+            puts ( "testing", file );
+            JsonParserFactory factory = new JsonParserFactory ();
+
+            JsonParser jsonParser = factory.create ();
+            final Map<String,Object> map = jsonParser.parse ( Map.class, IO.read ( file ) );
+
         }
 
 
@@ -69,7 +97,7 @@ public class JsonUTF8ParserTest {
     @Test
         public void testParserSimpleMapWithNumber() {
 
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = jsonParser.parse ( Map.class,
                     " { 'foo': 1 }  ".replace ( '\'', '"' )
             );
 
@@ -89,7 +117,7 @@ public class JsonUTF8ParserTest {
         @Test
         public void testParseFalse() {
 
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = jsonParser.parse (Map.class,
                     " { 'foo': false }  ".replace ( '\'', '"' )
             );
 
@@ -107,7 +135,7 @@ public class JsonUTF8ParserTest {
         @Test
         public void testParseNull() {
 
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = jsonParser.parse (Map.class,
                     " { 'foo': null }  ".replace ( '\'', '"' )
             );
 
@@ -125,7 +153,7 @@ public class JsonUTF8ParserTest {
         @Test
         public void testParserSimpleMapWithBoolean() {
 
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = jsonParser.parse (Map.class,
                     " { 'foo': true }  ".replace ( '\'', '"' )
             );
 
@@ -144,7 +172,7 @@ public class JsonUTF8ParserTest {
         @Test
         public void testParserSimpleMapWithList() {
 
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = jsonParser.parse (Map.class,
                     " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
             );
 
@@ -162,7 +190,7 @@ public class JsonUTF8ParserTest {
         @Test
         public void testParserSimpleMapWithString() {
 
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = jsonParser.parse (Map.class,
                     " { 'foo': 'str ' }  ".replace ( '\'', '"' )
             );
 
@@ -227,7 +255,7 @@ public class JsonUTF8ParserTest {
 
             System.out.printf("%s, %s, %s", name, json, compareTo);
 
-            Object obj = JsonUTF8Parser.parse (
+            Object obj = jsonParser.parse (Map.class,
                     json.replace ( '\'', '"' )
             );
 
@@ -247,7 +275,7 @@ public class JsonUTF8ParserTest {
     @Test
     public void testNumber() {
 
-        Object obj = JsonUTF8Parser.parse (
+        Object obj = jsonParser.parse (Map.class,
                 "1".replace ( '\'', '"' )
         );
 
@@ -265,7 +293,7 @@ public class JsonUTF8ParserTest {
     @Test
     public void testBoolean() {
 
-        Object obj = JsonUTF8Parser.parse (
+        Object obj = jsonParser.parse (Map.class,
                 "  true  ".replace ( '\'', '"' )
         );
 
@@ -283,7 +311,7 @@ public class JsonUTF8ParserTest {
     @Test(expected = JsonException.class)
     public void testBooleanParseError() {
 
-        Object obj = JsonUTF8Parser.parse (
+        Object obj = jsonParser.parse (Map.class,
                 "  tbone  ".replace ( '\'', '"' )
         );
 
@@ -306,7 +334,7 @@ public class JsonUTF8ParserTest {
                         "   do you think it is \\'cool\\' '").replace('\'', '"');
 
 
-        Object obj = JsonUTF8Parser.parse ( testString );
+        Object obj = jsonParser.parse (Map.class, testString );
 
         System.out.println("here is what I got " + obj);
 
@@ -331,7 +359,7 @@ public class JsonUTF8ParserTest {
 
 
 
-        Object obj = JsonUTF8Parser.parse ( testString );
+        Object obj = jsonParser.parse ( Map.class, testString );
 
 
 
@@ -358,7 +386,7 @@ public class JsonUTF8ParserTest {
 
 
 
-        Object obj = JsonUTF8Parser.parse ( testString );
+        Object obj = jsonParser.parse (Map.class, testString );
         System.out.println("here is what I got " + obj);
 
         boolean ok = true;
@@ -377,11 +405,8 @@ public class JsonUTF8ParserTest {
     @Test
     public void textInMiddleOfArray() {
 
-        final JsonUTF8Parser parser = new JsonUTF8Parser ();
-
-
         try {
-            Object obj = parser.decode (
+            Object obj = jsonParser.parse ( Map.class,
                     lines ( "[A, 0]"
                     ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
             );
@@ -397,7 +422,7 @@ public class JsonUTF8ParserTest {
     @Test
     public void oddlySpaced2() {
 
-        Object obj = JsonUTF8Parser.parse (
+        Object obj = jsonParser.parse (Map.class,
                 lines ( "[   2   ,    1, 0]"
                 ).replace ( '\'', '"' )
         );
@@ -411,9 +436,8 @@ public class JsonUTF8ParserTest {
     @Test
     public void complex() {
 
-        final JsonUTF8Parser parser = new JsonUTF8Parser ();
 
-        Object obj = parser.decode (
+        Object obj = jsonParser.parse (Map.class,
                 lines (
 
                         "{    'num' : 1   , ",

@@ -1,6 +1,6 @@
 package org.boon.json.internal;
 
-import org.boon.json.JsonStringDecoder;
+import org.boon.json.implementation.JsonStringDecoder;
 import org.boon.primitive.CharScanner;
 
 import java.math.BigDecimal;

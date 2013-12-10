@@ -1,6 +1,8 @@
-package org.boon.json;
+package org.boon.json.implementation;
 
 import org.boon.core.reflection.Reflection;
+import org.boon.json.JsonException;
+import org.boon.json.JsonParser;
 import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
@@ -17,7 +19,7 @@ import static org.boon.primitive.ByteScanner.isInteger;
 import static org.boon.primitive.ByteScanner.parseInt;
 import static org.boon.primitive.ByteScanner.parseLong;
 
-public class JsonUTF8Parser {
+public class JsonUTF8Parser implements JsonParser {
 
     private byte[] charArray;
     private int __index;
@@ -832,6 +834,31 @@ public class JsonUTF8Parser {
             }
         }
 
+    }
+
+
+
+
+    @Override
+    public <T> T parse( Class<T> type, String str ) {
+        return (T) this.decode ( str  );
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, byte[] bytes ) {
+        return (T) this.decode ( bytes  );
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, CharSequence charSequence ) {
+        return parse(type, charSequence.toString ());
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, char[] chars ) {
+
+        die ( "Not supported char[]" );
+        return null;
     }
 
 }

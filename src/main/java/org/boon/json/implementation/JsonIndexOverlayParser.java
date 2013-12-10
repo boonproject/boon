@@ -1,11 +1,12 @@
-package org.boon.json;
+package org.boon.json.implementation;
 
 import org.boon.core.reflection.Reflection;
+import org.boon.json.JsonException;
+import org.boon.json.JsonParser;
 import org.boon.json.internal.*;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Map;
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
  */
-public class JsonIndexOverlayParser {
+public class JsonIndexOverlayParser implements JsonParser {
 
     private char[] charArray;
     private int __index;
@@ -41,85 +42,7 @@ public class JsonIndexOverlayParser {
     }
 
 
-    public static Object parse( String cs ) {
-        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
-        return p.decode ( cs );
 
-    }
-
-
-    public static Map<String, Value> parseMapUseValue( String cs ) {
-        JsonIndexOverlayParser p = new JsonIndexOverlayParser ( true );
-        return ( Map<String, Value> ) p.decode ( cs );
-    }
-
-
-    public static Map<String, Value> parseMapUseValue( char[] cs ) {
-        JsonIndexOverlayParser p = new JsonIndexOverlayParser ( true );
-        return ( Map<String, Value> ) p.decode ( cs );
-    }
-
-
-    public static Map<String, Object> parseMap( String cs ) {
-        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
-
-
-    public static Object parse( char[] cs ) {
-        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
-        return p.decode ( cs );
-
-    }
-
-
-
-    public static Map<String, Object> parseMap( char[] cs ) {
-        JsonIndexOverlayParser p = new JsonIndexOverlayParser ();
-        return ( Map<String, Object> ) p.decode ( cs );
-    }
-
-
-    public static <T> T parseInto( T object, String cs ) {
-        Map objectMap = parseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, object );
-    }
-
-
-    public static <T> T parseInto( Class<T> clz, String cs ) {
-        Map objectMap = parseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( ( Map ) objectMap, clz );
-    }
-
-
-    public static Object parseIntoJavaObject( String cs ) {
-        Map objectMap = parseMapUseValue ( cs );
-        return Reflection.fromMap ( ( Map ) objectMap );
-    }
-
-
-    public static <T> T parseInto( T object, char[] cs ) {
-        Map objectMap = parseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( objectMap, object );
-    }
-
-
-
-    public static <T> T parseInto( Class<T> clz, char[] cs ) {
-        Map objectMap = parseMapUseValue ( cs );
-        return ( T ) Reflection.fromValueMap ( objectMap, clz );
-    }
-
-
-    public static Object parseIntoJavaObject( char[] cs ) {
-        Map objectMap = parseMapUseValue ( cs );
-        return Reflection.fromMap ( objectMap );
-    }
-
-
-
-
-    //
 
 
     @SuppressWarnings( "unchecked" )
@@ -706,5 +629,27 @@ public class JsonIndexOverlayParser {
         return charString;
     }
 
+
+
+
+    @Override
+    public <T> T parse( Class<T> type, String str ) {
+        return (T) this.decode ( str  );
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, byte[] bytes ) {
+        return (T) this.decode ( bytes  );
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, CharSequence charSequence ) {
+        return parse(type, charSequence.toString ());
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, char[] chars ) {
+        return (T) this.decode ( chars );
+    }
 
 }

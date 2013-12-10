@@ -1,6 +1,7 @@
-package org.boon.json;
+package org.boon.json.implementation;
 
 import org.boon.core.reflection.Reflection;
+import org.boon.json.JsonException;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
