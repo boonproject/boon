@@ -100,6 +100,9 @@ public class Reflection {
         return context ( )._sortableFields.get ( clazz.getName ( ) );
     }
 
+    public static Object contextToHold () {
+        return context ();
+    }
 
     /* Manages weak references. */
     private static Context context( ) {
