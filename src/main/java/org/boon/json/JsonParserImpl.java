@@ -9,6 +9,7 @@ import org.boon.json.implementation.JsonParserCharSequence;
 import org.boon.json.implementation.JsonUTF8Parser;
 import org.boon.primitive.CharBuf;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -85,11 +86,13 @@ public class JsonParserImpl implements JsonParser {
 
 
         if (type == Map.class || type == List.class ) {
-            if (value.length > this.sizeToUseDirectBytes) {
-                return directByteParser.parse ( type, value );
-            } else {
-                return basicParser.parse ( type, value );
-            }
+//            if (value.length > this.sizeToUseDirectBytes) {
+//                return directByteParser.parse ( type, value );
+//            } else {
+//                return basicParser.parse ( type, value );
+//            }
+              return this.parse ( type, new ByteArrayInputStream ( value ) );
+
         } else {
             Map<String, Value> objectMap = (Map<String, Value>) objectParser.parse ( Map.class, value );
             return Reflection.fromValueMap (objectMap, type);
