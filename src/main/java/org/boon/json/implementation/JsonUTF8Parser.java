@@ -8,6 +8,9 @@ import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
 import sun.nio.cs.Surrogate;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -858,6 +861,27 @@ public class JsonUTF8Parser implements JsonParser {
     public <T> T parse( Class<T> type, char[] chars ) {
 
         die ( "Not supported char[]" );
+        return null;
+    }
+
+
+
+    @Override
+    public <T> T parse( Class<T> type, Reader reader ) {
+
+        die("you are using the wrong class");
+        return null;
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input ) {
+        die("you are using the wrong class");
+        return null;
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+        die("you are using the wrong class");
         return null;
     }
 

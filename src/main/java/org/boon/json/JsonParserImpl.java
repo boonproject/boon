@@ -1,15 +1,20 @@
 package org.boon.json;
 
+import org.boon.IO;
 import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
 import org.boon.json.implementation.JsonIndexOverlayParser;
 import org.boon.json.implementation.JsonParserCharArray;
 import org.boon.json.implementation.JsonParserCharSequence;
 import org.boon.json.implementation.JsonUTF8Parser;
+import org.boon.primitive.CharBuf;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+
 
 public class JsonParserImpl implements JsonParser {
 
@@ -111,4 +116,28 @@ public class JsonParserImpl implements JsonParser {
         }
 
     }
+
+
+    CharBuf charBuf;
+
+    @Override
+    public <T> T parse( Class<T> type, Reader reader ) {
+
+        charBuf = IO.read ( reader, charBuf );
+        return parse ( type,  charBuf.readForRecycle () );
+
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input ) {
+        charBuf = IO.read ( input, charBuf, this.charset );
+        return parse ( type,  charBuf.readForRecycle () );
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+        charBuf = IO.read ( input, charBuf, charset );
+        return parse ( type,  charBuf.readForRecycle () );
+    }
+
 }

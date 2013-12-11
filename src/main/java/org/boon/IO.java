@@ -23,7 +23,7 @@ import static org.boon.Str.slc;
 //import java.util.stream.CloseableStream;
 
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings( "unchecked" )
 public class IO {
 
 
@@ -31,6 +31,10 @@ public class IO {
     public final static String FILE_SCHEMA = "file";
     public final static String JAR_SCHEMA = "jar";
     public final static String CLASSPATH_SCHEMA = "classpath";
+
+
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+    private static final int EOF = -1;
 
 
     public static class ConvertToPathFunction implements Function<String, Path> {
@@ -41,16 +45,16 @@ public class IO {
         }
     }
 
-    public static ConvertToPathFunction convertToPathFunction = new ConvertToPathFunction ( );
+    public static ConvertToPathFunction convertToPathFunction = new ConvertToPathFunction ();
 
     public static List<String> list( final Path path ) {
 
-        List<String> result = new ArrayList<> ( );
+        List<String> result = new ArrayList<> ();
 
         try {
             try ( DirectoryStream<Path> directoryStream = Files.newDirectoryStream ( path ) ) {
                 for ( Path entry : directoryStream ) {
-                    result.add ( entry.toAbsolutePath ( ).toString ( ) );
+                    result.add ( entry.toAbsolutePath ().toString () );
                 }
             }
             return result;
@@ -68,12 +72,12 @@ public class IO {
 
     public static List<String> listByGlob( Path pathFromFileSystem, String glob ) {
 
-        List<String> result = new ArrayList<> ( );
+        List<String> result = new ArrayList<> ();
 
         try {
             try ( DirectoryStream<Path> stream = Files.newDirectoryStream ( pathFromFileSystem, glob ) ) {
                 for ( Path entry : stream ) {
-                    result.add ( entry.toAbsolutePath ( ).toString ( ) );
+                    result.add ( entry.toAbsolutePath ().toString () );
                 }
             }
             return result;
@@ -92,12 +96,12 @@ public class IO {
     public static List<String> listByFileExtension( final Path pathFromFileSystem, final String ext ) {
         final String extToLookForGlob = "*." + ext;
 
-        List<String> result = new ArrayList<> ( );
+        List<String> result = new ArrayList<> ();
 
         try {
             try ( DirectoryStream<Path> stream = Files.newDirectoryStream ( pathFromFileSystem, extToLookForGlob ) ) {
                 for ( Path entry : stream ) {
-                    result.add ( entry.toAbsolutePath ( ).toString ( ) );
+                    result.add ( entry.toAbsolutePath ().toString () );
                 }
             }
             return result;
@@ -118,7 +122,7 @@ public class IO {
 
         final String extToLookForGlob = "*." + ext;
 
-        List<String> result = new ArrayList<> ( );
+        List<String> result = new ArrayList<> ();
 
         return doListByFileExtensionRecursive ( result, pathFromFileSystem, extToLookForGlob );
     }
@@ -131,7 +135,7 @@ public class IO {
         try {
             try ( DirectoryStream<Path> stream = Files.newDirectoryStream ( pathFromFileSystem, glob ) ) {
                 for ( Path entry : stream ) {
-                    result.add ( entry.toAbsolutePath ( ).toString ( ) );
+                    result.add ( entry.toAbsolutePath ().toString () );
                 }
             }
             try ( DirectoryStream<Path> stream = Files.newDirectoryStream ( pathFromFileSystem ) ) {
@@ -152,7 +156,7 @@ public class IO {
     public static String readChild( Path parentDir, String childFileName ) {
         try {
 
-            final Path newFilePath = path ( parentDir.toString ( ),
+            final Path newFilePath = path ( parentDir.toString (),
                     childFileName );
 
             return read ( newFilePath );
@@ -171,16 +175,26 @@ public class IO {
         }
     }
 
-    public static char [] readCharBuffer( Path path ) {
+    public static char[] readCharBuffer( Path path ) {
         try {
 
             long bufSize = Files.size ( path );
-            return readCharBuffer ( Files.newBufferedReader ( path, DEFAULT_CHARSET ), (int) bufSize );
+            return readCharBuffer ( Files.newBufferedReader ( path, DEFAULT_CHARSET ), ( int ) bufSize );
 
         } catch ( IOException ex ) {
             return Exceptions.handle ( char[].class, ex );
         }
     }
+
+    public static String read( InputStream inputStream, Charset charset ) {
+
+        try ( Reader reader = new InputStreamReader ( inputStream, charset ) ) {
+            return read ( reader );
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( String.class, ex );
+        }
+    }
+
 
     public static String read( InputStream inputStream, String charset ) {
 
@@ -191,9 +205,18 @@ public class IO {
         }
     }
 
+    public static String readCharBuffer( InputStream inputStream, Charset charset ) {
+
+        try ( Reader reader = new InputStreamReader ( inputStream, charset ) ) {
+            return read ( reader );
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( String.class, ex );
+        }
+    }
+
     public static String read( InputStream inputStream ) {
 
-        try ( Reader reader = new InputStreamReader ( inputStream ) ) {
+        try ( Reader reader = new InputStreamReader ( inputStream, DEFAULT_CHARSET ) ) {
             return read ( reader );
         } catch ( Exception ex ) {
             return Exceptions.handle ( String.class, ex );
@@ -201,12 +224,53 @@ public class IO {
 
     }
 
+
+    public static char[] readCharBuffer( InputStream inputStream ) {
+
+        try ( Reader reader = new InputStreamReader ( inputStream ) ) {
+            return readCharBuffer ( reader );
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( char[].class, ex );
+        }
+
+    }
+
+    public static CharBuf read( InputStream inputStream, CharBuf charBuf ) {
+
+        try ( Reader reader = new InputStreamReader ( inputStream ) ) {
+            return read ( reader, charBuf );
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( CharBuf.class, ex );
+        }
+
+    }
+
+
+    public static CharBuf read( InputStream inputStream, CharBuf charBuf, Charset charset ) {
+
+        try ( Reader reader = new InputStreamReader ( inputStream, charset ) ) {
+            return read ( reader, charBuf );
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( CharBuf.class, ex );
+        }
+
+    }
+
+    public static byte[] input( String fileName ) {
+        try {
+            return input ( Files.newInputStream ( IO.path ( fileName ) ) );
+        } catch ( IOException e ) {
+            return Exceptions.handle ( byte[].class, e );
+        }
+    }
+
+
     public static byte[] input( InputStream inputStream ) {
 
         try ( InputStream is = inputStream ) {
 
-            ByteBuf buf = ByteBuf.create ( 1024 );
-            byte[] bytes = new byte[1024];
+            ByteBuf buf = ByteBuf.create ( DEFAULT_BUFFER_SIZE );
+            byte[] bytes = new byte[DEFAULT_BUFFER_SIZE];
 
             int read = -2;
 
@@ -215,49 +279,124 @@ public class IO {
 
                 read = inputStream.read ( bytes );
 
-                if ( read == 1024 ) {
+                if ( read == DEFAULT_BUFFER_SIZE ) {
                     buf.add ( bytes );
                 } else if ( read > 0 ) {
                     buf.add ( bytes, read );
                 }
             }
-            return buf.toBytes ( );
+            return buf.toBytes ();
         } catch ( Exception ex ) {
             return Exceptions.handle ( byte[].class, ex );
         }
     }
 
-    public static String read( Reader reader ) {
 
+    public static long copyLarge( Reader reader, Writer writer ) {
+        return copyLarge ( reader, writer, new char[DEFAULT_BUFFER_SIZE] );
+    }
 
-        CharBuf builder = CharBuf.create ( 256 );
+    public static long copyLarge( Reader reader, Writer writer, char[] buffer ) {
+        long count = 0;
+        int n;
 
-        try ( Reader r = reader ) {
-
-
-            int i;
-            while ( ( i = reader.read ( ) ) != -1 ) {
-                builder.add ( ( char ) i );
+        try {
+            while ( EOF != ( n = reader.read ( buffer ) ) ) {
+                writer.write ( buffer, 0, n );
+                count += n;
             }
+        } catch ( IOException e ) {
+            Exceptions.handle ( e );
+        }
+        return count;
+    }
 
 
-        } catch ( Exception ex ) {
-            return Exceptions.handle ( String.class, ex );
+    public static String read( Reader input ) {
+        try {
+
+            CharBuf sw = CharBuf.create ( DEFAULT_BUFFER_SIZE );
+            copy ( input, sw );
+            return sw.toString ();
+
+        } finally {
+            try {
+                input.close ();
+            } catch ( IOException e ) {
+                Exceptions.handle ( e );
+            }
+        }
+    }
+
+    public static CharBuf read( Reader input, CharBuf charBuf ) {
+        if ( charBuf == null ) {
+            charBuf = CharBuf.create ( 256  );
+        } else {
+            charBuf.readForRecycle ();
         }
 
-        return builder.toString ( );
+        try {
 
+
+            char[] buffer = charBuf.toCharArray ();
+            int size = input.read ( buffer );
+            if ( size != -1 ) {
+                charBuf._len ( size );
+            }
+            if ( size < buffer.length ) {
+                return charBuf;
+            }
+
+            copy ( input, charBuf );
+
+        } catch ( IOException e ) {
+            Exceptions.handle ( e );
+        } finally {
+            try {
+                input.close ();
+            } catch ( IOException e ) {
+                Exceptions.handle ( e );
+            }
+        }
+
+        return charBuf;
+
+    }
+
+    public static char[] readCharBuffer( Reader input ) {
+
+        try {
+            CharBuf sw = CharBuf.create ( DEFAULT_BUFFER_SIZE );
+            copy ( input, sw );
+            return sw.toCharArray ();
+
+        } finally {
+            try {
+                input.close ();
+            } catch ( IOException e ) {
+                Exceptions.handle ( e );
+            }
+        }
+
+    }
+
+    public static int copy( Reader input, Writer output ) {
+        long count = copyLarge ( input, output );
+        if ( count > Integer.MAX_VALUE ) {
+            return -1;
+        }
+        return ( int ) count;
     }
 
 
     public static char[] readCharBuffer( Reader reader, int size ) {
 
 
-        char [] buffer = new char [size];
+        char[] buffer = new char[size];
 
         try ( Reader r = reader ) {
 
-             reader.read ( buffer );
+            reader.read ( buffer );
 
 
         } catch ( Exception ex ) {
@@ -333,7 +472,7 @@ public class IO {
 
 
             String line;
-            while ( ( line = bufferedReader.readLine ( ) ) != null ) {
+            while ( ( line = bufferedReader.readLine () ) != null ) {
                 lines.add ( line );
             }
 
@@ -357,7 +496,7 @@ public class IO {
             String line;
             int lineNumber = 0;
 
-            while ( ( line = bufferedReader.readLine ( ) ) != null &&
+            while ( ( line = bufferedReader.readLine () ) != null &&
                     eachLine.line ( line, lineNumber++ ) ) { //
                 // no op
             }
@@ -393,17 +532,17 @@ public class IO {
 
         final URI uri = createURI ( path );
 
-        return ( List<String> ) Exceptions.tryIt ( Typ.list, new Exceptions.TrialWithReturn<List> ( ) {
+        return ( List<String> ) Exceptions.tryIt ( Typ.list, new Exceptions.TrialWithReturn<List> () {
             @Override
-            public List<String> tryIt( ) throws Exception {
-                if ( uri.getScheme ( ) == null ) {
+            public List<String> tryIt() throws Exception {
+                if ( uri.getScheme () == null ) {
 
-                    Path thePath = FileSystems.getDefault ( ).getPath ( path );
+                    Path thePath = FileSystems.getDefault ().getPath ( path );
                     return Files.readAllLines ( thePath, DEFAULT_CHARSET );
 
-                } else if ( uri.getScheme ( ).equals ( FILE_SCHEMA ) ) {
+                } else if ( uri.getScheme ().equals ( FILE_SCHEMA ) ) {
 
-                    Path thePath = FileSystems.getDefault ( ).getPath ( uri.getPath ( ) );
+                    Path thePath = FileSystems.getDefault ().getPath ( uri.getPath () );
                     return Files.readAllLines ( thePath, DEFAULT_CHARSET );
 
                 } else {
@@ -414,13 +553,13 @@ public class IO {
     }
 
     public static URI createURI( final String path ) {
-        if ( !Sys.isWindows ( ) ) {
+        if ( !Sys.isWindows () ) {
             return URI.create ( path );
 
         } else {
 
             if ( path.contains ( "\\" ) || path.startsWith ( "C:" ) || path.startsWith ( "D:" ) ) {
-                String newPath = new File ( path ).toURI ( ).toString ( );
+                String newPath = new File ( path ).toURI ().toString ();
                 if ( newPath.startsWith ( "file:/C:" ) ) {
                     newPath = slc ( newPath, 8 );
                     return URI.create ( newPath );
@@ -439,33 +578,33 @@ public class IO {
 
         final URI uri = createURI ( location );
 
-        Exceptions.tryIt ( new Exceptions.Trial ( ) {
+        Exceptions.tryIt ( new Exceptions.Trial () {
             @Override
-            public void tryIt( ) throws Exception {
+            public void tryIt() throws Exception {
 
 
-                if ( uri.getScheme ( ) == null ) {
+                if ( uri.getScheme () == null ) {
 
-                    Path thePath = FileSystems.getDefault ( ).getPath ( location );
+                    Path thePath = FileSystems.getDefault ().getPath ( location );
                     BufferedReader buf = Files.newBufferedReader (
                             thePath, DEFAULT_CHARSET );
                     eachLine ( buf, eachLine );
 
-                } else if ( uri.getScheme ( ).equals ( FILE_SCHEMA ) ) {
+                } else if ( uri.getScheme ().equals ( FILE_SCHEMA ) ) {
 
 
                     Path thePath = null;
 
-                    if ( Sys.isWindows ( ) ) {
-                        String path = uri.toString ( );
+                    if ( Sys.isWindows () ) {
+                        String path = uri.toString ();
 
-                        path = path.replace ( '/', Sys.windowsPathSeparator ( ) );
+                        path = path.replace ( '/', Sys.windowsPathSeparator () );
                         if ( slc ( path, 0, 6 ).equals ( "file:\\" ) ) {
                             path = slc ( path, 6 );
                         }
-                        thePath = FileSystems.getDefault ( ).getPath ( path );
+                        thePath = FileSystems.getDefault ().getPath ( path );
                     } else {
-                        thePath = FileSystems.getDefault ( ).getPath ( uri.getPath ( ) );
+                        thePath = FileSystems.getDefault ().getPath ( uri.getPath () );
 
                     }
                     BufferedReader buf = Files.newBufferedReader (
@@ -483,11 +622,11 @@ public class IO {
     }
 
     private static String getWindowsPathIfNeeded( String path ) {
-        if ( Sys.isWindows ( ) ) {
+        if ( Sys.isWindows () ) {
 
             if ( !path.startsWith ( "http" ) && !path.startsWith ( CLASSPATH_SCHEMA )
                     && !path.startsWith ( JAR_SCHEMA ) ) {
-                path = path.replace ( '/', Sys.windowsPathSeparator ( ) );
+                path = path.replace ( '/', Sys.windowsPathSeparator () );
                 if ( slc ( path, 0, 6 ).equals ( "file:\\" ) ) {
                     path = slc ( path, 6 );
                 }
@@ -503,28 +642,28 @@ public class IO {
     public static String read( final String location ) {
         final URI uri = createURI ( location );
 
-        return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> ( ) {
+        return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
 
             @Override
-            public String tryIt( ) throws Exception {
+            public String tryIt() throws Exception {
 
                 String path = location;
 
                 path = getWindowsPathIfNeeded ( path );
 
-                if ( uri.getScheme ( ) == null ) {
+                if ( uri.getScheme () == null ) {
 
-                    Path thePath = FileSystems.getDefault ( ).getPath ( path );
+                    Path thePath = FileSystems.getDefault ().getPath ( path );
                     return read ( Files.newBufferedReader ( thePath, DEFAULT_CHARSET ) );
 
-                } else if ( uri.getScheme ( ).equals ( FILE_SCHEMA ) ) {
+                } else if ( uri.getScheme ().equals ( FILE_SCHEMA ) ) {
 
                     return readFromFileSchema ( uri );
 
-                } else if ( uri.getScheme ( ).equals ( CLASSPATH_SCHEMA )
-                        || uri.getScheme ( ).equals ( JAR_SCHEMA ) ) {
+                } else if ( uri.getScheme ().equals ( CLASSPATH_SCHEMA )
+                        || uri.getScheme ().equals ( JAR_SCHEMA ) ) {
 
-                    return readFromClasspath ( uri.toString ( ) );
+                    return readFromClasspath ( uri.toString () );
 
                 } else {
                     return read ( location, uri );
@@ -549,14 +688,14 @@ public class IO {
 
     public static Path uriToPath( URI uri ) {
         Path thePath = null;
-        if ( Sys.isWindows ( ) ) {
-            String newPath = uri.getPath ( );
+        if ( Sys.isWindows () ) {
+            String newPath = uri.getPath ();
             if ( newPath.startsWith ( "/C:" ) ) {
                 newPath = slc ( newPath, 3 );
             }
-            thePath = FileSystems.getDefault ( ).getPath ( newPath );
+            thePath = FileSystems.getDefault ().getPath ( newPath );
         } else {
-            thePath = FileSystems.getDefault ( ).getPath ( uri.getPath ( ) );
+            thePath = FileSystems.getDefault ().getPath ( uri.getPath () );
         }
         return thePath;
     }
@@ -572,7 +711,7 @@ public class IO {
             //Paths.get()
             return Files.readAllLines ( fsPath, DEFAULT_CHARSET );
         } catch ( ProviderNotFoundException ex ) {
-            return readLines ( uri.toURL ( ).openStream ( ) );
+            return readLines ( uri.toURL ().openStream () );
         }
     }
 
@@ -586,7 +725,7 @@ public class IO {
 
 
         } catch ( ProviderNotFoundException ex ) {
-            eachLine ( uri.toURL ( ).openStream ( ), eachLine );
+            eachLine ( uri.toURL ().openStream (), eachLine );
         }
     }
 
@@ -596,7 +735,7 @@ public class IO {
             Path fsPath = fileSystem.getPath ( location );
             return read ( Files.newBufferedReader ( fsPath, DEFAULT_CHARSET ) );
         } catch ( ProviderNotFoundException ex ) {
-            return read ( uri.toURL ( ).openStream ( ) );
+            return read ( uri.toURL ().openStream () );
         }
     }
 
@@ -615,7 +754,7 @@ public class IO {
 
         try {
 
-            final Path newFilePath = path ( parentDir.toString ( ),
+            final Path newFilePath = path ( parentDir.toString (),
                     childFileName );
 
             write ( newFilePath, childContents );
@@ -629,7 +768,7 @@ public class IO {
         try {
 
 
-            final Path newDir = path ( parentDir.toString ( ),
+            final Path newDir = path ( parentDir.toString (),
                     childDir );
 
 
@@ -674,8 +813,8 @@ public class IO {
         }
     }
 
-    public static FileSystem fileSystem( ) {
-        return FileSystems.getDefault ( );
+    public static FileSystem fileSystem() {
+        return FileSystems.getDefault ();
     }
 
 
@@ -684,7 +823,7 @@ public class IO {
     }
 
     public static Path path( Path path, String... more ) {
-        return Paths.get ( path.toString ( ), more );
+        return Paths.get ( path.toString (), more );
     }
 
     public static void write( Path file, String contents ) {
@@ -730,7 +869,7 @@ public class IO {
     }
 
     private static List<String> listFromDefaultClassLoader( String s ) {
-        List<String> result = new ArrayList<> ( );
+        List<String> result = new ArrayList<> ();
 
         String newPath = s;
 
@@ -742,11 +881,11 @@ public class IO {
             if ( Files.isDirectory ( resourcePath ) ) {
                 result.addAll ( IO.list ( resourcePath ) );
             } else {
-                result.add ( resourcePath.toString ( ) );
+                result.add ( resourcePath.toString () );
             }
         }
 
-        for ( int index = 0; index < result.size ( ); index++ ) {
+        for ( int index = 0; index < result.size (); index++ ) {
             result.set ( index, "classpath:" + result.get ( index ) );
         }
 
@@ -807,10 +946,10 @@ public class IO {
     public static List<String> list( final String path ) {
 
         URI uri = URI.create ( path );
-        if ( uri.getScheme ( ) == null ) {
+        if ( uri.getScheme () == null ) {
             final Path pathFromFileSystem = path ( path );
             return list ( pathFromFileSystem );
-        } else if ( uri.getScheme ( ).equals ( CLASSPATH_SCHEMA ) ) {
+        } else if ( uri.getScheme ().equals ( CLASSPATH_SCHEMA ) ) {
 
             return listFromDefaultClassLoader ( StringScanner.split ( path, ':' )[1] );
 
@@ -823,11 +962,11 @@ public class IO {
     public static List<String> listByExt( final String path, String ext ) {
 
         final List<String> list = list ( path );
-        final List<String> newList = new ArrayList<> (  );
+        final List<String> newList = new ArrayList<> ();
 
-        for (String file : list) {
-            if (file.endsWith ( ext )) {
-                newList.add ( file) ;
+        for ( String file : list ) {
+            if ( file.endsWith ( ext ) ) {
+                newList.add ( file );
             }
         }
 

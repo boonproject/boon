@@ -1,6 +1,7 @@
 package org.boon.json;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class JsonParserFactory {
 
@@ -8,7 +9,7 @@ public class JsonParserFactory {
     boolean preferCharSequence = false;
 
     boolean useDirectBytes = true;
-    Charset charset;
+    Charset charset= StandardCharsets.UTF_8;
     boolean overlay = false;
     int sizeToUseDirectBytes = 30_000;
 

@@ -7,10 +7,15 @@ import org.boon.json.internal.*;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static org.boon.Exceptions.die;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
@@ -650,6 +655,25 @@ public class JsonIndexOverlayParser implements JsonParser {
     @Override
     public <T> T parse( Class<T> type, char[] chars ) {
         return (T) this.decode ( chars );
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, Reader reader ) {
+
+        die("you are using the wrong class");
+        return null;
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input ) {
+        die("you are using the wrong class");
+        return null;
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+        die("you are using the wrong class");
+        return null;
     }
 
 }

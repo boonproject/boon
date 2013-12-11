@@ -6,6 +6,9 @@ import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
@@ -632,6 +635,26 @@ public class JsonParserCharSequence implements JsonParser {
     @Override
     public <T> T parse( Class<T> type, char[] chars ) {
         die ("not supported by this parser char[] chars");
+        return null;
+    }
+
+
+    @Override
+    public <T> T parse( Class<T> type, Reader reader ) {
+
+        die("you are using the wrong class");
+        return null;
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input ) {
+        die("you are using the wrong class");
+        return null;
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+        die("you are using the wrong class");
         return null;
     }
 

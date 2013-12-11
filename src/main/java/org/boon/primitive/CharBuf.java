@@ -1,14 +1,14 @@
 package org.boon.primitive;
 
 
-import org.boon.core.reflection.Reflection;
-
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 
 import static org.boon.primitive.CharScanner.*;
 import static org.boon.primitive.CharScanner.parseLong;
 
-public class CharBuf {
+public class CharBuf extends Writer {
     protected int capacity = 16;
     protected int location = 0;
 
@@ -46,6 +46,26 @@ public class CharBuf {
 
     protected CharBuf( ) {
         init ( );
+    }
+
+    @Override
+    public void write( char[] cbuf, int off, int len )  {
+
+        if (off == 0 && cbuf.length == len) {
+            this.add(cbuf);
+        } else {
+            char [] buffer = Arrays.copyOfRange ( cbuf, off, off + len );
+            this.add ( buffer );
+        }
+
+    }
+
+    @Override
+    public void flush() throws IOException {
+    }
+
+    @Override
+    public void close() throws IOException {
     }
 
     public void init( ) {
@@ -155,6 +175,8 @@ public class CharBuf {
     }
 
 
+
+
     public void add( char ch ) {
         if ( 1 + location < capacity ) {
             Chr.idx ( buffer, location, ch );
@@ -178,6 +200,9 @@ public class CharBuf {
         return this.buffer;
     }
 
+    public void _len(int location ) {
+        this.location = location;
+    }
 
 
 
