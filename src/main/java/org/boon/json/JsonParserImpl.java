@@ -6,7 +6,6 @@ import org.boon.core.reflection.Reflection;
 import org.boon.json.implementation.JsonIndexOverlayParser;
 import org.boon.json.implementation.JsonParserCharArray;
 import org.boon.json.implementation.JsonParserCharSequence;
-import org.boon.json.implementation.JsonUTF8Parser;
 import org.boon.primitive.CharBuf;
 
 import java.io.ByteArrayInputStream;
@@ -23,39 +22,33 @@ public class JsonParserImpl implements JsonParser {
     private final boolean useDirectBytes;
     private final Charset charset;
     private final boolean overlay;
-    private final int sizeToUseDirectBytes;
+    private final int sizeSmallerUseOverlayAlways;
     private final boolean preferCharSequence;
 
 
     private final JsonParser objectParser;
     private final JsonParser basicParser;
-    private final JsonParser directByteParser;
     private final JsonParser charSequenceParser;
+    private final JsonParser overlayParser;
 
 
-    public JsonParserImpl( boolean useDirectBytes, Charset charset, boolean overlay, int sizeToUseDirectBytes,
+    public JsonParserImpl( boolean useDirectBytes, Charset charset, boolean overlay, int sizeSmallerUseOverlayAlways,
                            boolean preferCharSequence) {
         this.useDirectBytes = useDirectBytes;
         this.charset = charset;
         this.overlay = overlay;
-        this.sizeToUseDirectBytes = sizeToUseDirectBytes;
+        this.sizeSmallerUseOverlayAlways = sizeSmallerUseOverlayAlways;
         this.preferCharSequence = preferCharSequence;
 
+        this.overlayParser = new JsonIndexOverlayParser (  );
+
         if (overlay) {
-            this.basicParser = new JsonIndexOverlayParser (  );
+            this.basicParser = overlayParser;
         } else {
             this.basicParser = new JsonParserCharArray ( );
         }
 
         this.objectParser = new JsonIndexOverlayParser ( true );
-
-        if ( useDirectBytes ) {
-            directByteParser =  new JsonUTF8Parser ();
-        } else {
-            directByteParser = basicParser;
-        }
-
-
 
 
         if (preferCharSequence) {
@@ -87,12 +80,11 @@ public class JsonParserImpl implements JsonParser {
 
 
         if (type == Map.class || type == List.class ) {
-//            if (value.length > this.sizeToUseDirectBytes) {
-//                return directByteParser.parse ( type, value );
-//            } else {
-//                return basicParser.parse ( type, value );
-//            }
-              return this.parse ( type, new ByteArrayInputStream ( value ) );
+            if (value.length < this.sizeSmallerUseOverlayAlways ) {
+                return overlayParser.parse ( type, value );
+            } else {
+                return this.parse ( type, new ByteArrayInputStream ( value ) );
+            }
 
         } else {
             Map<String, Value> objectMap = (Map<String, Value>) objectParser.parse ( Map.class, value );

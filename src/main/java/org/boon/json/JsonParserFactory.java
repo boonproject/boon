@@ -11,7 +11,7 @@ public class JsonParserFactory {
     boolean useDirectBytes = true;
     Charset charset= StandardCharsets.UTF_8;
     boolean overlay = false;
-    int sizeToUseDirectBytes = 30_000;
+    int sizeToUseOverlay = 50;
 
 
     public JsonParserFactory useDirectBytes() {
@@ -33,8 +33,8 @@ public class JsonParserFactory {
     }
 
 
-    public JsonParserFactory setSizeToUseDirectBytes( int size ) {
-        this.sizeToUseDirectBytes = size;
+    public JsonParserFactory setSizeToUseOverlay( int size ) {
+        this.sizeToUseOverlay = size;
         return this;
     }
 
@@ -64,7 +64,7 @@ public class JsonParserFactory {
 
 
     public JsonParser create() {
-        return new JsonParserImpl ( useDirectBytes, charset, overlay, sizeToUseDirectBytes,
+        return new JsonParserImpl ( useDirectBytes, charset, overlay, sizeToUseOverlay,
          preferCharSequence );
     }
 
