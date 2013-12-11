@@ -256,6 +256,17 @@ public class IO {
 
     }
 
+
+    public static CharBuf read( InputStream inputStream, CharBuf charBuf, Charset charset, int bufSize ) {
+
+        try ( Reader reader = new InputStreamReader ( inputStream, charset ) ) {
+            return read ( reader, charBuf, bufSize );
+        } catch ( Exception ex ) {
+            return Exceptions.handle ( CharBuf.class, ex );
+        }
+
+    }
+
     public static byte[] input( String fileName ) {
         try {
             return input ( Files.newInputStream ( IO.path ( fileName ) ) );
@@ -328,9 +339,10 @@ public class IO {
         }
     }
 
-    public static CharBuf read( Reader input, CharBuf charBuf ) {
+    public static CharBuf read( Reader input, CharBuf charBuf, final int bufSize ) {
+
         if ( charBuf == null ) {
-            charBuf = CharBuf.create ( 256  );
+            charBuf = CharBuf.create ( bufSize  );
         } else {
             charBuf.readForRecycle ();
         }
@@ -361,6 +373,10 @@ public class IO {
 
         return charBuf;
 
+
+    }
+    public static CharBuf read( Reader input, CharBuf charBuf ) {
+        return read ( input, charBuf, 2048 );
     }
 
     public static char[] readCharBuffer( Reader input ) {

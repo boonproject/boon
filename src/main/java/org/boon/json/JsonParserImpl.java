@@ -31,6 +31,8 @@ public class JsonParserImpl implements JsonParser {
     private final JsonParser charSequenceParser;
     private final JsonParser overlayParser;
 
+    int bufSize = 256;
+
 
     public JsonParserImpl( boolean useDirectBytes, Charset charset, boolean overlay, int sizeSmallerUseOverlayAlways,
                            boolean preferCharSequence) {
@@ -83,6 +85,7 @@ public class JsonParserImpl implements JsonParser {
             if (value.length < this.sizeSmallerUseOverlayAlways ) {
                 return overlayParser.parse ( type, value );
             } else {
+                this.bufSize = value.length;
                 return this.parse ( type, new ByteArrayInputStream ( value ) );
             }
 
@@ -119,20 +122,20 @@ public class JsonParserImpl implements JsonParser {
     @Override
     public <T> T parse( Class<T> type, Reader reader ) {
 
-        charBuf = IO.read ( reader, charBuf );
+        charBuf = IO.read ( reader, charBuf, bufSize );
         return parse ( type,  charBuf.readForRecycle () );
 
     }
 
     @Override
     public <T> T parse( Class<T> type, InputStream input ) {
-        charBuf = IO.read ( input, charBuf, this.charset );
+        charBuf = IO.read ( input, charBuf, this.charset, bufSize );
         return parse ( type,  charBuf.readForRecycle () );
     }
 
     @Override
     public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        charBuf = IO.read ( input, charBuf, charset );
+        charBuf = IO.read ( input, charBuf, charset, bufSize );
         return parse ( type,  charBuf.readForRecycle () );
     }
 
