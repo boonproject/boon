@@ -26,6 +26,7 @@ public class JsonParserImpl implements JsonParser {
     private final int sizeToUseDirectBytes;
     private final boolean preferCharSequence;
 
+
     private final JsonParser objectParser;
     private final JsonParser basicParser;
     private final JsonParser directByteParser;
@@ -41,9 +42,9 @@ public class JsonParserImpl implements JsonParser {
         this.preferCharSequence = preferCharSequence;
 
         if (overlay) {
-            this.basicParser = new JsonParserCharArray ();
-        } else {
             this.basicParser = new JsonIndexOverlayParser (  );
+        } else {
+            this.basicParser = new JsonParserCharArray ( );
         }
 
         this.objectParser = new JsonIndexOverlayParser ( true );
