@@ -29,18 +29,7 @@ public class JsonParserCharArray implements JsonParser {
     private int __index;
     private char __currentChar;
 
-    private final boolean lax;
 
-    boolean inList;
-    boolean inObject;
-
-    public JsonParserCharArray () {
-        this.lax = false;
-    }
-
-    public JsonParserCharArray ( boolean lax ) {
-        this.lax = lax;
-    }
 
 
     @SuppressWarnings ( "unchecked" )
@@ -215,90 +204,6 @@ public class JsonParserCharArray implements JsonParser {
         return map;
     }
 
-    private Object decodeJsonObjectLax () {
-
-        if ( __currentChar == '{' )
-            this.nextChar ();
-
-        Map<String, Object> map = new LinkedHashMap<> ();
-
-
-        inObject = true;
-
-        boolean foundKeyQuote = false;
-
-        skipWhiteSpace ();
-        int startIndexOfKey = __index;
-
-        done:
-        for (; __index < this.charArray.length; __index++ ) {
-
-            skipWhiteSpace ();
-
-            switch(__currentChar) {
-
-                case ':' :
-                if ( !foundKeyQuote ) {
-
-                    char startChar = charArray[startIndexOfKey];
-
-                    switch ( startChar )  {
-                        case ',':
-                            startIndexOfKey++;
-                    }
-
-                    char[] keysChars = Arrays.copyOfRange ( charArray, startIndexOfKey, __index );
-                    String key = new String ( keysChars );
-
-                    __index++; //skip :
-
-                    Object value = decodeValue ();
-                    skipWhiteSpace ();
-                    map.put ( key, value );
-                    startIndexOfKey = __index;
-                    if (__currentChar=='}') {
-                        __index++;
-                        break done;
-                    }
-
-                    break;
-                }
-
-                case '"' :
-                    foundKeyQuote = true;
-                    String key =  decodeString ();
-
-                    skipWhiteSpace ();
-
-                    if ( __currentChar != ':' ) {
-
-                        complain ( "expecting current character to be " + charDescription ( __currentChar ) + "\n" );
-                    }
-                    __index++;
-                    Object value = decodeValue ();
-
-                    skipWhiteSpace ();
-                    map.put ( key, value );
-                    startIndexOfKey = __index;
-                    if (__currentChar=='}') {
-                        __index++;
-                        break done;
-                    }
-                    break;
-
-
-                case '}' :
-                   // __index++;
-                    break done;
-
-            }
-        }
-
-
-
-        inObject = false;
-        return map;
-    }
 
     private void complain ( String complaint ) {
         throw new JsonException ( exceptionDetails ( complaint ) );
@@ -335,40 +240,15 @@ public class JsonParserCharArray implements JsonParser {
 
 
             case 't':
-                if (lax){
-                   if (isTrue ()) {
-                       value = decodeTrue ();
-                   } else {
-                       value = decodeStringLax ();
-                   }
-                } else {
-                    value = decodeTrue ();
-                }
+                value = decodeTrue ();
                 break;
 
             case 'f':
-                if (lax){
-                    if (isFalse ()) {
-                        value = decodeFalse ();
-                    } else {
-                        value = decodeStringLax ();
-                    }
-                } else {
-                    value = decodeFalse ();
-                }
+                value = decodeFalse ();
                 break;
 
             case 'n':
-                if (lax){
-                    if (isNull ()) {
-                        value = decodeNull ();
-                    } else {
-                        value = decodeStringLax ();
-                    }
-
-                } else {
-                    value = decodeNull ();
-                }
+                value = decodeNull ();
                 break;
 
             case '[':
@@ -376,12 +256,7 @@ public class JsonParserCharArray implements JsonParser {
                 break;
 
             case '{':
-                if (lax) {
-                    value = decodeJsonObjectLax ();
-
-                }   else {
-                    value = decodeJsonObject ();
-                }
+                value = decodeJsonObject ();
                 break;
 
             case '1':
@@ -429,12 +304,8 @@ public class JsonParserCharArray implements JsonParser {
                 break;
 
             default:
-                if ( lax ) {
-                    value = decodeStringLax ();
-                } else {
                     throw new JsonException ( exceptionDetails ( "Unable to determine the " +
                             "current character, it is not a string, number, array, or object" ) );
-                }
 
         }
 
@@ -597,18 +468,6 @@ public class JsonParserCharArray implements JsonParser {
         throw new JsonException ( exceptionDetails ( "null not parse properly" ) );
     }
 
-    private boolean isNull () {
-
-        if ( __index + NULL.length <= charArray.length ) {
-            if ( charArray[ __index ] == 'n' &&
-                    charArray[ __index + 1] == 'u' &&
-                    charArray[ __index + 2] == 'l' &&
-                    charArray[ __index + 3] == 'l' ) {
-                    return true;
-            }
-        }
-        return false;
-    }
 
     private static char[] TRUE = Chr.chars ( "true" );
 
@@ -630,21 +489,6 @@ public class JsonParserCharArray implements JsonParser {
     }
 
 
-    private boolean isTrue () {
-
-        if ( __index + TRUE.length <= charArray.length ) {
-            if ( charArray[ __index ] == 't' &&
-                    charArray[ __index + 1] == 'r' &&
-                    charArray[ __index + 2] == 'u' &&
-                    charArray[ __index + 3] == 'e' ) {
-                return true;
-
-            }
-        }
-
-        return false;
-    }
-
 
     private static char[] FALSE = Chr.chars ( "false" );
 
@@ -663,98 +507,6 @@ public class JsonParserCharArray implements JsonParser {
         throw new JsonException ( exceptionDetails ( "false not parsed properly" ) );
     }
 
-    private boolean isFalse () {
-
-        if ( __index + FALSE.length <= charArray.length ) {
-            if ( charArray[ __index ] == 'f' &&
-                    charArray[ __index + 1] == 'a' &&
-                    charArray[ __index + 2] == 'l' &&
-                    charArray[ __index + 3] == 's' &&
-                    charArray[ __index + 4] == 'e' ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String decodeStringLax () {
-
-        __currentChar = charArray[ __index ];
-
-        if ( __index < charArray.length && __currentChar == '"' ) {
-            __index++;
-
-        }
-
-
-        final int startIndex = __index;
-
-
-        boolean escape = false;
-        boolean hasEscaped = false;
-        boolean skip = false;
-
-        if ( lax ) {
-
-            done:
-            for (; __index < this.charArray.length; __index++ ) {
-                __currentChar = charArray[ __index ];
-                switch ( __currentChar ) {
-
-                    case '"':
-                        if ( !escape ) {
-                            skip = true;
-                            break done;
-                        } else {
-                            escape = false;
-                            continue;
-                        }
-
-                    case ']':
-                        if (inList) {
-                            skip = false;
-                            break done;
-                        }
-
-                    case '}':
-                        if (inObject) {
-                            skip = false;
-                            break done;
-                        }
-
-
-                    case ',':
-                        if (inObject || inList) {
-                            skip = false;
-                            break done;
-                        }
-
-                    case '\\':
-                        hasEscaped = true;
-                        escape = true;
-                        continue;
-
-                }
-                escape = false;
-            }
-
-        }
-
-
-
-        String value = null;
-        if ( hasEscaped ) {
-            value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index ).trim();
-        } else {
-            value = new String ( charArray, startIndex, ( __index - startIndex ) ).trim();
-        }
-
-        if ( __index < charArray.length && skip) {
-            __index++;
-        }
-
-        return value;
-    }
 
 
     private String decodeString () {
@@ -816,8 +568,6 @@ public class JsonParserCharArray implements JsonParser {
         }
 
 
-        inList = true;
-
         skipWhiteSpace ();
 
         List<Object> list = new ArrayList<> ();
@@ -825,14 +575,11 @@ public class JsonParserCharArray implements JsonParser {
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
             this.nextChar ();
-            inList = false;
             return list;
         }
 
 
         int arrayIndex = 0;
-
-        skipWhiteSpace ();
 
         do {
 
@@ -872,7 +619,6 @@ public class JsonParserCharArray implements JsonParser {
             }
         } while ( this.hasMore () );
 
-        inList=false;
         return list;
     }
 

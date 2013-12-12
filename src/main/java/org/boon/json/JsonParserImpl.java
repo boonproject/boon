@@ -6,6 +6,7 @@ import org.boon.core.reflection.Reflection;
 import org.boon.json.implementation.JsonIndexOverlayParser;
 import org.boon.json.implementation.JsonParserCharArray;
 import org.boon.json.implementation.JsonParserCharSequence;
+import org.boon.json.implementation.JsonParserLax;
 import org.boon.primitive.CharBuf;
 
 import java.io.ByteArrayInputStream;
@@ -57,7 +58,7 @@ public class JsonParserImpl implements JsonParser {
 
         if (lax )  {
             //For now there is only one lax parser so force it to that if they are using lax.
-            this.basicParser = new JsonParserCharArray ( true );
+            this.basicParser = new JsonParserLax ( );
             this.overlayParser = this.basicParser;
             this.objectParser = this.basicParser;
             this.charSequenceParser = this.basicParser;
