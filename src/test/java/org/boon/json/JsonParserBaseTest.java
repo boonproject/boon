@@ -66,9 +66,7 @@ public class JsonParserBaseTest {
 
 
             puts ( "testing", file );
-            JsonParserFactory factory = new JsonParserFactory ();
 
-            JsonParser jsonParser = factory.create ();
             final Map<String,Object> map = jsonParser.parse ( Map.class, IO.read ( file ) );
 
         }

@@ -1,8 +1,7 @@
 {"menu": {
     "header": "SVG Viewer",
     "items": [
-        {"id": "Open"},
-        {"id": "OpenNew", "label": "Open New"},
+        "a",
         null,
         {"id": "ZoomIn", "label": "Zoom In"},
         {"id": "ZoomOut", "label": "Zoom Out"},

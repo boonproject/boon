@@ -360,6 +360,11 @@ public class JsonParserCharArray implements JsonParser {
 
             case 'n':
                 if (lax){
+                    if (isNull ()) {
+                        value = decodeNull ();
+                    } else {
+                        value = decodeStringLax ();
+                    }
 
                 } else {
                     value = decodeNull ();
