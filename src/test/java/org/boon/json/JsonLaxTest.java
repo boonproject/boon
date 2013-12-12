@@ -1,7 +1,6 @@
 package org.boon.json;
 
 import org.boon.Lists;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -15,6 +14,9 @@ import static org.boon.Str.lines;
 
 /**
  * Created by rick on 12/12/13.
+ *
+ * Make sure it can handle these
+ * https://code.google.com/p/json-smart/wiki/FeaturesTests
  */
 public class JsonLaxTest extends JsonParserBaseTest {
 
