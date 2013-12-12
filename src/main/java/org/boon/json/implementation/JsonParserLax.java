@@ -157,55 +157,6 @@ public class JsonParserLax implements JsonParser {
 
         }
 
-        private Object decodeJsonObject () {
-
-            if ( __currentChar == '{' )
-                this.nextChar ();
-
-
-            Map<String, Object> map = new LinkedHashMap<> ();
-
-
-            for (; __index < this.charArray.length; __index++ ) {
-
-                skipWhiteSpace ();
-
-
-                if ( __currentChar == '"' ) {
-
-                    String key =
-                            decodeString ();
-
-                    skipWhiteSpace ();
-
-                    if ( __currentChar != ':' ) {
-
-                        complain ( "expecting current character to be " + charDescription ( __currentChar ) + "\n" );
-                    }
-                    this.nextChar (); // skip past ':'
-
-                    Object value = decodeValue ();
-
-                    skipWhiteSpace ();
-                    map.put ( key, value );
-
-
-                }
-                if ( __currentChar == '}' ) {
-                    __index++;
-                    break;
-                } else if ( __currentChar == ',' ) {
-                    continue;
-                } else {
-                    complain (
-                            "expecting '}' or ',' but got current char " + charDescription ( __currentChar ) );
-
-                }
-            }
-
-            return map;
-        }
-
         private Object decodeJsonObjectLax () {
 
             if ( __currentChar == '{' )
@@ -236,10 +187,18 @@ public class JsonParserLax implements JsonParser {
                             switch ( startChar )  {
                                 case ',':
                                     startIndexOfKey++;
+                                    break;
+                                case ' ':
+                                    startIndexOfKey++;
+                                    break;
+                                case '\n':
+                                    startIndexOfKey++;
+                                    break;
+
                             }
 
                             char[] keysChars = Arrays.copyOfRange ( charArray, startIndexOfKey, __index );
-                            String key = new String ( keysChars );
+                            String key = new String ( keysChars ).trim ();
 
                             __index++; //skip :
 

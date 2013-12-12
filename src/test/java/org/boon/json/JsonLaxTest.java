@@ -51,13 +51,17 @@ public class JsonLaxTest extends JsonParserBaseTest {
     @Test
     public void testLax2() {
 
-        Object obj = jsonParser.parse (Map.class,
-                (" {foo: hi mom hi dad how are you?," +
-                        "thanks:I am good thanks for asking," +
-                        "list:[love, rocket, fire]," +
-                        "num:1," +
-                        "mix: [true,false,1,2,blue] }  ").replace ( '\'', '"' )
-        );
+        String testString = (" {foo: hi mom hi dad how are you?,\n" +
+                "thanks:I am good thanks for asking,\t\n" +
+                "list:[love, rocket, fire],\t" +
+                " num:1, " +
+                "mix: [ true, false, 1, 2, blue, true\n,\t,false\t,foo\n,], }  ").replace ( '\'', '"' );
+        Object obj = jsonParser.parse (Map.class,  testString
+                        );
+
+        puts(testString);
+
+
 
         boolean ok = true;
 
