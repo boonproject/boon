@@ -99,7 +99,7 @@ public class JsonParserCharArray implements JsonParser {
         int line = 0;
         int lastLineIndex = 0;
 
-        for ( int i = 0; i < __index; i++ ) {
+        for ( int i = 0; i < __index && i < charArray.length ; i++ ) {
             if ( charArray[ i ] == '\n' ) {
                 line++;
                 lastLineIndex = i + 1;
@@ -256,6 +256,11 @@ public class JsonParserCharArray implements JsonParser {
                     skipWhiteSpace ();
                     map.put ( key, value );
                     startIndexOfKey = __index;
+                    if (__currentChar=='}') {
+                        __index++;
+                        break done;
+                    }
+
                     break;
                 }
 
@@ -275,11 +280,15 @@ public class JsonParserCharArray implements JsonParser {
                     skipWhiteSpace ();
                     map.put ( key, value );
                     startIndexOfKey = __index;
+                    if (__currentChar=='}') {
+                        __index++;
+                        break done;
+                    }
                     break;
 
 
                 case '}' :
-                    __index++;
+                   // __index++;
                     break done;
 
             }
@@ -801,6 +810,7 @@ public class JsonParserCharArray implements JsonParser {
             this.nextChar ();
         }
 
+
         inList = true;
 
         skipWhiteSpace ();
@@ -817,7 +827,10 @@ public class JsonParserCharArray implements JsonParser {
 
         int arrayIndex = 0;
 
+        skipWhiteSpace ();
+
         do {
+
             skipWhiteSpace ();
 
             Object arrayItem = decodeValue ();
@@ -842,6 +855,7 @@ public class JsonParserCharArray implements JsonParser {
                 this.nextChar ();
                 break;
             } else {
+
                 String charString = charDescription ( c );
 
                 complain (

@@ -452,6 +452,23 @@ public class JsonParserBaseTest {
         //die();
     }
 
+    @Test
+    public void bug2() {
+
+
+        Object obj = jsonParser.parse (Map.class,
+                lines (
+
+                        "    [ {'bar': {'zed': 1}} , 1]\n "
+                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
+        );
+
+        boolean ok = true;
+
+        System.out.println(obj);
+        //die();
+    }
+
 
 
 
