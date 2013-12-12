@@ -12,7 +12,19 @@ public class JsonParserFactory {
     Charset charset= StandardCharsets.UTF_8;
     boolean overlay = false;
     int sizeToUseOverlay = 50;
+    boolean lax;
 
+
+
+    public JsonParserFactory lax() {
+        lax = true;
+        return this;
+    }
+
+    public JsonParserFactory strict() {
+        lax = false;
+        return this;
+    }
 
     public JsonParserFactory useDirectBytes() {
          useDirectBytes = true;
@@ -65,7 +77,7 @@ public class JsonParserFactory {
 
     public JsonParser create() {
         return new JsonParserImpl ( useDirectBytes, charset, overlay, sizeToUseOverlay,
-         preferCharSequence );
+         preferCharSequence, lax );
     }
 
 

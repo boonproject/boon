@@ -24,6 +24,7 @@ public class JsonParserImpl implements JsonParser {
     private final boolean overlay;
     private final int sizeSmallerUseOverlayAlways;
     private final boolean preferCharSequence;
+    private final boolean lax;
 
 
     private final JsonParser objectParser;
@@ -35,29 +36,51 @@ public class JsonParserImpl implements JsonParser {
 
 
     public JsonParserImpl( boolean useDirectBytes, Charset charset, boolean overlay, int sizeSmallerUseOverlayAlways,
-                           boolean preferCharSequence) {
-        this.useDirectBytes = useDirectBytes;
+                           boolean preferCharSequence, boolean lax) {
+
+        this.lax = lax;
+
+        if (lax)  {
+            this.useDirectBytes = false;
+            this.overlay = false;
+            this.sizeSmallerUseOverlayAlways = 0;
+            this.preferCharSequence = false;
+
+        }   else {
+            this.useDirectBytes = useDirectBytes;
+            this.overlay = overlay;
+            this.sizeSmallerUseOverlayAlways = sizeSmallerUseOverlayAlways;
+            this.preferCharSequence = preferCharSequence;
+        }
+
         this.charset = charset;
-        this.overlay = overlay;
-        this.sizeSmallerUseOverlayAlways = sizeSmallerUseOverlayAlways;
-        this.preferCharSequence = preferCharSequence;
 
-        this.overlayParser = new JsonIndexOverlayParser (  );
+        if (lax )  {
+            //For now there is only one lax parser so force it to that if they are using lax.
+            this.basicParser = new JsonParserCharArray ( true );
+            this.overlayParser = this.basicParser;
+            this.objectParser = this.basicParser;
+            this.charSequenceParser = this.basicParser;
+        }  else {
+            this.overlayParser = new JsonIndexOverlayParser (  );
 
-        if (overlay) {
-            this.basicParser = overlayParser;
-        } else {
-            this.basicParser = new JsonParserCharArray ( );
+            if (overlay) {
+                this.basicParser = overlayParser;
+            } else {
+                this.basicParser = new JsonParserCharArray ( );
+            }
+
+            this.objectParser = new JsonIndexOverlayParser ( true );
+
+            if (preferCharSequence) {
+                this.charSequenceParser = new JsonParserCharSequence ();
+            } else {
+                this.charSequenceParser = basicParser;
+            }
+
         }
 
-        this.objectParser = new JsonIndexOverlayParser ( true );
 
-
-        if (preferCharSequence) {
-             this.charSequenceParser = new JsonParserCharSequence ();
-        } else {
-            this.charSequenceParser = basicParser;
-        }
 
 
 
@@ -72,8 +95,14 @@ public class JsonParserImpl implements JsonParser {
         if (type == Map.class || type == List.class ) {
             return basicParser.parse ( type, value );
         } else {
-            Map<String, Value> objectMap = (Map<String, Value>) objectParser.parse ( Map.class, value );
-            return Reflection.fromValueMap (objectMap, type);
+
+            if (!lax) {
+                Map<String, Value> objectMap = (Map<String, Value>) objectParser.parse ( Map.class, value );
+                return Reflection.fromValueMap (objectMap, type);
+            } else {
+                Map<String, Object> objectMap = (Map<String, Object>) objectParser.parse ( Map.class, value );
+                return Reflection.fromMap ( objectMap, type );
+            }
         }
     }
 
