@@ -136,4 +136,95 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
 
+
+
+
+    @Test ()
+    public void doubleQuoteInsideOfSingleQuote() {
+
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":'ab\"c'}"
+                )
+        );
+
+    }
+
+    @Test ()
+    public void supportSimpleQuoteInNonProtectedStringValue() {
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":It's'Work}"
+                )
+        );
+    }
+    @Test ()
+    public void supportNonProtectedStrings() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ a:1234}"
+                )
+        );
+
+    }
+
+    @Test ()
+    public void crapInAnArray() {
+        jsonParser.parse (Map.class,
+                lines (
+
+                        "[ a,bc]"
+                )
+        );
+
+    }
+
+
+    @Test ()
+    public void randomStringAsValuesWithSpaces() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":s1 s2}"
+                )
+        );
+
+    }
+
+
+    @Test ()
+    public void randomStringAsValuesWithSpaceAndMoreSpaces() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":s1 s2 }"
+                )
+        );
+
+    }
+
+
+
+    @Test ()
+    public void singleQuotes() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ 'value':'string'}"
+                )
+        );
+
+       boolean ok =  idx ( map, "value" ).equals ( "string" ) || die();
+
+
+    }
+
+
+
+
 }

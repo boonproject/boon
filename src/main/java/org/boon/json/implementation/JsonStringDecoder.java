@@ -94,7 +94,7 @@ public class JsonStringDecoder {
                         case 'u':
 
                             if ( index + 4 < to ) {
-                                String hex = new String ( chars, index + 1, index + 5 );
+                                String hex = new String ( chars, index + 1,  4 );
                                 char unicode = ( char ) Integer.parseInt ( hex, 16 );
                                 builder.add ( unicode );
                                 index += 4;

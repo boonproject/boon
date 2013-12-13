@@ -214,9 +214,10 @@ public class JsonParserLax implements JsonParser {
                             break;
                         }
 
+                    case '\'':
                     case '"' :
                         foundKeyQuote = true;
-                        String key =  decodeString ();
+                        String key =  decodeString (__currentChar);
 
                         skipWhiteSpace ();
 
@@ -280,9 +281,12 @@ public class JsonParserLax implements JsonParser {
                     break;
 
                 case '"':
-                    value = decodeString ();
+                    value = decodeString ( '"');
                     break;
 
+                case '\'':
+                    value = decodeString ( '\'');
+                    break;
 
                 case 't':
                         if (isTrue ()) {
@@ -370,143 +374,150 @@ public class JsonParserLax implements JsonParser {
         }
 
 
-        private Object decodeNumber () {
-
-            int startIndex = __index;
-
-            boolean doubleFloat = false;
-
-            boolean minus = false;
-
-            boolean simple = true;
-
-            int sign = 1;
-
-            int index;
-
-            int digitsPastPoint = 0;
-
-            loop:
-            for ( index = __index; index < charArray.length; index++ ) {
-                __currentChar = charArray[ index ];
-
-                if ( doubleFloat ) {
-                    digitsPastPoint++;
-                }
+    private Object decodeNumber () {
 
 
-                switch ( __currentChar ) {
-                    case ' ':
-                        __index = index + 1;
-                        break loop;
+        boolean doubleFloat = false;
 
-                    case '\t':
-                        __index = index + 1;
-                        break loop;
+        boolean minus = false;
 
-                    case '\n':
-                        __index = index + 1;
-                        break loop;
+        boolean simple = true;
 
-                    case '\r':
-                        __index = index + 1;
-                        break loop;
+        int sign = 1;
 
-                    case ',':
-                        break loop;
+        int index;
 
-                    case ']':
-                        break loop;
-
-                    case '}':
-                        break loop;
-
-                    case '1':
-                        continue loop;
-
-                    case '2':
-                        continue loop;
-
-                    case '3':
-                        continue loop;
-
-                    case '4':
-                        continue loop;
-
-                    case '5':
-                        continue loop;
-
-                    case '6':
-                        continue loop;
-
-                    case '7':
-                        continue loop;
-
-                    case '8':
-                        continue loop;
-
-                    case '9':
-                        continue loop;
-
-                    case '0':
-                        continue loop;
-
-                    case '-':
-                        minus = true;
-                        sign = -1;
-                        continue loop;
+        int digitsPastPoint = 0;
 
 
-                    case '+':
+        __currentChar = charArray[ __index ];
 
-                        simple = false;
-                        doubleFloat = true;
-                        continue loop;
+        if ( __currentChar == '-' ) {
+            minus = true;
+            __index++;
+            sign =  -1;
+        }
 
-                    case 'e':
-                        simple = false;
-                        doubleFloat = true;
-                        continue loop;
+        int startIndex = __index;
 
-                    case 'E':
 
-                        simple = false;
-                        doubleFloat = true;
-                        continue loop;
 
-                    case '.':
-                        doubleFloat = true;
-                        continue loop;
+        loop:
+        for ( index = __index; index < charArray.length; index++ ) {
+            __currentChar = charArray[ index ];
 
-                }
-
-                complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
-            }
-
-            __index = index;
-
-            if ( minus ) {
-                startIndex++;
-            }
-
-            Object value;
             if ( doubleFloat ) {
-                value = CharScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
-            } else {
+                digitsPastPoint++;
+            }
 
-                if ( isInteger ( this.charArray, startIndex, __index - startIndex, minus ) ) {
-                    value = parseInt ( charArray, startIndex, __index - startIndex ) * sign;
-                } else {
-                    value = parseLong ( charArray, startIndex, __index - startIndex ) * sign;
-                }
+
+            switch ( __currentChar ) {
+                case ' ':
+                    __index = index + 1;
+                    break loop;
+
+                case '\t':
+                    __index = index + 1;
+                    break loop;
+
+                case '\n':
+                    __index = index + 1;
+                    break loop;
+
+                case '\r':
+                    __index = index + 1;
+                    break loop;
+
+                case ',':
+                    break loop;
+
+                case ']':
+                    break loop;
+
+                case '}':
+                    break loop;
+
+                case '1':
+                    continue loop;
+
+                case '2':
+                    continue loop;
+
+                case '3':
+                    continue loop;
+
+                case '4':
+                    continue loop;
+
+                case '5':
+                    continue loop;
+
+                case '6':
+                    continue loop;
+
+                case '7':
+                    continue loop;
+
+                case '8':
+                    continue loop;
+
+                case '9':
+                    continue loop;
+
+                case '0':
+                    continue loop;
+
+                case '-':
+                    continue loop;
+
+
+                case '+':
+
+                    simple = false;
+                    doubleFloat = true;
+                    continue loop;
+
+                case 'e':
+                    simple = false;
+                    doubleFloat = true;
+                    continue loop;
+
+                case 'E':
+
+                    simple = false;
+                    doubleFloat = true;
+                    continue loop;
+
+                case '.':
+                    doubleFloat = true;
+                    continue loop;
 
             }
 
-            skipWhiteSpace ();
+            complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
+        }
 
-            return value;
+        __index = index;
+
+
+        Object value;
+        if ( doubleFloat ) {
+            value = CharScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
+        } else {
+
+            if ( isInteger ( this.charArray, startIndex, __index - startIndex, minus ) ) {
+                value = parseInt ( charArray, startIndex, __index - startIndex ) * sign;
+            } else {
+                value = parseLong ( charArray, startIndex, __index - startIndex ) * sign;
+            }
 
         }
+
+        skipWhiteSpace ();
+
+        return value;
+
+    }
 
 
         private static char[] NULL = Chr.chars ( "null" );
@@ -683,11 +694,11 @@ public class JsonParserLax implements JsonParser {
         }
 
 
-        private String decodeString () {
+        private String decodeString (final char terminator) {
 
             __currentChar = charArray[ __index ];
 
-            if ( __index < charArray.length && __currentChar == '"' ) {
+            if ( __index < charArray.length && __currentChar == terminator ) {
                 __index++;
 
             }
@@ -704,12 +715,15 @@ public class JsonParserLax implements JsonParser {
                 __currentChar = charArray[ __index ];
                 switch ( __currentChar ) {
 
-                    case '"':
+                    case  '\'':
+                    case  '"':
+                        if (terminator == __currentChar) {
                         if ( !escape ) {
                             break done;
                         } else {
                             escape = false;
                             continue;
+                        }
                         }
 
 

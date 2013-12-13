@@ -36,21 +36,20 @@ public class JsonParserCharArray implements JsonParser {
     public Object decode ( char[] cs ) {
         __index = 0;
         charArray = cs;
-        return decodeValue ();
+        Object value =  decodeValue ();
+        return value;
     }
 
 
     public Object decode ( String cs ) {
         __index = 0;
-        this.charArray = Reflection.toCharArray ( cs );
-        return decodeValue ();
+        return  decode (Reflection.toCharArray ( cs ) );
     }
 
 
     public Object decode ( byte[] bytes ) {
         __index = 0;
-        this.charArray = Reflection.toCharArray ( bytes );
-        return decodeValue ();
+        return decode ( Reflection.toCharArray ( bytes ) );
     }
 
 
@@ -315,7 +314,6 @@ public class JsonParserCharArray implements JsonParser {
 
     private Object decodeNumber () {
 
-        int startIndex = __index;
 
         boolean doubleFloat = false;
 
@@ -328,6 +326,19 @@ public class JsonParserCharArray implements JsonParser {
         int index;
 
         int digitsPastPoint = 0;
+
+
+        __currentChar = charArray[ __index ];
+
+        if ( __currentChar == '-' ) {
+            minus = true;
+            __index++;
+            sign =  -1;
+        }
+
+        int startIndex = __index;
+
+
 
         loop:
         for ( index = __index; index < charArray.length; index++ ) {
@@ -395,8 +406,6 @@ public class JsonParserCharArray implements JsonParser {
                     continue loop;
 
                 case '-':
-                    minus = true;
-                    sign = -1;
                     continue loop;
 
 
@@ -428,9 +437,6 @@ public class JsonParserCharArray implements JsonParser {
 
         __index = index;
 
-        if ( minus ) {
-            startIndex++;
-        }
 
         Object value;
         if ( doubleFloat ) {

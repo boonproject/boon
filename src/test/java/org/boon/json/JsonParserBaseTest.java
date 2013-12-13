@@ -467,7 +467,171 @@ public class JsonParserBaseTest {
         //die();
     }
 
+    //{ "PI":3.141E-10}
 
+
+
+    @Test
+    public void complianceFromJsonSmartForPI() {
+
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"PI\":3.141E-10} "
+                )
+        );
+
+
+        boolean ok = map.get("PI").equals ( 3.141E-10 ) || die("" + map.get("PI"));
+    }
+
+
+
+
+    @Test
+    public void complianceForLowerCaseNumber() {
+
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":\"\\u00c1\\u00e1\"}"
+                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
+        );
+
+
+        boolean ok = map.get("v").equals ( "Áá" ) || die("map " + map.get("v"));
+    }
+
+    @Test
+    public void complianceForUpperCaseNumber() {
+
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":\"\\u00C1\\u00E1\"}"
+                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
+        );
+
+
+        boolean ok = map.get("v").equals ( "Áá" ) || die("map " + map.get("v"));
+    }
+
+
+
+    @Test
+    public void doublePrecisionFloatingPoint() {
+
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":1.7976931348623157E308}"
+                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
+        );
+
+
+        boolean ok = map.get("v").equals ( 1.7976931348623157E308 ) || die("map " + map.get("v"));
+    }
+
+    //
+
+
+    @Test (expected = JsonException.class)
+    public void doubleQuoteInsideOfSingleQuote() {
+
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":'ab\"c'}"
+                )
+        );
+
+    }
+
+    @Test (expected = JsonException.class)
+    public void supportSimpleQuoteInNonProtectedStringValue() {
+
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":It's'Work}"
+                )
+        );
+    }
+    @Test (expected = JsonException.class)
+    public void supportNonProtectedStrings() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ a:1234}"
+                )
+        );
+
+    }
+
+    @Test (expected = JsonException.class)
+    public void crapInAnArray() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "[ a,bc]"
+                )
+        );
+
+    }
+
+
+    @Test (expected = JsonException.class)
+    public void randomStringAsValuesWithSpaces() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":s1 s2}"
+                )
+        );
+
+    }
+
+
+    @Test (expected = JsonException.class)
+    public void randomStringAsValuesWithSpaceAndMoreSpaces() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"v\":s1 s2 }"
+                )
+        );
+
+    }
+
+
+    @Test ()
+    public void garbageAtEndOfString() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ \"a\":\"foo.bar\"}#toto"
+                )
+        );
+        puts (map);
+    }
+
+
+
+    @Test (expected = JsonException.class)
+    public void singleQuotes() {
+        Map<String, Object> map = (Map<String, Object>) jsonParser.parse (Map.class,
+                lines (
+
+                        "{ 'value':'string'}"
+                )
+        );
+
+    }
 
 
 
