@@ -178,6 +178,15 @@ public class JsonParserLax implements JsonParser {
                 skipWhiteSpace ();
 
                 switch(__currentChar) {
+                    case '/': /* */ //
+                        handleComment();
+                        startIndexOfKey = __index;
+                        break;
+
+                    case '#':
+                        handleBashComment();
+                        startIndexOfKey = __index;
+                        break;
 
                     case ':' :
                         if ( !foundKeyQuote ) {
@@ -259,7 +268,11 @@ public class JsonParserLax implements JsonParser {
         private Object decodeValue () {
             Object value = null;
 
+
+            for (; __index < charArray.length; __index++) {
             skipWhiteSpace ();
+
+
 
             switch ( __currentChar ) {
                 case '\n':
@@ -280,6 +293,14 @@ public class JsonParserLax implements JsonParser {
                 case '\f':
                     break;
 
+                case '/': /* */ //
+                    handleComment();
+                    break;
+
+                case '#':
+                    handleBashComment();
+                    break;
+
                 case '"':
                     value = decodeString ( '"');
                     break;
@@ -287,6 +308,7 @@ public class JsonParserLax implements JsonParser {
                 case '\'':
                     value = decodeString ( '\'');
                     break;
+
 
                 case 't':
                         if (isTrue ()) {
@@ -307,6 +329,7 @@ public class JsonParserLax implements JsonParser {
                 case 'n':
                         if (isNull ()) {
                             value = decodeNull ();
+                            return value;
                         } else {
                             value = decodeStringLax ();
                         }
@@ -370,9 +393,69 @@ public class JsonParserLax implements JsonParser {
 
             }
 
-            return value;
+                if (value != null) {
+                    return value;
+                }
+            }
+
+            return null;
         }
 
+    private void handleBashComment() {
+        for ( ; __index < charArray.length; __index++ ) {
+            __currentChar = charArray[ __index ];
+
+            if (__currentChar == '\n') {
+                return;
+            }
+        }
+    }
+
+    private void handleComment() {
+
+
+        if (hasMore ()) {
+
+            __index++;
+            __currentChar = charArray[__index];
+
+            switch (__currentChar) {
+                case '*':
+                    for ( ; __index < charArray.length; __index++ ) {
+                        __currentChar = charArray[ __index ];
+
+                        if (__currentChar == '*') {
+                            if (hasMore ()) {
+                                __index++;
+                                __currentChar = charArray[ __index ];
+                                 if (__currentChar=='/') {
+                                    if (hasMore ()) {
+                                        __index++;
+                                        return;
+                                    }
+                                 }
+                            } else {
+                                complain ("missing close of comment");
+                            }
+                        }
+
+
+                    }
+
+                case '/':
+                    for ( ; __index < charArray.length; __index++ ) {
+                        __currentChar = charArray[ __index ];
+
+                        if (__currentChar == '\n') {
+                            return;
+                        }
+                    }
+            }
+
+        }
+
+
+    }
 
     private Object decodeNumber () {
 
