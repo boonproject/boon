@@ -21,6 +21,13 @@ import static org.boon.primitive.CharScanner.parseLong;
  * Converts an input JSON String into Java objects works with String or char array
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
+ *
+ * TODO Create base class that stores common things between JsonIndexOverlay, JsonCharArray, and JsonParserLax.
+ * TODO Create cache of lightweight List/Map replacements.
+ * TODO Immutable Map? Maybe?
+ * TODO collection factory Maybe? start with standard collections
+ * TODO try faster string creation
+ * TODO char[] val = value;     avoid getfield opcode  for all
  */
 public class JsonParserCharArray implements JsonParser {
 

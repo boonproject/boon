@@ -19,6 +19,7 @@ import static org.boon.primitive.CharScanner.parseLong;
 
 /**
  * Created by rick on 12/12/13.
+ *
  */
 public class JsonParserLax implements JsonParser {
 
@@ -197,17 +198,10 @@ public class JsonParserLax implements JsonParser {
                                 case ',':
                                     startIndexOfKey++;
                                     break;
-                                case ' ':
-                                    startIndexOfKey++;
-                                    break;
-                                case '\n':
-                                    startIndexOfKey++;
-                                    break;
-
                             }
 
-                            char[] keysChars = Arrays.copyOfRange ( charArray, startIndexOfKey, __index );
-                            String key = new String ( keysChars ).trim ();
+                            char [] chars = Chr.trim (charArray, startIndexOfKey, __index);
+                            String key = new String ( chars);
 
                             __index++; //skip :
 

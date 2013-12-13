@@ -1,6 +1,7 @@
 package org.boon.primitive;
 
 
+import org.boon.Arrays;
 import org.boon.Exceptions;
 import org.boon.Universal;
 
@@ -623,6 +624,23 @@ public class Chr {
             buffer[index] = (char) chars [index2];
         }
 
+    }
+
+
+
+    public static char[] trim(char [] buffer, int start, int to) {
+
+
+        while ((start < to) && (
+                 buffer[start] <= ' ' ||  buffer[start] <= '\n' ||  buffer[start] <= '\t' ) ) {
+            start++;
+        }
+        while ((start < to) && (
+                buffer[start] <= ' ' ||  buffer[start] <= '\n' ||  buffer[start] <= '\t') ) {
+            to--;
+        }
+        return ((start > 0) || (to < buffer.length)) ?
+                java.util.Arrays.copyOfRange (buffer, start, to ) : buffer;
     }
 
 
