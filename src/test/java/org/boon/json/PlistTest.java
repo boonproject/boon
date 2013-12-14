@@ -33,41 +33,55 @@ public class PlistTest {
     @Test public void basic () {
         String testString = "{\n" +
                 "                date=\"1994-11-05T08:15:30Z\";\n" +
+                "                \"foo\" = \"bar\";\n"+
                 "        Applications = {\n" +
                 "                isSymLink = 1;\n" +
                 "                symLink   = \"/var/stash/Application/\";\n" +
                 "                owner     = root;\n" +
-//                "                permissions = {\n" +
-//                "                        root      = (read, write, execute); \n" +
-//                "                        \"<other>\" = (read, execute);\n" +
-//                "                };\n" +
+                "                permissions = {\n" +
+                "                        root      = (read, write, execute); \n" +
+                "                        \"other\" = (read, execute);\n" +
+                "                };\n" +
                 "                numberOfFilesIncluded = 31;\n" +
                 "                date=\"1994-11-05T08:15:30Z\";//lovebucket\n" +
                 "        };\n" +
-//                "        foo=bar;#comment \n"+
-//                "        anotherComment=bar;//lovebucket \n" +
-//                "        Library = {\n" +
-//                "                isSymLink = 0;\n" +
-//                "                owner     = root;\n" +
-//                "                permissions = {\n" +
-//                "                        root      = (read, write, execute); \n" +
-//                "                        admin     = (read, write, execute); \n" +
-//                "                        \"<other>\" = (read, execute);\n" +
-//                "                };\n" +
-//                "                numberOfFilesIncluded = 23;\n" +
-//                "        };\n" +
-//                "        /* etc. */\n" +
+                "        anotherComment=bar;//lovebucket \n" +
+                "        Library = {\n" +
+                "                isSymLink = 0;\n" +
+                "                owner     = root;\n" +
+                "                permissions = {\n" +
+                "                        root      = (read, //read this \n" +
+                "                                     write, # write this\n" +
+                "                                    /* hi */ execute); \n" +
+                "                        admin     = (read, write, execute); \n" +
+                "                        \"<other>\" = (read, execute);\n" +
+                "                };\n" +
+                "                numberOfFilesIncluded = 23;\n" +
+                "        };\n" +
+                "        /* etc. */\n" +
                 "}";
 
         Map<String, Object> map = jsonParser.parse ( Map.class, testString );
 
+        boolean ok = map.size () == 5 || die("" + map.size ());
+
         Map<String, Object> applications = (Map<String, Object>) map.get ( "Applications" );
 
+        ok =  idx(map, "date").toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die("I did not find:" + idx(map, "date") +"#");
 
 
         int symlink = (Integer)applications.get("isSymLink");
-        boolean ok = symlink == 1 || die();
-        ok &=  idx(map, "date").toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die("I did not find:" + idx(map, "date") +"#");
+         ok = symlink == 1 || die();
+
+        Map<String, Object> library = (Map<String, Object>) map.get ( "Library" );
+         symlink = (Integer)library.get("isSymLink");
+        ok = symlink == 0 || die();
+
+        int numberOfFilesIncluded = (Integer)library.get("numberOfFilesIncluded");
+        ok = numberOfFilesIncluded == 23 || die();
+
+        Map<String, Object> permissions2 = (Map<String, Object>) library.get ( "permissions" );
+        ok = permissions2.get("root").toString ().equals ( "[read, write, execute]" ) || die();
 
     }
 
@@ -80,12 +94,16 @@ public class PlistTest {
                 "    b = { b1=foo; b2=1; b3={}; b4=();};"+
                 "    c = 31;\n" +
                 "    d =\"1994-11-05T08:15:30Z\";" +
-                " };\n" +
+                " };" +
+                " map2={" +
+
+
+                "};\n" +
                 "}" ;
 
 
         Map<String, Object> map = jsonParser.parse ( Map.class, testString );
-        boolean ok = map.size () == 1 || die();
+        boolean ok = map.size () == 2 || die();
         ok = map.containsKey ( "a" ) || die();
         ok = !map.containsKey ( "b" ) || die();
         ok = !map.containsKey ( "c" ) || die();
@@ -117,6 +135,9 @@ public class PlistTest {
         List<Object> b4  = (List<Object> ) b.get ( "b4" );
 
         ok = b4.toString ().equals ( "[]" )|| die("" +b4);
+
+        Map<String, Object> map2 = ( Map<String, Object> ) map.get ( "map2" );
+
 
     }
 

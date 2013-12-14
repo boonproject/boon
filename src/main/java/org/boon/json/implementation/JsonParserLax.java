@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 
+//import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.isInteger;
 import static org.boon.primitive.CharScanner.parseInt;
@@ -33,17 +34,17 @@ public class JsonParserLax implements JsonParser {
     boolean inList;
     boolean inObject;
 
-    private  final char OBJECT_ITEM_DELIMETER_TOKEN;
+    private final char OBJECT_ITEM_DELIMETER_TOKEN;
 
-    private  final char START_ARRAY_TOKEN;
-
-
-    private  final char END_ARRAY_TOKEN;
+    private final char START_ARRAY_TOKEN;
 
 
-    private  final char KEY_ASSIGNMENT_OPERATOR;
+    private final char END_ARRAY_TOKEN;
 
-    private  static final boolean internKeys = Boolean.parseBoolean ( System.getProperty ( "org.boon.json.implementation.internKeys", "true" ) );
+
+    private final char KEY_ASSIGNMENT_OPERATOR;
+
+    private static final boolean internKeys = Boolean.parseBoolean ( System.getProperty ( "org.boon.json.implementation.internKeys", "true" ) );
 
 
     public JsonParserLax () {
@@ -55,9 +56,9 @@ public class JsonParserLax implements JsonParser {
     }
 
 
-    public JsonParserLax (boolean plist) {
+    public JsonParserLax ( boolean plist ) {
 
-        if (plist) {
+        if ( plist ) {
             OBJECT_ITEM_DELIMETER_TOKEN = ';';
             START_ARRAY_TOKEN = '(';
             END_ARRAY_TOKEN = ')';
@@ -208,10 +209,11 @@ public class JsonParserLax implements JsonParser {
 
         inObject = true;
 
-        boolean foundKeyQuote = false;
 
         skipWhiteSpace ();
         int startIndexOfKey = __index;
+        String key;
+        Object value;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
@@ -231,65 +233,76 @@ public class JsonParserLax implements JsonParser {
 
                 case '=':
                 case ':':
-                    if (__currentChar != KEY_ASSIGNMENT_OPERATOR) {
+                    if ( __currentChar != KEY_ASSIGNMENT_OPERATOR ) {
                         continue;
                     }
-                    if ( !foundKeyQuote ) {
 
-                        char startChar = charArray[ startIndexOfKey ];
+                    char startChar = charArray[ startIndexOfKey ];
 
-                        if ( startChar == OBJECT_ITEM_DELIMETER_TOKEN) {
-                                startIndexOfKey++;
-                        }
-
-                        char[] chars = Chr.trim ( charArray, startIndexOfKey, __index );
-                        String key = new String ( chars );
-                        if (internKeys) {
-                            key = key.intern ();
-                        }
-
-                        __index++; //skip :
-
-                        Object value = decodeValue ();
-                        skipWhiteSpace ();
-                        map.put ( key, value );
-                        startIndexOfKey = __index;
-                        if ( __currentChar == '}' ) {
-                            __index++;
-                            break done;
-                        }
-
-                        break;
+                    if ( startChar == OBJECT_ITEM_DELIMETER_TOKEN ) {
+                        startIndexOfKey++;
                     }
+
+                    char[] chars = Chr.trim ( charArray, startIndexOfKey, __index );
+                    key = new String ( chars );
+
+                    //puts ( "key no quote", "#" + key + "#" );
+                    if ( internKeys ) {
+                        key = key.intern ();
+                    }
+
+                    __index++; //skip :
+
+                    value = decodeValue ();
+                    skipWhiteSpace ();
+                    map.put ( key, value );
+                    //puts ( "key no quote", "#" + key + "#", value );
+
+                    startIndexOfKey = __index;
+                    if ( __currentChar == '}' ) {
+                        __index++;
+                        break done;
+                    }
+
+                    break;
 
                 case '\'':
                 case '"':
-                    foundKeyQuote = true;
-                    String key = (String) decodeString ( __currentChar );
+                    key = ( String ) decodeString ( __currentChar );
+
+                    //puts ( "key with quote", key );
 
                     skipWhiteSpace ();
 
                     if ( __currentChar != KEY_ASSIGNMENT_OPERATOR ) {
 
-                        complain ( "expecting current character to be : but got " + charDescription ( __currentChar ) + "\n" );
+                        complain ( "expecting current character to be " + KEY_ASSIGNMENT_OPERATOR + " but got " + charDescription ( __currentChar ) + "\n" );
                     }
                     __index++;
-                    Object value = decodeValue ();
+                    value = decodeValue ();
+
+                    //puts ( "key", "#" + key + "#", value );
 
                     skipWhiteSpace ();
                     map.put ( key, value );
                     startIndexOfKey = __index;
                     if ( __currentChar == '}' ) {
                         __index++;
+                        if ( hasMore () && OBJECT_ITEM_DELIMETER_TOKEN == ';' ) {
+                            if ( charArray[ __index ] == ';' ) {
+                                __index++;
+                            }
+                        }
                         break done;
                     }
+
                     break;
 
 
                 case '}':
                     __index++;
-                    if (hasMore () && OBJECT_ITEM_DELIMETER_TOKEN == ';') {
-                        if (charArray[__index] == ';') {
+                    if ( hasMore () && OBJECT_ITEM_DELIMETER_TOKEN == ';' ) {
+                        if ( charArray[ __index ] == ';' ) {
                             __index++;
                         }
                     }
@@ -555,7 +568,7 @@ public class JsonParserLax implements JsonParser {
 
                 case ';':
                 case ',':
-                    if (__currentChar==OBJECT_ITEM_DELIMETER_TOKEN){
+                    if ( __currentChar == OBJECT_ITEM_DELIMETER_TOKEN ) {
                         break loop;
                     } else {
                         complain ( "unexpected token " + __currentChar );
@@ -563,7 +576,7 @@ public class JsonParserLax implements JsonParser {
 
                 case ')':
                 case ']':
-                    if (__currentChar==END_ARRAY_TOKEN){
+                    if ( __currentChar == END_ARRAY_TOKEN ) {
                         break loop;
                     } else {
                         complain ( "unexpected token " + __currentChar );
@@ -785,31 +798,22 @@ public class JsonParserLax implements JsonParser {
 
                 case ']':
                 case ')':
-                    if ( inList && __currentChar == END_ARRAY_TOKEN) {
+                    if ( __currentChar ==  END_ARRAY_TOKEN ) {
+
                         skip = false;
                         break done;
-                    } else {
-                        break;
                     }
 
                 case '}':
-                    if ( inObject ) {
                         skip = false;
                         break done;
-                    } else {
-                        break;
-                    }
 
 
                 case ';':
                 case ',':
-                    if (__currentChar == OBJECT_ITEM_DELIMETER_TOKEN || __currentChar == ',') {
-                    if ( inObject || inList ) {
-                        skip = false;
-                        break done;
-                    } else {
-                        break;
-                    }
+                    if ( __currentChar == OBJECT_ITEM_DELIMETER_TOKEN || __currentChar == ',' ) {
+                            skip = false;
+                            break done;
                     } else {
                         complain ( "unexpected token " + __currentChar );
                     }
@@ -888,7 +892,7 @@ public class JsonParserLax implements JsonParser {
             value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index );
         } else {
 
-            if (Dates.isISO8601QuickCheck ( charArray, startIndex, __index )) {
+            if ( Dates.isISO8601QuickCheck ( charArray, startIndex, __index ) ) {
                 value = Dates.fromISO8601DateLoose ( charArray, startIndex, __index );
             } else {
 
