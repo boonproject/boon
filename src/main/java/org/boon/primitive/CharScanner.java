@@ -226,6 +226,65 @@ public class CharScanner {
         return results;
     }
 
+    public static char[][] splitByChars ( final char[] inputArray, int from, int to,
+                                          final char... delims ) {
+        /** Holds the results. */
+        char[][] results = new char[ 16 ][];
+
+        final int length =  to - from;
+
+        int resultIndex = 0;
+        int startCurrentLineIndex = 0;
+        int currentLineLength = 1;
+
+
+        char c = '\u0000';
+        int index = from;
+        int j;
+        char split;
+
+
+        for (; index < length; index++, currentLineLength++ ) {
+
+            c = inputArray[ index ];
+
+            inner:
+            for ( j = 0; j < delims.length; j++ ) {
+                split = delims[ j ];
+                if ( c == split ) {
+
+                    if ( resultIndex == results.length ) {
+
+                        results = _grow ( results );
+                    }
+
+
+                    results[ resultIndex ] = Chr.copy (
+                            inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                    startCurrentLineIndex = index + 1; //skip the char
+
+                    currentLineLength = 0;
+                    resultIndex++;
+                    break inner;
+                }
+            }
+        }
+
+        if ( !Chr.in ( c, delims ) ) {
+
+            results[ resultIndex ] = Chr.copy (
+                    inputArray, startCurrentLineIndex, currentLineLength - 1 );
+            resultIndex++;
+        }
+
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length ) {
+            final int newSize = results.length - actualLength;
+            results = __shrink ( results, newSize );
+        }
+        return results;
+    }
 
     public static char[][] splitByCharsNoneEmpty ( final char[] inputArray,
                                                    final char... delims ) {
@@ -234,6 +293,14 @@ public class CharScanner {
         return compact ( results );
     }
 
+
+
+    public static char[][] splitByCharsNoneEmpty ( final char[] inputArray, int from, int to,
+                                                   final char... delims ) {
+
+        final char[][] results = splitByChars ( inputArray, from, to, delims );
+        return compact ( results );
+    }
 
     public static char[][] compact( char[][] array ) {
         Objects.requireNonNull ( array );
@@ -315,6 +382,10 @@ public class CharScanner {
             }
         }
         return true;
+    }
+
+    public static int parseInt ( char[] digitChars ) {
+        return parseInt ( digitChars, 0, digitChars.length );
     }
 
     public static int parseInt ( char[] digitChars, int offset, int len ) {

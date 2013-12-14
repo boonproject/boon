@@ -50,4 +50,13 @@ public class StringScanner {
         return Str.fromCharArrayOfArrayToStringArray ( comps );
     }
 
+
+
+    public static String[] splitByCharsNoneEmpty( final String string, int  start, int end, final char... delimiters)  {
+        Objects.requireNonNull ( string );
+
+        char[][] comps = CharScanner.splitByCharsNoneEmpty ( Reflection.toCharArray ( string), start, end, delimiters );
+        return Str.fromCharArrayOfArrayToStringArray ( comps );
+    }
+
 }

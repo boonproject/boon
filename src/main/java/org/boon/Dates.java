@@ -2,6 +2,7 @@ package org.boon;
 
 import org.boon.core.Sys;
 import org.boon.core.reflection.Reflection;
+import org.boon.json.JsonException;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 
@@ -244,6 +245,10 @@ public class Dates {
         return internalDate ( tz, year, month, day, hour, minute,  second, miliseconds );
     }
 
+    public static Date toDate(  int year, int month, int day,
+                               int hour, int minute, int second, int miliseconds ) {
+        return internalDate ( TimeZone.getDefault (), year, month, day, hour, minute, second, miliseconds );
+    }
 
     public static long date( TimeZone tz, int year, int month, int day,
                              int hour, int minute ) {
@@ -371,14 +376,6 @@ public class Dates {
 
     }
 
-    final static int SHORT_ISO_8601_TIME_LENGTH =  "1994-11-05T08:15:30Z".length ();
-                                                // 01234567890123456789012
-    final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length ();
-                                              // 01234567890123456789012
-    final static int JSON_TIME_LENGTH =         "2013-12-14T01:55:33.412Z".length ();
-
-    ;
-
 
     public static Date fromJsonDate( String string ) {
 
@@ -390,6 +387,78 @@ public class Dates {
 
         return fromISO8601 (  Reflection.toCharArray ( string ), 0, string.length () );
 
+    }
+
+    public static Date fromISO8601DateLoose( String string ) {
+        return fromISO8601DateLoose ( Reflection.toCharArray ( string ), 0, string.length () );
+
+    }
+
+
+    final static int SHORT_ISO_8601_TIME_LENGTH =  "1994-11-05T08:15:30Z".length ();
+    // 01234567890123456789012
+    final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length ();
+    // 01234567890123456789012
+    final static int JSON_TIME_LENGTH =         "2013-12-14T01:55:33.412Z".length ();
+
+    public static Date fromISO8601DateLoose(  char[] buffer, int startIndex, int endIndex ) {
+
+        if (Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex )) {
+
+            if (Dates.isJsonDate ( buffer, startIndex, endIndex )) {
+                return Dates.fromJsonDate ( buffer, startIndex, endIndex );
+
+            } else if (Dates.isISO8601 ( buffer, startIndex, endIndex )) {
+                return Dates.fromISO8601 ( buffer, startIndex, endIndex );
+            } else {
+                try {
+                    return looseParse ( buffer, startIndex, endIndex );
+                } catch (Exception ex) {
+                    throw new JsonException ( "unable to do a loose parse", ex );
+                }
+            }
+        } else {
+
+            try {
+                return looseParse ( buffer, startIndex, endIndex );
+            } catch (Exception ex) {
+                throw new JsonException ( "unable to do a loose parse", ex );
+            }
+        }
+
+
+    }
+
+    private static Date looseParse ( char[] buffer, int startIndex, int endIndex ) {
+        final char [][] parts = CharScanner.splitByCharsNoneEmpty ( buffer, startIndex, endIndex, '-', ':', 'T', '.' );
+        int year = 0;
+        int month = 0;
+        int day = 0;
+
+        int hour = 0;
+        int minutes = 0;
+        int seconds = 0;
+
+        int mili = 0;
+
+        if (parts.length >= 3) {
+            year = CharScanner.parseInt ( parts[0] );
+            month = CharScanner.parseInt (  parts[1]  );
+            day = CharScanner.parseInt (  parts[2]  );
+        }
+
+        if (parts.length >= 6) {
+            hour = CharScanner.parseInt ( parts[3] );
+            minutes = CharScanner.parseInt (  parts[4]  );
+            seconds = CharScanner.parseInt (  parts[5]  );
+        }
+
+        if (parts.length >= 7) {
+            mili = CharScanner.parseInt ( parts[6] );
+        }
+
+
+        return toDate ( year, month, day, hour, minutes, seconds, mili );
     }
 
     public static Date fromISO8601( char[] charArray, int from, int to ) {
@@ -492,12 +561,17 @@ public class Dates {
     public static boolean isISO8601QuickCheck( char[] charArray, int start, int to ) {
         final int length = to -start;
 
-        if (length != JSON_TIME_LENGTH || length !=LONG_ISO_8601_TIME_LENGTH
-                || length != SHORT_ISO_8601_TIME_LENGTH) {
-            return false;
+         if (length == JSON_TIME_LENGTH || length ==LONG_ISO_8601_TIME_LENGTH
+                || length == SHORT_ISO_8601_TIME_LENGTH || (length >= 16 &&  (charArray [ start + 16 ]  == ':'))
+        ) {
+
+            if (length >= 16 &&  (charArray [ start + 16 ]  == ':')) {
+                return true;
+            }
         }
 
-        return  (charArray [ start + 16 ]  == ':');
+        return false;
+
     }
 
     public static boolean isJsonDate( char[] charArray, int start, int to ) {

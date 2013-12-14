@@ -1,6 +1,5 @@
 package org.boon;
 
-import org.boon.Dates;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -8,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -66,6 +66,41 @@ public class DatesTest {
     }
 
 
+    @Test
+    public void testIsoLooseDate() {
+        String test =  "1994-11-05T08:11:22.123";
+
+        Date date = Dates.fromISO8601DateLoose ( test );
+
+
+        puts ("loose date " + date);
+
+        boolean ok = "Sat Nov 05 08:11:22 PST 1994".equals (  date.toString () ) || die("#"+date.toString ()+"#");
+    }
+
+    @Test
+    public void testIsoLooserDate() {
+        String test =  "1994-11-05";
+
+        Date date = Dates.fromISO8601DateLoose ( test );
+
+
+        puts ("loose date " + date);
+
+        boolean ok = "Sat Nov 05 00:00:00 PST 1994".equals (  date.toString () ) || die("#"+date.toString ()+"#");
+    }
+
+    @Test
+    public void testIsoLoose2Date() {
+        String test =  "1994-11-05-08:11:22";
+
+        Date date = Dates.fromISO8601DateLoose ( test );
+
+
+        puts ("loose date " + date);
+
+        boolean ok = "Sat Nov 05 08:11:22 PST 1994".equals (  date.toString () ) || die("#"+date.toString ()+"#");
+    }
 
     @Test
     public void testDates () {

@@ -48,6 +48,9 @@ public class JsonStringDecoder {
         return decodeForSure ( cs, start, to );
     }
 
+    public static String decodeForSure( char[] chars ) {
+        return decodeForSure ( chars, 0, chars.length );
+    }
     public static String decodeForSure( char[] chars, int start, int to ) {
 
         CharBuf builder = CharBuf.create ( to - start );

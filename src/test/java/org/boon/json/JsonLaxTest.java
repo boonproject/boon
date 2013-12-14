@@ -164,7 +164,8 @@ public class JsonLaxTest extends JsonParserBaseTest {
                 "thanks:I am good thanks for asking, #I hear you can do it here\t\n" +
                 "list:[love, rocket, fire],\t" +
                 " num:1, " +
-                "mix: [ true, false, 1, 2, blue, true\n,\t,false\t,foo\n,], }  "
+                "mix: [ true, false, 1, 2, blue, true\n,\t,false\t,foo\n,], " +
+                "date: \"1994-11-05T08:15:30Z\" } "
                 ;
         Object obj = jsonParser.parse (Map.class,  testString
         );
@@ -181,6 +182,8 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
         puts (map);
 
+
+        ok &=  idx(map, "date").equals ( "1994-11-05T08:15:30Z" ) || die("I did not find:" + idx(map, "date") +"#");
 
         ok &=  idx(map, "foo").equals ( "hi mom hi dad how are you?" ) || die("I did not find:" + idx(map, "foo") +"#");
         ok &=  idx(map, "thanks").equals ( "I am good thanks for asking" ) || die("I did not find:" + idx(map, "foo") +"#");

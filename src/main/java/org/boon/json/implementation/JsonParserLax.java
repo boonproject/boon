@@ -1,5 +1,6 @@
 package org.boon.json.implementation;
 
+import org.boon.Dates;
 import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
@@ -41,7 +42,7 @@ public class JsonParserLax implements JsonParser {
 
     private  final char KEY_ASSIGNMENT_OPERATOR;
 
-    private  static final boolean internKeys = Boolean.parseBoolean (System.getProperty ( "org.boon.json.implementation.internKeys", "true" ));
+    private  static final boolean internKeys = Boolean.parseBoolean ( System.getProperty ( "org.boon.json.implementation.internKeys", "true" ) );
 
 
     public JsonParserLax () {
@@ -263,7 +264,7 @@ public class JsonParserLax implements JsonParser {
                 case '\'':
                 case '"':
                     foundKeyQuote = true;
-                    String key = decodeString ( __currentChar );
+                    String key = (String) decodeString ( __currentChar );
 
                     skipWhiteSpace ();
 
@@ -744,7 +745,7 @@ public class JsonParserLax implements JsonParser {
         return false;
     }
 
-    private String decodeStringLax () {
+    private Object decodeStringLax () {
 
         __currentChar = charArray[ __index ];
 
@@ -817,11 +818,13 @@ public class JsonParserLax implements JsonParser {
         }
 
 
-        String value = null;
+        Object value = null;
         if ( hasEscaped ) {
-            value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index ).trim ();
+            final char[] chars = Chr.trim ( charArray, startIndex, __index );
+            value = JsonStringDecoder.decodeForSure ( chars);
         } else {
-            value = new String ( charArray, startIndex, ( __index - startIndex ) ).trim ();
+            final char[] chars = Chr.trim ( charArray, startIndex, __index );
+            value = new String ( chars );
         }
 
         if ( __index < charArray.length && skip ) {
@@ -832,7 +835,7 @@ public class JsonParserLax implements JsonParser {
     }
 
 
-    private String decodeString ( final char terminator ) {
+    private Object decodeString ( final char terminator ) {
 
         __currentChar = charArray[ __index ];
 
@@ -874,7 +877,7 @@ public class JsonParserLax implements JsonParser {
             escape = false;
         }
 
-        String value = null;
+        Object value = null;
         if ( hasEscaped ) {
             value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index );
         } else {
