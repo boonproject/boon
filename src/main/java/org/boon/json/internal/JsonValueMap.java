@@ -2,7 +2,6 @@ package org.boon.json.internal;
 
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Exceptions.die;
 

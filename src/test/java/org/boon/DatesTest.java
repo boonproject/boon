@@ -13,6 +13,60 @@ import static org.junit.Assert.assertTrue;
 
 public class DatesTest {
 
+
+    @Test
+    public void testIsoShortDate() {
+        String test =  "1994-11-05T08:15:30Z";
+
+        Date date = Dates.fromISO8601 ( test );
+        Date date2 = Dates.fromISO8601_ ( test );
+
+        assertEquals(date2.toString (), date.toString ());
+
+        puts (date);
+    }
+
+    @Test
+    public void testIsoLongDate() {
+        String test =  "1994-11-05T08:11:22-05:00";
+
+        Date date = Dates.fromISO8601 ( test );
+        Date date2 = Dates.fromISO8601_ ( test );
+
+        assertEquals(date2.toString (), date.toString ());
+
+        puts (date);
+    }
+
+
+
+    /*
+        var d=new Date();
+        var s = JSON.stringify(d);
+
+        document.write(s);
+        document.write("<br />"+d);
+
+
+        "2013-12-14T01:55:33.412Z"
+        Fri Dec 13 2013 17:55:33 GMT-0800 (PST)
+
+
+     */
+    @Test
+    public void jsonJavaScriptDate() {
+        String test =  "2013-12-14T01:55:33.412Z";
+
+        Date date = Dates.fromJsonDate ( test );
+        Date date2 = Dates.fromJsonDate_ ( test );
+
+        assertEquals(date2.toString (), "" + date);
+
+        puts (date);
+    }
+
+
+
     @Test
     public void testDates () {
         long now = Dates.utcNow();

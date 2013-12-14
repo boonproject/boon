@@ -632,11 +632,11 @@ public class Chr {
 
 
         while ((start < to) && (
-                 buffer[start] <= ' ' ||  buffer[start] <= '\n' ||  buffer[start] <= '\t' ) ) {
+                 buffer[start] <= ' ' ) ) {
             start++;
         }
         while ((start < to) && (
-                buffer[start] <= ' ' ||  buffer[start] <= '\n' ||  buffer[start] <= '\t') ) {
+                buffer[to -1] <= ' ') ) {
             to--;
         }
         return ((start > 0) || (to < buffer.length)) ?

@@ -11,6 +11,9 @@ public class MapItemValue  implements Map.Entry <String, Value>{
 
     private String key = null;
 
+    private  static final boolean internKeys = Boolean.parseBoolean (System.getProperty ( "org.boon.json.implementation.internKeys", "true" ));
+
+
 
     public MapItemValue (Value name, Value value) {
         this.name = name;
@@ -21,7 +24,11 @@ public class MapItemValue  implements Map.Entry <String, Value>{
     @Override
     public String getKey() {
          if (key == null) {
-            key =  name.toString ();
+            if (internKeys) {
+                key =  name.toString ();
+            } else {
+                key =  name.toString ().intern ();
+            }
          }
          return key;
     }

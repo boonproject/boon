@@ -13,7 +13,7 @@ public class JsonParserFactory {
     boolean overlay = false;
     int sizeToUseOverlay = 50;
     boolean lax;
-
+    private boolean pllistStyle;
 
 
     public JsonParserFactory lax() {
@@ -77,8 +77,13 @@ public class JsonParserFactory {
 
     public JsonParser create() {
         return new JsonParserImpl ( useDirectBytes, charset, overlay, sizeToUseOverlay,
-         preferCharSequence, lax );
+         preferCharSequence, lax, pllistStyle );
     }
 
 
+    public JsonParserFactory plistStyle () {
+        lax = true;
+        pllistStyle = true;
+        return this;
+    }
 }

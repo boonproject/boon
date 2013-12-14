@@ -37,7 +37,7 @@ public class JsonParserImpl implements JsonParser {
 
 
     public JsonParserImpl( boolean useDirectBytes, Charset charset, boolean overlay, int sizeSmallerUseOverlayAlways,
-                           boolean preferCharSequence, boolean lax) {
+                           boolean preferCharSequence, boolean lax, boolean plistStyle) {
 
         this.lax = lax;
 
@@ -58,7 +58,7 @@ public class JsonParserImpl implements JsonParser {
 
         if (lax )  {
             //For now there is only one lax parser so force it to that if they are using lax.
-            this.basicParser = new JsonParserLax ( );
+            this.basicParser = new JsonParserLax (plistStyle );
             this.overlayParser = this.basicParser;
             this.objectParser = this.basicParser;
             this.charSequenceParser = this.basicParser;

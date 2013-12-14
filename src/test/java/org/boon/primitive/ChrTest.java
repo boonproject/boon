@@ -13,6 +13,22 @@ public class ChrTest {
 
 
     @Test
+    public void trimTest() {
+
+        char[] letters =
+                array(' ', '\n', 'a', 'b', 'c', ' ', '\n', '\t');
+
+        char [] results = trim( letters, 0, letters.length );
+        assertArrayEquals(
+                array('a', 'b', 'c'),
+                results
+        );
+
+    }
+
+
+
+    @Test
     public void rpadTest() {
 
         char[] letters =

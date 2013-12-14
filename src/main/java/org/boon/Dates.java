@@ -1,14 +1,13 @@
 package org.boon;
 
 import org.boon.core.Sys;
+import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.CharScanner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 public class Dates {
 
@@ -123,19 +122,63 @@ public class Dates {
          */
         calendar.setTimeZone ( UTC_TIME_ZONE );
 
-        return internalDate ( year, month, day, hour, minute, calendar );
+        return internalDateLong ( year, month, day, hour, minute, calendar );
     }
 
-    private static long internalDate( int year, int month, int day, int hour, int minute, Calendar calendar ) {
+    private static long internalDateLong ( int year, int month, int day, int hour, int minute, Calendar calendar ) {
+
+        return internalDate ( year, month, day, hour, minute, calendar ).getTime ();
+
+    }
+
+
+
+    private static Date internalDate ( int year, int month, int day, int hour, int minute, Calendar calendar ) {
         calendar.set ( Calendar.YEAR, year );
         calendar.set ( Calendar.MONTH, month );
         calendar.set ( Calendar.DAY_OF_MONTH, day );
         calendar.set ( Calendar.HOUR_OF_DAY, hour );
         calendar.set ( Calendar.MINUTE, minute );
 
-        return calendar.getTime ( ).getTime ( );
+        return calendar.getTime ( );
     }
 
+
+
+
+    private static Date internalDate ( TimeZone tz, int year, int month, int day, int hour, int minute, int second ) {
+
+        Calendar calendar = Calendar.getInstance ( );
+
+        calendar.set ( Calendar.YEAR, year );
+        calendar.set ( Calendar.MONTH, month-1 );
+        calendar.set ( Calendar.DAY_OF_MONTH, day );
+        calendar.set ( Calendar.HOUR_OF_DAY, hour );
+        calendar.set ( Calendar.MINUTE, minute );
+        calendar.set ( Calendar.SECOND, second );
+        calendar.setTimeZone ( tz );
+
+        return calendar.getTime ( );
+    }
+
+
+    private static Date internalDate ( TimeZone tz, int year, int month, int day, int hour,
+                                       int minute, int second, int miliseconds ) {
+
+        Calendar calendar = Calendar.getInstance ( );
+
+        calendar.set ( Calendar.YEAR, year );
+        calendar.set ( Calendar.MONTH, month-1 );
+        calendar.set ( Calendar.DAY_OF_MONTH, day );
+        calendar.set ( Calendar.HOUR_OF_DAY, hour );
+        calendar.set ( Calendar.MINUTE, minute );
+        calendar.set ( Calendar.SECOND, second );
+        calendar.set ( Calendar.MILLISECOND, miliseconds );
+
+        calendar.setTimeZone ( tz );
+
+        return calendar.getTime ( );
+    }
 
     public static long wallTimeDate( int year, int month, int day ) {
         Calendar calendar = Calendar.getInstance ( );
@@ -175,7 +218,7 @@ public class Dates {
         calendar.set ( Calendar.MONTH, month );
         calendar.set ( Calendar.DAY_OF_MONTH, day );
 
-        return calendar.getTime ( ).getTime ( );
+        return calendar.getTime ( ).getTime ();
     }
 
     public static long wallTimeDate( int year, int month, int day,
@@ -184,8 +227,23 @@ public class Dates {
         midnight ( calendar );
 
 
-        return internalDate ( year, month, day, hour, minute, calendar );
+        return internalDateLong ( year, month, day, hour, minute, calendar );
     }
+
+
+
+    public static Date toDate( TimeZone tz, int year, int month, int day,
+                               int hour, int minute, int second ) {
+         return internalDate ( tz, year, month, day, hour, minute,  second );
+    }
+
+
+
+    public static Date toDate( TimeZone tz, int year, int month, int day,
+                               int hour, int minute, int second, int miliseconds ) {
+        return internalDate ( tz, year, month, day, hour, minute,  second, miliseconds );
+    }
+
 
     public static long date( TimeZone tz, int year, int month, int day,
                              int hour, int minute ) {
@@ -193,7 +251,7 @@ public class Dates {
         midnight ( calendar );
         calendar.setTimeZone ( tz );
 
-        return internalDate ( year, month, day, hour, minute, calendar );
+        return internalDateLong ( year, month, day, hour, minute, calendar );
     }
 
     private static void midnight( Calendar calendar ) {
@@ -289,14 +347,170 @@ public class Dates {
     }
 
 
-    public static Date fromISO8601( String string ) {
+    public static Date fromISO8601_( String string ) {
 
         try {
-            return new SimpleDateFormat ( "yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH).parse ( string );
+
+                return new SimpleDateFormat ( "yyyy-MM-dd'T'HH:mm:ssXXX").parse ( string );
         } catch ( ParseException e ) {
             return Exceptions.handle (Date.class, "Not a valid ISO8601", e);
         }
 
 
     }
+
+    public static Date fromJsonDate_( String string ) {
+
+        try {
+
+            return new SimpleDateFormat ( "yyyy-MM-dd'T'HH:mm:ss.SSSXXX").parse ( string );
+        } catch ( ParseException e ) {
+            return Exceptions.handle (Date.class, "Not a valid JSON date", e);
+        }
+
+
+    }
+
+    final static int SHORT_ISO_8601_TIME_LENGTH =  "1994-11-05T08:15:30Z".length ();
+                                                // 01234567890123456789012
+    final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length ();
+                                              // 01234567890123456789012
+    final static int JSON_TIME_LENGTH =         "2013-12-14T01:55:33.412Z".length ();
+
+    ;
+
+
+    public static Date fromJsonDate( String string ) {
+
+        return fromJsonDate ( Reflection.toCharArray ( string ), 0, string.length () );
+
+    }
+
+    public static Date fromISO8601( String string ) {
+
+        return fromISO8601 (  Reflection.toCharArray ( string ), 0, string.length () );
+
+    }
+
+    public static Date fromISO8601( char[] charArray, int from, int to ) {
+
+        int length = to - from;
+        if (isISO8601 ( charArray, from, to )) {
+            int year = CharScanner.parseIntFromTo ( charArray, from + 0, from + 4 );
+            int month = CharScanner.parseIntFromTo ( charArray,  from +5,  from +7 );
+            int day = CharScanner.parseIntFromTo ( charArray,  from +8,  from +10 );
+            int hour = CharScanner.parseIntFromTo ( charArray,  from +11,  from +13 );
+
+            int minute = CharScanner.parseIntFromTo ( charArray,  from +14,  from +16 );
+
+            int second = CharScanner.parseIntFromTo ( charArray,  from +17,  from +19 );
+            TimeZone tz = null ;
+
+            if ( charArray[from + 19] == 'Z'  ) {
+
+                tz = TimeZone.getTimeZone ( "GMT" );
+
+            } else {
+
+                StringBuilder builder = new StringBuilder ( 9 );
+                builder.append ( "GMT" );
+                builder.append( charArray,  from +19,  6);
+                String tzStr = builder.toString ();
+                tz = TimeZone.getTimeZone ( tzStr ) ;
+
+            }
+            return toDate ( tz, year, month, day, hour, minute, second );
+
+        }   else {
+            return null;
+        }
+
+    }
+
+    public static Date fromJsonDate( char[] charArray, int from, int to ) {
+
+        if (isJsonDate ( charArray, from, to )) {
+            int year = CharScanner.parseIntFromTo ( charArray, from + 0, from + 4 );
+            int month = CharScanner.parseIntFromTo ( charArray,  from +5,  from +7 );
+            int day = CharScanner.parseIntFromTo ( charArray,  from +8,  from +10 );
+            int hour = CharScanner.parseIntFromTo ( charArray,  from +11,  from +13 );
+
+            int minute = CharScanner.parseIntFromTo ( charArray,  from +14,  from +16 );
+
+            int second = CharScanner.parseIntFromTo ( charArray,  from +17,  from +19 );
+
+            int miliseconds = CharScanner.parseIntFromTo ( charArray,  from +20,  from +23 );
+
+            TimeZone tz = TimeZone.getTimeZone ( "GMT" );
+
+
+            return toDate ( tz, year, month, day, hour, minute, second, miliseconds );
+
+        }   else {
+            return null;
+        }
+
+    }
+
+    public static boolean isISO8601( String string ) {
+
+        return isISO8601 ( Reflection.toCharArray ( string ) );
+    }
+
+
+    public static boolean isISO8601( char[] charArray ) {
+        return isISO8601 ( charArray, 0, charArray.length );
+    }
+
+    public static boolean isISO8601( char[] charArray, int start, int to ) {
+        boolean valid = true;
+        final int length = to -start;
+
+        if ( length == SHORT_ISO_8601_TIME_LENGTH ) {
+            valid &=  (charArray [ start + 19 ]  == 'Z');
+
+        } else if (length == LONG_ISO_8601_TIME_LENGTH) {
+            valid &=  (charArray[  start +19 ]  == '-' || charArray[  start +19 ]  == '+');
+            valid &=  (charArray[  start +22 ]  == ':');
+
+        } else {
+            return false;
+        }
+
+        //  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
+        // "1 9 9 4 - 1 1 - 0 5 T 0 8 : 1 5 : 3 0 - 0 5 : 0 0
+
+        valid &=  (charArray[  start +4 ]  == '-') &&
+                (charArray[  start +7 ]  == '-') &&
+                (charArray[  start +10 ] == 'T') &&
+                (charArray[  start +13 ] == ':') &&
+                (charArray[  start +16 ] == ':');
+
+        return valid;
+    }
+
+    public static boolean isJsonDate( char[] charArray, int start, int to ) {
+        boolean valid = true;
+        final int length = to -start;
+
+        if (length != JSON_TIME_LENGTH) {
+            return false;
+        }
+
+        valid &=  (charArray [ start + 19 ]  == '.');
+
+        if (!valid) {
+            return false;
+        }
+
+
+        valid &=  (charArray[  start +4 ]  == '-') &&
+                (charArray[  start +7 ]  == '-') &&
+                (charArray[  start +10 ] == 'T') &&
+                (charArray[  start +13 ] == ':') &&
+                (charArray[  start +16 ] == ':');
+
+        return valid;
+    }
+
 }

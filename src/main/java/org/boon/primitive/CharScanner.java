@@ -349,6 +349,37 @@ public class CharScanner {
     }
 
 
+
+    public static int parseIntFromTo ( char[] digitChars, int offset, int to ) {
+        int num = digitChars[ offset ] - '0';
+        // This looks ugly, but appears the fastest way (as per measurements)
+        if ( ++offset < to ) {
+            num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+            if ( ++offset < to ) {
+                num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                if ( ++offset < to ) {
+                    num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                    if ( ++offset < to ) {
+                        num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                        if ( ++offset < to ) {
+                            num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                            if ( ++offset < to ) {
+                                num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                if ( ++offset < to ) {
+                                    num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                    if ( ++offset < to ) {
+                                        num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return num;
+    }
+
     public static int parseIntIgnoreDot ( char[] digitChars, int offset, int len ) {
         int num = digitChars[ offset ] - '0';
         int to = len + offset;
