@@ -149,7 +149,8 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     @Override
     public Date dateValue() {
 
-        if (type == Type.STRING) {
+
+        if (type == Type.STRING ) {
 
             String string = stringValue ();
 

@@ -489,6 +489,17 @@ public class Dates {
         return valid;
     }
 
+    public static boolean isISO8601QuickCheck( char[] charArray, int start, int to ) {
+        final int length = to -start;
+
+        if (length != JSON_TIME_LENGTH || length !=LONG_ISO_8601_TIME_LENGTH
+                || length != SHORT_ISO_8601_TIME_LENGTH) {
+            return false;
+        }
+
+        return  (charArray [ start + 16 ]  == ':');
+    }
+
     public static boolean isJsonDate( char[] charArray, int start, int to ) {
         boolean valid = true;
         final int length = to -start;

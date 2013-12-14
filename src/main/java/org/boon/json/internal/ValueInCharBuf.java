@@ -1,5 +1,7 @@
 package org.boon.json.internal;
 
+import org.boon.Dates;
+import org.boon.json.JsonException;
 import org.boon.json.implementation.JsonStringDecoder;
 import org.boon.primitive.CharScanner;
 
@@ -131,6 +133,35 @@ public class ValueInCharBuf extends ValueBase {
     @Override
     public String stringValueEncoded() {
         return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
+    }
+
+
+
+    @Override
+    public Date dateValue() {
+
+
+        if (type == Type.STRING ) {
+
+            if (Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex )) {
+
+                if (Dates.isJsonDate ( buffer, startIndex, endIndex )) {
+                    return Dates.fromJsonDate ( buffer, startIndex, endIndex );
+
+                } else if (Dates.isISO8601 ( buffer, startIndex, endIndex )) {
+                    return Dates.fromISO8601 ( buffer, startIndex, endIndex );
+                } else {
+                    throw new JsonException ( "Unable to convert " + stringValue () +  " to date " );
+                }
+            } else {
+
+                throw new JsonException ( "Unable to convert " + stringValue () +  " to date " );
+            }
+        } else {
+
+            return new Date (Dates.utc ( longValue ()));
+        }
+
     }
 
 
