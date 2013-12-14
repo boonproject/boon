@@ -183,7 +183,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
         puts (map);
 
 
-        ok &=  idx(map, "date").equals ( "1994-11-05T08:15:30Z" ) || die("I did not find:" + idx(map, "date") +"#");
+        ok &=  idx(map, "date").toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die("I did not find:" + idx(map, "date") +"#");
 
         ok &=  idx(map, "foo").equals ( "hi mom hi dad how are you?" ) || die("I did not find:" + idx(map, "foo") +"#");
         ok &=  idx(map, "thanks").equals ( "I am good thanks for asking" ) || die("I did not find:" + idx(map, "foo") +"#");

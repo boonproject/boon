@@ -13,6 +13,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.*;
 
+
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.isInteger;
 import static org.boon.primitive.CharScanner.parseInt;
@@ -286,7 +287,12 @@ public class JsonParserLax implements JsonParser {
 
 
                 case '}':
-                    // __index++;
+                    __index++;
+                    if (hasMore () && OBJECT_ITEM_DELIMETER_TOKEN == ';') {
+                        if (charArray[__index] == ';') {
+                            __index++;
+                        }
+                    }
                     break done;
 
             }
@@ -821,7 +827,7 @@ public class JsonParserLax implements JsonParser {
         Object value = null;
         if ( hasEscaped ) {
             final char[] chars = Chr.trim ( charArray, startIndex, __index );
-            value = JsonStringDecoder.decodeForSure ( chars);
+            value = JsonStringDecoder.decodeForSure ( chars );
         } else {
             final char[] chars = Chr.trim ( charArray, startIndex, __index );
             value = new String ( chars );
@@ -881,7 +887,15 @@ public class JsonParserLax implements JsonParser {
         if ( hasEscaped ) {
             value = JsonStringDecoder.decodeForSure ( charArray, startIndex, __index );
         } else {
-            value = new String ( charArray, startIndex, ( __index - startIndex ) );
+
+            if (Dates.isISO8601QuickCheck ( charArray, startIndex, __index )) {
+                value = Dates.fromISO8601DateLoose ( charArray, startIndex, __index );
+            } else {
+
+                value = new String ( charArray, startIndex, ( __index - startIndex ) );
+
+            }
+
         }
 
         if ( __index < charArray.length ) {
