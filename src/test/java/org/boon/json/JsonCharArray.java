@@ -1,5 +1,13 @@
 package org.boon.json;
 
+import org.boon.IO;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.boon.Boon.puts;
+
 /**
  * Created by rick on 12/12/13.
  */
@@ -13,5 +21,28 @@ public class JsonCharArray extends JsonParserBaseTest {
                 .neverUseOverlay ().setSizeToUseOverlay ( 0 );
     }
 
+
+
+    @Test
+    public  void testNest () {
+
+
+        String nest =  IO.read ( "files/nest.json" );
+
+        this.jsonParser.parse ( Map.class, nest );
+
+
+    }
+
+    @Test
+    public  void noNest () {
+
+
+        String json =  IO.read ( "files/nonest.json" );
+
+        this.jsonParser.parse ( Map.class, json );
+
+
+    }
 
 }

@@ -24,7 +24,7 @@ public class JsonParserImpl implements JsonParser {
     private final Charset charset;
     private final boolean overlay;
     private final int sizeSmallerUseOverlayAlways;
-    private final boolean preferCharSequence;
+    private final boolean preferCharSequence ;
     private final boolean lax;
 
 
@@ -94,7 +94,7 @@ public class JsonParserImpl implements JsonParser {
     public <T> T parse( Class<T> type, String value ) {
 
         if (type == Map.class || type == List.class ) {
-            return basicParser.parse ( type, value );
+            return charSequenceParser.parse ( type, value );
         } else {
 
             if (!lax) {
