@@ -13,7 +13,7 @@ public class JsonParserFactory {
     boolean overlay = false;
     int sizeToUseOverlay = 50;
     boolean lax;
-    private boolean pllistStyle;
+    private boolean plistStyle;
 
 
     public JsonParserFactory lax () {
@@ -75,12 +75,12 @@ public class JsonParserFactory {
     public JsonParser create () {
 
 
-        if ( lax && pllistStyle && charset == null || charset == StandardCharsets.US_ASCII ) {
+        if ( lax && plistStyle && (charset == null || charset == StandardCharsets.US_ASCII) ) {
             this.useDirectBytes = true;
 
         }
 
-        if ( ( charset == null ) && lax && pllistStyle ) {
+        if ( ( charset == null ) && lax && plistStyle ) {
 
             charset = StandardCharsets.US_ASCII;
         } else if ( charset == null ) {
@@ -88,13 +88,13 @@ public class JsonParserFactory {
         }
 
         return new JsonParserImpl ( useDirectBytes, charset, overlay, sizeToUseOverlay,
-                preferCharSequence, lax, pllistStyle );
+                preferCharSequence, lax, plistStyle );
     }
 
 
     public JsonParserFactory plistStyle () {
         lax = true;
-        pllistStyle = true;
+        plistStyle = true;
         return this;
     }
 }
