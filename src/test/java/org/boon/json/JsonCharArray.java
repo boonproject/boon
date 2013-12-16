@@ -3,10 +3,8 @@ package org.boon.json;
 import org.boon.IO;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.Map;
 
-import static org.boon.Boon.puts;
 
 /**
  * Created by rick on 12/12/13.

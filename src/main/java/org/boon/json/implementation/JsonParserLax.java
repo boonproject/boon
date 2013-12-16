@@ -20,8 +20,6 @@ public class JsonParserLax extends JsonParserCharArray  {
 
 
 
-    boolean inList;
-    boolean inObject;
 
 
 
@@ -69,8 +67,6 @@ public class JsonParserLax extends JsonParserCharArray  {
 
     protected void  init() {
         super.init ();
-        inList = false;
-        inObject = false;
     }
 
 
@@ -87,7 +83,6 @@ public class JsonParserLax extends JsonParserCharArray  {
         }
 
 
-        inObject = true;
 
 
         skipWhiteSpace ();
@@ -192,7 +187,6 @@ public class JsonParserLax extends JsonParserCharArray  {
         }
 
 
-        inObject = false;
 
         if (heavyCache) {
             return prepareMap ( map );
@@ -746,7 +740,6 @@ public class JsonParserLax extends JsonParserCharArray  {
         }
 
 
-        inList = true;
 
         skipWhiteSpace ();
 
@@ -801,7 +794,6 @@ public class JsonParserLax extends JsonParserCharArray  {
             }
         } while ( this.hasMore () );
 
-        inList = false;
 
 
         if (heavyCache) {

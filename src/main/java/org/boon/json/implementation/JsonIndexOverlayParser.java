@@ -1,38 +1,22 @@
 package org.boon.json.implementation;
 
-import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
-import org.boon.json.JsonParser;
 import org.boon.json.internal.*;
-import org.boon.primitive.CharBuf;
-import org.boon.primitive.Chr;
-
-import java.io.InputStream;
-import java.io.Reader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.boon.Exceptions.die;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
  */
-public class JsonIndexOverlayParser implements JsonParser {
-
-    private char[] charArray;
-    private int __index;
-    private char __currentChar;
+public class JsonIndexOverlayParser extends JsonParserCharArray {
 
 
     private static ValueBase EMPTY_LIST = new ValueBase ( Collections.EMPTY_LIST );
-
-
-
 
 
     private final boolean useValues;
@@ -49,132 +33,12 @@ public class JsonIndexOverlayParser implements JsonParser {
     }
 
 
-
-
-
-    @SuppressWarnings( "unchecked" )
-    public Object decode( char[] cs ) {
-        __index = 0;
-        charArray = cs;
-        return decodeValue ().toValue ();
+    protected final Object decodeFromChars ( char[] cs ) {
+        return ( ( Value ) super.decodeFromChars ( cs ) ).toValue ();
     }
 
 
-    public Object decode( String cs ) {
-        __index = 0;
-        this.charArray =  Reflection.toCharArray ( cs );
-        return decodeValue ().toValue ();
-    }
-
-
-    public Object decode( byte[] bytes ) {
-        __index = 0;
-        this.charArray =  Reflection.toCharArray ( bytes );
-        return decodeValue ().toValue ();
-    }
-
-    private final boolean hasMore() {
-        return __index + 1 < charArray.length;
-    }
-
-    private final char nextChar() {
-
-        try {
-            if ( __index + 1 < charArray.length ) {
-                __index++;
-                return __currentChar = charArray[__index];
-            } else {
-                return '\u0000';
-            }
-        } catch ( Exception ex ) {
-            throw new JsonException (  exceptionDetails ( "unable to advance character"), ex);
-        }
-    }
-
-
-
-    private String exceptionDetails( String message ) {
-        CharBuf buf = CharBuf.create ( 255 );
-
-        buf.addLine ( message );
-
-        buf.addLine ( "" );
-        buf.addLine ( "The current character read is " + charDescription ( __currentChar ) );
-
-
-        buf.addLine ( message );
-
-        int line = 0;
-        int lastLineIndex = 0;
-
-        for ( int i = 0; i < __index; i++ ) {
-            if ( charArray[i] == '\n' ) {
-                line++;
-                lastLineIndex = i + 1;
-            }
-        }
-
-        int count = 0;
-
-        for ( int i = lastLineIndex; i < charArray.length; i++, count++ ) {
-            if ( charArray[i] == '\n' ) {
-                break;
-            }
-        }
-
-
-        buf.addLine ( "line number " + line + 1 );
-        buf.addLine ( "index number " + __index );
-
-
-        try {
-            buf.addLine ( new String ( charArray, lastLineIndex, count ) );
-        } catch ( Exception ex ) {
-
-            try {
-                int index = ( __index - 10 < 0 ) ? 0 : __index - 10;
-
-                buf.addLine ( new String ( charArray, index, __index ) );
-            } catch ( Exception ex2 ) {
-                buf.addLine ( new String ( charArray, 0, charArray.length ) );
-            }
-        }
-        for ( int i = 0; i < ( __index - lastLineIndex ); i++ ) {
-            buf.add ( '.' );
-        }
-        buf.add ( '^' );
-
-        return buf.toString ();
-    }
-
-    private void skipWhiteSpace() {
-
-
-        label:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
-            switch ( __currentChar ) {
-                case '\n':
-                    continue label;
-
-                case '\r':
-                    continue label;
-
-                case ' ':
-                    continue label;
-
-                case '\t':
-                    continue label;
-
-                default:
-                    break label;
-
-            }
-        }
-
-    }
-
-    private final Value decodeJsonObject() {
+    protected final Value decodeJsonObjectOverlay () {
 
         if ( __currentChar == '{' )
             this.nextChar ();
@@ -197,7 +61,7 @@ public class JsonIndexOverlayParser implements JsonParser {
 
 
             if ( __currentChar == '"' ) {
-                Value key = decodeString ();
+                Value key = decodeStringOverlay ();
                 skipWhiteSpace ();
 
                 if ( __currentChar != ':' ) {
@@ -206,7 +70,7 @@ public class JsonIndexOverlayParser implements JsonParser {
                 }
                 this.nextChar (); // skip past ':'
 
-                Value item = decodeValue ();
+                Value item = decodeValueOverlay ();
 
                 skipWhiteSpace ();
 
@@ -236,91 +100,90 @@ public class JsonIndexOverlayParser implements JsonParser {
         return value;
     }
 
-    private void complain( String complaint ) {
-        throw new JsonException ( exceptionDetails ( complaint ) );
+    protected Value decodeValue () {
+        return decodeValueOverlay ();
     }
 
-
-    private Value decodeValue() {
+    private Value decodeValueOverlay () {
+        skipWhiteSpace ();
 
         label:
         for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
+            __currentChar = charArray[ __index ];
 
             switch ( __currentChar ) {
 
-            case '\n':
-                continue label;
+                case '\n':
+                    continue label;
 
-            case '\r':
-                continue label;
+                case '\r':
+                    continue label;
 
-            case ' ':
-                continue label;
+                case ' ':
+                    continue label;
 
-            case '\t':
-                continue label;
-
-
-            case '"':
-                return  decodeString ();
+                case '\t':
+                    continue label;
 
 
-            case 't':
-                return decodeTrue ();
-
-            case 'f':
-                return decodeFalse ();
+                case '"':
+                    return decodeStringOverlay ();
 
 
-            case 'n':
-                return decodeNull ();
+                case 't':
+                    return decodeTrue () == true ? Value.TRUE : Value.FALSE;
 
-            case '[':
-                return  decodeJsonArray ();
-
-            case '{':
-                return decodeJsonObject ();
-
-            case '1':
-                return decodeNumber ();
-
-            case '2':
-                return decodeNumber ();
-
-            case '3':
-                return decodeNumber ();
-
-            case '4':
-                return decodeNumber ();
-
-            case '5':
-                return decodeNumber ();
-
-            case '6':
-                return decodeNumber ();
-
-            case '7':
-                return decodeNumber ();
-
-            case '8':
-                return decodeNumber ();
-
-            case '9':
-                return decodeNumber ();
-
-            case '0':
-                return decodeNumber ();
-
-            case '-':
-                return decodeNumber ();
+                case 'f':
+                    return decodeFalse () == false ? Value.FALSE : Value.TRUE;
 
 
-                default :
+                case 'n':
+                    return decodeNull () == null ? ValueBase.NULL : Value.NULL;
+
+                case '[':
+                    return decodeJsonArrayOverlay ();
+
+                case '{':
+                    return decodeJsonObjectOverlay ();
+
+                case '1':
+                    return decodeNumberOverlay ();
+
+                case '2':
+                    return decodeNumberOverlay ();
+
+                case '3':
+                    return decodeNumberOverlay ();
+
+                case '4':
+                    return decodeNumberOverlay ();
+
+                case '5':
+                    return decodeNumberOverlay ();
+
+                case '6':
+                    return decodeNumberOverlay ();
+
+                case '7':
+                    return decodeNumberOverlay ();
+
+                case '8':
+                    return decodeNumberOverlay ();
+
+                case '9':
+                    return decodeNumberOverlay ();
+
+                case '0':
+                    return decodeNumberOverlay ();
+
+                case '-':
+                    return decodeNumberOverlay ();
+
+
+                default:
 
                     throw new JsonException ( exceptionDetails ( "Unable to determine the " +
                             "current character, it is not a string, number, array, or object" ) );
-
 
 
             }
@@ -332,7 +195,7 @@ public class JsonIndexOverlayParser implements JsonParser {
     }
 
 
-    private Value decodeNumber() {
+    private Value decodeNumberOverlay () {
 
         int startIndex = __index;
 
@@ -342,7 +205,7 @@ public class JsonIndexOverlayParser implements JsonParser {
 
         loop:
         for ( index = __index; index < charArray.length; index++ ) {
-            __currentChar = charArray[index];
+            __currentChar = charArray[ index ];
 
             switch ( __currentChar ) {
                 case ' ':
@@ -445,66 +308,11 @@ public class JsonIndexOverlayParser implements JsonParser {
     }
 
 
-    private static char[] NULL = Chr.chars ( "null" );
-
-
-    private Value decodeNull() {
-
-        if ( __index + NULL.length <= charArray.length ) {
-            if ( charArray[__index] == 'n' &&
-                    charArray[++__index] == 'u' &&
-                    charArray[++__index] == 'l' &&
-                    charArray[++__index] == 'l' ) {
-                nextChar ();
-                return Value.NULL;
-            }
-        }
-        throw new JsonException ( exceptionDetails ( "null not parse properly" ) );
-    }
-
-    private static char[] TRUE = Chr.chars ( "true" );
-
-
-    private Value decodeTrue() {
-
-        if ( __index + TRUE.length <= charArray.length ) {
-            if ( charArray[__index] == 't' &&
-                    charArray[++__index] == 'r' &&
-                    charArray[++__index] == 'u' &&
-                    charArray[++__index] == 'e' ) {
-
-                nextChar ();
-                return Value.TRUE;
-
-            }
-        }
-
-        throw new JsonException ( exceptionDetails ( "true not parsed properly" ) );
-    }
-
-
-    private static char[] FALSE = Chr.chars ( "false" );
-
-    private Value decodeFalse() {
-
-        if ( __index + FALSE.length <= charArray.length ) {
-            if ( charArray[__index] == 'f' &&
-                    charArray[++__index] == 'a' &&
-                    charArray[++__index] == 'l' &&
-                    charArray[++__index] == 's' &&
-                    charArray[++__index] == 'e' ) {
-                nextChar ();
-                return Value.FALSE;
-            }
-        }
-        throw new JsonException ( exceptionDetails ( "false not parsed properly" ) );
-    }
-
-    private Value decodeString() {
+    private Value decodeStringOverlay () {
         ValueInCharBuf value = new ValueInCharBuf ( Type.STRING );
 
 
-        __currentChar = charArray[__index];
+        __currentChar = charArray[ __index ];
 
         if ( __index < charArray.length && __currentChar == '"' ) {
             __index++;
@@ -519,11 +327,11 @@ public class JsonIndexOverlayParser implements JsonParser {
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
+            __currentChar = charArray[ __index ];
             switch ( __currentChar ) {
 
                 case '"':
-                    if ( !escape )  {
+                    if ( !escape ) {
                         break done;
                     } else {
                         escape = false;
@@ -553,8 +361,7 @@ public class JsonIndexOverlayParser implements JsonParser {
     }
 
 
-
-    private Value decodeJsonArray() {
+    private Value decodeJsonArrayOverlay () {
         if ( __currentChar == '[' ) {
             this.nextChar ();
         }
@@ -571,7 +378,7 @@ public class JsonIndexOverlayParser implements JsonParser {
         }
 
 
-        List<Object> list = null;
+        List<Object> list;
 
         if ( useValues ) {
             list = new ArrayList<> ();
@@ -584,7 +391,7 @@ public class JsonIndexOverlayParser implements JsonParser {
         int arrayIndex = 0;
 
         do {
-            Value arrayItem = decodeValue ();
+            Value arrayItem = decodeValueOverlay ();
 
             if ( arrayItem == null ) {
                 list.add ( ValueBase.NULL ); //JSON null detected
@@ -618,64 +425,5 @@ public class JsonIndexOverlayParser implements JsonParser {
         return value;
     }
 
-    private String charDescription( char c ) {
-        String charString;
-        if ( c == ' ' ) {
-            charString = "[SPACE]";
-        } else if ( c == '\t' ) {
-            charString = "[TAB]";
-
-        } else if ( c == '\n' ) {
-            charString = "[NEWLINE]";
-
-        } else {
-            charString = "'" + c + "'";
-        }
-
-        charString = charString + " with an int value of " + ( ( int ) c );
-        return charString;
-    }
-
-
-
-
-    @Override
-    public <T> T parse( Class<T> type, String str ) {
-        return (T) this.decode ( str  );
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, byte[] bytes ) {
-        return (T) this.decode ( bytes  );
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, CharSequence charSequence ) {
-        return parse(type, charSequence.toString ());
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, char[] chars ) {
-        return (T) this.decode ( chars );
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, Reader reader ) {
-
-        die("you are using the wrong class");
-        return null;
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, InputStream input ) {
-        die("you are using the wrong class");
-        return null;
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        die("you are using the wrong class");
-        return null;
-    }
 
 }

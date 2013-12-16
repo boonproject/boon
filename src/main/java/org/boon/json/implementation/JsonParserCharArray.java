@@ -1,6 +1,8 @@
 package org.boon.json.implementation;
 
+import org.boon.IO;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
 import org.boon.json.internal.JsonLazyLinkedMap;
@@ -8,9 +10,11 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
@@ -32,7 +36,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     protected char __currentChar;
 
 
-    protected final Object decodeFromChars ( char[] cs ) {
+    protected Object decodeFromChars ( char[] cs ) {
         __index = 0;
         charArray = cs;
         init();
@@ -133,13 +137,13 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         for (; __index < this.charArray.length; __index++ ) {
             __currentChar = charArray[ __index ];
             switch ( __currentChar ) {
+                case ' ':
+                    continue label;
+
                 case '\n':
                     continue label;
 
                 case '\r':
-                    continue label;
-
-                case ' ':
                     continue label;
 
                 case '\t':
@@ -607,7 +611,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         }
 
         ArrayList<Object> list;
-
         if (heavyCache) {
              list = createList ();
         } else {
@@ -664,7 +667,8 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     @Override
     public <T> T parse ( Class<T> type, byte[] bytes ) {
-        return ( T ) this.decodeFromBytes ( bytes );
+
+         return this.parse ( type, new ByteArrayInputStream ( bytes ) );
     }
 
     @Override
@@ -674,26 +678,37 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     @Override
     public <T> T parse ( Class<T> type, char[] chars ) {
-        return ( T ) this.decodeFromChars ( chars );
+        if (type == Map.class || type == List.class ) {
+            return (T) this.decodeFromChars ( chars );
+        } else {
+            Map<String, Object> objectMap = (Map<String, Object>) this.decodeFromChars ( chars );
+            return Reflection.fromMap ( objectMap, type );
+        }
     }
+
+
+    private CharBuf fileInputBuf;
 
     @Override
-    public <T> T parse ( Class<T> type, Reader reader ) {
+    public <T> T parse( Class<T> type, Reader reader ) {
 
-        die ( "you are using the wrong class" );
-        return null;
+        fileInputBuf = IO.read ( reader, fileInputBuf, 256 );
+        return parse ( type,  fileInputBuf.readForRecycle () );
+
     }
+
 
     @Override
     public <T> T parse ( Class<T> type, InputStream input ) {
-        die ( "you are using the wrong class" );
-        return null;
+        fileInputBuf = IO.read ( input, fileInputBuf, StandardCharsets.UTF_8, 256 );
+        return parse ( type,  fileInputBuf.readForRecycle () );
     }
 
+
     @Override
-    public <T> T parse ( Class<T> type, InputStream input, Charset charset ) {
-        die ( "you are using the wrong class" );
-        return null;
+    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+        fileInputBuf = IO.read ( input, fileInputBuf, charset, 256 );
+        return parse ( type,  fileInputBuf.readForRecycle () );
     }
 
 

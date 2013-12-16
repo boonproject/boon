@@ -3,6 +3,8 @@ package org.boon.primitive;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.boon.primitive.CharScanner.*;
@@ -13,6 +15,7 @@ public class CharBuf extends Writer {
     protected int location = 0;
 
     protected char[] buffer;
+
 
     public CharBuf ( char[] buffer ) {
         this.buffer = buffer;
