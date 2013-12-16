@@ -38,10 +38,10 @@ public class PropertiesFileValidationTest {
     public void testRecursiveWithPropertyFile() {
         
         Map<String, Object> objectMap = map(
-            "/org/boon/validator/required", (Object) new RequiredValidator(),
-            "/org/boon/validator/range", (Object) new LongRangeValidator(),
-            "/org/boon/validator/length" , (Object) new LengthValidator(),
-            "/org/boon/validator/personName" , Validators.personName("", "")
+            "required", (Object) new RequiredValidator(),
+            "range", (Object) new LongRangeValidator(),
+            "length" , (Object) new LengthValidator(),
+            "personName" , Validators.personName("", "")
         );
         
         RecursiveDescentPropertyValidator validator = new RecursiveDescentPropertyValidator();
