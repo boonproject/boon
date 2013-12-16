@@ -1,12 +1,15 @@
 package org.boon.primitive;
 
 
+import sun.nio.cs.Surrogate;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
 import static org.boon.primitive.CharScanner.parseLong;
 
@@ -22,6 +25,10 @@ public class CharBuf extends Writer {
         this.capacity = buffer.length;
     }
 
+    public CharBuf ( byte[] bytes ) {
+        this.buffer = null;
+        this.addAsUTF ( bytes );
+    }
 
     public static CharBuf createExact( final int capacity ) {
         return new CharBuf ( capacity ) {
@@ -38,6 +45,10 @@ public class CharBuf extends Writer {
     }
 
     public static CharBuf create( char[] buffer ) {
+        return new CharBuf ( buffer );
+    }
+
+    public static CharBuf createFromUTF8Bytes( byte[] buffer ) {
         return new CharBuf ( buffer );
     }
 
@@ -88,20 +99,20 @@ public class CharBuf extends Writer {
 
 
 
-    public CharBuf addChar( byte i ) {
+    public final CharBuf addChar( byte i ) {
         add ((char) i );
         return this;
     }
 
 
 
-    public CharBuf addChar( int i ) {
+    public final CharBuf addChar( int i ) {
         add ((char) i );
         return this;
     }
 
 
-    public CharBuf addChar( short i ) {
+    public final CharBuf addChar( short i ) {
         add ((char) i );
         return this;
     }
@@ -437,6 +448,126 @@ public class CharBuf extends Writer {
         }
 
     }
+
+
+    public void addAsUTF ( byte[] value ) {
+
+        if (this.buffer == null) {
+            this.buffer = new char[value.length];
+        } else if ( this.buffer.length < value.length ) {
+            buffer = Chr.grow ( buffer, value.length - buffer.length );
+        }
+
+
+        for (int index=0; index< value.length; index++) {
+            int __currentChar = value [index];
+
+
+            if ( __currentChar >= 0 ) {
+                this.addChar ( __currentChar );
+            } else {
+                utf8MultiByte ( __currentChar,index, value );
+            }
+
+        }
+
+
+    }
+
+
+
+
+    //  [C2..DF] [80..BF]
+    private static boolean isMalformed2 ( int b1, int b2 ) {
+        return ( b1 & 0x1e ) == 0x0 || ( b2 & 0xc0 ) != 0x80;
+    }
+
+    //  [E0]     [A0..BF] [80..BF]
+    //  [E1..EF] [80..BF] [80..BF]
+    private static boolean isMalformed3 ( int b1, int b2, int b3 ) {
+        return ( b1 == ( byte ) 0xe0 && ( b2 & 0xe0 ) == 0x80 ) ||
+                ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80;
+    }
+
+    //  [F0]     [90..BF] [80..BF] [80..BF]
+    //  [F1..F3] [80..BF] [80..BF] [80..BF]
+    //  [F4]     [80..8F] [80..BF] [80..BF]
+    //  only check 80-be range here, the [0xf0,0x80...] and [0xf4,0x90-...]
+    //  will be checked by Surrogate.neededFor(uc)
+    private static boolean isMalformed4 ( int b2, int b3, int b4 ) {
+        return ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80 ||
+                ( b4 & 0xc0 ) != 0x80;
+    }
+
+
+
+    private  final void utf8MultiByte (final int b1, int __index, byte[] bytes) {
+
+        boolean ok = true;
+
+        if ( ( b1 >> 5 ) == -2 ) {
+            int b2;
+
+            ok = __index +1 < bytes.length || die ( "unable to parse 2 byte utf 8 - b2" );
+            __index++;
+            b2 = bytes[ __index ];
+
+            if ( isMalformed2 ( b1, b2 ) ) {
+                addChar ( '#' );
+            } else {
+                addChar ( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 );
+            }
+        } else if ( ( b1 >> 4 ) == -2 ) {
+            int b2;
+            int b3;
+
+            ok =  __index +1 < bytes.length || die ( "unable to parse 3 byte utf 8 - b2" );
+            __index++;
+            b2 = bytes[ __index ];
+            ok =  __index +1 < bytes.length || die ( "unable to parse 3 byte utf 8 - b3" );
+            __index++;
+            b3 = bytes[ __index ];
+
+            if ( isMalformed3 ( b1, b2, b3 ) ) {
+                addChar ( '#' );
+            } else {
+                addChar ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 );
+            }
+        } else if ( ( b1 >> 3 ) == -2 ) {
+            int b2;
+            int b3;
+            int b4;
+
+            ok =  __index +1 < bytes.length || die ( "unable to parse 4 byte utf 8 - b2" );
+            __index++;
+            b2 = bytes[ __index ];
+            ok =  __index +1 < bytes.length || die ( "unable to parse 4 byte utf 8 - b3" );
+            __index++;
+            b3 = bytes[ __index ];
+            ok =  __index +1 < bytes.length || die ( "unable to parse 4 byte utf 8 - b4" );
+            __index++;
+            b4 = bytes[ __index ];
+
+            int uc = ( ( b1 & 0x07 ) << 18 ) |
+                    ( ( b2 & 0x3f ) << 12 ) |
+                    ( ( b3 & 0x3f ) << 6 ) |
+                    ( b4 & 0x3f );
+
+            if ( isMalformed4 ( b2, b3, b4 ) && !Surrogate.neededFor ( uc ) ) {
+                addChar ( '#' );
+            } else {
+
+                final char high = Surrogate.high ( uc );
+                final char low = Surrogate.low ( uc );
+
+                addChar ( high );
+                addChar ( low );
+
+            }
+        }
+
+    }
+
 
 
 }

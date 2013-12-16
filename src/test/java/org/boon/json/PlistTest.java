@@ -3,6 +3,7 @@ package org.boon.json;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -158,7 +159,7 @@ public class PlistTest {
                 "}" ;
 
 
-        Map<String, Object> map = jsonParser.parse ( Map.class, testString );
+        Map<String, Object> map = jsonParser.parse ( Map.class, testString.getBytes ( StandardCharsets.US_ASCII) );
         boolean ok = map.size () == 1 || die();
         ok = map.containsKey ( "a" ) || die();
         ok = !map.containsKey ( "b" ) || die();

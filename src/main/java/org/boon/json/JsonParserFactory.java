@@ -9,7 +9,7 @@ public class JsonParserFactory {
     boolean preferCharSequence = false;
 
     boolean useDirectBytes = true;
-    Charset charset= StandardCharsets.UTF_8;
+    Charset charset= null;
     boolean overlay = false;
     int sizeToUseOverlay = 50;
     boolean lax;
@@ -76,6 +76,21 @@ public class JsonParserFactory {
 
 
     public JsonParser create() {
+
+
+
+        if (lax && pllistStyle && charset == null || charset == StandardCharsets.US_ASCII) {
+            this.useDirectBytes = true;
+
+        }
+
+         if ( ( charset==null ) && lax && pllistStyle) {
+
+             charset = StandardCharsets.US_ASCII;
+         }else {
+             charset = StandardCharsets.UTF_8;
+         }
+
         return new JsonParserImpl ( useDirectBytes, charset, overlay, sizeToUseOverlay,
          preferCharSequence, lax, pllistStyle );
     }

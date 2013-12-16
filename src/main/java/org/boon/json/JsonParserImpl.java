@@ -8,13 +8,17 @@ import org.boon.json.implementation.JsonParserCharArray;
 import org.boon.json.implementation.JsonParserCharSequence;
 import org.boon.json.implementation.JsonParserLax;
 import org.boon.primitive.CharBuf;
+import sun.nio.cs.Surrogate;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+
+import static org.boon.Exceptions.die;
 
 
 public class JsonParserImpl implements JsonParser {
@@ -33,6 +37,8 @@ public class JsonParserImpl implements JsonParser {
     private final JsonParser charSequenceParser;
     private final JsonParser overlayParser;
 
+    private final boolean plist;
+
     int bufSize = 256;
 
 
@@ -40,20 +46,20 @@ public class JsonParserImpl implements JsonParser {
                            boolean preferCharSequence, boolean lax, boolean plistStyle) {
 
         this.lax = lax;
+        this.plist = plistStyle;
 
         if (lax)  {
-            this.useDirectBytes = false;
             this.overlay = false;
             this.sizeSmallerUseOverlayAlways = 0;
             this.preferCharSequence = false;
 
         }   else {
-            this.useDirectBytes = useDirectBytes;
             this.overlay = overlay;
             this.sizeSmallerUseOverlayAlways = sizeSmallerUseOverlayAlways;
             this.preferCharSequence = preferCharSequence;
         }
 
+        this.useDirectBytes = useDirectBytes;
         this.charset = charset;
 
         if (lax )  {
@@ -107,8 +113,25 @@ public class JsonParserImpl implements JsonParser {
         }
     }
 
+
     @Override
     public <T> T parse( Class<T> type, byte[] value ) {
+
+        if (useDirectBytes && value.length > this.sizeSmallerUseOverlayAlways && value.length < 20_000
+                && charset == StandardCharsets.US_ASCII) {
+            char [] chars = new char[value.length];
+            for (int index=0; index< value.length; index++) {
+                chars[index] = (char)value[index];
+            }
+            return parse (type, chars);
+        } else if (useDirectBytes && value.length > this.sizeSmallerUseOverlayAlways && value.length < 20_000
+                && charset == StandardCharsets.UTF_8) {
+
+            CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
+
+            return parse (type, builder.toCharArray ());
+
+        }
 
 
         if (type == Map.class || type == List.class ) {
@@ -168,5 +191,9 @@ public class JsonParserImpl implements JsonParser {
         charBuf = IO.read ( input, charBuf, charset, bufSize );
         return parse ( type,  charBuf.readForRecycle () );
     }
+
+
+
+
 
 }
