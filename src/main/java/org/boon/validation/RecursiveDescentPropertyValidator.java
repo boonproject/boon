@@ -17,7 +17,7 @@ import java.util.*;
 public class RecursiveDescentPropertyValidator {
     protected ValidatorMetaDataReader validatorMetaDataReader = new AnnotationValidatorMetaDataReader ( );
 
-    protected class MessageHolder {
+    public class MessageHolder {
         public final String propertyPath;
         public final ValidatorMessageHolder holder;
 
