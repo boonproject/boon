@@ -665,10 +665,15 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return ( T ) this.decodeFromString ( str );
     }
 
-    @Override
-    public <T> T parse ( Class<T> type, byte[] bytes ) {
 
-         return this.parse ( type, new ByteArrayInputStream ( bytes ) );
+    @Override
+    public <T> T parse( Class<T> type, byte[] value ) {
+         if (value.length < 20_000) {
+            CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
+            return parse (type, builder.toCharArray ());
+        }else {
+             return this.parse ( type, new ByteArrayInputStream ( value ) );
+         }
     }
 
     @Override

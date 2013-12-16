@@ -226,8 +226,8 @@ public class CharScanner {
         return results;
     }
 
-    public static char[][] splitByChars ( final char[] inputArray, int from, int to,
-                                          final char... delims ) {
+    public static char[][] splitByCharsFromToDelims ( final char[] inputArray, int from, int to,
+                                                      final char... delims ) {
         /** Holds the results. */
         char[][] results = new char[ 16 ][];
 
@@ -298,7 +298,7 @@ public class CharScanner {
     public static char[][] splitByCharsNoneEmpty ( final char[] inputArray, int from, int to,
                                                    final char... delims ) {
 
-        final char[][] results = splitByChars ( inputArray, from, to, delims );
+        final char[][] results = splitByCharsFromToDelims ( inputArray, from, to, delims );
         return compact ( results );
     }
 
