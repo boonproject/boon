@@ -1,3 +1,6 @@
+
+Dec 17: 0.3 released.
+
 For the next 15 minutes, before Cowboy coder wakes up and tunes Jackson, Boon has the fastest JSON parser.
 Boo yah!
 
