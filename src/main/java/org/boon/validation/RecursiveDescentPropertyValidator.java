@@ -211,7 +211,7 @@ public class RecursiveDescentPropertyValidator {
         Objects.requireNonNull ( applicationContext );
 
         return ( FieldValidator ) applicationContext
-                .get ( validationMetaDataName );
+                .get (  "/org/boon/validator/" + validationMetaDataName );
     }
 
     /**
