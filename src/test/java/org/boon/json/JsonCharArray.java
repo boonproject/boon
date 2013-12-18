@@ -16,7 +16,7 @@ public class JsonCharArray extends JsonParserBaseTest {
         return new JsonParserFactory ()
                 .neverPreferCharSequence ()
                 .neverUseDirectBytes ()
-                .neverUseOverlay ().setSizeToUseOverlay ( 0 );
+                .neverUseLazyFinalParse ().setSizeToForceLazyFinalParse ( 0 );
     }
 
 

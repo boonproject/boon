@@ -24,4 +24,9 @@ public interface JsonParser {
 
     <T> T  parse (Class <T> type,  InputStream input, Charset charset);
 
+    <T> T parseDirect( Class<T> type, byte[] value );
+
+    <T> T parseAsStream( Class<T> type, byte[] value );
+
+
 }

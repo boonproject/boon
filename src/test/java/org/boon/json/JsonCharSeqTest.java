@@ -10,7 +10,7 @@ public class JsonCharSeqTest extends JsonParserBaseTest {
         return new JsonParserFactory ()
                 .preferCharSequence ()
                 .neverUseDirectBytes ()
-                .neverUseOverlay ().setSizeToUseOverlay ( 0 );
+                .neverUseLazyFinalParse ().setSizeToForceLazyFinalParse ( 0 );
     }
 
 

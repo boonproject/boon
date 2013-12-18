@@ -8,6 +8,7 @@ import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -22,7 +23,7 @@ import static org.boon.primitive.ByteScanner.parseLong;
 /**
  * Created by rick on 12/15/13.
  */
-public class JsonBaseByteArrayParser extends BaseJsonParser {
+public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     protected byte[] charArray;
     protected int __index;
@@ -712,9 +713,7 @@ public class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    protected  void addChar() {
-        builder.addChar ( __currentChar );
-    }
+    abstract protected   void addChar();
 
     protected final String decodeKeyName () {
         return decodeString ();
@@ -784,5 +783,16 @@ public class JsonBaseByteArrayParser extends BaseJsonParser {
             return list;
         }
     }
+
+
+
+    public <T> T parseDirect( Class<T> type, byte[] value ) {
+            return this.parse ( type, new ByteArrayInputStream ( value ) );
+    }
+
+    public <T> T parseAsStream( Class<T> type, byte[] value ) {
+        return this.parse ( type, value  );
+    }
+
 
 }

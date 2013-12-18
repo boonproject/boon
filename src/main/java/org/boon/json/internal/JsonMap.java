@@ -8,37 +8,38 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     Map<String, Object> map = null;
 
-    public Entry<String, Value>[] items = new  Entry[ 20 ];
+    public Entry<String, Value>[] items = new Entry[20];
 
     int len = 0;
 
-    public void add ( MapItemValue miv) {
-        if (len == items.length) {
-            items =  org.boon.Arrays.grow ( items );
+    public void add( MapItemValue miv ) {
+        if ( len == items.length ) {
+            items = org.boon.Arrays.grow ( items );
         }
-        items [len] = miv;
+        items[len] = miv;
         len++;
 
     }
 
 
-    static class FakeSet extends AbstractSet <Entry<String, Object>> {
+    static class FakeSet extends AbstractSet<Entry<String, Object>> {
         @Override
         public <T> T[] toArray( T[] a ) {
-            return (T[]) items;
+            return ( T[] ) items;
         }
 
         Entry<String, Value>[] items;
 
-        FakeSet (Entry<String, Value>[] items  ) {
+        FakeSet( Entry<String, Value>[] items ) {
 
             this.items = items;
         }
 
         @Override
         public Iterator<Entry<String, Object>> iterator() {
-            return  new Iterator<Entry<String, Object>> () {
+            return new Iterator<Entry<String, Object>> () {
                 int location = 0;
+
                 @Override
                 public boolean hasNext() {
                     return location < items.length;
@@ -46,8 +47,8 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
                 @Override
                 public Entry<String, Object> next() {
-                    Object o =  items[location++];
-                    return (Entry<String, Object>)o;
+                    Object o = items[location++];
+                    return ( Entry<String, Object> ) o;
                 }
 
                 @Override
@@ -69,8 +70,58 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     @Override
     public Object get( Object key ) {
-            if ( map == null ) buildMap ();
-            return map.get ( key );
+        if ( map == null ) buildMap ();
+        Object object = map.get ( key );
+        chopIfNeeded ( object );
+        return object;
+    }
+
+    private void chopIfNeeded( Object object ) {
+        if ( object instanceof JsonMap ) {
+            JsonMap m = new JsonMap ();
+            m.chopMap ();
+        } else if ( object instanceof JsonList ) {
+            JsonList list = new JsonList ();
+            list.chopList ();
+        }
+
+    }
+
+    boolean mapChopped = false;
+
+    void chopMap() {
+        if ( mapChopped ) {
+            return;
+        }
+        mapChopped = true;
+        if ( this.map != null ) {
+            return;
+        } else {
+            for ( Entry e : this.items ) {
+                if (e==null) break;
+                MapItemValue entry = ( MapItemValue ) e;
+
+                Value value = entry.getValue ();
+                if (value == null) continue;
+                if ( value.isContainer () ) {
+                    chopContainer ( value );
+                } else {
+                    value.chop ();
+                }
+            }
+        }
+
+    }
+
+    void chopContainer( Value value ) {
+        Object obj = value.toValue ();
+        if ( obj instanceof JsonMap ) {
+            JsonMap map = ( JsonMap ) obj;
+            map.chopMap ();
+        } else if ( obj instanceof JsonList ) {
+            JsonList list = ( JsonList ) obj;
+            list.chopList ();
+        }
     }
 
 
@@ -83,19 +134,19 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        if ( map == null )  {
+        if ( map == null ) {
             return set;
         } else {
             return map.entrySet ();
         }
     }
 
-    private final void buildMap () {
+    private final void buildMap() {
 
         map = new HashMap<> ( items.length );
 
         for ( Entry<String, Value> miv : items ) {
-            if (miv == null) {
+            if ( miv == null ) {
                 break;
             }
             map.put ( miv.getKey (), miv.getValue ().toValue () );

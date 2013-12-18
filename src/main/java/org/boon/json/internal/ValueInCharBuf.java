@@ -1,6 +1,7 @@
 package org.boon.json.internal;
 
 import org.boon.Dates;
+import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
 import org.boon.json.implementation.JsonStringDecoder;
 import org.boon.primitive.CharScanner;
@@ -15,19 +16,55 @@ public class ValueInCharBuf extends ValueBase {
 
     public char[] buffer;
 
-
     public ValueInCharBuf( Type type ) {
         this.type = type;
     }
 
-    public ValueInCharBuf() {
+    public ValueInCharBuf(  ) {
 
+    }
+
+    public ValueInCharBuf(boolean chop, Type type,  int startIndex, int endIndex, char [] buffer) {
+        this.type = type;
+
+        if (chop) {
+
+            this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
+            this.startIndex = 0;
+            this.endIndex = this.buffer.length;
+        } else {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.buffer = buffer;
+        }
+    }
+
+
+
+    public ValueInCharBuf(boolean chop, Type type,  int startIndex, int endIndex, char [] buffer, boolean encoded) {
+        this.type = type;
+
+        if (chop) {
+
+            this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
+            this.startIndex = 0;
+            this.endIndex = this.buffer.length;
+        } else {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.buffer = buffer;
+        }
+
+        this.decodeStrings = encoded;
     }
 
 
     public String toString() {
-
-        return  new String ( buffer, startIndex, ( endIndex - startIndex ) );
+        if (startIndex == 0 && endIndex == buffer.length ) {
+            return FastStringUtils.noCopyStringFromChars ( buffer ) ;
+        } else {
+            return  new String ( buffer, startIndex, ( endIndex - startIndex ) );
+        }
     }
 
 
@@ -124,7 +161,7 @@ public class ValueInCharBuf extends ValueBase {
 
     public String stringValue() {
         if ( this.decodeStrings ) {
-            return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
+            return JsonStringDecoder.decodeForSure ( buffer, startIndex, endIndex );
         } else {
             return toString ();
         }
@@ -281,6 +318,12 @@ public class ValueInCharBuf extends ValueBase {
 
         return Float.parseFloat ( toString () ) * sign;
 
+    }
+
+    public final void chop () {
+        this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
+        this.startIndex = 0;
+        this.endIndex = this.buffer.length;
     }
 
 

@@ -26,6 +26,13 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
 
     public boolean decodeStrings;
 
+    public ValueBase( int startIndex, int endIndex, Object value, Type type,  boolean decodeStrings ) {
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
+        this.value = value;
+        this.type = type;
+        this.decodeStrings = decodeStrings;
+    }
 
     public ValueBase( Type type ) {
         this.type = type;
@@ -128,6 +135,10 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     public boolean isContainer() {
         return container;
 
+    }
+
+    @Override
+    public void chop() {
     }
 
     @Override

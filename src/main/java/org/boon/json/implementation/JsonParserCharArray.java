@@ -661,28 +661,41 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
     @Override
-    public <T> T parse ( Class<T> type, String str ) {
+    public final <T> T parse ( Class<T> type, String str ) {
         return ( T ) this.decodeFromString ( str );
     }
 
 
+
     @Override
-    public <T> T parse( Class<T> type, byte[] value ) {
-         if (value.length < 20_000) {
+    public final <T> T parse( Class<T> type, byte[] value ) {
+          return (T) this.decodeFromBytes ( value );
+    }
+
+
+    @Override
+    public final <T> T parseDirect( Class<T> type, byte[] value ) {
+        if (value.length < 20_000) {
             CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
             return parse (type, builder.toCharArray ());
         }else {
-             return this.parse ( type, new ByteArrayInputStream ( value ) );
-         }
+            return this.parse ( type, new ByteArrayInputStream ( value ) );
+        }
     }
 
     @Override
-    public <T> T parse ( Class<T> type, CharSequence charSequence ) {
+    public final <T> T parseAsStream( Class<T> type, byte[] value ) {
+        return this.parse ( type, new ByteArrayInputStream ( value ) );
+    }
+
+
+    @Override
+    public final <T> T parse ( Class<T> type, CharSequence charSequence ) {
         return parse ( type, charSequence.toString () );
     }
 
     @Override
-    public <T> T parse ( Class<T> type, char[] chars ) {
+    public final <T> T parse ( Class<T> type, char[] chars ) {
         if (type == Map.class || type == List.class ) {
             return (T) this.decodeFromChars ( chars );
         } else {
@@ -695,7 +708,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     private CharBuf fileInputBuf;
 
     @Override
-    public <T> T parse( Class<T> type, Reader reader ) {
+    public final <T> T parse( Class<T> type, Reader reader ) {
 
         fileInputBuf = IO.read ( reader, fileInputBuf, 256 );
         return parse ( type,  fileInputBuf.readForRecycle () );
@@ -704,14 +717,14 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
     @Override
-    public <T> T parse ( Class<T> type, InputStream input ) {
+    public final <T> T parse ( Class<T> type, InputStream input ) {
         fileInputBuf = IO.read ( input, fileInputBuf, StandardCharsets.UTF_8, 256 );
         return parse ( type,  fileInputBuf.readForRecycle () );
     }
 
 
     @Override
-    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+    public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
         fileInputBuf = IO.read ( input, fileInputBuf, charset, 256 );
         return parse ( type,  fileInputBuf.readForRecycle () );
     }

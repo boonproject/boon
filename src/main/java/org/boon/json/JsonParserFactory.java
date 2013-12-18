@@ -1,5 +1,7 @@
 package org.boon.json;
 
+import org.boon.json.implementation.*;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -10,8 +12,8 @@ public class JsonParserFactory {
 
     boolean useDirectBytes = true;
     Charset charset = null;
-    boolean overlay = false;
-    int sizeToUseOverlay = 50;
+    boolean lazyFinalParse = false;
+    int sizeToForceLazyFinalParse = 50;
     boolean lax;
     private boolean plistStyle;
 
@@ -44,8 +46,8 @@ public class JsonParserFactory {
     }
 
 
-    public JsonParserFactory setSizeToUseOverlay ( int size ) {
-        this.sizeToUseOverlay = size;
+    public JsonParserFactory setSizeToForceLazyFinalParse( int size ) {
+        this.sizeToForceLazyFinalParse = size;
         return this;
     }
 
@@ -60,17 +62,48 @@ public class JsonParserFactory {
         return this;
     }
 
-    public JsonParserFactory useOverlay () {
-        overlay = true;
+    public JsonParserFactory useLazyFinalParse() {
+        lazyFinalParse = true;
         return this;
     }
 
 
-    public JsonParserFactory neverUseOverlay () {
-        overlay = false;
+    public JsonParserFactory neverUseLazyFinalParse() {
+        lazyFinalParse = false;
         return this;
     }
 
+
+    public JsonParser createFastParser () {
+         return new JsonFastParser (false, true);
+    }
+
+
+    public JsonParser createCharSequenceParser () {
+        return new JsonParserCharSequence ();
+    }
+
+
+    public JsonParser createUTFDirectByteParser () {
+        return new JsonUTF8Parser ();
+    }
+
+    public JsonParser createASCIIParser () {
+        return new JsonAsciiParser ();
+    }
+
+
+    public JsonParser createLaxParser () {
+        return new JsonParserLax ();
+    }
+
+    public JsonParser createLazyFinalParser() {
+        return new JsonFastParser ();
+    }
+
+    public JsonParser createJsonParserForJsonPath() {
+        return new JsonFastParser ();
+    }
 
     public JsonParser create () {
 
@@ -87,7 +120,7 @@ public class JsonParserFactory {
             charset = StandardCharsets.UTF_8;
         }
 
-        return new JsonParserImpl ( useDirectBytes, charset, overlay, sizeToUseOverlay,
+        return new JsonParserImpl ( useDirectBytes, charset, lazyFinalParse, sizeToForceLazyFinalParse,
                 preferCharSequence, lax, plistStyle );
     }
 

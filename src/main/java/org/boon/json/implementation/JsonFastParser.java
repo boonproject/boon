@@ -9,26 +9,35 @@ import java.util.Map;
 
 
 /**
- * Converts an input JSON String into Java objects works with String or char array
- * as input. Produces an Object which can be any of the basic JSON types mapped
- * to Java.
+ * This works in index overlay mode or chop mode.
+ * Chop mode reduces possibility of memory leak but causes a few more buffer copies as it chops up the buffer.
+ *
  */
-public class JsonIndexOverlayParser extends JsonParserCharArray {
+public class JsonFastParser extends JsonParserCharArray {
 
 
     private static ValueBase EMPTY_LIST = new ValueBase ( Collections.EMPTY_LIST );
 
 
     private final boolean useValues;
+    private final boolean chop;
 
-    public JsonIndexOverlayParser () {
+    public JsonFastParser() {
         useValues = false;
+        chop = false;
 
     }
 
 
-    public JsonIndexOverlayParser ( boolean useValues ) {
+    public JsonFastParser( boolean useValues ) {
         this.useValues = useValues;
+        chop = false;
+    }
+
+
+    public JsonFastParser( boolean useValues, boolean chop ) {
+        this.useValues = useValues;
+        this.chop = chop;
 
     }
 
@@ -290,16 +299,9 @@ public class JsonIndexOverlayParser extends JsonParserCharArray {
 
         __index = index;
 
-        ValueInCharBuf value = new ValueInCharBuf ();
-        value.buffer = this.charArray;
-        value.startIndex = startIndex;
-        value.endIndex = __index;
+        Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        if ( doubleFloat ) {
-            value.type = Type.DOUBLE;
-        } else {
-            value.type = Type.INTEGER;
-        }
+        ValueInCharBuf value = new ValueInCharBuf (chop, type ,startIndex, __index, this.charArray );
 
         skipWhiteSpace ();
 
@@ -309,7 +311,6 @@ public class JsonIndexOverlayParser extends JsonParserCharArray {
 
 
     private Value decodeStringOverlay () {
-        ValueInCharBuf value = new ValueInCharBuf ( Type.STRING );
 
 
         __currentChar = charArray[ __index ];
@@ -348,16 +349,13 @@ public class JsonIndexOverlayParser extends JsonParserCharArray {
             escape = false;
         }
 
-        value.startIndex = startIndex;
-        value.endIndex = __index;
-        value.buffer = charArray;
-        value.decodeStrings = encoded;
+
 
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return value;
+        return new ValueInCharBuf (chop, Type.STRING ,startIndex, __index-1, this.charArray, encoded );
     }
 
 

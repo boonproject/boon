@@ -38,4 +38,6 @@ public interface Value {
 
     boolean isContainer(); //either a map or a collection
 
+    public void chop();
+
 }

@@ -18,6 +18,8 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
             obj = convert ( ( ValueBase ) obj );
             list.set ( index, obj );
         }
+
+        chopIfNeeded ( obj );
         return obj;
 
     }
@@ -62,5 +64,44 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
     }
 
 
+    public void chopList() {
 
+        for (Object obj : list) {
+            if (obj == null) continue;
+
+            if (obj instanceof Value) {
+                Value value = (Value) obj;
+                if (value.isContainer ()) {
+                    chopContainer ( value );
+                } else {
+                    value.chop ();
+                }
+            }
+        }
+    }
+
+
+    private void chopIfNeeded( Object object ) {
+        if ( object instanceof JsonMap ) {
+            JsonMap m = new JsonMap ();
+            m.chopMap ();
+        } else if ( object instanceof JsonList ) {
+            JsonList list = new JsonList ();
+            list.chopList ();
+        }
+
+    }
+
+
+
+    void chopContainer( Value value ) {
+        Object obj = value.toValue ();
+        if (obj instanceof JsonMap) {
+            JsonMap map = (JsonMap)  obj;
+            map.chopMap (  );
+        }   else if (obj instanceof JsonList) {
+            JsonList list = (JsonList)  obj;
+            list.chopList();
+        }
+    }
 }

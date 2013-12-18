@@ -7,6 +7,7 @@ import org.boon.json.internal.JsonLazyLinkedMap;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -626,6 +627,22 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
     public <T> T parse ( Class<T> type, InputStream input, Charset charset ) {
         die ( "you are using the wrong class" );
         return null;
+    }
+
+
+    @Override
+    public <T> T parseDirect( Class<T> type, byte[] value ) {
+        if (value.length < 20_000) {
+            CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
+            return parse (type, builder.toString ());
+        }else {
+            return this.parse ( type, new ByteArrayInputStream ( value ) );
+        }
+    }
+
+    @Override
+    public <T> T parseAsStream( Class<T> type, byte[] value ) {
+        return this.parse ( type, new ByteArrayInputStream ( value ) );
     }
 
 

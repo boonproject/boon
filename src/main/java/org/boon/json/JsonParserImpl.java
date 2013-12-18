@@ -3,22 +3,20 @@ package org.boon.json;
 import org.boon.IO;
 import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
-import org.boon.json.implementation.JsonIndexOverlayParser;
+import org.boon.json.implementation.JsonFastParser;
 import org.boon.json.implementation.JsonParserCharArray;
 import org.boon.json.implementation.JsonParserCharSequence;
 import org.boon.json.implementation.JsonParserLax;
 import org.boon.primitive.CharBuf;
-import sun.nio.cs.Surrogate;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-import static org.boon.Exceptions.die;
 
 
 public class JsonParserImpl implements JsonParser {
@@ -26,8 +24,8 @@ public class JsonParserImpl implements JsonParser {
 
     private final boolean useDirectBytes;
     private final Charset charset;
-    private final boolean overlay;
-    private final int sizeSmallerUseOverlayAlways;
+    private final boolean lazyFinalParse;
+    private final int sizeSmallerUseLazyFinalParseAlways;
     private final boolean preferCharSequence ;
     private final boolean lax;
 
@@ -35,7 +33,7 @@ public class JsonParserImpl implements JsonParser {
     private final JsonParser objectParser;
     private final JsonParser basicParser;
     private final JsonParser charSequenceParser;
-    private final JsonParser overlayParser;
+    private final JsonParser lazyFinalParseParser;
 
     private final boolean plist;
 
@@ -49,13 +47,13 @@ public class JsonParserImpl implements JsonParser {
         this.plist = plistStyle;
 
         if (lax)  {
-            this.overlay = false;
-            this.sizeSmallerUseOverlayAlways = 0;
+            this.lazyFinalParse = false;
+            this.sizeSmallerUseLazyFinalParseAlways = 0;
             this.preferCharSequence = false;
 
         }   else {
-            this.overlay = overlay;
-            this.sizeSmallerUseOverlayAlways = sizeSmallerUseOverlayAlways;
+            this.lazyFinalParse = overlay;
+            this.sizeSmallerUseLazyFinalParseAlways = sizeSmallerUseOverlayAlways;
             this.preferCharSequence = preferCharSequence;
         }
 
@@ -65,19 +63,19 @@ public class JsonParserImpl implements JsonParser {
         if (lax )  {
             //For now there is only one lax parser so force it to that if they are using lax.
             this.basicParser = new JsonParserLax (plistStyle );
-            this.overlayParser = this.basicParser;
+            this.lazyFinalParseParser = this.basicParser;
             this.objectParser = this.basicParser;
             this.charSequenceParser = this.basicParser;
         }  else {
-            this.overlayParser = new JsonIndexOverlayParser (  );
+            this.lazyFinalParseParser = new JsonFastParser (  );
 
             if (overlay) {
-                this.basicParser = overlayParser;
+                this.basicParser = lazyFinalParseParser;
             } else {
                 this.basicParser = new JsonParserCharArray ( );
             }
 
-            this.objectParser = new JsonIndexOverlayParser ( true );
+            this.objectParser = new JsonFastParser ( true );
 
             if (preferCharSequence) {
                 this.charSequenceParser = new JsonParserCharSequence ();
@@ -97,7 +95,7 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
-    public <T> T parse( Class<T> type, String value ) {
+    public final <T> T parse( Class<T> type, String value ) {
 
         if (type == Map.class || type == List.class ) {
             return charSequenceParser.parse ( type, value );
@@ -115,31 +113,14 @@ public class JsonParserImpl implements JsonParser {
 
 
     @Override
-    public <T> T parse( Class<T> type, byte[] value ) {
-
-        if (useDirectBytes && value.length > this.sizeSmallerUseOverlayAlways && value.length < 20_000
-                && charset == StandardCharsets.US_ASCII) {
-            char [] chars = new char[value.length];
-            for (int index=0; index< value.length; index++) {
-                chars[index] = (char)value[index];
-            }
-            return parse (type, chars);
-        } else if (useDirectBytes && value.length > this.sizeSmallerUseOverlayAlways && value.length < 20_000
-                && charset == StandardCharsets.UTF_8) {
-
-            CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
-
-            return parse (type, builder.toCharArray ());
-
-        }
-
+    public final <T> T parse( Class<T> type, byte[] value ) {
 
         if (type == Map.class || type == List.class ) {
-            if (value.length < this.sizeSmallerUseOverlayAlways ) {
-                return overlayParser.parse ( type, value );
+            if (value.length < this.sizeSmallerUseLazyFinalParseAlways ) {
+                return lazyFinalParseParser.parse ( type, value );
             } else {
                 this.bufSize = value.length;
-                return this.parse ( type, new ByteArrayInputStream ( value ) );
+                return this.basicParser.parse ( type, value );
             }
 
         } else {
@@ -149,7 +130,7 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
-    public <T> T parse( Class<T> type, CharSequence value ) {
+    public final <T> T parse( Class<T> type, CharSequence value ) {
         if (type == Map.class || type == List.class ) {
             return charSequenceParser.parse ( type, value );
         } else {
@@ -159,7 +140,7 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
-    public <T> T parse( Class<T> type, char[] value ) {
+    public final <T> T parse( Class<T> type, char[] value ) {
         if (type == Map.class || type == List.class ) {
             return basicParser.parse ( type, value );
         } else {
@@ -173,7 +154,7 @@ public class JsonParserImpl implements JsonParser {
     CharBuf charBuf;
 
     @Override
-    public <T> T parse( Class<T> type, Reader reader ) {
+    public final  <T> T parse( Class<T> type, Reader reader ) {
 
         charBuf = IO.read ( reader, charBuf, bufSize );
         return parse ( type,  charBuf.readForRecycle () );
@@ -181,19 +162,33 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
-    public <T> T parse( Class<T> type, InputStream input ) {
+    public final  <T> T parse( Class<T> type, InputStream input ) {
         charBuf = IO.read ( input, charBuf, this.charset, bufSize );
         return parse ( type,  charBuf.readForRecycle () );
     }
 
     @Override
-    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+    public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
         charBuf = IO.read ( input, charBuf, charset, bufSize );
         return parse ( type,  charBuf.readForRecycle () );
     }
 
 
 
+    @Override
+    public final <T> T parseDirect( Class<T> type, byte[] value ) {
+        if (value.length < 20_000) {
+            CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
+            return parse (type, builder.toCharArray ());
+        }else {
+            return this.parse ( type, new ByteArrayInputStream ( value ) );
+        }
+    }
+
+    @Override
+    public final <T> T parseAsStream( Class<T> type, byte[] value ) {
+        return this.parse ( type, new ByteArrayInputStream ( value ) );
+    }
 
 
 }
