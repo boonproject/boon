@@ -4,14 +4,12 @@ import org.junit.Test;
 
 import static org.boon.Exceptions.die;
 
-/**
- * Created by rick on 12/17/13.
- */
-public class LruCacheTest {
+public class LruConcurrentCacheTest {
+
 
     @Test
     public void test () {
-        LruCache<Integer, Integer> cache = new LruCacheNormal<> ( 4 );
+        LruCache <Integer, Integer> cache = new ConcurrentLruCache<> ( 4 );
 
 
         cache.put ( 0, 0 );
