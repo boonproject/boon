@@ -34,6 +34,18 @@ public class LruConcurrentCacheTest {
         ok |= cache.getSilent ( 4 ) == 4 || die ();
         ok |= cache.getSilent ( 5 ) == 5 || die ();
 
+
+        cache.get ( 2 );
+        cache.get ( 3 );
+        cache.put ( 6, 6 );
+        cache.put ( 7, 7 );
+        ok |= cache.size () == 4 || die ( "size" + cache.size () );
+        ok |= cache.getSilent ( 2 ) == 2 || die ();
+        ok |= cache.getSilent ( 3 ) == 3 || die ();
+        ok |= cache.getSilent ( 4 ) == null || die ();
+        ok |= cache.getSilent ( 5 ) == null || die ();
+
+
         if ( !ok ) die ();
 
     }
