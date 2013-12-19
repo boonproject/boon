@@ -1,6 +1,7 @@
 package org.boon.primitive;
 
 
+import org.boon.core.reflection.FastStringUtils;
 import sun.nio.cs.Surrogate;
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class CharBuf extends Writer {
     }
 
     public CharBuf add( String str ) {
-        add ( str.toCharArray ( ) );
+        add ( FastStringUtils.toCharArray (str) );
         return this;
     }
 

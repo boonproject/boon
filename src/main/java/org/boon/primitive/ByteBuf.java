@@ -370,7 +370,7 @@ public class ByteBuf implements Output {
     /**
      * Turns a single nibble into an ascii HEX digit.
      *
-     * @param nibble the nibble to encode.
+     * @param nibble the nibble to serialize.
      * @return the encoded nibble (1/2 byte).
      */
     protected static int encodeNibbleToHexAsciiCharByte( final int nibble ) {
@@ -404,7 +404,7 @@ public class ByteBuf implements Output {
     /**
      * Turn a single bytes into two hex character representation.
      *
-     * @param decoded the byte to encode.
+     * @param decoded the byte to serialize.
      * @param encoded the array to which each encoded nibbles are now ascii hex representations.
      */
     public static void encodeByteIntoTwoAsciiCharBytes( final int decoded, final byte[] encoded ) {
