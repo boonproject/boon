@@ -9,9 +9,9 @@ import org.boon.datarepo.SearchableCollection;
 public interface RepoComposer<KEY, ITEM> {
 
 
-    void setSearchableCollection( SearchableCollection<KEY, ITEM> searchableCollection );
+    void setSearchableCollection ( SearchableCollection<KEY, ITEM> searchableCollection );
 
-    void init( );
+    void init ();
 
-    void setObjectEditor( ObjectEditor editor );
+    void setObjectEditor ( ObjectEditor editor );
 }

@@ -15,11 +15,11 @@ public class MBeansTest {
 
     public static interface HelloMBean {
 
-        public void sayHello();
+        public void sayHello ();
 
-        public int add(int x, int y);
+        public int add ( int x, int y );
 
-        public String getName();
+        public String getName ();
 
     }
 
@@ -28,30 +28,30 @@ public class MBeansTest {
 
         private String name = "value";
 
-        public void sayHello() {
-            System.out.println("hello, world");
+        public void sayHello () {
+            System.out.println ( "hello, world" );
         }
 
-        public int add(int x, int y) {
+        public int add ( int x, int y ) {
             return x + y;
         }
 
-        public String getName() {
+        public String getName () {
             return name;
         }
     }
 
 
     @Test
-    public void test() throws Exception {
+    public void test () throws Exception {
 
 
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-        Set<ObjectName> objectNames = server.queryNames(null, null);
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer ();
+        Set<ObjectName> objectNames = server.queryNames ( null, null );
 
-        for (ObjectName name : objectNames) {
-            System.out.println(name.toString());
-            System.out.println(MBeans.map(server, name));
+        for ( ObjectName name : objectNames ) {
+            System.out.println ( name.toString () );
+            System.out.println ( MBeans.map ( server, name ) );
 
         }
 
@@ -62,29 +62,29 @@ public class MBeansTest {
 
 
     @Test
-    public void createTest() throws Exception {
+    public void createTest () throws Exception {
 
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer ();
 
-        Hello hello = new Hello();
-        DynamicMBean dynamicMBean = MBeans.createMBean(hello, HelloMBean.class);
+        Hello hello = new Hello ();
+        DynamicMBean dynamicMBean = MBeans.createMBean ( hello, HelloMBean.class );
 
-        MBeans.registerMBean("com.example", "hello", dynamicMBean );
-        Set<ObjectName> objectNames = server.queryNames(null, null);
+        MBeans.registerMBean ( "com.example", "hello", dynamicMBean );
+        Set<ObjectName> objectNames = server.queryNames ( null, null );
 
 
-        for (ObjectName name : objectNames) {
-            System.out.println(name.toString());
-            System.out.println(MBeans.map(server, name));
+        for ( ObjectName name : objectNames ) {
+            System.out.println ( name.toString () );
+            System.out.println ( MBeans.map ( server, name ) );
 
         }
 
-        hello.name="laskdjfal;ksdjf;laskjdf;laksjdfl;aksjdfl;kajsdf\n\n\n\n\\n\n";
+        hello.name = "laskdjfal;ksdjf;laskjdf;laksjdfl;aksjdfl;kajsdf\n\n\n\n\\n\n";
 
 
-        for (ObjectName name : objectNames) {
-            System.out.println(name.toString());
-            System.out.println(MBeans.map(server, name));
+        for ( ObjectName name : objectNames ) {
+            System.out.println ( name.toString () );
+            System.out.println ( MBeans.map ( server, name ) );
 
         }
 

@@ -300,7 +300,7 @@ public class Runner {
     }
 
 
-    @SuppressWarnings ("serial")
+    @SuppressWarnings ( "serial" )
     public static class ProcessException extends RuntimeException {
 
         public ProcessException () {
@@ -347,7 +347,7 @@ public class Runner {
                                List<Path> path, boolean verbose, String... cmdLine ) {
 
 
-            if (timeoutInSeconds == 0) {
+            if ( timeoutInSeconds == 0 ) {
                 timeoutInSeconds = 5;
             }
             if ( cmdLine.length == 1 ) {

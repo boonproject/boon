@@ -18,8 +18,7 @@ public class Email {
     }
 
 
-
-    public Email (  ) {
+    public Email () {
     }
 
     @Override

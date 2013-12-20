@@ -27,90 +27,90 @@ import java.util.Map;
 
 public interface SearchableCollection<KEY, ITEM> extends Collection<ITEM> {
 
-    ITEM get( KEY key );
+    ITEM get ( KEY key );
 
-    KEY getKey( ITEM item );
+    KEY getKey ( ITEM item );
 
-    void invalidateIndex( String property, ITEM item );
+    void invalidateIndex ( String property, ITEM item );
 
-    void validateIndex( String property, ITEM item );
+    void validateIndex ( String property, ITEM item );
 
-    public void validateIndexes( ITEM item );
+    public void validateIndexes ( ITEM item );
 
-    int count( KEY key, String property, int value );
+    int count ( KEY key, String property, int value );
 
-    int count( KEY key, String property, short value );
+    int count ( KEY key, String property, short value );
 
-    int count( KEY key, String property, byte value );
+    int count ( KEY key, String property, byte value );
 
-    int count( KEY key, String property, long value );
+    int count ( KEY key, String property, long value );
 
-    int count( KEY key, String property, char value );
+    int count ( KEY key, String property, char value );
 
-    int count( KEY key, String property, float value );
+    int count ( KEY key, String property, float value );
 
-    int count( KEY key, String property, double value );
+    int count ( KEY key, String property, double value );
 
-    int count( KEY key, String property, Object value );
+    int count ( KEY key, String property, Object value );
 
-    <T> T max( KEY key, String property, Class<T> type );
+    <T> T max ( KEY key, String property, Class<T> type );
 
-    String maxString( KEY key, String property );
+    String maxString ( KEY key, String property );
 
-    Number maxNumber( KEY key, String property );
+    Number maxNumber ( KEY key, String property );
 
-    int maxInt( KEY key, String property );
+    int maxInt ( KEY key, String property );
 
-    long maxLong( KEY key, String property );
+    long maxLong ( KEY key, String property );
 
-    double maxDouble( KEY key, String property );
+    double maxDouble ( KEY key, String property );
 
-    <T> T min( KEY key, String property, Class<T> type );
+    <T> T min ( KEY key, String property, Class<T> type );
 
-    String minString( KEY key, String property );
+    String minString ( KEY key, String property );
 
-    Number minNumber( KEY key, String property );
+    Number minNumber ( KEY key, String property );
 
-    int minInt( KEY key, String property );
+    int minInt ( KEY key, String property );
 
-    long minLong( KEY key, String property );
+    long minLong ( KEY key, String property );
 
-    double minDouble( KEY key, String property );
-
-
-    ResultSet<ITEM> results( Criteria... expressions );
-
-    List<ITEM> query( Criteria... expressions );
-
-    List<ITEM> sortedQuery( String sortBy, Criteria... expressions );
-
-    List<ITEM> sortedQuery( Sort sortBy, Criteria... expressions );
-
-    List<Map<String, Object>> queryAsMaps( Criteria... expressions );
-
-    List<Map<String, Object>> query( List<Selector> selectors, Criteria... expressions );
-
-    List<Map<String, Object>> sortedQuery( String sortBy, List<Selector> selectors, Criteria... expressions );
-
-    List<Map<String, Object>> sortedQuery( Sort sortBy, List<Selector> selectors, Criteria... expressions );
-
-    void query( Visitor<KEY, ITEM> visitor, Criteria... expressions );
-
-    void sortedQuery( Visitor<KEY, ITEM> visitor, String sortBy, Criteria... expressions );
-
-    void sortedQuery( Visitor<KEY, ITEM> visitor, Sort sortBy, Criteria... expressions );
+    double minDouble ( KEY key, String property );
 
 
-    boolean delete( ITEM item );
+    ResultSet<ITEM> results ( Criteria... expressions );
+
+    List<ITEM> query ( Criteria... expressions );
+
+    List<ITEM> sortedQuery ( String sortBy, Criteria... expressions );
+
+    List<ITEM> sortedQuery ( Sort sortBy, Criteria... expressions );
+
+    List<Map<String, Object>> queryAsMaps ( Criteria... expressions );
+
+    List<Map<String, Object>> query ( List<Selector> selectors, Criteria... expressions );
+
+    List<Map<String, Object>> sortedQuery ( String sortBy, List<Selector> selectors, Criteria... expressions );
+
+    List<Map<String, Object>> sortedQuery ( Sort sortBy, List<Selector> selectors, Criteria... expressions );
+
+    void query ( Visitor<KEY, ITEM> visitor, Criteria... expressions );
+
+    void sortedQuery ( Visitor<KEY, ITEM> visitor, String sortBy, Criteria... expressions );
+
+    void sortedQuery ( Visitor<KEY, ITEM> visitor, Sort sortBy, Criteria... expressions );
 
 
-    void addSearchIndex( String name, SearchIndex<?, ?> si );
-
-    void addLookupIndex( String name, LookupIndex<?, ?> si );
+    boolean delete ( ITEM item );
 
 
-    List<ITEM> all( );
+    void addSearchIndex ( String name, SearchIndex<?, ?> si );
 
-    void removeByKey( KEY key );
+    void addLookupIndex ( String name, LookupIndex<?, ?> si );
+
+
+    List<ITEM> all ();
+
+    void removeByKey ( KEY key );
 
 }

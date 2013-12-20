@@ -7,40 +7,40 @@ import java.util.Objects;
 public class Lng {
 
 
-    public static String str( long value ) {
+    public static String str ( long value ) {
         return String.format ( "%,d", value );
     }
 
 
-    public static long[] grow( long[] array, final int size ) {
+    public static long[] grow ( long[] array, final int size ) {
         Objects.requireNonNull ( array );
 
-        long[] newArray = new long[array.length + size];
+        long[] newArray = new long[ array.length + size ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
-    public static long[] grow( long[] array ) {
+    public static long[] grow ( long[] array ) {
         Objects.requireNonNull ( array );
 
-        long[] newArray = new long[array.length * 2];
+        long[] newArray = new long[ array.length * 2 ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
-    public static long[] shrink( long[] array, int size ) {
+    public static long[] shrink ( long[] array, int size ) {
         Objects.requireNonNull ( array );
 
-        long[] newArray = new long[array.length - size];
+        long[] newArray = new long[ array.length - size ];
 
         System.arraycopy ( array, 0, newArray, 0, array.length - size );
         return newArray;
     }
 
 
-    public static long[] compact( long[] array ) {
+    public static long[] compact ( long[] array ) {
         Objects.requireNonNull ( array );
 
         int nullCount = 0;
@@ -50,7 +50,7 @@ public class Lng {
                 nullCount++;
             }
         }
-        long[] newArray = new long[array.length - nullCount];
+        long[] newArray = new long[ array.length - nullCount ];
 
         int j = 0;
         for ( long ch : array ) {
@@ -59,7 +59,7 @@ public class Lng {
                 continue;
             }
 
-            newArray[j] = ch;
+            newArray[ j ] = ch;
             j++;
         }
         return newArray;
@@ -72,8 +72,8 @@ public class Lng {
      * @param size size of the array you want to make
      * @return
      */
-    public static long[] arrayOfLong( final int size ) {
-        return new long[size];
+    public static long[] arrayOfLong ( final int size ) {
+        return new long[ size ];
     }
 
     /**
@@ -81,36 +81,36 @@ public class Lng {
      * @return
      */
     @Universal
-    public static long[] array( final long... array ) {
+    public static long[] array ( final long... array ) {
         Objects.requireNonNull ( array );
         return array;
     }
 
 
     @Universal
-    public static int len( long[] array ) {
+    public static int len ( long[] array ) {
         return array.length;
     }
 
 
     @Universal
-    public static long idx( final long[] array, final int index ) {
+    public static long idx ( final long[] array, final int index ) {
         final int i = calculateIndex ( array, index );
 
-        return array[i];
+        return array[ i ];
     }
 
 
     @Universal
-    public static void idx( final long[] array, int index, long value ) {
+    public static void idx ( final long[] array, int index, long value ) {
         final int i = calculateIndex ( array, index );
 
-        array[i] = value;
+        array[ i ] = value;
     }
 
 
     @Universal
-    public static long[] slc( long[] array, int startIndex, int endIndex ) {
+    public static long[] slc ( long[] array, int startIndex, int endIndex ) {
         Objects.requireNonNull ( array );
 
         final int start = calculateIndex ( array, startIndex );
@@ -124,13 +124,13 @@ public class Lng {
             );
         }
 
-        long[] newArray = new long[newLength];
+        long[] newArray = new long[ newLength ];
         System.arraycopy ( array, start, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
-    public static long[] slc( long[] array, int startIndex ) {
+    public static long[] slc ( long[] array, int startIndex ) {
         Objects.requireNonNull ( array );
 
         final int start = calculateIndex ( array, startIndex );
@@ -143,13 +143,13 @@ public class Lng {
             );
         }
 
-        long[] newArray = new long[newLength];
+        long[] newArray = new long[ newLength ];
         System.arraycopy ( array, start, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
-    public static long[] slcEnd( long[] array, int endIndex ) {
+    public static long[] slcEnd ( long[] array, int endIndex ) {
         Objects.requireNonNull ( array );
 
         final int end = calculateIndex ( array, endIndex );
@@ -162,13 +162,13 @@ public class Lng {
             );
         }
 
-        long[] newArray = new long[newLength];
+        long[] newArray = new long[ newLength ];
         System.arraycopy ( array, 0, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
-    public static boolean in( long value, long[] array ) {
+    public static boolean in ( long value, long[] array ) {
         for ( long currentValue : array ) {
             if ( currentValue == value ) {
                 return true;
@@ -179,27 +179,27 @@ public class Lng {
 
 
     @Universal
-    public static long[] copy( long[] array ) {
+    public static long[] copy ( long[] array ) {
         Objects.requireNonNull ( array );
-        long[] newArray = new long[array.length];
+        long[] newArray = new long[ array.length ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
     @Universal
-    public static long[] add( long[] array, long v ) {
+    public static long[] add ( long[] array, long v ) {
         Objects.requireNonNull ( array );
-        long[] newArray = new long[array.length + 1];
+        long[] newArray = new long[ array.length + 1 ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
-        newArray[array.length] = v;
+        newArray[ array.length ] = v;
         return newArray;
     }
 
     @Universal
-    public static long[] add( long[] array, long[] array2 ) {
+    public static long[] add ( long[] array, long[] array2 ) {
         Objects.requireNonNull ( array );
-        long[] newArray = new long[array.length + array2.length];
+        long[] newArray = new long[ array.length + array2.length ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         System.arraycopy ( array2, 0, newArray, array.length, array2.length );
         return newArray;
@@ -207,7 +207,7 @@ public class Lng {
 
 
     @Universal
-    public static long[] insert( final long[] array, final int idx, final long v ) {
+    public static long[] insert ( final long[] array, final int idx, final long v ) {
         Objects.requireNonNull ( array );
 
         if ( idx >= array.length ) {
@@ -217,7 +217,7 @@ public class Lng {
         final int index = calculateIndex ( array, idx );
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-        long[] newArray = new long[array.length + 1];
+        long[] newArray = new long[ array.length + 1 ];
 
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
@@ -241,13 +241,13 @@ public class Lng {
 
         }
 
-        newArray[index] = v;
+        newArray[ index ] = v;
         return newArray;
     }
 
 
     @Universal
-    public static long[] insert( final long[] array, final int fromIndex, final long[] values ) {
+    public static long[] insert ( final long[] array, final int fromIndex, final long[] values ) {
         Objects.requireNonNull ( array );
 
         if ( fromIndex >= array.length ) {
@@ -257,7 +257,7 @@ public class Lng {
         final int index = calculateIndex ( array, fromIndex );
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-        long[] newArray = new long[array.length + values.length];
+        long[] newArray = new long[ array.length + values.length ];
 
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
@@ -284,14 +284,14 @@ public class Lng {
         }
 
         for ( int i = index, j = 0; i < toIndex; i++, j++ ) {
-            newArray[i] = values[j];
+            newArray[ i ] = values[ j ];
         }
         return newArray;
     }
 
 
     /* End universal methods. */
-    private static int calculateIndex( long[] array, int originalIndex ) {
+    private static int calculateIndex ( long[] array, int originalIndex ) {
         final int length = array.length;
 
         Objects.requireNonNull ( array, "array cannot be null" );

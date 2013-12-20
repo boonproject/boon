@@ -5,17 +5,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
+@Retention ( RetentionPolicy.RUNTIME )
+@Target ( { ElementType.METHOD, ElementType.TYPE, ElementType.FIELD } )
 public @interface Regex {
 
-    String match( );
+    String match ();
 
-    String detailMessage( ) default "";
+    String detailMessage () default "";
 
-    String summaryMessage( ) default "";
+    String summaryMessage () default "";
 
-    boolean negate( ) default false;
+    boolean negate () default false;
 
 
 }

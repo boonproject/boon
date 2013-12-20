@@ -7,35 +7,35 @@ import java.util.Objects;
 public class Flt {
 
 
-    public static float[] grow( float[] array, final int size ) {
+    public static float[] grow ( float[] array, final int size ) {
         Objects.requireNonNull ( array );
 
-        float[] newArray = new float[array.length + size];
+        float[] newArray = new float[ array.length + size ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
-    public static float[] grow( float[] array ) {
+    public static float[] grow ( float[] array ) {
         Objects.requireNonNull ( array );
 
-        float[] newArray = new float[array.length * 2];
+        float[] newArray = new float[ array.length * 2 ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
-    public static float[] shrink( float[] array, int size ) {
+    public static float[] shrink ( float[] array, int size ) {
         Objects.requireNonNull ( array );
 
-        float[] newArray = new float[array.length - size];
+        float[] newArray = new float[ array.length - size ];
 
         System.arraycopy ( array, 0, newArray, 0, array.length - size );
         return newArray;
     }
 
 
-    public static float[] compact( float[] array ) {
+    public static float[] compact ( float[] array ) {
         Objects.requireNonNull ( array );
 
         int nullCount = 0;
@@ -45,7 +45,7 @@ public class Flt {
                 nullCount++;
             }
         }
-        float[] newArray = new float[array.length - nullCount];
+        float[] newArray = new float[ array.length - nullCount ];
 
         int j = 0;
         for ( float ch : array ) {
@@ -54,7 +54,7 @@ public class Flt {
                 continue;
             }
 
-            newArray[j] = ch;
+            newArray[ j ] = ch;
             j++;
         }
         return newArray;
@@ -67,8 +67,8 @@ public class Flt {
      * @param size size of the array you want to make
      * @return
      */
-    public static float[] arrayOfFloat( final int size ) {
-        return new float[size];
+    public static float[] arrayOfFloat ( final int size ) {
+        return new float[ size ];
     }
 
     /**
@@ -76,36 +76,36 @@ public class Flt {
      * @return
      */
     @Universal
-    public static float[] array( final float... array ) {
+    public static float[] array ( final float... array ) {
         Objects.requireNonNull ( array );
         return array;
     }
 
 
     @Universal
-    public static int len( float[] array ) {
+    public static int len ( float[] array ) {
         return array.length;
     }
 
 
     @Universal
-    public static float idx( final float[] array, final int index ) {
+    public static float idx ( final float[] array, final int index ) {
         final int i = calculateIndex ( array, index );
 
-        return array[i];
+        return array[ i ];
     }
 
 
     @Universal
-    public static void idx( final float[] array, int index, float value ) {
+    public static void idx ( final float[] array, int index, float value ) {
         final int i = calculateIndex ( array, index );
 
-        array[i] = value;
+        array[ i ] = value;
     }
 
 
     @Universal
-    public static float[] slc( float[] array, int startIndex, int endIndex ) {
+    public static float[] slc ( float[] array, int startIndex, int endIndex ) {
         Objects.requireNonNull ( array );
 
         final int start = calculateIndex ( array, startIndex );
@@ -119,13 +119,13 @@ public class Flt {
             );
         }
 
-        float[] newArray = new float[newLength];
+        float[] newArray = new float[ newLength ];
         System.arraycopy ( array, start, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
-    public static float[] slc( float[] array, int startIndex ) {
+    public static float[] slc ( float[] array, int startIndex ) {
         Objects.requireNonNull ( array );
 
         final int start = calculateIndex ( array, startIndex );
@@ -138,13 +138,13 @@ public class Flt {
             );
         }
 
-        float[] newArray = new float[newLength];
+        float[] newArray = new float[ newLength ];
         System.arraycopy ( array, start, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
-    public static float[] slcEnd( float[] array, int endIndex ) {
+    public static float[] slcEnd ( float[] array, int endIndex ) {
         Objects.requireNonNull ( array );
 
         final int end = calculateIndex ( array, endIndex );
@@ -157,13 +157,13 @@ public class Flt {
             );
         }
 
-        float[] newArray = new float[newLength];
+        float[] newArray = new float[ newLength ];
         System.arraycopy ( array, 0, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
-    public static boolean in( float value, float[] array ) {
+    public static boolean in ( float value, float[] array ) {
         for ( float currentValue : array ) {
             if ( currentValue == value ) {
                 return true;
@@ -174,27 +174,27 @@ public class Flt {
 
 
     @Universal
-    public static float[] copy( float[] array ) {
+    public static float[] copy ( float[] array ) {
         Objects.requireNonNull ( array );
-        float[] newArray = new float[array.length];
+        float[] newArray = new float[ array.length ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
     @Universal
-    public static float[] add( float[] array, float v ) {
+    public static float[] add ( float[] array, float v ) {
         Objects.requireNonNull ( array );
-        float[] newArray = new float[array.length + 1];
+        float[] newArray = new float[ array.length + 1 ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
-        newArray[array.length] = v;
+        newArray[ array.length ] = v;
         return newArray;
     }
 
     @Universal
-    public static float[] add( float[] array, float[] array2 ) {
+    public static float[] add ( float[] array, float[] array2 ) {
         Objects.requireNonNull ( array );
-        float[] newArray = new float[array.length + array2.length];
+        float[] newArray = new float[ array.length + array2.length ];
         System.arraycopy ( array, 0, newArray, 0, array.length );
         System.arraycopy ( array2, 0, newArray, array.length, array2.length );
         return newArray;
@@ -202,7 +202,7 @@ public class Flt {
 
 
     @Universal
-    public static float[] insert( final float[] array, final int idx, final float v ) {
+    public static float[] insert ( final float[] array, final int idx, final float v ) {
         Objects.requireNonNull ( array );
 
         if ( idx >= array.length ) {
@@ -212,7 +212,7 @@ public class Flt {
         final int index = calculateIndex ( array, idx );
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-        float[] newArray = new float[array.length + 1];
+        float[] newArray = new float[ array.length + 1 ];
 
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
@@ -236,13 +236,13 @@ public class Flt {
 
         }
 
-        newArray[index] = v;
+        newArray[ index ] = v;
         return newArray;
     }
 
 
     @Universal
-    public static float[] insert( final float[] array, final int fromIndex, final float[] values ) {
+    public static float[] insert ( final float[] array, final int fromIndex, final float[] values ) {
         Objects.requireNonNull ( array );
 
         if ( fromIndex >= array.length ) {
@@ -252,7 +252,7 @@ public class Flt {
         final int index = calculateIndex ( array, fromIndex );
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
-        float[] newArray = new float[array.length + values.length];
+        float[] newArray = new float[ array.length + values.length ];
 
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
@@ -279,14 +279,14 @@ public class Flt {
         }
 
         for ( int i = index, j = 0; i < toIndex; i++, j++ ) {
-            newArray[i] = values[j];
+            newArray[ i ] = values[ j ];
         }
         return newArray;
     }
 
 
     /* End universal methods. */
-    private static int calculateIndex( float[] array, int originalIndex ) {
+    private static int calculateIndex ( float[] array, int originalIndex ) {
         final int length = array.length;
 
         Objects.requireNonNull ( array, "array cannot be null" );

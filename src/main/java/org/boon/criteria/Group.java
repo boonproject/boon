@@ -18,30 +18,30 @@ public abstract class Group extends Criteria {
 
     //TODO there is an opportunity to optimize this so Group holds on to fields for subgroups.
     @Override
-    public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
+    public void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
 
     }
 
     @Override
-    public void cleanAfterGroupTest( ) {
+    public void cleanAfterGroupTest () {
 
     }
 
-    public Group( Grouping grouping, Criteria... expressions ) {
+    public Group ( Grouping grouping, Criteria... expressions ) {
         this.grouping = grouping;
         this.expressions = expressions;
-        hashCode = doHashCode ( );
+        hashCode = doHashCode ();
 
     }
 
-    private int doHashCode( ) {
+    private int doHashCode () {
         int result = expressions != null ? Arrays.hashCode ( expressions ) : 0;
-        result = 31 * result + ( grouping != null ? grouping.hashCode ( ) : 0 );
+        result = 31 * result + ( grouping != null ? grouping.hashCode () : 0 );
         return result;
 
     }
 
-    private String doToString( ) {
+    private String doToString () {
 
         if ( toString == null ) {
 
@@ -53,25 +53,25 @@ public abstract class Group extends Criteria {
             builder.add ( ", \"grouping\":" );
             builder.add ( String.valueOf ( grouping ) );
             builder.add ( '}' );
-            toString = builder.toString ( );
+            toString = builder.toString ();
         }
         return toString;
 
     }
 
-    public Grouping getGrouping( ) {
+    public Grouping getGrouping () {
         return grouping;
     }
 
 
-    public Criteria[] getExpressions( ) {
+    public Criteria[] getExpressions () {
         return expressions;
     }
 
     @Override
-    public boolean equals( Object o ) {
+    public boolean equals ( Object o ) {
         if ( this == o ) return true;
-        if ( o == null || getClass ( ) != o.getClass ( ) ) return false;
+        if ( o == null || getClass () != o.getClass () ) return false;
 
         Group group = ( Group ) o;
 
@@ -82,30 +82,30 @@ public abstract class Group extends Criteria {
     }
 
     @Override
-    public int hashCode( ) {
+    public int hashCode () {
         return hashCode;
     }
 
     @Override
-    public String toString( ) {
-        return doToString ( );
+    public String toString () {
+        return doToString ();
     }
 
     public static class And extends Group {
 
-        public And( Criteria... expressions ) {
+        public And ( Criteria... expressions ) {
             super ( Grouping.AND, expressions );
         }
 
 
         @Override
-        public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
+        public boolean resolve ( Map<String, FieldAccess> fields, Object owner ) {
             for ( Criteria c : expressions ) {
                 c.prepareForGroupTest ( fields, owner );
                 if ( !c.test ( owner ) ) {
                     return false;
                 }
-                c.cleanAfterGroupTest ( );
+                c.cleanAfterGroupTest ();
             }
             return true;
         }
@@ -113,23 +113,23 @@ public abstract class Group extends Criteria {
 
     public static class Or extends Group {
 
-        public Or( Criteria... expressions ) {
+        public Or ( Criteria... expressions ) {
             super ( Grouping.OR, expressions );
         }
 
         @Override
-        public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
+        public void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
 
         }
 
         @Override
-        public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
+        public boolean resolve ( Map<String, FieldAccess> fields, Object owner ) {
             for ( Criteria c : expressions ) {
                 c.prepareForGroupTest ( fields, owner );
                 if ( c.test ( owner ) ) {
                     return true;
                 }
-                c.cleanAfterGroupTest ( );
+                c.cleanAfterGroupTest ();
             }
             return false;
         }

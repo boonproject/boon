@@ -5,48 +5,48 @@ public class Pair<T> {
 
     private T first;
     private T second;
-    private T[] both = ( T[] ) new Object[2];
+    private T[] both = ( T[] ) new Object[ 2 ];
 
-    public Pair( ) {
+    public Pair () {
     }
 
-    public Pair( T f, T s ) {
+    public Pair ( T f, T s ) {
         this.first = f;
         this.second = s;
-        both[0] = f;
-        both[1] = s;
+        both[ 0 ] = f;
+        both[ 1 ] = s;
     }
 
 
-    public T getFirst( ) {
+    public T getFirst () {
         return first;
     }
 
-    public T getSecond( ) {
+    public T getSecond () {
         return second;
     }
 
 
-    public T[] getBoth( ) {
+    public T[] getBoth () {
         return both;
     }
 
-    public void setFirst( T first ) {
+    public void setFirst ( T first ) {
         this.first = first;
-        both[0] = first;
+        both[ 0 ] = first;
 
     }
 
-    public void setSecond( T second ) {
+    public void setSecond ( T second ) {
         this.second = second;
-        both[1] = second;
+        both[ 1 ] = second;
 
     }
 
-    public void setBoth( T[] both ) {
+    public void setBoth ( T[] both ) {
         this.both = both;
-        this.first = both[0];
-        this.second = both[1];
+        this.first = both[ 0 ];
+        this.second = both[ 1 ];
 
     }
 

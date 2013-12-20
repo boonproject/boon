@@ -32,7 +32,7 @@ import java.util.Collection;
  * @see Collections
  */
 public interface CollectionDecorator {
-    SearchableCollection searchCollection( );
+    SearchableCollection searchCollection ();
 
-    Collection collection( );
+    Collection collection ();
 }

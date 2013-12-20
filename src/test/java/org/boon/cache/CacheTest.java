@@ -48,18 +48,18 @@ public class CacheTest {
         lruCache.put ( 14, 10 );
 
         boolean ok = lruCache.get ( 12 ) != null || die ();
-        ok |= lruCache.get ( 0 ) == null || die();
+        ok |= lruCache.get ( 0 ) == null || die ();
 
         lruCache.put ( 15, 10 );
         ok = lruCache.get ( 12 ) != null || die ();
-        ok |= lruCache.get ( 1 ) == null || die();
+        ok |= lruCache.get ( 1 ) == null || die ();
 
         lruCache.put ( 16, 10 );
         ok = lruCache.get ( 12 ) != null || die ();
-        ok |= lruCache.get ( 2 ) == null || die();
+        ok |= lruCache.get ( 2 ) == null || die ();
 
 
-        puts ("fifo", lruCache);
+        puts ( "fifo", lruCache );
 
     }
 
@@ -68,7 +68,6 @@ public class CacheTest {
 
 
         lruCache = new Cache<> ( 0, 10, CacheType.LFU );
-
 
 
         lruCache.put ( -1, 10 );
@@ -105,10 +104,10 @@ public class CacheTest {
         lruCache.put ( 98, 60 );
 
 
-        puts ( "here is what is there", lruCache.size(), lruCache );
+        puts ( "here is what is there", lruCache.size (), lruCache );
         boolean ok = lruCache.get ( -1 ) == null || die ();
         ok |= lruCache.getSilent ( 2 ) == 20 || die ();
-        ok |= lruCache.getSilent ( 9 ) == 90 || die();
+        ok |= lruCache.getSilent ( 9 ) == 90 || die ();
 
 
         lruCache.put ( 11, 10 );

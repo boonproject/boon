@@ -13,39 +13,39 @@ import java.util.List;
  */
 public interface SearchIndex<KEY, ITEM> extends LookupIndex<KEY, ITEM> {
 
-    ITEM findFirst( );
+    ITEM findFirst ();
 
-    ITEM findLast( );
+    ITEM findLast ();
 
-    KEY findFirstKey( );
+    KEY findFirstKey ();
 
-    KEY findLastKey( );
+    KEY findLastKey ();
 
-    List<ITEM> findEquals( KEY key );
+    List<ITEM> findEquals ( KEY key );
 
-    List<ITEM> findStartsWith( KEY keyFrag );
+    List<ITEM> findStartsWith ( KEY keyFrag );
 
-    List<ITEM> findEndsWith( KEY keyFrag );
+    List<ITEM> findEndsWith ( KEY keyFrag );
 
-    List<ITEM> findContains( KEY keyFrag );
+    List<ITEM> findContains ( KEY keyFrag );
 
-    List<ITEM> findBetween( KEY start, KEY end );
+    List<ITEM> findBetween ( KEY start, KEY end );
 
-    List<ITEM> findGreaterThan( KEY key );
+    List<ITEM> findGreaterThan ( KEY key );
 
-    List<ITEM> findLessThan( KEY key );
+    List<ITEM> findLessThan ( KEY key );
 
-    List<ITEM> findGreaterThanEqual( KEY key );
+    List<ITEM> findGreaterThanEqual ( KEY key );
 
-    List<ITEM> findLessThanEqual( KEY key );
+    List<ITEM> findLessThanEqual ( KEY key );
 
-    ITEM min( );
+    ITEM min ();
 
-    ITEM max( );
+    ITEM max ();
 
-    int count( KEY key );
+    int count ( KEY key );
 
-    void setComparator( Comparator<KEY> collator );
+    void setComparator ( Comparator<KEY> collator );
 
 
 //      List <ITEM> findEquals (KEY key, int start, int length);

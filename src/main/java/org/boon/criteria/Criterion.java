@@ -34,7 +34,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     private Map<String, FieldAccess> fields;
 
-    public Criterion( String name, Operator operator, VALUE... values ) {
+    public Criterion ( String name, Operator operator, VALUE... values ) {
         Objects.requireNonNull ( name, "name cannot be null" );
         Objects.requireNonNull ( operator, "operator cannot be null" );
         Objects.requireNonNull ( values, "values cannot be null" );
@@ -42,39 +42,39 @@ public abstract class Criterion<VALUE> extends Criteria {
         this.name = name;
         this.operator = operator;
         this.setValues ( values );
-        hashCode = doHashCode ( );
-        toString = doToString ( );
+        hashCode = doHashCode ();
+        toString = doToString ();
     }
 
 
-    public String getName( ) {
+    public String getName () {
         return name;
     }
 
-    public Operator getOperator( ) {
+    public Operator getOperator () {
         return operator;
     }
 
 
-    public VALUE getValue( ) {
+    public VALUE getValue () {
         return value;
     }
 
 
-    public VALUE[] getValues( ) {
+    public VALUE[] getValues () {
         return values;
     }
 
-    public void setValues( VALUE[] values ) {
+    public void setValues ( VALUE[] values ) {
         if ( values.length > 0 ) {
-            this.value = values[0];
+            this.value = values[ 0 ];
         }
         this.values = values;
     }
 
 
     @Override
-    public boolean equals( Object o ) {
+    public boolean equals ( Object o ) {
         if ( this == o ) return true;
         if ( !( o instanceof Criterion ) ) return false;
 
@@ -90,25 +90,25 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
     @Override
-    public int hashCode( ) {
+    public int hashCode () {
         return hashCode;
     }
 
-    public int doHashCode( ) {
-        int result = name != null ? name.hashCode ( ) : 0;
-        result = 31 * result + ( operator != null ? operator.hashCode ( ) : 0 );
-        result = 31 * result + ( value != null ? value.hashCode ( ) : 0 );
+    public int doHashCode () {
+        int result = name != null ? name.hashCode () : 0;
+        result = 31 * result + ( operator != null ? operator.hashCode () : 0 );
+        result = 31 * result + ( value != null ? value.hashCode () : 0 );
         result = 31 * result + ( values != null ? Arrays.hashCode ( values ) : 0 );
         return result;
     }
 
     @Override
-    public String toString( ) {
+    public String toString () {
         return toString;
     }
 
 
-    public String doToString( ) {
+    public String doToString () {
         CharBuf builder = CharBuf.create ( 80 );
         builder.add ( "c{" );
         builder.add ( "\"name\":'" );
@@ -120,28 +120,28 @@ public abstract class Criterion<VALUE> extends Criteria {
         builder.add ( ", \"update\":" );
         builder.add ( Arrays.toString ( values ) );
         builder.add ( "}" );
-        return builder.toString ( );
+        return builder.toString ();
     }
 
-    public boolean isInitialized( ) {
+    public boolean isInitialized () {
         return initialized;
     }
 
 
-    public void initByClass( Class clazz ) {
+    public void initByClass ( Class clazz ) {
 
         this.fields = getFieldsInternal ( clazz );
-        initIfNeeded ( );
+        initIfNeeded ();
     }
 
-    public void initByFields( Map<String, FieldAccess> fields ) {
+    public void initByFields ( Map<String, FieldAccess> fields ) {
         this.fields = fields;
-        initIfNeeded ( );
+        initIfNeeded ();
     }
 
 
     //Only called when part of group.
-    public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
+    public void prepareForGroupTest ( Map<String, FieldAccess> fields, Object owner ) {
 
         this.fields = fields;
         this.objectUnderTest = owner;
@@ -149,11 +149,11 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     }
 
-    public void cleanAfterGroupTest( ) {
-        clean ( );
+    public void cleanAfterGroupTest () {
+        clean ();
     }
 
-    public void clean( ) {
+    public void clean () {
         this.field = null;
         this.fields = null;
         this.objectUnderTest = null;
@@ -161,7 +161,7 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
     @Override
-    public boolean test( Object o ) {
+    public boolean test ( Object o ) {
 
 
         try {
@@ -170,7 +170,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             this.objectUnderTest = o;
 
-            initIfNeeded ( );
+            initIfNeeded ();
             if ( this.useDelegate ) {
 
                 return this.nativeDelegate.resolve ( fields, o );
@@ -183,35 +183,35 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         } catch ( Exception ex ) {
             return Exceptions.handle ( Typ.bool,
-                    sputl ( "In class " + this.getClass ( ).getName ( ),
+                    sputl ( "In class " + this.getClass ().getName (),
                             "the test method is unable to test the following criteria operator",
-                            Objects.toString ( this.getOperator ( ) ),
-                            sputs ( "The field name is          :          ", this.getName ( ) ),
-                            sputs ( "The value is               :          ", this.getValue ( ) ),
-                            sputs ( "The value type is          :          ", this.getValue ( ).getClass ( ).getName ( ) ),
+                            Objects.toString ( this.getOperator () ),
+                            sputs ( "The field name is          :          ", this.getName () ),
+                            sputs ( "The value is               :          ", this.getValue () ),
+                            sputs ( "The value type is          :          ", this.getValue ().getClass ().getName () ),
                             sputs ( "The object under test      :          ", this.objectUnderTest ),
                             sputs ( "The object under test type :          ",
-                                    this.objectUnderTest == null ? "null" : this.objectUnderTest.getClass ( ).getName ( ) ),
+                                    this.objectUnderTest == null ? "null" : this.objectUnderTest.getClass ().getName () ),
                             sputs ( "Field                      :          ",
                                     field ),
                             sputs ( "Fields                     :          ",
                                     fields ),
 
-                            sputs ( )
+                            sputs ()
 
                     )
                     , ex );
         }
     }
 
-    private FieldAccess field( ) {
+    private FieldAccess field () {
         if ( field == null ) {
-            field = fields ( ).get ( this.name );
+            field = fields ().get ( this.name );
         }
         return field;
     }
 
-    private Map<String, FieldAccess> fields( ) {
+    private Map<String, FieldAccess> fields () {
 
         if ( fields == null ) {
             fields = getFieldsInternal ( this.objectUnderTest );
@@ -221,12 +221,12 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     public static abstract class PrimitiveCriterion extends Criterion {
 
-        public PrimitiveCriterion( String name, Operator operator, Object... objects ) {
+        public PrimitiveCriterion ( String name, Operator operator, Object... objects ) {
             super ( name, operator, objects );
         }
 
         @Override
-        public boolean test( Object o ) {
+        public boolean test ( Object o ) {
 
             Map<String, FieldAccess> fields = getFieldsInternal ( o );
             return resolve ( fields, o );
@@ -235,7 +235,7 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
-    private void initForShortValue( short v ) {
+    private void initForShortValue ( short v ) {
 
         this.value = ( VALUE ) ( Short ) v;
 
@@ -271,7 +271,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenShort ( name, ( v ),
-                        Conversions.toShort ( values[1] ) );
+                        Conversions.toShort ( values[ 1 ] ) );
                 break;
 
 
@@ -286,20 +286,20 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
-    private void initIfNeeded( ) {
+    private void initIfNeeded () {
 
         if ( initialized ) return;
         initialized = true;
 
-        FieldAccess field = field ( );
+        FieldAccess field = field ();
         if ( field == null ) {
             return;
         }
 
-        Class type = field.getType ( );
+        Class type = field.getType ();
 
 
-        if ( !type.isPrimitive ( ) && type != Typ.date ) {
+        if ( !type.isPrimitive () && type != Typ.date ) {
             return;
         }
 
@@ -307,7 +307,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         if ( type == Typ.date ) {
 
             if ( !( value instanceof Date ) ) {
-                initForDate ( );
+                initForDate ();
             }
             return;
         }
@@ -379,7 +379,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     }
 
-    private void initForChar( char value ) {
+    private void initForChar ( char value ) {
 
 
         this.value = ( VALUE ) ( Character ) value;
@@ -413,7 +413,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenChar ( name, ( value ),
-                        Conversions.toChar ( values[1] ) );
+                        Conversions.toChar ( values[ 1 ] ) );
                 break;
 
             case IN:
@@ -430,7 +430,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForDouble( double value ) {
+    private void initForDouble ( double value ) {
 
         this.value = ( VALUE ) ( Double ) value;
 
@@ -461,7 +461,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenDouble ( name, ( value ),
-                        Conversions.toDouble ( values[1] ) );
+                        Conversions.toDouble ( values[ 1 ] ) );
                 break;
 
             case IN:
@@ -480,7 +480,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForFloat( float value ) {
+    private void initForFloat ( float value ) {
 
         this.value = ( VALUE ) ( Float ) value;
 
@@ -511,7 +511,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenFloat ( name, ( value ),
-                        Conversions.toFloat ( values[1] ) );
+                        Conversions.toFloat ( values[ 1 ] ) );
                 break;
 
             case IN:
@@ -529,7 +529,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForLong( long value ) {
+    private void initForLong ( long value ) {
 
         this.value = ( VALUE ) ( Long ) value;
 
@@ -565,7 +565,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenLong ( name, ( value ),
-                        Conversions.toLong ( values[1] ) );
+                        Conversions.toLong ( values[ 1 ] ) );
                 break;
 
 
@@ -579,7 +579,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForByte( byte value ) {
+    private void initForByte ( byte value ) {
 
         this.value = ( VALUE ) ( Byte ) value;
 
@@ -621,7 +621,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenByte ( name, ( value ),
-                        Conversions.toByte ( values[1] ) );
+                        Conversions.toByte ( values[ 1 ] ) );
                 break;
 
 
@@ -630,19 +630,19 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForDate( ) {
+    private void initForDate () {
         value = ( VALUE ) Conversions.toDate ( value );
 
         if ( operator == Operator.BETWEEN ) {
-            values[0] = ( VALUE ) Conversions.toDate ( values[0] );
+            values[ 0 ] = ( VALUE ) Conversions.toDate ( values[ 0 ] );
 
-            values[1] = ( VALUE ) Conversions.toDate ( values[1] );
+            values[ 1 ] = ( VALUE ) Conversions.toDate ( values[ 1 ] );
 
         }
 
     }
 
-    private void initForInt( int v ) {
+    private void initForInt ( int v ) {
         this.value = ( VALUE ) ( Integer ) v;
 
 
@@ -673,7 +673,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             case BETWEEN:
                 nativeDelegate = CriteriaFactory.betweenInt ( name, v,
-                        Conversions.toInt ( values[1] ) );
+                        Conversions.toInt ( values[ 1 ] ) );
                 break;
 
             case IN:

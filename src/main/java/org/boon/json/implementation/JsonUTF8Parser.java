@@ -10,16 +10,6 @@ import static org.boon.Exceptions.die;
 public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParser {
 
 
-
-
-
-
-
-
-
-
-
-
     //  [C2..DF] [80..BF]
     private static boolean isMalformed2 ( int b1, int b2 ) {
         return ( b1 & 0x1e ) == 0x0 || ( b2 & 0xc0 ) != 0x80;
@@ -43,8 +33,7 @@ public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParse
     }
 
 
-
-    private final void utf8MultiByte (final int b1, final CharBuf builder) {
+    private final void utf8MultiByte ( final int b1, final CharBuf builder ) {
 
         boolean ok = true;
 
@@ -112,20 +101,13 @@ public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParse
     }
 
 
-
-    protected final  void addChar() {
+    protected final void addChar () {
         if ( __currentChar >= 0 ) {
             builder.addChar ( __currentChar );
         } else {
             utf8MultiByte ( __currentChar, builder );
         }
     }
-
-
-
-
-
-
 
 
 }

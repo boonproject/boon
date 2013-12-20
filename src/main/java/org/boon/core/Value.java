@@ -7,37 +7,36 @@ import java.util.Date;
 public interface Value {
 
 
+    byte byteValue ();
 
-    byte byteValue();
+    short shortValue ();
 
-    short shortValue();
+    int intValue ();
 
-    int intValue();
+    long longValue ();
 
-    long longValue();
+    BigDecimal bigDecimalValue ();
 
-    BigDecimal bigDecimalValue();
+    BigInteger bigIntegerValue ();
 
-    BigInteger bigIntegerValue();
+    float floatValue ();
 
-    float floatValue();
+    double doubleValue ();
 
-    double doubleValue();
+    boolean booleanValue ();
 
-    boolean booleanValue();
+    Date dateValue ();
 
-    Date dateValue();
+    String stringValue ();
 
-    String stringValue();
+    String stringValueEncoded ();
 
-    String stringValueEncoded();
+    Object toValue ();
 
-    Object  toValue();
+    Enum toEnum ( Class<? extends Enum> cls );
 
-    Enum toEnum(Class<? extends Enum> cls);
+    boolean isContainer (); //either a map or a collection
 
-    boolean isContainer(); //either a map or a collection
-
-    public void chop();
+    public void chop ();
 
 }

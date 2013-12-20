@@ -31,17 +31,17 @@ public abstract class AbstractCompareValidator extends BaseValidator {
     /**
      *
      */
-    public ValidatorMessageHolder validate( Object value, String fieldLabel ) {
+    public ValidatorMessageHolder validate ( Object value, String fieldLabel ) {
         
         /* Create the validator message. */
-        ValidatorMessage message = new ValidatorMessage ( );
+        ValidatorMessage message = new ValidatorMessage ();
 
         if ( value == null ) {
             return message;
         }
         
         /* Get the comparison value. */
-        Object compareToPropertyValue = lookupCompareToPropertyValue ( );
+        Object compareToPropertyValue = lookupCompareToPropertyValue ();
         
         /* Check to see if this is valid. */
         boolean valid = checkValidity ( value, compareToPropertyValue );
@@ -67,8 +67,8 @@ public abstract class AbstractCompareValidator extends BaseValidator {
      * @param compareToPropertyValue
      * @return
      */
-    protected abstract boolean checkValidity( Object object,
-                                              Object compareToPropertyValue );
+    protected abstract boolean checkValidity ( Object object,
+                                               Object compareToPropertyValue );
 
 
     /**
@@ -77,8 +77,8 @@ public abstract class AbstractCompareValidator extends BaseValidator {
      *
      * @return
      */
-    protected Object lookupCompareToPropertyValue( ) {
-        return ValidationContext.getCurrentInstance ( )
+    protected Object lookupCompareToPropertyValue () {
+        return ValidationContext.getCurrentInstance ()
                 .getProposedPropertyValue ( compareToProperty );
     }
 
@@ -86,12 +86,12 @@ public abstract class AbstractCompareValidator extends BaseValidator {
     /**
      * @param compareToProperty
      */
-    public void setCompareToProperty( String compareToProperty ) {
+    public void setCompareToProperty ( String compareToProperty ) {
         this.compareToProperty = compareToProperty;
     }
 
 
-    protected String getCompareToProperty( ) {
+    protected String getCompareToProperty () {
         return compareToProperty;
     }
 

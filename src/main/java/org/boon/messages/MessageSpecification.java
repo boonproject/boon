@@ -64,19 +64,19 @@ public class MessageSpecification implements Serializable {
      * You should only call the init method if you don't inject
      * values into the detailMessage and summaryMessage.
      */
-    public void init( ) {
+    public void init () {
         /* If the parent and name are equal to null,
-    	 * use the classname to load resources.
+         * use the classname to load resources.
     	 * */
         if ( name == null && parent == null ) {
-            this.setDetailMessage ( "{" + this.getClass ( ).getName ( ) + DETAIL_KEY + "}" );
-            this.setSummaryMessage ( "{" + this.getClass ( ).getName ( ) + SUMMARY_KEY + "}" );
+            this.setDetailMessage ( "{" + this.getClass ().getName () + DETAIL_KEY + "}" );
+            this.setSummaryMessage ( "{" + this.getClass ().getName () + SUMMARY_KEY + "}" );
         /* If the parent is null and the name is not,
          * use the name to load resources.
          */
         } else if ( name != null && parent == null ) {
-            this.setDetailMessage ( "{" + "message." + getName ( ) + DETAIL_KEY + "}" );
-            this.setSummaryMessage ( "{" + "message." + getName ( ) + SUMMARY_KEY + "}" );
+            this.setDetailMessage ( "{" + "message." + getName () + DETAIL_KEY + "}" );
+            this.setSummaryMessage ( "{" + "message." + getName () + SUMMARY_KEY + "}" );
         /* If the parent is present, initialize the message keys
          * with the parent name.
          */
@@ -86,25 +86,25 @@ public class MessageSpecification implements Serializable {
         }
     }
 
-    public boolean isNoSummary( ) {
+    public boolean isNoSummary () {
         return noSummary;
     }
 
-    public void setNoSummary( boolean noSummary ) {
+    public void setNoSummary ( boolean noSummary ) {
         this.noSummary = noSummary;
     }
 
     /**
      * Create the summaryMessage message.
      */
-    public String createSummaryMessage( Object... args ) {
+    public String createSummaryMessage ( Object... args ) {
         return createMessage ( summaryMessage, summaryArgs, args );
     }
 
     /**
      * Create the detailMessage message.
      */
-    public String createDetailMessage( Object... args ) {
+    public String createDetailMessage ( Object... args ) {
         return createMessage ( detailMessage, detailArgs, args );
     }
 
@@ -115,7 +115,7 @@ public class MessageSpecification implements Serializable {
      * @param args    Arguments that were passed via the object that wants to
      *                generate the message
      */
-    public String createMessage( String key, List<String> argKeys, Object... args ) {
+    public String createMessage ( String key, List<String> argKeys, Object... args ) {
     	/* Look up the message. */
         String message = getMessage ( key );
     	
@@ -131,7 +131,7 @@ public class MessageSpecification implements Serializable {
     		/* Convert the keys to values. */
             actualArgs = keysToValues ( argKeys );
         } else {
-            actualArgs = new Object[]{};
+            actualArgs = new Object[]{ };
         }
 
         return doCreateMessage ( message, actualArgs );
@@ -145,94 +145,94 @@ public class MessageSpecification implements Serializable {
      * @param actualArgs Arguments to the message.
      * @return
      */
-    @SuppressWarnings("unchecked")
-    private String doCreateMessage( String message, Object[] actualArgs ) {
+    @SuppressWarnings ( "unchecked" )
+    private String doCreateMessage ( String message, Object[] actualArgs ) {
 
-        return ValidationContext.get ( ).createMessage ( message, getSubject ( ), actualArgs );
+        return ValidationContext.get ().createMessage ( message, getSubject (), actualArgs );
     }
 
-    private String getMessage( String key ) {
+    private String getMessage ( String key ) {
 
-        return ValidationContext.get ( ).getMessage ( key );
+        return ValidationContext.get ().getMessage ( key );
     }
 
 
     /**
      * Convert the keys to values.
      */
-    private Object[] keysToValues( List<String> argKeys ) {
-        List<String> values = new ArrayList<> ( );
+    private Object[] keysToValues ( List<String> argKeys ) {
+        List<String> values = new ArrayList<> ();
         for ( String key : argKeys ) {
             values.add ( getMessage ( key ) );
         }
-        return values.toArray ( );
+        return values.toArray ();
     }
 
     /**
      * Allows client objects to set the subject for the current thread
      * per instance of the MessageSpecification.
      */
-    public void setCurrentSubject( String subject ) {
-        ValidationContext.get ( ).setCurrentSubject ( subject );
+    public void setCurrentSubject ( String subject ) {
+        ValidationContext.get ().setCurrentSubject ( subject );
     }
 
     /**
      * Gets the current subject or the configured subject if the
      * current subject is not found.
      */
-    public String getSubject( ) {
-        return ValidationContext.get ( ).getCurrentSubject ( ) == null ? this.subject :
-                ValidationContext.get ( ).getCurrentSubject ( );
+    public String getSubject () {
+        return ValidationContext.get ().getCurrentSubject () == null ? this.subject :
+                ValidationContext.get ().getCurrentSubject ();
     }
 
 
-    protected String getDetailMessage( ) {
+    protected String getDetailMessage () {
         return this.detailMessage;
     }
 
-    public void setDetailMessage( String detailKey ) {
+    public void setDetailMessage ( String detailKey ) {
         this.detailMessage = detailKey;
     }
 
-    protected String getSummaryMessage( ) {
+    protected String getSummaryMessage () {
         return this.summaryMessage;
     }
 
-    public void setSummaryMessage( String summaryKey ) {
+    public void setSummaryMessage ( String summaryKey ) {
         this.summaryMessage = summaryKey;
     }
 
-    protected List<String> getDetailArgs( ) {
+    protected List<String> getDetailArgs () {
         return this.detailArgs;
     }
 
-    public void setDetailArgs( List<String> argKeys ) {
+    public void setDetailArgs ( List<String> argKeys ) {
         this.detailArgs = argKeys;
     }
 
-    protected List<String> getSummaryArgs( ) {
+    protected List<String> getSummaryArgs () {
         return this.summaryArgs;
     }
 
-    public void setSummaryArgs( List<String> summaryArgKeys ) {
+    public void setSummaryArgs ( List<String> summaryArgKeys ) {
         this.summaryArgs = summaryArgKeys;
     }
 
-    public void setName( String aName ) {
+    public void setName ( String aName ) {
         this.name = aName;
     }
 
-    public String getName( ) {
+    public String getName () {
         return this.name;
     }
 
 
-    public void setParent( String parent ) {
+    public void setParent ( String parent ) {
         this.parent = parent;
     }
 
 
-    public void setSubject( String subject ) {
+    public void setSubject ( String subject ) {
         this.subject = subject;
     }
 

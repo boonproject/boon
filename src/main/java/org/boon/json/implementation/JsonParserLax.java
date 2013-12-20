@@ -16,11 +16,7 @@ import static org.boon.primitive.CharScanner.parseLong;
 /**
  * Created by rick on 12/12/13.
  */
-public class JsonParserLax extends JsonParserCharArray  {
-
-
-
-
+public class JsonParserLax extends JsonParserCharArray {
 
 
     private final char OBJECT_ITEM_DELIMETER_TOKEN;
@@ -32,7 +28,6 @@ public class JsonParserLax extends JsonParserCharArray  {
 
 
     private final char KEY_ASSIGNMENT_OPERATOR;
-
 
 
     public JsonParserLax () {
@@ -64,8 +59,7 @@ public class JsonParserLax extends JsonParserCharArray  {
     }
 
 
-
-    protected void  init() {
+    protected void init () {
         super.init ();
     }
 
@@ -75,14 +69,12 @@ public class JsonParserLax extends JsonParserCharArray  {
         if ( __currentChar == '{' )
             this.nextChar ();
 
-        JsonLazyLinkedMap  map = null;
-        if (heavyCache) {
-            map  = createMap ();
+        JsonLazyLinkedMap map = null;
+        if ( heavyCache ) {
+            map = createMap ();
         } else {
-            map = new JsonLazyLinkedMap (  );
+            map = new JsonLazyLinkedMap ();
         }
-
-
 
 
         skipWhiteSpace ();
@@ -187,8 +179,7 @@ public class JsonParserLax extends JsonParserCharArray  {
         }
 
 
-
-        if (heavyCache) {
+        if ( heavyCache ) {
             return prepareMap ( map );
         } else {
             return map;
@@ -447,7 +438,7 @@ public class JsonParserLax extends JsonParserCharArray  {
 
                 case ';':
                 case ',':
-                        break loop;
+                    break loop;
 
                 case ')':
                 case ']':
@@ -573,7 +564,6 @@ public class JsonParserLax extends JsonParserCharArray  {
     }
 
 
-
     private boolean isFalse () {
 
         if ( __index + FALSE.length <= charArray.length ) {
@@ -622,22 +612,22 @@ public class JsonParserLax extends JsonParserCharArray  {
 
                 case ']':
                 case ')':
-                    if ( __currentChar ==  END_ARRAY_TOKEN ) {
+                    if ( __currentChar == END_ARRAY_TOKEN ) {
 
                         skip = false;
                         break done;
                     }
 
                 case '}':
-                        skip = false;
-                        break done;
+                    skip = false;
+                    break done;
 
 
                 case ';':
                 case ',':
                     if ( __currentChar == OBJECT_ITEM_DELIMETER_TOKEN || __currentChar == ',' ) {
-                            skip = false;
-                            break done;
+                        skip = false;
+                        break done;
                     } else {
                         complain ( "unexpected token " + __currentChar );
                     }
@@ -740,7 +730,6 @@ public class JsonParserLax extends JsonParserCharArray  {
         }
 
 
-
         skipWhiteSpace ();
 
 
@@ -752,10 +741,10 @@ public class JsonParserLax extends JsonParserCharArray  {
 
         ArrayList<Object> list;
 
-        if (heavyCache) {
+        if ( heavyCache ) {
             list = createList ();
         } else {
-            list = new ArrayList (  );
+            list = new ArrayList ();
         }
 
 
@@ -768,7 +757,6 @@ public class JsonParserLax extends JsonParserCharArray  {
             Object arrayItem = decodeValueInternal ();
 
             list.add ( arrayItem );
-
 
 
             skipWhiteSpace ();
@@ -795,10 +783,9 @@ public class JsonParserLax extends JsonParserCharArray  {
         } while ( this.hasMore () );
 
 
-
-        if (heavyCache) {
+        if ( heavyCache ) {
             return prepareList ( list );
-        }   else {
+        } else {
             return list;
         }
     }

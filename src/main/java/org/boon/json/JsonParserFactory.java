@@ -46,7 +46,7 @@ public class JsonParserFactory {
     }
 
 
-    public JsonParserFactory setSizeToForceLazyFinalParse( int size ) {
+    public JsonParserFactory setSizeToForceLazyFinalParse ( int size ) {
         this.sizeToForceLazyFinalParse = size;
         return this;
     }
@@ -62,20 +62,20 @@ public class JsonParserFactory {
         return this;
     }
 
-    public JsonParserFactory useLazyFinalParse() {
+    public JsonParserFactory useLazyFinalParse () {
         lazyFinalParse = true;
         return this;
     }
 
 
-    public JsonParserFactory neverUseLazyFinalParse() {
+    public JsonParserFactory neverUseLazyFinalParse () {
         lazyFinalParse = false;
         return this;
     }
 
 
     public JsonParser createFastParser () {
-         return new JsonFastParser (false, true);
+        return new JsonFastParser ( false, true );
     }
 
 
@@ -97,18 +97,18 @@ public class JsonParserFactory {
         return new JsonParserLax ();
     }
 
-    public JsonParser createLazyFinalParser() {
+    public JsonParser createLazyFinalParser () {
         return new JsonFastParser ();
     }
 
-    public JsonParser createJsonParserForJsonPath() {
+    public JsonParser createJsonParserForJsonPath () {
         return new JsonFastParser ();
     }
 
     public JsonParser create () {
 
 
-        if ( lax && plistStyle && (charset == null || charset == StandardCharsets.US_ASCII) ) {
+        if ( lax && plistStyle && ( charset == null || charset == StandardCharsets.US_ASCII ) ) {
             this.useDirectBytes = true;
 
         }

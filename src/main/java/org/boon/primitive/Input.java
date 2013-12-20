@@ -4,88 +4,88 @@ package org.boon.primitive;
 public interface Input {
 
 
-    void readFully( byte[] b );
+    void readFully ( byte[] b );
 
-    void readFully( byte[] b, int off, int len );
+    void readFully ( byte[] b, int off, int len );
 
-    int skipBytes( int n );
+    int skipBytes ( int n );
 
-    void location( int n );
+    void location ( int n );
 
-    int location( );
+    int location ();
 
-    void reset( );
+    void reset ();
 
-    boolean readBoolean( );
+    boolean readBoolean ();
 
-    byte readByte( );
+    byte readByte ();
 
-    short readUnsignedByte( );
+    short readUnsignedByte ();
 
-    short readShort( );
+    short readShort ();
 
-    int readUnsignedShort( );
+    int readUnsignedShort ();
 
-    char readChar( );
+    char readChar ();
 
-    int readInt( );
+    int readInt ();
 
-    long readUnsignedInt( );
+    long readUnsignedInt ();
 
-    long readLong( );
+    long readLong ();
 
-    float readFloat( );
+    float readFloat ();
 
-    double readDouble( );
+    double readDouble ();
 
-    String readSmallString( );
+    String readSmallString ();
 
-    String readLargeString( );
+    String readLargeString ();
 
-    String readMediumString( );
-
-
-    byte[] readSmallByteArray( );
-
-    byte[] readLargeByteArray( );
-
-    byte[] readMediumByteArray( );
-
-    short[] readSmallShortArray( );
-
-    short[] readLargeShortArray( );
-
-    short[] readMediumShortArray( );
+    String readMediumString ();
 
 
-    int[] readSmallIntArray( );
+    byte[] readSmallByteArray ();
 
-    int[] readLargeIntArray( );
+    byte[] readLargeByteArray ();
 
-    int[] readMediumIntArray( );
+    byte[] readMediumByteArray ();
 
-    byte[] readBytes( int size );
+    short[] readSmallShortArray ();
 
+    short[] readLargeShortArray ();
 
-    long[] readSmallLongArray( );
-
-    long[] readLargeLongArray( );
-
-    long[] readMediumLongArray( );
+    short[] readMediumShortArray ();
 
 
-    float[] readSmallFloatArray( );
+    int[] readSmallIntArray ();
 
-    float[] readLargeFloatArray( );
+    int[] readLargeIntArray ();
 
-    float[] readMediumFloatArray( );
+    int[] readMediumIntArray ();
+
+    byte[] readBytes ( int size );
 
 
-    double[] readSmallDoubleArray( );
+    long[] readSmallLongArray ();
 
-    double[] readLargeDoubleArray( );
+    long[] readLargeLongArray ();
 
-    double[] readMediumDoubleArray( );
+    long[] readMediumLongArray ();
+
+
+    float[] readSmallFloatArray ();
+
+    float[] readLargeFloatArray ();
+
+    float[] readMediumFloatArray ();
+
+
+    double[] readSmallDoubleArray ();
+
+    double[] readLargeDoubleArray ();
+
+    double[] readMediumDoubleArray ();
 
     //TODO add unsigned int, unsigned byte, unsigned short array
 

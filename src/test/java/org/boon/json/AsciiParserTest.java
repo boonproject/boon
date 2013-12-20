@@ -9,8 +9,8 @@ public class AsciiParserTest extends JsonParserBaseTest {
 
 
     public JsonParserFactory factory () {
-        return new JsonParserFactory (){
-            public JsonParser create() {
+        return new JsonParserFactory () {
+            public JsonParser create () {
                 return new JsonAsciiParser ();
             }
         };

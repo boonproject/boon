@@ -26,7 +26,7 @@ import static org.boon.primitive.CharScanner.parseLong;
  * Converts an input JSON String into Java objects works with String or char array
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
- *
+ * <p/>
  * TODO char[] val = value;     avoid getfield opcode  for all
  */
 public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
@@ -39,14 +39,14 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     protected Object decodeFromChars ( char[] cs ) {
         __index = 0;
         charArray = cs;
-        init();
-        Object value =  decodeValue ();
+        init ();
+        Object value = decodeValue ();
         return value;
     }
 
 
     protected final Object decodeFromString ( String cs ) {
-        return  decodeFromChars ( FastStringUtils.toCharArray ( cs ) );
+        return decodeFromChars ( FastStringUtils.toCharArray ( cs ) );
     }
 
 
@@ -90,7 +90,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         int line = 0;
         int lastLineIndex = 0;
 
-        for ( int i = 0; i < __index && i < charArray.length ; i++ ) {
+        for ( int i = 0; i < __index && i < charArray.length; i++ ) {
             if ( charArray[ i ] == '\n' ) {
                 line++;
                 lastLineIndex = i + 1;
@@ -163,11 +163,11 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         if ( __currentChar == '{' )
             this.nextChar ();
 
-        JsonLazyLinkedMap  map = null;
-        if (heavyCache) {
-            map  = createMap ();
+        JsonLazyLinkedMap map = null;
+        if ( heavyCache ) {
+            map = createMap ();
         } else {
-           map = new JsonLazyLinkedMap (  );
+            map = new JsonLazyLinkedMap ();
         }
 
         for (; __index < this.charArray.length; __index++ ) {
@@ -180,9 +180,9 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                 String key =
                         decodeString ();
 
-                if (internKeys) {
-                    String keyPrime = internedKeysCache.get(key);
-                    if (keyPrime == null) {
+                if ( internKeys ) {
+                    String keyPrime = internedKeysCache.get ( key );
+                    if ( keyPrime == null ) {
                         key = key.intern ();
                         internedKeysCache.put ( key, key );
                     } else {
@@ -218,9 +218,8 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         }
 
 
-
-        if (heavyCache) {
-            return prepareMap(map);
+        if ( heavyCache ) {
+            return prepareMap ( map );
         } else {
             return map;
         }
@@ -232,7 +231,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-    protected  Object decodeValue () {
+    protected Object decodeValue () {
         return decodeValueInternal ();
     }
 
@@ -330,8 +329,8 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                 break;
 
             default:
-                    throw new JsonException ( exceptionDetails ( "Unable to determine the " +
-                            "current character, it is not a string, number, array, or object" ) );
+                throw new JsonException ( exceptionDetails ( "Unable to determine the " +
+                        "current character, it is not a string, number, array, or object" ) );
 
         }
 
@@ -360,11 +359,10 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         if ( __currentChar == '-' ) {
             minus = true;
             __index++;
-            sign =  -1;
+            sign = -1;
         }
 
         int startIndex = __index;
-
 
 
         loop:
@@ -504,7 +502,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     protected static final char[] TRUE = Chr.chars ( "true" );
 
-    protected final  boolean decodeTrue () {
+    protected final boolean decodeTrue () {
 
         if ( __index + TRUE.length <= charArray.length ) {
             if ( charArray[ __index ] == 't' &&
@@ -522,10 +520,9 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-
     protected static char[] FALSE = Chr.chars ( "false" );
 
-    protected final  boolean decodeFalse () {
+    protected final boolean decodeFalse () {
 
         if ( __index + FALSE.length <= charArray.length ) {
             if ( charArray[ __index ] == 'f' &&
@@ -541,8 +538,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-
-    protected final  String decodeString () {
+    protected final String decodeString () {
 
         __currentChar = charArray[ __index ];
 
@@ -595,7 +591,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return value;
     }
 
-    protected final  List decodeJsonArray () {
+    protected final List decodeJsonArray () {
         if ( __currentChar == '[' ) {
             this.nextChar ();
         }
@@ -611,10 +607,10 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         }
 
         ArrayList<Object> list;
-        if (heavyCache) {
-             list = createList ();
+        if ( heavyCache ) {
+            list = createList ();
         } else {
-             list = new ArrayList (  );
+            list = new ArrayList ();
         }
 
         do {
@@ -650,14 +646,12 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         } while ( this.hasMore () );
 
 
-
-        if (heavyCache) {
+        if ( heavyCache ) {
             return prepareList ( list );
-        }   else {
+        } else {
             return list;
         }
     }
-
 
 
     @Override
@@ -666,25 +660,24 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-
     @Override
-    public final <T> T parse( Class<T> type, byte[] value ) {
-          return (T) this.decodeFromBytes ( value );
+    public final <T> T parse ( Class<T> type, byte[] value ) {
+        return ( T ) this.decodeFromBytes ( value );
     }
 
 
     @Override
-    public final <T> T parseDirect( Class<T> type, byte[] value ) {
-        if (value.length < 20_000) {
+    public final <T> T parseDirect ( Class<T> type, byte[] value ) {
+        if ( value.length < 20_000 ) {
             CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
-            return parse (type, builder.toCharArray ());
-        }else {
+            return parse ( type, builder.toCharArray () );
+        } else {
             return this.parse ( type, new ByteArrayInputStream ( value ) );
         }
     }
 
     @Override
-    public final <T> T parseAsStream( Class<T> type, byte[] value ) {
+    public final <T> T parseAsStream ( Class<T> type, byte[] value ) {
         return this.parse ( type, new ByteArrayInputStream ( value ) );
     }
 
@@ -696,10 +689,10 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     @Override
     public final <T> T parse ( Class<T> type, char[] chars ) {
-        if (type == Map.class || type == List.class ) {
-            return (T) this.decodeFromChars ( chars );
+        if ( type == Map.class || type == List.class ) {
+            return ( T ) this.decodeFromChars ( chars );
         } else {
-            Map<String, Object> objectMap = (Map<String, Object>) this.decodeFromChars ( chars );
+            Map<String, Object> objectMap = ( Map<String, Object> ) this.decodeFromChars ( chars );
             return Reflection.fromMap ( objectMap, type );
         }
     }
@@ -708,10 +701,10 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     private CharBuf fileInputBuf;
 
     @Override
-    public final <T> T parse( Class<T> type, Reader reader ) {
+    public final <T> T parse ( Class<T> type, Reader reader ) {
 
         fileInputBuf = IO.read ( reader, fileInputBuf, 256 );
-        return parse ( type,  fileInputBuf.readForRecycle () );
+        return parse ( type, fileInputBuf.readForRecycle () );
 
     }
 
@@ -719,16 +712,15 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     @Override
     public final <T> T parse ( Class<T> type, InputStream input ) {
         fileInputBuf = IO.read ( input, fileInputBuf, StandardCharsets.UTF_8, 256 );
-        return parse ( type,  fileInputBuf.readForRecycle () );
+        return parse ( type, fileInputBuf.readForRecycle () );
     }
 
 
     @Override
-    public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+    public final <T> T parse ( Class<T> type, InputStream input, Charset charset ) {
         fileInputBuf = IO.read ( input, fileInputBuf, charset, 256 );
-        return parse ( type,  fileInputBuf.readForRecycle () );
+        return parse ( type, fileInputBuf.readForRecycle () );
     }
-
 
 
 }

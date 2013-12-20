@@ -29,12 +29,12 @@ public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
 
     private List<ValidatorMetaDataReader> chain;
 
-    public void setChain( final List<ValidatorMetaDataReader> chain ) {
+    public void setChain ( final List<ValidatorMetaDataReader> chain ) {
         this.chain = chain;
     }
 
-    public List<ValidatorMetaData> readMetaData( final Class<?> clazz, final String propertyName ) {
-        Map<String, ValidatorMetaData> overrideMap = new LinkedHashMap<String, ValidatorMetaData> ( );
+    public List<ValidatorMetaData> readMetaData ( final Class<?> clazz, final String propertyName ) {
+        Map<String, ValidatorMetaData> overrideMap = new LinkedHashMap<String, ValidatorMetaData> ();
 
 		/* Iterate through the chain of readers, read the validation data, put the validation data in a 
          * linked hash map based on the name of the validation data. As you add another rule with the same name
@@ -43,21 +43,21 @@ public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
         for ( ValidatorMetaDataReader reader : chain ) {
             /* Read the validation meta-data from the current reader in the chain. */
             List<ValidatorMetaData> list = reader.readMetaData ( clazz, propertyName );
-			
+
 			/* Put the validation rules in the linked hash map by name so the last reader can override
 			 * the previous reader. 
 			 */
             for ( ValidatorMetaData data : list ) {
-                String overrideName = data.getName ( );
-                if ( ( data.getProperties ( ) != null ) && ( data.getProperties ( ).get ( OVERRIDE_NAME ) != null ) ) {
-                    overrideName = ( String ) data.getProperties ( ).get ( OVERRIDE_NAME );
-                    data.getProperties ( ).remove ( OVERRIDE_NAME );
+                String overrideName = data.getName ();
+                if ( ( data.getProperties () != null ) && ( data.getProperties ().get ( OVERRIDE_NAME ) != null ) ) {
+                    overrideName = ( String ) data.getProperties ().get ( OVERRIDE_NAME );
+                    data.getProperties ().remove ( OVERRIDE_NAME );
                 }
                 overrideMap.put ( overrideName, data );
             }
         }
 		/* Turn the map into a list. */
-        return new ArrayList<ValidatorMetaData> ( overrideMap.values ( ) );
+        return new ArrayList<ValidatorMetaData> ( overrideMap.values () );
     }
 
 }

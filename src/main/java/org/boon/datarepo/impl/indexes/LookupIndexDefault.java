@@ -22,29 +22,29 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     protected Function<ITEM, KEY> primaryKeyGetter;
 
     protected Map<KEY, MultiValue> map;
-    private Logger log = Logger.getLogger ( LookupIndexDefault.class.getName ( ) );
+    private Logger log = Logger.getLogger ( LookupIndexDefault.class.getName () );
     protected boolean storeKeyInIndexOnly;
     private Function<Object, KEY> keyTransformer;
 
     protected int keyBucketSize = 3;
 
 
-    public LookupIndexDefault( Class<?> keyType ) {
+    public LookupIndexDefault ( Class<?> keyType ) {
 
 
         if ( log.isLoggable ( Level.FINE ) ) {
-            log.fine ( String.format ( "key type %s ", keyType.getName ( ) ) );
+            log.fine ( String.format ( "key type %s ", keyType.getName () ) );
         }
 
         if ( keyType == null ) {
             return;
         }
-        map = SPIFactory.getMapCreatorFactory ( ).get ( ).createMap ( keyType );
+        map = SPIFactory.getMapCreatorFactory ().get ().createMap ( keyType );
 
     }
 
 
-    protected void addManyKeys( ITEM item, List<KEY> keys ) {
+    protected void addManyKeys ( ITEM item, List<KEY> keys ) {
         for ( KEY key : keys ) {
             if ( key != null ) {
                 this.put ( item, key );
@@ -53,7 +53,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public boolean add( ITEM item ) {
+    public boolean add ( ITEM item ) {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( String.format ( "add item = %s", item ) );
@@ -69,7 +69,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     }
 
-    private void put( ITEM item, KEY key ) {
+    private void put ( ITEM item, KEY key ) {
 
 
         if ( log.isLoggable ( Level.FINE ) ) {
@@ -93,12 +93,12 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         map.put ( key, mv );
     }
 
-    private MultiValue mvCreateOrAddToMV( MultiValue mv, Object obj ) {
+    private MultiValue mvCreateOrAddToMV ( MultiValue mv, Object obj ) {
         return MultiValue.add ( mv, obj, keyBucketSize );
     }
 
 
-    protected final void removeManyKeys( ITEM item, List<KEY> keys ) {
+    protected final void removeManyKeys ( ITEM item, List<KEY> keys ) {
         for ( KEY key : keys ) {
             if ( key != null ) {
                 removeKey ( item, key );
@@ -107,7 +107,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public boolean delete( ITEM item ) {
+    public boolean delete ( ITEM item ) {
         KEY key = keyGetter.apply ( item );
 
 
@@ -115,7 +115,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     }
 
-    private boolean removeKey( ITEM item, KEY key ) {
+    private boolean removeKey ( ITEM item, KEY key ) {
         key = getKey ( key );
 
         if ( key == null ) {
@@ -137,44 +137,44 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
 
-    public void setKeyGetter( Function<ITEM, KEY> keyGetter ) {
+    public void setKeyGetter ( Function<ITEM, KEY> keyGetter ) {
         Objects.requireNonNull ( keyGetter, "keyGetter cannot be null" );
         this.keyGetter = keyGetter;
     }
 
-    public void setPrimaryKeyGetter( Function<ITEM, KEY> keyGetter ) {
+    public void setPrimaryKeyGetter ( Function<ITEM, KEY> keyGetter ) {
         Objects.requireNonNull ( keyGetter, "keyGetter cannot be null" );
         storeKeyInIndexOnly = true;
         this.primaryKeyGetter = keyGetter;
     }
 
     @Override
-    public List<ITEM> all( ) {
+    public List<ITEM> all () {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "all called" );
         }
 
-        List results = new ArrayList<> ( map.size ( ) );
-        for ( MultiValue values : map.values ( ) ) {
+        List results = new ArrayList<> ( map.size () );
+        for ( MultiValue values : map.values () ) {
             values.addTo ( results );
         }
         return results;
     }
 
     @Override
-    public int size( ) {
-        return this.map.size ( );
+    public int size () {
+        return this.map.size ();
     }
 
     @Override
-    public Collection<ITEM> toCollection( ) {
-        return ( Collection<ITEM> ) this.map.values ( );
+    public Collection<ITEM> toCollection () {
+        return ( Collection<ITEM> ) this.map.values ();
     }
 
 
     @Override
-    public ITEM get( KEY key ) {
+    public ITEM get ( KEY key ) {
 
         key = getKey ( key );
 
@@ -182,11 +182,11 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         if ( mv == null ) {
             return null;
         } else {
-            return ( ITEM ) mv.getValue ( );
+            return ( ITEM ) mv.getValue ();
         }
     }
 
-    protected KEY getKey( KEY key ) {
+    protected KEY getKey ( KEY key ) {
         if ( keyTransformer != null ) {
             key = this.keyTransformer.apply ( key );
         }
@@ -194,19 +194,19 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
 
-    public List<ITEM> getAll( KEY key ) {
+    public List<ITEM> getAll ( KEY key ) {
         key = getKey ( key );
 
         MultiValue mv = map.get ( key );
         if ( mv == null ) {
             return null;
         } else {
-            return mv.getValues ( );
+            return mv.getValues ();
         }
     }
 
     @Override
-    public boolean deleteByKey( KEY key ) {
+    public boolean deleteByKey ( KEY key ) {
         key = getKey ( key );
 
         this.map.remove ( key );
@@ -217,37 +217,37 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     //TODO implement so we can store only primary keys in a index to make indexes smaller if
     //we ever decide to cache actual items
     @Override
-    public boolean isPrimaryKeyOnly( ) {
+    public boolean isPrimaryKeyOnly () {
         return storeKeyInIndexOnly;
     }
 
     @Override
-    public void setInputKeyTransformer( Function<Object, KEY> func ) {
+    public void setInputKeyTransformer ( Function<Object, KEY> func ) {
         this.keyTransformer = func;
     }
 
     @Override
-    public void setBucketSize( int size ) {
+    public void setBucketSize ( int size ) {
         this.keyBucketSize = size;
     }
 
     @Override
-    public void init( ) {
+    public void init () {
     }
 
     @Override
-    public boolean has( KEY key ) {
+    public boolean has ( KEY key ) {
         return this.map.containsKey ( key );
     }
 
 
     @Override
-    public void clear( ) {
+    public void clear () {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "clear called" );
         }
-        this.map.clear ( );
+        this.map.clear ();
     }
 
 }

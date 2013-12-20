@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface ValidatorMetaDataReader {
 
-    public List<ValidatorMetaData> readMetaData( Class<?> clazz, String propertyName );
+    public List<ValidatorMetaData> readMetaData ( Class<?> clazz, String propertyName );
 
 }

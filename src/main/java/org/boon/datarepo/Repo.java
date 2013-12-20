@@ -30,25 +30,25 @@ import java.util.List;
 public interface Repo<KEY, ITEM> extends ObjectEditor<KEY, ITEM>, SearchableCollection<KEY, ITEM> {
 
 
-    void updateByFilter( String property, Object value, Criteria... expressions );
+    void updateByFilter ( String property, Object value, Criteria... expressions );
 
-    void updateByFilterUsingValue( String property, String value, Criteria... expressions );
+    void updateByFilterUsingValue ( String property, String value, Criteria... expressions );
 
-    void updateByFilter( String property, int value, Criteria... expressions );
+    void updateByFilter ( String property, int value, Criteria... expressions );
 
-    void updateByFilter( String property, long value, Criteria... expressions );
+    void updateByFilter ( String property, long value, Criteria... expressions );
 
-    void updateByFilter( String property, char value, Criteria... expressions );
+    void updateByFilter ( String property, char value, Criteria... expressions );
 
-    void updateByFilter( String property, short value, Criteria... expressions );
+    void updateByFilter ( String property, short value, Criteria... expressions );
 
-    void updateByFilter( String property, byte value, Criteria... expressions );
+    void updateByFilter ( String property, byte value, Criteria... expressions );
 
-    void updateByFilter( String property, float value, Criteria... expressions );
+    void updateByFilter ( String property, float value, Criteria... expressions );
 
-    void updateByFilter( String property, double value, Criteria... expressions );
+    void updateByFilter ( String property, double value, Criteria... expressions );
 
-    void updateByFilter( List<Update> values, Criteria... expressions );
+    void updateByFilter ( List<Update> values, Criteria... expressions );
 
 
 }

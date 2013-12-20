@@ -20,12 +20,11 @@ public class JsonCharArray extends JsonParserBaseTest {
     }
 
 
-
     @Test
-    public  void testNest () {
+    public void testNest () {
 
 
-        String nest =  IO.read ( "files/nest.json" );
+        String nest = IO.read ( "files/nest.json" );
 
         this.jsonParser.parse ( Map.class, nest );
 
@@ -33,10 +32,10 @@ public class JsonCharArray extends JsonParserBaseTest {
     }
 
     @Test
-    public  void noNest () {
+    public void noNest () {
 
 
-        String json =  IO.read ( "files/nonest.json" );
+        String json = IO.read ( "files/nonest.json" );
 
         this.jsonParser.parse ( Map.class, json );
 

@@ -11,404 +11,403 @@ import static org.junit.Assert.assertTrue;
 public class ArraysTest {
 
 
-
-
     @Test
-    public void allocate() {
+    public void allocate () {
 
         String[] fruit =
-                array(String.class, 500);
+                array ( String.class, 500 );
 
-        assertEquals(
+        assertEquals (
                 500,
-                len(fruit)
+                len ( fruit )
         );
 
     }
 
     @Test
-    public void addArrayTest() {
+    public void addArrayTest () {
 
         String[] fruit =
-                array( "apple", "oranges" );
+                array ( "apple", "oranges" );
 
 
         String[] veggies =
-                array( "green beans", "broccoli" );
+                array ( "green beans", "broccoli" );
 
-        String[] food = add( fruit, veggies );
+        String[] food = add ( fruit, veggies );
 
 
-        assertEquals(
+        assertEquals (
                 4,
-                len(food)
+                len ( food )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(food, 0)
+                idx ( food, 0 )
         );
 
-        assertEquals(
+        assertEquals (
                 "oranges",
-                idx(food, 1)
+                idx ( food, 1 )
         );
 
-        assertEquals(
+        assertEquals (
                 "green beans",
-                idx(food, 2)
+                idx ( food, 2 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "broccoli",
-                idx(food, 3)
+                idx ( food, 3 )
         );
 
     }
 
     @Test
-    public void shrinkTest() {
+    public void shrinkTest () {
 
         String[] fruit =
-                array("apple", "oranges", null, "grapes", "kiwi");
+                array ( "apple", "oranges", null, "grapes", "kiwi" );
 
-        fruit = shrink(fruit, 3 );
+        fruit = shrink ( fruit, 3 );
 
-        assertEquals(
+        assertEquals (
                 2,
-                len(fruit)
+                len ( fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(fruit, 0)
+                idx ( fruit, 0 )
         );
 
-        assertEquals(
+        assertEquals (
                 "oranges",
-                idx(fruit, 1)
+                idx ( fruit, 1 )
         );
     }
 
     @Test
-    public void growTest() {
+    public void growTest () {
 
         String[] fruit =
-                array("apple", "oranges", null, "grapes", "kiwi");
+                array ( "apple", "oranges", null, "grapes", "kiwi" );
 
-        fruit = grow(fruit, 2 * fruit.length);
+        fruit = grow ( fruit, 2 * fruit.length );
 
-        assertEquals(
+        assertEquals (
                 15,
-                len(fruit)
+                len ( fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(fruit, 0)
+                idx ( fruit, 0 )
         );
 
-        assertEquals(
+        assertEquals (
                 "oranges",
-                idx(fruit, 1)
+                idx ( fruit, 1 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "grapes",
-                idx(fruit, 3)
+                idx ( fruit, 3 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "kiwi",
-                idx(fruit, 4)
+                idx ( fruit, 4 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 null,
-                idx(fruit, 5)
+                idx ( fruit, 5 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 null,
-                idx(fruit, 14)
+                idx ( fruit, 14 )
         );
 
     }
 
 
     @Test
-    public void compactTest() {
+    public void compactTest () {
 
         String[] fruit =
-                array("apple", "oranges", null, "grapes", "kiwi");
+                array ( "apple", "oranges", null, "grapes", "kiwi" );
 
-        fruit = compact(fruit);
+        fruit = compact ( fruit );
 
-        assertEquals(
+        assertEquals (
                 4,
-                len(fruit)
+                len ( fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(fruit, 0)
+                idx ( fruit, 0 )
         );
 
-        assertEquals(
+        assertEquals (
                 "oranges",
-                idx(fruit, 1)
+                idx ( fruit, 1 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "grapes",
-                idx(fruit, 2)
+                idx ( fruit, 2 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "kiwi",
-                idx(fruit, 3)
+                idx ( fruit, 3 )
         );
 
 
     }
 
     @Test
-    public void insertTest() {
+    public void insertTest () {
 
         String[] fruit =
-                array("apple", "oranges", "pears", "grapes", "kiwi");
+                array ( "apple", "oranges", "pears", "grapes", "kiwi" );
 
-        fruit = insert(fruit, 1, "bacon");
+        fruit = insert ( fruit, 1, "bacon" );
 
 
-        assertEquals(
+        assertEquals (
                 6,
-                len(fruit)
+                len ( fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "bacon",
-                idx(fruit, 1)
+                idx ( fruit, 1 )
         );
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(fruit, 0)
+                idx ( fruit, 0 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "oranges",
-                idx(fruit, 2)
+                idx ( fruit, 2 )
         );
 
 
     }
 
     @Test
-    public void insertTest2() {
+    public void insertTest2 () {
 
         String[] fruit =
-                array("apple", "oranges", "pears", "grapes", "kiwi");
+                array ( "apple", "oranges", "pears", "grapes", "kiwi" );
 
-        fruit = insert(fruit, 0, "bacon");
+        fruit = insert ( fruit, 0, "bacon" );
 
 
-        assertEquals(
+        assertEquals (
                 6,
-                len(fruit)
+                len ( fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "bacon",
-                idx(fruit, 0)
+                idx ( fruit, 0 )
         );
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(fruit, 1)
+                idx ( fruit, 1 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "oranges",
-                idx(fruit, 2)
+                idx ( fruit, 2 )
         );
 
 
     }
 
     @Test
-    public void insertTest3() {
+    public void insertTest3 () {
 
         String[] fruit =
-                array("apple", "oranges", "pears", "grapes", "kiwi");
+                array ( "apple", "oranges", "pears", "grapes", "kiwi" );
 
-        fruit = insert(fruit, fruit.length-1, "bacon");
+        fruit = insert ( fruit, fruit.length - 1, "bacon" );
 
 
-        assertEquals(
+        assertEquals (
                 6,
-                len(fruit)
+                len ( fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(fruit, 0)
+                idx ( fruit, 0 )
         );
 
-        assertEquals(
+        assertEquals (
                 "oranges",
-                idx(fruit, 1)
+                idx ( fruit, 1 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "pears",
-                idx(fruit, 2)
+                idx ( fruit, 2 )
         );
 
-        assertEquals(
+        assertEquals (
                 "grapes",
-                idx(fruit, 3)
+                idx ( fruit, 3 )
         );
 
-        assertEquals(
+        assertEquals (
                 "bacon",
-                idx(fruit, 4)
+                idx ( fruit, 4 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "kiwi",
-                idx(fruit, 5)
+                idx ( fruit, 5 )
         );
 
 
     }
 
     @Test
-    public void addTest() {
+    public void addTest () {
 
         String[] fruit =
-                array("apple", "oranges", "pears", "grapes", "kiwi");
+                array ( "apple", "oranges", "pears", "grapes", "kiwi" );
 
-        fruit = add(fruit, "bacon");
+        fruit = add ( fruit, "bacon" );
 
 
-        assertEquals(
+        assertEquals (
                 6,
-                len(fruit)
+                len ( fruit )
         );
 
-        assertEquals(
+        assertEquals (
                 "kiwi",
-                idx(fruit, -2)
+                idx ( fruit, -2 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "bacon",
-                idx(fruit, 5)
+                idx ( fruit, 5 )
         );
 
-        assertEquals(
+        assertEquals (
                 "apple",
-                idx(fruit, 0)
+                idx ( fruit, 0 )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "pears",
-                idx(fruit, 2)
+                idx ( fruit, 2 )
         );
 
 
     }
+
     @Test
-    public void basicTest() {
+    public void basicTest () {
 
         String[] fruit =
-                array("apple", "oranges", "pears", "grapes", "kiwi");
+                array ( "apple", "oranges", "pears", "grapes", "kiwi" );
 
 
-
-        assertArrayEquals(
+        assertArrayEquals (
                 fruit,
-                copy(fruit)
+                copy ( fruit )
         );
 
-        assertTrue(
-                in("apple", fruit)
+        assertTrue (
+                in ( "apple", fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 5,
-                len(fruit)
+                len ( fruit )
         );
 
 
-        assertEquals(
+        assertEquals (
                 "pears",
-                idx(fruit, 2)
+                idx ( fruit, 2 )
         );
 
-        idx(fruit, 2, "bacon");
+        idx ( fruit, 2, "bacon" );
 
-        assertEquals(
+        assertEquals (
                 "bacon",
-                idx(fruit, 2)
+                idx ( fruit, 2 )
         );
 
 
     }
+
     @Test
-    public void sliceTest() {
+    public void sliceTest () {
 
         String[] fruit =
-                array("apple", "oranges", "pears", "grapes", "kiwi");
+                array ( "apple", "oranges", "pears", "grapes", "kiwi" );
 
-        String[] array2  = slc(fruit, 0, 2);
+        String[] array2 = slc ( fruit, 0, 2 );
 
-        assertArrayEquals(
-                array("apple", "oranges"),
+        assertArrayEquals (
+                array ( "apple", "oranges" ),
                 array2
         );
 
-        String[] array3 = slc(fruit, -3, -1);
+        String[] array3 = slc ( fruit, -3, -1 );
 
-        assertArrayEquals(
-                array("pears", "grapes"),
+        assertArrayEquals (
+                array ( "pears", "grapes" ),
                 array3
         );
 
-        String[] array4 = slc(fruit, -3);
+        String[] array4 = slc ( fruit, -3 );
 
-        assertArrayEquals(
-                array("pears", "grapes", "kiwi"),
+        assertArrayEquals (
+                array ( "pears", "grapes", "kiwi" ),
                 array4
         );
 
 
-        String[] array5 = slcEnd(fruit, -3);
+        String[] array5 = slcEnd ( fruit, -3 );
 
-        assertArrayEquals(
-                array("apple", "oranges"),
+        assertArrayEquals (
+                array ( "apple", "oranges" ),
                 array5
         );
 
@@ -416,57 +415,53 @@ public class ArraysTest {
 
 
     @Test
-    public void outOfBounds() {
+    public void outOfBounds () {
 
         String[] fruit =
-                array("apple", "oranges", "pears", "grapes", "kiwi");
+                array ( "apple", "oranges", "pears", "grapes", "kiwi" );
 
-        slcEnd(fruit, 100);
-        slcEnd(fruit, -100);
+        slcEnd ( fruit, 100 );
+        slcEnd ( fruit, -100 );
 
-        slc(fruit, 100);
-        slc(fruit, -100);
-        idx(fruit, 100);
-        idx(fruit, -100);
-
-
-        idx(fruit, 100, "bar");
+        slc ( fruit, 100 );
+        slc ( fruit, -100 );
+        idx ( fruit, 100 );
+        idx ( fruit, -100 );
 
 
+        idx ( fruit, 100, "bar" );
 
-        assertEquals(
+
+        assertEquals (
                 "bar",
-                idx(fruit, -1)
+                idx ( fruit, -1 )
         );
 
     }
-
-
 
 
     @Test
-    public void addInsertSingle() {
+    public void addInsertSingle () {
 
-        assertArrayEquals(
-                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-                insert( array('a', 'b', 'd', 'e', 'f', 'g'), 2, 'c' )
-
-        );
-
-        assertArrayEquals(
-                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-                insert( array('b', 'c', 'd', 'e', 'f', 'g'), 0, 'a' )
+        assertArrayEquals (
+                array ( 'a', 'b', 'c', 'd', 'e', 'f', 'g' ),
+                insert ( array ( 'a', 'b', 'd', 'e', 'f', 'g' ), 2, 'c' )
 
         );
 
-        assertArrayEquals(
-                array('a', 'b', 'c', 'd', 'e', 'f', 'g'),
-                insert( array('a', 'b', 'c', 'd', 'e', 'f'), 6, 'g' )
+        assertArrayEquals (
+                array ( 'a', 'b', 'c', 'd', 'e', 'f', 'g' ),
+                insert ( array ( 'b', 'c', 'd', 'e', 'f', 'g' ), 0, 'a' )
+
+        );
+
+        assertArrayEquals (
+                array ( 'a', 'b', 'c', 'd', 'e', 'f', 'g' ),
+                insert ( array ( 'a', 'b', 'c', 'd', 'e', 'f' ), 6, 'g' )
 
         );
 
     }
-
 
 
 }

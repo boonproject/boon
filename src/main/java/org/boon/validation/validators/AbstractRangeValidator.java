@@ -4,7 +4,7 @@ package org.boon.validation.validators;
 /**
  * Abstract class for range validation.
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings ( "unchecked" )
 public abstract class AbstractRangeValidator extends BaseValidator {
 
     /* The min value for comparison. */
@@ -15,7 +15,7 @@ public abstract class AbstractRangeValidator extends BaseValidator {
     private boolean isInitialized;
 
     /* Allows this base class to be initialized by the subclasses. */
-    protected void init( Comparable min, Comparable max ) {
+    protected void init ( Comparable min, Comparable max ) {
         this.realMin = min;
         this.realMax = max;
         assert min.compareTo ( max ) < 0;
@@ -23,7 +23,7 @@ public abstract class AbstractRangeValidator extends BaseValidator {
     }
 
     /* Checks to see if the value is less than the min. */
-    protected boolean isValueGreaterThanMin( Comparable value ) {
+    protected boolean isValueGreaterThanMin ( Comparable value ) {
         if ( realMin == null ) {
             return true;
         }
@@ -31,14 +31,14 @@ public abstract class AbstractRangeValidator extends BaseValidator {
     }
 
     /* Checks to see if the value is greater than the max. */
-    protected boolean isValueLessThanMax( Comparable value ) {
+    protected boolean isValueLessThanMax ( Comparable value ) {
         if ( realMax == null ) {
             return true;
         }
         return value.compareTo ( realMax ) <= 0;
     }
 
-    public boolean isInitialized( ) {
+    public boolean isInitialized () {
         return isInitialized;
     }
 }

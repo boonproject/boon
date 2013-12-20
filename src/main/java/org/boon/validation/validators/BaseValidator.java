@@ -21,19 +21,19 @@ public abstract class BaseValidator extends MessageSpecification implements Name
 
     public boolean noMessages = false;
 
-    public boolean isNoMessages( ) {
+    public boolean isNoMessages () {
         return noMessages;
     }
 
-    public void setNoMessages( boolean noMessages ) {
+    public void setNoMessages ( boolean noMessages ) {
         this.noMessages = noMessages;
     }
 
-    protected void populateMessage( ValidatorMessage message, String fieldLabel, Object... args ) {
+    protected void populateMessage ( ValidatorMessage message, String fieldLabel, Object... args ) {
         populateMessage ( null, message, fieldLabel, args );
     }
 
-    protected void populateMessage( MessageSpecification ms, ValidatorMessage message, String fieldLabel, Object... args ) {
+    protected void populateMessage ( MessageSpecification ms, ValidatorMessage message, String fieldLabel, Object... args ) {
         if ( ms == null ) {
             ms = this;
         }

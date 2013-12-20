@@ -26,8 +26,8 @@ public class LengthValidator extends BaseValidator {
      * @param fieldValue the value to validate
      * @param fieldLabel the logical name of the value used for generating error messages
      */
-    public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
-        ValidatorMessage validatorMessage = new ValidatorMessage ( );
+    public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
+        ValidatorMessage validatorMessage = new ValidatorMessage ();
         if ( fieldValue == null ) {
             return validatorMessage;
         }
@@ -43,11 +43,11 @@ public class LengthValidator extends BaseValidator {
 
     }
 
-    public void setMax( int max ) {
+    public void setMax ( int max ) {
         this.max = max;
     }
 
-    public void setMin( int min ) {
+    public void setMin ( int min ) {
         this.min = min;
     }
 

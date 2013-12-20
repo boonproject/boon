@@ -25,8 +25,8 @@ import org.boon.criteria.Criteria;
  */
 public interface Filter {
 
-    ResultSet filter( Criteria... expressions );
+    ResultSet filter ( Criteria... expressions );
 
-    void invalidate( );
+    void invalidate ();
 
 }

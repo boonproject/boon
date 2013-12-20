@@ -231,7 +231,7 @@ public class CharScanner {
         /** Holds the results. */
         char[][] results = new char[ 16 ][];
 
-        final int length =  to - from;
+        final int length = to - from;
 
         int resultIndex = 0;
         int startCurrentLineIndex = 0;
@@ -294,7 +294,6 @@ public class CharScanner {
     }
 
 
-
     public static char[][] splitByCharsNoneEmpty ( final char[] inputArray, int from, int to,
                                                    final char... delims ) {
 
@@ -302,26 +301,26 @@ public class CharScanner {
         return compact ( results );
     }
 
-    public static char[][] compact( char[][] array ) {
+    public static char[][] compact ( char[][] array ) {
         Objects.requireNonNull ( array );
 
         int nullCount = 0;
         for ( char[] ch : array ) {
 
-            if ( ch == null || ch.length== 0 ) {
+            if ( ch == null || ch.length == 0 ) {
                 nullCount++;
             }
         }
-        char[][] newArray = new char[array.length - nullCount][];
+        char[][] newArray = new char[ array.length - nullCount ][];
 
         int j = 0;
         for ( char[] ch : array ) {
 
-            if ( ch == null || ch.length== 0  ) {
+            if ( ch == null || ch.length == 0 ) {
                 continue;
             }
 
-            newArray[j] = ch;
+            newArray[ j ] = ch;
             j++;
         }
         return newArray;
@@ -418,7 +417,6 @@ public class CharScanner {
         }
         return num;
     }
-
 
 
     public static int parseIntFromTo ( char[] digitChars, int offset, int to ) {

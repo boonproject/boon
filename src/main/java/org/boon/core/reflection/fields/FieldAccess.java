@@ -7,74 +7,74 @@ import java.lang.reflect.ParameterizedType;
 
 
 public interface FieldAccess {
-    String getName( );
+    String getName ();
 
-    Object getValue( Object obj );
+    Object getValue ( Object obj );
 
-    void setValue( Object obj, Object value );
+    void setValue ( Object obj, Object value );
 
-    public  void setFromValue( Object obj, Value value );
+    public void setFromValue ( Object obj, Value value );
 
-    boolean getBoolean( Object obj );
+    boolean getBoolean ( Object obj );
 
-    void setBoolean( Object obj, boolean value );
-
-
-    int getInt( Object obj );
-
-    void setInt( Object obj, int value );
+    void setBoolean ( Object obj, boolean value );
 
 
-    short getShort( Object obj );
+    int getInt ( Object obj );
 
-    void setShort( Object obj, short value );
-
-    char getChar( Object obj );
-
-    void setChar( Object obj, char value );
+    void setInt ( Object obj, int value );
 
 
-    long getLong( Object obj );
+    short getShort ( Object obj );
 
-    void setLong( Object obj, long value );
+    void setShort ( Object obj, short value );
 
+    char getChar ( Object obj );
 
-    double getDouble( Object obj );
-
-    void setDouble( Object obj, double value );
-
-
-    float getFloat( Object obj );
-
-    void setFloat( Object obj, float value );
+    void setChar ( Object obj, char value );
 
 
-    byte getByte( Object obj );
+    long getLong ( Object obj );
 
-    void setByte( Object obj, byte value );
-
-    Object getObject( Object obj );
-
-    void setObject( Object obj, Object value );
+    void setLong ( Object obj, long value );
 
 
-    boolean isFinal( );
+    double getDouble ( Object obj );
 
-    boolean isStatic( );
-
-    boolean isVolatile( );
-
-    boolean isQualified( );
-
-    boolean isReadOnly( );
-
-    Class<?> getType( );
-
-    Field getField( );
+    void setDouble ( Object obj, double value );
 
 
-    public ParameterizedType getParameterizedType( );
+    float getFloat ( Object obj );
+
+    void setFloat ( Object obj, float value );
 
 
-    public Class<?> getComponentClass( );
+    byte getByte ( Object obj );
+
+    void setByte ( Object obj, byte value );
+
+    Object getObject ( Object obj );
+
+    void setObject ( Object obj, Object value );
+
+
+    boolean isFinal ();
+
+    boolean isStatic ();
+
+    boolean isVolatile ();
+
+    boolean isQualified ();
+
+    boolean isReadOnly ();
+
+    Class<?> getType ();
+
+    Field getField ();
+
+
+    public ParameterizedType getParameterizedType ();
+
+
+    public Class<?> getComponentClass ();
 }

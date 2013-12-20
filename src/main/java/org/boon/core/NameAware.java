@@ -12,10 +12,10 @@ package org.boon.core;
  * @author Rick Hightower
  */
 public interface NameAware {
-    void setName( String name );
+    void setName ( String name );
 
-    String getName( );
+    String getName ();
 
-    void init( );
+    void init ();
 
 }

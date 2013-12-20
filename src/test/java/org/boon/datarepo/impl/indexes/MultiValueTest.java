@@ -14,76 +14,76 @@ public class MultiValueTest {
     private MultiValue mv;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp () throws Exception {
 
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown () throws Exception {
 
     }
 
     @Test
-    public void testAdd() throws Exception {
+    public void testAdd () throws Exception {
 
-        MultiValue mv = MultiValue.add(null, "Rick", 3);
-        Assert.assertEquals("Rick", mv.getValue());
-
-    }
-
-    @Test
-    public void testMany() throws Exception {
-
-        List<String> strings = list("Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13");
-
-
-        for (String item : strings) {
-            mv = MultiValue.add(mv, item, 3);
-
-        }
-
-        Assert.assertEquals("Rick", mv.getValue());
-        Assert.assertEquals(13, mv.size());
-
-
-        for (Object item : mv.getValues()) {
-            junit.framework.Assert.assertNotNull(item);
-        }
+        MultiValue mv = MultiValue.add ( null, "Rick", 3 );
+        Assert.assertEquals ( "Rick", mv.getValue () );
 
     }
 
     @Test
-    public void testManyThenAddTo() throws Exception {
+    public void testMany () throws Exception {
 
-        List<String> strings = list("Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13");
+        List<String> strings = list ( "Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" );
 
 
-        for (String item : strings) {
-            mv = MultiValue.add(mv, item, 3);
+        for ( String item : strings ) {
+            mv = MultiValue.add ( mv, item, 3 );
 
         }
 
-        List<String> results = list("Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13");
+        Assert.assertEquals ( "Rick", mv.getValue () );
+        Assert.assertEquals ( 13, mv.size () );
 
-        mv.addTo(results);
 
-        for (Object item : mv.getValues()) {
-            junit.framework.Assert.assertNotNull(item);
+        for ( Object item : mv.getValues () ) {
+            junit.framework.Assert.assertNotNull ( item );
+        }
+
+    }
+
+    @Test
+    public void testManyThenAddTo () throws Exception {
+
+        List<String> strings = list ( "Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" );
+
+
+        for ( String item : strings ) {
+            mv = MultiValue.add ( mv, item, 3 );
+
+        }
+
+        List<String> results = list ( "Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" );
+
+        mv.addTo ( results );
+
+        for ( Object item : mv.getValues () ) {
+            junit.framework.Assert.assertNotNull ( item );
         }
 
 
     }
 
     @Test
-    public void testManyUseAddTo() throws Exception {
+    public void testManyUseAddTo () throws Exception {
 
-        MultiValue mv = MultiValue.add(null, "Rick", 3);
+        MultiValue mv = MultiValue.add ( null, "Rick", 3 );
 
-        Assert.assertEquals("Rick", mv.getValue());
+        Assert.assertEquals ( "Rick", mv.getValue () );
 
-        List<String> results = list("Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13");
+        List<String> results = list ( "Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" );
 
-        mv.addTo(results);
+        mv.addTo ( results );
 
 //        results.forEach((item) -> {
 //            assertNotNull(item);

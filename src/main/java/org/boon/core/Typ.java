@@ -62,67 +62,67 @@ public class Typ {
     public static final Class<double[]> doubleArray = double[].class;
     public static final Class<Object[]> objectArray = Object[].class;
 
-    public static boolean doesMapHaveKeyTypeString( Object value ) {
+    public static boolean doesMapHaveKeyTypeString ( Object value ) {
         return getKeyType ( ( Map<?, ?> ) value ) == string;
     }
 
-    public static boolean isBasicType( Object value ) {
+    public static boolean isBasicType ( Object value ) {
         return ( value instanceof Number || value instanceof CharSequence
                 || value instanceof Date || value instanceof Calendar || value instanceof Boolean );
     }
 
-    public static boolean isBasicType( Class<?> theClass ) {
+    public static boolean isBasicType ( Class<?> theClass ) {
         return ( number.isAssignableFrom ( theClass )
                 || chars.isAssignableFrom ( theClass )
                 || date.isAssignableFrom ( theClass )
                 || calendar.isAssignableFrom ( theClass )
                 || bool.isAssignableFrom ( theClass )
-                || theClass.isPrimitive ( ) );
+                || theClass.isPrimitive () );
     }
 
-    public static boolean isMap( Class<?> thisType ) {
+    public static boolean isMap ( Class<?> thisType ) {
         return isSuperType ( thisType, Map.class );
     }
 
 
-    public static boolean isValue( Class<?> thisType ) {
+    public static boolean isValue ( Class<?> thisType ) {
         return isSuperType ( thisType, Value.class );
     }
 
-    public static boolean isCharSequence( Class<?> thisType ) {
+    public static boolean isCharSequence ( Class<?> thisType ) {
         return isSuperType ( thisType, CharSequence.class );
     }
 
-    public static boolean isCollection( Class<?> thisType ) {
+    public static boolean isCollection ( Class<?> thisType ) {
         return isSuperType ( thisType, Collection.class );
     }
 
-    public static boolean isList( Class<?> thisType ) {
+    public static boolean isList ( Class<?> thisType ) {
         return isSuperType ( thisType, List.class );
     }
 
-    public static boolean isSet( Class<?> thisType ) {
+    public static boolean isSet ( Class<?> thisType ) {
         return isSuperType ( thisType, Set.class );
     }
 
-    public static boolean isSortedSet( Class<?> thisType ) {
+    public static boolean isSortedSet ( Class<?> thisType ) {
         return isSuperType ( thisType, SortedSet.class );
     }
 
-    public static boolean isType( Class<?> thisType, Class<?> isThisType ) {
+    public static boolean isType ( Class<?> thisType, Class<?> isThisType ) {
         return isSuperType ( thisType, isThisType );
     }
 
-    public static boolean isComparable( Object o ) {
+    public static boolean isComparable ( Object o ) {
         return o instanceof Comparable;
     }
 
-    public static boolean isComparable( Class<?> type ) {
+    public static boolean isComparable ( Class<?> type ) {
         return implementsInterface ( type, comparable );
     }
 
-    public static boolean isSuperClass( Class<?> type, Class<?> possibleSuperType ) {
-        if ( possibleSuperType.isInterface ( ) ) {
+    public static boolean isSuperClass ( Class<?> type, Class<?> possibleSuperType ) {
+        if ( possibleSuperType.isInterface () ) {
             return false;
         } else {
             return possibleSuperType.isAssignableFrom ( type );
@@ -130,12 +130,12 @@ public class Typ {
 
     }
 
-    public static boolean isSuperType( Class<?> type, Class<?> possibleSuperType ) {
+    public static boolean isSuperType ( Class<?> type, Class<?> possibleSuperType ) {
         return possibleSuperType.isAssignableFrom ( type );
     }
 
-    public static boolean implementsInterface( Class<?> type, Class<?> interfaceType ) {
-        if ( !interfaceType.isInterface ( ) ) {
+    public static boolean implementsInterface ( Class<?> type, Class<?> interfaceType ) {
+        if ( !interfaceType.isInterface () ) {
             return false;
         } else {
             return interfaceType.isAssignableFrom ( type );
@@ -143,9 +143,9 @@ public class Typ {
 
     }
 
-    public static Class<?> getKeyType( Map<?, ?> value ) {
-        if ( value.size ( ) > 0 ) {
-            return value.keySet ( ).iterator ( ).next ( ).getClass ( );
+    public static Class<?> getKeyType ( Map<?, ?> value ) {
+        if ( value.size () > 0 ) {
+            return value.keySet ().iterator ().next ().getClass ();
         } else {
             return null;
         }

@@ -1,93 +1,92 @@
-    package org.boon.cache;
+package org.boon.cache;
 
-    import org.junit.Test;
+import org.junit.Test;
 
-    import static org.boon.Boon.puts;
-    import static org.boon.Exceptions.die;
-
-
-    public class SimpleConcurrentLRUCache {
+import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 
 
-        @Test
-        public void test () {
-            LruCache <Integer, Integer> cache = new LruSimpleConcurrentCache<> ( 1, 4, false );
+public class SimpleConcurrentLRUCache {
 
 
-            cache.put ( 0, 0 );
-            cache.put ( 1, 1 );
-
-            cache.put ( 2, 2 );
-            cache.put ( 3, 3 );
+    @Test
+    public void test () {
+        LruCache<Integer, Integer> cache = new LruSimpleConcurrentCache<> ( 1, 4, false );
 
 
-            boolean ok = cache.size () == 4 || die ( "size" + cache.size () );
+        cache.put ( 0, 0 );
+        cache.put ( 1, 1 );
+
+        cache.put ( 2, 2 );
+        cache.put ( 3, 3 );
 
 
-            cache.put ( 4, 4 );
-            cache.put ( 5, 5 );
-
-            puts (cache);
-            ok |= cache.size () == 4 || die ( "size" + cache.size () );
-            ok |= cache.getSilent ( 2 ) == 2 || die ();
-            ok |= cache.getSilent ( 3 ) == 3 || die ();
-            ok |= cache.getSilent ( 4 ) == 4 || die ();
-            ok |= cache.getSilent ( 5 ) == 5 || die ();
+        boolean ok = cache.size () == 4 || die ( "size" + cache.size () );
 
 
-            cache.get ( 2 );
-            cache.get ( 3 );
-            cache.put ( 6, 6 );
-            cache.put ( 7, 7 );
-            ok |= cache.size () == 4 || die ( "size" + cache.size () );
-            ok |= cache.getSilent ( 2 ) == 2 || die ();
-            ok |= cache.getSilent ( 3 ) == 3 || die ();
+        cache.put ( 4, 4 );
+        cache.put ( 5, 5 );
 
-            cache.put ( 8, 8 );
-            cache.put ( 9, 9 );
-
-            ok |= cache.getSilent ( 4 ) == null || die ();
-            ok |= cache.getSilent ( 5 ) == null || die ();
+        puts ( cache );
+        ok |= cache.size () == 4 || die ( "size" + cache.size () );
+        ok |= cache.getSilent ( 2 ) == 2 || die ();
+        ok |= cache.getSilent ( 3 ) == 3 || die ();
+        ok |= cache.getSilent ( 4 ) == 4 || die ();
+        ok |= cache.getSilent ( 5 ) == 5 || die ();
 
 
-            puts (cache);
+        cache.get ( 2 );
+        cache.get ( 3 );
+        cache.put ( 6, 6 );
+        cache.put ( 7, 7 );
+        ok |= cache.size () == 4 || die ( "size" + cache.size () );
+        ok |= cache.getSilent ( 2 ) == 2 || die ();
+        ok |= cache.getSilent ( 3 ) == 3 || die ();
+
+        cache.put ( 8, 8 );
+        cache.put ( 9, 9 );
+
+        ok |= cache.getSilent ( 4 ) == null || die ();
+        ok |= cache.getSilent ( 5 ) == null || die ();
 
 
-            if ( !ok ) die ();
-
-        }
+        puts ( cache );
 
 
-        @Test
-        public void test2 () {
-            LruCache <Integer, Integer> cache = new LruSimpleConcurrentCache<> ( 400, false );
-
-
-            cache.put ( 0, 0 );
-            cache.put ( 1, 1 );
-
-            cache.put ( 2, 2 );
-            cache.put ( 3, 3 );
-
-
-            for (int index =0 ; index < 5_000; index++) {
-                cache.get(0);
-                cache.get ( 1 );
-                cache.put ( 2, index  );
-                cache.put ( 3, index );
-                cache.put(index, index);
-            }
-
-            boolean ok = cache.getSilent ( 0 ) == 0 || die ();
-            ok |= cache.getSilent ( 1 ) == 1 || die ();
-            ok |= cache.getSilent ( 2 ) != null || die ();
-            ok |= cache.getSilent ( 3 ) != null || die ();
-
-            ok |= cache.size () < 600 || die();
-            if ( !ok ) die ();
-
-
-
-        }
+        if ( !ok ) die ();
 
     }
+
+
+    @Test
+    public void test2 () {
+        LruCache<Integer, Integer> cache = new LruSimpleConcurrentCache<> ( 400, false );
+
+
+        cache.put ( 0, 0 );
+        cache.put ( 1, 1 );
+
+        cache.put ( 2, 2 );
+        cache.put ( 3, 3 );
+
+
+        for ( int index = 0; index < 5_000; index++ ) {
+            cache.get ( 0 );
+            cache.get ( 1 );
+            cache.put ( 2, index );
+            cache.put ( 3, index );
+            cache.put ( index, index );
+        }
+
+        boolean ok = cache.getSilent ( 0 ) == 0 || die ();
+        ok |= cache.getSilent ( 1 ) == 1 || die ();
+        ok |= cache.getSilent ( 2 ) != null || die ();
+        ok |= cache.getSilent ( 3 ) != null || die ();
+
+        ok |= cache.size () < 600 || die ();
+        if ( !ok ) die ();
+
+
+    }
+
+}

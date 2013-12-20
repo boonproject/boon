@@ -109,7 +109,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         return __index + 1 < charArray.length;
     }
 
-    protected final  int nextChar () {
+    protected final int nextChar () {
 
         try {
             if ( hasMore () ) {
@@ -126,7 +126,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    protected final  String exceptionDetails ( String message ) {
+    protected final String exceptionDetails ( String message ) {
         CharBuf buf = CharBuf.create ( 255 );
 
         buf.addLine ( message );
@@ -205,7 +205,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-
     protected String charDescription ( int c ) {
         String charString;
         if ( c == SPACE ) {
@@ -225,7 +224,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-
     private Object decode ( byte[] cs ) {
         charArray = cs;
         __index = 0;
@@ -233,51 +231,47 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    public <T> T parse( Class<T> type, String str ) {
-        return (T) this.parse ( type, str.getBytes ( charSet ) );
+    public <T> T parse ( Class<T> type, String str ) {
+        return ( T ) this.parse ( type, str.getBytes ( charSet ) );
     }
 
-    public <T> T parse( Class<T> type, byte[] bytes ) {
+    public <T> T parse ( Class<T> type, byte[] bytes ) {
 
-        if (type == Map.class || type == List.class ) {
-            return (T) this.decode ( bytes  );
+        if ( type == Map.class || type == List.class ) {
+            return ( T ) this.decode ( bytes );
         } else {
-            Map<String, Object> objectMap = (Map<String, Object>) this.decode ( bytes );
+            Map<String, Object> objectMap = ( Map<String, Object> ) this.decode ( bytes );
             return Reflection.fromMap ( objectMap, type );
         }
 
     }
 
 
-    public <T> T parse( Class<T> type, InputStream input ) {
-        return parse ( type, IO.input (input) );
+    public <T> T parse ( Class<T> type, InputStream input ) {
+        return parse ( type, IO.input ( input ) );
     }
 
-    public <T> T parse( Class<T> type, CharSequence charSequence ) {
-        return parse(type, charSequence.toString ());
+    public <T> T parse ( Class<T> type, CharSequence charSequence ) {
+        return parse ( type, charSequence.toString () );
     }
 
-    public <T> T parse( Class<T> type, char[] chars ) {
+    public <T> T parse ( Class<T> type, char[] chars ) {
 
-        return parse(type, new String(chars));
+        return parse ( type, new String ( chars ) );
     }
 
 
+    public <T> T parse ( Class<T> type, Reader reader ) {
 
-    public <T> T parse( Class<T> type, Reader reader ) {
-
-        die("you are using the wrong class");
+        die ( "you are using the wrong class" );
         return null;
     }
 
 
-    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        die("you are using the wrong class");
+    public <T> T parse ( Class<T> type, InputStream input, Charset charset ) {
+        die ( "you are using the wrong class" );
         return null;
     }
-
-
-
 
 
     protected void complain ( String complaint ) {
@@ -354,9 +348,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-
-
-
     protected final Object decodeJsonObject () {
 
         if ( __currentChar == OPEN_CURLY && this.hasMore () ) {
@@ -373,10 +364,10 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
         JsonLazyLinkedMap map = null;
-        if (heavyCache) {
-            map  = createMap ();
+        if ( heavyCache ) {
+            map = createMap ();
         } else {
-            map = new JsonLazyLinkedMap (  );
+            map = new JsonLazyLinkedMap ();
         }
 
 
@@ -388,9 +379,9 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
             if ( __currentChar == DOUBLE_QUOTE ) {
                 String key = decodeKeyName ();
 
-                if (internKeys) {
-                    String keyPrime = internedKeysCache.get(key);
-                    if (keyPrime == null) {
+                if ( internKeys ) {
+                    String keyPrime = internedKeysCache.get ( key );
+                    if ( keyPrime == null ) {
                         key = key.intern ();
                         internedKeysCache.put ( key, key );
                     } else {
@@ -432,8 +423,8 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
             }
         } while ( this.hasMore () );
 
-        if (heavyCache) {
-            return prepareMap(map);
+        if ( heavyCache ) {
+            return prepareMap ( map );
         } else {
             return map;
         }
@@ -615,12 +606,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-
-
-
-    protected  final String decodeString () {
-
-
+    protected final String decodeString () {
 
 
         if ( __index < charArray.length && __currentChar == DOUBLE_QUOTE ) {
@@ -695,7 +681,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
                             continue loop;
                     }
                 default:
-                      addChar ();
+                    addChar ();
 
 
             }
@@ -713,7 +699,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    abstract protected   void addChar();
+    abstract protected void addChar ();
 
     protected final String decodeKeyName () {
         return decodeString ();
@@ -735,12 +721,11 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
         ArrayList<Object> list;
-        if (heavyCache) {
+        if ( heavyCache ) {
             list = createList ();
         } else {
-            list = new ArrayList (  );
+            list = new ArrayList ();
         }
-
 
 
         int arrayIndex = 0;
@@ -777,21 +762,20 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         } while ( this.hasMore () );
 
 
-        if (heavyCache) {
+        if ( heavyCache ) {
             return prepareList ( list );
-        }   else {
+        } else {
             return list;
         }
     }
 
 
-
-    public <T> T parseDirect( Class<T> type, byte[] value ) {
-            return this.parse ( type, new ByteArrayInputStream ( value ) );
+    public <T> T parseDirect ( Class<T> type, byte[] value ) {
+        return this.parse ( type, new ByteArrayInputStream ( value ) );
     }
 
-    public <T> T parseAsStream( Class<T> type, byte[] value ) {
-        return this.parse ( type, value  );
+    public <T> T parseAsStream ( Class<T> type, byte[] value ) {
+        return this.parse ( type, value );
     }
 
 

@@ -79,7 +79,7 @@ public class HTTPTest {
 
         private void testResponse ( HttpExchange t ) throws IOException {
 
-            if (t.getRequestMethod ().equals ( "GET" )) {
+            if ( t.getRequestMethod ().equals ( "GET" ) ) {
 
                 Headers requestHeaders = t.getRequestHeaders ();
                 String body = "";
@@ -96,8 +96,7 @@ public class HTTPTest {
                 }
 
 
-
-            } else if (t.getRequestMethod ().equals ( "POST" )) {
+            } else if ( t.getRequestMethod ().equals ( "POST" ) ) {
                 InputStream requestBody = t.getRequestBody ();
                 String body = IO.read ( requestBody );
                 Headers requestHeaders = t.getRequestHeaders ();
@@ -115,18 +114,17 @@ public class HTTPTest {
     }
 
 
-
     static class MyHandler implements HttpHandler {
-        public void handle(HttpExchange t) throws IOException {
+        public void handle ( HttpExchange t ) throws IOException {
 
-            InputStream requestBody = t.getRequestBody();
-            String body = IO.read(requestBody);
-            Headers requestHeaders = t.getRequestHeaders();
-            body = body + "\n" + copy(requestHeaders).toString();
-            t.sendResponseHeaders(200, body.length());
-            OutputStream os = t.getResponseBody();
-            os.write(body.getBytes());
-            os.close();
+            InputStream requestBody = t.getRequestBody ();
+            String body = IO.read ( requestBody );
+            Headers requestHeaders = t.getRequestHeaders ();
+            body = body + "\n" + copy ( requestHeaders ).toString ();
+            t.sendResponseHeaders ( 200, body.length () );
+            OutputStream os = t.getResponseBody ();
+            os.write ( body.getBytes () );
+            os.close ();
         }
     }
 
@@ -330,7 +328,6 @@ public class HTTPTest {
         assertTrue ( response.contains ( "hi mom" ) );
         assertTrue ( response.contains ( "Fun=[sun]" ) );
         assertTrue ( response.contains ( "Foo=[bar]" ) );
-
 
 
         Thread.sleep ( 10 );

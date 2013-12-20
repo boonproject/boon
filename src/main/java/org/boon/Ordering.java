@@ -14,50 +14,50 @@ import java.util.logging.Logger;
 
 public class Ordering {
 
-    private static final Logger log = Logger.getLogger ( Ordering.class.getName ( ) );
+    private static final Logger log = Logger.getLogger ( Ordering.class.getName () );
 
 
-    public static Comparable comparable( Object comparable ) {
+    public static Comparable comparable ( Object comparable ) {
         return ( Comparable ) comparable;
     }
 
 
-    public static void sortAsc( List list ) {
+    public static void sortAsc ( List list ) {
         sortAsc ( list, "this" );
     }
 
-    public static void sortDesc( List list ) {
+    public static void sortDesc ( List list ) {
         sortDesc ( list, "this" );
     }
 
-    public static void sortAsc( List list, String sortBy ) {
-        if ( list == null || list.size ( ) == 0 ) {
+    public static void sortAsc ( List list, String sortBy ) {
+        if ( list == null || list.size () == 0 ) {
             return;
         }
-        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( list.iterator ( ).next ( ).getClass ( ) );
+        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( list.iterator ().next ().getClass () );
 
         sortAsc ( list, sortBy, fields );
     }
 
-    public static void sortDesc( List list, String sortBy ) {
-        if ( list == null || list.size ( ) == 0 ) {
+    public static void sortDesc ( List list, String sortBy ) {
+        if ( list == null || list.size () == 0 ) {
             return;
         }
-        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( list.iterator ( ).next ( ).getClass ( ) );
+        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( list.iterator ().next ().getClass () );
 
         sortDesc ( list, sortBy, fields );
     }
 
-    public static void sortAsc( List list, String sortBy, Map<String, FieldAccess> fields ) {
+    public static void sortAsc ( List list, String sortBy, Map<String, FieldAccess> fields ) {
         sort ( list, sortBy, fields, true );
     }
 
-    public static void sortDesc( List list, String sortBy, Map<String, FieldAccess> fields ) {
+    public static void sortDesc ( List list, String sortBy, Map<String, FieldAccess> fields ) {
         sort ( list, sortBy, fields, false );
     }
 
-    public static void sort( List list, String sortBy, Map<String, FieldAccess> fields, boolean ascending ) {
-        if ( list == null || list.size ( ) == 0 ) {
+    public static void sort ( List list, String sortBy, Map<String, FieldAccess> fields, boolean ascending ) {
+        if ( list == null || list.size () == 0 ) {
             return;
         }
         Object o = list.get ( 0 );
@@ -79,10 +79,10 @@ public class Ordering {
     }
 
 
-    public static Comparator universalComparator( final FieldAccess field, final boolean ascending ) {
-        return new Comparator ( ) {
+    public static Comparator universalComparator ( final FieldAccess field, final boolean ascending ) {
+        return new Comparator () {
             @Override
-            public int compare( Object o1, Object o2 ) {
+            public int compare ( Object o1, Object o2 ) {
                 Object value1 = null;
                 Object value2 = null;
 
@@ -99,11 +99,11 @@ public class Ordering {
     }
 
 
-    public static Comparator universalComparator( final String sortBy, final Map<String, FieldAccess> fields,
-                                                  final boolean ascending, final List<Comparator> comparators ) {
-        return new Comparator ( ) {
+    public static Comparator universalComparator ( final String sortBy, final Map<String, FieldAccess> fields,
+                                                   final boolean ascending, final List<Comparator> comparators ) {
+        return new Comparator () {
             @Override
-            public int compare( Object o1, Object o2 ) {
+            public int compare ( Object o1, Object o2 ) {
 
                 Object value1 = null;
                 Object value2 = null;
@@ -124,7 +124,7 @@ public class Ordering {
                         Exceptions.die ( Str.lines (
                                 "The fields was null for sortBy " + sortBy,
                                 String.format ( "fields = %s", fields ),
-                                String.format ( "Outer object type = %s", o1.getClass ( ).getName ( ) ),
+                                String.format ( "Outer object type = %s", o1.getClass ().getName () ),
                                 String.format ( "Outer object is %s", o1 )
                         ) );
                     }
@@ -154,7 +154,7 @@ public class Ordering {
     }
 
 
-    public static int compare( Object value1, Object value2 ) {
+    public static int compare ( Object value1, Object value2 ) {
 
         if ( value1 == null && value2 == null ) {
             return 0;
@@ -168,7 +168,7 @@ public class Ordering {
         if ( value1 instanceof CharSequence ) {
             String str1 = Conversions.toString ( value1 );
             String str2 = Conversions.toString ( value2 );
-            Collator collator = Collator.getInstance ( );
+            Collator collator = Collator.getInstance ();
             return collator.compare ( str1, str2 );
         } else if ( Typ.isComparable ( value1 ) ) {
             Comparable c1 = comparable ( value1 );

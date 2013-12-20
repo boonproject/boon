@@ -5,14 +5,13 @@ public class Subject {
     public final String name;
 
 
-    public Subject() {
-        name="ROOT";
+    public Subject () {
+        name = "ROOT";
     }
 
 
-
-    public Subject(String name) {
-        this.name=name;
+    public Subject ( String name ) {
+        this.name = name;
     }
 
     @Override

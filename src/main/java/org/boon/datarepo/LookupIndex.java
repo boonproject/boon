@@ -26,23 +26,23 @@ import java.util.List;
  * @param <ITEM> The item
  */
 public interface LookupIndex<KEY, ITEM> extends Bag<ITEM> {
-    ITEM get( KEY key );
+    ITEM get ( KEY key );
 
-    void setKeyGetter( Function<ITEM, KEY> keyGetter );
+    void setKeyGetter ( Function<ITEM, KEY> keyGetter );
 
-    List<ITEM> getAll( KEY key );
+    List<ITEM> getAll ( KEY key );
 
-    boolean deleteByKey( KEY key );
+    boolean deleteByKey ( KEY key );
 
-    boolean isPrimaryKeyOnly( );
+    boolean isPrimaryKeyOnly ();
 
-    void setInputKeyTransformer( Function<Object, KEY> func );
+    void setInputKeyTransformer ( Function<Object, KEY> func );
 
-    void setBucketSize( int size );
+    void setBucketSize ( int size );
 
-    void init( );
+    void init ();
 
-    boolean has( KEY key );
+    boolean has ( KEY key );
 
 
 }

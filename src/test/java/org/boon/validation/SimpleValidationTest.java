@@ -31,93 +31,91 @@ public class SimpleValidationTest {
 
 
     @Before
-    public void setup() {
+    public void setup () {
 
-        ValidationContext.create();
-
-
+        ValidationContext.create ();
 
 
     }
 
     @After
-    public void cleanup() {
+    public void cleanup () {
 
-        ValidationContext.destroy();
+        ValidationContext.destroy ();
 
     }
 
     @Test
-    public void testRequired() {
+    public void testRequired () {
 
-        RequiredValidator required = Validators.required("phone number required");
+        RequiredValidator required = Validators.required ( "phone number required" );
 
 
-        ValidatorMessage message = (ValidatorMessage) required.validate(null, "Phone Number");
+        ValidatorMessage message = ( ValidatorMessage ) required.validate ( null, "Phone Number" );
 
 
         boolean ok = true;
 
-        ok |= message.hasError() || die("Phone number is required");
+        ok |= message.hasError () || die ( "Phone number is required" );
 
 
-        message = (ValidatorMessage) required.validate("", "Phone Number");
+        message = ( ValidatorMessage ) required.validate ( "", "Phone Number" );
 
 
         //Empty strings don't count!
-        ok |= message.hasError() || die("Phone number is required");
+        ok |= message.hasError () || die ( "Phone number is required" );
 
 
     }
 
 
     @Test
-    public void testLengthShowsMustBePresentToBeValidated() {
+    public void testLengthShowsMustBePresentToBeValidated () {
 
-        LengthValidator length = Validators.length(7, 12, "phone number must be 7 to  12 characters long");
+        LengthValidator length = Validators.length ( 7, 12, "phone number must be 7 to  12 characters long" );
 
 
-        ValidatorMessage message = (ValidatorMessage) length.validate(null, "Phone Number");
+        ValidatorMessage message = ( ValidatorMessage ) length.validate ( null, "Phone Number" );
 
 
         boolean ok = true;
 
-        ok |= !message.hasError() || die("Phone number must be between 7, and 12");
+        ok |= !message.hasError () || die ( "Phone number must be between 7, and 12" );
 
 
-        message = (ValidatorMessage) length.validate("", "Phone Number");
+        message = ( ValidatorMessage ) length.validate ( "", "Phone Number" );
 
 
-        ok |= message.hasError() || die("Phone number must be between 7 and 12");
+        ok |= message.hasError () || die ( "Phone number must be between 7 and 12" );
 
 
     }
 
 
     @Test
-    public void testComposite() {
+    public void testComposite () {
 
 
-        CompositeValidator validators = Validators.validators(required("phone number required"),
-                length(7, 12, "phone number must be 7 to  12 characters long"));
+        CompositeValidator validators = Validators.validators ( required ( "phone number required" ),
+                length ( 7, 12, "phone number must be 7 to  12 characters long" ) );
 
 
-        ValidatorMessages messages = (ValidatorMessages) validators.validate(null, "Phone Number");
+        ValidatorMessages messages = ( ValidatorMessages ) validators.validate ( null, "Phone Number" );
 
 
         boolean ok = true;
 
-        ok |= messages.hasError() || die("required");
+        ok |= messages.hasError () || die ( "required" );
 
 
-        messages = (ValidatorMessages) validators.validate("123", "Phone Number");
+        messages = ( ValidatorMessages ) validators.validate ( "123", "Phone Number" );
 
-        ok |= messages.hasError() || die("wrong length");
+        ok |= messages.hasError () || die ( "wrong length" );
 
 
-        messages = (ValidatorMessages) validators.validate("1231234567", "Phone Number");
+        messages = ( ValidatorMessages ) validators.validate ( "1231234567", "Phone Number" );
 
-        ok |= !messages.hasError() || die("all good now");
+        ok |= !messages.hasError () || die ( "all good now" );
 
 
     }
@@ -128,135 +126,128 @@ public class SimpleValidationTest {
         int age;
         String phone;
 
-        public Employee(String name, int age, String phone) {
+        public Employee ( String name, int age, String phone ) {
             this.firstName = name;
             this.age = age;
             this.phone = phone;
         }
 
-        public String getFirstName() {
+        public String getFirstName () {
             return firstName;
         }
 
-        public void setFirstName(String firstName) {
+        public void setFirstName ( String firstName ) {
             this.firstName = firstName;
         }
 
-        public int getAge() {
+        public int getAge () {
             return age;
         }
 
-        public void setAge(int age) {
+        public void setAge ( int age ) {
             this.age = age;
         }
 
-        public String getPhone() {
+        public String getPhone () {
             return phone;
         }
 
-        public void setPhone(String phone) {
+        public void setPhone ( String phone ) {
             this.phone = phone;
         }
     }
 
 
+    Map<String, List<ValidatorMetaData>> rules = map (
+            "phone", Lists.list (
+            validatorMeta ( "length",
+                    map ( "max", ( Object ) 12, "min", 5 )
+            )
+    ),
 
-    Map<String, List<ValidatorMetaData>> rules =  map(
-            "phone", Lists.list(
-                            validatorMeta("length",
-                                map("max", (Object) 12, "min", 5)
-                            )
-                    ),
-
-            "firstName", Lists.list(
-                            validatorMeta( "personName", Collections.EMPTY_MAP )
-                          )
+            "firstName", Lists.list (
+            validatorMeta ( "personName", Collections.EMPTY_MAP )
+    )
     );
 
     Map<Class<Employee>, Map<String, List<ValidatorMetaData>>> classToRulesMap =
-            map( Employee.class, rules);
+            map ( Employee.class, rules );
 
 
     class ValidatorReader implements ValidatorMetaDataReader {
 
 
         @Override
-        public List<ValidatorMetaData> readMetaData(Class<?> clazz, String propertyName) {
-                if ( classToRulesMap.get(clazz).get(propertyName) == null) {
-                    return Collections.EMPTY_LIST;
-                } else {
-                    return classToRulesMap.get(clazz).get(propertyName);
-                }
+        public List<ValidatorMetaData> readMetaData ( Class<?> clazz, String propertyName ) {
+            if ( classToRulesMap.get ( clazz ).get ( propertyName ) == null ) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return classToRulesMap.get ( clazz ).get ( propertyName );
+            }
 
         }
     }
 
 
-
-
     @Test
-    public void testRecursive() {
+    public void testRecursive () {
 
 
-        Map<String, Object> objectMap = map(
-                "/org/boon/validator/length" , (Object )new LengthValidator(),
-                "/org/boon/validator/personName" , Validators.personName("", "")
+        Map<String, Object> objectMap = map (
+                "/org/boon/validator/length", ( Object ) new LengthValidator (),
+                "/org/boon/validator/personName", Validators.personName ( "", "" )
         );
 
 
+        RecursiveDescentPropertyValidator validator = new RecursiveDescentPropertyValidator ();
 
-        RecursiveDescentPropertyValidator validator = new RecursiveDescentPropertyValidator();
-
-        validator.setValidatorMetaDataReader( new ValidatorReader()  );
+        validator.setValidatorMetaDataReader ( new ValidatorReader () );
 
         List<RecursiveDescentPropertyValidator.MessageHolder> messageHolders = Collections.EMPTY_LIST;
 
 
-        messageHolders  = validator.validateObject(new Employee("Rick", 43, "555-121-3333"), objectMap);
-
+        messageHolders = validator.validateObject ( new Employee ( "Rick", 43, "555-121-3333" ), objectMap );
 
 
         int errors = 0;
 
-        for (RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders) {
+        for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts(messageHolder.propertyPath);
+            puts ( messageHolder.propertyPath );
 
-            puts(messageHolder.holder.hasError());
+            puts ( messageHolder.holder.hasError () );
 
 
-            if (messageHolder.holder.hasError()) {
-                errors ++;
+            if ( messageHolder.holder.hasError () ) {
+                errors++;
             }
 
         }
 
         if ( errors > 0 ) {
-             die (" Not expecting any errors ");
+            die ( " Not expecting any errors " );
         }
 
 
-
-
-        messageHolders  = validator.validateObject(new Employee("123", 50, "A"), objectMap);
+        messageHolders = validator.validateObject ( new Employee ( "123", 50, "A" ), objectMap );
 
         errors = 0;
 
-        for (RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders) {
+        for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts(messageHolder.propertyPath);
+            puts ( messageHolder.propertyPath );
 
-            puts(messageHolder.holder.hasError());
+            puts ( messageHolder.holder.hasError () );
 
 
-            if (messageHolder.holder.hasError()) {
-                errors ++;
+            if ( messageHolder.holder.hasError () ) {
+                errors++;
             }
 
         }
 
         if ( errors != 2 ) {
-            die (" expecting two errors " + errors );
+            die ( " expecting two errors " + errors );
         }
 
     }
@@ -270,105 +261,99 @@ public class SimpleValidationTest {
         int age;
 
 
-        @Length(max = 12, min=5, detailMessage = "Phone number must be a phone number")
+        @Length (max = 12, min = 5, detailMessage = "Phone number must be a phone number")
         String phone;
 
-        public Employee2(String name, int age, String phone) {
+        public Employee2 ( String name, int age, String phone ) {
             this.firstName = name;
             this.age = age;
             this.phone = phone;
         }
 
-        public String getFirstName() {
+        public String getFirstName () {
             return firstName;
         }
 
-        public void setFirstName(String firstName) {
+        public void setFirstName ( String firstName ) {
             this.firstName = firstName;
         }
 
-        public int getAge() {
+        public int getAge () {
             return age;
         }
 
-        public void setAge(int age) {
+        public void setAge ( int age ) {
             this.age = age;
         }
 
-        public String getPhone() {
+        public String getPhone () {
             return phone;
         }
 
-        public void setPhone(String phone) {
+        public void setPhone ( String phone ) {
             this.phone = phone;
         }
     }
 
 
-
-
     @Test
-    public void testRecursiveWithAnnotations() {
+    public void testRecursiveWithAnnotations () {
 
 
-        Map<String, Object> objectMap = map(
-                "/org/boon/validator/length" , (Object )new LengthValidator(),
-                "/org/boon/validator/properNoun" , Validators.properNoun("", "")
+        Map<String, Object> objectMap = map (
+                "/org/boon/validator/length", ( Object ) new LengthValidator (),
+                "/org/boon/validator/properNoun", Validators.properNoun ( "", "" )
         );
 
 
-
-        RecursiveDescentPropertyValidator validator = new RecursiveDescentPropertyValidator();
+        RecursiveDescentPropertyValidator validator = new RecursiveDescentPropertyValidator ();
 
 
         List<RecursiveDescentPropertyValidator.MessageHolder> messageHolders = Collections.EMPTY_LIST;
 
 
-        messageHolders  = validator.validateObject(new Employee2("Rick", 43, "555-121-3333"), objectMap);
-
+        messageHolders = validator.validateObject ( new Employee2 ( "Rick", 43, "555-121-3333" ), objectMap );
 
 
         int errors = 0;
 
-        for (RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders) {
+        for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts(messageHolder.propertyPath);
+            puts ( messageHolder.propertyPath );
 
-            puts(messageHolder.holder.hasError());
+            puts ( messageHolder.holder.hasError () );
 
 
-            if (messageHolder.holder.hasError()) {
-                errors ++;
+            if ( messageHolder.holder.hasError () ) {
+                errors++;
             }
 
         }
 
         if ( errors > 0 ) {
-            die (" Not expecting any errors ");
+            die ( " Not expecting any errors " );
         }
 
 
-
-
-        messageHolders  = validator.validateObject(new Employee2("123", 50, "A"), objectMap);
+        messageHolders = validator.validateObject ( new Employee2 ( "123", 50, "A" ), objectMap );
 
         errors = 0;
 
-        for (RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders) {
+        for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts(messageHolder.propertyPath);
+            puts ( messageHolder.propertyPath );
 
-            puts(messageHolder.holder.hasError());
+            puts ( messageHolder.holder.hasError () );
 
 
-            if (messageHolder.holder.hasError()) {
-                errors ++;
+            if ( messageHolder.holder.hasError () ) {
+                errors++;
             }
 
         }
 
         if ( errors != 2 ) {
-            die (" expecting two errors " + errors );
+            die ( " expecting two errors " + errors );
         }
 
     }

@@ -18,7 +18,7 @@ import java.util.List;
  * @author Rick Hightower
  */
 public class CompositeValidator implements FieldValidator {
-    private List<FieldValidator> validatorList = new ArrayList<> ( );
+    private List<FieldValidator> validatorList = new ArrayList<> ();
     private RequiredValidator requiredValidator = null;
     private List<String> detailArgs;
     private List<String> summaryArgs;
@@ -26,7 +26,7 @@ public class CompositeValidator implements FieldValidator {
     private boolean stopOnFirstRule = false;
     private boolean stopOnBlank = true;
 
-    public void setValidatorList( List<FieldValidator> list ) {
+    public void setValidatorList ( List<FieldValidator> list ) {
         this.validatorList = list;
         StopOnRuleValidator stopOnRuleValidator = null;
         for ( FieldValidator validator : list ) {
@@ -41,7 +41,7 @@ public class CompositeValidator implements FieldValidator {
 
         if ( stopOnRuleValidator != null ) {
             validatorList.remove ( stopOnRule );
-            String ruleName = stopOnRuleValidator.getRuleName ( );
+            String ruleName = stopOnRuleValidator.getRuleName ();
             if ( "first".equals ( ruleName ) || ruleName == null ) {
                 stopOnFirstRule = true;
             } else {
@@ -53,19 +53,19 @@ public class CompositeValidator implements FieldValidator {
         }
     }
 
-    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
+    public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
 
-        ValidatorMessages messages = new ValidatorMessages ( ); //holds error messages.
+        ValidatorMessages messages = new ValidatorMessages (); //holds error messages.
         
         /* Validate with the requiredValidator if it is present. */
         ValidatorMessage requiredMessage = validateWithRequriedIfPresent ( object, fieldLabel, messages );
 
-        boolean proceed = !( stopOnBlank && ( object == null || object.toString ( ).trim ( ).length ( ) == 0 ) );
+        boolean proceed = !( stopOnBlank && ( object == null || object.toString ().trim ().length () == 0 ) );
 
         /* If the requiredMessage from the requiredValidator is null, then there was not a required validator present. */
         /* If the requiredMessage is present then check to see if it has errors, only validate further if
          * the requiredMessage has no error. */
-        if ( requiredMessage == null || !requiredMessage.hasError ( ) ) {
+        if ( requiredMessage == null || !requiredMessage.hasError () ) {
             if ( proceed ) {
                 runValidationRules ( object, fieldLabel, messages );
             }
@@ -74,34 +74,34 @@ public class CompositeValidator implements FieldValidator {
         return messages;
     }
 
-    private void runValidationRules( Object object, String fieldLabel, ValidatorMessages messages ) {
+    private void runValidationRules ( Object object, String fieldLabel, ValidatorMessages messages ) {
         for ( FieldValidator validator : validatorList ) {
             putArgs ( validator );
             ValidatorMessage message = ( ValidatorMessage ) validator.validate ( object, fieldLabel );
-            if ( message.hasError ( ) ) {
+            if ( message.hasError () ) {
                 messages.add ( message );
                 if ( this.stopOnFirstRule ) {
                     break;
-                } else if ( validator.getClass ( ).getSimpleName ( ).equalsIgnoreCase ( stopOnRule ) ) {
+                } else if ( validator.getClass ().getSimpleName ().equalsIgnoreCase ( stopOnRule ) ) {
                     break;
                 }
             }
         }
     }
 
-    private ValidatorMessage validateWithRequriedIfPresent( Object object, String fieldLabel, ValidatorMessages messages ) {
+    private ValidatorMessage validateWithRequriedIfPresent ( Object object, String fieldLabel, ValidatorMessages messages ) {
         ValidatorMessage requiredMessage = null;
         if ( requiredValidator != null ) {
             putArgs ( requiredValidator );
             requiredMessage = ( ValidatorMessage ) requiredValidator.validate ( object, fieldLabel );
-            if ( requiredMessage.hasError ( ) ) {
+            if ( requiredMessage.hasError () ) {
                 messages.add ( requiredMessage );
             }
         }
         return requiredMessage;
     }
 
-    private void putArgs( FieldValidator validator ) {
+    private void putArgs ( FieldValidator validator ) {
         if ( validator instanceof BaseValidator ) {
             BaseValidator aValidator = ( BaseValidator ) validator;
             aValidator.setDetailArgs ( this.detailArgs );
@@ -110,16 +110,16 @@ public class CompositeValidator implements FieldValidator {
     }
 
 
-    public void setDetailArgs( List<String> detailArgKeys ) {
+    public void setDetailArgs ( List<String> detailArgKeys ) {
         this.detailArgs = detailArgKeys;
     }
 
 
-    public void setSummaryArgs( List<String> summaryArgKeys ) {
+    public void setSummaryArgs ( List<String> summaryArgKeys ) {
         this.summaryArgs = summaryArgKeys;
     }
 
-    public void setStopOnBlank( boolean stopOnBlank ) {
+    public void setStopOnBlank ( boolean stopOnBlank ) {
         this.stopOnBlank = stopOnBlank;
     }
 

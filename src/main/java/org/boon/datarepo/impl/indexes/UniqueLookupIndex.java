@@ -16,31 +16,31 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     protected Map<KEY, ITEM> map = null;
 
 
-    private Logger log = Logger.getLogger ( UniqueLookupIndex.class.getName ( ) );
+    private Logger log = Logger.getLogger ( UniqueLookupIndex.class.getName () );
 
     private Function<Object, KEY> keyTransformer;
 
-    public UniqueLookupIndex( Class<?> keyType ) {
+    public UniqueLookupIndex ( Class<?> keyType ) {
         if ( keyType == null ) {
             return;
         }
-        map = SPIFactory.getMapCreatorFactory ( ).get ( ).createMap ( keyType );
+        map = SPIFactory.getMapCreatorFactory ().get ().createMap ( keyType );
 
     }
 
     @Override
-    public ITEM get( KEY key ) {
+    public ITEM get ( KEY key ) {
         key = getKey ( key );
         return map.get ( key );
     }
 
     @Override
-    public void setKeyGetter( Function<ITEM, KEY> keyGetter ) {
+    public void setKeyGetter ( Function<ITEM, KEY> keyGetter ) {
         this.keyGetter = keyGetter;
     }
 
     @Override
-    public boolean add( ITEM item ) {
+    public boolean add ( ITEM item ) {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( String.format ( "add item = %s", item ) );
@@ -62,7 +62,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public boolean delete( ITEM item ) {
+    public boolean delete ( ITEM item ) {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( String.format ( "delete item = %s", item ) );
@@ -74,17 +74,17 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public List<ITEM> all( ) {
+    public List<ITEM> all () {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "all called " );
         }
 
-        return new ArrayList<> ( map.values ( ) );
+        return new ArrayList<> ( map.values () );
     }
 
     @Override
-    public List<ITEM> getAll( KEY key ) {
+    public List<ITEM> getAll ( KEY key ) {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "getAll called " );
@@ -94,38 +94,38 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public int size( ) {
-        return this.map.size ( );
+    public int size () {
+        return this.map.size ();
     }
 
     @Override
-    public Collection<ITEM> toCollection( ) {
-        return new HashSet ( this.map.values ( ) );
+    public Collection<ITEM> toCollection () {
+        return new HashSet ( this.map.values () );
     }
 
     @Override
-    public void clear( ) {
-        this.map.clear ( );
+    public void clear () {
+        this.map.clear ();
     }
 
     @Override
-    public boolean deleteByKey( KEY key ) {
+    public boolean deleteByKey ( KEY key ) {
         key = getKey ( key );
         return this.map.remove ( key ) != null;
     }
 
     @Override
-    public boolean isPrimaryKeyOnly( ) {
+    public boolean isPrimaryKeyOnly () {
         return false;
     }
 
     @Override
-    public void init( ) {
+    public void init () {
 
     }
 
     @Override
-    public boolean has( KEY key ) {
+    public boolean has ( KEY key ) {
         if ( key == null ) {
             return false;
         }
@@ -134,16 +134,16 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
 
     @Override
-    public void setInputKeyTransformer( Function<Object, KEY> func ) {
+    public void setInputKeyTransformer ( Function<Object, KEY> func ) {
         this.keyTransformer = func;
     }
 
     @Override
-    public void setBucketSize( int size ) {
+    public void setBucketSize ( int size ) {
 
     }
 
-    protected KEY getKey( KEY key ) {
+    protected KEY getKey ( KEY key ) {
         if ( keyTransformer != null ) {
             key = this.keyTransformer.apply ( key );
         }

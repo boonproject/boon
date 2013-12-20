@@ -21,5 +21,5 @@ public interface FieldValidator extends Serializable {
      * @param fieldLabel field label
      * @return A messages whose hasError is set to true if there was an error.
      */
-    ValidatorMessageHolder validate( Object fieldValue, String fieldLabel );
+    ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel );
 }

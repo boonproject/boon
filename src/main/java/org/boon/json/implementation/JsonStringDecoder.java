@@ -7,59 +7,57 @@ import org.boon.primitive.Chr;
 
 public class JsonStringDecoder {
 
-    public static String decode( String string ) {
-        if ( !string.contains ( "\\" )) {
+    public static String decode ( String string ) {
+        if ( !string.contains ( "\\" ) ) {
             return string;
         }
-        char[] cs = (char[]) Reflection.idx ( string, "value" );
+        char[] cs = ( char[] ) Reflection.idx ( string, "value" );
         return decode ( cs, 0, cs.length );
     }
 
-    public static String decode( char[] chars ) {
+    public static String decode ( char[] chars ) {
 
         return decode ( chars, 0, chars.length );
     }
 
 
+    public static String decode ( char[] chars, int start, int to ) {
 
-
-    public static String decode( char[] chars, int start, int to ) {
-
-        if (!Chr.contains ( chars, '\\' , start, to - start) ) {
-            return new String (chars, start, to - start);
+        if ( !Chr.contains ( chars, '\\', start, to - start ) ) {
+            return new String ( chars, start, to - start );
         }
-        return decodeForSure(chars, start, to);
+        return decodeForSure ( chars, start, to );
     }
 
 
-
-    public static String decodeForSure( CharSequence cs, int start, int to ) {
-             if (cs instanceof String) {
-                 return decodeForSure ( (String)cs, start, to );
-             } else {
-                 return decode ( cs.subSequence ( start, to ).toString () );
-             }
+    public static String decodeForSure ( CharSequence cs, int start, int to ) {
+        if ( cs instanceof String ) {
+            return decodeForSure ( ( String ) cs, start, to );
+        } else {
+            return decode ( cs.subSequence ( start, to ).toString () );
+        }
 
     }
 
 
-    public static String decodeForSure( String string, int start, int to ) {
-        char[] cs = (char[]) Reflection.idx ( string, "value" );
+    public static String decodeForSure ( String string, int start, int to ) {
+        char[] cs = ( char[] ) Reflection.idx ( string, "value" );
         return decodeForSure ( cs, start, to );
     }
 
-    public static String decodeForSure( char[] chars ) {
+    public static String decodeForSure ( char[] chars ) {
         return decodeForSure ( chars, 0, chars.length );
     }
-    public static String decodeForSure( char[] chars, int start, int to ) {
+
+    public static String decodeForSure ( char[] chars, int start, int to ) {
 
         CharBuf builder = CharBuf.create ( to - start );
         for ( int index = start; index < to; index++ ) {
-            char c = chars[index];
+            char c = chars[ index ];
             if ( c == '\\' ) {
                 if ( index < to ) {
                     index++;
-                    c = chars[index];
+                    c = chars[ index ];
                     switch ( c ) {
 
                         case 'n':
@@ -97,7 +95,7 @@ public class JsonStringDecoder {
                         case 'u':
 
                             if ( index + 4 < to ) {
-                                String hex = new String ( chars, index + 1,  4 );
+                                String hex = new String ( chars, index + 1, 4 );
                                 char unicode = ( char ) Integer.parseInt ( hex, 16 );
                                 builder.add ( unicode );
                                 index += 4;
@@ -111,27 +109,26 @@ public class JsonStringDecoder {
                 builder.add ( c );
             }
         }
-        return builder.toString ( );
+        return builder.toString ();
 
     }
 
 
-
-    public static String decode( final byte[] chars, int start, int to ) {
+    public static String decode ( final byte[] chars, int start, int to ) {
 
         final byte[] cs = chars;
 
-        if ( cs[start] == '"' ) {
+        if ( cs[ start ] == '"' ) {
             start++;
         }
 
-        CharBuf builder = CharBuf.create (  to - start );
+        CharBuf builder = CharBuf.create ( to - start );
         for ( int index = start; index < to; index++ ) {
-            byte c = cs[index];
+            byte c = cs[ index ];
             if ( c == '\\' ) {
                 if ( index < cs.length ) {
                     index++;
-                    c = cs[index];
+                    c = cs[ index ];
                     switch ( c ) {
 
                         case 'n':
@@ -183,7 +180,7 @@ public class JsonStringDecoder {
                 builder.addChar ( c );
             }
         }
-        return builder.toString ( );
+        return builder.toString ();
 
     }
 }

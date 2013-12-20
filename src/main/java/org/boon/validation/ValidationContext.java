@@ -16,7 +16,7 @@ import java.util.*;
 public class ValidationContext {
 
 
-    private ArrayDeque<String> bindingPath = new ArrayDeque<> ( );
+    private ArrayDeque<String> bindingPath = new ArrayDeque<> ();
 
 
     /**
@@ -41,7 +41,7 @@ public class ValidationContext {
     /**
      * Holds the data(context) for the current thread.
      */
-    private static ThreadLocal<ValidationContext> holder = new ThreadLocal<> ( );
+    private static ThreadLocal<ValidationContext> holder = new ThreadLocal<> ();
 
 
     /**
@@ -58,8 +58,8 @@ public class ValidationContext {
      *
      * @return xx
      */
-    public static ValidationContext getCurrentInstance( ) {
-        return holder.get ( );
+    public static ValidationContext getCurrentInstance () {
+        return holder.get ();
     }
 
     /**
@@ -69,7 +69,7 @@ public class ValidationContext {
      *
      * @param context xx
      */
-    protected void register( ValidationContext context ) {
+    protected void register ( ValidationContext context ) {
         holder.set ( context );
     }
 
@@ -79,7 +79,7 @@ public class ValidationContext {
      *
      * @return xx
      */
-    public Object getParentObject( ) {
+    public Object getParentObject () {
         return parentObject;
     }
 
@@ -89,7 +89,7 @@ public class ValidationContext {
      *
      * @param parentObject xx
      */
-    public void setParentObject( Object parentObject ) {
+    public void setParentObject ( Object parentObject ) {
         this.parentObject = parentObject;
     }
 
@@ -98,11 +98,11 @@ public class ValidationContext {
      *
      * @return xx
      */
-    public Map<String, Object> getParams( ) {
+    public Map<String, Object> getParams () {
         return params;
     }
 
-    public void setParams( Map<String, Object> params ) {
+    public void setParams ( Map<String, Object> params ) {
         this.params = params;
     }
 
@@ -113,68 +113,68 @@ public class ValidationContext {
      * @param propertyName xx
      * @return xx
      */
-    public Object getProposedPropertyValue( String propertyName ) {
+    public Object getProposedPropertyValue ( String propertyName ) {
         return null;
     }
 
-    private String calculateBindingPath( ) {
+    private String calculateBindingPath () {
         StringBuilder builder = new StringBuilder ( 255 );
         int index = 0;
         for ( String component : bindingPath ) {
             index++;
             builder.append ( component );
-            if ( index != bindingPath.size ( ) ) {
+            if ( index != bindingPath.size () ) {
                 builder.append ( '.' );
             }
         }
-        return builder.toString ( );
+        return builder.toString ();
     }
 
-    public void pop( ) {
-        bindingPath.pop ( );
+    public void pop () {
+        bindingPath.pop ();
     }
 
-    public void pushProperty( final String component ) {
+    public void pushProperty ( final String component ) {
         bindingPath.push ( component );
     }
 
-    public void pushObject( final Object object ) {
-        String simpleName = object.getClass ( ).getSimpleName ( );
-        simpleName = simpleName.substring ( 0, 1 ).toLowerCase ( ) + simpleName.substring ( 1, simpleName.length ( ) );
+    public void pushObject ( final Object object ) {
+        String simpleName = object.getClass ().getSimpleName ();
+        simpleName = simpleName.substring ( 0, 1 ).toLowerCase () + simpleName.substring ( 1, simpleName.length () );
         bindingPath.push ( simpleName );
     }
 
-    public static String getBindingPath( ) {
-        if ( getCurrentInstance ( ) != null ) {
-            return getCurrentInstance ( ).calculateBindingPath ( );
+    public static String getBindingPath () {
+        if ( getCurrentInstance () != null ) {
+            return getCurrentInstance ().calculateBindingPath ();
         }
         return "";
     }
 
-    public static ValidationContext create( ) {
-        holder.set ( new ValidationContext ( ) );
-        return get ( );
+    public static ValidationContext create () {
+        holder.set ( new ValidationContext () );
+        return get ();
     }
 
-    public static ValidationContext get( ) {
-        return holder.get ( );
+    public static ValidationContext get () {
+        return holder.get ();
     }
 
-    public static void destroy( ) {
+    public static void destroy () {
         holder.set ( null );
     }
 
     Map<String, Object> objectRegistry;
 
-    public Map<String, Object> getObjectRegistry( ) {
+    public Map<String, Object> getObjectRegistry () {
         return objectRegistry;
     }
 
-    public void setObjectRegistry( Map<String, Object> objectRegistry ) {
+    public void setObjectRegistry ( Map<String, Object> objectRegistry ) {
         this.objectRegistry = objectRegistry;
     }
 
-    public String getMessage( String key ) {
+    public String getMessage ( String key ) {
 
         String message = doGetMessageFromBundle ( key );
 
@@ -183,16 +183,16 @@ public class ValidationContext {
     }
 
 
-    public String getCurrentSubject( ) {
+    public String getCurrentSubject () {
         return currentSubject;
     }
 
-    public void setCurrentSubject( String currentSubject ) {
+    public void setCurrentSubject ( String currentSubject ) {
         this.currentSubject = currentSubject;
     }
 
 
-    public String createMessage( String message, String subject, Object[] actualArgs ) {
+    public String createMessage ( String message, String subject, Object[] actualArgs ) {
         List argumentList = new ArrayList ( Arrays.asList ( actualArgs ) );
 
     	/* If the subject is found add it as the first
@@ -203,7 +203,7 @@ public class ValidationContext {
         }
         try {
             /* Attempt to create the message. */
-            return MessageFormat.format ( message, argumentList.toArray ( ) );
+            return MessageFormat.format ( message, argumentList.toArray () );
         } catch ( Exception ex ) {
 
             return message;
@@ -212,12 +212,12 @@ public class ValidationContext {
     }
 
 
-    public void setResourceBundleLocator( ResourceBundleLocator resourceBundleLocator ) {
+    public void setResourceBundleLocator ( ResourceBundleLocator resourceBundleLocator ) {
         this.resourceBundleLocator = resourceBundleLocator;
     }
 
 
-    protected ResourceBundleLocator getResourceBundleLocator( ) {
+    protected ResourceBundleLocator getResourceBundleLocator () {
         return resourceBundleLocator;
     }
 
@@ -229,13 +229,13 @@ public class ValidationContext {
      * and uses OGNL, JSF EL, or the Universal EL to look up the expression
      * in the context.
      */
-    private String doGetMessageFromBundle( String key ) {
+    private String doGetMessageFromBundle ( String key ) {
 
         if ( resourceBundleLocator == null ) {
             return null;
         }
-		/* Find the resourceBundle. */
-        ResourceBundle bundle = this.resourceBundleLocator.getBundle ( );
+        /* Find the resourceBundle. */
+        ResourceBundle bundle = this.resourceBundleLocator.getBundle ();
 
         if ( bundle == null ) {
             return null;
@@ -249,7 +249,7 @@ public class ValidationContext {
     	 */
         if ( key.startsWith ( this.i18nMarker ) ) {
             try {
-                key = key.substring ( 1, key.length ( ) - 1 );
+                key = key.substring ( 1, key.length () - 1 );
                 message = lookupMessageInBundle ( key, bundle, message );
             } catch ( MissingResourceException mre ) {
                 message = key;
@@ -274,11 +274,11 @@ public class ValidationContext {
     }
 
 
-    private String lookupMessageInBundle( String key, ResourceBundle bundle,
-                                          String message ) {
-        if ( getCurrentSubject ( ) != null ) {
+    private String lookupMessageInBundle ( String key, ResourceBundle bundle,
+                                           String message ) {
+        if ( getCurrentSubject () != null ) {
             try {
-                message = bundle.getString ( key + "." + getCurrentSubject ( ) );
+                message = bundle.getString ( key + "." + getCurrentSubject () );
 
             } catch ( MissingResourceException mre ) {
                 message = bundle.getString ( key );

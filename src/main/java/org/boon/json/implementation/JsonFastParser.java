@@ -2,6 +2,7 @@ package org.boon.json.implementation;
 
 import org.boon.json.JsonException;
 import org.boon.json.internal.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.Map;
 /**
  * This works in index overlay mode or chop mode.
  * Chop mode reduces possibility of memory leak but causes a few more buffer copies as it chops up the buffer.
- *
  */
 public class JsonFastParser extends JsonParserCharArray {
 
@@ -22,20 +22,20 @@ public class JsonFastParser extends JsonParserCharArray {
     private final boolean useValues;
     private final boolean chop;
 
-    public JsonFastParser() {
+    public JsonFastParser () {
         useValues = false;
         chop = false;
 
     }
 
 
-    public JsonFastParser( boolean useValues ) {
+    public JsonFastParser ( boolean useValues ) {
         this.useValues = useValues;
         chop = false;
     }
 
 
-    public JsonFastParser( boolean useValues, boolean chop ) {
+    public JsonFastParser ( boolean useValues, boolean chop ) {
         this.useValues = useValues;
         this.chop = chop;
 
@@ -301,7 +301,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        ValueInCharBuf value = new ValueInCharBuf (chop, type ,startIndex, __index, this.charArray );
+        ValueInCharBuf value = new ValueInCharBuf ( chop, type, startIndex, __index, this.charArray );
 
         skipWhiteSpace ();
 
@@ -350,12 +350,11 @@ public class JsonFastParser extends JsonParserCharArray {
         }
 
 
-
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return new ValueInCharBuf (chop, Type.STRING ,startIndex, __index-1, this.charArray, encoded );
+        return new ValueInCharBuf ( chop, Type.STRING, startIndex, __index - 1, this.charArray, encoded );
     }
 
 

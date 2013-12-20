@@ -23,7 +23,6 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
     private char __currentChar;
 
 
-
     private Object decode ( CharSequence cs ) {
         __index = 0;
         charSequence = cs;
@@ -631,17 +630,17 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
 
 
     @Override
-    public <T> T parseDirect( Class<T> type, byte[] value ) {
-        if (value.length < 20_000) {
+    public <T> T parseDirect ( Class<T> type, byte[] value ) {
+        if ( value.length < 20_000 ) {
             CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
-            return parse (type, builder.toString ());
-        }else {
+            return parse ( type, builder.toString () );
+        } else {
             return this.parse ( type, new ByteArrayInputStream ( value ) );
         }
     }
 
     @Override
-    public <T> T parseAsStream( Class<T> type, byte[] value ) {
+    public <T> T parseAsStream ( Class<T> type, byte[] value ) {
         return this.parse ( type, new ByteArrayInputStream ( value ) );
     }
 

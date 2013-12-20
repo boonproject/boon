@@ -16,18 +16,18 @@ public class ValueInCharBuf extends ValueBase {
 
     public char[] buffer;
 
-    public ValueInCharBuf( Type type ) {
+    public ValueInCharBuf ( Type type ) {
         this.type = type;
     }
 
-    public ValueInCharBuf(  ) {
+    public ValueInCharBuf () {
 
     }
 
-    public ValueInCharBuf(boolean chop, Type type,  int startIndex, int endIndex, char [] buffer) {
+    public ValueInCharBuf ( boolean chop, Type type, int startIndex, int endIndex, char[] buffer ) {
         this.type = type;
 
-        if (chop) {
+        if ( chop ) {
 
             this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
             this.startIndex = 0;
@@ -40,11 +40,10 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-
-    public ValueInCharBuf(boolean chop, Type type,  int startIndex, int endIndex, char [] buffer, boolean encoded) {
+    public ValueInCharBuf ( boolean chop, Type type, int startIndex, int endIndex, char[] buffer, boolean encoded ) {
         this.type = type;
 
-        if (chop) {
+        if ( chop ) {
 
             this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
             this.startIndex = 0;
@@ -59,17 +58,17 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-    public String toString() {
-        if (startIndex == 0 && endIndex == buffer.length ) {
-            return FastStringUtils.noCopyStringFromChars ( buffer ) ;
+    public String toString () {
+        if ( startIndex == 0 && endIndex == buffer.length ) {
+            return FastStringUtils.noCopyStringFromChars ( buffer );
         } else {
-            return  new String ( buffer, startIndex, ( endIndex - startIndex ) );
+            return new String ( buffer, startIndex, ( endIndex - startIndex ) );
         }
     }
 
 
     @Override
-    public Object toValue() {
+    public Object toValue () {
 
         if ( value != null ) {
             return value;
@@ -79,7 +78,7 @@ public class ValueInCharBuf extends ValueBase {
         }
     }
 
-    private Object doToValue() {
+    private Object doToValue () {
 
         switch ( type ) {
             case DOUBLE:
@@ -88,15 +87,15 @@ public class ValueInCharBuf extends ValueBase {
 
                 int sign = 1;
                 boolean negative = false;
-                if (buffer[startIndex]== '-') {
+                if ( buffer[ startIndex ] == '-' ) {
                     startIndex++;
-                    sign=-1;
+                    sign = -1;
                     negative = true;
 
                 }
 
 
-                if (isInteger(buffer, startIndex, endIndex - startIndex, negative)) {
+                if ( isInteger ( buffer, startIndex, endIndex - startIndex, negative ) ) {
                     return intValue () * sign;
                 } else {
                     return longValue () * sign;
@@ -109,7 +108,7 @@ public class ValueInCharBuf extends ValueBase {
     }
 
     @Override
-    public boolean equals( Object o ) {
+    public boolean equals ( Object o ) {
         if ( this == o ) return true;
         if ( !( o instanceof ValueBase ) ) return false;
 
@@ -125,7 +124,7 @@ public class ValueInCharBuf extends ValueBase {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         int result = type != null ? type.hashCode () : 0;
         result = 31 * result + ( buffer != null ? Arrays.hashCode ( buffer ) : 0 );
         result = 31 * result + startIndex;
@@ -136,17 +135,17 @@ public class ValueInCharBuf extends ValueBase {
 
 
     @Override
-    public final int length() {
+    public final int length () {
         return buffer.length;
     }
 
     @Override
-    public final char charAt( int index ) {
-        return buffer[index];
+    public final char charAt ( int index ) {
+        return buffer[ index ];
     }
 
     @Override
-    public final CharSequence subSequence( int start, int end ) {
+    public final CharSequence subSequence ( int start, int end ) {
 
         ValueInCharBuf b = new ValueInCharBuf ();
         b.startIndex = start;
@@ -155,11 +154,11 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-    public BigDecimal bigDecimalValue() {
+    public BigDecimal bigDecimalValue () {
         return new BigDecimal ( buffer, startIndex, endIndex - startIndex );
     }
 
-    public String stringValue() {
+    public String stringValue () {
         if ( this.decodeStrings ) {
             return JsonStringDecoder.decodeForSure ( buffer, startIndex, endIndex );
         } else {
@@ -168,73 +167,72 @@ public class ValueInCharBuf extends ValueBase {
     }
 
     @Override
-    public String stringValueEncoded() {
+    public String stringValueEncoded () {
         return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
     }
 
 
-
     @Override
-    public Date dateValue() {
+    public Date dateValue () {
 
 
-        if (type == Type.STRING ) {
+        if ( type == Type.STRING ) {
 
-            if (Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex )) {
+            if ( Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex ) ) {
 
-                if (Dates.isJsonDate ( buffer, startIndex, endIndex )) {
+                if ( Dates.isJsonDate ( buffer, startIndex, endIndex ) ) {
                     return Dates.fromJsonDate ( buffer, startIndex, endIndex );
 
-                } else if (Dates.isISO8601 ( buffer, startIndex, endIndex )) {
+                } else if ( Dates.isISO8601 ( buffer, startIndex, endIndex ) ) {
                     return Dates.fromISO8601 ( buffer, startIndex, endIndex );
                 } else {
-                    throw new JsonException ( "Unable to convert " + stringValue () +  " to date " );
+                    throw new JsonException ( "Unable to convert " + stringValue () + " to date " );
                 }
             } else {
 
-                throw new JsonException ( "Unable to convert " + stringValue () +  " to date " );
+                throw new JsonException ( "Unable to convert " + stringValue () + " to date " );
             }
         } else {
 
-            return new Date (Dates.utc ( longValue ()));
+            return new Date ( Dates.utc ( longValue () ) );
         }
 
     }
 
 
     @Override
-    public int intValue() {
+    public int intValue () {
         int sign = 1;
-        if (buffer[startIndex]== '-') {
+        if ( buffer[ startIndex ] == '-' ) {
             startIndex++;
-            sign=-1;
+            sign = -1;
 
         }
         return parseInt ( buffer, startIndex, endIndex - startIndex ) * sign;
     }
 
     @Override
-    public long longValue() {
+    public long longValue () {
         long sign = 1;
-        if (buffer[startIndex]== '-') {
+        if ( buffer[ startIndex ] == '-' ) {
             startIndex++;
-            sign=-1;
+            sign = -1;
 
         }
         return parseLong ( buffer, startIndex, endIndex - startIndex ) * sign;
     }
 
 
-    public byte byteValue() {
+    public byte byteValue () {
         return ( byte ) intValue ();
     }
 
-    public short shortValue() {
+    public short shortValue () {
         return ( short ) intValue ();
     }
 
 
-    private static  float fpowersOf10[] = {
+    private static float fpowersOf10[] = {
             1.0f,
             10.0f,
             100.0f,
@@ -248,13 +246,13 @@ public class ValueInCharBuf extends ValueBase {
     };
 
     @Override
-    public double doubleValue() {
+    public double doubleValue () {
         return CharScanner.doubleValue ( this.buffer, startIndex, endIndex );
 
     }
 
     @Override
-    public float floatValue() {
+    public float floatValue () {
 
         boolean simple = true;
         int digitsPastPoint = 0;
@@ -262,7 +260,7 @@ public class ValueInCharBuf extends ValueBase {
 
         float sign;
 
-        if ( buffer[startIndex] == '-' ) {
+        if ( buffer[ startIndex ] == '-' ) {
             startIndex++;
             sign = -1.0f;
         } else {
@@ -271,12 +269,12 @@ public class ValueInCharBuf extends ValueBase {
 
 
         int length = endIndex - startIndex;
-        if (length > 10) {
+        if ( length > 10 ) {
             return Float.parseFloat ( toString () ) * sign;
         }
         loop:
         for ( int index = startIndex; index < endIndex; index++ ) {
-            char ch = buffer[index];
+            char ch = buffer[ index ];
             switch ( ch ) {
                 case 'e':
                     simple = false;
@@ -296,7 +294,7 @@ public class ValueInCharBuf extends ValueBase {
             }
             if ( foundPoint ) {
                 digitsPastPoint++;
-                if (digitsPastPoint >= fpowersOf10.length) {
+                if ( digitsPastPoint >= fpowersOf10.length ) {
                     simple = true;
                     break;
                 }
@@ -308,7 +306,7 @@ public class ValueInCharBuf extends ValueBase {
 
             value = parseIntIgnoreDot ( buffer, startIndex, length );
             if ( digitsPastPoint < fpowersOf10.length ) {
-                float power = fpowersOf10[digitsPastPoint] * sign;
+                float power = fpowersOf10[ digitsPastPoint ] * sign;
                 return value / power;
 
             }

@@ -9,7 +9,7 @@ public class LruConcurrentCacheTest {
 
     @Test
     public void test () {
-        LruCache <Integer, Integer> cache = new ConcurrentLruCache<> ( 4 );
+        LruCache<Integer, Integer> cache = new ConcurrentLruCache<> ( 4 );
 
 
         cache.put ( 0, 0 );

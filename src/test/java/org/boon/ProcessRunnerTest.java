@@ -10,7 +10,7 @@ import static org.boon.Boon.puts;
 public class ProcessRunnerTest {
 
     @Before
-    public void init() {
+    public void init () {
 
     }
 
@@ -22,23 +22,22 @@ public class ProcessRunnerTest {
 
     @Test
     public void runWithTimeout () {
-        puts ( Runner.runShell ( 1, "ls -l") );
+        puts ( Runner.runShell ( 1, "ls -l" ) );
     }
 
     @Test
     public void runExec () {
-        puts ( Runner.execShell ( "ls -l") );
+        puts ( Runner.execShell ( "ls -l" ) );
     }
 
 
     @Test
     public void runExecTimeout () {
-        puts ( Runner.execShell ( 1, "ls -l") );
+        puts ( Runner.execShell ( 1, "ls -l" ) );
     }
 
 
-
-    @Test  (expected = Runner.ProcessException.class)
+    @Test ( expected = Runner.ProcessException.class )
     public void runRunTimeoutFails () {
         puts ( Runner.run ( 1, "sleep 20" ) );
     }
@@ -70,8 +69,8 @@ public class ProcessRunnerTest {
 //    }
 
 
-    public static void main (String... args) {
-        System.out.println (Runner.run ( "date +%s" ));
+    public static void main ( String... args ) {
+        System.out.println ( Runner.run ( "date +%s" ) );
     }
 
 }

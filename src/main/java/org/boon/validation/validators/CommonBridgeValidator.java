@@ -25,16 +25,16 @@ public class CommonBridgeValidator extends BaseValidator {
     private Object validator;
     private Method validateMethod;
 
-    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
-        ValidatorMessage message = new ValidatorMessage ( );
+    public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
+        ValidatorMessage message = new ValidatorMessage ();
         if ( object == null ) {
             return message;
         }
         boolean valid = false;
         try {
-            initValidatorIfNeeded ( );
-            initValidateMethodIfNeeded ( );
-            valid = ( Boolean ) validateMethod.invoke ( validator, new Object[]{( String ) object} );
+            initValidatorIfNeeded ();
+            initValidateMethodIfNeeded ();
+            valid = ( Boolean ) validateMethod.invoke ( validator, new Object[]{ ( String ) object } );
 
         } catch ( Exception exception ) {
             throw new RuntimeException ( "Fatal exception trying to "
@@ -47,19 +47,19 @@ public class CommonBridgeValidator extends BaseValidator {
         return message;
     }
 
-    private void initValidateMethodIfNeeded( ) throws Exception {
+    private void initValidateMethodIfNeeded () throws Exception {
         if ( validateMethod == null ) {
-            validateMethod = validatorClass.getMethod ( methodName, new Class[]{String.class} );
+            validateMethod = validatorClass.getMethod ( methodName, new Class[]{ String.class } );
         }
     }
 
     /**
      * @throws Exception if something goes wrong
      */
-    private void initValidatorIfNeeded( ) throws Exception {
+    private void initValidatorIfNeeded () throws Exception {
         if ( validator == null ) {
             if ( factoryMethod == null ) {
-                validator = validatorClass.newInstance ( );
+                validator = validatorClass.newInstance ();
             } else {
                 Method method = validatorClass.getMethod ( factoryMethod );
                 validator = method.invoke ( null, ( Object[] ) null );
@@ -67,15 +67,15 @@ public class CommonBridgeValidator extends BaseValidator {
         }
     }
 
-    public void setMethodName( String methodName ) {
+    public void setMethodName ( String methodName ) {
         this.methodName = methodName;
     }
 
-    public void setValidatorClass( Class<?> validatorClass ) {
+    public void setValidatorClass ( Class<?> validatorClass ) {
         this.validatorClass = validatorClass;
     }
 
-    public void setFactoryMethod( String factoryMethod ) {
+    public void setFactoryMethod ( String factoryMethod ) {
         this.factoryMethod = factoryMethod;
     }
 

@@ -6,14 +6,14 @@ import org.boon.datarepo.SearchableCollection;
 import java.util.Map;
 
 public interface ObjectEditorComposer<KEY, ITEM> {
-    void setFields( Map<String, FieldAccess> fields );
+    void setFields ( Map<String, FieldAccess> fields );
 
-    void setSearchableCollection( SearchableCollection<KEY, ITEM> searchableCollection );
+    void setSearchableCollection ( SearchableCollection<KEY, ITEM> searchableCollection );
 
-    void init( );
+    void init ();
 
-    void hashCodeOptimizationOn( );
+    void hashCodeOptimizationOn ();
 
-    public void setLookupAndExcept( boolean lookupAndExcept );
+    public void setLookupAndExcept ( boolean lookupAndExcept );
 
 }

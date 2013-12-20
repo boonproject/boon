@@ -19,24 +19,24 @@ import static org.boon.Exceptions.die;
 public class Conversions {
     static Class<Conversions> types = Conversions.class;
 
-    private static final Logger log = Logger.getLogger ( Conversions.class.getName ( ) );
+    private static final Logger log = Logger.getLogger ( Conversions.class.getName () );
 
 
-    public static int toInt( Object obj ) {
-        if ( obj.getClass ( ) == int.class ) {
+    public static int toInt ( Object obj ) {
+        if ( obj.getClass () == int.class ) {
             return int.class.cast ( obj );
         }
         try {
             if ( obj instanceof Number ) {
-                return ( ( Number ) obj ).intValue ( );
-            } else if ( obj instanceof Boolean || obj.getClass ( ) == Boolean.class ) {
+                return ( ( Number ) obj ).intValue ();
+            } else if ( obj instanceof Boolean || obj.getClass () == Boolean.class ) {
                 boolean value = toBoolean ( obj );
                 return value ? 1 : 0;
             } else if ( obj instanceof CharSequence ) {
                 try {
-                    return Integer.parseInt ( ( ( CharSequence ) obj ).toString ( ) );
+                    return Integer.parseInt ( ( ( CharSequence ) obj ).toString () );
                 } catch ( Exception ex ) {
-                    char[] chars = toString ( obj ).toCharArray ( );
+                    char[] chars = toString ( obj ).toCharArray ();
                     boolean found = false;
                     CharBuf builder = CharBuf.create ( chars.length );
                     for ( char c : chars ) {
@@ -49,13 +49,13 @@ public class Conversions {
                         }
                     }
                     try {
-                        if ( builder.len ( ) > 0 ) {
-                            return Integer.parseInt ( builder.toString ( ) );
+                        if ( builder.len () > 0 ) {
+                            return Integer.parseInt ( builder.toString () );
                         }
                     } catch ( Exception ex2 ) {
                         log.warning ( String.format (
                                 "unable to convert to byte and there was an exception %s",
-                                ex2.getMessage ( ) ) );
+                                ex2.getMessage () ) );
                     }
                 }
             } else {
@@ -64,52 +64,52 @@ public class Conversions {
 
             log.warning ( String.format (
                     "unable to convert to byte and there was an exception %s",
-                    ex1.getMessage ( ) ) );
+                    ex1.getMessage () ) );
 
         }
-        die ( String.format ( "Unable to convert %s to a int", obj.getClass ( ) ) );
+        die ( String.format ( "Unable to convert %s to a int", obj.getClass () ) );
         return -666; // die throws an exception
 
     }
 
-    public static byte toByte( Object obj ) {
-        if ( obj.getClass ( ) == byte.class ) {
+    public static byte toByte ( Object obj ) {
+        if ( obj.getClass () == byte.class ) {
             return byte.class.cast ( obj );
         } else if ( obj instanceof Number ) {
-            return ( ( Number ) obj ).byteValue ( );
+            return ( ( Number ) obj ).byteValue ();
         } else {
             return ( byte ) toInt ( obj );
         }
     }
 
-    public static short toShort( Object obj ) {
+    public static short toShort ( Object obj ) {
 
-        if ( obj.getClass ( ) == short.class ) {
+        if ( obj.getClass () == short.class ) {
             return short.class.cast ( obj );
         } else if ( obj instanceof Number ) {
-            return ( ( Number ) obj ).shortValue ( );
+            return ( ( Number ) obj ).shortValue ();
         } else {
             return ( short ) toInt ( obj );
         }
     }
 
-    public static char toChar( Object obj ) {
-        if ( obj.getClass ( ) == char.class ) {
+    public static char toChar ( Object obj ) {
+        if ( obj.getClass () == char.class ) {
             return char.class.cast ( obj );
         } else if ( obj instanceof Character ) {
-            return ( ( Character ) obj ).charValue ( );
+            return ( ( Character ) obj ).charValue ();
         } else if ( obj instanceof CharSequence ) {
-            return obj.toString ( ).charAt ( 0 );
+            return obj.toString ().charAt ( 0 );
         } else if ( obj instanceof Number ) {
             return ( char ) toInt ( obj );
-        } else if ( obj instanceof Boolean || obj.getClass ( ) == Boolean.class ) {
+        } else if ( obj instanceof Boolean || obj.getClass () == Boolean.class ) {
             boolean value = toBoolean ( obj );
             return value ? 'T' : 'F';
-        } else if ( obj.getClass ( ).isPrimitive ( ) ) {
+        } else if ( obj.getClass ().isPrimitive () ) {
             return ( char ) toInt ( obj );
         } else {
             String str = toString ( obj );
-            if ( str.length ( ) > 0 ) {
+            if ( str.length () > 0 ) {
                 return str.charAt ( 0 );
             } else {
                 return '0';
@@ -117,20 +117,20 @@ public class Conversions {
         }
     }
 
-    public static long toLong( Object obj ) {
+    public static long toLong ( Object obj ) {
 
-        if ( obj.getClass ( ) == long.class ) {
+        if ( obj.getClass () == long.class ) {
             return long.class.cast ( obj );
         }
 
         try {
             if ( obj instanceof Number ) {
-                return ( ( Number ) obj ).longValue ( );
+                return ( ( Number ) obj ).longValue ();
             } else if ( obj instanceof CharSequence ) {
                 try {
-                    return Long.parseLong ( ( ( CharSequence ) obj ).toString ( ) );
+                    return Long.parseLong ( ( ( CharSequence ) obj ).toString () );
                 } catch ( Exception ex ) {
-                    char[] chars = toString ( obj ).toCharArray ( );
+                    char[] chars = toString ( obj ).toCharArray ();
 
                     CharBuf builder = CharBuf.create ( chars.length );
                     boolean found = false;
@@ -144,13 +144,13 @@ public class Conversions {
                         }
                     }
                     try {
-                        if ( builder.len ( ) > 0 ) {
-                            return Long.parseLong ( builder.toString ( ) );
+                        if ( builder.len () > 0 ) {
+                            return Long.parseLong ( builder.toString () );
                         }
                     } catch ( Exception ex2 ) {
                         log.warning ( String.format (
                                 "unable to convert to long and there was an exception %s",
-                                ex2.getMessage ( ) ) );
+                                ex2.getMessage () ) );
 
                     }
                 }
@@ -160,11 +160,11 @@ public class Conversions {
         } catch ( Exception ex ) {
             log.warning ( String.format (
                     "unable to convert to long and there was an exception %s",
-                    ex.getMessage ( ) ) );
+                    ex.getMessage () ) );
 
         }
 
-        die ( String.format ( "Unable to convert %s to a long", obj.getClass ( ) ) );
+        die ( String.format ( "Unable to convert %s to a long", obj.getClass () ) );
         return -666; // die throws an exception
 
     }
@@ -172,19 +172,19 @@ public class Conversions {
     final static Set<String> TRUE_SET = Sets.set ( "t", "true", "True", "y", "yes", "1", "aye",
             "T", "TRUE", "ok" );
 
-    public static boolean toBoolean( Object obj ) {
+    public static boolean toBoolean ( Object obj ) {
 
-        if ( obj.getClass ( ) == boolean.class ) {
+        if ( obj.getClass () == boolean.class ) {
             return boolean.class.cast ( obj );
         } else if ( obj instanceof Boolean ) {
-            return ( ( Boolean ) obj ).booleanValue ( );
-        } else if ( obj instanceof Number || obj.getClass ( ).isPrimitive ( ) ) {
+            return ( ( Boolean ) obj ).booleanValue ();
+        } else if ( obj instanceof Number || obj.getClass ().isPrimitive () ) {
             int value = toInt ( obj );
             return value != 0 ? true : false;
         } else if ( obj instanceof String || obj instanceof CharSequence
-                || obj.getClass ( ) == char[].class ) {
+                || obj.getClass () == char[].class ) {
             String str = Conversions.toString ( obj );
-            if ( str.length ( ) == 0 ) {
+            if ( str.length () == 0 ) {
                 return false;
             } else {
                 return Sets.in ( str, TRUE_SET );
@@ -196,8 +196,8 @@ public class Conversions {
         }
     }
 
-    public static double toDouble( Object obj ) {
-        if ( obj.getClass ( ) == double.class ) {
+    public static double toDouble ( Object obj ) {
+        if ( obj.getClass () == double.class ) {
             return ( Double ) obj;
         }
 
@@ -205,10 +205,10 @@ public class Conversions {
             if ( obj instanceof Double ) {
                 return ( Double ) obj;
             } else if ( obj instanceof Number ) {
-                return ( ( Number ) obj ).doubleValue ( );
+                return ( ( Number ) obj ).doubleValue ();
             } else if ( obj instanceof CharSequence ) {
                 try {
-                    return Double.parseDouble ( ( ( CharSequence ) obj ).toString ( ) );
+                    return Double.parseDouble ( ( ( CharSequence ) obj ).toString () );
                 } catch ( Exception ex ) {
 //                    String svalue = str(obj);
 //                    Matcher re = Regex.re(
@@ -217,7 +217,7 @@ public class Conversions {
 //                        svalue = re.group(0);
 //                        return Double.parseDouble(svalue);
 //                    }
-                    die ( String.format ( "Unable to convert %s to a double", obj.getClass ( ) ) );
+                    die ( String.format ( "Unable to convert %s to a double", obj.getClass () ) );
                     return Double.NaN;
                 }
             } else {
@@ -225,16 +225,16 @@ public class Conversions {
         } catch ( Exception ex ) {
             log.warning ( String.format (
                     "unable to convert to double and there was an exception %s",
-                    ex.getMessage ( ) ) );
+                    ex.getMessage () ) );
         }
 
-        die ( String.format ( "Unable to convert %s to a double", obj.getClass ( ) ) );
+        die ( String.format ( "Unable to convert %s to a double", obj.getClass () ) );
         return -666d; // die throws an exception
 
     }
 
-    public static float toFloat( Object obj ) {
-        if ( obj.getClass ( ) == float.class ) {
+    public static float toFloat ( Object obj ) {
+        if ( obj.getClass () == float.class ) {
             return ( Float ) obj;
         }
 
@@ -242,10 +242,10 @@ public class Conversions {
             if ( obj instanceof Float ) {
                 return ( Float ) obj;
             } else if ( obj instanceof Number ) {
-                return ( ( Number ) obj ).floatValue ( );
+                return ( ( Number ) obj ).floatValue ();
             } else if ( obj instanceof CharSequence ) {
                 try {
-                    return Float.parseFloat ( ( ( CharSequence ) obj ).toString ( ) );
+                    return Float.parseFloat ( ( ( CharSequence ) obj ).toString () );
                 } catch ( Exception ex ) {
 //                    String svalue = str(obj);
 //                    Matcher re = Regex.re(
@@ -254,7 +254,7 @@ public class Conversions {
 //                        svalue = re.group(0);
 //                        return Float.parseFloat(svalue);
 //                    }
-                    die ( String.format ( "Unable to convert %s to a float", obj.getClass ( ) ) );
+                    die ( String.format ( "Unable to convert %s to a float", obj.getClass () ) );
                     return Float.NaN;
                 }
             } else {
@@ -263,19 +263,19 @@ public class Conversions {
 
             log.warning ( String.format (
                     "unable to convert to float and there was an exception %s",
-                    ex.getMessage ( ) ) );
+                    ex.getMessage () ) );
         }
 
-        die ( String.format ( "Unable to convert %s to a float", obj.getClass ( ) ) );
+        die ( String.format ( "Unable to convert %s to a float", obj.getClass () ) );
         return -666f; // die throws an exception
 
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T coerce( Class<T> clz, Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T coerce ( Class<T> clz, Object value ) {
 
         if ( clz == Typ.string || clz == Typ.chars ) {
-            return ( T ) value.toString ( );
+            return ( T ) value.toString ();
         } else if ( clz == Typ.integer || clz == Typ.intgr ) {
             Integer i = toInt ( value );
             return ( T ) i;
@@ -294,65 +294,65 @@ public class Conversions {
         } else if ( clz == Typ.bool || clz == Typ.bln ) {
             Boolean b = toBoolean ( value );
             return ( T ) b;
-        }  else if ( Typ.isMap ( clz ) ) {
+        } else if ( Typ.isMap ( clz ) ) {
             if ( value instanceof Map ) {
                 return ( T ) value;
             }
             return ( T ) toMap ( value );
-        } else if ( clz.isArray ( ) ) {
+        } else if ( clz.isArray () ) {
             return ( T ) toPrimitiveArrayIfPossible ( clz, value );
         } else if ( Typ.isCollection ( clz ) ) {
             return toCollection ( clz, value );
-        } else if ( clz != null && clz.getPackage ( ) != null && !clz.getPackage ( ).getName ( ).startsWith ( "java" )
-                && Typ.isMap ( value.getClass ( ) ) && Typ.doesMapHaveKeyTypeString ( value ) ) {
+        } else if ( clz != null && clz.getPackage () != null && !clz.getPackage ().getName ().startsWith ( "java" )
+                && Typ.isMap ( value.getClass () ) && Typ.doesMapHaveKeyTypeString ( value ) ) {
             return ( T ) Reflection.fromMap ( ( Map<String, Object> ) value );
         } else if ( clz.isEnum () ) {
-            return toEnum (  clz, value );
+            return toEnum ( clz, value );
 
         } else {
             return ( T ) value;
         }
     }
 
-    public static <T> T toEnum(Class<? extends Enum> cls ,  String value ) {
-        return (T) Enum.valueOf ( cls,  value );
+    public static <T> T toEnum ( Class<? extends Enum> cls, String value ) {
+        return ( T ) Enum.valueOf ( cls, value );
 
     }
 
 
-    public static <T> T toEnum(Class<? extends Enum> cls ,  int value ) {
+    public static <T> T toEnum ( Class<? extends Enum> cls, int value ) {
         Class<? extends Enum> clsEnum = ( Class<? extends Enum> ) cls;
 
         Enum[] enumConstants = clsEnum.getEnumConstants ();
-        for (Enum e : enumConstants) {
-            if (e.ordinal () == value) {
-                return (T)e;
+        for ( Enum e : enumConstants ) {
+            if ( e.ordinal () == value ) {
+                return ( T ) e;
             }
         }
 
-        die ("Can't convert ordinal value " + value + " into enum of type " + clsEnum);
-        return (T)null;
+        die ( "Can't convert ordinal value " + value + " into enum of type " + clsEnum );
+        return ( T ) null;
 
 
     }
 
 
-    public static <T> T toEnum(  Class<?> cls, Object value ) {
+    public static <T> T toEnum ( Class<?> cls, Object value ) {
 
         if ( value instanceof CharSequence ) {
             return toEnum ( cls, value.toString () );
-        } else if (value instanceof Number || value.getClass ().isPrimitive ()) {
+        } else if ( value instanceof Number || value.getClass ().isPrimitive () ) {
 
             int i = toInt ( value );
             return toEnum ( cls, i );
         } else {
-            die ("Can't convert  value " + value + " into enum of type " + cls);
-            return (T)null;
+            die ( "Can't convert  value " + value + " into enum of type " + cls );
+            return ( T ) null;
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T toPrimitiveArrayIfPossible( Class<T> clz, Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T toPrimitiveArrayIfPossible ( Class<T> clz, Object value ) {
         if ( clz == Typ.intArray ) {
             return ( T ) iarray ( value );
         } else if ( clz == Typ.byteArray ) {
@@ -367,14 +367,14 @@ public class Conversions {
             return ( T ) farray ( value );
         } else if ( clz == Typ.doubleArray ) {
             return ( T ) darray ( value );
-        } else if ( value.getClass ( ) == clz ) {
+        } else if ( value.getClass () == clz ) {
             return ( T ) value;
         } else {
             int index = 0;
-            Object newInstance = Array.newInstance ( clz.getComponentType ( ), Reflection.len ( value ) );
+            Object newInstance = Array.newInstance ( clz.getComponentType (), Reflection.len ( value ) );
             Iterator<Object> iterator = iterator ( Typ.object, value );
-            while ( iterator.hasNext ( ) ) {
-                Reflection.idx ( newInstance, index, iterator.next ( ) );
+            while ( iterator.hasNext () ) {
+                Reflection.idx ( newInstance, index, iterator.next () );
                 index++;
             }
             return ( T ) newInstance;
@@ -382,153 +382,153 @@ public class Conversions {
     }
 
 
-    public static double[] darray( Object value ) {
+    public static double[] darray ( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
-        if ( value.getClass ( ) == Typ.shortArray ) {
+        if ( value.getClass () == Typ.shortArray ) {
             return ( double[] ) value;
         }
-        double[] values = new double[Reflection.len ( value )];
+        double[] values = new double[ Reflection.len ( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
-        while ( iterator.hasNext ( ) ) {
-            values[index] = toFloat ( iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            values[ index ] = toFloat ( iterator.next () );
             index++;
         }
         return values;
     }
 
-    public static float[] farray( Object value ) {
+    public static float[] farray ( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
-        if ( value.getClass ( ) == Typ.floatArray ) {
+        if ( value.getClass () == Typ.floatArray ) {
             return ( float[] ) value;
         }
-        float[] values = new float[Reflection.len ( value )];
+        float[] values = new float[ Reflection.len ( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
-        while ( iterator.hasNext ( ) ) {
-            values[index] = toFloat ( iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            values[ index ] = toFloat ( iterator.next () );
             index++;
         }
         return values;
     }
 
-    public static long[] larray( Object value ) {
+    public static long[] larray ( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
-        if ( value.getClass ( ) == Typ.shortArray ) {
+        if ( value.getClass () == Typ.shortArray ) {
             return ( long[] ) value;
         }
-        long[] values = new long[Reflection.len ( value )];
+        long[] values = new long[ Reflection.len ( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
-        while ( iterator.hasNext ( ) ) {
-            values[index] = toLong ( iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            values[ index ] = toLong ( iterator.next () );
             index++;
         }
         return values;
     }
 
-    public static short[] sarray( Object value ) {
+    public static short[] sarray ( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
-        if ( value.getClass ( ) == Typ.shortArray ) {
+        if ( value.getClass () == Typ.shortArray ) {
             return ( short[] ) value;
         }
-        short[] values = new short[Reflection.len ( value )];
+        short[] values = new short[ Reflection.len ( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
-        while ( iterator.hasNext ( ) ) {
-            values[index] = toShort ( iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            values[ index ] = toShort ( iterator.next () );
             index++;
         }
         return values;
     }
 
-    public static int[] iarray( Object value ) {
+    public static int[] iarray ( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
-        if ( value.getClass ( ) == Typ.intArray ) {
+        if ( value.getClass () == Typ.intArray ) {
             return ( int[] ) value;
         }
-        int[] values = new int[Reflection.len ( value )];
+        int[] values = new int[ Reflection.len ( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
-        while ( iterator.hasNext ( ) ) {
-            values[index] = toInt ( iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            values[ index ] = toInt ( iterator.next () );
             index++;
         }
         return values;
     }
 
-    public static byte[] barray( Object value ) {
+    public static byte[] barray ( Object value ) {
         //You could handleUnexpectedException shorts, ints, longs and chars more efficiently
-        if ( value.getClass ( ) == Typ.byteArray ) {
+        if ( value.getClass () == Typ.byteArray ) {
             return ( byte[] ) value;
         }
-        byte[] values = new byte[Reflection.len ( value )];
+        byte[] values = new byte[ Reflection.len ( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
-        while ( iterator.hasNext ( ) ) {
-            values[index] = toByte ( iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            values[ index ] = toByte ( iterator.next () );
             index++;
         }
         return values;
     }
 
-    public static char[] carray( Object value ) {
+    public static char[] carray ( Object value ) {
         //You could handleUnexpectedException shorts, ints, longs and chars more efficiently
-        if ( value.getClass ( ) == Typ.charArray ) {
+        if ( value.getClass () == Typ.charArray ) {
             return ( char[] ) value;
         }
-        char[] values = new char[Reflection.len ( value )];
+        char[] values = new char[ Reflection.len ( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator ( Typ.object, value );
-        while ( iterator.hasNext ( ) ) {
-            values[index] = toChar ( iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            values[ index ] = toChar ( iterator.next () );
             index++;
         }
         return values;
     }
 
-    @SuppressWarnings("unchecked")
-    public static Iterator iterator( final Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static Iterator iterator ( final Object value ) {
         return iterator ( null, value );
     }
 
-    public static <T> Iterator<T> iterator( Class<T> class1, final Object value ) {
+    public static <T> Iterator<T> iterator ( Class<T> class1, final Object value ) {
 
 
         if ( Reflection.isArray ( value ) ) {
             final int length = Reflection.arrayLength ( value );
 
-            return new Iterator<T> ( ) {
+            return new Iterator<T> () {
                 int i = 0;
 
                 @Override
-                public boolean hasNext( ) {
+                public boolean hasNext () {
                     return i < length;
                 }
 
                 @Override
-                public T next( ) {
+                public T next () {
                     T next = ( T ) Reflection.idx ( value, i );
                     i++;
                     return next;
                 }
 
                 @Override
-                public void remove( ) {
+                public void remove () {
                 }
             };
-        } else if ( Typ.isCollection ( value.getClass ( ) ) ) {
-            return ( ( Collection<T> ) value ).iterator ( );
-        } else if ( Typ.isMap ( value.getClass ( ) ) ) {
-            Iterator<T> iterator = ( ( Map<String, T> ) value ).values ( ).iterator ( );
+        } else if ( Typ.isCollection ( value.getClass () ) ) {
+            return ( ( Collection<T> ) value ).iterator ();
+        } else if ( Typ.isMap ( value.getClass () ) ) {
+            Iterator<T> iterator = ( ( Map<String, T> ) value ).values ().iterator ();
             return iterator;
         } else {
-            return ( Iterator<T> ) Collections.singleton ( value ).iterator ( );
+            return ( Iterator<T> ) Collections.singleton ( value ).iterator ();
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T toCollection( Class<T> clz, Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T toCollection ( Class<T> clz, Object value ) {
         if ( Typ.isList ( clz ) ) {
             return ( T ) toList ( value );
         } else if ( Typ.isSortedSet ( clz ) ) {
@@ -540,8 +540,8 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static List toList( Object value ) {
+    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    public static List toList ( Object value ) {
         if ( value instanceof List ) {
             return ( List ) value;
         } else if ( value instanceof Collection ) {
@@ -549,15 +549,15 @@ public class Conversions {
         } else {
             ArrayList list = new ArrayList ( Reflection.len ( value ) );
             Iterator<Object> iterator = iterator ( Typ.object, value );
-            while ( iterator.hasNext ( ) ) {
-                list.add ( iterator.next ( ) );
+            while ( iterator.hasNext () ) {
+                list.add ( iterator.next () );
             }
             return list;
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static Set toSet( Object value ) {
+    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    public static Set toSet ( Object value ) {
         if ( value instanceof Set ) {
             return ( Set ) value;
         } else if ( value instanceof Collection ) {
@@ -565,40 +565,40 @@ public class Conversions {
         } else {
             HashSet set = new HashSet ( Reflection.len ( value ) );
             Iterator<Object> iterator = iterator ( Typ.object, value );
-            while ( iterator.hasNext ( ) ) {
-                set.add ( iterator.next ( ) );
+            while ( iterator.hasNext () ) {
+                set.add ( iterator.next () );
             }
             return set;
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static SortedSet toSortedSet( Object value ) {
+    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    public static SortedSet toSortedSet ( Object value ) {
         if ( value instanceof Set ) {
             return ( SortedSet ) value;
         } else if ( value instanceof Collection ) {
             return new TreeSet ( ( Collection ) value );
         } else {
-            TreeSet set = new TreeSet ( );
+            TreeSet set = new TreeSet ();
             Iterator<Object> iterator = iterator ( Typ.object, value );
-            while ( iterator.hasNext ( ) ) {
-                set.add ( iterator.next ( ) );
+            while ( iterator.hasNext () ) {
+                set.add ( iterator.next () );
             }
             return set;
         }
     }
 
 
-    public static Map<String, Object> toMap( Object value ) {
+    public static Map<String, Object> toMap ( Object value ) {
         return Reflection.toMap ( value );
     }
 
 
-    public static String toString( Object obj ) {
+    public static String toString ( Object obj ) {
         return String.valueOf ( obj );
     }
 
-    public static Number toWrapper( long l ) {
+    public static Number toWrapper ( long l ) {
         if ( l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE ) {
             return toWrapper ( ( int ) l );
         } else {
@@ -606,7 +606,7 @@ public class Conversions {
         }
     }
 
-    public static Number toWrapper( int i ) {
+    public static Number toWrapper ( int i ) {
         if ( i >= Byte.MIN_VALUE && i <= Byte.MAX_VALUE ) {
             return Byte.valueOf ( ( byte ) i );
         } else if ( i >= Short.MIN_VALUE && i <= Short.MAX_VALUE ) {
@@ -616,80 +616,80 @@ public class Conversions {
         }
     }
 
-    public static Object wrapAsObject( boolean i ) {
+    public static Object wrapAsObject ( boolean i ) {
         return Boolean.valueOf ( i );
     }
 
 
-    public static Object wrapAsObject( byte i ) {
+    public static Object wrapAsObject ( byte i ) {
         return Byte.valueOf ( i );
     }
 
-    public static Object wrapAsObject( short i ) {
+    public static Object wrapAsObject ( short i ) {
         return Short.valueOf ( i );
     }
 
-    public static Object wrapAsObject( int i ) {
+    public static Object wrapAsObject ( int i ) {
         return Integer.valueOf ( i );
     }
 
-    public static Object wrapAsObject( long i ) {
+    public static Object wrapAsObject ( long i ) {
         return Long.valueOf ( i );
     }
 
-    public static Object wrapAsObject( double i ) {
+    public static Object wrapAsObject ( double i ) {
         return Double.valueOf ( i );
     }
 
-    public static Object wrapAsObject( float i ) {
+    public static Object wrapAsObject ( float i ) {
         return Float.valueOf ( i );
     }
 
-    public static Object toArrayGuessType( Collection<?> value ) {
+    public static Object toArrayGuessType ( Collection<?> value ) {
         Class<?> componentType = Reflection.getComponentType ( value );
-        Object array = Array.newInstance ( componentType, value.size ( ) );
-        @SuppressWarnings("unchecked")
-        Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ( );
+        Object array = Array.newInstance ( componentType, value.size () );
+        @SuppressWarnings ( "unchecked" )
+        Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ();
         int index = 0;
-        while ( iterator.hasNext ( ) ) {
-            Reflection.idx ( array, index, iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            Reflection.idx ( array, index, iterator.next () );
             index++;
         }
         return array;
     }
 
 
-    public static Object toArray( Class<?> componentType, Collection<?> value ) {
-        Object array = Array.newInstance ( componentType, value.size ( ) );
-        @SuppressWarnings("unchecked")
-        Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ( );
+    public static Object toArray ( Class<?> componentType, Collection<?> value ) {
+        Object array = Array.newInstance ( componentType, value.size () );
+        @SuppressWarnings ( "unchecked" )
+        Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ();
         int index = 0;
-        while ( iterator.hasNext ( ) ) {
-            Reflection.idx ( array, index, iterator.next ( ) );
+        while ( iterator.hasNext () ) {
+            Reflection.idx ( array, index, iterator.next () );
             index++;
         }
         return array;
     }
 
-    public static <V> V[] array( Class<V> type, final Collection<V> array ) {
+    public static <V> V[] array ( Class<V> type, final Collection<V> array ) {
         return ( V[] ) Conversions.toArray ( type, array );
     }
 
 
-    public static Date toDate( Calendar c ) {
-        return c.getTime ( );
+    public static Date toDate ( Calendar c ) {
+        return c.getTime ();
 
     }
 
-    public static Date toDate( long value ) {
+    public static Date toDate ( long value ) {
         return new Date ( value );
     }
 
-    public static Date toDate( Long value ) {
+    public static Date toDate ( Long value ) {
         return new Date ( value );
     }
 
-    public static Date toDate( String value ) {
+    public static Date toDate ( String value ) {
         try {
             return toDateUS ( value );
         } catch ( Exception ex ) {
@@ -704,15 +704,15 @@ public class Conversions {
     }
 
 
-    public static Date toDateUS( String string ) {
+    public static Date toDateUS ( String string ) {
 
-        String[] split = StringScanner.splitByChars ( string, new char[]{'.', '\\', '/', ':'} );
+        String[] split = StringScanner.splitByChars ( string, new char[]{ '.', '\\', '/', ':' } );
 
         if ( split.length == 3 ) {
-            return Dates.getUSDate ( toInt ( split[0] ), toInt ( split[1] ), toInt ( split[2] ) );
+            return Dates.getUSDate ( toInt ( split[ 0 ] ), toInt ( split[ 1 ] ), toInt ( split[ 2 ] ) );
         } else if ( split.length >= 6 ) {
-            return Dates.getUSDate ( toInt ( split[0] ), toInt ( split[1] ), toInt ( split[2] ),
-                    toInt ( split[3] ), toInt ( split[4] ), toInt ( split[5] )
+            return Dates.getUSDate ( toInt ( split[ 0 ] ), toInt ( split[ 1 ] ), toInt ( split[ 2 ] ),
+                    toInt ( split[ 3 ] ), toInt ( split[ 4 ] ), toInt ( split[ 5 ] )
             );
         } else {
             die ( String.format ( "Not able to parse %s into a US date", string ) );
@@ -721,15 +721,15 @@ public class Conversions {
 
     }
 
-    public static Date toEuroDate( String string ) {
+    public static Date toEuroDate ( String string ) {
 
-        String[] split = StringScanner.splitByChars ( string, new char[]{'.', '\\', '/', ':'} );
+        String[] split = StringScanner.splitByChars ( string, new char[]{ '.', '\\', '/', ':' } );
 
         if ( split.length == 3 ) {
-            return Dates.getEuroDate ( toInt ( split[0] ), toInt ( split[1] ), toInt ( split[2] ) );
+            return Dates.getEuroDate ( toInt ( split[ 0 ] ), toInt ( split[ 1 ] ), toInt ( split[ 2 ] ) );
         } else if ( split.length >= 6 ) {
-            return Dates.getEuroDate ( toInt ( split[0] ), toInt ( split[1] ), toInt ( split[2] ),
-                    toInt ( split[3] ), toInt ( split[4] ), toInt ( split[5] )
+            return Dates.getEuroDate ( toInt ( split[ 0 ] ), toInt ( split[ 1 ] ), toInt ( split[ 2 ] ),
+                    toInt ( split[ 3 ] ), toInt ( split[ 4 ] ), toInt ( split[ 5 ] )
             );
         } else {
             die ( String.format ( "Not able to parse %s into a Euro date", string ) );
@@ -739,14 +739,14 @@ public class Conversions {
     }
 
 
-    public static Date toDate( Object value ) {
+    public static Date toDate ( Object value ) {
         if ( value instanceof Long ) {
             return toDate ( ( Long ) value );
         } else if ( value instanceof String ) {
             return toDate ( ( String ) value );
         } else {
             if ( value != null ) {
-                return toDate ( value.toString ( ) );
+                return toDate ( value.toString () );
             } else {
                 die ( "Unable to convert set to date" );
                 return null;
@@ -756,14 +756,14 @@ public class Conversions {
 
 
     public interface Converter<TO, FROM> {
-        TO convert( FROM from );
+        TO convert ( FROM from );
     }
 
 
-    public static <TO, FROM> List<TO> map( Converter<TO, FROM> converter,
-                                           List<FROM> fromList ) {
+    public static <TO, FROM> List<TO> map ( Converter<TO, FROM> converter,
+                                            List<FROM> fromList ) {
 
-        ArrayList<TO> toList = new ArrayList<TO> ( fromList.size ( ) );
+        ArrayList<TO> toList = new ArrayList<TO> ( fromList.size () );
 
         for ( FROM from : fromList ) {
             toList.add ( converter.convert ( from ) );
@@ -773,10 +773,10 @@ public class Conversions {
     }
 
 
-    public static <TO, FROM> List<TO> mapFilterNulls( Converter<TO, FROM> converter,
-                                                      List<FROM> fromList ) {
+    public static <TO, FROM> List<TO> mapFilterNulls ( Converter<TO, FROM> converter,
+                                                       List<FROM> fromList ) {
 
-        ArrayList<TO> toList = new ArrayList<TO> ( fromList.size ( ) );
+        ArrayList<TO> toList = new ArrayList<TO> ( fromList.size () );
 
         for ( FROM from : fromList ) {
             TO converted = converter.convert ( from );
@@ -789,11 +789,11 @@ public class Conversions {
     }
 
 
-    public static Object unifyList( Object o ) {
+    public static Object unifyList ( Object o ) {
         return unifyList ( o, null );
     }
 
-    public static Object unifyList( Object o, List list ) {
+    public static Object unifyList ( Object o, List list ) {
 
         if ( list == null && !Reflection.isArray ( o ) && !( o instanceof Iterable ) ) {
             return o;
@@ -822,18 +822,18 @@ public class Conversions {
     }
 
 
-    public Number coerceNumber( Object inputArgument, Class<?> paraType ) {
+    public Number coerceNumber ( Object inputArgument, Class<?> paraType ) {
         Number number = ( Number ) inputArgument;
         if ( paraType == int.class || paraType == Integer.class ) {
-            return number.intValue ( );
+            return number.intValue ();
         } else if ( paraType == double.class || paraType == Double.class ) {
-            return number.doubleValue ( );
+            return number.doubleValue ();
         } else if ( paraType == float.class || paraType == Float.class ) {
-            return number.floatValue ( );
+            return number.floatValue ();
         } else if ( paraType == short.class || paraType == Short.class ) {
-            return number.shortValue ( );
+            return number.shortValue ();
         } else if ( paraType == byte.class || paraType == Byte.class ) {
-            return number.byteValue ( );
+            return number.byteValue ();
         }
         return null;
     }

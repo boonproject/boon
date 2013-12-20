@@ -10,17 +10,16 @@ import static org.junit.Assert.assertEquals;
 public class CharScannerTest {
 
 
-
     ///
     ///
     @Test
-    public void autoSplitThisEndsInSpace() {
+    public void autoSplitThisEndsInSpace () {
 
         char[] letters =
-                chars("This is a string ");
+                chars ( "This is a string " );
 
 
-        char[][] splitted = CharScanner.split(letters, ' ');
+        char[][] splitted = CharScanner.split ( letters, ' ' );
 
 
         assertEquals (
@@ -29,30 +28,30 @@ public class CharScannerTest {
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[0]
+                chars ( "This" ),
+                splitted[ 0 ]
         );
 
 
         assertArrayEquals (
-                chars("is"),
-                splitted[1]
+                chars ( "is" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[2]
+                chars ( "a" ),
+                splitted[ 2 ]
         );
 
 
         assertArrayEquals (
-                chars("string"),
-                splitted[3]
+                chars ( "string" ),
+                splitted[ 3 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
                 splitted
         );
 
@@ -60,13 +59,13 @@ public class CharScannerTest {
     }
 
     @Test
-    public  void autoSplitThis() {
+    public void autoSplitThis () {
 
         char[] letters =
-                chars("This is a string");
+                chars ( "This is a string" );
 
 
-        char[][] splitted = CharScanner.split(letters, ' ');
+        char[][] splitted = CharScanner.split ( letters, ' ' );
 
 
         assertEquals (
@@ -75,30 +74,30 @@ public class CharScannerTest {
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[0]
+                chars ( "This" ),
+                splitted[ 0 ]
         );
 
 
         assertArrayEquals (
-                chars("is"),
-                splitted[1]
+                chars ( "is" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[2]
+                chars ( "a" ),
+                splitted[ 2 ]
         );
 
 
         assertArrayEquals (
-                chars("string"),
-                splitted[3]
+                chars ( "string" ),
+                splitted[ 3 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
                 splitted
         );
 
@@ -106,15 +105,14 @@ public class CharScannerTest {
     }
 
 
-
     @Test
-    public void autoSplitThisStartSpace() {
+    public void autoSplitThisStartSpace () {
 
         char[] letters =
-                chars(" This is a string");
+                chars ( " This is a string" );
 
 
-        char[][] splitted = CharScanner.split(letters, ' ');
+        char[][] splitted = CharScanner.split ( letters, ' ' );
 
 
         assertEquals (
@@ -123,37 +121,36 @@ public class CharScannerTest {
         );
 
 
-
         assertEquals (
                 0,
-                splitted[0].length
+                splitted[ 0 ].length
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[1]
-        );
-
-
-        assertArrayEquals (
-                chars("is"),
-                splitted[2]
+                chars ( "This" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[3]
+                chars ( "is" ),
+                splitted[ 2 ]
         );
 
 
         assertArrayEquals (
-                chars("string"),
-                splitted[4]
+                chars ( "a" ),
+                splitted[ 3 ]
+        );
+
+
+        assertArrayEquals (
+                chars ( "string" ),
+                splitted[ 4 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars(""), chars("This"), chars("is"), chars("a"), chars("string")},
+                new char[][]{ chars ( "" ), chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
                 splitted
         );
 
@@ -162,13 +159,13 @@ public class CharScannerTest {
 
 
     @Test
-    public void autoSplitThisByTabOrSpace() {
+    public void autoSplitThisByTabOrSpace () {
 
         char[] letters =
-                chars("This\tis a string");
+                chars ( "This\tis a string" );
 
 
-        char[][] splitted = CharScanner.splitByChars(letters, '\t', ' ');
+        char[][] splitted = CharScanner.splitByChars ( letters, '\t', ' ' );
 
 
         assertEquals (
@@ -177,30 +174,30 @@ public class CharScannerTest {
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[0]
+                chars ( "This" ),
+                splitted[ 0 ]
         );
 
 
         assertArrayEquals (
-                chars("is"),
-                splitted[1]
+                chars ( "is" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[2]
+                chars ( "a" ),
+                splitted[ 2 ]
         );
 
 
         assertArrayEquals (
-                chars("string"),
-                splitted[3]
+                chars ( "string" ),
+                splitted[ 3 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
                 splitted
         );
 
@@ -209,13 +206,13 @@ public class CharScannerTest {
 
 
     @Test
-    public void autoSplitThis3DoubleSpaceAfterA() {
+    public void autoSplitThis3DoubleSpaceAfterA () {
 
         char[] letters =
-                chars("This is a  string");
+                chars ( "This is a  string" );
 
 
-        char[][] splitted = CharScanner.split(letters, ' ');
+        char[][] splitted = CharScanner.split ( letters, ' ' );
 
 
         assertEquals (
@@ -224,34 +221,34 @@ public class CharScannerTest {
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[0]
+                chars ( "This" ),
+                splitted[ 0 ]
         );
 
 
         assertArrayEquals (
-                chars("is"),
-                splitted[1]
+                chars ( "is" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[2]
+                chars ( "a" ),
+                splitted[ 2 ]
         );
 
         assertEquals (
                 0,
-                splitted[3].length
+                splitted[ 3 ].length
         );
 
         assertArrayEquals (
-                chars("string"),
-                splitted[4]
+                chars ( "string" ),
+                splitted[ 4 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars("This"), chars("is"), chars("a"), chars(""), chars("string")},
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "" ), chars ( "string" ) },
                 splitted
         );
 
@@ -259,61 +256,14 @@ public class CharScannerTest {
     }
 
 
-
     @Test
-    public void splitThisEndsInSpace() {
+    public void splitThisEndsInSpace () {
 
         char[] letters =
-                chars("This is a string ");
+                chars ( "This is a string " );
 
 
-        char[][] splitted = CharScanner.splitExact(letters, ' ', 10);
-
-
-        assertEquals(
-                4,
-                splitted.length
-        );
-
-        assertArrayEquals(
-                chars("This"),
-                splitted[0]
-        );
-
-
-        assertArrayEquals(
-                chars("is"),
-                splitted[1]
-        );
-
-
-        assertArrayEquals(
-                chars("a"),
-                splitted[2]
-        );
-
-
-        assertArrayEquals(
-                chars("string"),
-                splitted[3]
-        );
-
-        assertArrayEquals(
-                new char[][]{chars("This"), chars("is"), chars("a"), chars("string")},
-                splitted
-        );
-
-
-    }
-
-    @Test
-    public void splitThis() {
-
-        char[] letters =
-                chars("This is a string");
-
-
-        char[][] splitted = CharScanner.splitExact(letters, ' ', 10);
+        char[][] splitted = CharScanner.splitExact ( letters, ' ', 10 );
 
 
         assertEquals (
@@ -322,30 +272,76 @@ public class CharScannerTest {
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[0]
+                chars ( "This" ),
+                splitted[ 0 ]
         );
 
 
         assertArrayEquals (
-                chars("is"),
-                splitted[1]
+                chars ( "is" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[2]
+                chars ( "a" ),
+                splitted[ 2 ]
         );
 
 
         assertArrayEquals (
-                chars("string"),
-                splitted[3]
+                chars ( "string" ),
+                splitted[ 3 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
+                splitted
+        );
+
+
+    }
+
+    @Test
+    public void splitThis () {
+
+        char[] letters =
+                chars ( "This is a string" );
+
+
+        char[][] splitted = CharScanner.splitExact ( letters, ' ', 10 );
+
+
+        assertEquals (
+                4,
+                splitted.length
+        );
+
+        assertArrayEquals (
+                chars ( "This" ),
+                splitted[ 0 ]
+        );
+
+
+        assertArrayEquals (
+                chars ( "is" ),
+                splitted[ 1 ]
+        );
+
+
+        assertArrayEquals (
+                chars ( "a" ),
+                splitted[ 2 ]
+        );
+
+
+        assertArrayEquals (
+                chars ( "string" ),
+                splitted[ 3 ]
+        );
+
+        assertArrayEquals (
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
                 splitted
         );
 
@@ -353,15 +349,14 @@ public class CharScannerTest {
     }
 
 
-
     @Test
-    public void splitThisStartSpace() {
+    public void splitThisStartSpace () {
 
         char[] letters =
-                chars(" This is a string");
+                chars ( " This is a string" );
 
 
-        char[][] splitted = CharScanner.splitExact(letters, ' ', 10);
+        char[][] splitted = CharScanner.splitExact ( letters, ' ', 10 );
 
 
         assertEquals (
@@ -370,37 +365,36 @@ public class CharScannerTest {
         );
 
 
-
-        assertEquals(
+        assertEquals (
                 0,
-                splitted[0].length
+                splitted[ 0 ].length
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[1]
-        );
-
-
-        assertArrayEquals (
-                chars("is"),
-                splitted[2]
+                chars ( "This" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[3]
+                chars ( "is" ),
+                splitted[ 2 ]
         );
 
 
         assertArrayEquals (
-                chars("string"),
-                splitted[4]
+                chars ( "a" ),
+                splitted[ 3 ]
+        );
+
+
+        assertArrayEquals (
+                chars ( "string" ),
+                splitted[ 4 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars(""), chars("This"), chars("is"), chars("a"), chars("string")},
+                new char[][]{ chars ( "" ), chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
                 splitted
         );
 
@@ -409,13 +403,13 @@ public class CharScannerTest {
 
 
     @Test
-    public void splitThisByTabOrSpace() {
+    public void splitThisByTabOrSpace () {
 
         char[] letters =
-                chars("This\tis a string");
+                chars ( "This\tis a string" );
 
 
-        char[][] splitted = CharScanner.splitExact(letters, 10, '\t', ' ');
+        char[][] splitted = CharScanner.splitExact ( letters, 10, '\t', ' ' );
 
 
         assertEquals (
@@ -424,30 +418,30 @@ public class CharScannerTest {
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[0]
+                chars ( "This" ),
+                splitted[ 0 ]
         );
 
 
         assertArrayEquals (
-                chars("is"),
-                splitted[1]
+                chars ( "is" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[2]
+                chars ( "a" ),
+                splitted[ 2 ]
         );
 
 
         assertArrayEquals (
-                chars("string"),
-                splitted[3]
+                chars ( "string" ),
+                splitted[ 3 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars("This"), chars("is"), chars("a"), chars("string")},
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "string" ) },
                 splitted
         );
 
@@ -456,13 +450,13 @@ public class CharScannerTest {
 
 
     @Test
-    public void splitThis3DoubleSpaceAfterA() {
+    public void splitThis3DoubleSpaceAfterA () {
 
         char[] letters =
-                chars("This is a  string");
+                chars ( "This is a  string" );
 
 
-        char[][] splitted = CharScanner.splitExact(letters, ' ', 10);
+        char[][] splitted = CharScanner.splitExact ( letters, ' ', 10 );
 
 
         assertEquals (
@@ -471,34 +465,34 @@ public class CharScannerTest {
         );
 
         assertArrayEquals (
-                chars("This"),
-                splitted[0]
+                chars ( "This" ),
+                splitted[ 0 ]
         );
 
 
         assertArrayEquals (
-                chars("is"),
-                splitted[1]
+                chars ( "is" ),
+                splitted[ 1 ]
         );
 
 
         assertArrayEquals (
-                chars("a"),
-                splitted[2]
+                chars ( "a" ),
+                splitted[ 2 ]
         );
 
-        assertEquals(
+        assertEquals (
                 0,
-                splitted[3].length
+                splitted[ 3 ].length
         );
 
         assertArrayEquals (
-                chars("string"),
-                splitted[4]
+                chars ( "string" ),
+                splitted[ 4 ]
         );
 
         assertArrayEquals (
-                new char [] [] { chars("This"), chars("is"), chars("a"), chars(""), chars("string")},
+                new char[][]{ chars ( "This" ), chars ( "is" ), chars ( "a" ), chars ( "" ), chars ( "string" ) },
                 splitted
         );
 

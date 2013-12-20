@@ -3,80 +3,80 @@ package org.boon.primitive;
 
 public interface Output {
 
-    void write( int b );
+    void write ( int b );
 
-    void write( byte[] b );
+    void write ( byte[] b );
 
-    void write( byte[] b, int off, int len );
+    void write ( byte[] b, int off, int len );
 
-    void writeBoolean( boolean v );
+    void writeBoolean ( boolean v );
 
-    void writeByte( byte v );
+    void writeByte ( byte v );
 
-    void writeUnsignedByte( short v );
+    void writeUnsignedByte ( short v );
 
-    void writeShort( short v );
+    void writeShort ( short v );
 
-    void writeUnsignedShort( int v );
+    void writeUnsignedShort ( int v );
 
-    void writeChar( char v );
+    void writeChar ( char v );
 
-    void writeInt( int v );
+    void writeInt ( int v );
 
-    void writeUnsignedInt( long v );
+    void writeUnsignedInt ( long v );
 
-    void writeLong( long v );
+    void writeLong ( long v );
 
-    void writeFloat( float v );
+    void writeFloat ( float v );
 
-    void writeDouble( double v );
-
-
-    void writeLargeString( String s );
-
-    void writeSmallString( String s );
-
-    void writeMediumString( String s );
-
-    void writeLargeByteArray( byte[] bytes );
-
-    void writeSmallByteArray( byte[] bytes );
-
-    void writeMediumByteArray( byte[] bytes );
+    void writeDouble ( double v );
 
 
-    void writeLargeShortArray( short[] values );
+    void writeLargeString ( String s );
 
-    void writeSmallShortArray( short[] values );
+    void writeSmallString ( String s );
 
-    void writeMediumShortArray( short[] values );
+    void writeMediumString ( String s );
 
+    void writeLargeByteArray ( byte[] bytes );
 
-    void writeLargeIntArray( int[] values );
+    void writeSmallByteArray ( byte[] bytes );
 
-    void writeSmallIntArray( int[] values );
-
-    void writeMediumIntArray( int[] values );
-
-
-    void writeLargeLongArray( long[] values );
-
-    void writeSmallLongArray( long[] values );
-
-    void writeMediumLongArray( long[] values );
-
-    void writeLargeFloatArray( float[] values );
-
-    void writeSmallFloatArray( float[] values );
-
-    void writeMediumFloatArray( float[] values );
+    void writeMediumByteArray ( byte[] bytes );
 
 
-    void writeLargeDoubleArray( double[] values );
+    void writeLargeShortArray ( short[] values );
 
-    void writeSmallDoubleArray( double[] values );
+    void writeSmallShortArray ( short[] values );
 
-    void writeMediumDoubleArray( double[] values );
+    void writeMediumShortArray ( short[] values );
+
+
+    void writeLargeIntArray ( int[] values );
+
+    void writeSmallIntArray ( int[] values );
+
+    void writeMediumIntArray ( int[] values );
+
+
+    void writeLargeLongArray ( long[] values );
+
+    void writeSmallLongArray ( long[] values );
+
+    void writeMediumLongArray ( long[] values );
+
+    void writeLargeFloatArray ( float[] values );
+
+    void writeSmallFloatArray ( float[] values );
+
+    void writeMediumFloatArray ( float[] values );
+
+
+    void writeLargeDoubleArray ( double[] values );
+
+    void writeSmallDoubleArray ( double[] values );
+
+    void writeMediumDoubleArray ( double[] values );
 
     //TODO add unsigned int, unsigned byte, unsigned short array
 

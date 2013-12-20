@@ -2,7 +2,7 @@ package org.boon.json;
 
 public class JsonException extends RuntimeException {
 
-    static void handleException( Exception ex ) {
+    static void handleException ( Exception ex ) {
         throw new JsonException ( ex );
     }
 

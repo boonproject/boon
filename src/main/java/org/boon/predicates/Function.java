@@ -11,6 +11,6 @@ public interface Function<T, R> {
      * @param t the input object
      * @return the function result
      */
-    R apply( T t );
+    R apply ( T t );
 
 }

@@ -496,7 +496,6 @@ public class MoreTests {
         RepoBuilder indexedRepoBuilder = new RepoBuilderDefault ();
 
 
-
         //build repo indexed on id, with search index on lastName
         Repo<String, Employee> indexedRepo = indexedRepoBuilder.primaryKey ( "id" )
                 .searchIndex ( "lastName" )
@@ -504,7 +503,6 @@ public class MoreTests {
 
         //dump employees into repo
         indexedRepo.addAll ( employees );
-
 
 
         //now see who does not have a lastName
@@ -518,7 +516,7 @@ public class MoreTests {
         Repo<String, Employee> nonindexedRepo = nonindexedRepoBuilder.primaryKey ( "id" )
                 .build ( String.class, Employee.class );
         nonindexedRepo.addAll ( employees );
-        assertEquals (2000, nonindexedRepo.size ());
+        assertEquals ( 2000, nonindexedRepo.size () );
 
         List<Employee> nonindexedResult = nonindexedRepo.query ( empty ( "lastName" ) );
 
@@ -559,19 +557,18 @@ public class MoreTests {
     }
 
 
-
     @Test
-    public void testDeleteWithNullIndexedField() {
+    public void testDeleteWithNullIndexedField () {
         Repo<String, Employee> repo =
                 Repos.builder ().primaryKey ( "id" )
                         .searchIndex ( "firstName" )
                         .build ( Typ.string, Employee.class );
 
         Employee e = Employee.employee ( null, "LastA", "9131971", "5.29.1970:00:00:01", 100 );
-        repo.put(e);
+        repo.put ( e );
 
-        e = repo.get("9131971");
-        assertEquals ( "9131971", e.getId() );
+        e = repo.get ( "9131971" );
+        assertEquals ( "9131971", e.getId () );
 
         repo.delete ( e );
         e = repo.get ( "9131971" );
@@ -580,7 +577,7 @@ public class MoreTests {
 
 
     @Test
-    public void testQueryAfterUpdate() {
+    public void testQueryAfterUpdate () {
         String id = "9131971";
 
         Repo<String, Employee> repo =
@@ -590,28 +587,28 @@ public class MoreTests {
 
         Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
         repo.put ( e );
-        assertEquals ( 1, repo.size() );
+        assertEquals ( 1, repo.size () );
 
         // Find the new employee
         Criteria exp = eq ( "firstName", "FirstA" );
         List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size() );
+        assertEquals ( 1, results.size () );
 
         Employee e2 = repo.get ( id );
         repo.modify ( e2 );
-        assertEquals ( 1, repo.size() );
+        assertEquals ( 1, repo.size () );
 
         Employee e3 = repo.get ( id );
         repo.modify ( e3 );
-        assertEquals ( 1, repo.size() );
+        assertEquals ( 1, repo.size () );
 
         List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size() );
+        assertEquals ( 1, results2.size () );
     }
 
 
     @Test
-    public void testQueryAfterUpdate2() {
+    public void testQueryAfterUpdate2 () {
         String id = "9131971";
 
         Repo<String, Employee> repo =
@@ -621,12 +618,12 @@ public class MoreTests {
 
         Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
         repo.put ( e );
-        assertEquals ( 1, repo.size() );
+        assertEquals ( 1, repo.size () );
 
         // Find the new employee
         Criteria exp = eq ( "firstName", "FirstA" );
         List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size() );
+        assertEquals ( 1, results.size () );
 
 
         // Add returns true or false based on whether it was able to add
@@ -638,18 +635,18 @@ public class MoreTests {
         try {
             Employee e3 = repo.get ( id );
             repo.put ( e3 );
-            die("you never get here") ;
-        }catch (DataRepoException dre) {
-            puts("you tried to put something in the repo that is already there", dre.getMessage ());
+            die ( "you never get here" );
+        } catch ( DataRepoException dre ) {
+            puts ( "you tried to put something in the repo that is already there", dre.getMessage () );
         }
 
         List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size() );
+        assertEquals ( 1, results2.size () );
     }
 
 
     @Test
-    public void testQueryAfterUpdate3() {
+    public void testQueryAfterUpdate3 () {
         String id = "9131971";
 
         Repo<String, Employee> repo =
@@ -659,12 +656,12 @@ public class MoreTests {
 
         Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
         repo.put ( e );
-        assertEquals ( 1, repo.size() );
+        assertEquals ( 1, repo.size () );
 
         // Find the new employee
         Criteria exp = eq ( "firstName", "FirstA" );
         List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size() );
+        assertEquals ( 1, results.size () );
 
 
         // Add returns true or false based on whether it was able to add
@@ -683,22 +680,21 @@ public class MoreTests {
 
         try {
             repo.update ( e4 );
-            die("you never get here") ;
-        }catch (DataRepoException dre) {
-            puts("you tried to update something but it does not exist", dre.getMessage ());
+            die ( "you never get here" );
+        } catch ( DataRepoException dre ) {
+            puts ( "you tried to update something but it does not exist", dre.getMessage () );
         }
 
 
         List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size() );
+        assertEquals ( 1, results2.size () );
     }
 
 
     @Test
-    public void testQueryAfterUpdate4() {
+    public void testQueryAfterUpdate4 () {
 
         String id = "3212333222333";
-
 
 
         Repo<String, Employee> repo =
@@ -707,19 +703,16 @@ public class MoreTests {
                         .build ( Typ.string, Employee.class );
 
 
-
         Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
         repo.put ( e );
-        assertEquals ( 1, repo.size() );
-
+        assertEquals ( 1, repo.size () );
 
 
         // Find the new employee by first name
 
         Criteria exp = eq ( "firstName", "FirstA" );
         List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size() );
-
+        assertEquals ( 1, results.size () );
 
 
         // Change first name
@@ -727,49 +720,42 @@ public class MoreTests {
         repo.update ( e );
 
 
-
         // We should not find any results when searching for the old first name
         List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size() );
-
+        assertEquals ( 1, results2.size () );
 
 
         // We should find one result when searching for the new first name
         Criteria expNewFirstName = eq ( "firstName", "NewFirstName" );
         List<Employee> results3 = repo.query ( expNewFirstName );
-        assertEquals ( 1, results3.size() );
+        assertEquals ( 1, results3.size () );
 
     }
 
 
-
     @Test
-    public void testQueryAfterUpdateUseCloneEdits() {
+    public void testQueryAfterUpdateUseCloneEdits () {
 
         String id = "3212333222333";
 
 
-
         Repo<String, Employee> repo =
                 Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" ).cloneEdits( true )     //<--- Clone edits makes a clone
+                        .searchIndex ( "firstName" ).cloneEdits ( true )     //<--- Clone edits makes a clone
                         .build ( Typ.string, Employee.class );
-
 
 
         Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
         repo.put ( e );
 
-        assertEquals ( 1, repo.size() );
-
+        assertEquals ( 1, repo.size () );
 
 
         // Find the new employee by first name
         Criteria exp = eq ( "firstName", "FirstA" );
         List<Employee> results = repo.query ( exp );
 
-        assertEquals ( 1, results.size() );
-
+        assertEquals ( 1, results.size () );
 
 
         // Change first name
@@ -777,11 +763,9 @@ public class MoreTests {
         repo.update ( e );
 
 
-
         // We should not find any results when searching for the old first name
         List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 0, results2.size() );
-
+        assertEquals ( 0, results2.size () );
 
 
         // We should find one result when searching for the new first name
@@ -790,49 +774,43 @@ public class MoreTests {
 
         List<Employee> results3 = repo.query ( expNewFirstName );
 
-        assertEquals ( 1, results3.size() );
+        assertEquals ( 1, results3.size () );
 
     }
 
 
     @Test
-    public void testQueryAfterUpdateUseUpdateMethod() {
+    public void testQueryAfterUpdateUseUpdateMethod () {
 
         String id = "3212333222333";
 
 
-
         Repo<String, Employee> repo =
                 Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" ).cloneEdits( false )     //<--- No cloning
+                        .searchIndex ( "firstName" ).cloneEdits ( false )     //<--- No cloning
                         .build ( Typ.string, Employee.class );
-
 
 
         Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
         repo.put ( e );
 
-        assertEquals ( 1, repo.size() );
-
+        assertEquals ( 1, repo.size () );
 
 
         // Find the new employee by first name
         Criteria exp = eq ( "firstName", "FirstA" );
         List<Employee> results = repo.query ( exp );
 
-        assertEquals ( 1, results.size() );
-
+        assertEquals ( 1, results.size () );
 
 
         // Change first name
-        repo.update(e.getId(), "firstName", "NewFirstName");
-
+        repo.update ( e.getId (), "firstName", "NewFirstName" );
 
 
         // We should not find any results when searching for the old first name
         List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 0, results2.size() );
-
+        assertEquals ( 0, results2.size () );
 
 
         // We should find one result when searching for the new first name
@@ -841,7 +819,7 @@ public class MoreTests {
 
         List<Employee> results3 = repo.query ( expNewFirstName );
 
-        assertEquals ( 1, results3.size() );
+        assertEquals ( 1, results3.size () );
 
     }
 
