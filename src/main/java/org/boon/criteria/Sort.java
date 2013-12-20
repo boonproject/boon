@@ -41,11 +41,7 @@ public class Sort {
         return new Sort ( name, SortType.DESCENDING );
     }
 
-<<<<<<< HEAD
     public Sort () {
-=======
-    public Sort() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
     public Sort ( String name, SortType type ) {
@@ -55,7 +51,6 @@ public class Sort {
         this.toString = doToString ();
     }
 
-<<<<<<< HEAD
     public SortType getType () {
         return type;
     }
@@ -65,17 +60,6 @@ public class Sort {
     }
 
     private String doToString () {
-=======
-    public SortType getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    private String doToString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return "Sort{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
@@ -104,11 +88,7 @@ public class Sort {
     }
 
     @Override
-<<<<<<< HEAD
     public String toString () {
-=======
-    public String toString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return toString;
     }
 
@@ -125,11 +105,7 @@ public class Sort {
         return true;
     }
 
-<<<<<<< HEAD
     private int doHashCode () {
-=======
-    private int doHashCode() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         int result = name.hashCode ();
         result = 31 * result + type.hashCode ();
         return result;
@@ -137,11 +113,7 @@ public class Sort {
     }
 
     @Override
-<<<<<<< HEAD
     public int hashCode () {
-=======
-    public int hashCode() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return hashCode;
     }
 
@@ -150,11 +122,7 @@ public class Sort {
     }
 
 
-<<<<<<< HEAD
     public void sort ( List list ) {
-=======
-    public void sort( List list ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( list == null || list.size () == 0 ) {
             return;
         }

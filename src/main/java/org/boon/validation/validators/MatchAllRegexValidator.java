@@ -25,11 +25,7 @@ public class MatchAllRegexValidator extends BaseValidator {
     private Map<String, Pattern> compiledRegexCache = new HashMap<String, Pattern> ();
 
 
-<<<<<<< HEAD
     public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
-=======
-    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         ValidatorMessage message = new ValidatorMessage ();
         if ( object == null ) {
             return message;

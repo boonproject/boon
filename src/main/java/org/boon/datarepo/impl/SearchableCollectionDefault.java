@@ -514,11 +514,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
 
 
     @Override
-<<<<<<< HEAD
     public void clear () {
-=======
-    public void clear() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         for ( LookupIndex index : indexes ) {
             index.clear ();
         }
@@ -544,11 +540,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         indexes.add ( si );
     }
 
-<<<<<<< HEAD
     public List<ITEM> all () {
-=======
-    public List<ITEM> all() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return primaryIndex.all ();
     }
 
@@ -557,45 +549,25 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         this.primaryKeyName = primaryKey;
     }
 
-<<<<<<< HEAD
     public Collection<ITEM> toCollection () {
         return this.primaryIndex.toCollection ();
     }
 
     public boolean isEmpty () {
-=======
-    public Collection<ITEM> toCollection() {
-        return this.primaryIndex.toCollection ();
-    }
-
-    public boolean isEmpty() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.primaryIndex.toCollection ().isEmpty ();
     }
 
 
-<<<<<<< HEAD
     public Iterator<ITEM> iterator () {
-=======
-    public Iterator<ITEM> iterator() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return primaryIndex.toCollection ().iterator ();
     }
 
 
-<<<<<<< HEAD
     public Object[] toArray () {
         return primaryIndex.toCollection ().toArray ();
     }
 
     public <T> T[] toArray ( T[] a ) {
-=======
-    public Object[] toArray() {
-        return primaryIndex.toCollection ().toArray ();
-    }
-
-    public <T> T[] toArray( T[] a ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return primaryIndex.toCollection ().toArray ( a );
     }
 
@@ -607,11 +579,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     }
 
     @Override
-<<<<<<< HEAD
     public void init () {
-=======
-    public void init() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.primaryIndex = ( UniqueLookupIndex<KEY, ITEM> ) this.lookupIndexMap.get ( this.primaryKeyName );
         if ( filter instanceof FilterComposer ) {
             FilterComposer fc = ( FilterComposer ) filter;
@@ -630,11 +598,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     }
 
 
-<<<<<<< HEAD
     public int size () {
-=======
-    public int size() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return primaryIndex.size ();
     }
 

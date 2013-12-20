@@ -30,7 +30,6 @@ public interface Bag<ITEM> {
 
     boolean delete ( ITEM item );
 
-<<<<<<< HEAD
     List<ITEM> all ();
 
     int size ();
@@ -38,15 +37,6 @@ public interface Bag<ITEM> {
     Collection<ITEM> toCollection ();
 
     void clear ();
-=======
-    List<ITEM> all();
-
-    int size();
-
-    Collection<ITEM> toCollection();
-
-    void clear();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
 }

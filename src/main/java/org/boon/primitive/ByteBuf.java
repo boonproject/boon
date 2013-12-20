@@ -3,6 +3,7 @@ package org.boon.primitive;
 import org.boon.Exceptions;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static org.boon.Exceptions.die;
@@ -43,21 +44,12 @@ public class ByteBuf implements Output {
     }
 
 
-<<<<<<< HEAD
     protected ByteBuf () {
         init ();
     }
 
     private void init () {
         buffer = new byte[ capacity ];
-=======
-    protected ByteBuf() {
-        init ();
-    }
-
-    private void init() {
-        buffer = new byte[capacity];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
 
@@ -253,30 +245,18 @@ public class ByteBuf implements Output {
         return this;
     }
 
-<<<<<<< HEAD
     public byte[] readAndReset () {
-=======
-    public byte[] readAndReset() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         byte[] bytes = this.buffer;
         this.buffer = null;
         return bytes;
     }
 
-<<<<<<< HEAD
     public byte[] readForRecycle () {
-=======
-    public byte[] readForRecycle() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.length = 0;
         return this.buffer;
     }
 
-<<<<<<< HEAD
     public int len () {
-=======
-    public int len() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return length;
     }
 
@@ -666,11 +646,7 @@ public class ByteBuf implements Output {
         }
     }
 
-<<<<<<< HEAD
     public Input input () {
-=======
-    public Input input() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return new InputByteArray ( this.buffer );
     }
 
@@ -776,32 +752,19 @@ public class ByteBuf implements Output {
     }
 
 
-<<<<<<< HEAD
     public String toString () {
         int len = len ();
 
         char[] chars = new char[ buffer.length ];
         for ( int index = 0; index < chars.length; index++ ) {
             chars[ index ] = ( char ) buffer[ index ];
-=======
-    public String toString() {
-        int len = len ();
-
-        char[] chars = new char[buffer.length];
-        for ( int index = 0; index < chars.length; index++ ) {
-            chars[index] = ( char ) buffer[index];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
         return new String ( chars, 0, len );
         //return new String ( this.buffer, 0, len, StandardCharsets.UTF_8 );
     }
 
 
-<<<<<<< HEAD
     public byte[] toBytes () {
-=======
-    public byte[] toBytes() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return Byt.slc ( this.buffer, 0, length );
     }
 

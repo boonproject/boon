@@ -9,6 +9,7 @@ import org.boon.json.implementation.JsonParserCharSequence;
 import org.boon.json.implementation.JsonParserLax;
 import org.boon.primitive.CharBuf;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -38,13 +39,8 @@ public class JsonParserImpl implements JsonParser {
     int bufSize = 256;
 
 
-<<<<<<< HEAD
     public JsonParserImpl ( boolean useDirectBytes, Charset charset, boolean overlay, int sizeSmallerUseOverlayAlways,
                             boolean preferCharSequence, boolean lax, boolean plistStyle ) {
-=======
-    public JsonParserImpl( boolean useDirectBytes, Charset charset, boolean overlay, int sizeSmallerUseOverlayAlways,
-                           boolean preferCharSequence, boolean lax, boolean plistStyle ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         this.lax = lax;
         this.plist = plistStyle;
@@ -127,11 +123,7 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
-<<<<<<< HEAD
     public final <T> T parse ( Class<T> type, CharSequence value ) {
-=======
-    public final <T> T parse( Class<T> type, CharSequence value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( type == Map.class || type == List.class ) {
             return charSequenceParser.parse ( type, value );
         } else {
@@ -141,11 +133,7 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
-<<<<<<< HEAD
     public final <T> T parse ( Class<T> type, char[] value ) {
-=======
-    public final <T> T parse( Class<T> type, char[] value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( type == Map.class || type == List.class ) {
             return basicParser.parse ( type, value );
         } else {
@@ -159,11 +147,7 @@ public class JsonParserImpl implements JsonParser {
     CharBuf charBuf;
 
     @Override
-<<<<<<< HEAD
     public final <T> T parse ( Class<T> type, Reader reader ) {
-=======
-    public final <T> T parse( Class<T> type, Reader reader ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         charBuf = IO.read ( reader, charBuf, bufSize );
         return parse ( type, charBuf.readForRecycle () );
@@ -171,11 +155,7 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
-<<<<<<< HEAD
     public final <T> T parse ( Class<T> type, InputStream input ) {
-=======
-    public final <T> T parse( Class<T> type, InputStream input ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         charBuf = IO.read ( input, charBuf, this.charset, bufSize );
         return parse ( type, charBuf.readForRecycle () );
     }
@@ -188,11 +168,7 @@ public class JsonParserImpl implements JsonParser {
 
 
     @Override
-<<<<<<< HEAD
     public final <T> T parseDirect ( Class<T> type, byte[] value ) {
-=======
-    public final <T> T parseDirect( Class<T> type, byte[] value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( value.length < 20_000 ) {
             CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
             return parse ( type, builder.toCharArray () );

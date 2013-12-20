@@ -22,11 +22,7 @@ public class QueryFactory {
     }
 
 
-<<<<<<< HEAD
     public static <T> List<T> filter ( Collection<T> items, Criteria exp ) {
-=======
-    public static <T> List<T> filter( Collection<T> items, Criteria exp ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( items.size () == 0 ) {
             return Collections.EMPTY_LIST;
         }

@@ -22,11 +22,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
 
                 final Map<String, String> accept = Maps.map (
@@ -45,11 +41,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( byte[].class, new Exceptions.TrialWithReturn<byte[]> () {
             @Override
-<<<<<<< HEAD
             public byte[] tryIt () throws Exception {
-=======
-            public byte[] tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doGet ( url, null, contentType, null, true );
                 return extractResponseBytes ( connection );
@@ -63,11 +55,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( byte[].class, new Exceptions.TrialWithReturn<byte[]> () {
             @Override
-<<<<<<< HEAD
             public byte[] tryIt () throws Exception {
-=======
-            public byte[] tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doGet ( url, headers, contentType, null, true );
                 return extractResponseBytes ( connection );
@@ -82,11 +70,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doGet ( url, headers, null, null );
                 return extractResponseString ( connection );
@@ -102,11 +86,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doGet ( url, headers, contentType, null );
                 return extractResponseString ( connection );
@@ -124,11 +104,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doGet ( url, headers, contentType, charSet );
                 return extractResponseString ( connection );
@@ -151,11 +127,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doPost ( url, null, contentType, null, body );
                 return extractResponseString ( connection );
@@ -192,11 +164,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doPost ( url, headers, "text/plain", null, body );
                 return extractResponseString ( connection );
@@ -215,11 +183,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doPost ( url, headers, contentType, null, body );
                 return extractResponseString ( connection );
@@ -239,11 +203,7 @@ public class HTTP {
 
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doPost ( url, headers, contentType, charSet, body );
                 return extractResponseString ( connection );
@@ -276,11 +236,7 @@ public class HTTP {
     ) {
         return Exceptions.tryIt ( String.class, new Exceptions.TrialWithReturn<String> () {
             @Override
-<<<<<<< HEAD
             public String tryIt () throws Exception {
-=======
-            public String tryIt() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 URLConnection connection;
                 connection = doPostFormData ( url, headers, formData );
                 return extractResponseString ( connection );
@@ -413,11 +369,7 @@ public class HTTP {
 
     }
 
-<<<<<<< HEAD
     private static String readErrorResponseBody ( HttpURLConnection http, int status, String charset ) {
-=======
-    private static String readErrorResponseBody( HttpURLConnection http, int status, String charset ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         InputStream errorStream = http.getErrorStream ();
         if ( errorStream != null ) {
             String error = charset == null ? IO.read ( errorStream ) :
@@ -453,11 +405,7 @@ public class HTTP {
     }
 
 
-<<<<<<< HEAD
     private static void manageContentTypeHeaders ( String contentType, String charset, URLConnection connection ) {
-=======
-    private static void manageContentTypeHeaders( String contentType, String charset, URLConnection connection ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         connection.setRequestProperty ( "Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName () : charset );
         if ( contentType != null && !contentType.isEmpty () ) {
             connection.setRequestProperty ( "Content-Type", contentType );

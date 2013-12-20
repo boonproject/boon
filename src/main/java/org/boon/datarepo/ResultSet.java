@@ -11,17 +11,12 @@ import java.util.Set;
 
 public interface ResultSet<T> extends Iterable<T> {
 
-<<<<<<< HEAD
     ResultSet expectOne ();
-=======
-    ResultSet expectOne();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
     <EXPECT> ResultSet<EXPECT> expectOne ( Class<EXPECT> clz );
 
 
-<<<<<<< HEAD
     ResultSet expectMany ();
 
     ResultSet expectNone ();
@@ -29,15 +24,6 @@ public interface ResultSet<T> extends Iterable<T> {
     ResultSet expectOneOrMany ();
 
     ResultSet removeDuplication ();
-=======
-    ResultSet expectMany();
-
-    ResultSet expectNone();
-
-    ResultSet expectOneOrMany();
-
-    ResultSet removeDuplication();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     ResultSet sort ( Sort sort );
 
@@ -64,7 +50,6 @@ public interface ResultSet<T> extends Iterable<T> {
     <OBJ> ResultSet<OBJ> selectObjectsAsResultSet ( Class<OBJ> cls, Selector selector );
 
 
-<<<<<<< HEAD
     Collection<T> asCollection ();
 
     String asJSONString ();
@@ -82,25 +67,6 @@ public interface ResultSet<T> extends Iterable<T> {
     Map<String, Object> firstMap ();
 
     String firstJSON ();
-=======
-    Collection<T> asCollection();
-
-    String asJSONString();
-
-    List<Map<String, Object>> asListOfMaps();
-
-    List<T> asList();
-
-    Set<T> asSet();
-
-    List<PlanStep> queryPlan();
-
-    T firstItem();
-
-    Map<String, Object> firstMap();
-
-    String firstJSON();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     int firstInt ( Selector selector );
 
@@ -127,11 +93,7 @@ public interface ResultSet<T> extends Iterable<T> {
 
     //Size can vary if you allow duplication.
     //The size can change after removeDuplication.
-<<<<<<< HEAD
     int size ();
-=======
-    int size();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
 }

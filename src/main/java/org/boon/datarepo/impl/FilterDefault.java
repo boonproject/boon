@@ -105,11 +105,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
     @Override
-<<<<<<< HEAD
     public void invalidate () {
-=======
-    public void invalidate() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     }
 
@@ -360,11 +356,7 @@ public class FilterDefault implements Filter, FilterComposer {
                 break;
 
             case BETWEEN:
-<<<<<<< HEAD
                 resultList = searchIndex.findBetween ( criterion.getValue (), criterion.getValues ()[ 1 ] );
-=======
-                resultList = searchIndex.findBetween ( criterion.getValue (), criterion.getValues ()[1] );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 break;
 
 
@@ -381,11 +373,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
     }
 
-<<<<<<< HEAD
     private List processResultsFromIndex ( SearchIndex searchIndex, List results ) {
-=======
-    private List processResultsFromIndex( SearchIndex searchIndex, List results ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( searchIndex.isPrimaryKeyOnly () ) {
             //TODO iterate through listStream and lookup items from keys, and put those in the actual results
             return null;
@@ -416,11 +404,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
     @Override
-<<<<<<< HEAD
     public void init () {
-=======
-    public void init() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     }
 }

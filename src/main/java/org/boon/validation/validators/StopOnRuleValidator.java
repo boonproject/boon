@@ -17,11 +17,7 @@ import org.boon.validation.ValidatorMessageHolder;
 public class StopOnRuleValidator implements FieldValidator {
     private String ruleName;
 
-<<<<<<< HEAD
     public String getRuleName () {
-=======
-    public String getRuleName() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ruleName;
     }
 
@@ -29,11 +25,7 @@ public class StopOnRuleValidator implements FieldValidator {
         this.ruleName = ruleName;
     }
 
-<<<<<<< HEAD
     public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
-=======
-    public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return new ValidatorMessage ();
     }
 

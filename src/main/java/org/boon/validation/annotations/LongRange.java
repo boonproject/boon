@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 @Target ( { ElementType.METHOD, ElementType.TYPE, ElementType.FIELD } )
 public @interface LongRange {
 
-<<<<<<< HEAD
     long min ();
 
     long max ();
@@ -17,15 +16,6 @@ public @interface LongRange {
     String detailMessage () default "";
 
     String summaryMessage () default "";
-=======
-    long min();
-
-    long max();
-
-    String detailMessage() default "";
-
-    String summaryMessage() default "";
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
 }

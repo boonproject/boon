@@ -256,13 +256,8 @@ public class Arrays {
     }
 
 
-<<<<<<< HEAD
     @SuppressWarnings ( "unchecked" )
     public static <V> V[] array ( Collection<V> collection ) {
-=======
-    @SuppressWarnings("unchecked")
-    public static <V> V[] array( Collection<V> collection ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( collection.size () > 0 ) {
             Object newInstance = Array.newInstance ( collection.iterator ().next ().getClass (),
                     collection.size () );

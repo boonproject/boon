@@ -25,11 +25,7 @@ public class CommonBridgeValidator extends BaseValidator {
     private Object validator;
     private Method validateMethod;
 
-<<<<<<< HEAD
     public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
-=======
-    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         ValidatorMessage message = new ValidatorMessage ();
         if ( object == null ) {
             return message;
@@ -38,11 +34,7 @@ public class CommonBridgeValidator extends BaseValidator {
         try {
             initValidatorIfNeeded ();
             initValidateMethodIfNeeded ();
-<<<<<<< HEAD
             valid = ( Boolean ) validateMethod.invoke ( validator, new Object[]{ ( String ) object } );
-=======
-            valid = ( Boolean ) validateMethod.invoke ( validator, new Object[]{( String ) object} );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         } catch ( Exception exception ) {
             throw new RuntimeException ( "Fatal exception trying to "
@@ -55,11 +47,7 @@ public class CommonBridgeValidator extends BaseValidator {
         return message;
     }
 
-<<<<<<< HEAD
     private void initValidateMethodIfNeeded () throws Exception {
-=======
-    private void initValidateMethodIfNeeded() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( validateMethod == null ) {
             validateMethod = validatorClass.getMethod ( methodName, new Class[]{ String.class } );
         }
@@ -68,11 +56,7 @@ public class CommonBridgeValidator extends BaseValidator {
     /**
      * @throws Exception if something goes wrong
      */
-<<<<<<< HEAD
     private void initValidatorIfNeeded () throws Exception {
-=======
-    private void initValidatorIfNeeded() throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( validator == null ) {
             if ( factoryMethod == null ) {
                 validator = validatorClass.newInstance ();

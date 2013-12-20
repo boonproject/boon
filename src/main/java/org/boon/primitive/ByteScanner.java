@@ -2,6 +2,8 @@ package org.boon.primitive;
 
 import java.util.Objects;
 
+import static org.boon.Exceptions.die;
+
 public class ByteScanner {
 
 
@@ -227,24 +229,15 @@ public class ByteScanner {
     final static String MAX_LONG_STR = String.valueOf ( Long.MAX_VALUE );
 
 
-<<<<<<< HEAD
     public static boolean isInteger ( byte[] digitChars, int offset, int len,
                                       boolean negative ) {
-=======
-    public static boolean isInteger( byte[] digitChars, int offset, int len,
-                                     boolean negative ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
         int cmpLen = cmpStr.length ();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
 
         for ( int i = 0; i < cmpLen; ++i ) {
-<<<<<<< HEAD
             int diff = digitChars[ offset + i ] - cmpStr.charAt ( i );
-=======
-            int diff = digitChars[offset + i] - cmpStr.charAt ( i );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             if ( diff != 0 ) {
                 return ( diff < 0 );
             }
@@ -252,24 +245,15 @@ public class ByteScanner {
         return true;
     }
 
-<<<<<<< HEAD
     public static boolean isLong ( byte[] digitChars, int offset, int len,
                                    boolean negative ) {
-=======
-    public static boolean isLong( byte[] digitChars, int offset, int len,
-                                  boolean negative ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
         int cmpLen = cmpStr.length ();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
 
         for ( int i = 0; i < cmpLen; ++i ) {
-<<<<<<< HEAD
             int diff = digitChars[ offset + i ] - cmpStr.charAt ( i );
-=======
-            int diff = digitChars[offset + i] - cmpStr.charAt ( i );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             if ( diff != 0 ) {
                 return ( diff < 0 );
             }
@@ -278,7 +262,6 @@ public class ByteScanner {
     }
 
 
-<<<<<<< HEAD
     public static int parseInt ( byte[] digitChars, int offset, int len ) {
         int num = digitChars[ offset ] - '0';
         int to = len + offset;
@@ -299,28 +282,6 @@ public class ByteScanner {
                                     num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
                                     if ( ++offset < to ) {
                                         num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
-=======
-    public static int parseInt( byte[] digitChars, int offset, int len ) {
-        int num = digitChars[offset] - '0';
-        int to = len + offset;
-        // This looks ugly, but appears the fastest way (as per measurements)
-        if ( ++offset < to ) {
-            num = ( num * 10 ) + ( digitChars[offset] - '0' );
-            if ( ++offset < to ) {
-                num = ( num * 10 ) + ( digitChars[offset] - '0' );
-                if ( ++offset < to ) {
-                    num = ( num * 10 ) + ( digitChars[offset] - '0' );
-                    if ( ++offset < to ) {
-                        num = ( num * 10 ) + ( digitChars[offset] - '0' );
-                        if ( ++offset < to ) {
-                            num = ( num * 10 ) + ( digitChars[offset] - '0' );
-                            if ( ++offset < to ) {
-                                num = ( num * 10 ) + ( digitChars[offset] - '0' );
-                                if ( ++offset < to ) {
-                                    num = ( num * 10 ) + ( digitChars[offset] - '0' );
-                                    if ( ++offset < to ) {
-                                        num = ( num * 10 ) + ( digitChars[offset] - '0' );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                                     }
                                 }
                             }
@@ -333,7 +294,6 @@ public class ByteScanner {
     }
 
 
-<<<<<<< HEAD
     public static int parseIntIgnoreDot ( byte[] digitChars, int offset, int len ) {
         int num = digitChars[ offset ] - '0';
         int to = len + offset;
@@ -356,30 +316,6 @@ public class ByteScanner {
                                         num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
                                         if ( ++offset < to ) {
                                             num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-=======
-    public static int parseIntIgnoreDot( byte[] digitChars, int offset, int len ) {
-        int num = digitChars[offset] - '0';
-        int to = len + offset;
-        // This looks ugly, but appears the fastest way (as per measurements)
-        if ( ++offset < to ) {
-            num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-            if ( ++offset < to ) {
-                num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-                if ( ++offset < to ) {
-                    num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-                    if ( ++offset < to ) {
-                        num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-                        if ( ++offset < to ) {
-                            num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-                            if ( ++offset < to ) {
-                                num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-                                if ( ++offset < to ) {
-                                    num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-                                    if ( ++offset < to ) {
-                                        num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
-                                        if ( ++offset < to ) {
-                                            num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                                         }
                                     }
                                 }
@@ -392,21 +328,13 @@ public class ByteScanner {
         return num;
     }
 
-<<<<<<< HEAD
     public static long parseLong ( byte[] digitChars, int offset, int len ) {
-=======
-    public static long parseLong( byte[] digitChars, int offset, int len ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         int len1 = len - 9;
         long val = parseInt ( digitChars, offset, len1 ) * L_BILLION;
         return val + ( long ) parseInt ( digitChars, offset + len1, 9 );
     }
 
-<<<<<<< HEAD
     public static long parseLongIgnoreDot ( byte[] digitChars, int offset, int len ) {
-=======
-    public static long parseLongIgnoreDot( byte[] digitChars, int offset, int len ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         int len1 = len - 9;
         long val = parseIntIgnoreDot ( digitChars, offset, len1 ) * L_BILLION;
         return val + ( long ) parseIntIgnoreDot ( digitChars, offset + len1, 9 );
@@ -415,11 +343,7 @@ public class ByteScanner {
     private final static long L_BILLION = 1000000000;
 
 
-<<<<<<< HEAD
     public static double doubleValue ( byte[] buffer, int startIndex, int endIndex ) {
-=======
-    public static double doubleValue( byte[] buffer, int startIndex, int endIndex ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         boolean simple = true;
         int digitsPastPoint = 0;
@@ -488,11 +412,7 @@ public class ByteScanner {
     }
 
 
-<<<<<<< HEAD
     public static double simpleDouble ( byte[] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex ) {
-=======
-    public static double simpleDouble( byte[] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         double sign;
 

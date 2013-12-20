@@ -14,22 +14,14 @@ public class MapItemValue implements Map.Entry<String, Value> {
     private static final boolean internKeys = Boolean.parseBoolean ( System.getProperty ( "org.boon.json.implementation.internKeys", "true" ) );
 
 
-<<<<<<< HEAD
     public MapItemValue ( Value name, Value value ) {
-=======
-    public MapItemValue( Value name, Value value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.name = name;
         this.value = value;
 
     }
 
     @Override
-<<<<<<< HEAD
     public String getKey () {
-=======
-    public String getKey() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( key == null ) {
             if ( internKeys ) {
                 key = name.toString ();
@@ -46,11 +38,7 @@ public class MapItemValue implements Map.Entry<String, Value> {
     }
 
     @Override
-<<<<<<< HEAD
     public Value setValue ( Value value ) {
-=======
-    public Value setValue( Value value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         die ( "not that kind of Entry" );
         return null;
     }

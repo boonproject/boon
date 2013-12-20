@@ -121,11 +121,7 @@ public class Typ {
         return implementsInterface ( type, comparable );
     }
 
-<<<<<<< HEAD
     public static boolean isSuperClass ( Class<?> type, Class<?> possibleSuperType ) {
-=======
-    public static boolean isSuperClass( Class<?> type, Class<?> possibleSuperType ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( possibleSuperType.isInterface () ) {
             return false;
         } else {
@@ -138,11 +134,7 @@ public class Typ {
         return possibleSuperType.isAssignableFrom ( type );
     }
 
-<<<<<<< HEAD
     public static boolean implementsInterface ( Class<?> type, Class<?> interfaceType ) {
-=======
-    public static boolean implementsInterface( Class<?> type, Class<?> interfaceType ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( !interfaceType.isInterface () ) {
             return false;
         } else {
@@ -151,11 +143,7 @@ public class Typ {
 
     }
 
-<<<<<<< HEAD
     public static Class<?> getKeyType ( Map<?, ?> value ) {
-=======
-    public static Class<?> getKeyType( Map<?, ?> value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( value.size () > 0 ) {
             return value.keySet ().iterator ().next ().getClass ();
         } else {

@@ -53,7 +53,6 @@ public class MBeans {
 
     }
 
-<<<<<<< HEAD
     public static String[] getAttributeNames ( MBeanInfo info ) {
         final MBeanAttributeInfo[] attributes = info.getAttributes ();
         final String[] attributeNames = new String[ attributes.length ];
@@ -61,15 +60,6 @@ public class MBeans {
         for ( int index = 0; index < attributes.length; index++ ) {
 
             attributeNames[ index ] = attributes[ index ].getName ();
-=======
-    public static String[] getAttributeNames( MBeanInfo info ) {
-        final MBeanAttributeInfo[] attributes = info.getAttributes ();
-        final String[] attributeNames = new String[attributes.length];
-
-        for ( int index = 0; index < attributes.length; index++ ) {
-
-            attributeNames[index] = attributes[index].getName ();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
         return attributeNames;
     }
@@ -132,11 +122,7 @@ public class MBeans {
         return value;
     }
 
-<<<<<<< HEAD
     private static Object convertFromArrayToList ( Object value ) {
-=======
-    private static Object convertFromArrayToList( Object value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         final List<Object> list = new ArrayList<Object> ();
 
         final int length = Array.getLength ( value );

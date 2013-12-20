@@ -33,11 +33,7 @@ public class Reflection {
     private static WeakReference<Context> weakContext = new WeakReference<> ( null );
 
 
-<<<<<<< HEAD
     public static Unsafe getUnsafe () {
-=======
-    public static Unsafe getUnsafe() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( context ().control == null ) {
             try {
                 Field f = Unsafe.class.getDeclaredField ( "theUnsafe" );
@@ -94,32 +90,20 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     private static void setSortableField ( Class<?> clazz, String fieldName ) {
         context ()._sortableFields.put ( clazz.getName (), fieldName );
     }
 
     private static String getSortableField ( Class<?> clazz ) {
-=======
-    private static void setSortableField( Class<?> clazz, String fieldName ) {
-        context ()._sortableFields.put ( clazz.getName (), fieldName );
-    }
-
-    private static String getSortableField( Class<?> clazz ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return context ()._sortableFields.get ( clazz.getName () );
     }
 
-    public static Object contextToHold() {
+    public static Object contextToHold () {
         return context ();
     }
 
     /* Manages weak references. */
-<<<<<<< HEAD
     private static Context context () {
-=======
-    private static Context context() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( _context != null ) {
             return _context;
@@ -160,11 +144,7 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     private static void setAccessorFieldInCache ( Class<? extends Object> theClass, boolean useUnsafe, Map<String, FieldAccess> map ) {
-=======
-    private static void setAccessorFieldInCache( Class<? extends Object> theClass, boolean useUnsafe, Map<String, FieldAccess> map ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( useUnsafe ) {
             context ()._allAccessorUnsafeFieldsCache.put ( theClass, map );
         } else {
@@ -173,20 +153,12 @@ public class Reflection {
         }
     }
 
-<<<<<<< HEAD
     private static void setPropertyAccessorFieldsInCache ( Class<? extends Object> theClass, Map<String, FieldAccess> map ) {
-=======
-    private static void setPropertyAccessorFieldsInCache( Class<? extends Object> theClass, Map<String, FieldAccess> map ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         context ()._allAccessorPropertyFieldsCache.put ( theClass, map );
     }
 
 
-<<<<<<< HEAD
     private static Map<String, FieldAccess> getPropertyAccessorFieldsFromCache ( Class<? extends Object> theClass ) {
-=======
-    private static Map<String, FieldAccess> getPropertyAccessorFieldsFromCache( Class<? extends Object> theClass ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return context ()._allAccessorPropertyFieldsCache.get ( theClass );
     }
 
@@ -298,11 +270,7 @@ public class Reflection {
      * @param name
      * @return
      */
-<<<<<<< HEAD
     public static boolean hasField ( Object value1, String name ) {
-=======
-    public static boolean hasField( Object value1, String name ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return classHasField ( value1.getClass (), name );
     }
 
@@ -332,11 +300,7 @@ public class Reflection {
      * @param value1 value we are analyzing
      * @return first field that is comparable or primitive.
      */
-<<<<<<< HEAD
     public static String getFirstComparableOrPrimitive ( Object value1 ) {
-=======
-    public static String getFirstComparableOrPrimitive( Object value1 ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getFirstComparableOrPrimitiveFromClass ( value1.getClass () );
     }
 
@@ -368,11 +332,7 @@ public class Reflection {
      * @param name  name
      * @return field name or null
      */
-<<<<<<< HEAD
     public static String getFirstStringFieldNameEndsWith ( Object value, String name ) {
-=======
-    public static String getFirstStringFieldNameEndsWith( Object value, String name ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getFirstStringFieldNameEndsWithFromClass ( value.getClass (), name );
     }
 
@@ -406,11 +366,7 @@ public class Reflection {
      * @param value1
      * @return sortable field
      */
-<<<<<<< HEAD
     public static String getSortableField ( Object value1 ) {
-=======
-    public static String getSortableField( Object value1 ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getSortableFieldFromClass ( value1.getClass () );
     }
 
@@ -495,11 +451,7 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     public static char[] toCharArray ( String str ) {
-=======
-    public static char[] toCharArray( String str ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( _useUnsafe ) {
             return ( char[] ) context ().stringValueField.getObject ( str );
@@ -509,11 +461,7 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     public static char[] toCharArray ( byte[] bytes ) {
-=======
-    public static char[] toCharArray( byte[] bytes ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( _useUnsafe ) {
             return ( char[] ) context ().stringValueField.getObject ( new String ( bytes, StandardCharsets.UTF_8 ) );
         } else {
@@ -787,11 +735,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
         if ( field.getType () == Typ.intgr ) {
@@ -868,11 +812,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
         if ( field.getType () == Typ.bt ) {
@@ -906,11 +846,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
         if ( field.getType () == Typ.flt ) {
@@ -949,11 +885,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
 
@@ -991,11 +923,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
         if ( field.getType () == Typ.chr ) {
@@ -1034,11 +962,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
         if ( field.getType () == Typ.dbl ) {
@@ -1077,11 +1001,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
         if ( field.getType () == Typ.lng ) {
@@ -1120,11 +1040,7 @@ public class Reflection {
         Object object = baseForGetProperty ( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
-<<<<<<< HEAD
         final String lastProperty = properties[ properties.length - 1 ];
-=======
-        final String lastProperty = properties[properties.length - 1];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         FieldAccess field = fields.get ( lastProperty );
 
         if ( field.getType () == Typ.bln ) {
@@ -1154,11 +1070,7 @@ public class Reflection {
     @SuppressWarnings ( "serial" )
     public static class ReflectionException extends RuntimeException {
 
-<<<<<<< HEAD
         public ReflectionException () {
-=======
-        public ReflectionException() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             super ();
         }
 
@@ -1312,25 +1224,15 @@ public class Reflection {
         return fromMap ( map, newInstance ( clazz ) );
     }
 
-<<<<<<< HEAD
     @SuppressWarnings ( "unchecked" )
     public static Object fromMap ( Map<String, Object> map ) {
-=======
-    @SuppressWarnings( "unchecked" )
-    public static Object fromMap( Map<String, Object> map ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         String className = ( String ) map.get ( "class" );
         Object newInstance = newInstance ( className );
         return fromMap ( map, newInstance );
     }
 
-<<<<<<< HEAD
     @SuppressWarnings ( "unchecked" )
     public static <T> T fromMap ( Map<String, Object> map, T newInstance ) {
-=======
-    @SuppressWarnings( "unchecked" )
-    public static <T> T fromMap( Map<String, Object> map, T newInstance ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
         Objects.requireNonNull ( newInstance );
@@ -1392,13 +1294,8 @@ public class Reflection {
         return fromValueMap ( map, newInstance ( clazz ) );
     }
 
-<<<<<<< HEAD
     @SuppressWarnings ( "unchecked" )
     public static <T> T fromValueMap ( Map<String, Value> map, T newInstance ) {
-=======
-    @SuppressWarnings( "unchecked" )
-    public static <T> T fromValueMap( Map<String, Value> map, T newInstance ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
         Map<String, FieldAccess> fields = getAllAccessorFields ( newInstance.getClass (), true );
@@ -1407,11 +1304,7 @@ public class Reflection {
 
 
         for ( int index = 0; index < size; index++ ) {
-<<<<<<< HEAD
             Map.Entry<String, Value> entry = entries[ index ];
-=======
-            Map.Entry<String, Value> entry = entries[index];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
             String key = entry.getKey ();
             FieldAccess field = fields.get ( key );
@@ -1515,15 +1408,9 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     @SuppressWarnings ( "unchecked" )
     private static void handleCollectionOfValues ( Object newInstance,
                                                    FieldAccess field, Collection<Value> collectionOfValues ) {
-=======
-    @SuppressWarnings( "unchecked" )
-    private static void handleCollectionOfValues( Object newInstance,
-                                                  FieldAccess field, Collection<Value> collectionOfValues ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         Collection<Object> newCollection = createCollection ( field.getType (), collectionOfValues.size () );
 
@@ -1585,11 +1472,7 @@ public class Reflection {
         class FieldToEntryConverter implements
                 Conversions.Converter<Maps.Entry<String, Object>, FieldAccess> {
             @Override
-<<<<<<< HEAD
             public Maps.Entry<String, Object> convert ( FieldAccess from ) {
-=======
-            public Maps.Entry<String, Object> convert( FieldAccess from ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( from.isReadOnly () ) {
                     return null;
                 }
@@ -1656,11 +1539,7 @@ public class Reflection {
         return map;
     }
 
-<<<<<<< HEAD
     public static Class<?> getComponentType ( Collection<?> collection, FieldAccess fieldAccess ) {
-=======
-    public static Class<?> getComponentType( Collection<?> collection, FieldAccess fieldAccess ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Class<?> clz = fieldAccess.getComponentClass ();
         if ( clz == null ) {
             clz = getComponentType ( collection );
@@ -1669,11 +1548,7 @@ public class Reflection {
 
     }
 
-<<<<<<< HEAD
     public static Class<?> getComponentType ( Collection<?> value ) {
-=======
-    public static Class<?> getComponentType( Collection<?> value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( value.size () > 0 ) {
             Object next = value.iterator ().next ();
             return next.getClass ();
@@ -1722,11 +1597,7 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     public static <V> Map<String, V> collectionToMap ( String propertyKey, Collection<V> values ) {
-=======
-    public static <V> Map<String, V> collectionToMap( String propertyKey, Collection<V> values ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         LinkedHashMap<String, V> map = new LinkedHashMap<String, V> ( values.size () );
         Iterator<V> iterator = values.iterator ();
         for ( V v : values ) {
@@ -1785,11 +1656,7 @@ public class Reflection {
         List<Method> getterMethodList = new ArrayList<> ( methods.length );
 
         for ( int index = 0; index < methods.length; index++ ) {
-<<<<<<< HEAD
             Method method = methods[ index ];
-=======
-            Method method = methods[index];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             String name = method.getName ();
 
             if ( method.getParameterTypes ().length == 1
@@ -1840,11 +1707,7 @@ public class Reflection {
         list.addAll ( more );
     }
 
-<<<<<<< HEAD
     public static List<Field> getFields ( Class<? extends Object> theClass ) {
-=======
-    public static List<Field> getFields( Class<? extends Object> theClass ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<Field> list = Lists.list ( theClass.getDeclaredFields () );
         for ( Field field : list ) {
             field.setAccessible ( true );
@@ -1856,10 +1719,7 @@ public class Reflection {
         if ( item instanceof Cloneable ) {
             try {
                 Method method = item.getClass ().getMethod ( "clone", ( Class[] ) null );
-<<<<<<< HEAD
                 method.setAccessible ( true );
-=======
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 return ( T ) method.invoke ( item, ( Object[] ) null );
             } catch ( NoSuchMethodException | InvocationTargetException | IllegalAccessException ex ) {
                 return fieldByFieldCopy ( item );
@@ -1870,11 +1730,7 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     private static <T> T fieldByFieldCopy ( T item ) {
-=======
-    private static <T> T fieldByFieldCopy( T item ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Map<String, FieldAccess> fields = getAllAccessorFields ( item.getClass () );
         T clone = null;
         try {
@@ -1901,31 +1757,19 @@ public class Reflection {
                 int length = len ( o );
 
                 @Override
-<<<<<<< HEAD
                 public boolean hasNext () {
-=======
-                public boolean hasNext() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return index < length;
                 }
 
                 @Override
-<<<<<<< HEAD
                 public Object next () {
-=======
-                public Object next() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     Object value = Reflection.idx ( o, index );
                     index++;
                     return value;
                 }
 
                 @Override
-<<<<<<< HEAD
                 public void remove () {
-=======
-                public void remove() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 }
             };
         }
@@ -1947,11 +1791,7 @@ public class Reflection {
     }
 
 
-<<<<<<< HEAD
     public static List<Map<String, Object>> toListOfMaps ( Collection<?> collection ) {
-=======
-    public static List<Map<String, Object>> toListOfMaps( Collection<?> collection ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<Map<String, Object>> list = new ArrayList<> ();
         for ( Object o : collection ) {
             list.add ( toMap ( o ) );

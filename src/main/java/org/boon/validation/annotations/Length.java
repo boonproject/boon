@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 @Retention ( RetentionPolicy.RUNTIME )
 @Target ( { ElementType.METHOD, ElementType.TYPE, ElementType.FIELD } )
 public @interface Length {
-<<<<<<< HEAD
     long min () default 1L;
 
     long max () default Long.MAX_VALUE;
@@ -16,14 +15,5 @@ public @interface Length {
     String detailMessage () default "";
 
     String summaryMessage () default "";
-=======
-    long min() default 1L;
-
-    long max() default Long.MAX_VALUE;
-
-    String detailMessage() default "";
-
-    String summaryMessage() default "";
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 }

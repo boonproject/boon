@@ -12,11 +12,7 @@ public class Boon {
         Sys.println ( message );
     }
 
-<<<<<<< HEAD
     public static void println () {
-=======
-    public static void println() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Sys.println ( "" );
     }
 

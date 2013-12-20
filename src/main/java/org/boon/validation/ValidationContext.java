@@ -58,11 +58,7 @@ public class ValidationContext {
      *
      * @return xx
      */
-<<<<<<< HEAD
     public static ValidationContext getCurrentInstance () {
-=======
-    public static ValidationContext getCurrentInstance() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return holder.get ();
     }
 
@@ -83,11 +79,7 @@ public class ValidationContext {
      *
      * @return xx
      */
-<<<<<<< HEAD
     public Object getParentObject () {
-=======
-    public Object getParentObject() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return parentObject;
     }
 
@@ -106,11 +98,7 @@ public class ValidationContext {
      *
      * @return xx
      */
-<<<<<<< HEAD
     public Map<String, Object> getParams () {
-=======
-    public Map<String, Object> getParams() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return params;
     }
 
@@ -129,11 +117,7 @@ public class ValidationContext {
         return null;
     }
 
-<<<<<<< HEAD
     private String calculateBindingPath () {
-=======
-    private String calculateBindingPath() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         StringBuilder builder = new StringBuilder ( 255 );
         int index = 0;
         for ( String component : bindingPath ) {
@@ -146,11 +130,7 @@ public class ValidationContext {
         return builder.toString ();
     }
 
-<<<<<<< HEAD
     public void pop () {
-=======
-    public void pop() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         bindingPath.pop ();
     }
 
@@ -158,59 +138,35 @@ public class ValidationContext {
         bindingPath.push ( component );
     }
 
-<<<<<<< HEAD
     public void pushObject ( final Object object ) {
-=======
-    public void pushObject( final Object object ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         String simpleName = object.getClass ().getSimpleName ();
         simpleName = simpleName.substring ( 0, 1 ).toLowerCase () + simpleName.substring ( 1, simpleName.length () );
         bindingPath.push ( simpleName );
     }
 
-<<<<<<< HEAD
     public static String getBindingPath () {
-=======
-    public static String getBindingPath() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( getCurrentInstance () != null ) {
             return getCurrentInstance ().calculateBindingPath ();
         }
         return "";
     }
 
-<<<<<<< HEAD
     public static ValidationContext create () {
-=======
-    public static ValidationContext create() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         holder.set ( new ValidationContext () );
         return get ();
     }
 
-<<<<<<< HEAD
     public static ValidationContext get () {
         return holder.get ();
     }
 
     public static void destroy () {
-=======
-    public static ValidationContext get() {
-        return holder.get ();
-    }
-
-    public static void destroy() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         holder.set ( null );
     }
 
     Map<String, Object> objectRegistry;
 
-<<<<<<< HEAD
     public Map<String, Object> getObjectRegistry () {
-=======
-    public Map<String, Object> getObjectRegistry() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return objectRegistry;
     }
 
@@ -227,11 +183,7 @@ public class ValidationContext {
     }
 
 
-<<<<<<< HEAD
     public String getCurrentSubject () {
-=======
-    public String getCurrentSubject() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return currentSubject;
     }
 
@@ -265,11 +217,7 @@ public class ValidationContext {
     }
 
 
-<<<<<<< HEAD
     protected ResourceBundleLocator getResourceBundleLocator () {
-=======
-    protected ResourceBundleLocator getResourceBundleLocator() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return resourceBundleLocator;
     }
 
@@ -326,13 +274,8 @@ public class ValidationContext {
     }
 
 
-<<<<<<< HEAD
     private String lookupMessageInBundle ( String key, ResourceBundle bundle,
                                            String message ) {
-=======
-    private String lookupMessageInBundle( String key, ResourceBundle bundle,
-                                          String message ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( getCurrentSubject () != null ) {
             try {
                 message = bundle.getString ( key + "." + getCurrentSubject () );

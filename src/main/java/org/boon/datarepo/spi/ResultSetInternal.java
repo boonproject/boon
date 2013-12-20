@@ -11,13 +11,7 @@ public interface ResultSetInternal<T> extends ResultSet<T> {
 
     void filterAndPrune ( Criteria criteria );
 
-<<<<<<< HEAD
     void andResults ();
 
     int lastSize ();
-=======
-    void andResults();
-
-    int lastSize();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 }

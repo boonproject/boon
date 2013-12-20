@@ -4,11 +4,15 @@ package org.boon.json.internal;
 import org.boon.Dates;
 import org.boon.core.reflection.Conversions;
 
+
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.boon.Exceptions.die;
 
@@ -22,11 +26,7 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
 
     public boolean decodeStrings;
 
-<<<<<<< HEAD
     public ValueBase ( int startIndex, int endIndex, Object value, Type type, boolean decodeStrings ) {
-=======
-    public ValueBase( int startIndex, int endIndex, Object value, Type type, boolean decodeStrings ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.value = value;
@@ -56,20 +56,12 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
 
 
     @Override
-<<<<<<< HEAD
     public int intValue () {
-=======
-    public int intValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return Integer.parseInt ( toString () );
     }
 
     @Override
-<<<<<<< HEAD
     public long longValue () {
-=======
-    public long longValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return Long.parseLong ( toString () );
     }
 
@@ -100,20 +92,12 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
     }
 
 
-<<<<<<< HEAD
     public String toString () {
-=======
-    public String toString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return type.toString ();
     }
 
     @Override
-<<<<<<< HEAD
     public Object toValue () {
-=======
-    public Object toValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( value != null ) {
             return value;
         }
@@ -188,57 +172,33 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
     }
 
 
-<<<<<<< HEAD
     public byte byteValue () {
         return Byte.parseByte ( toString () );
     }
 
     public short shortValue () {
-=======
-    public byte byteValue() {
-        return Byte.parseByte ( toString () );
-    }
-
-    public short shortValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return Short.parseShort ( toString () );
     }
 
 
-<<<<<<< HEAD
     public BigDecimal bigDecimalValue () {
         return new BigDecimal ( toString () );
     }
 
     public BigInteger bigIntegerValue () {
-=======
-    public BigDecimal bigDecimalValue() {
-        return new BigDecimal ( toString () );
-    }
-
-    public BigInteger bigIntegerValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return new BigInteger ( toString () );
     }
 
 
     @Override
-<<<<<<< HEAD
     public double doubleValue () {
-=======
-    public double doubleValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return Double.parseDouble ( toString () );
 
     }
 
 
     @Override
-<<<<<<< HEAD
     public float floatValue () {
-=======
-    public float floatValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return Float.parseFloat ( toString () );
     }
 

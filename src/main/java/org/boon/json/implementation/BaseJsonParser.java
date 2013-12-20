@@ -16,6 +16,7 @@ public class BaseJsonParser {
     private JsonLazyLinkedMap[] levelMaps = new JsonLazyLinkedMap[ 5 ];
     private ArrayList[] levelLists = new ArrayList[ 5 ];
 
+
     private int objectLevel;
     private int listLevel;
 
@@ -26,63 +27,37 @@ public class BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected void init () {
-=======
-    protected void init() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         objectLevel = 0;
         listLevel = 0;
     }
 
 
-<<<<<<< HEAD
     protected JsonLazyLinkedMap createMap () {
-=======
-    protected JsonLazyLinkedMap createMap() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( objectLevel == levelMaps.length ) {
             objectLevel++;
             return new JsonLazyLinkedMap ( 7 );
         }
-<<<<<<< HEAD
         JsonLazyLinkedMap map = levelMaps[ objectLevel ];
         if ( map == null ) {
             map = new JsonLazyLinkedMap ( 10 );
             levelMaps[ objectLevel ] = map;
-=======
-        JsonLazyLinkedMap map = levelMaps[objectLevel];
-        if ( map == null ) {
-            map = new JsonLazyLinkedMap ( 10 );
-            levelMaps[objectLevel] = map;
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
         objectLevel++;
         return map;
     }
 
 
-<<<<<<< HEAD
     protected ArrayList createList () {
-=======
-    protected ArrayList createList() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( listLevel == levelLists.length ) {
             listLevel++;
             return new ArrayList ( 5 );
         }
-<<<<<<< HEAD
         ArrayList list = levelLists[ listLevel ];
         if ( list == null ) {
             list = new ArrayList ( 10 );
             levelLists[ listLevel ] = list;
-=======
-        ArrayList list = levelLists[listLevel];
-        if ( list == null ) {
-            list = new ArrayList ( 10 );
-            levelLists[listLevel] = list;
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
         listLevel++;
         return list;
@@ -90,11 +65,7 @@ public class BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected final ArrayList prepareList ( ArrayList old ) {
-=======
-    protected final ArrayList prepareList( ArrayList old ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
         if ( listLevel < levelLists.length ) {
@@ -109,11 +80,7 @@ public class BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected Object prepareMap ( final JsonLazyLinkedMap map ) {
-=======
-    protected Object prepareMap( final JsonLazyLinkedMap map ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( objectLevel < levelMaps.length ) {
             objectLevel--;
@@ -125,11 +92,7 @@ public class BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected String charDescription ( char c ) {
-=======
-    protected String charDescription( char c ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         String charString;
         if ( c == ' ' ) {
             charString = "[SPACE]";

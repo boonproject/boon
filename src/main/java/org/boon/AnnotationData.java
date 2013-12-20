@@ -44,11 +44,7 @@ public class AnnotationData {
 
     private Map<String, Object> values;
 
-<<<<<<< HEAD
     public AnnotationData ( Annotation annotation ) {
-=======
-    public AnnotationData( Annotation annotation ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this ( annotation, new HashSet<String> () );
     }
 
@@ -66,11 +62,7 @@ public class AnnotationData {
 
 
     /* TODO this needs to be in Str or StringScanner, but it is here for now. */
-<<<<<<< HEAD
     private static String unCapitalize ( String string ) {
-=======
-    private static String unCapitalize( String string ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         StringBuilder rv = new StringBuilder ();
         if ( string.length () > 0 ) {
             rv.append ( Character.toLowerCase ( string.charAt ( 0 ) ) );
@@ -86,11 +78,7 @@ public class AnnotationData {
      * Determines if this is an annotation we care about.
      * Checks to see if the package name is in the set.
      */
-<<<<<<< HEAD
     public boolean isAllowed () {
-=======
-    public boolean isAllowed() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return allowedAnnotations.contains ( annotationPackageName );
     }
 
@@ -100,11 +88,7 @@ public class AnnotationData {
      *
      * @return
      */
-<<<<<<< HEAD
     public String getName () {
-=======
-    public String getName() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 
@@ -115,11 +99,7 @@ public class AnnotationData {
      *
      * @return
      */
-<<<<<<< HEAD
     Map<String, Object> doGetValues () {
-=======
-    Map<String, Object> doGetValues() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         /* Holds the value map. */
         Map<String, Object> values = new HashMap<String, Object> ();
         /* Get the declared methods from the actual annotation. */
@@ -145,19 +125,11 @@ public class AnnotationData {
         return values;
     }
 
-<<<<<<< HEAD
     public Map<String, Object> getValues () {
         return values;
     }
 
     public String toString () {
-=======
-    public Map<String, Object> getValues() {
-        return values;
-    }
-
-    public String toString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 }

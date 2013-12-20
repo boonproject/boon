@@ -680,29 +680,17 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-<<<<<<< HEAD
     public List<ITEM> all () {
-=======
-    public List<ITEM> all() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return editor.all ();
     }
 
     @Override
-<<<<<<< HEAD
     public int size () {
-=======
-    public int size() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return editor.size ();
     }
 
     @Override
-<<<<<<< HEAD
     public boolean isEmpty () {
-=======
-    public boolean isEmpty() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         return query.isEmpty ();
     }
@@ -713,21 +701,13 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-<<<<<<< HEAD
     public Iterator<ITEM> iterator () {
-=======
-    public Iterator<ITEM> iterator() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return query.iterator ();
     }
 
 
     @Override
-<<<<<<< HEAD
     public Object[] toArray () {
-=======
-    public Object[] toArray() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return query.toArray ();
 
     }
@@ -738,20 +718,12 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-<<<<<<< HEAD
     public Collection<ITEM> toCollection () {
-=======
-    public Collection<ITEM> toCollection() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return editor.toCollection ();
     }
 
     @Override
-<<<<<<< HEAD
     public void clear () {
-=======
-    public void clear() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         editor.clear ();
     }
 
@@ -762,11 +734,7 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-<<<<<<< HEAD
     public void init () {
-=======
-    public void init() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
     @Override

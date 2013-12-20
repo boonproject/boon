@@ -6,10 +6,13 @@ import sun.nio.cs.Surrogate;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
+import static org.boon.primitive.CharScanner.parseLong;
 
 public class CharBuf extends Writer {
     protected int capacity = 16;
@@ -18,12 +21,12 @@ public class CharBuf extends Writer {
     protected char[] buffer;
 
 
-    public CharBuf( char[] buffer ) {
+    public CharBuf ( char[] buffer ) {
         this.buffer = buffer;
         this.capacity = buffer.length;
     }
 
-    public CharBuf( byte[] bytes ) {
+    public CharBuf ( byte[] bytes ) {
         this.buffer = null;
         this.addAsUTF ( bytes );
     }
@@ -56,20 +59,12 @@ public class CharBuf extends Writer {
     }
 
 
-<<<<<<< HEAD
     protected CharBuf () {
-=======
-    protected CharBuf() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         init ();
     }
 
     @Override
-<<<<<<< HEAD
     public void write ( char[] cbuf, int off, int len ) {
-=======
-    public void write( char[] cbuf, int off, int len ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( off == 0 && cbuf.length == len ) {
             this.add ( cbuf );
@@ -88,19 +83,11 @@ public class CharBuf extends Writer {
     public void close () throws IOException {
     }
 
-<<<<<<< HEAD
     public void init () {
         buffer = new char[ capacity ];
     }
 
     public CharBuf add ( String str ) {
-=======
-    public void init() {
-        buffer = new char[capacity];
-    }
-
-    public CharBuf add( String str ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         add ( FastStringUtils.toCharArray ( str ) );
         return this;
     }
@@ -112,61 +99,37 @@ public class CharBuf extends Writer {
     }
 
 
-<<<<<<< HEAD
     public final CharBuf addChar ( byte i ) {
-=======
-    public final CharBuf addChar( byte i ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         add ( ( char ) i );
         return this;
     }
 
 
-<<<<<<< HEAD
     public final CharBuf addChar ( int i ) {
-=======
-    public final CharBuf addChar( int i ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         add ( ( char ) i );
         return this;
     }
 
 
-<<<<<<< HEAD
     public final CharBuf addChar ( short i ) {
-=======
-    public final CharBuf addChar( short i ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         add ( ( char ) i );
         return this;
     }
 
 
-<<<<<<< HEAD
     public CharBuf addChar ( char c ) {
-=======
-    public CharBuf addChar( char c ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         add ( c );
         return this;
     }
 
-<<<<<<< HEAD
     public CharBuf addLine ( String str ) {
-=======
-    public CharBuf addLine( String str ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         add ( str.toCharArray () );
         add ( '\n' );
         return this;
     }
 
 
-<<<<<<< HEAD
     public CharBuf addLine ( CharSequence str ) {
-=======
-    public CharBuf addLine( CharSequence str ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         add ( str.toString () );
         add ( '\n' );
         return this;
@@ -225,11 +188,7 @@ public class CharBuf extends Writer {
     }
 
 
-<<<<<<< HEAD
     public void add ( char ch ) {
-=======
-    public void add( char ch ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( 1 + location < capacity ) {
             Chr.idx ( buffer, location, ch );
         } else {
@@ -240,7 +199,6 @@ public class CharBuf extends Writer {
         location += 1;
     }
 
-<<<<<<< HEAD
     public String toString () {
         return new String ( buffer, 0, location );
     }
@@ -254,30 +212,11 @@ public class CharBuf extends Writer {
     }
 
     public void _len ( int location ) {
-=======
-    public String toString() {
-        return new String ( buffer, 0, location );
-    }
-
-    public int len() {
-        return location;
-    }
-
-    public char[] toCharArray() {
-        return this.buffer;
-    }
-
-    public void _len( int location ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.location = location;
     }
 
 
-<<<<<<< HEAD
     public char[] readForRecycle () {
-=======
-    public char[] readForRecycle() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.location = 0;
         return this.buffer;
     }
@@ -455,11 +394,7 @@ public class CharBuf extends Writer {
     public int intValue () {
         int sign = 1;
         int startIndex = 0;
-<<<<<<< HEAD
         if ( buffer[ startIndex ] == '-' ) {
-=======
-        if ( buffer[startIndex] == '-' ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             startIndex++;
             sign = -1;
 
@@ -471,11 +406,7 @@ public class CharBuf extends Writer {
         long sign = 1;
         int startIndex = 0;
 
-<<<<<<< HEAD
         if ( buffer[ startIndex ] == '-' ) {
-=======
-        if ( buffer[startIndex] == '-' ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             startIndex++;
             sign = -1;
 
@@ -498,11 +429,7 @@ public class CharBuf extends Writer {
         int sign = 1;
         boolean negative = false;
         int startIndex = 0;
-<<<<<<< HEAD
         if ( buffer[ startIndex ] == '-' ) {
-=======
-        if ( buffer[startIndex] == '-' ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             startIndex++;
             sign = -1;
             negative = true;
@@ -519,25 +446,17 @@ public class CharBuf extends Writer {
     }
 
 
-    public void addAsUTF( byte[] value ) {
+    public void addAsUTF ( byte[] value ) {
 
         if ( this.buffer == null ) {
-<<<<<<< HEAD
             this.buffer = new char[ value.length ];
-=======
-            this.buffer = new char[value.length];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         } else if ( this.buffer.length < value.length ) {
             buffer = Chr.grow ( buffer, value.length - buffer.length );
         }
 
 
         for ( int index = 0; index < value.length; index++ ) {
-<<<<<<< HEAD
             int __currentChar = value[ index ];
-=======
-            int __currentChar = value[index];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
             if ( __currentChar >= 0 ) {
@@ -553,13 +472,13 @@ public class CharBuf extends Writer {
 
 
     //  [C2..DF] [80..BF]
-    private static boolean isMalformed2( int b1, int b2 ) {
+    private static boolean isMalformed2 ( int b1, int b2 ) {
         return ( b1 & 0x1e ) == 0x0 || ( b2 & 0xc0 ) != 0x80;
     }
 
     //  [E0]     [A0..BF] [80..BF]
     //  [E1..EF] [80..BF] [80..BF]
-    private static boolean isMalformed3( int b1, int b2, int b3 ) {
+    private static boolean isMalformed3 ( int b1, int b2, int b3 ) {
         return ( b1 == ( byte ) 0xe0 && ( b2 & 0xe0 ) == 0x80 ) ||
                 ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80;
     }
@@ -569,17 +488,13 @@ public class CharBuf extends Writer {
     //  [F4]     [80..8F] [80..BF] [80..BF]
     //  only check 80-be range here, the [0xf0,0x80...] and [0xf4,0x90-...]
     //  will be checked by Surrogate.neededFor(uc)
-    private static boolean isMalformed4( int b2, int b3, int b4 ) {
+    private static boolean isMalformed4 ( int b2, int b3, int b4 ) {
         return ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80 ||
                 ( b4 & 0xc0 ) != 0x80;
     }
 
 
-<<<<<<< HEAD
     private final void utf8MultiByte ( final int b1, int __index, byte[] bytes ) {
-=======
-    private final void utf8MultiByte( final int b1, int __index, byte[] bytes ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         boolean ok = true;
 
@@ -588,7 +503,7 @@ public class CharBuf extends Writer {
 
             ok = __index + 1 < bytes.length || die ( "unable to parse 2 byte utf 8 - b2" );
             __index++;
-            b2 = bytes[__index];
+            b2 = bytes[ __index ];
 
             if ( isMalformed2 ( b1, b2 ) ) {
                 addChar ( '#' );
@@ -601,14 +516,10 @@ public class CharBuf extends Writer {
 
             ok = __index + 1 < bytes.length || die ( "unable to parse 3 byte utf 8 - b2" );
             __index++;
-<<<<<<< HEAD
             b2 = bytes[ __index ];
-=======
-            b2 = bytes[__index];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             ok = __index + 1 < bytes.length || die ( "unable to parse 3 byte utf 8 - b3" );
             __index++;
-            b3 = bytes[__index];
+            b3 = bytes[ __index ];
 
             if ( isMalformed3 ( b1, b2, b3 ) ) {
                 addChar ( '#' );
@@ -622,20 +533,13 @@ public class CharBuf extends Writer {
 
             ok = __index + 1 < bytes.length || die ( "unable to parse 4 byte utf 8 - b2" );
             __index++;
-<<<<<<< HEAD
             b2 = bytes[ __index ];
             ok = __index + 1 < bytes.length || die ( "unable to parse 4 byte utf 8 - b3" );
             __index++;
             b3 = bytes[ __index ];
-=======
-            b2 = bytes[__index];
-            ok = __index + 1 < bytes.length || die ( "unable to parse 4 byte utf 8 - b3" );
-            __index++;
-            b3 = bytes[__index];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             ok = __index + 1 < bytes.length || die ( "unable to parse 4 byte utf 8 - b4" );
             __index++;
-            b4 = bytes[__index];
+            b4 = bytes[ __index ];
 
             int uc = ( ( b1 & 0x07 ) << 18 ) |
                     ( ( b2 & 0x3f ) << 12 ) |

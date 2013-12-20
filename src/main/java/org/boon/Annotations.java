@@ -25,11 +25,7 @@ public class Annotations {
         return extractValidationAnnotationData ( findClassAnnotations ( clazz ), allowedPackages );
     }
 
-<<<<<<< HEAD
     private static Annotation[] findClassAnnotations ( Class<?> clazz ) {
-=======
-    private static Annotation[] findClassAnnotations( Class<?> clazz ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return clazz.getAnnotations ();
     }
 

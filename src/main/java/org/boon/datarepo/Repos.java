@@ -51,11 +51,7 @@ public class Repos {
         SPIFactory.setFilterFactory ( factory );
     }
 
-<<<<<<< HEAD
     public static RepoBuilder builder () {
-=======
-    public static RepoBuilder builder() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         SPIFactory.init ();
         return SPIFactory.getRepoBuilderFactory ().get ();
     }

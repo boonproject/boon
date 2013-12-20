@@ -101,11 +101,7 @@ public class RecursiveDescentPropertyValidator {
         vMessageHolders.add ( new MessageHolder ( ValidationContext.getBindingPath (), holder ) );
     }
 
-<<<<<<< HEAD
     protected boolean shouldFieldBeValidated () {
-=======
-    protected boolean shouldFieldBeValidated() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return true;
     }
 

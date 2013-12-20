@@ -13,11 +13,7 @@ public final class MessageUtils {
     /**
      * Stops creation of a new MessageUtils object.
      */
-<<<<<<< HEAD
     private MessageUtils () {
-=======
-    private MessageUtils() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
     public static String createLabelNoPlural ( String fieldName, final ResourceBundle bundle ) {
@@ -138,11 +134,7 @@ public final class MessageUtils {
             boolean shouldContinue = true;
             char[] chars = fieldName.toCharArray ();
 
-<<<<<<< HEAD
             void processFieldName () {
-=======
-            void processFieldName() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
                 for ( int index = 0; index < chars.length; index++ ) {
                     char cchar = chars[ index ];
@@ -209,11 +201,7 @@ public final class MessageUtils {
                 return cchar;
             }
 
-<<<<<<< HEAD
             private char processCapitalizeCommand ( char cchar ) {
-=======
-            private char processCapitalizeCommand( char cchar ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 /* Capitalize the character. */
                 if ( capNextChar ) {
                     capNextChar = false;

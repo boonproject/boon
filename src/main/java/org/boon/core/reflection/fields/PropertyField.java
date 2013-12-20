@@ -11,7 +11,9 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.logging.Logger;
 
+import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
 import static org.boon.core.reflection.Conversions.*;
 
 public class PropertyField implements FieldAccess {
@@ -41,11 +43,7 @@ public class PropertyField implements FieldAccess {
             } else {
                 isStatic = Modifier.isStatic ( setter.getModifiers () );
                 isFinal = Modifier.isFinal ( setter.getModifiers () );
-<<<<<<< HEAD
                 type = setter.getParameterTypes ()[ 0 ];
-=======
-                type = setter.getParameterTypes ()[0];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             }
 
 
@@ -146,20 +144,12 @@ public class PropertyField implements FieldAccess {
     }
 
     @Override
-<<<<<<< HEAD
     public Field getField () {
-=======
-    public Field getField() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return null;
     }
 
 
-<<<<<<< HEAD
     public ParameterizedType getParameterizedType () {
-=======
-    public ParameterizedType getParameterizedType() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
         return null;
@@ -169,11 +159,7 @@ public class PropertyField implements FieldAccess {
 
     private Class<?> componentClass;
 
-<<<<<<< HEAD
     public Class<?> getComponentClass () {
-=======
-    public Class<?> getComponentClass() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( componentClass == null ) {
             componentClass = doGetComponentClass ();
         }
@@ -181,96 +167,56 @@ public class PropertyField implements FieldAccess {
     }
 
 
-<<<<<<< HEAD
     private Class<?> doGetComponentClass () {
-=======
-    private Class<?> doGetComponentClass() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         final ParameterizedType parameterizedType = this.getParameterizedType ();
         if ( parameterizedType == null ) {
             return null;
         } else {
-<<<<<<< HEAD
             return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[ 0 ] );
-=======
-            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[0] );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
     }
 
 
     @Override
-<<<<<<< HEAD
     public boolean isFinal () {
-=======
-    public boolean isFinal() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isFinal;
     }
 
 
     @Override
-<<<<<<< HEAD
     public boolean isStatic () {
-=======
-    public boolean isStatic() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isStatic;
     }
 
     @Override
-<<<<<<< HEAD
     public boolean isVolatile () {
-=======
-    public boolean isVolatile() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isVolatile;
     }
 
 
     @Override
-<<<<<<< HEAD
     public boolean isQualified () {
-=======
-    public boolean isQualified() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return qualified;
     }
 
     @Override
-<<<<<<< HEAD
     public boolean isReadOnly () {
-=======
-    public boolean isReadOnly() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return readOnly;
     }
 
 
     @Override
-<<<<<<< HEAD
     public Class<?> getType () {
-=======
-    public Class<?> getType() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return type;
     }
 
     @Override
-<<<<<<< HEAD
     public String getName () {
-=======
-    public String getName() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 
     @Override
-<<<<<<< HEAD
     public void setValue ( Object obj, Object value ) {
-=======
-    public void setValue( Object obj, Object value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( value != null && value.getClass () == this.type ) {
             this.setObject ( obj, value );
             return;
@@ -305,11 +251,7 @@ public class PropertyField implements FieldAccess {
     }
 
 
-<<<<<<< HEAD
     public final void setFromValue ( Object obj, Value value ) {
-=======
-    public final void setFromValue( Object obj, Value value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( type == Typ.string ) {
             setObject ( obj, value.stringValue () );

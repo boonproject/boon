@@ -13,13 +13,12 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.boon.Exceptions.die;
-import static org.boon.primitive.ByteScanner.*;
+import static org.boon.primitive.ByteScanner.isInteger;
+import static org.boon.primitive.ByteScanner.parseInt;
+import static org.boon.primitive.ByteScanner.parseLong;
 
 /**
  * Created by rick on 12/15/13.
@@ -101,25 +100,21 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     protected Charset charSet = StandardCharsets.UTF_8;
 
 
-    public JsonBaseByteArrayParser() {
+    public JsonBaseByteArrayParser () {
 
     }
 
 
-    protected final boolean hasMore() {
+    protected final boolean hasMore () {
         return __index + 1 < charArray.length;
     }
 
-<<<<<<< HEAD
     protected final int nextChar () {
-=======
-    protected final int nextChar() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         try {
             if ( hasMore () ) {
                 __index++;
-                return __currentChar = charArray[__index];
+                return __currentChar = charArray[ __index ];
             }
             return __currentChar;
 
@@ -131,11 +126,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected final String exceptionDetails ( String message ) {
-=======
-    protected final String exceptionDetails( String message ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         CharBuf buf = CharBuf.create ( 255 );
 
         buf.addLine ( message );
@@ -150,7 +141,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         int lastLineIndex = 0;
 
         for ( int i = 0; i < __index; i++ ) {
-            if ( charArray[i] == NEW_LINE ) {
+            if ( charArray[ i ] == NEW_LINE ) {
                 line++;
                 lastLineIndex = i + 1;
             }
@@ -159,7 +150,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         int count = 0;
 
         for ( int i = lastLineIndex; i < charArray.length; i++, count++ ) {
-            if ( charArray[i] == NEW_LINE ) {
+            if ( charArray[ i ] == NEW_LINE ) {
                 break;
             }
         }
@@ -189,12 +180,12 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         return buf.toString ();
     }
 
-    protected final void skipWhiteSpace() {
+    protected final void skipWhiteSpace () {
 
 
         label:
         for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
+            __currentChar = charArray[ __index ];
             switch ( __currentChar ) {
                 case NEW_LINE:
                     continue label;
@@ -214,11 +205,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected String charDescription ( int c ) {
-=======
-    protected String charDescription( int c ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         String charString;
         if ( c == SPACE ) {
             charString = "[SPACE]";
@@ -237,22 +224,14 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     private Object decode ( byte[] cs ) {
-=======
-    private Object decode( byte[] cs ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         charArray = cs;
         __index = 0;
         return decodeValue ();
     }
 
 
-<<<<<<< HEAD
     public <T> T parse ( Class<T> type, String str ) {
-=======
-    public <T> T parse( Class<T> type, String str ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ( T ) this.parse ( type, str.getBytes ( charSet ) );
     }
 
@@ -268,19 +247,11 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     public <T> T parse ( Class<T> type, InputStream input ) {
         return parse ( type, IO.input ( input ) );
     }
 
     public <T> T parse ( Class<T> type, CharSequence charSequence ) {
-=======
-    public <T> T parse( Class<T> type, InputStream input ) {
-        return parse ( type, IO.input ( input ) );
-    }
-
-    public <T> T parse( Class<T> type, CharSequence charSequence ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return parse ( type, charSequence.toString () );
     }
 
@@ -290,42 +261,30 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     public <T> T parse ( Class<T> type, Reader reader ) {
-=======
-    public <T> T parse( Class<T> type, Reader reader ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         die ( "you are using the wrong class" );
         return null;
     }
 
 
-<<<<<<< HEAD
     public <T> T parse ( Class<T> type, InputStream input, Charset charset ) {
-=======
-    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         die ( "you are using the wrong class" );
         return null;
     }
 
 
-<<<<<<< HEAD
     protected void complain ( String complaint ) {
-=======
-    protected void complain( String complaint ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         throw new JsonException ( exceptionDetails ( complaint ) );
     }
 
 
-    protected final Object decodeValue() {
+    protected final Object decodeValue () {
         Object value = null;
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
+            __currentChar = charArray[ __index ];
 
 
             switch ( __currentChar ) {
@@ -389,11 +348,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected final Object decodeJsonObject () {
-=======
-    protected final Object decodeJsonObject() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( __currentChar == OPEN_CURLY && this.hasMore () ) {
             this.nextChar ();
@@ -476,7 +431,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    protected final Object decodeNumber() {
+    protected final Object decodeNumber () {
 
         int startIndex = __index;
 
@@ -498,7 +453,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
         int digitsPastPoint = 0;
 
-        __currentChar = charArray[__index];
+        __currentChar = charArray[ __index ];
 
         if ( __currentChar == MINUS ) {
             minus = true;
@@ -508,7 +463,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
         loop:
         for ( index = __index; index < charArray.length; index++, count++ ) {
-            __currentChar = charArray[index];
+            __currentChar = charArray[ index ];
 
             if ( doubleFloat ) {
                 digitsPastPoint++;
@@ -599,13 +554,13 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     protected final static byte[] NULL = Byt.bytes ( "null" );
 
-    protected final Object decodeNull() {
+    protected final Object decodeNull () {
 
         if ( __index + NULL.length <= charArray.length ) {
-            if ( charArray[__index] == LETTER_N &&
-                    charArray[++__index] == LETTER_U &&
-                    charArray[++__index] == LETTER_L &&
-                    charArray[++__index] == LETTER_L ) {
+            if ( charArray[ __index ] == LETTER_N &&
+                    charArray[ ++__index ] == LETTER_U &&
+                    charArray[ ++__index ] == LETTER_L &&
+                    charArray[ ++__index ] == LETTER_L ) {
                 nextChar ();
                 return null;
             }
@@ -615,13 +570,13 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     protected final static byte[] TRUE = Byt.bytes ( "true" );
 
-    protected final boolean decodeTrue() {
+    protected final boolean decodeTrue () {
 
         if ( __index + TRUE.length <= charArray.length ) {
-            if ( charArray[__index] == LETTER_T &&
-                    charArray[++__index] == LETTER_R &&
-                    charArray[++__index] == LETTER_U &&
-                    charArray[++__index] == LETTER_E ) {
+            if ( charArray[ __index ] == LETTER_T &&
+                    charArray[ ++__index ] == LETTER_R &&
+                    charArray[ ++__index ] == LETTER_U &&
+                    charArray[ ++__index ] == LETTER_E ) {
 
                 nextChar ();
                 return true;
@@ -635,14 +590,14 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     protected final static byte[] FALSE = Byt.bytes ( "false" );
 
-    protected final boolean decodeFalse() {
+    protected final boolean decodeFalse () {
 
         if ( __index + FALSE.length <= charArray.length ) {
-            if ( charArray[__index] == LETTER_F &&
-                    charArray[++__index] == LETTER_A &&
-                    charArray[++__index] == LETTER_L &&
-                    charArray[++__index] == LETTER_S &&
-                    charArray[++__index] == LETTER_E ) {
+            if ( charArray[ __index ] == LETTER_F &&
+                    charArray[ ++__index ] == LETTER_A &&
+                    charArray[ ++__index ] == LETTER_L &&
+                    charArray[ ++__index ] == LETTER_S &&
+                    charArray[ ++__index ] == LETTER_E ) {
                 nextChar ();
                 return false;
             }
@@ -651,11 +606,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     protected final String decodeString () {
-=======
-    protected final String decodeString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
         if ( __index < charArray.length && __currentChar == DOUBLE_QUOTE ) {
@@ -665,7 +616,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
         loop:
         for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[__index];
+            __currentChar = charArray[ __index ];
             switch ( __currentChar ) {
 
                 case DOUBLE_QUOTE:
@@ -675,7 +626,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
                     if ( __index < charArray.length ) {
                         __index++;
                     }
-                    __currentChar = charArray[__index];
+                    __currentChar = charArray[ __index ];
 
                     switch ( __currentChar ) {
 
@@ -716,13 +667,13 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
                             if ( __index + 4 < charArray.length ) {
 
                                 CharBuf hex = CharBuf.create ( 4 );
-                                hex.addChar ( charArray[__index + 1] );
+                                hex.addChar ( charArray[ __index + 1 ] );
 
-                                hex.addChar ( charArray[__index + 2] );
+                                hex.addChar ( charArray[ __index + 2 ] );
 
-                                hex.addChar ( charArray[__index + 3] );
+                                hex.addChar ( charArray[ __index + 3 ] );
 
-                                hex.addChar ( charArray[__index + 4] );
+                                hex.addChar ( charArray[ __index + 4 ] );
                                 char unicode = ( char ) Integer.parseInt ( hex.toString (), 16 );
                                 builder.add ( unicode );
                                 __index += 4;
@@ -748,18 +699,14 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     abstract protected void addChar ();
-=======
-    abstract protected void addChar();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
-    protected final String decodeKeyName() {
+    protected final String decodeKeyName () {
         return decodeString ();
 
     }
 
-    protected final List decodeJsonArray() {
+    protected final List decodeJsonArray () {
         if ( __currentChar == OPEN_BRACKET ) {
             this.nextChar ();
         }
@@ -823,19 +770,11 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-<<<<<<< HEAD
     public <T> T parseDirect ( Class<T> type, byte[] value ) {
         return this.parse ( type, new ByteArrayInputStream ( value ) );
     }
 
     public <T> T parseAsStream ( Class<T> type, byte[] value ) {
-=======
-    public <T> T parseDirect( Class<T> type, byte[] value ) {
-        return this.parse ( type, new ByteArrayInputStream ( value ) );
-    }
-
-    public <T> T parseAsStream( Class<T> type, byte[] value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.parse ( type, value );
     }
 

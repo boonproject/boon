@@ -4,6 +4,7 @@ import org.boon.Dates;
 import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.Typ;
+import org.boon.core.Value;
 import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
@@ -21,11 +22,7 @@ public class Conversions {
     private static final Logger log = Logger.getLogger ( Conversions.class.getName () );
 
 
-<<<<<<< HEAD
     public static int toInt ( Object obj ) {
-=======
-    public static int toInt( Object obj ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( obj.getClass () == int.class ) {
             return int.class.cast ( obj );
         }
@@ -75,11 +72,7 @@ public class Conversions {
 
     }
 
-<<<<<<< HEAD
     public static byte toByte ( Object obj ) {
-=======
-    public static byte toByte( Object obj ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( obj.getClass () == byte.class ) {
             return byte.class.cast ( obj );
         } else if ( obj instanceof Number ) {
@@ -100,11 +93,7 @@ public class Conversions {
         }
     }
 
-<<<<<<< HEAD
     public static char toChar ( Object obj ) {
-=======
-    public static char toChar( Object obj ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( obj.getClass () == char.class ) {
             return char.class.cast ( obj );
         } else if ( obj instanceof Character ) {
@@ -207,11 +196,7 @@ public class Conversions {
         }
     }
 
-<<<<<<< HEAD
     public static double toDouble ( Object obj ) {
-=======
-    public static double toDouble( Object obj ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( obj.getClass () == double.class ) {
             return ( Double ) obj;
         }
@@ -248,11 +233,7 @@ public class Conversions {
 
     }
 
-<<<<<<< HEAD
     public static float toFloat ( Object obj ) {
-=======
-    public static float toFloat( Object obj ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( obj.getClass () == float.class ) {
             return ( Float ) obj;
         }
@@ -333,21 +314,13 @@ public class Conversions {
         }
     }
 
-<<<<<<< HEAD
     public static <T> T toEnum ( Class<? extends Enum> cls, String value ) {
-=======
-    public static <T> T toEnum( Class<? extends Enum> cls, String value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ( T ) Enum.valueOf ( cls, value );
 
     }
 
 
-<<<<<<< HEAD
     public static <T> T toEnum ( Class<? extends Enum> cls, int value ) {
-=======
-    public static <T> T toEnum( Class<? extends Enum> cls, int value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Class<? extends Enum> clsEnum = ( Class<? extends Enum> ) cls;
 
         Enum[] enumConstants = clsEnum.getEnumConstants ();
@@ -364,11 +337,7 @@ public class Conversions {
     }
 
 
-<<<<<<< HEAD
     public static <T> T toEnum ( Class<?> cls, Object value ) {
-=======
-    public static <T> T toEnum( Class<?> cls, Object value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( value instanceof CharSequence ) {
             return toEnum ( cls, value.toString () );
@@ -422,11 +391,7 @@ public class Conversions {
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
         while ( iterator.hasNext () ) {
-<<<<<<< HEAD
             values[ index ] = toFloat ( iterator.next () );
-=======
-            values[index] = toFloat ( iterator.next () );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             index++;
         }
         return values;
@@ -441,11 +406,7 @@ public class Conversions {
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
         while ( iterator.hasNext () ) {
-<<<<<<< HEAD
             values[ index ] = toFloat ( iterator.next () );
-=======
-            values[index] = toFloat ( iterator.next () );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             index++;
         }
         return values;
@@ -460,11 +421,7 @@ public class Conversions {
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
         while ( iterator.hasNext () ) {
-<<<<<<< HEAD
             values[ index ] = toLong ( iterator.next () );
-=======
-            values[index] = toLong ( iterator.next () );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             index++;
         }
         return values;
@@ -479,11 +436,7 @@ public class Conversions {
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
         while ( iterator.hasNext () ) {
-<<<<<<< HEAD
             values[ index ] = toShort ( iterator.next () );
-=======
-            values[index] = toShort ( iterator.next () );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             index++;
         }
         return values;
@@ -498,11 +451,7 @@ public class Conversions {
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
         while ( iterator.hasNext () ) {
-<<<<<<< HEAD
             values[ index ] = toInt ( iterator.next () );
-=======
-            values[index] = toInt ( iterator.next () );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             index++;
         }
         return values;
@@ -517,11 +466,7 @@ public class Conversions {
         int index = 0;
         Iterator<Object> iterator = iterator ( Object.class, value );
         while ( iterator.hasNext () ) {
-<<<<<<< HEAD
             values[ index ] = toByte ( iterator.next () );
-=======
-            values[index] = toByte ( iterator.next () );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             index++;
         }
         return values;
@@ -536,11 +481,7 @@ public class Conversions {
         int index = 0;
         Iterator<Object> iterator = iterator ( Typ.object, value );
         while ( iterator.hasNext () ) {
-<<<<<<< HEAD
             values[ index ] = toChar ( iterator.next () );
-=======
-            values[index] = toChar ( iterator.next () );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             index++;
         }
         return values;
@@ -561,31 +502,19 @@ public class Conversions {
                 int i = 0;
 
                 @Override
-<<<<<<< HEAD
                 public boolean hasNext () {
-=======
-                public boolean hasNext() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return i < length;
                 }
 
                 @Override
-<<<<<<< HEAD
                 public T next () {
-=======
-                public T next() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     T next = ( T ) Reflection.idx ( value, i );
                     i++;
                     return next;
                 }
 
                 @Override
-<<<<<<< HEAD
                 public void remove () {
-=======
-                public void remove() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 }
             };
         } else if ( Typ.isCollection ( value.getClass () ) ) {
@@ -719,11 +648,7 @@ public class Conversions {
     public static Object toArrayGuessType ( Collection<?> value ) {
         Class<?> componentType = Reflection.getComponentType ( value );
         Object array = Array.newInstance ( componentType, value.size () );
-<<<<<<< HEAD
         @SuppressWarnings ( "unchecked" )
-=======
-        @SuppressWarnings("unchecked")
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ();
         int index = 0;
         while ( iterator.hasNext () ) {
@@ -734,15 +659,9 @@ public class Conversions {
     }
 
 
-<<<<<<< HEAD
     public static Object toArray ( Class<?> componentType, Collection<?> value ) {
         Object array = Array.newInstance ( componentType, value.size () );
         @SuppressWarnings ( "unchecked" )
-=======
-    public static Object toArray( Class<?> componentType, Collection<?> value ) {
-        Object array = Array.newInstance ( componentType, value.size () );
-        @SuppressWarnings("unchecked")
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ();
         int index = 0;
         while ( iterator.hasNext () ) {
@@ -757,11 +676,7 @@ public class Conversions {
     }
 
 
-<<<<<<< HEAD
     public static Date toDate ( Calendar c ) {
-=======
-    public static Date toDate( Calendar c ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return c.getTime ();
 
     }

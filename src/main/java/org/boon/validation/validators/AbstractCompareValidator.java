@@ -77,11 +77,7 @@ public abstract class AbstractCompareValidator extends BaseValidator {
      *
      * @return
      */
-<<<<<<< HEAD
     protected Object lookupCompareToPropertyValue () {
-=======
-    protected Object lookupCompareToPropertyValue() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ValidationContext.getCurrentInstance ()
                 .getProposedPropertyValue ( compareToProperty );
     }
@@ -95,11 +91,7 @@ public abstract class AbstractCompareValidator extends BaseValidator {
     }
 
 
-<<<<<<< HEAD
     protected String getCompareToProperty () {
-=======
-    protected String getCompareToProperty() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return compareToProperty;
     }
 

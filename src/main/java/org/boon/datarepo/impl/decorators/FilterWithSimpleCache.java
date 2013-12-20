@@ -37,11 +37,7 @@ public class FilterWithSimpleCache extends FilterDecoratorBase {
     }
 
     @Override
-<<<<<<< HEAD
     public void invalidate () {
-=======
-    public void invalidate() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         queryCache.clear ();
         super.invalidate ();
     }
@@ -50,11 +46,7 @@ public class FilterWithSimpleCache extends FilterDecoratorBase {
         super ( delegate );
     }
 
-<<<<<<< HEAD
     private void checkCache () {
-=======
-    private void checkCache() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( flushCount.get () > 10_000 && queryCache.size () > 10_000 ) {
             queryCache.clear ();
             flushCount.set ( 0 );

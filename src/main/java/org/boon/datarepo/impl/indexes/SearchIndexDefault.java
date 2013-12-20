@@ -61,49 +61,29 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-<<<<<<< HEAD
     public void init () {
-=======
-    public void init() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         super.map = SPIFactory.getMapCreatorFactory ().get ().createNavigableMap ( this.keyType, this.collator );
         this.navigableMap = ( NavigableMap<KEY, MultiValue> ) super.map;
     }
 
 
     @Override
-<<<<<<< HEAD
     public ITEM findFirst () {
-=======
-    public ITEM findFirst() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ( ITEM ) this.navigableMap.firstEntry ().getValue ().getValue ();
     }
 
     @Override
-<<<<<<< HEAD
     public ITEM findLast () {
-=======
-    public ITEM findLast() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ( ITEM ) this.navigableMap.lastEntry ().getValue ().getValue ();
     }
 
     @Override
-<<<<<<< HEAD
     public KEY findFirstKey () {
-=======
-    public KEY findFirstKey() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.firstEntry ().getKey ();
     }
 
     @Override
-<<<<<<< HEAD
     public KEY findLastKey () {
-=======
-    public KEY findLastKey() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.lastEntry ().getKey ();
     }
 
@@ -201,11 +181,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
     boolean init;
 
-<<<<<<< HEAD
     void initIfNeeded () {
-=======
-    void initIfNeeded() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( !init ) {
             init = true;
             ITEM item = ( ITEM ) ( ( MultiValue ) this.navigableMap.firstEntry () ).getValue ();
@@ -272,39 +248,23 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
 
     @Override
-<<<<<<< HEAD
     public ITEM min () {
-=======
-    public ITEM min() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ( ITEM ) this.navigableMap.firstEntry ().getValue ().getValue ();
     }
 
     @Override
-<<<<<<< HEAD
     public ITEM max () {
-=======
-    public ITEM max() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ( ITEM ) this.navigableMap.lastEntry ().getValue ().getValue ();
     }
 
     @Override
-<<<<<<< HEAD
     public int count ( KEY key ) {
-=======
-    public int count( KEY key ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.get ( key ).size ();
     }
 
 
     @Override
-<<<<<<< HEAD
     public int size () {
-=======
-    public int size() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.size ();
     }
 

@@ -74,23 +74,13 @@ public interface RepoBuilder {
 
     public RepoBuilder cloneEdits ( boolean cloneEdits );
 
-<<<<<<< HEAD
     public RepoBuilder useCache ();
 
     public RepoBuilder storeKeyInIndexOnly ();
-=======
-    public RepoBuilder useCache();
-
-    public RepoBuilder storeKeyInIndexOnly();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     RepoBuilder events ( ModificationListener... listeners );
 
-<<<<<<< HEAD
     RepoBuilder debug ();
-=======
-    RepoBuilder debug();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
     <KEY, ITEM> Repo<KEY, ITEM> build ( Class<KEY> key, Class<ITEM> clazz, Class<?>... all );
@@ -108,19 +98,11 @@ public interface RepoBuilder {
 
     RepoBuilder nestedIndex ( String... propertyPath );
 
-<<<<<<< HEAD
     RepoBuilder indexHierarchy ();
-=======
-    RepoBuilder indexHierarchy();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     RepoBuilder indexBucketSize ( String propertyName, int size );
 
-<<<<<<< HEAD
     RepoBuilder hashCodeOptimizationOn ();
-=======
-    RepoBuilder hashCodeOptimizationOn();
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
     RepoBuilder removeDuplication ( boolean removeDuplication );

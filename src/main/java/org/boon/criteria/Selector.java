@@ -15,22 +15,14 @@ import static org.boon.core.reflection.Reflection.joinBy;
 public abstract class Selector {
     protected String name;
 
-<<<<<<< HEAD
     public Selector () {
-=======
-    public Selector() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
     public Selector ( String n ) {
         name = n;
     }
 
-<<<<<<< HEAD
     public String getName () {
-=======
-    public String getName() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 
@@ -73,17 +65,10 @@ public abstract class Selector {
         };
     }
 
-<<<<<<< HEAD
     public static Selector toStr () {
         return new Selector ( "toString()" ) {
             @Override
             public void handleRow ( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-=======
-    public static Selector toStr() {
-        return new Selector ( "toString()" ) {
-            @Override
-            public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 row.put ( this.name, item.toString () );
             }
 
@@ -168,11 +153,7 @@ public abstract class Selector {
         };
     }
 
-<<<<<<< HEAD
     public static Selector rowId () {
-=======
-    public static Selector rowId() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         return new Selector ( "rowId" ) {
             @Override
@@ -191,11 +172,7 @@ public abstract class Selector {
     }
 
 
-<<<<<<< HEAD
     public static <ITEM> List<Map<String, Object>> performSelection ( List<Selector> selectors, List<ITEM> results, Map<String, FieldAccess> fields ) {
-=======
-    public static <ITEM> List<Map<String, Object>> performSelection( List<Selector> selectors, List<ITEM> results, Map<String, FieldAccess> fields ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<Map<String, Object>> rows = new ArrayList<> ( results.size () );
 
 

@@ -23,11 +23,7 @@ public abstract class Group extends Criteria {
     }
 
     @Override
-<<<<<<< HEAD
     public void cleanAfterGroupTest () {
-=======
-    public void cleanAfterGroupTest() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     }
 
@@ -38,22 +34,14 @@ public abstract class Group extends Criteria {
 
     }
 
-<<<<<<< HEAD
     private int doHashCode () {
-=======
-    private int doHashCode() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         int result = expressions != null ? Arrays.hashCode ( expressions ) : 0;
         result = 31 * result + ( grouping != null ? grouping.hashCode () : 0 );
         return result;
 
     }
 
-<<<<<<< HEAD
     private String doToString () {
-=======
-    private String doToString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( toString == null ) {
 
@@ -71,20 +59,12 @@ public abstract class Group extends Criteria {
 
     }
 
-<<<<<<< HEAD
     public Grouping getGrouping () {
-=======
-    public Grouping getGrouping() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return grouping;
     }
 
 
-<<<<<<< HEAD
     public Criteria[] getExpressions () {
-=======
-    public Criteria[] getExpressions() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return expressions;
     }
 
@@ -102,20 +82,12 @@ public abstract class Group extends Criteria {
     }
 
     @Override
-<<<<<<< HEAD
     public int hashCode () {
-=======
-    public int hashCode() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return hashCode;
     }
 
     @Override
-<<<<<<< HEAD
     public String toString () {
-=======
-    public String toString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return doToString ();
     }
 

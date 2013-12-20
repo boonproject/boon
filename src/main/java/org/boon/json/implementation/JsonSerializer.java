@@ -25,16 +25,12 @@ public class JsonSerializer {
 
     }
 
-    public void serializeString( String str, CharBuf builder ) {
+    public void serializeString ( String str, CharBuf builder ) {
         builder.addChar ( '\"' );
         char[] charArray = str.toCharArray ();
 
         for ( int index = 0; index < charArray.length; index++ ) {
-<<<<<<< HEAD
             char c = charArray[ index ];
-=======
-            char c = charArray[index];
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
             switch ( c ) {
                 case '\"':
@@ -92,7 +88,6 @@ public class JsonSerializer {
         builder.addChar ( '\"' );
     }
 
-<<<<<<< HEAD
     public CharBuf serialize ( Object obj ) {
         CharBuf builder = CharBuf.create ( 64 );
 
@@ -100,24 +95,11 @@ public class JsonSerializer {
             serializeObject ( obj, builder );
         } catch ( Exception ex ) {
             return Exceptions.handle ( CharBuf.class, "unable to serializeObject", ex );
-=======
-    public CharBuf serializeObject( Object obj ) {
-        CharBuf builder = CharBuf.create ( 64 );
-
-        try {
-            serialize ( obj, builder );
-        } catch ( Exception ex ) {
-            return Exceptions.handle ( CharBuf.class, "unable to serialize", ex );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
         return builder;
     }
 
-<<<<<<< HEAD
     public void serializeObject ( Object obj, CharBuf builder ) throws Exception {
-=======
-    public void serialize( Object obj, CharBuf builder ) throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( obj == null ) {
             builder.add ( "null" );
@@ -136,45 +118,22 @@ public class JsonSerializer {
         } else {
             builder.addChar ( '{' );
             if ( outputType ) {
-<<<<<<< HEAD
                 builder.add ( "\"class\":\"" );
-=======
-                builder.add ( "\"java_type\":\"" );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 builder.add ( obj.getClass ().getName () );
                 builder.addChar ( '"' );
             }
 
-<<<<<<< HEAD
 
             final Map<String, FieldAccess> fieldAccessors = Reflection.getPropertyFieldAccessors ( obj.getClass () );
 
             int index = 0;
             Collection<FieldAccess> values = fieldAccessors.values ();
             final int length = values.size ();
-=======
-            Method[] methods = obj.getClass ().getMethods ();
-
-            List<Method> methodList = new ArrayList<> ( methods.length );
-
-            for ( int index = 0; index < methods.length; index++ ) {
-                Method method = methods[index];
-                String name = method.getName ();
-
-                if ( method.getParameterTypes ().length > 0
-                        || method.getReturnType () == Void.class
-                        || !( name.startsWith ( "get" ) || name.startsWith ( "is" ) )
-                        || name.equals ( "getClass" ) ) {
-                    continue;
-                }
-                methodList.add ( method );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
             if ( outputType && length > 0 ) {
                 builder.addChar ( ',' );
             }
 
-<<<<<<< HEAD
             for ( FieldAccess fieldAccess : values ) {
 
                 builder.addChar ( '\"' );
@@ -184,30 +143,6 @@ public class JsonSerializer {
                 serializeObject ( fieldAccess.getObject ( obj ), builder );
 
                 if ( index + 1 != length ) {
-=======
-            if ( methodList.size () > 0 ) {
-                builder.append ( ',' );
-            }
-
-            for ( int index = 0; index < methodList.size (); index++ ) {
-                Method method = methodList.get ( index );
-                String name = method.getName ();
-                if ( name.charAt ( 0 ) == 'g' ) {
-                    name = name.substring ( 3 );
-                } else {
-                    name = name.substring ( 2 );
-                }
-                name = "" + Character.toLowerCase ( name.charAt ( 0 ) )
-                        + name.substring ( 1 );
-                builder.addChar ( '\"' );
-                builder.add ( name );
-                builder.addChar ( '\"' );
-                builder.addChar ( ':' );
-                Object object = method.invoke ( obj );
-                serialize ( object, builder );
-
-                if ( index + 1 != methodList.size () ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     builder.addChar ( ',' );
                 }
                 index++;
@@ -218,11 +153,7 @@ public class JsonSerializer {
         }
     }
 
-<<<<<<< HEAD
     private void serializeMap ( Map<Object, Object> map, CharBuf builder ) throws Exception {
-=======
-    private void serializeMap( Map<Object, Object> map, CharBuf builder ) throws Exception {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         final Set<Map.Entry<Object, Object>> entrySet = map.entrySet ();
         for ( Map.Entry<Object, Object> entry : entrySet ) {
             builder.addChar ( '\"' );
@@ -233,7 +164,6 @@ public class JsonSerializer {
         }
     }
 
-<<<<<<< HEAD
     private void serializeCollection ( Collection<?> collection, CharBuf builder ) throws Exception {
         for ( Object o : collection ) {
             serializeObject ( o, builder );
@@ -244,18 +174,6 @@ public class JsonSerializer {
         builder.addChar ( '[' );
         for ( int index = 0; index < array.length; index++ ) {
             serializeObject ( array[ index ], builder );
-=======
-    private void serializeCollection( Collection<?> collection, CharBuf builder ) throws Exception {
-        for ( Object o : collection ) {
-            serialize ( o, builder );
-        }
-    }
-
-    private void serializeArray( Object[] array, CharBuf builder ) throws Exception {
-        builder.addChar ( '[' );
-        for ( int index = 0; index < array.length; index++ ) {
-            serialize ( array[index], builder );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             if ( index != array.length - 1 ) {
                 builder.append ( ',' );
             }

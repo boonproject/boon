@@ -483,19 +483,11 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     }
 
     @Override
-<<<<<<< HEAD
     public void init () {
     }
 
     @Override
     public void hashCodeOptimizationOn () {
-=======
-    public void init() {
-    }
-
-    @Override
-    public void hashCodeOptimizationOn() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.hashCodeOptimization = true;
     }
 
@@ -546,11 +538,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
 
     @Override
-<<<<<<< HEAD
     public void clear () {
-=======
-    public void clear() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         query.clear ();
     }
 
@@ -561,39 +549,23 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     }
 
     @Override
-<<<<<<< HEAD
     public List<ITEM> all () {
-=======
-    public List<ITEM> all() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return query.all ();  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-<<<<<<< HEAD
     public int size () {
-=======
-    public int size() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return query.size ();
 
     }
 
     @Override
-<<<<<<< HEAD
     public Collection<ITEM> toCollection () {
-=======
-    public Collection<ITEM> toCollection() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return query;
     }
 
 
-<<<<<<< HEAD
     public SearchableCollection<KEY, ITEM> query () {
-=======
-    public SearchableCollection<KEY, ITEM> query() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return query;
     }
 

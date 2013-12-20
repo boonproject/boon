@@ -7,8 +7,7 @@ import org.boon.json.implementation.JsonStringDecoder;
 import org.boon.primitive.CharScanner;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
@@ -21,19 +20,11 @@ public class ValueInCharBuf extends ValueBase {
         this.type = type;
     }
 
-<<<<<<< HEAD
     public ValueInCharBuf () {
 
     }
 
     public ValueInCharBuf ( boolean chop, Type type, int startIndex, int endIndex, char[] buffer ) {
-=======
-    public ValueInCharBuf() {
-
-    }
-
-    public ValueInCharBuf( boolean chop, Type type, int startIndex, int endIndex, char[] buffer ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.type = type;
 
         if ( chop ) {
@@ -49,11 +40,7 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-<<<<<<< HEAD
     public ValueInCharBuf ( boolean chop, Type type, int startIndex, int endIndex, char[] buffer, boolean encoded ) {
-=======
-    public ValueInCharBuf( boolean chop, Type type, int startIndex, int endIndex, char[] buffer, boolean encoded ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.type = type;
 
         if ( chop ) {
@@ -71,11 +58,7 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-<<<<<<< HEAD
     public String toString () {
-=======
-    public String toString() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( startIndex == 0 && endIndex == buffer.length ) {
             return FastStringUtils.noCopyStringFromChars ( buffer );
         } else {
@@ -104,11 +87,7 @@ public class ValueInCharBuf extends ValueBase {
 
                 int sign = 1;
                 boolean negative = false;
-<<<<<<< HEAD
                 if ( buffer[ startIndex ] == '-' ) {
-=======
-                if ( buffer[startIndex] == '-' ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     startIndex++;
                     sign = -1;
                     negative = true;
@@ -224,11 +203,7 @@ public class ValueInCharBuf extends ValueBase {
     @Override
     public int intValue () {
         int sign = 1;
-<<<<<<< HEAD
         if ( buffer[ startIndex ] == '-' ) {
-=======
-        if ( buffer[startIndex] == '-' ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             startIndex++;
             sign = -1;
 
@@ -239,11 +214,7 @@ public class ValueInCharBuf extends ValueBase {
     @Override
     public long longValue () {
         long sign = 1;
-<<<<<<< HEAD
         if ( buffer[ startIndex ] == '-' ) {
-=======
-        if ( buffer[startIndex] == '-' ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             startIndex++;
             sign = -1;
 
@@ -347,7 +318,7 @@ public class ValueInCharBuf extends ValueBase {
 
     }
 
-    public final void chop() {
+    public final void chop () {
         this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
         this.startIndex = 0;
         this.endIndex = this.buffer.length;

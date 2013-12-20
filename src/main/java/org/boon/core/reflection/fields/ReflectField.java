@@ -59,11 +59,7 @@ public class ReflectField implements FieldAccess {
 
     }
 
-<<<<<<< HEAD
     public ParameterizedType getParameterizedType () {
-=======
-    public ParameterizedType getParameterizedType() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
         ParameterizedType type = null;
@@ -84,11 +80,7 @@ public class ReflectField implements FieldAccess {
 
     private Class<?> componentClass;
 
-<<<<<<< HEAD
     public Class<?> getComponentClass () {
-=======
-    public Class<?> getComponentClass() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( componentClass == null ) {
             componentClass = doGetComponentClass ();
         }
@@ -96,20 +88,12 @@ public class ReflectField implements FieldAccess {
     }
 
 
-<<<<<<< HEAD
     private Class<?> doGetComponentClass () {
-=======
-    private Class<?> doGetComponentClass() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         final ParameterizedType parameterizedType = this.getParameterizedType ();
         if ( parameterizedType == null ) {
             return null;
         } else {
-<<<<<<< HEAD
             return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[ 0 ] );
-=======
-            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[0] );
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
     }
 
@@ -200,42 +184,25 @@ public class ReflectField implements FieldAccess {
         return getValue ( obj );
     }
 
-<<<<<<< HEAD
     public boolean getStaticBoolean () {
         return getBoolean ( null );
     }
 
     public int getStaticInt () {
-=======
-    public boolean getStaticBoolean() {
-        return getBoolean ( null );
-    }
-
-    public int getStaticInt() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getInt ( null );
 
     }
 
-<<<<<<< HEAD
     public short getStaticShort () {
-=======
-    public short getStaticShort() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getShort ( null );
     }
 
 
-<<<<<<< HEAD
     public long getStaticLong () {
-=======
-    public long getStaticLong() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getLong ( null );
     }
 
 
-<<<<<<< HEAD
     public double getStaticDouble () {
         return getDouble ( null );
     }
@@ -249,106 +216,55 @@ public class ReflectField implements FieldAccess {
     }
 
     public Object getObject () {
-=======
-    public double getStaticDouble() {
-        return getDouble ( null );
-    }
-
-    public float getStaticFloat() {
-        return getFloat ( null );
-    }
-
-    public byte getStaticByte() {
-        return getByte ( null );
-    }
-
-    public Object getObject() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getObject ( null );
     }
 
     @Override
-<<<<<<< HEAD
     public Field getField () {
-=======
-    public Field getField() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return field;
     }
 
 
     @Override
-<<<<<<< HEAD
     public boolean isFinal () {
-=======
-    public boolean isFinal() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isFinal;
     }
 
 
     @Override
-<<<<<<< HEAD
     public boolean isStatic () {
-=======
-    public boolean isStatic() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isStatic;
     }
 
     @Override
-<<<<<<< HEAD
     public boolean isVolatile () {
-=======
-    public boolean isVolatile() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isVolatile;
     }
 
 
     @Override
-<<<<<<< HEAD
     public boolean isQualified () {
-=======
-    public boolean isQualified() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return qualified;
     }
 
     @Override
-<<<<<<< HEAD
     public boolean isReadOnly () {
-=======
-    public boolean isReadOnly() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return readOnly;
     }
 
 
     @Override
-<<<<<<< HEAD
     public Class<?> getType () {
-=======
-    public Class<?> getType() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return type;
     }
 
     @Override
-<<<<<<< HEAD
     public String getName () {
-=======
-    public String getName() {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 
     @Override
-<<<<<<< HEAD
     public void setValue ( Object obj, Object value ) {
-=======
-    public void setValue( Object obj, Object value ) {
->>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( value != null && value.getClass () == this.type ) {
             this.setObject ( obj, value );
             return;
