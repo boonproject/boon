@@ -7,13 +7,13 @@ import java.lang.reflect.ParameterizedType;
 
 
 public interface FieldAccess {
-    String getName( );
+    String getName();
 
     Object getValue( Object obj );
 
     void setValue( Object obj, Object value );
 
-    public  void setFromValue( Object obj, Value value );
+    public void setFromValue( Object obj, Value value );
 
     boolean getBoolean( Object obj );
 
@@ -58,23 +58,23 @@ public interface FieldAccess {
     void setObject( Object obj, Object value );
 
 
-    boolean isFinal( );
+    boolean isFinal();
 
-    boolean isStatic( );
+    boolean isStatic();
 
-    boolean isVolatile( );
+    boolean isVolatile();
 
-    boolean isQualified( );
+    boolean isQualified();
 
-    boolean isReadOnly( );
+    boolean isReadOnly();
 
-    Class<?> getType( );
+    Class<?> getType();
 
-    Field getField( );
-
-
-    public ParameterizedType getParameterizedType( );
+    Field getField();
 
 
-    public Class<?> getComponentClass( );
+    public ParameterizedType getParameterizedType();
+
+
+    public Class<?> getComponentClass();
 }

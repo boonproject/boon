@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface Equals {
 
-    String compareToProperty( );
+    String compareToProperty();
 
-    String detailMessage( ) default "";
+    String detailMessage() default "";
 
-    String summaryMessage( ) default "";
+    String summaryMessage() default "";
 
 
 }

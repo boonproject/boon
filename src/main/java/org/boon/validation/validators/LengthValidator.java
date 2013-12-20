@@ -27,7 +27,7 @@ public class LengthValidator extends BaseValidator {
      * @param fieldLabel the logical name of the value used for generating error messages
      */
     public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
-        ValidatorMessage validatorMessage = new ValidatorMessage ( );
+        ValidatorMessage validatorMessage = new ValidatorMessage ();
         if ( fieldValue == null ) {
             return validatorMessage;
         }

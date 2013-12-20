@@ -11,19 +11,19 @@ import java.util.Set;
 
 public interface ResultSet<T> extends Iterable<T> {
 
-    ResultSet expectOne( );
+    ResultSet expectOne();
 
 
     <EXPECT> ResultSet<EXPECT> expectOne( Class<EXPECT> clz );
 
 
-    ResultSet expectMany( );
+    ResultSet expectMany();
 
-    ResultSet expectNone( );
+    ResultSet expectNone();
 
-    ResultSet expectOneOrMany( );
+    ResultSet expectOneOrMany();
 
-    ResultSet removeDuplication( );
+    ResultSet removeDuplication();
 
     ResultSet sort( Sort sort );
 
@@ -50,23 +50,23 @@ public interface ResultSet<T> extends Iterable<T> {
     <OBJ> ResultSet<OBJ> selectObjectsAsResultSet( Class<OBJ> cls, Selector selector );
 
 
-    Collection<T> asCollection( );
+    Collection<T> asCollection();
 
-    String asJSONString( );
+    String asJSONString();
 
-    List<Map<String, Object>> asListOfMaps( );
+    List<Map<String, Object>> asListOfMaps();
 
-    List<T> asList( );
+    List<T> asList();
 
-    Set<T> asSet( );
+    Set<T> asSet();
 
-    List<PlanStep> queryPlan( );
+    List<PlanStep> queryPlan();
 
-    T firstItem( );
+    T firstItem();
 
-    Map<String, Object> firstMap( );
+    Map<String, Object> firstMap();
 
-    String firstJSON( );
+    String firstJSON();
 
     int firstInt( Selector selector );
 
@@ -93,7 +93,7 @@ public interface ResultSet<T> extends Iterable<T> {
 
     //Size can vary if you allow duplication.
     //The size can change after removeDuplication.
-    int size( );
+    int size();
 
 
 }

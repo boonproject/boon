@@ -42,10 +42,10 @@ class MultiValue<T> {
             org.remove ( removeItem );
         }
 
-        return org.size ( ) == 0 ? null : org;
+        return org.size () == 0 ? null : org;
     }
 
-    private MultiValue( ) {
+    private MultiValue() {
 
     }
 
@@ -64,18 +64,18 @@ class MultiValue<T> {
         values.remove ( item );
     }
 
-    T getValue( ) {
+    T getValue() {
 
-        return ( values.size ( ) > 0 ) ? values.get ( 0 ) : null;
+        return ( values.size () > 0 ) ? values.get ( 0 ) : null;
     }
 
-    final List<T> getValues( ) {
+    final List<T> getValues() {
         return values;
     }
 
 
-    int size( ) {
-        return values.size ( );
+    int size() {
+        return values.size ();
     }
 
     void addTo( List<T> results ) {

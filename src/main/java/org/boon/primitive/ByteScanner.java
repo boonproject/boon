@@ -2,8 +2,6 @@ package org.boon.primitive;
 
 import java.util.Objects;
 
-import static org.boon.Exceptions.die;
-
 public class ByteScanner {
 
 
@@ -221,72 +219,67 @@ public class ByteScanner {
     }
 
 
+    final static String MIN_INT_STR_NO_SIGN = String.valueOf ( Integer.MIN_VALUE ).substring ( 1 );
+    final static String MAX_INT_STR = String.valueOf ( Integer.MAX_VALUE );
 
 
-    final static String MIN_INT_STR_NO_SIGN = String.valueOf(Integer.MIN_VALUE).substring(1);
-    final static String MAX_INT_STR = String.valueOf(Integer.MAX_VALUE);
+    final static String MIN_LONG_STR_NO_SIGN = String.valueOf ( Long.MIN_VALUE ).substring ( 1 );
+    final static String MAX_LONG_STR = String.valueOf ( Long.MAX_VALUE );
 
 
-
-    final static String MIN_LONG_STR_NO_SIGN = String.valueOf(Long.MIN_VALUE).substring(1);
-    final static String MAX_LONG_STR = String.valueOf(Long.MAX_VALUE);
-
-
-
-    public static boolean isInteger(byte[] digitChars, int offset, int len,
-                                    boolean negative) {
+    public static boolean isInteger( byte[] digitChars, int offset, int len,
+                                     boolean negative ) {
         String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
-        int cmpLen = cmpStr.length();
-        if (len < cmpLen) return true;
-        if (len > cmpLen) return false;
+        int cmpLen = cmpStr.length ();
+        if ( len < cmpLen ) return true;
+        if ( len > cmpLen ) return false;
 
-        for (int i = 0; i < cmpLen; ++i) {
-            int diff = digitChars[offset+i] - cmpStr.charAt(i);
-            if (diff != 0) {
-                return (diff < 0);
+        for ( int i = 0; i < cmpLen; ++i ) {
+            int diff = digitChars[offset + i] - cmpStr.charAt ( i );
+            if ( diff != 0 ) {
+                return ( diff < 0 );
             }
         }
         return true;
     }
 
-    public static boolean isLong(byte[] digitChars, int offset, int len,
-                                 boolean negative) {
+    public static boolean isLong( byte[] digitChars, int offset, int len,
+                                  boolean negative ) {
         String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
-        int cmpLen = cmpStr.length();
-        if (len < cmpLen) return true;
-        if (len > cmpLen) return false;
+        int cmpLen = cmpStr.length ();
+        if ( len < cmpLen ) return true;
+        if ( len > cmpLen ) return false;
 
-        for (int i = 0; i < cmpLen; ++i) {
-            int diff = digitChars[offset+i] - cmpStr.charAt(i);
-            if (diff != 0) {
-                return (diff < 0);
+        for ( int i = 0; i < cmpLen; ++i ) {
+            int diff = digitChars[offset + i] - cmpStr.charAt ( i );
+            if ( diff != 0 ) {
+                return ( diff < 0 );
             }
         }
         return true;
     }
 
 
-
-    public static int parseInt(byte[] digitChars, int offset, int len) {
+    public static int parseInt( byte[] digitChars, int offset, int len ) {
         int num = digitChars[offset] - '0';
-        int to =   len + offset;
+        int to = len + offset;
         // This looks ugly, but appears the fastest way (as per measurements)
-        if (++offset < to) {
-            num = (num * 10) + (digitChars[offset] - '0');
-            if (++offset < to) {
-                num = (num * 10) + (digitChars[offset] - '0');
-                if (++offset < to) {
-                    num = (num * 10) + (digitChars[offset] - '0');
-                    if (++offset < to) {
-                        num = (num * 10) + (digitChars[offset] - '0');
-                        if (++offset < to) {
-                            num = (num * 10) + (digitChars[offset] - '0');
-                            if (++offset < to) {
-                                num = (num * 10) + (digitChars[offset] - '0');
-                                if (++offset < to) {
-                                    num = (num * 10) + (digitChars[offset] - '0');
-                                    if (++offset < to) {
-                                        num = (num * 10) + (digitChars[offset] - '0');
+        if ( ++offset < to ) {
+            num = ( num * 10 ) + ( digitChars[offset] - '0' );
+            if ( ++offset < to ) {
+                num = ( num * 10 ) + ( digitChars[offset] - '0' );
+                if ( ++offset < to ) {
+                    num = ( num * 10 ) + ( digitChars[offset] - '0' );
+                    if ( ++offset < to ) {
+                        num = ( num * 10 ) + ( digitChars[offset] - '0' );
+                        if ( ++offset < to ) {
+                            num = ( num * 10 ) + ( digitChars[offset] - '0' );
+                            if ( ++offset < to ) {
+                                num = ( num * 10 ) + ( digitChars[offset] - '0' );
+                                if ( ++offset < to ) {
+                                    num = ( num * 10 ) + ( digitChars[offset] - '0' );
+                                    if ( ++offset < to ) {
+                                        num = ( num * 10 ) + ( digitChars[offset] - '0' );
                                     }
                                 }
                             }
@@ -299,29 +292,28 @@ public class ByteScanner {
     }
 
 
-
-    public static int parseIntIgnoreDot(byte[] digitChars, int offset, int len) {
+    public static int parseIntIgnoreDot( byte[] digitChars, int offset, int len ) {
         int num = digitChars[offset] - '0';
-        int to =   len + offset;
+        int to = len + offset;
         // This looks ugly, but appears the fastest way (as per measurements)
-        if (++offset < to) {
-            num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-            if (++offset < to) {
-                num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-                if (++offset < to) {
-                    num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-                    if (++offset < to) {
-                        num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-                        if (++offset < to) {
-                            num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-                            if (++offset < to) {
-                                num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-                                if (++offset < to) {
-                                    num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-                                    if (++offset < to) {
-                                        num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
-                                        if (++offset < to) {
-                                            num = digitChars[offset] != '.' ? (num * 10) + (digitChars[offset] - '0') : num;
+        if ( ++offset < to ) {
+            num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+            if ( ++offset < to ) {
+                num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+                if ( ++offset < to ) {
+                    num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+                    if ( ++offset < to ) {
+                        num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+                        if ( ++offset < to ) {
+                            num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+                            if ( ++offset < to ) {
+                                num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+                                if ( ++offset < to ) {
+                                    num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+                                    if ( ++offset < to ) {
+                                        num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
+                                        if ( ++offset < to ) {
+                                            num = digitChars[offset] != '.' ? ( num * 10 ) + ( digitChars[offset] - '0' ) : num;
                                         }
                                     }
                                 }
@@ -334,33 +326,29 @@ public class ByteScanner {
         return num;
     }
 
-    public static long parseLong(byte[] digitChars, int offset, int len) {
-        int len1 = len-9;
-        long val = parseInt(digitChars, offset, len1) * L_BILLION;
-        return val + (long) parseInt(digitChars, offset+len1, 9);
+    public static long parseLong( byte[] digitChars, int offset, int len ) {
+        int len1 = len - 9;
+        long val = parseInt ( digitChars, offset, len1 ) * L_BILLION;
+        return val + ( long ) parseInt ( digitChars, offset + len1, 9 );
     }
 
-    public static long parseLongIgnoreDot(byte[] digitChars, int offset, int len) {
-        int len1 = len-9;
-        long val = parseIntIgnoreDot (digitChars, offset, len1) * L_BILLION;
-        return val + (long) parseIntIgnoreDot(digitChars, offset+len1, 9);
+    public static long parseLongIgnoreDot( byte[] digitChars, int offset, int len ) {
+        int len1 = len - 9;
+        long val = parseIntIgnoreDot ( digitChars, offset, len1 ) * L_BILLION;
+        return val + ( long ) parseIntIgnoreDot ( digitChars, offset + len1, 9 );
     }
 
     private final static long L_BILLION = 1000000000;
 
 
-
-
-
-
-    public static double doubleValue(byte [] buffer, int startIndex, int endIndex) {
+    public static double doubleValue( byte[] buffer, int startIndex, int endIndex ) {
 
         boolean simple = true;
         int digitsPastPoint = 0;
         boolean foundPoint = false;
         boolean negative = false;
 
-        double sign ;
+        double sign;
 
         if ( buffer[startIndex] == '-' ) {
             startIndex++;
@@ -393,7 +381,7 @@ public class ByteScanner {
             }
             if ( foundPoint ) {
                 digitsPastPoint++;
-                if (digitsPastPoint >= powersOf10.length) {
+                if ( digitsPastPoint >= powersOf10.length ) {
                     simple = true;
                     break;
                 }
@@ -418,14 +406,13 @@ public class ByteScanner {
 
         }
 
-        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) )) * sign;
+        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
     }
 
 
+    public static double simpleDouble( byte[] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex ) {
 
-    public static double simpleDouble(byte [] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex) {
-
-        double sign ;
+        double sign;
 
         if ( negative ) {
             sign = -1.0;
@@ -452,7 +439,7 @@ public class ByteScanner {
 
         }
 
-        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) )) * sign;
+        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
     }
 
 
@@ -473,8 +460,6 @@ public class ByteScanner {
             10_000_000_000_000.0,
             100_000_000_000_000.0,
     };
-
-
 
 
 }

@@ -88,19 +88,19 @@ public class RepoBuilderDefault implements RepoBuilder {
     /**
      * This holds the set of search indexes that the Repo will manage
      */
-    Set<String> searchIndexes = new HashSet<> ( );
+    Set<String> searchIndexes = new HashSet<> ();
     /**
      * This holds the set of lookupIndexes that the Repo will manage.
      */
-    Set<String> lookupIndexes = new HashSet<> ( );
+    Set<String> lookupIndexes = new HashSet<> ();
     /**
      * This holds the uniqueSearchIndexes that this repo will manage.
      */
-    Set<String> uniqueSearchIndexes = new HashSet<> ( );
+    Set<String> uniqueSearchIndexes = new HashSet<> ();
     /**
      * This holds the uniqueLookupIndexes that this repo will manager.
      */
-    Set<String> uniqueLookupIndexes = new HashSet<> ( );
+    Set<String> uniqueLookupIndexes = new HashSet<> ();
 
     /**
      * If we are dealing with a complex key, like a derived key or some sort of
@@ -112,7 +112,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * <p/>
      * In our case, they give us the key and the Function gives them the value of the key.
      */
-    Map<String, Function> keyGetterMap = new HashMap ( );
+    Map<String, Function> keyGetterMap = new HashMap ();
 
 
     /**
@@ -201,7 +201,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     /**
      * Holds a collection of comparators that will be used per property for the Repo.
      */
-    private Map<String, Comparator> collators = new HashMap<> ( );
+    private Map<String, Comparator> collators = new HashMap<> ();
 
 
     /**
@@ -210,7 +210,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * Key transformers are used to for example make a case insensitive search.
      * It determines how the key is indexed.
      */
-    private Map<String, Function> keyTransformers = new HashMap<> ( );
+    private Map<String, Function> keyTransformers = new HashMap<> ();
 
 
     /**
@@ -218,7 +218,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * <p/>
      * Employee.address.zip would be a nested index.
      */
-    private Map<String, String[]> nestedIndexes = new HashMap<> ( );
+    private Map<String, String[]> nestedIndexes = new HashMap<> ();
 
 
     /**
@@ -230,7 +230,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * For non-unique indexes, this sets up how many values you would like
      * the index to hold initially. (It expands automatically).
      */
-    private Map<String, Integer> indexBucketSize = new HashMap<> ( );
+    private Map<String, Integer> indexBucketSize = new HashMap<> ();
 
 
     /**
@@ -342,7 +342,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @return RepoBuilder
      */
     @Override
-    public RepoBuilder useCache( ) {
+    public RepoBuilder useCache() {
         this.cache = true;
         return this;
     }
@@ -354,7 +354,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @return RepoBuilder
      */
     @Override
-    public RepoBuilder storeKeyInIndexOnly( ) {
+    public RepoBuilder storeKeyInIndexOnly() {
         this.storeKeyInIndexOnly = true;
 
         return this;
@@ -379,7 +379,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @return
      */
     @Override
-    public RepoBuilder debug( ) {
+    public RepoBuilder debug() {
         this.debug = true;
         return this;
     }
@@ -513,7 +513,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      */
     @Override
     public RepoBuilder collateIndex( String propertyName ) {
-        collators.put ( propertyName, Collator.getInstance ( ) );
+        collators.put ( propertyName, Collator.getInstance () );
         return this;
     }
 
@@ -567,29 +567,29 @@ public class RepoBuilderDefault implements RepoBuilder {
     /**
      *
      */
-    private void initializeTheFactories( ) {
+    private void initializeTheFactories() {
 
         if ( this.repoComposerFactory == null ) {
-            this.repoComposerFactory = SPIFactory.getRepoFactory ( );
+            this.repoComposerFactory = SPIFactory.getRepoFactory ();
         }
         if ( this.lookupIndexFactory == null ) {
-            this.lookupIndexFactory = SPIFactory.getLookupIndexFactory ( );
+            this.lookupIndexFactory = SPIFactory.getLookupIndexFactory ();
         }
         if ( this.searchIndexFactory == null ) {
-            this.searchIndexFactory = SPIFactory.getSearchIndexFactory ( );
+            this.searchIndexFactory = SPIFactory.getSearchIndexFactory ();
         }
         if ( this.uniqueLookupIndexFactory == null ) {
-            this.uniqueLookupIndexFactory = SPIFactory.getUniqueLookupIndexFactory ( );
+            this.uniqueLookupIndexFactory = SPIFactory.getUniqueLookupIndexFactory ();
         }
         if ( this.searchableCollectionFactory == null ) {
-            this.searchableCollectionFactory = SPIFactory.getSearchableCollectionFactory ( );
+            this.searchableCollectionFactory = SPIFactory.getSearchableCollectionFactory ();
         }
         if ( this.filterFactory == null ) {
-            this.filterFactory = SPIFactory.getFilterFactory ( );
+            this.filterFactory = SPIFactory.getFilterFactory ();
         }
 
         if ( this.objectEditorFactory == null ) {
-            this.objectEditorFactory = SPIFactory.getObjectEditorFactory ( );
+            this.objectEditorFactory = SPIFactory.getObjectEditorFactory ();
         }
 
     }
@@ -619,7 +619,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     public <KEY, ITEM> Repo<KEY, ITEM> build( Class<?> primitiveKey, Class<KEY> key, Class<ITEM> clazz, Class<?>... classes ) {
 
         /* Initialize factories. */
-        initializeTheFactories ( );
+        initializeTheFactories ();
 
 
         /* Reflect and load all of the fields. */
@@ -628,7 +628,7 @@ public class RepoBuilderDefault implements RepoBuilder {
 
 
         /* Construct */
-        this.repo = this.repoComposerFactory.get ( );
+        this.repo = this.repoComposerFactory.get ();
         this.editor = constructObjectEditor ( fields );
         SearchableCollectionComposer query = constructSearchableCollection ( primitiveKey, clazz, repo, fields );
         query.setRemoveDuplication ( this.removeDuplication );
@@ -658,7 +658,7 @@ public class RepoBuilderDefault implements RepoBuilder {
             Map<String, FieldAccess> fieldsComponentType
                     = Reflection.getPropertyFieldAccessMap ( cls, useField, useUnSafe );
 
-            for ( String sKey : fieldsComponentType.keySet ( ) ) {
+            for ( String sKey : fieldsComponentType.keySet () ) {
                 if ( !fields.containsKey ( sKey ) ) {
                     fields.put ( sKey, fieldsComponentType.get ( sKey ) );
                 }
@@ -676,10 +676,10 @@ public class RepoBuilderDefault implements RepoBuilder {
     private SearchableCollectionComposer constructSearchableCollection( Class<?> primitiveKey, Class<?> itemClazz, RepoComposer repo, Map<String, FieldAccess> fields ) {
 
         /* Create the searchable collection. */
-        query = searchableCollectionFactory.get ( );
+        query = searchableCollectionFactory.get ();
 
         /* Create the filter object. */
-        Filter filter = this.filterFactory.get ( );
+        Filter filter = this.filterFactory.get ();
 
 
         configPrimaryKey ( primitiveKey == null ? itemClazz : primitiveKey, fields );
@@ -693,7 +693,7 @@ public class RepoBuilderDefault implements RepoBuilder {
 
         query.setFields ( fields );
 
-        query.init ( );
+        query.init ();
 
         if ( this.cache ) {
             filter = new FilterWithSimpleCache ( filter );
@@ -705,13 +705,13 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     private ObjectEditor constructObjectEditor( Map<String, FieldAccess> fields ) {
-        ObjectEditorComposer editorComposer = this.objectEditorFactory.get ( );
+        ObjectEditorComposer editorComposer = this.objectEditorFactory.get ();
         if ( this.hashCodeOptimizationOn ) {
-            editorComposer.hashCodeOptimizationOn ( );
+            editorComposer.hashCodeOptimizationOn ();
         }
 
         ObjectEditor editor = ( ObjectEditor ) editorComposer;
-        editorComposer.init ( );
+        editorComposer.init ();
 
         if ( this.cloneEdits ) {
             editorComposer.setLookupAndExcept ( true );
@@ -787,7 +787,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     @Override
-    public RepoBuilder indexHierarchy( ) {
+    public RepoBuilder indexHierarchy() {
         this.indexHierarchy = true;
         return this;
     }
@@ -799,7 +799,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     @Override
-    public RepoBuilder hashCodeOptimizationOn( ) {
+    public RepoBuilder hashCodeOptimizationOn() {
         this.hashCodeOptimizationOn = true;
         return this;
     }
@@ -813,7 +813,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     private Function createKeyGetter( final FieldAccess field ) {
         Objects.requireNonNull ( field, "field cannot be null" );
 
-        return new Function ( ) {
+        return new Function () {
             @Override
             public Object apply( Object o ) {
                 return field.getValue ( o );
@@ -829,14 +829,14 @@ public class RepoBuilderDefault implements RepoBuilder {
                                 Map<String, FieldAccess> fields ) {
 
         if ( this.indexHierarchy ) {
-            TypeHierarchyIndex index = new TypeHierarchyIndex ( );
+            TypeHierarchyIndex index = new TypeHierarchyIndex ();
             index.setComparator ( this.collators.get ( "_type" ) );
             index.setInputKeyTransformer ( this.keyTransformers.get ( "_type" ) );
-            index.init ( );
+            index.init ();
             ( ( SearchableCollection ) query ).addSearchIndex ( "_type", index );
         }
 
-        for ( String prop : nestedIndexes.keySet ( ) ) {
+        for ( String prop : nestedIndexes.keySet () ) {
             NestedKeySearchIndex index = new NestedKeySearchIndex ( this.nestedIndexes.get ( prop ) );
             configIndex ( prop, index );
         }
@@ -845,7 +845,7 @@ public class RepoBuilderDefault implements RepoBuilder {
 
             Objects.requireNonNull ( fieldAccess, "Field access for property was null. " + prop );
 
-            Class<?> type = fieldAccess.getType ( );
+            Class<?> type = fieldAccess.getType ();
 
             SearchIndex searchIndex = this.searchIndexFactory.apply ( type );
             configSearchIndex ( fields, prop, searchIndex );
@@ -855,7 +855,7 @@ public class RepoBuilderDefault implements RepoBuilder {
             FieldAccess fieldAccess = fields.get ( prop );
             Objects.requireNonNull ( fieldAccess, "Field access for property was null. " + prop );
 
-            SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply ( fieldAccess.getType ( ) );
+            SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply ( fieldAccess.getType () );
             configSearchIndex ( fields, prop, searchIndex );
         }
 
@@ -864,7 +864,7 @@ public class RepoBuilderDefault implements RepoBuilder {
             FieldAccess fieldAccess = fields.get ( prop );
             Objects.requireNonNull ( fieldAccess, "Field access for property was null. " + prop );
 
-            LookupIndex index = this.lookupIndexFactory.apply ( fieldAccess.getType ( ) );
+            LookupIndex index = this.lookupIndexFactory.apply ( fieldAccess.getType () );
             configLookupIndex ( fields, prop, index );
         }
         for ( String prop : uniqueLookupIndexes ) {
@@ -872,7 +872,7 @@ public class RepoBuilderDefault implements RepoBuilder {
             Objects.requireNonNull ( fieldAccess, "Field access for property was null. " + prop );
 
 
-            LookupIndex index = this.uniqueLookupIndexFactory.apply ( fieldAccess.getType ( ) );
+            LookupIndex index = this.uniqueLookupIndexFactory.apply ( fieldAccess.getType () );
             configLookupIndex ( fields, prop, index );
         }
 
@@ -884,7 +884,7 @@ public class RepoBuilderDefault implements RepoBuilder {
         index.setKeyGetter ( kg );
         index.setBucketSize ( this.indexBucketSize.get ( prop ) == null ? 3 : this.indexBucketSize.get ( prop ) );
 
-        index.init ( );
+        index.init ();
         ( ( SearchableCollection ) query ).addLookupIndex ( prop, index );
     }
 
@@ -894,7 +894,7 @@ public class RepoBuilderDefault implements RepoBuilder {
         Function kg = getKeyGetterOrCreate ( fields, prop );
         searchIndex.setKeyGetter ( kg );
         searchIndex.setBucketSize ( this.indexBucketSize.get ( prop ) == null ? 3 : this.indexBucketSize.get ( prop ) );
-        searchIndex.init ( );
+        searchIndex.init ();
         ( ( SearchableCollection ) query ).addSearchIndex ( prop, searchIndex );
     }
 
@@ -902,7 +902,7 @@ public class RepoBuilderDefault implements RepoBuilder {
         index.setComparator ( this.collators.get ( prop ) );
         index.setInputKeyTransformer ( this.keyTransformers.get ( prop ) );
         index.setBucketSize ( this.indexBucketSize.get ( prop ) == null ? 3 : this.indexBucketSize.get ( prop ) );
-        index.init ( );
+        index.init ();
         ( ( SearchableCollection ) query ).addSearchIndex ( prop, index );
     }
 

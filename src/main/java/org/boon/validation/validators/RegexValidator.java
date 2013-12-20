@@ -22,9 +22,9 @@ public class RegexValidator extends BaseValidator {
 
     private String match;
     private boolean negate;
-    private Map<String, Pattern> compiledRegexCache = new HashMap<> ( );
+    private Map<String, Pattern> compiledRegexCache = new HashMap<> ();
 
-    public boolean isNegate( ) {
+    public boolean isNegate() {
         return this.negate;
     }
 
@@ -37,7 +37,7 @@ public class RegexValidator extends BaseValidator {
      *
      * @return the regular expression
      */
-    protected String getMatch( ) {
+    protected String getMatch() {
         return this.match;
     }
 
@@ -46,17 +46,17 @@ public class RegexValidator extends BaseValidator {
     }
 
     public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
-        ValidatorMessage message = new ValidatorMessage ( );
+        ValidatorMessage message = new ValidatorMessage ();
         if ( object == null ) {
             return message;
         }
-        String string = object.toString ( );
-        Pattern pattern = compileRegex ( );
+        String string = object.toString ();
+        Pattern pattern = compileRegex ();
         boolean valid;
         if ( negate ) {
-            valid = !pattern.matcher ( string ).matches ( );
+            valid = !pattern.matcher ( string ).matches ();
         } else {
-            valid = pattern.matcher ( string ).matches ( );
+            valid = pattern.matcher ( string ).matches ();
         }
 
         if ( !valid ) {
@@ -72,12 +72,12 @@ public class RegexValidator extends BaseValidator {
      *
      * @return the resulting pattern object
      */
-    private Pattern compileRegex( ) {
+    private Pattern compileRegex() {
 
-        Pattern pattern = compiledRegexCache.get ( getMatch ( ) );
+        Pattern pattern = compiledRegexCache.get ( getMatch () );
         if ( pattern == null ) {
-            pattern = Pattern.compile ( getMatch ( ) );
-            compiledRegexCache.put ( getMatch ( ), pattern );
+            pattern = Pattern.compile ( getMatch () );
+            compiledRegexCache.put ( getMatch (), pattern );
         }
         return pattern;
     }

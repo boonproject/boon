@@ -42,26 +42,26 @@ public abstract class Criterion<VALUE> extends Criteria {
         this.name = name;
         this.operator = operator;
         this.setValues ( values );
-        hashCode = doHashCode ( );
-        toString = doToString ( );
+        hashCode = doHashCode ();
+        toString = doToString ();
     }
 
 
-    public String getName( ) {
+    public String getName() {
         return name;
     }
 
-    public Operator getOperator( ) {
+    public Operator getOperator() {
         return operator;
     }
 
 
-    public VALUE getValue( ) {
+    public VALUE getValue() {
         return value;
     }
 
 
-    public VALUE[] getValues( ) {
+    public VALUE[] getValues() {
         return values;
     }
 
@@ -90,25 +90,25 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
     @Override
-    public int hashCode( ) {
+    public int hashCode() {
         return hashCode;
     }
 
-    public int doHashCode( ) {
-        int result = name != null ? name.hashCode ( ) : 0;
-        result = 31 * result + ( operator != null ? operator.hashCode ( ) : 0 );
-        result = 31 * result + ( value != null ? value.hashCode ( ) : 0 );
+    public int doHashCode() {
+        int result = name != null ? name.hashCode () : 0;
+        result = 31 * result + ( operator != null ? operator.hashCode () : 0 );
+        result = 31 * result + ( value != null ? value.hashCode () : 0 );
         result = 31 * result + ( values != null ? Arrays.hashCode ( values ) : 0 );
         return result;
     }
 
     @Override
-    public String toString( ) {
+    public String toString() {
         return toString;
     }
 
 
-    public String doToString( ) {
+    public String doToString() {
         CharBuf builder = CharBuf.create ( 80 );
         builder.add ( "c{" );
         builder.add ( "\"name\":'" );
@@ -120,10 +120,10 @@ public abstract class Criterion<VALUE> extends Criteria {
         builder.add ( ", \"update\":" );
         builder.add ( Arrays.toString ( values ) );
         builder.add ( "}" );
-        return builder.toString ( );
+        return builder.toString ();
     }
 
-    public boolean isInitialized( ) {
+    public boolean isInitialized() {
         return initialized;
     }
 
@@ -131,12 +131,12 @@ public abstract class Criterion<VALUE> extends Criteria {
     public void initByClass( Class clazz ) {
 
         this.fields = getFieldsInternal ( clazz );
-        initIfNeeded ( );
+        initIfNeeded ();
     }
 
     public void initByFields( Map<String, FieldAccess> fields ) {
         this.fields = fields;
-        initIfNeeded ( );
+        initIfNeeded ();
     }
 
 
@@ -149,11 +149,11 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     }
 
-    public void cleanAfterGroupTest( ) {
-        clean ( );
+    public void cleanAfterGroupTest() {
+        clean ();
     }
 
-    public void clean( ) {
+    public void clean() {
         this.field = null;
         this.fields = null;
         this.objectUnderTest = null;
@@ -170,7 +170,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             this.objectUnderTest = o;
 
-            initIfNeeded ( );
+            initIfNeeded ();
             if ( this.useDelegate ) {
 
                 return this.nativeDelegate.resolve ( fields, o );
@@ -183,35 +183,35 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         } catch ( Exception ex ) {
             return Exceptions.handle ( Typ.bool,
-                    sputl ( "In class " + this.getClass ( ).getName ( ),
+                    sputl ( "In class " + this.getClass ().getName (),
                             "the test method is unable to test the following criteria operator",
-                            Objects.toString ( this.getOperator ( ) ),
-                            sputs ( "The field name is          :          ", this.getName ( ) ),
-                            sputs ( "The value is               :          ", this.getValue ( ) ),
-                            sputs ( "The value type is          :          ", this.getValue ( ).getClass ( ).getName ( ) ),
+                            Objects.toString ( this.getOperator () ),
+                            sputs ( "The field name is          :          ", this.getName () ),
+                            sputs ( "The value is               :          ", this.getValue () ),
+                            sputs ( "The value type is          :          ", this.getValue ().getClass ().getName () ),
                             sputs ( "The object under test      :          ", this.objectUnderTest ),
                             sputs ( "The object under test type :          ",
-                                    this.objectUnderTest == null ? "null" : this.objectUnderTest.getClass ( ).getName ( ) ),
+                                    this.objectUnderTest == null ? "null" : this.objectUnderTest.getClass ().getName () ),
                             sputs ( "Field                      :          ",
                                     field ),
                             sputs ( "Fields                     :          ",
                                     fields ),
 
-                            sputs ( )
+                            sputs ()
 
                     )
                     , ex );
         }
     }
 
-    private FieldAccess field( ) {
+    private FieldAccess field() {
         if ( field == null ) {
-            field = fields ( ).get ( this.name );
+            field = fields ().get ( this.name );
         }
         return field;
     }
 
-    private Map<String, FieldAccess> fields( ) {
+    private Map<String, FieldAccess> fields() {
 
         if ( fields == null ) {
             fields = getFieldsInternal ( this.objectUnderTest );
@@ -286,20 +286,20 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
-    private void initIfNeeded( ) {
+    private void initIfNeeded() {
 
         if ( initialized ) return;
         initialized = true;
 
-        FieldAccess field = field ( );
+        FieldAccess field = field ();
         if ( field == null ) {
             return;
         }
 
-        Class type = field.getType ( );
+        Class type = field.getType ();
 
 
-        if ( !type.isPrimitive ( ) && type != Typ.date ) {
+        if ( !type.isPrimitive () && type != Typ.date ) {
             return;
         }
 
@@ -307,7 +307,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         if ( type == Typ.date ) {
 
             if ( !( value instanceof Date ) ) {
-                initForDate ( );
+                initForDate ();
             }
             return;
         }
@@ -630,7 +630,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private void initForDate( ) {
+    private void initForDate() {
         value = ( VALUE ) Conversions.toDate ( value );
 
         if ( operator == Operator.BETWEEN ) {

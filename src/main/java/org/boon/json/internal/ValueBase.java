@@ -4,19 +4,15 @@ package org.boon.json.internal;
 import org.boon.Dates;
 import org.boon.core.reflection.Conversions;
 
-
-import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.boon.Exceptions.die;
 
-public  class ValueBase extends Number implements Value, CharSequence, org.boon.core.Value {
+public class ValueBase extends Number implements Value, CharSequence, org.boon.core.Value {
     public int startIndex;
     public int endIndex;
     public Object value;
@@ -26,7 +22,7 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
 
     public boolean decodeStrings;
 
-    public ValueBase( int startIndex, int endIndex, Object value, Type type,  boolean decodeStrings ) {
+    public ValueBase( int startIndex, int endIndex, Object value, Type type, boolean decodeStrings ) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.value = value;
@@ -55,15 +51,14 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     }
 
 
-
     @Override
-    public  int intValue() {
+    public int intValue() {
         return Integer.parseInt ( toString () );
     }
 
     @Override
-    public   long longValue() {
-        return Long.parseLong ( toString ()  );
+    public long longValue() {
+        return Long.parseLong ( toString () );
     }
 
 
@@ -76,7 +71,7 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
             case TRUE:
                 return true;
         }
-        die();
+        die ();
         return false;
 
     }
@@ -93,14 +88,13 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     }
 
 
-
     public String toString() {
         return type.toString ();
     }
 
     @Override
     public Object toValue() {
-        if (value!=null) {
+        if ( value != null ) {
             return value;
         }
         switch ( type ) {
@@ -111,7 +105,7 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
             case NULL:
                 return null;
         }
-        die();
+        die ();
         return null;
 
     }
@@ -126,7 +120,7 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
             case NULL:
                 return null;
         }
-        die("toEnum " + cls + " value was " + stringValue ());
+        die ( "toEnum " + cls + " value was " + stringValue () );
         return null;
 
     }
@@ -161,56 +155,48 @@ public  class ValueBase extends Number implements Value, CharSequence, org.boon.
     public Date dateValue() {
 
 
-        if (type == Type.STRING ) {
+        if ( type == Type.STRING ) {
 
             String string = stringValue ();
 
             return Dates.fromISO8601 ( string );
         } else {
 
-            return new Date (Dates.utc ( longValue ()));
+            return new Date ( Dates.utc ( longValue () ) );
         }
 
     }
 
 
-
-
-
-    public   byte byteValue() {
+    public byte byteValue() {
         return Byte.parseByte ( toString () );
     }
 
-    public   short shortValue() {
+    public short shortValue() {
         return Short.parseShort ( toString () );
     }
 
 
-    public   BigDecimal bigDecimalValue() {
+    public BigDecimal bigDecimalValue() {
         return new BigDecimal ( toString () );
     }
 
-    public   BigInteger bigIntegerValue() {
+    public BigInteger bigIntegerValue() {
         return new BigInteger ( toString () );
     }
 
 
     @Override
-    public   double doubleValue() {
+    public double doubleValue() {
         return Double.parseDouble ( toString () );
 
     }
 
 
     @Override
-    public   float floatValue() {
+    public float floatValue() {
         return Float.parseFloat ( toString () );
     }
-
-
-
-
-
 
 
 }

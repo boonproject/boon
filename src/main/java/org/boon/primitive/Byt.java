@@ -201,7 +201,6 @@ public class Byt {
     }
 
 
-
     @Universal
     public static boolean inIntArray( byte value, int[] array ) {
         for ( int currentValue : array ) {

@@ -8,7 +8,7 @@ public class ValidationException extends Exception {
         this.field = field;
     }
 
-    public String getField( ) {
+    public String getField() {
         return field;
     }
 

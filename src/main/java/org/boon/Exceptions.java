@@ -11,7 +11,7 @@ import static org.boon.Boon.sputs;
 public class Exceptions {
 
 
-    public static boolean die( ) {
+    public static boolean die() {
         throw new SoftenedException ( "died" );
     }
 
@@ -45,7 +45,7 @@ public class Exceptions {
 
     public static <T> T tryIt( Class<T> clazz, TrialWithReturn<T> tryIt ) {
         try {
-            return tryIt.tryIt ( );
+            return tryIt.tryIt ();
         } catch ( java.lang.Exception ex ) {
             throw new SoftenedException ( ex );
         }
@@ -54,7 +54,7 @@ public class Exceptions {
 
     public static void tryIt( Trial tryIt ) {
         try {
-            tryIt.tryIt ( );
+            tryIt.tryIt ();
         } catch ( java.lang.Exception ex ) {
             throw new SoftenedException ( ex );
         }
@@ -66,7 +66,7 @@ public class Exceptions {
 
     public static void tryIt( String message, Trial tryIt ) {
         try {
-            tryIt.tryIt ( );
+            tryIt.tryIt ();
         } catch ( java.lang.Exception ex ) {
             throw new SoftenedException ( message, ex );
         }
@@ -74,11 +74,11 @@ public class Exceptions {
 
 
     public static interface Trial {
-        void tryIt( ) throws java.lang.Exception;
+        void tryIt() throws java.lang.Exception;
     }
 
     public static interface TrialWithReturn<T> {
-        T tryIt( ) throws java.lang.Exception;
+        T tryIt() throws java.lang.Exception;
     }
 
     public static class SoftenedException extends RuntimeException {
@@ -99,11 +99,11 @@ public class Exceptions {
         @Override
         public void printStackTrace( PrintStream s ) {
 
-            s.println(this.getMessage ());
-            if ( getCause ( ) != null ) {
+            s.println ( this.getMessage () );
+            if ( getCause () != null ) {
                 s.println ( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
-                getCause ( ).printStackTrace ( s );
+                getCause ().printStackTrace ( s );
             } else {
                 super.printStackTrace ( s );
             }
@@ -111,61 +111,61 @@ public class Exceptions {
         }
 
         @Override
-        public String getMessage( ) {
-            return super.getMessage ( ) + ( getCause ( ) == null ? "" :
-                    getCauseMessage ( ) );
+        public String getMessage() {
+            return super.getMessage () + ( getCause () == null ? "" :
+                    getCauseMessage () );
         }
 
-        private String getCauseMessage( ) {
-            return "\n CAUSE " + getCause ( ).getClass ( ).getName ( ) + " :: " +
-                    getCause ( ).getMessage ( );
-        }
-
-        @Override
-        public String getLocalizedMessage( ) {
-            return this.getMessage ( );
+        private String getCauseMessage() {
+            return "\n CAUSE " + getCause ().getClass ().getName () + " :: " +
+                    getCause ().getMessage ();
         }
 
         @Override
-        public StackTraceElement[] getStackTrace( ) {
-            if ( getCause ( ) != null ) {
-                return getCause ( ).getStackTrace ( );
+        public String getLocalizedMessage() {
+            return this.getMessage ();
+        }
+
+        @Override
+        public StackTraceElement[] getStackTrace() {
+            if ( getCause () != null ) {
+                return getCause ().getStackTrace ();
             } else {
-                return super.getStackTrace ( );
+                return super.getStackTrace ();
             }
 
         }
 
         @Override
-        public Throwable getCause( ) {
-            return super.getCause ( );
+        public Throwable getCause() {
+            return super.getCause ();
         }
 
         @Override
         public void printStackTrace( PrintWriter s ) {
 
-            s.println(this.getMessage ());
+            s.println ( this.getMessage () );
 
-            if ( getCause ( ) != null ) {
+            if ( getCause () != null ) {
                 s.println ( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
-                getCause ( ).printStackTrace ( s );
+                getCause ().printStackTrace ( s );
             } else {
                 super.printStackTrace ( s );
             }
         }
 
         @Override
-        public void printStackTrace( ) {
+        public void printStackTrace() {
 
-            System.err.println(this.getMessage ());
+            System.err.println ( this.getMessage () );
 
-            if ( getCause ( ) != null ) {
+            if ( getCause () != null ) {
                 System.err.println ( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
-                getCause ( ).printStackTrace ( );
+                getCause ().printStackTrace ();
             } else {
-                super.printStackTrace ( );
+                super.printStackTrace ();
             }
         }
     }
@@ -173,16 +173,16 @@ public class Exceptions {
 
     public static String toString( Exception ex ) {
         CharBuf buffer = CharBuf.create ( 255 );
-        buffer.addLine ( ex.getLocalizedMessage ( ) );
+        buffer.addLine ( ex.getLocalizedMessage () );
 
-        final StackTraceElement[] stackTrace = ex.getStackTrace ( );
+        final StackTraceElement[] stackTrace = ex.getStackTrace ();
         for ( StackTraceElement element : stackTrace ) {
-            buffer.add ( element.getClassName ( ) );
-            sputs ( buffer, "class", element.getClassName ( ),
-                    "method", element.getMethodName ( ), "line", element.getLineNumber ( ) );
+            buffer.add ( element.getClassName () );
+            sputs ( buffer, "class", element.getClassName (),
+                    "method", element.getMethodName (), "line", element.getLineNumber () );
         }
 
-        return buffer.toString ( );
+        return buffer.toString ();
 
     }
 
@@ -192,15 +192,15 @@ public class Exceptions {
         buffer.addByte ( '{' );
 
         buffer.add ( "\n    " ).addJSONEncodedString ( "message" ).add ( " : " )
-                .addJSONEncodedString ( ex.getMessage ( ) ).add ( ",\n" );
+                .addJSONEncodedString ( ex.getMessage () ).add ( ",\n" );
 
         buffer.add ( "    " ).addJSONEncodedString ( "localizedMessage" ).add ( " : " )
-                .addJSONEncodedString ( ex.getLocalizedMessage ( ) ).add ( ",\n" );
+                .addJSONEncodedString ( ex.getLocalizedMessage () ).add ( ",\n" );
 
         buffer.add ( "    " ).addJSONEncodedString ( "stackTrace" ).add ( " : " )
                 .addByte ( '[' ).addByte ( '\n' );
 
-        final StackTraceElement[] stackTrace = ex.getStackTrace ( );
+        final StackTraceElement[] stackTrace = ex.getStackTrace ();
 
         for ( int index = 0; index < ( stackTrace.length > 10 ? 10 : stackTrace.length ); index++ ) {
             StackTraceElement element = stackTrace[index];
@@ -211,18 +211,18 @@ public class Exceptions {
             index++;
             buffer.add ( "           { " );
             buffer.add ( "             " ).addJSONEncodedString ( "className" ).add ( " : " )
-                    .addJSONEncodedString ( element.getClassName ( ) ).add ( ",\n" );
+                    .addJSONEncodedString ( element.getClassName () ).add ( ",\n" );
 
             buffer.add ( "             " ).addJSONEncodedString ( "methodName" ).add ( " : " )
-                    .addJSONEncodedString ( element.getMethodName ( ) ).add ( ",\n" );
+                    .addJSONEncodedString ( element.getMethodName () ).add ( ",\n" );
 
             buffer.add ( "             " ).addJSONEncodedString ( "lineNumber" ).add ( " : " )
-                    .add ( "" + element.getLineNumber ( ) ).add ( "}\n" );
+                    .add ( "" + element.getLineNumber () ).add ( "}\n" );
 
         }
 
         buffer.add ( "\n    ]\n}" );
-        return buffer.toString ( );
+        return buffer.toString ();
 
     }
 

@@ -7,7 +7,7 @@ import static org.boon.core.reflection.Reflection.copy;
 
 public class ObjectEditorCloneDecorator<KEY, ITEM> extends ObjectEditorDecoratorBase<KEY, ITEM> {
 
-    public ObjectEditorCloneDecorator( ) {
+    public ObjectEditorCloneDecorator() {
 
     }
 

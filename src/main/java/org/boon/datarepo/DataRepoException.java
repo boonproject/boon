@@ -19,8 +19,8 @@ package org.boon.datarepo;
  * Generic DataRepoException
  */
 public class DataRepoException extends RuntimeException {
-    public DataRepoException( ) {
-        super ( );    //To change body of overridden methods use File | Settings | File Templates.
+    public DataRepoException() {
+        super ();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     public DataRepoException( String message ) {

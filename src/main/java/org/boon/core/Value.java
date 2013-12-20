@@ -7,7 +7,6 @@ import java.util.Date;
 public interface Value {
 
 
-
     byte byteValue();
 
     short shortValue();
@@ -32,9 +31,9 @@ public interface Value {
 
     String stringValueEncoded();
 
-    Object  toValue();
+    Object toValue();
 
-    Enum toEnum(Class<? extends Enum> cls);
+    Enum toEnum( Class<? extends Enum> cls );
 
     boolean isContainer(); //either a map or a collection
 

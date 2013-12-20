@@ -30,13 +30,13 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
         hasError = true;
     }
 
-    public ValidatorMessage( ) {
+    public ValidatorMessage() {
         this.summary = "Message not setup!";
         this.detail = "Message not setup!";
         hasError = false;
     }
 
-    public String getDetail( ) {
+    public String getDetail() {
         return this.detail;
     }
 
@@ -44,7 +44,7 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
         this.detail = detail;
     }
 
-    public String getSummary( ) {
+    public String getSummary() {
         return this.summary;
     }
 
@@ -52,7 +52,7 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
         this.summary = summary;
     }
 
-    public boolean hasError( ) {
+    public boolean hasError() {
         return this.hasError;
     }
 
@@ -62,7 +62,7 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
 
 
     @Override
-    public String toString( ) {
+    public String toString() {
         return "ValidatorMessage{" +
                 "detail='" + detail + '\'' +
                 ", summary='" + summary + '\'' +

@@ -12,7 +12,7 @@ public class Sort {
 
     private String name = "this";
     private SortType type;
-    private List<Sort> sorts = new ArrayList<> ( );
+    private List<Sort> sorts = new ArrayList<> ();
     private String toString;
     private int hashCode;
 
@@ -41,25 +41,25 @@ public class Sort {
         return new Sort ( name, SortType.DESCENDING );
     }
 
-    public Sort( ) {
+    public Sort() {
     }
 
     public Sort( String name, SortType type ) {
         this.name = name;
         this.type = type;
-        this.hashCode = doHashCode ( );
-        this.toString = doToString ( );
+        this.hashCode = doHashCode ();
+        this.toString = doToString ();
     }
 
-    public SortType getType( ) {
+    public SortType getType() {
         return type;
     }
 
-    public String getName( ) {
+    public String getName() {
         return name;
     }
 
-    private String doToString( ) {
+    private String doToString() {
         return "Sort{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
@@ -88,7 +88,7 @@ public class Sort {
     }
 
     @Override
-    public String toString( ) {
+    public String toString() {
         return toString;
     }
 
@@ -105,15 +105,15 @@ public class Sort {
         return true;
     }
 
-    private int doHashCode( ) {
-        int result = name.hashCode ( );
-        result = 31 * result + type.hashCode ( );
+    private int doHashCode() {
+        int result = name.hashCode ();
+        result = 31 * result + type.hashCode ();
         return result;
 
     }
 
     @Override
-    public int hashCode( ) {
+    public int hashCode() {
         return hashCode;
     }
 
@@ -122,13 +122,12 @@ public class Sort {
     }
 
 
-
     public void sort( List list ) {
-        if ( list == null || list.size ( ) == 0 ) {
+        if ( list == null || list.size () == 0 ) {
             return;
         }
 
-        Object item = list.iterator ( ).next ( );
+        Object item = list.iterator ().next ();
 
         Map<String, FieldAccess> fields = Reflection.getFieldsFromObject ( item );
         Collections.sort ( list, this.comparator ( fields ) );
@@ -136,19 +135,19 @@ public class Sort {
 
     public Comparator comparator( Map<String, FieldAccess> fields ) {
         if ( comparator == null ) {
-            comparator = Ordering.universalComparator ( this.getName ( ), fields,
-                    this.getType ( ) == SortType.ASCENDING, this.childComparators ( fields ) );
+            comparator = Ordering.universalComparator ( this.getName (), fields,
+                    this.getType () == SortType.ASCENDING, this.childComparators ( fields ) );
         }
         return comparator;
     }
 
     private List<Comparator> childComparators( Map<String, FieldAccess> fields ) {
         if ( this.comparators == null ) {
-            this.comparators = new ArrayList<Comparator> ( this.sorts.size ( ) + 1 );
+            this.comparators = new ArrayList<Comparator> ( this.sorts.size () + 1 );
 
             for ( Sort sort : sorts ) {
                 Comparator comparator = Ordering.universalComparator (
-                        sort.getName ( ),
+                        sort.getName (),
                         fields,
                         sort.type == SortType.ASCENDING,
                         sort.childComparators ( fields )

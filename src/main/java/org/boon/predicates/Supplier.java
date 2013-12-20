@@ -7,5 +7,5 @@ public interface Supplier<T> {
      *
      * @return an object
      */
-    T get( );
+    T get();
 }

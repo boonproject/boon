@@ -34,14 +34,14 @@ public abstract class AbstractCompareValidator extends BaseValidator {
     public ValidatorMessageHolder validate( Object value, String fieldLabel ) {
         
         /* Create the validator message. */
-        ValidatorMessage message = new ValidatorMessage ( );
+        ValidatorMessage message = new ValidatorMessage ();
 
         if ( value == null ) {
             return message;
         }
         
         /* Get the comparison value. */
-        Object compareToPropertyValue = lookupCompareToPropertyValue ( );
+        Object compareToPropertyValue = lookupCompareToPropertyValue ();
         
         /* Check to see if this is valid. */
         boolean valid = checkValidity ( value, compareToPropertyValue );
@@ -77,8 +77,8 @@ public abstract class AbstractCompareValidator extends BaseValidator {
      *
      * @return
      */
-    protected Object lookupCompareToPropertyValue( ) {
-        return ValidationContext.getCurrentInstance ( )
+    protected Object lookupCompareToPropertyValue() {
+        return ValidationContext.getCurrentInstance ()
                 .getProposedPropertyValue ( compareToProperty );
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractCompareValidator extends BaseValidator {
     }
 
 
-    protected String getCompareToProperty( ) {
+    protected String getCompareToProperty() {
         return compareToProperty;
     }
 

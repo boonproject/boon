@@ -14,7 +14,7 @@ public class FastStringUtils {
     public static final long STRING_VALUE_FIELD_OFFSET;
     public static final boolean HAS_UNSAFE;
 
-    private static final boolean WRITE_TO_FINAL_FIELDS = Boolean.parseBoolean ( System.getProperty ( "org.boon.dont.write.to.final.fields", "false" ));
+    private static final boolean WRITE_TO_FINAL_FIELDS = Boolean.parseBoolean ( System.getProperty ( "org.boon.dont.write.to.final.fields", "false" ) );
 
     static {
         Unsafe unsafe;
@@ -65,14 +65,14 @@ public class FastStringUtils {
 
     public static String noCopyStringFromChars( final char[] chars ) {
 
-       if (HAS_UNSAFE && WRITE_TO_FINAL_FIELDS) {
+        if ( HAS_UNSAFE && WRITE_TO_FINAL_FIELDS ) {
 
-           final String string = new String (  );
-           UNSAFE.putObject ( string, STRING_VALUE_FIELD_OFFSET, chars ) ;
-           return string;
-       } else {
-           return new String (chars);
-       }
+            final String string = new String ();
+            UNSAFE.putObject ( string, STRING_VALUE_FIELD_OFFSET, chars );
+            return string;
+        } else {
+            return new String ( chars );
+        }
     }
 
 }

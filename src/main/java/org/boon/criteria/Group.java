@@ -23,25 +23,25 @@ public abstract class Group extends Criteria {
     }
 
     @Override
-    public void cleanAfterGroupTest( ) {
+    public void cleanAfterGroupTest() {
 
     }
 
     public Group( Grouping grouping, Criteria... expressions ) {
         this.grouping = grouping;
         this.expressions = expressions;
-        hashCode = doHashCode ( );
+        hashCode = doHashCode ();
 
     }
 
-    private int doHashCode( ) {
+    private int doHashCode() {
         int result = expressions != null ? Arrays.hashCode ( expressions ) : 0;
-        result = 31 * result + ( grouping != null ? grouping.hashCode ( ) : 0 );
+        result = 31 * result + ( grouping != null ? grouping.hashCode () : 0 );
         return result;
 
     }
 
-    private String doToString( ) {
+    private String doToString() {
 
         if ( toString == null ) {
 
@@ -53,25 +53,25 @@ public abstract class Group extends Criteria {
             builder.add ( ", \"grouping\":" );
             builder.add ( String.valueOf ( grouping ) );
             builder.add ( '}' );
-            toString = builder.toString ( );
+            toString = builder.toString ();
         }
         return toString;
 
     }
 
-    public Grouping getGrouping( ) {
+    public Grouping getGrouping() {
         return grouping;
     }
 
 
-    public Criteria[] getExpressions( ) {
+    public Criteria[] getExpressions() {
         return expressions;
     }
 
     @Override
     public boolean equals( Object o ) {
         if ( this == o ) return true;
-        if ( o == null || getClass ( ) != o.getClass ( ) ) return false;
+        if ( o == null || getClass () != o.getClass () ) return false;
 
         Group group = ( Group ) o;
 
@@ -82,13 +82,13 @@ public abstract class Group extends Criteria {
     }
 
     @Override
-    public int hashCode( ) {
+    public int hashCode() {
         return hashCode;
     }
 
     @Override
-    public String toString( ) {
-        return doToString ( );
+    public String toString() {
+        return doToString ();
     }
 
     public static class And extends Group {
@@ -105,7 +105,7 @@ public abstract class Group extends Criteria {
                 if ( !c.test ( owner ) ) {
                     return false;
                 }
-                c.cleanAfterGroupTest ( );
+                c.cleanAfterGroupTest ();
             }
             return true;
         }
@@ -129,7 +129,7 @@ public abstract class Group extends Criteria {
                 if ( c.test ( owner ) ) {
                     return true;
                 }
-                c.cleanAfterGroupTest ( );
+                c.cleanAfterGroupTest ();
             }
             return false;
         }

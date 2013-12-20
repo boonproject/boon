@@ -42,7 +42,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
             }
@@ -74,7 +74,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
             }
@@ -90,7 +90,7 @@ public abstract class ProjectedSelector extends Selector {
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
 
                 FieldAccess field = fields.get ( fieldName );
-                if ( field.getType ( ) == Typ.intgr ) {
+                if ( field.getType () == Typ.intgr ) {
                     int value = field.getInt ( item );
                     sum += value;
                 } else {
@@ -108,7 +108,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, sum );
                 }
             }
@@ -123,7 +123,7 @@ public abstract class ProjectedSelector extends Selector {
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
 
                 FieldAccess field = fields.get ( fieldName );
-                if ( field.getType ( ) == Typ.flt ) {
+                if ( field.getType () == Typ.flt ) {
                     float value = field.getFloat ( item );
                     sum += value;
                 } else {
@@ -141,7 +141,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, sum );
                 }
 
@@ -157,7 +157,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get ( fieldName );
-                if ( field.getType ( ) == Typ.intgr ) {
+                if ( field.getType () == Typ.intgr ) {
                     int value = field.getInt ( item );
                     if ( value > max ) {
                         max = value;
@@ -180,7 +180,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
             }
@@ -194,7 +194,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get ( fieldName );
-                if ( field.getType ( ) == Typ.lng ) {
+                if ( field.getType () == Typ.lng ) {
                     long value = field.getLong ( item );
                     if ( value > max ) {
                         max = value;
@@ -217,7 +217,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
 
@@ -232,7 +232,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get ( fieldName );
-                if ( field.getType ( ) == Typ.intgr ) {
+                if ( field.getType () == Typ.intgr ) {
                     int value = field.getInt ( item );
                     if ( value < min ) {
                         min = value;
@@ -253,7 +253,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
 
@@ -268,7 +268,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get ( fieldName );
-                if ( field.getType ( ) == Typ.lng ) {
+                if ( field.getType () == Typ.lng ) {
                     long value = field.getLong ( item );
                     if ( value < min ) {
                         min = value;
@@ -289,7 +289,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
 
@@ -304,7 +304,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get ( fieldName );
-                if ( field.getType ( ) == Typ.flt ) {
+                if ( field.getType () == Typ.flt ) {
                     float value = field.getFloat ( item );
                     if ( value > max ) {
                         max = value;
@@ -325,7 +325,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
             }
@@ -341,7 +341,7 @@ public abstract class ProjectedSelector extends Selector {
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get ( fieldName );
 
-                if ( field.getType ( ) == Typ.flt ) {
+                if ( field.getType () == Typ.flt ) {
                     float value = field.getFloat ( item );
                     if ( value > min ) {
                         min = value;
@@ -362,7 +362,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
 
@@ -389,7 +389,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, max );
                 }
             }
@@ -415,7 +415,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, min );
                 }
             }
@@ -441,7 +441,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, min );
                 }
             }
@@ -467,7 +467,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, max );
                 }
             }
@@ -493,7 +493,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, max );
                 }
             }
@@ -520,7 +520,7 @@ public abstract class ProjectedSelector extends Selector {
 
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
-                if ( rows.size ( ) > 0 ) {
+                if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, min );
                 }
             }

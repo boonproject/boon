@@ -17,5 +17,5 @@ public interface FilterComposer {
 
     public void setLookupIndexMap( Map<String, LookupIndex> lookupIndexMap );
 
-    public void init( );
+    public void init();
 }

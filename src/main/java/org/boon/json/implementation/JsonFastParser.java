@@ -2,6 +2,7 @@ package org.boon.json.implementation;
 
 import org.boon.json.JsonException;
 import org.boon.json.internal.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.Map;
 /**
  * This works in index overlay mode or chop mode.
  * Chop mode reduces possibility of memory leak but causes a few more buffer copies as it chops up the buffer.
- *
  */
 public class JsonFastParser extends JsonParserCharArray {
 
@@ -53,12 +53,12 @@ public class JsonFastParser extends JsonParserCharArray {
 
     }
 
-    protected final Object decodeFromChars ( char[] cs ) {
+    protected final Object decodeFromChars( char[] cs ) {
         return ( ( Value ) super.decodeFromChars ( cs ) ).toValue ();
     }
 
 
-    protected final Value decodeJsonObjectOverlay () {
+    protected final Value decodeJsonObjectOverlay() {
 
         if ( __currentChar == '{' )
             this.nextChar ();
@@ -70,7 +70,7 @@ public class JsonFastParser extends JsonParserCharArray {
             valueMap = new JsonValueMap ();
             value = new ValueBase ( ( Map ) valueMap );
         } else {
-            map = new JsonMap (lazyChop);
+            map = new JsonMap ( lazyChop );
             value = new ValueBase ( map );
         }
 
@@ -120,16 +120,16 @@ public class JsonFastParser extends JsonParserCharArray {
         return value;
     }
 
-    protected Value decodeValue () {
+    protected Value decodeValue() {
         return decodeValueOverlay ();
     }
 
-    private Value decodeValueOverlay () {
+    private Value decodeValueOverlay() {
         skipWhiteSpace ();
 
         label:
         for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
+            __currentChar = charArray[__index];
 
             switch ( __currentChar ) {
 
@@ -215,7 +215,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    private Value decodeNumberOverlay () {
+    private Value decodeNumberOverlay() {
 
         int startIndex = __index;
 
@@ -225,7 +225,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         loop:
         for ( index = __index; index < charArray.length; index++ ) {
-            __currentChar = charArray[ index ];
+            __currentChar = charArray[index];
 
             switch ( __currentChar ) {
                 case ' ':
@@ -312,7 +312,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        ValueInCharBuf value = new ValueInCharBuf (chop, type ,startIndex, __index, this.charArray );
+        ValueInCharBuf value = new ValueInCharBuf ( chop, type, startIndex, __index, this.charArray );
 
         skipWhiteSpace ();
 
@@ -321,10 +321,10 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    private Value decodeStringOverlay () {
+    private Value decodeStringOverlay() {
 
 
-        __currentChar = charArray[ __index ];
+        __currentChar = charArray[__index];
 
         if ( __index < charArray.length && __currentChar == '"' ) {
             __index++;
@@ -339,7 +339,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
+            __currentChar = charArray[__index];
             switch ( __currentChar ) {
 
                 case '"':
@@ -361,16 +361,15 @@ public class JsonFastParser extends JsonParserCharArray {
         }
 
 
-
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return new ValueInCharBuf (chop, Type.STRING ,startIndex, __index-1, this.charArray, encoded );
+        return new ValueInCharBuf ( chop, Type.STRING, startIndex, __index - 1, this.charArray, encoded );
     }
 
 
-    private Value decodeJsonArrayOverlay () {
+    private Value decodeJsonArrayOverlay() {
         if ( __currentChar == '[' ) {
             this.nextChar ();
         }
@@ -392,7 +391,7 @@ public class JsonFastParser extends JsonParserCharArray {
         if ( useValues ) {
             list = new ArrayList<> ();
         } else {
-            list = new JsonList (lazyChop);
+            list = new JsonList ( lazyChop );
         }
 
         Value value = new ValueBase ( list );

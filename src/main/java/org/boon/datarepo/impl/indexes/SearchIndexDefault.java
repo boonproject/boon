@@ -32,7 +32,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     public SearchIndexDefault( Class<?> keyType, List<ITEM> items, Function<ITEM, KEY> keyGetter ) {
         super ( null );
         super.keyGetter = keyGetter;
-        super.map = SPIFactory.getMapCreatorFactory ( ).get ( ).createNavigableMap ( keyType );
+        super.map = SPIFactory.getMapCreatorFactory ().get ().createNavigableMap ( keyType );
         this.navigableMap = ( NavigableMap<KEY, MultiValue> ) super.map;
 
         for ( ITEM item : items ) {
@@ -45,7 +45,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     public SearchIndexDefault( Class<?> keyType, List<ITEM> items, Function<ITEM, KEY> keyGetter, Collator collator ) {
         super ( null );
         super.keyGetter = keyGetter;
-        super.map = SPIFactory.getMapCreatorFactory ( ).get ( ).createNavigableMap ( keyType, collator );
+        super.map = SPIFactory.getMapCreatorFactory ().get ().createNavigableMap ( keyType, collator );
         this.navigableMap = ( NavigableMap<KEY, MultiValue> ) super.map;
 
         for ( ITEM item : items ) {
@@ -61,30 +61,30 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public void init( ) {
-        super.map = SPIFactory.getMapCreatorFactory ( ).get ( ).createNavigableMap ( this.keyType, this.collator );
+    public void init() {
+        super.map = SPIFactory.getMapCreatorFactory ().get ().createNavigableMap ( this.keyType, this.collator );
         this.navigableMap = ( NavigableMap<KEY, MultiValue> ) super.map;
     }
 
 
     @Override
-    public ITEM findFirst( ) {
-        return ( ITEM ) this.navigableMap.firstEntry ( ).getValue ( ).getValue ( );
+    public ITEM findFirst() {
+        return ( ITEM ) this.navigableMap.firstEntry ().getValue ().getValue ();
     }
 
     @Override
-    public ITEM findLast( ) {
-        return ( ITEM ) this.navigableMap.lastEntry ( ).getValue ( ).getValue ( );
+    public ITEM findLast() {
+        return ( ITEM ) this.navigableMap.lastEntry ().getValue ().getValue ();
     }
 
     @Override
-    public KEY findFirstKey( ) {
-        return this.navigableMap.firstEntry ( ).getKey ( );
+    public KEY findFirstKey() {
+        return this.navigableMap.firstEntry ().getKey ();
     }
 
     @Override
-    public KEY findLastKey( ) {
-        return this.navigableMap.lastEntry ( ).getKey ( );
+    public KEY findLastKey() {
+        return this.navigableMap.lastEntry ().getKey ();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
         if ( items == null ) {
             return null;
         }
-        return items.getValues ( );
+        return items.getValues ();
     }
 
     @Override
@@ -105,14 +105,14 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
         if ( keyFrag instanceof String ) {
             String start = ( String ) keyFrag;
-            if ( start.length ( ) == 0 || start == null ) {
+            if ( start.length () == 0 || start == null ) {
                 return Collections.EMPTY_LIST;
             }
 
-            char endLetter = start.charAt ( start.length ( ) - 1 );
-            String sub = start.substring ( 0, start.length ( ) - 1 );
+            char endLetter = start.charAt ( start.length () - 1 );
+            String sub = start.substring ( 0, start.length () - 1 );
 
-            CharBuf after = CharBuf.create ( start.length ( ) );
+            CharBuf after = CharBuf.create ( start.length () );
 
             after.add ( sub );
             after.add ( ( char ) ( endLetter + 1 ) );
@@ -120,11 +120,11 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
             NavigableMap<String, MultiValue> sortMap = ( NavigableMap<String, MultiValue> ) this.navigableMap;
 
 
-            SortedMap<String, MultiValue> sortedSubMap = sortMap.subMap ( start, after.toString ( ) );
+            SortedMap<String, MultiValue> sortedSubMap = sortMap.subMap ( start, after.toString () );
 
-            if ( sortedSubMap.size ( ) > 0 ) {
-                results = new ArrayList<> ( );
-                for ( MultiValue values : sortedSubMap.values ( ) ) {
+            if ( sortedSubMap.size () > 0 ) {
+                results = new ArrayList<> ();
+                for ( MultiValue values : sortedSubMap.values () ) {
                     values.addTo ( results );
                 }
                 return results;
@@ -139,13 +139,13 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     public List<ITEM> findEndsWith( KEY keyFrag ) {
         keyFrag = getKey ( keyFrag );
 
-        List<ITEM> results = new ArrayList<> ( );
+        List<ITEM> results = new ArrayList<> ();
 
         if ( keyFrag instanceof String ) {
 
-            Collection<MultiValue> values = navigableMap.values ( );
+            Collection<MultiValue> values = navigableMap.values ();
             for ( MultiValue<ITEM> mv : values ) {
-                for ( ITEM value : mv.getValues ( ) ) {
+                for ( ITEM value : mv.getValues () ) {
                     String svalue = ( String ) this.keyGetter.apply ( value );
                     if ( svalue.endsWith ( ( String ) keyFrag ) ) {
                         results.add ( value );
@@ -160,13 +160,13 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     public List<ITEM> findContains( KEY keyFrag ) {
         keyFrag = getKey ( keyFrag );
 
-        List<ITEM> results = new ArrayList<> ( );
+        List<ITEM> results = new ArrayList<> ();
 
         if ( keyFrag instanceof String ) {
 
-            Collection<MultiValue> values = navigableMap.values ( );
+            Collection<MultiValue> values = navigableMap.values ();
             for ( MultiValue<ITEM> mv : values ) {
-                for ( ITEM value : mv.getValues ( ) ) {
+                for ( ITEM value : mv.getValues () ) {
 
                     String svalue = ( String ) this.keyGetter.apply ( value );
                     if ( svalue.endsWith ( ( String ) keyFrag ) ) {
@@ -181,10 +181,10 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
     boolean init;
 
-    void initIfNeeded( ) {
+    void initIfNeeded() {
         if ( !init ) {
             init = true;
-            ITEM item = ( ITEM ) ( ( MultiValue ) this.navigableMap.firstEntry ( ) ).getValue ( );
+            ITEM item = ( ITEM ) ( ( MultiValue ) this.navigableMap.firstEntry () ).getValue ();
 
         }
     }
@@ -203,9 +203,9 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
     private List<ITEM> getResults( SortedMap<KEY, MultiValue> keyMultiValueSortedMap ) {
         List<ITEM> results = null;
-        if ( keyMultiValueSortedMap.size ( ) > 0 ) {
-            results = new ArrayList<> ( );
-            for ( MultiValue<ITEM> values : keyMultiValueSortedMap.values ( ) ) {
+        if ( keyMultiValueSortedMap.size () > 0 ) {
+            results = new ArrayList<> ();
+            for ( MultiValue<ITEM> values : keyMultiValueSortedMap.values () ) {
                 values.addTo ( results );
             }
             return results;
@@ -248,24 +248,24 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
 
     @Override
-    public ITEM min( ) {
-        return ( ITEM ) this.navigableMap.firstEntry ( ).getValue ( ).getValue ( );
+    public ITEM min() {
+        return ( ITEM ) this.navigableMap.firstEntry ().getValue ().getValue ();
     }
 
     @Override
-    public ITEM max( ) {
-        return ( ITEM ) this.navigableMap.lastEntry ( ).getValue ( ).getValue ( );
+    public ITEM max() {
+        return ( ITEM ) this.navigableMap.lastEntry ().getValue ().getValue ();
     }
 
     @Override
     public int count( KEY key ) {
-        return this.navigableMap.get ( key ).size ( );
+        return this.navigableMap.get ( key ).size ();
     }
 
 
     @Override
-    public int size( ) {
-        return this.navigableMap.size ( );
+    public int size() {
+        return this.navigableMap.size ();
     }
 
 }

@@ -51,9 +51,9 @@ public class Repos {
         SPIFactory.setFilterFactory ( factory );
     }
 
-    public static RepoBuilder builder( ) {
-        SPIFactory.init ( );
-        return SPIFactory.getRepoBuilderFactory ( ).get ( );
+    public static RepoBuilder builder() {
+        SPIFactory.init ();
+        return SPIFactory.getRepoBuilderFactory ().get ();
     }
 
 }

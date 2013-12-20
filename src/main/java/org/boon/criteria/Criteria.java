@@ -8,20 +8,20 @@ import org.boon.predicates.Predicate;
 import java.util.Map;
 
 public abstract class Criteria implements Predicate {
-    private static ThreadLocal<Map<String, FieldAccess>> fieldsLocal = new ThreadLocal<> ( );
+    private static ThreadLocal<Map<String, FieldAccess>> fieldsLocal = new ThreadLocal<> ();
 
     public static void fields( Map<String, FieldAccess> fields ) {
         fieldsLocal.set ( fields );
     }
 
-    public static void clearFields( ) {
+    public static void clearFields() {
         fieldsLocal.set ( null );
     }
 
     public abstract void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner );
 
 
-    public abstract void cleanAfterGroupTest( );
+    public abstract void cleanAfterGroupTest();
 
     public abstract boolean resolve( Map<String, FieldAccess> fields, Object owner );
 
@@ -33,11 +33,11 @@ public abstract class Criteria implements Predicate {
     }
 
     protected Map<String, FieldAccess> getFieldsInternal( Object o ) {
-        return getFieldsInternal ( o.getClass ( ) );
+        return getFieldsInternal ( o.getClass () );
     }
 
     protected Map<String, FieldAccess> getFieldsInternal( Class clazz ) {
-        Map<String, FieldAccess> fields = fieldsLocal == null ? null : fieldsLocal.get ( );
+        Map<String, FieldAccess> fields = fieldsLocal == null ? null : fieldsLocal.get ();
         if ( fields == null ) {
             fields = Reflection.getPropertyFieldAccessMap ( clazz );
         }

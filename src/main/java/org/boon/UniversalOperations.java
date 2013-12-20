@@ -278,7 +278,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Maps
      * @see Sets
      */
-    int len( );
+    int len();
 
 
     /**

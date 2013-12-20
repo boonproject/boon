@@ -7,13 +7,13 @@ public class Validators {
 
 
     public static RequiredValidator required( String detailMessage, String summaryMessage ) {
-        RequiredValidator validator = new RequiredValidator ( );
+        RequiredValidator validator = new RequiredValidator ();
         init ( detailMessage, summaryMessage, validator );
         return validator;
     }
 
     public static RequiredValidator required( String detailMessage ) {
-        RequiredValidator validator = new RequiredValidator ( );
+        RequiredValidator validator = new RequiredValidator ();
         init ( detailMessage, validator );
         return validator;
     }
@@ -21,18 +21,18 @@ public class Validators {
     private static void init( String detailMessage, BaseValidator validator ) {
         validator.setDetailMessage ( detailMessage );
         validator.setNoSummary ( true );
-        validator.init ( );
+        validator.init ();
     }
 
     private static void init( String detailMessage, String summaryMessage, BaseValidator validator ) {
         validator.setDetailMessage ( detailMessage );
         validator.setSummaryMessage ( summaryMessage );
-        validator.init ( );
+        validator.init ();
     }
 
 
     public static LengthValidator length( int min, int max, String message ) {
-        LengthValidator v = new LengthValidator ( );
+        LengthValidator v = new LengthValidator ();
         v.setMax ( max );
         v.setMin ( min );
         init ( message, v );
@@ -41,14 +41,14 @@ public class Validators {
 
 
     public static LengthValidator length( String message, String summary ) {
-        LengthValidator eq = new LengthValidator ( );
+        LengthValidator eq = new LengthValidator ();
         init ( message, summary, eq );
         return eq;
     }
 
 
     public static CompositeValidator validators( FieldValidator... validators ) {
-        CompositeValidator compositeValidator = new CompositeValidator ( );
+        CompositeValidator compositeValidator = new CompositeValidator ();
         compositeValidator.setValidatorList ( Lists.list ( validators ) );
         return compositeValidator;
 
@@ -56,7 +56,7 @@ public class Validators {
 
 
     public static RegexValidator match( String match, String message, String summary ) {
-        RegexValidator v = new RegexValidator ( );
+        RegexValidator v = new RegexValidator ();
         v.setMatch ( match );
         init ( message, summary, v );
         return v;
@@ -64,7 +64,7 @@ public class Validators {
 
 
     public static RegexValidator dontMatch( String match, String message, String summary ) {
-        RegexValidator v = new RegexValidator ( );
+        RegexValidator v = new RegexValidator ();
         v.setMatch ( match );
         v.setNegate ( true );
         init ( message, summary, v );

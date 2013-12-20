@@ -16,7 +16,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     protected Map<KEY, ITEM> map = null;
 
 
-    private Logger log = Logger.getLogger ( UniqueLookupIndex.class.getName ( ) );
+    private Logger log = Logger.getLogger ( UniqueLookupIndex.class.getName () );
 
     private Function<Object, KEY> keyTransformer;
 
@@ -24,7 +24,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         if ( keyType == null ) {
             return;
         }
-        map = SPIFactory.getMapCreatorFactory ( ).get ( ).createMap ( keyType );
+        map = SPIFactory.getMapCreatorFactory ().get ().createMap ( keyType );
 
     }
 
@@ -74,13 +74,13 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public List<ITEM> all( ) {
+    public List<ITEM> all() {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "all called " );
         }
 
-        return new ArrayList<> ( map.values ( ) );
+        return new ArrayList<> ( map.values () );
     }
 
     @Override
@@ -94,18 +94,18 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public int size( ) {
-        return this.map.size ( );
+    public int size() {
+        return this.map.size ();
     }
 
     @Override
-    public Collection<ITEM> toCollection( ) {
-        return new HashSet ( this.map.values ( ) );
+    public Collection<ITEM> toCollection() {
+        return new HashSet ( this.map.values () );
     }
 
     @Override
-    public void clear( ) {
-        this.map.clear ( );
+    public void clear() {
+        this.map.clear ();
     }
 
     @Override
@@ -115,12 +115,12 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public boolean isPrimaryKeyOnly( ) {
+    public boolean isPrimaryKeyOnly() {
         return false;
     }
 
     @Override
-    public void init( ) {
+    public void init() {
 
     }
 

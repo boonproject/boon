@@ -13,7 +13,7 @@ public class MapField implements FieldAccess {
 
     private String name;
 
-    public MapField( ) {
+    public MapField() {
 
     }
 
@@ -22,7 +22,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public String getName( ) {
+    public String getName() {
         return name;
     }
 
@@ -32,7 +32,7 @@ public class MapField implements FieldAccess {
             Map map = ( Map ) obj;
             return map.get ( name );
         }
-        return die ( Object.class, "Object must be a map but was a " + obj.getClass ( ).getName ( ) );
+        return die ( Object.class, "Object must be a map but was a " + obj.getClass ().getName () );
     }
 
     @Override
@@ -222,48 +222,48 @@ public class MapField implements FieldAccess {
 
 
     @Override
-    public Field getField( ) {
+    public Field getField() {
         return die ( Field.class, "Unsupported operation" );
 
     }
 
     @Override
-    public ParameterizedType getParameterizedType( ) {
+    public ParameterizedType getParameterizedType() {
         return null;
     }
 
     @Override
-    public Class<?> getComponentClass( ) {
+    public Class<?> getComponentClass() {
         return null;
     }
 
     @Override
-    public boolean isFinal( ) {
+    public boolean isFinal() {
         return false;
     }
 
     @Override
-    public boolean isStatic( ) {
+    public boolean isStatic() {
         return false;
     }
 
     @Override
-    public boolean isVolatile( ) {
+    public boolean isVolatile() {
         return false;
     }
 
     @Override
-    public boolean isQualified( ) {
+    public boolean isQualified() {
         return false;
     }
 
     @Override
-    public boolean isReadOnly( ) {
+    public boolean isReadOnly() {
         return false;
     }
 
     @Override
-    public Class<?> getType( ) {
+    public Class<?> getType() {
         return Object.class;
     }
 }

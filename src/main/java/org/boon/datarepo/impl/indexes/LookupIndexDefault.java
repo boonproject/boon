@@ -22,7 +22,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     protected Function<ITEM, KEY> primaryKeyGetter;
 
     protected Map<KEY, MultiValue> map;
-    private Logger log = Logger.getLogger ( LookupIndexDefault.class.getName ( ) );
+    private Logger log = Logger.getLogger ( LookupIndexDefault.class.getName () );
     protected boolean storeKeyInIndexOnly;
     private Function<Object, KEY> keyTransformer;
 
@@ -33,13 +33,13 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
 
         if ( log.isLoggable ( Level.FINE ) ) {
-            log.fine ( String.format ( "key type %s ", keyType.getName ( ) ) );
+            log.fine ( String.format ( "key type %s ", keyType.getName () ) );
         }
 
         if ( keyType == null ) {
             return;
         }
-        map = SPIFactory.getMapCreatorFactory ( ).get ( ).createMap ( keyType );
+        map = SPIFactory.getMapCreatorFactory ().get ().createMap ( keyType );
 
     }
 
@@ -149,27 +149,27 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public List<ITEM> all( ) {
+    public List<ITEM> all() {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "all called" );
         }
 
-        List results = new ArrayList<> ( map.size ( ) );
-        for ( MultiValue values : map.values ( ) ) {
+        List results = new ArrayList<> ( map.size () );
+        for ( MultiValue values : map.values () ) {
             values.addTo ( results );
         }
         return results;
     }
 
     @Override
-    public int size( ) {
-        return this.map.size ( );
+    public int size() {
+        return this.map.size ();
     }
 
     @Override
-    public Collection<ITEM> toCollection( ) {
-        return ( Collection<ITEM> ) this.map.values ( );
+    public Collection<ITEM> toCollection() {
+        return ( Collection<ITEM> ) this.map.values ();
     }
 
 
@@ -182,7 +182,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         if ( mv == null ) {
             return null;
         } else {
-            return ( ITEM ) mv.getValue ( );
+            return ( ITEM ) mv.getValue ();
         }
     }
 
@@ -201,7 +201,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         if ( mv == null ) {
             return null;
         } else {
-            return mv.getValues ( );
+            return mv.getValues ();
         }
     }
 
@@ -217,7 +217,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     //TODO implement so we can store only primary keys in a index to make indexes smaller if
     //we ever decide to cache actual items
     @Override
-    public boolean isPrimaryKeyOnly( ) {
+    public boolean isPrimaryKeyOnly() {
         return storeKeyInIndexOnly;
     }
 
@@ -232,7 +232,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
-    public void init( ) {
+    public void init() {
     }
 
     @Override
@@ -242,12 +242,12 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
 
     @Override
-    public void clear( ) {
+    public void clear() {
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "clear called" );
         }
-        this.map.clear ( );
+        this.map.clear ();
     }
 
 }

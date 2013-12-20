@@ -37,17 +37,17 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public int location( ) {
+    public int location() {
         return location;
     }
 
     @Override
-    public void reset( ) {
+    public void reset() {
         location = 0;
     }
 
     @Override
-    public boolean readBoolean( ) {
+    public boolean readBoolean() {
         final byte val = Byt.idx ( array, location );
 
         location += 1;
@@ -60,7 +60,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public byte readByte( ) {
+    public byte readByte() {
 
         byte value = Byt.idx ( array, location );
         location += 1;
@@ -69,7 +69,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public short readUnsignedByte( ) {
+    public short readUnsignedByte() {
 
         short value = Byt.idxUnsignedByte ( array, location );
         location += 1;
@@ -78,7 +78,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public short readShort( ) {
+    public short readShort() {
 
         short value = Byt.idxShort ( array, location );
         location += 2;
@@ -87,7 +87,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public int readUnsignedShort( ) {
+    public int readUnsignedShort() {
 
         int value = Byt.idxUnsignedShort ( array, location );
         location += 2;
@@ -96,7 +96,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public char readChar( ) {
+    public char readChar() {
 
         char value = Byt.idxChar ( array, location );
         location += 2;
@@ -105,7 +105,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public int readInt( ) {
+    public int readInt() {
 
         int value = Byt.idxInt ( array, location );
         location += 4;
@@ -114,7 +114,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public long readUnsignedInt( ) {
+    public long readUnsignedInt() {
 
         long value = Byt.idxUnsignedInt ( array, location );
         location += 4;
@@ -123,7 +123,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public long readLong( ) {
+    public long readLong() {
 
         long value = Byt.idxLong ( array, location );
         location += 8;
@@ -132,7 +132,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public float readFloat( ) {
+    public float readFloat() {
 
         float value = Byt.idxFloat ( array, location );
         location += 4;
@@ -141,7 +141,7 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public double readDouble( ) {
+    public double readDouble() {
 
         double value = Byt.idxDouble ( array, location );
         location += 8;
@@ -151,8 +151,8 @@ public class InputByteArray implements Input {
 
 
     @Override
-    public String readSmallString( ) {
-        short size = this.readUnsignedByte ( );
+    public String readSmallString() {
+        short size = this.readUnsignedByte ();
 
         byte[] bytes = this.readBytes ( size );
         return new String ( bytes, StandardCharsets.UTF_8 );
@@ -160,19 +160,8 @@ public class InputByteArray implements Input {
 
 
     @Override
-    public String readMediumString( ) {
-        int size = this.readUnsignedShort ( );
-
-        byte[] bytes = this.readBytes ( size );
-
-        return new String ( bytes, StandardCharsets.UTF_8 );
-    }
-
-
-    @Override
-    public String readLargeString( ) {
-        int size = this.readInt ( );
-
+    public String readMediumString() {
+        int size = this.readUnsignedShort ();
 
         byte[] bytes = this.readBytes ( size );
 
@@ -181,8 +170,19 @@ public class InputByteArray implements Input {
 
 
     @Override
-    public byte[] readSmallByteArray( ) {
-        short size = this.readUnsignedByte ( );
+    public String readLargeString() {
+        int size = this.readInt ();
+
+
+        byte[] bytes = this.readBytes ( size );
+
+        return new String ( bytes, StandardCharsets.UTF_8 );
+    }
+
+
+    @Override
+    public byte[] readSmallByteArray() {
+        short size = this.readUnsignedByte ();
 
         byte[] bytes = this.readBytes ( size );
         return bytes;
@@ -190,8 +190,8 @@ public class InputByteArray implements Input {
 
 
     @Override
-    public byte[] readMediumByteArray( ) {
-        int size = this.readUnsignedShort ( );
+    public byte[] readMediumByteArray() {
+        int size = this.readUnsignedShort ();
 
         byte[] bytes = this.readBytes ( size );
 
@@ -199,9 +199,9 @@ public class InputByteArray implements Input {
     }
 
     @Override
-    public short[] readSmallShortArray( ) {
+    public short[] readSmallShortArray() {
 
-        short size = this.readUnsignedByte ( );
+        short size = this.readUnsignedByte ();
 
         return doReadShortArray ( size );
 
@@ -212,24 +212,24 @@ public class InputByteArray implements Input {
         short[] values = new short[size];
 
         for ( int index = 0; index < values.length; index++ ) {
-            values[index] = this.readShort ( );
+            values[index] = this.readShort ();
         }
         return values;
     }
 
     @Override
-    public short[] readLargeShortArray( ) {
+    public short[] readLargeShortArray() {
 
-        int size = this.readInt ( );
+        int size = this.readInt ();
 
         return doReadShortArray ( size );
 
     }
 
     @Override
-    public short[] readMediumShortArray( ) {
+    public short[] readMediumShortArray() {
 
-        int size = this.readUnsignedShort ( );
+        int size = this.readUnsignedShort ();
 
         return doReadShortArray ( size );
 
@@ -237,8 +237,8 @@ public class InputByteArray implements Input {
 
 
     @Override
-    public byte[] readLargeByteArray( ) {
-        int size = this.readInt ( );
+    public byte[] readLargeByteArray() {
+        int size = this.readInt ();
 
 
         byte[] bytes = this.readBytes ( size );
@@ -255,9 +255,9 @@ public class InputByteArray implements Input {
 
 
     @Override
-    public int[] readSmallIntArray( ) {
+    public int[] readSmallIntArray() {
 
-        short size = this.readUnsignedByte ( );
+        short size = this.readUnsignedByte ();
 
         return doReadIntArray ( size );
 
@@ -268,24 +268,24 @@ public class InputByteArray implements Input {
         int[] values = new int[size];
 
         for ( int index = 0; index < values.length; index++ ) {
-            values[index] = this.readInt ( );
+            values[index] = this.readInt ();
         }
         return values;
     }
 
     @Override
-    public int[] readLargeIntArray( ) {
+    public int[] readLargeIntArray() {
 
-        int size = this.readInt ( );
+        int size = this.readInt ();
 
         return doReadIntArray ( size );
 
     }
 
     @Override
-    public int[] readMediumIntArray( ) {
+    public int[] readMediumIntArray() {
 
-        int size = this.readUnsignedShort ( );
+        int size = this.readUnsignedShort ();
 
         return doReadIntArray ( size );
 
@@ -296,9 +296,9 @@ public class InputByteArray implements Input {
 
 
     @Override
-    public long[] readSmallLongArray( ) {
+    public long[] readSmallLongArray() {
 
-        short size = this.readUnsignedByte ( );
+        short size = this.readUnsignedByte ();
 
         return doReadLongArray ( size );
 
@@ -309,71 +309,71 @@ public class InputByteArray implements Input {
         long[] values = new long[size];
 
         for ( int index = 0; index < values.length; index++ ) {
-            values[index] = this.readLong ( );
+            values[index] = this.readLong ();
         }
         return values;
     }
 
     @Override
-    public long[] readLargeLongArray( ) {
+    public long[] readLargeLongArray() {
 
-        int size = this.readInt ( );
-
-        return doReadLongArray ( size );
-
-    }
-
-    @Override
-    public long[] readMediumLongArray( ) {
-
-        int size = this.readUnsignedShort ( );
+        int size = this.readInt ();
 
         return doReadLongArray ( size );
 
     }
 
     @Override
-    public float[] readSmallFloatArray( ) {
-        short size = this.readUnsignedByte ( );
+    public long[] readMediumLongArray() {
+
+        int size = this.readUnsignedShort ();
+
+        return doReadLongArray ( size );
+
+    }
+
+    @Override
+    public float[] readSmallFloatArray() {
+        short size = this.readUnsignedByte ();
         return doReadFloatArray ( size );
     }
 
     @Override
-    public float[] readLargeFloatArray( ) {
-        int size = this.readInt ( );
+    public float[] readLargeFloatArray() {
+        int size = this.readInt ();
         return doReadFloatArray ( size );
     }
 
     @Override
-    public float[] readMediumFloatArray( ) {
-        int size = this.readUnsignedShort ( );
+    public float[] readMediumFloatArray() {
+        int size = this.readUnsignedShort ();
         return doReadFloatArray ( size );
     }
 
     private float[] doReadFloatArray( int size ) {
         float[] values = new float[size];
         for ( int index = 0; index < values.length; index++ ) {
-            values[index] = this.readFloat ( );
+            values[index] = this.readFloat ();
         }
         return values;
     }
 
 
     @Override
-    public double[] readSmallDoubleArray( ) {
-        short size = this.readUnsignedByte ( );
+    public double[] readSmallDoubleArray() {
+        short size = this.readUnsignedByte ();
         return doReadDoubleArray ( size );
     }
 
     @Override
-    public double[] readLargeDoubleArray( ) {
-        int size = this.readInt ( );
+    public double[] readLargeDoubleArray() {
+        int size = this.readInt ();
         return doReadDoubleArray ( size );
     }
 
     @Override
-    public double[] readMediumDoubleArray( ) {
-        int size = this.readUnsignedShort ( );
+    public double[] readMediumDoubleArray() {
+        int size = this.readUnsignedShort ();
         return doReadDoubleArray ( size );
     }
 
@@ -381,7 +381,7 @@ public class InputByteArray implements Input {
     private double[] doReadDoubleArray( int size ) {
         double[] values = new double[size];
         for ( int index = 0; index < values.length; index++ ) {
-            values[index] = this.readDouble ( );
+            values[index] = this.readDouble ();
         }
         return values;
     }

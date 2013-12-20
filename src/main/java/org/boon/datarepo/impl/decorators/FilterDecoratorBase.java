@@ -21,7 +21,7 @@ public class FilterDecoratorBase implements Filter {
     }
 
     @Override
-    public void invalidate( ) {
-        delegate.invalidate ( );
+    public void invalidate() {
+        delegate.invalidate ();
     }
 }

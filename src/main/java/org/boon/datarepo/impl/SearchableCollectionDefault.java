@@ -26,14 +26,14 @@ import static org.boon.core.reflection.Reflection.toMap;
 public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollection<KEY, ITEM>, SearchableCollectionComposer {
 
 
-    private Logger log = Logger.getLogger ( RepoDefault.class.getName ( ) );
+    private Logger log = Logger.getLogger ( RepoDefault.class.getName () );
 
-    protected Map<String, LookupIndex> lookupIndexMap = new LinkedHashMap<> ( );
-    protected Map<String, SearchIndex> searchIndexMap = new LinkedHashMap<> ( );
-    protected Set<LookupIndex> indexes = new LinkedHashSet<> ( );
+    protected Map<String, LookupIndex> lookupIndexMap = new LinkedHashMap<> ();
+    protected Map<String, SearchIndex> searchIndexMap = new LinkedHashMap<> ();
+    protected Set<LookupIndex> indexes = new LinkedHashSet<> ();
     protected Filter filter;
 
-    protected Map<String, FieldAccess> fields = new LinkedHashMap<> ( );
+    protected Map<String, FieldAccess> fields = new LinkedHashMap<> ();
     protected UniqueLookupIndex<KEY, ITEM> primaryIndex;
 
     protected Function<ITEM, KEY> primaryKeyGetter;
@@ -194,7 +194,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public <T> T max( KEY key, String property, Class<T> type ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.max ( );
+            ITEM item = ( ITEM ) index.max ();
             if ( item != null ) {
                 return ( T ) this.fields.get ( property ).getValue ( item );
             }
@@ -206,7 +206,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public String maxString( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.max ( );
+            ITEM item = ( ITEM ) index.max ();
             if ( item != null ) {
                 return ( String ) this.fields.get ( property ).getObject ( item );
             }
@@ -218,7 +218,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public Number maxNumber( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.max ( );
+            ITEM item = ( ITEM ) index.max ();
             if ( item != null ) {
                 return ( Number ) this.fields.get ( property ).getValue ( item );
             }
@@ -230,7 +230,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public int maxInt( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.max ( );
+            ITEM item = ( ITEM ) index.max ();
             if ( item != null ) {
                 return this.fields.get ( property ).getInt ( item );
             }
@@ -242,11 +242,11 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public long maxLong( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.max ( );
+            ITEM item = ( ITEM ) index.max ();
             if ( item != null ) {
                 FieldAccess field = this.fields.get ( property );
 
-                if ( field.getType ( ) == long.class ) {
+                if ( field.getType () == long.class ) {
                     return field.getLong ( item );
                 }
             }
@@ -258,7 +258,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public double maxDouble( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.max ( );
+            ITEM item = ( ITEM ) index.max ();
             if ( item != null ) {
                 return this.fields.get ( property ).getDouble ( item );
             }
@@ -270,7 +270,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public <T> T min( KEY key, String property, Class<T> type ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.min ( );
+            ITEM item = ( ITEM ) index.min ();
             if ( item != null ) {
                 return ( T ) this.fields.get ( property ).getValue ( item );
             }
@@ -282,7 +282,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public String minString( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.min ( );
+            ITEM item = ( ITEM ) index.min ();
             if ( item != null ) {
                 return ( String ) this.fields.get ( property ).getObject ( item );
             }
@@ -294,7 +294,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public Number minNumber( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.min ( );
+            ITEM item = ( ITEM ) index.min ();
             if ( item != null ) {
                 return ( Number ) this.fields.get ( property ).getValue ( item );
             }
@@ -306,7 +306,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public int minInt( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.min ( );
+            ITEM item = ( ITEM ) index.min ();
             if ( item != null ) {
                 return this.fields.get ( property ).getInt ( item );
             }
@@ -318,11 +318,11 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public long minLong( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.min ( );
+            ITEM item = ( ITEM ) index.min ();
             if ( item != null ) {
                 FieldAccess field = this.fields.get ( property );
 
-                if ( field.getType ( ) == long.class ) {
+                if ( field.getType () == long.class ) {
                     return field.getLong ( item );
                 }
             }
@@ -334,7 +334,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public double minDouble( KEY key, String property ) {
         SearchIndex index = this.searchIndexMap.get ( property );
         if ( index != null ) {
-            ITEM item = ( ITEM ) index.min ( );
+            ITEM item = ( ITEM ) index.min ();
             if ( item != null ) {
                 return this.fields.get ( property ).getDouble ( item );
             }
@@ -350,12 +350,12 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     @Override
     public List<ITEM> query( Criteria... expressions ) {
         if ( expressions == null || expressions.length == 0 ) {
-            return this.all ( );
+            return this.all ();
         } else {
             if ( this.removeDuplication ) {
-                return ( List<ITEM> ) this.filter.filter ( expressions ).removeDuplication ( ).asList ( );
+                return ( List<ITEM> ) this.filter.filter ( expressions ).removeDuplication ().asList ();
             } else {
-                return ( List<ITEM> ) this.filter.filter ( expressions ).asList ( );
+                return ( List<ITEM> ) this.filter.filter ( expressions ).asList ();
             }
         }
     }
@@ -376,7 +376,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     @Override
     public List<Map<String, Object>> queryAsMaps( Criteria... expressions ) {
         List<ITEM> items = this.query ( expressions );
-        List<Map<String, Object>> results = new ArrayList<> ( items.size ( ) );
+        List<Map<String, Object>> results = new ArrayList<> ( items.size () );
         for ( ITEM item : items ) {
             results.add ( toMap ( item ) );
         }
@@ -408,12 +408,12 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         visitor.visit ( key, item, o, path );
 
 
-        if ( o.getClass ( ).isPrimitive ( ) ) {
+        if ( o.getClass ().isPrimitive () ) {
             return;
         }
 
 
-        if ( o.getClass ( ).getName ( ).startsWith ( "java" ) ) {
+        if ( o.getClass ().getName ().startsWith ( "java" ) ) {
             return;
         }
 
@@ -422,25 +422,25 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
 
             int index = 0;
             Iterator iterator = Reflection.iterator ( o );
-            while ( iterator.hasNext ( ) ) {
+            while ( iterator.hasNext () ) {
                 path.add ( String.format ( "[%s]", index ) );
-                Object objectItem = iterator.next ( );
+                Object objectItem = iterator.next ();
                 visit ( key, item, visitor, objectItem, path, levels );
-                path.remove ( path.size ( ) - 1 );
+                path.remove ( path.size () - 1 );
                 index++;
 
             }
 
         }
 
-        Map<String, FieldAccess> accessorFields = Reflection.getAllAccessorFields ( o.getClass ( ) );
-        for ( FieldAccess field : accessorFields.values ( ) ) {
-            if ( field.isStatic ( ) ) {
+        Map<String, FieldAccess> accessorFields = Reflection.getAllAccessorFields ( o.getClass () );
+        for ( FieldAccess field : accessorFields.values () ) {
+            if ( field.isStatic () ) {
                 continue;
             }
-            path.add ( field.getName ( ) );
+            path.add ( field.getName () );
             visit ( key, item, visitor, field.getValue ( o ), path, levels );
-            path.remove ( path.size ( ) - 1 );
+            path.remove ( path.size () - 1 );
 
         }
 
@@ -495,7 +495,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         if ( index != null ) {
             index.delete ( item );
         }
-        filter.invalidate ( );
+        filter.invalidate ();
 
     }
 
@@ -514,9 +514,9 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
 
 
     @Override
-    public void clear( ) {
+    public void clear() {
         for ( LookupIndex index : indexes ) {
-            index.clear ( );
+            index.clear ();
         }
 
     }
@@ -540,8 +540,8 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         indexes.add ( si );
     }
 
-    public List<ITEM> all( ) {
-        return primaryIndex.all ( );
+    public List<ITEM> all() {
+        return primaryIndex.all ();
     }
 
 
@@ -549,26 +549,26 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         this.primaryKeyName = primaryKey;
     }
 
-    public Collection<ITEM> toCollection( ) {
-        return this.primaryIndex.toCollection ( );
+    public Collection<ITEM> toCollection() {
+        return this.primaryIndex.toCollection ();
     }
 
-    public boolean isEmpty( ) {
-        return this.primaryIndex.toCollection ( ).isEmpty ( );
-    }
-
-
-    public Iterator<ITEM> iterator( ) {
-        return primaryIndex.toCollection ( ).iterator ( );
+    public boolean isEmpty() {
+        return this.primaryIndex.toCollection ().isEmpty ();
     }
 
 
-    public Object[] toArray( ) {
-        return primaryIndex.toCollection ( ).toArray ( );
+    public Iterator<ITEM> iterator() {
+        return primaryIndex.toCollection ().iterator ();
+    }
+
+
+    public Object[] toArray() {
+        return primaryIndex.toCollection ().toArray ();
     }
 
     public <T> T[] toArray( T[] a ) {
-        return primaryIndex.toCollection ( ).toArray ( a );
+        return primaryIndex.toCollection ().toArray ( a );
     }
 
 
@@ -579,7 +579,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     }
 
     @Override
-    public void init( ) {
+    public void init() {
         this.primaryIndex = ( UniqueLookupIndex<KEY, ITEM> ) this.lookupIndexMap.get ( this.primaryKeyName );
         if ( filter instanceof FilterComposer ) {
             FilterComposer fc = ( FilterComposer ) filter;
@@ -587,7 +587,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
             fc.setLookupIndexMap ( this.lookupIndexMap );
             fc.setSearchIndexMap ( this.searchIndexMap );
             fc.setSearchableCollection ( this );
-            fc.init ( );
+            fc.init ();
         }
         indexes.add ( this.primaryIndex );
     }
@@ -598,8 +598,8 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     }
 
 
-    public int size( ) {
-        return primaryIndex.size ( );
+    public int size() {
+        return primaryIndex.size ();
     }
 
     public boolean addAll( Collection<? extends ITEM> items ) {

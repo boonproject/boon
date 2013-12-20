@@ -6,18 +6,18 @@ public class JsonException extends RuntimeException {
         throw new JsonException ( ex );
     }
 
-    public JsonException () {
+    public JsonException() {
     }
 
-    public JsonException ( String message, Throwable cause ) {
+    public JsonException( String message, Throwable cause ) {
         super ( message, cause );
     }
 
-    public JsonException ( String message ) {
+    public JsonException( String message ) {
         super ( message );
     }
 
-    public JsonException ( Throwable cause ) {
+    public JsonException( Throwable cause ) {
         super ( cause );
     }
 

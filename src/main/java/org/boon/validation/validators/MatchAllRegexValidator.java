@@ -22,20 +22,20 @@ public class MatchAllRegexValidator extends BaseValidator {
 
     private String[] matches;
 
-    private Map<String, Pattern> compiledRegexCache = new HashMap<String, Pattern> ( );
+    private Map<String, Pattern> compiledRegexCache = new HashMap<String, Pattern> ();
 
 
     public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
-        ValidatorMessage message = new ValidatorMessage ( );
+        ValidatorMessage message = new ValidatorMessage ();
         if ( object == null ) {
             return message;
         }
-        String string = object.toString ( );
+        String string = object.toString ();
         int validCount = 0;
 
         for ( String match : matches ) {
             Pattern pattern = compileRegex ( match );
-            if ( pattern.matcher ( string ).find ( ) ) {
+            if ( pattern.matcher ( string ).find () ) {
                 validCount++;
             }
         }

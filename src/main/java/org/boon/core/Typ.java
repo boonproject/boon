@@ -77,7 +77,7 @@ public class Typ {
                 || date.isAssignableFrom ( theClass )
                 || calendar.isAssignableFrom ( theClass )
                 || bool.isAssignableFrom ( theClass )
-                || theClass.isPrimitive ( ) );
+                || theClass.isPrimitive () );
     }
 
     public static boolean isMap( Class<?> thisType ) {
@@ -122,7 +122,7 @@ public class Typ {
     }
 
     public static boolean isSuperClass( Class<?> type, Class<?> possibleSuperType ) {
-        if ( possibleSuperType.isInterface ( ) ) {
+        if ( possibleSuperType.isInterface () ) {
             return false;
         } else {
             return possibleSuperType.isAssignableFrom ( type );
@@ -135,7 +135,7 @@ public class Typ {
     }
 
     public static boolean implementsInterface( Class<?> type, Class<?> interfaceType ) {
-        if ( !interfaceType.isInterface ( ) ) {
+        if ( !interfaceType.isInterface () ) {
             return false;
         } else {
             return interfaceType.isAssignableFrom ( type );
@@ -144,8 +144,8 @@ public class Typ {
     }
 
     public static Class<?> getKeyType( Map<?, ?> value ) {
-        if ( value.size ( ) > 0 ) {
-            return value.keySet ( ).iterator ( ).next ( ).getClass ( );
+        if ( value.size () > 0 ) {
+            return value.keySet ().iterator ().next ().getClass ();
         } else {
             return null;
         }

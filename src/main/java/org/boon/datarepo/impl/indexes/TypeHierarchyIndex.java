@@ -26,19 +26,19 @@ public class TypeHierarchyIndex extends BaseIndexWrapper {
 
     @Override
     protected List getKeys( Object o ) {
-        List<Object> list = new ArrayList ( );
-        Class cls = o.getClass ( );
+        List<Object> list = new ArrayList ();
+        Class cls = o.getClass ();
 
         while ( cls != null && cls != Object.class ) {
-            list.add ( cls.getSimpleName ( ) );
-            list.add ( cls.getName ( ) );
+            list.add ( cls.getSimpleName () );
+            list.add ( cls.getName () );
 
-            for ( Class<?> i : cls.getInterfaces ( ) ) {
-                list.add ( i.getSimpleName ( ) );
-                list.add ( i.getName ( ) );
+            for ( Class<?> i : cls.getInterfaces () ) {
+                list.add ( i.getSimpleName () );
+                list.add ( i.getName () );
             }
 
-            cls = cls.getSuperclass ( );
+            cls = cls.getSuperclass ();
         }
         return list;
     }

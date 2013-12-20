@@ -12,80 +12,80 @@ public interface Input {
 
     void location( int n );
 
-    int location( );
+    int location();
 
-    void reset( );
+    void reset();
 
-    boolean readBoolean( );
+    boolean readBoolean();
 
-    byte readByte( );
+    byte readByte();
 
-    short readUnsignedByte( );
+    short readUnsignedByte();
 
-    short readShort( );
+    short readShort();
 
-    int readUnsignedShort( );
+    int readUnsignedShort();
 
-    char readChar( );
+    char readChar();
 
-    int readInt( );
+    int readInt();
 
-    long readUnsignedInt( );
+    long readUnsignedInt();
 
-    long readLong( );
+    long readLong();
 
-    float readFloat( );
+    float readFloat();
 
-    double readDouble( );
+    double readDouble();
 
-    String readSmallString( );
+    String readSmallString();
 
-    String readLargeString( );
+    String readLargeString();
 
-    String readMediumString( );
-
-
-    byte[] readSmallByteArray( );
-
-    byte[] readLargeByteArray( );
-
-    byte[] readMediumByteArray( );
-
-    short[] readSmallShortArray( );
-
-    short[] readLargeShortArray( );
-
-    short[] readMediumShortArray( );
+    String readMediumString();
 
 
-    int[] readSmallIntArray( );
+    byte[] readSmallByteArray();
 
-    int[] readLargeIntArray( );
+    byte[] readLargeByteArray();
 
-    int[] readMediumIntArray( );
+    byte[] readMediumByteArray();
+
+    short[] readSmallShortArray();
+
+    short[] readLargeShortArray();
+
+    short[] readMediumShortArray();
+
+
+    int[] readSmallIntArray();
+
+    int[] readLargeIntArray();
+
+    int[] readMediumIntArray();
 
     byte[] readBytes( int size );
 
 
-    long[] readSmallLongArray( );
+    long[] readSmallLongArray();
 
-    long[] readLargeLongArray( );
+    long[] readLargeLongArray();
 
-    long[] readMediumLongArray( );
-
-
-    float[] readSmallFloatArray( );
-
-    float[] readLargeFloatArray( );
-
-    float[] readMediumFloatArray( );
+    long[] readMediumLongArray();
 
 
-    double[] readSmallDoubleArray( );
+    float[] readSmallFloatArray();
 
-    double[] readLargeDoubleArray( );
+    float[] readLargeFloatArray();
 
-    double[] readMediumDoubleArray( );
+    float[] readMediumFloatArray();
+
+
+    double[] readSmallDoubleArray();
+
+    double[] readLargeDoubleArray();
+
+    double[] readMediumDoubleArray();
 
     //TODO add unsigned int, unsigned byte, unsigned short array
 

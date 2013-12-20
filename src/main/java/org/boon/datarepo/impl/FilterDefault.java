@@ -55,7 +55,7 @@ public class FilterDefault implements Filter, FilterComposer {
             Criteria.fields ( this.fields );
             return mainQueryPlan ( expressions );
         } finally {
-            Criteria.clearFields ( );
+            Criteria.clearFields ();
         }
     }
 
@@ -92,20 +92,20 @@ public class FilterDefault implements Filter, FilterComposer {
     private void orPlanWithIndex( Criterion criterion, ResultSetInternal results ) {
 
 
-        Operator operator = criterion.getOperator ( );
-        if ( operator == Operator.EQUAL && lookupIndexMap.get ( criterion.getName ( ) ) != null ) {
+        Operator operator = criterion.getOperator ();
+        if ( operator == Operator.EQUAL && lookupIndexMap.get ( criterion.getName () ) != null ) {
             doFilterWithIndex ( criterion, fields, results );
-        } else if ( this.isIndexed ( criterion.getName ( ) ) && Sets.in ( operator, indexedOperators ) ) {
+        } else if ( this.isIndexed ( criterion.getName () ) && Sets.in ( operator, indexedOperators ) ) {
             doFilterWithIndex ( criterion, fields, results );
         } else {
-            List list = QueryFactory.filter ( this.searchableCollection.all ( ), criterion );
+            List list = QueryFactory.filter ( this.searchableCollection.all (), criterion );
             results.addResults ( list );
         }
 
     }
 
     @Override
-    public void invalidate( ) {
+    public void invalidate() {
 
     }
 
@@ -117,16 +117,16 @@ public class FilterDefault implements Filter, FilterComposer {
      */
     private void doFilterGroup( Group group, ResultSetInternal results ) {
         /* The group was n or group so handle it that way. */
-        if ( group.getGrouping ( ) == Grouping.OR ) {
+        if ( group.getGrouping () == Grouping.OR ) {
             /* nice short method name, or. */
-            or ( group.getExpressions ( ), fields, results );
+            or ( group.getExpressions (), fields, results );
         } else {
             /* create a result internal (why?), wrap the fields in the result set
             internal, and pass that to the and method.
              */
             ResultSetInternal resultsForAnd = new ResultSetImpl ( fields );
-            and ( group.getExpressions ( ), fields, resultsForAnd );
-            results.addResults ( resultsForAnd.asList ( ) );
+            and ( group.getExpressions (), fields, resultsForAnd );
+            results.addResults ( resultsForAnd.asList () );
         }
     }
 
@@ -187,17 +187,17 @@ public class FilterDefault implements Filter, FilterComposer {
                 }
 
                 /* if it is less than 20, just linear search the rest. */
-                if ( resultSet.lastSize ( ) < 20 ) {
-                    resultSet.andResults ( ); //consolidate now
+                if ( resultSet.lastSize () < 20 ) {
+                    resultSet.andResults (); //consolidate now
                     return foundIndex;
-                } else if ( resultSet.lastSize ( ) > 0 ) {
+                } else if ( resultSet.lastSize () > 0 ) {
                     //No op
                 }
 
             }
         }
         if ( foundIndex ) {
-            resultSet.andResults ( );
+            resultSet.andResults ();
         }
         return foundIndex;
     }
@@ -250,7 +250,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
     private void applyGroups( Set<Criteria> expressionSet, ResultSetInternal resultSet ) {
 
-        if ( expressionSet.size ( ) == 0 ) {
+        if ( expressionSet.size () == 0 ) {
             return;
         }
 
@@ -266,7 +266,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
     private void applyLinearSearch( Set<Criteria> expressionSet, ResultSetInternal resultSet, boolean foundIndex ) {
 
-        if ( expressionSet.size ( ) == 0 ) {
+        if ( expressionSet.size () == 0 ) {
             return;
         }
 
@@ -276,7 +276,7 @@ public class FilterDefault implements Filter, FilterComposer {
             resultSet.filterAndPrune ( CriteriaFactory.and ( expressions ) );
         } else {
             resultSet.addResults (
-                    QueryFactory.filter ( searchableCollection.all ( ),
+                    QueryFactory.filter ( searchableCollection.all (),
                             CriteriaFactory.and ( expressions ) )
             );
         }
@@ -294,16 +294,16 @@ public class FilterDefault implements Filter, FilterComposer {
     private boolean doFilterWithIndex( Criterion criterion, Map<String, FieldAccess> fields, ResultSetInternal resultSet ) {
 
 
-        boolean indexed = indexedOperators.contains ( criterion.getOperator ( ) );
+        boolean indexed = indexedOperators.contains ( criterion.getOperator () );
 
         if ( !indexed ) {
             return false;
         }
 
 
-        String name = criterion.getName ( );
-        Object value = criterion.getValue ( );
-        Operator operator = criterion.getOperator ( );
+        String name = criterion.getName ();
+        Object value = criterion.getValue ();
+        Operator operator = criterion.getOperator ();
         SearchIndex searchIndex = searchIndexMap.get ( name );
         LookupIndex lookupIndex = lookupIndexMap.get ( name );
         List resultList = null;
@@ -327,7 +327,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
         foundIndex = true;
 
-        if ( !criterion.isInitialized ( ) ) {
+        if ( !criterion.isInitialized () ) {
             criterion.initByFields ( this.fields );
         }
 
@@ -356,13 +356,13 @@ public class FilterDefault implements Filter, FilterComposer {
                 break;
 
             case BETWEEN:
-                resultList = searchIndex.findBetween ( criterion.getValue ( ), criterion.getValues ( )[1] );
+                resultList = searchIndex.findBetween ( criterion.getValue (), criterion.getValues ()[1] );
                 break;
 
 
         }
 
-        criterion.clean ( );
+        criterion.clean ();
 
         if ( resultList != null ) {
             resultSet.addResults ( resultList );
@@ -374,7 +374,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
     private List processResultsFromIndex( SearchIndex searchIndex, List results ) {
-        if ( searchIndex.isPrimaryKeyOnly ( ) ) {
+        if ( searchIndex.isPrimaryKeyOnly () ) {
             //TODO iterate through listStream and lookup items from keys, and put those in the actual results
             return null;
         } else {
@@ -404,7 +404,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
     @Override
-    public void init( ) {
+    public void init() {
 
     }
 }

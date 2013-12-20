@@ -7,7 +7,8 @@ import org.boon.json.implementation.JsonStringDecoder;
 import org.boon.primitive.CharScanner;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
 
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
@@ -20,14 +21,14 @@ public class ValueInCharBuf extends ValueBase {
         this.type = type;
     }
 
-    public ValueInCharBuf(  ) {
+    public ValueInCharBuf() {
 
     }
 
-    public ValueInCharBuf(boolean chop, Type type,  int startIndex, int endIndex, char [] buffer) {
+    public ValueInCharBuf( boolean chop, Type type, int startIndex, int endIndex, char[] buffer ) {
         this.type = type;
 
-        if (chop) {
+        if ( chop ) {
 
             this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
             this.startIndex = 0;
@@ -40,11 +41,10 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-
-    public ValueInCharBuf(boolean chop, Type type,  int startIndex, int endIndex, char [] buffer, boolean encoded) {
+    public ValueInCharBuf( boolean chop, Type type, int startIndex, int endIndex, char[] buffer, boolean encoded ) {
         this.type = type;
 
-        if (chop) {
+        if ( chop ) {
 
             this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
             this.startIndex = 0;
@@ -60,10 +60,10 @@ public class ValueInCharBuf extends ValueBase {
 
 
     public String toString() {
-        if (startIndex == 0 && endIndex == buffer.length ) {
-            return FastStringUtils.noCopyStringFromChars ( buffer ) ;
+        if ( startIndex == 0 && endIndex == buffer.length ) {
+            return FastStringUtils.noCopyStringFromChars ( buffer );
         } else {
-            return  new String ( buffer, startIndex, ( endIndex - startIndex ) );
+            return new String ( buffer, startIndex, ( endIndex - startIndex ) );
         }
     }
 
@@ -88,15 +88,15 @@ public class ValueInCharBuf extends ValueBase {
 
                 int sign = 1;
                 boolean negative = false;
-                if (buffer[startIndex]== '-') {
+                if ( buffer[startIndex] == '-' ) {
                     startIndex++;
-                    sign=-1;
+                    sign = -1;
                     negative = true;
 
                 }
 
 
-                if (isInteger(buffer, startIndex, endIndex - startIndex, negative)) {
+                if ( isInteger ( buffer, startIndex, endIndex - startIndex, negative ) ) {
                     return intValue () * sign;
                 } else {
                     return longValue () * sign;
@@ -173,30 +173,29 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-
     @Override
     public Date dateValue() {
 
 
-        if (type == Type.STRING ) {
+        if ( type == Type.STRING ) {
 
-            if (Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex )) {
+            if ( Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex ) ) {
 
-                if (Dates.isJsonDate ( buffer, startIndex, endIndex )) {
+                if ( Dates.isJsonDate ( buffer, startIndex, endIndex ) ) {
                     return Dates.fromJsonDate ( buffer, startIndex, endIndex );
 
-                } else if (Dates.isISO8601 ( buffer, startIndex, endIndex )) {
+                } else if ( Dates.isISO8601 ( buffer, startIndex, endIndex ) ) {
                     return Dates.fromISO8601 ( buffer, startIndex, endIndex );
                 } else {
-                    throw new JsonException ( "Unable to convert " + stringValue () +  " to date " );
+                    throw new JsonException ( "Unable to convert " + stringValue () + " to date " );
                 }
             } else {
 
-                throw new JsonException ( "Unable to convert " + stringValue () +  " to date " );
+                throw new JsonException ( "Unable to convert " + stringValue () + " to date " );
             }
         } else {
 
-            return new Date (Dates.utc ( longValue ()));
+            return new Date ( Dates.utc ( longValue () ) );
         }
 
     }
@@ -205,9 +204,9 @@ public class ValueInCharBuf extends ValueBase {
     @Override
     public int intValue() {
         int sign = 1;
-        if (buffer[startIndex]== '-') {
+        if ( buffer[startIndex] == '-' ) {
             startIndex++;
-            sign=-1;
+            sign = -1;
 
         }
         return parseInt ( buffer, startIndex, endIndex - startIndex ) * sign;
@@ -216,9 +215,9 @@ public class ValueInCharBuf extends ValueBase {
     @Override
     public long longValue() {
         long sign = 1;
-        if (buffer[startIndex]== '-') {
+        if ( buffer[startIndex] == '-' ) {
             startIndex++;
-            sign=-1;
+            sign = -1;
 
         }
         return parseLong ( buffer, startIndex, endIndex - startIndex ) * sign;
@@ -234,7 +233,7 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-    private static  float fpowersOf10[] = {
+    private static float fpowersOf10[] = {
             1.0f,
             10.0f,
             100.0f,
@@ -271,7 +270,7 @@ public class ValueInCharBuf extends ValueBase {
 
 
         int length = endIndex - startIndex;
-        if (length > 10) {
+        if ( length > 10 ) {
             return Float.parseFloat ( toString () ) * sign;
         }
         loop:
@@ -296,7 +295,7 @@ public class ValueInCharBuf extends ValueBase {
             }
             if ( foundPoint ) {
                 digitsPastPoint++;
-                if (digitsPastPoint >= fpowersOf10.length) {
+                if ( digitsPastPoint >= fpowersOf10.length ) {
                     simple = true;
                     break;
                 }
@@ -320,7 +319,7 @@ public class ValueInCharBuf extends ValueBase {
 
     }
 
-    public final void chop () {
+    public final void chop() {
         this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
         this.startIndex = 0;
         this.endIndex = this.buffer.length;

@@ -9,7 +9,7 @@ import java.util.List;
 public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, ITEM> {
     private final ObjectEditor<KEY, ITEM> objectEditorDefault;
 
-    public ObjectEditorDecoratorBase( ) {
+    public ObjectEditorDecoratorBase() {
         this.objectEditorDefault = null;
     }
 
@@ -18,7 +18,7 @@ public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, I
 
     }
 
-    public ObjectEditor<KEY, ITEM> delegate( ) {
+    public ObjectEditor<KEY, ITEM> delegate() {
         return objectEditorDefault;
     }
 
@@ -343,24 +343,24 @@ public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, I
         return objectEditorDefault.getKey ( item );
     }
 
-    public void clear( ) {
-        objectEditorDefault.clear ( );
+    public void clear() {
+        objectEditorDefault.clear ();
     }
 
     public boolean delete( ITEM item ) {
         return objectEditorDefault.delete ( item );
     }
 
-    public List<ITEM> all( ) {
-        return objectEditorDefault.all ( );
+    public List<ITEM> all() {
+        return objectEditorDefault.all ();
     }
 
-    public int size( ) {
-        return objectEditorDefault.size ( );
+    public int size() {
+        return objectEditorDefault.size ();
     }
 
-    public Collection<ITEM> toCollection( ) {
-        return objectEditorDefault.toCollection ( );
+    public Collection<ITEM> toCollection() {
+        return objectEditorDefault.toCollection ();
     }
 
 }

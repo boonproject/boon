@@ -26,14 +26,14 @@ public class CommonBridgeValidator extends BaseValidator {
     private Method validateMethod;
 
     public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
-        ValidatorMessage message = new ValidatorMessage ( );
+        ValidatorMessage message = new ValidatorMessage ();
         if ( object == null ) {
             return message;
         }
         boolean valid = false;
         try {
-            initValidatorIfNeeded ( );
-            initValidateMethodIfNeeded ( );
+            initValidatorIfNeeded ();
+            initValidateMethodIfNeeded ();
             valid = ( Boolean ) validateMethod.invoke ( validator, new Object[]{( String ) object} );
 
         } catch ( Exception exception ) {
@@ -47,7 +47,7 @@ public class CommonBridgeValidator extends BaseValidator {
         return message;
     }
 
-    private void initValidateMethodIfNeeded( ) throws Exception {
+    private void initValidateMethodIfNeeded() throws Exception {
         if ( validateMethod == null ) {
             validateMethod = validatorClass.getMethod ( methodName, new Class[]{String.class} );
         }
@@ -56,10 +56,10 @@ public class CommonBridgeValidator extends BaseValidator {
     /**
      * @throws Exception if something goes wrong
      */
-    private void initValidatorIfNeeded( ) throws Exception {
+    private void initValidatorIfNeeded() throws Exception {
         if ( validator == null ) {
             if ( factoryMethod == null ) {
-                validator = validatorClass.newInstance ( );
+                validator = validatorClass.newInstance ();
             } else {
                 Method method = validatorClass.getMethod ( factoryMethod );
                 validator = method.invoke ( null, ( Object[] ) null );

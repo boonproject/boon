@@ -23,11 +23,11 @@ public class QueryFactory {
 
 
     public static <T> List<T> filter( Collection<T> items, Criteria exp ) {
-        if ( items.size ( ) == 0 ) {
+        if ( items.size () == 0 ) {
             return Collections.EMPTY_LIST;
         }
 
-        List<T> results = new ArrayList<> ( );
+        List<T> results = new ArrayList<> ();
         for ( T item : items ) {
             if ( exp.test ( item ) ) {
                 results.add ( item );

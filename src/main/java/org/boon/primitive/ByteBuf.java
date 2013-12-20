@@ -3,7 +3,6 @@ package org.boon.primitive;
 import org.boon.Exceptions;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static org.boon.Exceptions.die;
@@ -40,15 +39,15 @@ public class ByteBuf implements Output {
 
     protected ByteBuf( int capacity ) {
         this.capacity = capacity;
-        init ( );
+        init ();
     }
 
 
-    protected ByteBuf( ) {
-        init ( );
+    protected ByteBuf() {
+        init ();
     }
 
-    private void init( ) {
+    private void init() {
         buffer = new byte[capacity];
     }
 
@@ -245,18 +244,18 @@ public class ByteBuf implements Output {
         return this;
     }
 
-    public byte[] readAndReset( ) {
+    public byte[] readAndReset() {
         byte[] bytes = this.buffer;
         this.buffer = null;
         return bytes;
     }
 
-    public byte[] readForRecycle( ) {
+    public byte[] readForRecycle() {
         this.length = 0;
         return this.buffer;
     }
 
-    public int len( ) {
+    public int len() {
         return length;
     }
 
@@ -646,7 +645,7 @@ public class ByteBuf implements Output {
         }
     }
 
-    public Input input( ) {
+    public Input input() {
         return new InputByteArray ( this.buffer );
     }
 
@@ -752,19 +751,19 @@ public class ByteBuf implements Output {
     }
 
 
-    public String toString( ) {
-        int len = len ( );
+    public String toString() {
+        int len = len ();
 
-        char [] chars = new char[buffer.length];
-        for (int index = 0; index < chars.length; index++) {
-            chars[index] = (char) buffer[index];
+        char[] chars = new char[buffer.length];
+        for ( int index = 0; index < chars.length; index++ ) {
+            chars[index] = ( char ) buffer[index];
         }
-        return new String(chars, 0, len);
+        return new String ( chars, 0, len );
         //return new String ( this.buffer, 0, len, StandardCharsets.UTF_8 );
     }
 
 
-    public byte[] toBytes( ) {
+    public byte[] toBytes() {
         return Byt.slc ( this.buffer, 0, length );
     }
 

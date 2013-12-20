@@ -15,14 +15,14 @@ import static org.boon.core.reflection.Reflection.joinBy;
 public abstract class Selector {
     protected String name;
 
-    public Selector( ) {
+    public Selector() {
     }
 
     public Selector( String n ) {
         name = n;
     }
 
-    public String getName( ) {
+    public String getName() {
         return name;
     }
 
@@ -52,7 +52,7 @@ public abstract class Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 Object selected = fields.get ( this.name ).getValue ( item );
-                row.put ( this.name, selected == null ? "" : selected.toString ( ) );
+                row.put ( this.name, selected == null ? "" : selected.toString () );
             }
 
             @Override
@@ -65,11 +65,11 @@ public abstract class Selector {
         };
     }
 
-    public static Selector toStr( ) {
+    public static Selector toStr() {
         return new Selector ( "toString()" ) {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-                row.put ( this.name, item.toString ( ) );
+                row.put ( this.name, item.toString () );
             }
 
             @Override
@@ -118,7 +118,7 @@ public abstract class Selector {
                 Object o = getPropByPath ( item, path );
 
 
-                row.put ( this.name, o == null ? "" : o.toString ( ) );
+                row.put ( this.name, o == null ? "" : o.toString () );
             }
 
 
@@ -153,7 +153,7 @@ public abstract class Selector {
         };
     }
 
-    public static Selector rowId( ) {
+    public static Selector rowId() {
 
         return new Selector ( "rowId" ) {
             @Override
@@ -173,7 +173,7 @@ public abstract class Selector {
 
 
     public static <ITEM> List<Map<String, Object>> performSelection( List<Selector> selectors, List<ITEM> results, Map<String, FieldAccess> fields ) {
-        List<Map<String, Object>> rows = new ArrayList<> ( results.size ( ) );
+        List<Map<String, Object>> rows = new ArrayList<> ( results.size () );
 
 
         for ( Selector s : selectors ) {
@@ -183,7 +183,7 @@ public abstract class Selector {
 
         int index = 0;
         for ( ITEM item : results ) {
-            Map<String, Object> row = new LinkedHashMap<> ( );
+            Map<String, Object> row = new LinkedHashMap<> ();
             for ( Selector s : selectors ) {
                 s.handleRow ( index, row, item, fields );
             }

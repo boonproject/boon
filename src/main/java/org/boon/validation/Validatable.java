@@ -6,5 +6,5 @@ package org.boon.validation;
  * @author Paul
  */
 public interface Validatable {
-    void validate( ) throws ValidationException;
+    void validate() throws ValidationException;
 }

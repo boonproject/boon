@@ -13,14 +13,14 @@ import java.util.Map;
 public class ValidatorMetaData {
     private String name = null;
 
-    private Map<String, Object> properties = new HashMap<> ( );
+    private Map<String, Object> properties = new HashMap<> ();
 
 
     public static ValidatorMetaData validatorMeta( String name, Map<String, Object> properties ) {
         return new ValidatorMetaData ( name, properties );
     }
 
-    public ValidatorMetaData( ) {
+    public ValidatorMetaData() {
     }
 
     public ValidatorMetaData( String name, Map<String, Object> properties ) {
@@ -32,7 +32,7 @@ public class ValidatorMetaData {
         this.name = name;
     }
 
-    public String getName( ) {
+    public String getName() {
         return name;
     }
 
@@ -40,7 +40,7 @@ public class ValidatorMetaData {
         this.properties = properties;
     }
 
-    public Map<String, Object> getProperties( ) {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 }

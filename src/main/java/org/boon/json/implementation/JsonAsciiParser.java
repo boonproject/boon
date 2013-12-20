@@ -8,7 +8,7 @@ import org.boon.json.JsonParser;
 public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonParser {
 
 
-    protected  final void addChar() {
+    protected final void addChar() {
         builder.addChar ( __currentChar );
     }
 

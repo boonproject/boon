@@ -23,7 +23,7 @@ import static org.boon.Str.slc;
 //import java.util.stream.CloseableStream;
 
 
-@SuppressWarnings( "unchecked" )
+@SuppressWarnings("unchecked")
 public class IO {
 
 
@@ -342,7 +342,7 @@ public class IO {
     public static CharBuf read( Reader input, CharBuf charBuf, final int bufSize ) {
 
         if ( charBuf == null ) {
-            charBuf = CharBuf.create ( bufSize  );
+            charBuf = CharBuf.create ( bufSize );
         } else {
             charBuf.readForRecycle ();
         }
@@ -375,6 +375,7 @@ public class IO {
 
 
     }
+
     public static CharBuf read( Reader input, CharBuf charBuf ) {
         return read ( input, charBuf, 2048 );
     }

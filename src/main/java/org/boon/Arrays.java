@@ -24,7 +24,7 @@ public class Arrays {
 
     public static <V> V[] grow( V[] array, int size ) {
         Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ),
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
                 array.length + size );
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return ( V[] ) newArray;
@@ -33,7 +33,7 @@ public class Arrays {
 
     public static <V> V[] grow( V[] array ) {
         Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ),
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
                 array.length * 2 );
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return ( V[] ) newArray;
@@ -41,7 +41,7 @@ public class Arrays {
 
     public static <V> V[] shrink( V[] array, int size ) {
         Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ),
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
                 array.length - size );
         System.arraycopy ( array, 0, ( V[] ) newArray, 0, array.length - size );
         return ( V[] ) newArray;
@@ -57,7 +57,7 @@ public class Arrays {
                 nullCount++;
             }
         }
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ),
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
                 array.length - nullCount );
 
         int j = 0;
@@ -116,7 +116,7 @@ public class Arrays {
             );
         }
 
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ), newLength );
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), newLength );
         System.arraycopy ( array, start, newArray, 0, newLength );
         return ( V[] ) newArray;
     }
@@ -146,7 +146,7 @@ public class Arrays {
             );
         }
 
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ), newLength );
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), newLength );
         System.arraycopy ( array, start, newArray, 0, newLength );
         return ( V[] ) newArray;
     }
@@ -155,7 +155,7 @@ public class Arrays {
     @Universal
     public static <V> V[] copy( V[] array ) {
         Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ), array.length );
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length );
         System.arraycopy ( array, 0, newArray, 0, array.length );
         return ( V[] ) newArray;
     }
@@ -164,7 +164,7 @@ public class Arrays {
     @Universal
     public static <V> V[] add( V[] array, V v ) {
         Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ), array.length + 1 );
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length + 1 );
         System.arraycopy ( array, 0, newArray, 0, array.length );
         Array.set ( newArray, array.length, v );
         return ( V[] ) newArray;
@@ -174,7 +174,7 @@ public class Arrays {
     @Universal
     public static <V> V[] add( V[] array, V[] array2 ) {
         Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ), array.length + array2.length );
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length + array2.length );
         System.arraycopy ( array, 0, newArray, 0, array.length );
         System.arraycopy ( array2, 0, newArray, array.length, array2.length );
 
@@ -184,7 +184,7 @@ public class Arrays {
     @Universal
     public static <V> V[] insert( V[] array, int index, V v ) {
         Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ), array.length + 1 );
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length + 1 );
         if ( index != 0 ) {
             System.arraycopy ( array, 0, newArray, 0, index );
         }
@@ -220,7 +220,7 @@ public class Arrays {
             );
         }
 
-        Object newArray = Array.newInstance ( array.getClass ( ).getComponentType ( ), newLength );
+        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), newLength );
         System.arraycopy ( array, 0, newArray, 0, newLength );
         return ( V[] ) newArray;
     }
@@ -258,9 +258,9 @@ public class Arrays {
 
     @SuppressWarnings("unchecked")
     public static <V> V[] array( Collection<V> collection ) {
-        if ( collection.size ( ) > 0 ) {
-            Object newInstance = Array.newInstance ( collection.iterator ( ).next ( ).getClass ( ),
-                    collection.size ( ) );
+        if ( collection.size () > 0 ) {
+            Object newInstance = Array.newInstance ( collection.iterator ().next ().getClass (),
+                    collection.size () );
             return collection.toArray ( ( V[] ) newInstance );
         } else {
             die ( "array(listStream): The collection has to have at least one item in it" );

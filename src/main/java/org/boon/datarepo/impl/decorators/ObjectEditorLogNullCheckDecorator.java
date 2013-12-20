@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDecoratorBase<KEY, ITEM> {
 
-    Logger logger = Logger.getLogger ( ObjectEditorLogNullCheckDecorator.class.getName ( ) );
+    Logger logger = Logger.getLogger ( ObjectEditorLogNullCheckDecorator.class.getName () );
     Level level = Level.FINER;
 
 
@@ -41,7 +41,7 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
         this.logger = logger;
     }
 
-    public ObjectEditorLogNullCheckDecorator( ) {
+    public ObjectEditorLogNullCheckDecorator() {
 
 
     }

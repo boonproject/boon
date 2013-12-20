@@ -12,7 +12,7 @@ public interface SearchableCollectionComposer {
 
     void setPrimaryKeyGetter( Function function );
 
-    void init( );
+    void init();
 
     void setFields( Map<String, FieldAccess> fields );
 

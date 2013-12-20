@@ -30,13 +30,13 @@ public interface Bag<ITEM> {
 
     boolean delete( ITEM item );
 
-    List<ITEM> all( );
+    List<ITEM> all();
 
-    int size( );
+    int size();
 
-    Collection<ITEM> toCollection( );
+    Collection<ITEM> toCollection();
 
-    void clear( );
+    void clear();
 
 
 }

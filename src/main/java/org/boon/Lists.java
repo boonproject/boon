@@ -12,11 +12,11 @@ public class Lists {
 
 
     public static <V> List<V> list( Class<V> clazz ) {
-        return new ArrayList<> ( );
+        return new ArrayList<> ();
     }
 
     public static <V> List<V> list( Iterable<V> iterable ) {
-        List<V> list = new ArrayList<> ( );
+        List<V> list = new ArrayList<> ();
         for ( V o : iterable ) {
             list.add ( o );
         }
@@ -26,10 +26,10 @@ public class Lists {
 
     public static List<?> toList( Object item ) {
         if ( item == null ) {
-            return new ArrayList<> ( );
-        } else if ( item.getClass ( ).isArray ( ) ) {
+            return new ArrayList<> ();
+        } else if ( item.getClass ().isArray () ) {
             final int length = Array.getLength ( item );
-            List<Object> list = new ArrayList<> ( );
+            List<Object> list = new ArrayList<> ();
             for ( int index = 0; index < length; index++ ) {
                 list.add ( Array.get ( item, index ) );
             }
@@ -43,7 +43,7 @@ public class Lists {
         } else if ( item instanceof Iterable ) {
             return list ( ( Iterable ) item );
         } else {
-            List<Object> list = new ArrayList<> ( );
+            List<Object> list = new ArrayList<> ();
             list.add ( item );
             return list;
         }
@@ -54,25 +54,25 @@ public class Lists {
     }
 
     public static <V> List<V> list( Enumeration<V> enumeration ) {
-        List<V> list = new ArrayList<> ( );
-        while ( enumeration.hasMoreElements ( ) ) {
-            list.add ( enumeration.nextElement ( ) );
+        List<V> list = new ArrayList<> ();
+        while ( enumeration.hasMoreElements () ) {
+            list.add ( enumeration.nextElement () );
         }
         return list;
     }
 
 
     public static <V> Enumeration<V> enumeration( final List<V> list ) {
-        final Iterator<V> iter = list.iterator ( );
-        return new Enumeration<V> ( ) {
+        final Iterator<V> iter = list.iterator ();
+        return new Enumeration<V> () {
             @Override
-            public boolean hasMoreElements( ) {
-                return iter.hasNext ( );
+            public boolean hasMoreElements() {
+                return iter.hasNext ();
             }
 
             @Override
-            public V nextElement( ) {
-                return iter.next ( );
+            public V nextElement() {
+                return iter.next ();
             }
         };
 
@@ -80,16 +80,16 @@ public class Lists {
 
 
     public static <V> List<V> list( Iterator<V> iterator ) {
-        List<V> list = new ArrayList<> ( );
-        while ( iterator.hasNext ( ) ) {
-            list.add ( iterator.next ( ) );
+        List<V> list = new ArrayList<> ();
+        while ( iterator.hasNext () ) {
+            list.add ( iterator.next () );
         }
         return list;
     }
 
     public static <V, N> List<N> list( Function<V, N> function, final V... array ) {
         if ( array == null ) {
-            return new ArrayList<> ( );
+            return new ArrayList<> ();
         }
         List<N> list = new ArrayList<> ( array.length );
 
@@ -103,7 +103,7 @@ public class Lists {
     @SafeVarargs
     public static <V> List<V> list( final V... array ) {
         if ( array == null ) {
-            return new ArrayList<> ( );
+            return new ArrayList<> ();
         }
         List<V> list = new ArrayList<> ( array.length );
         Collections.addAll ( list, array );
@@ -118,9 +118,9 @@ public class Lists {
     @SafeVarargs
     public static <V> List<V> linkedList( final V... array ) {
         if ( array == null ) {
-            return new ArrayList<> ( );
+            return new ArrayList<> ();
         }
-        List<V> list = new LinkedList<> ( );
+        List<V> list = new LinkedList<> ();
         Collections.addAll ( list, array );
         return list;
     }
@@ -139,11 +139,11 @@ public class Lists {
      */
     @Universal
     public static int len( List<?> list ) {
-        return list.size ( );
+        return list.size ();
     }
 
     public static boolean isEmpty( List<?> list ) {
-        return list == null || list.size ( ) == 0;
+        return list == null || list.size () == 0;
     }
 
     @Universal
@@ -159,8 +159,8 @@ public class Lists {
     @Universal
     public static <T> T idx( List<T> list, final int index ) {
         int i = calculateIndex ( list, index );
-        if ( i > list.size ( ) - 1 ) {
-            i = list.size ( ) - 1;
+        if ( i > list.size () - 1 ) {
+            i = list.size () - 1;
         }
         return list.get ( i );
 
@@ -181,7 +181,7 @@ public class Lists {
 
     @Universal
     public static <V> List<V> slc( List<V> list, int startIndex ) {
-        return slc ( list, startIndex, list.size ( ) );
+        return slc ( list, startIndex, list.size () );
     }
 
 
@@ -230,7 +230,7 @@ public class Lists {
 
     /* End universal methods. */
     private static <T> int calculateIndex( List<T> list, int originalIndex ) {
-        final int length = list.size ( );
+        final int length = list.size ();
 
         Objects.requireNonNull ( list, "listStream cannot be null" );
 
@@ -260,7 +260,7 @@ public class Lists {
 
 
     public static <T> List<T> listFromProperty( Class<T> propertyType, String propertyPath, Collection<?> list ) {
-        List<T> newList = new ArrayList<> ( list.size ( ) );
+        List<T> newList = new ArrayList<> ( list.size () );
 
         for ( Object item : list ) {
             T newItem = ( T ) Reflection.idx ( item, propertyPath );

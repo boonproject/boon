@@ -1,7 +1,6 @@
 package org.boon.primitive;
 
 
-import org.boon.Arrays;
 import org.boon.Exceptions;
 import org.boon.Universal;
 
@@ -36,7 +35,7 @@ public class Chr {
 
     @Universal
     public static char[] chars( final String array ) {
-        return array.toCharArray ( );
+        return array.toCharArray ();
     }
 
     @Universal
@@ -250,7 +249,7 @@ public class Chr {
 
     @Universal
     public static char[] add( char[] array, String str ) {
-        return add ( array, str.toCharArray ( ) );
+        return add ( array, str.toCharArray () );
     }
 
     @Universal
@@ -311,7 +310,7 @@ public class Chr {
 
     @Universal
     public static char[] insert( final char[] array, final int fromIndex, String values ) {
-        return insert ( array, fromIndex, values.toCharArray ( ) );
+        return insert ( array, fromIndex, values.toCharArray () );
     }
 
 
@@ -370,9 +369,9 @@ public class Chr {
 
 
     private static char[] getCharsFromStringBuilder( StringBuilder sbuf ) {
-        int length = sbuf.length ( );
-        char[] array2 = new char[sbuf.length ( )];
-        sbuf.getChars ( 0, sbuf.length ( ), array2, 0 );
+        int length = sbuf.length ();
+        char[] array2 = new char[sbuf.length ()];
+        sbuf.getChars ( 0, sbuf.length (), array2, 0 );
         return array2;
     }
 
@@ -561,10 +560,10 @@ public class Chr {
     }
 
 
-    public static boolean contains ( char[] chars, char c ) {
-        for (int index = 0; index < chars.length; index++) {
+    public static boolean contains( char[] chars, char c ) {
+        for ( int index = 0; index < chars.length; index++ ) {
             char ch = chars[index];
-            if (ch == c) {
+            if ( ch == c ) {
                 return true;
             }
         }
@@ -572,13 +571,11 @@ public class Chr {
     }
 
 
-
-
-    public static boolean contains ( char[] chars, char c, int start, final int length ) {
+    public static boolean contains( char[] chars, char c, int start, final int length ) {
         final int to = length + start;
-        for (int index = start; index < to; index++) {
+        for ( int index = start; index < to; index++ ) {
             char ch = chars[index];
-            if (ch == c) {
+            if ( ch == c ) {
                 return true;
             }
         }
@@ -587,13 +584,11 @@ public class Chr {
 
     public static void _idx( char[] buffer, int location, byte[] chars ) {
         int index2 = 0;
-        int endLocation =  (location + chars.length);
-        for (int index = location; index < endLocation; index++, index2++ ) {
-            buffer[index] = (char) chars [index2];
+        int endLocation = ( location + chars.length );
+        for ( int index = location; index < endLocation; index++, index2++ ) {
+            buffer[index] = ( char ) chars[index2];
         }
     }
-
-
 
 
     public static void _idx( final char[] array, int startIndex, char[] input ) {
@@ -619,28 +614,27 @@ public class Chr {
     public static void _idx( char[] buffer, int location, byte[] chars, int start, int end ) {
 
         int index2 = start;
-        int endLocation =  (location + (end - start));
-        for (int index = location; index < endLocation; index++, index2++ ) {
-            buffer[index] = (char) chars [index2];
+        int endLocation = ( location + ( end - start ) );
+        for ( int index = location; index < endLocation; index++, index2++ ) {
+            buffer[index] = ( char ) chars[index2];
         }
 
     }
 
 
+    public static char[] trim( char[] buffer, int start, int to ) {
 
-    public static char[] trim(char [] buffer, int start, int to) {
 
-
-        while ((start < to) && (
-                 buffer[start] <= ' ' ) ) {
+        while ( ( start < to ) && (
+                buffer[start] <= ' ' ) ) {
             start++;
         }
-        while ((start < to) && (
-                buffer[to -1] <= ' ') ) {
+        while ( ( start < to ) && (
+                buffer[to - 1] <= ' ' ) ) {
             to--;
         }
-        return ((start > 0) || (to < buffer.length)) ?
-                java.util.Arrays.copyOfRange (buffer, start, to ) : buffer;
+        return ( ( start > 0 ) || ( to < buffer.length ) ) ?
+                java.util.Arrays.copyOfRange ( buffer, start, to ) : buffer;
     }
 
 

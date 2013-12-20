@@ -12,14 +12,14 @@ public class Boon {
         Sys.println ( message );
     }
 
-    public static void println( ) {
+    public static void println() {
         Sys.println ( "" );
     }
 
     public static void println( Object message ) {
 
         print ( message );
-        println ( );
+        println ();
     }
 
     public static void print( String message ) {
@@ -30,10 +30,10 @@ public class Boon {
 
         if ( message == null ) {
             print ( "<NULL>" );
-        } else if ( message.getClass ( ).isArray ( ) ) {
-            print ( toList ( message ).toString ( ) );
+        } else if ( message.getClass ().isArray () ) {
+            print ( toList ( message ).toString () );
         } else {
-            print ( message.toString ( ) );
+            print ( message.toString () );
         }
     }
 
@@ -43,7 +43,7 @@ public class Boon {
             print ( message );
             print ( ' ' );
         }
-        println ( );
+        println ();
 
     }
 
@@ -51,9 +51,9 @@ public class Boon {
 
         for ( Object message : messages ) {
             print ( message );
-            println ( );
+            println ();
         }
-        println ( );
+        println ();
 
     }
 
@@ -73,16 +73,16 @@ public class Boon {
         for ( Object message : messages ) {
             if ( message == null ) {
                 buf.add ( "<NULL>" );
-            } else if ( message.getClass ( ).isArray ( ) ) {
-                buf.add ( toList ( message ).toString ( ) );
+            } else if ( message.getClass ().isArray () ) {
+                buf.add ( toList ( message ).toString () );
             } else {
-                buf.add ( message.toString ( ) );
+                buf.add ( message.toString () );
             }
             buf.add ( '\n' );
         }
         buf.add ( '\n' );
 
-        return buf.toString ( );
+        return buf.toString ();
 
 
     }
@@ -98,15 +98,15 @@ public class Boon {
 
             if ( message == null ) {
                 buf.add ( "<NULL>" );
-            } else if ( message.getClass ( ).isArray ( ) ) {
-                buf.add ( toList ( message ).toString ( ) );
+            } else if ( message.getClass ().isArray () ) {
+                buf.add ( toList ( message ).toString () );
             } else {
-                buf.add ( message.toString ( ) );
+                buf.add ( message.toString () );
             }
         }
         buf.add ( '\n' );
 
-        return buf.toString ( );
+        return buf.toString ();
 
     }
 

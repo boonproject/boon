@@ -9,45 +9,46 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     Map<String, Value> map = null;
 
-    public Entry<String, Value>[] items = new  Entry[ 20 ];
+    public Entry<String, Value>[] items = new Entry[20];
 
     int len = 0;
 
-    public void add (MapItemValue miv) {
-         if (len == items.length) {
-            items =  org.boon.Arrays.grow ( items );
-         }
-         items [len] = miv;
-         len++;
+    public void add( MapItemValue miv ) {
+        if ( len == items.length ) {
+            items = org.boon.Arrays.grow ( items );
+        }
+        items[len] = miv;
+        len++;
 
     }
 
 
-    static class FakeSet extends AbstractSet <Entry<String, Value>> {
+    static class FakeSet extends AbstractSet<Entry<String, Value>> {
         @Override
         public <T> T[] toArray( T[] a ) {
-            return (T[]) items;
+            return ( T[] ) items;
         }
 
         Entry<String, Value>[] items;
 
-        FakeSet (Entry<String, Value>[] items  ) {
+        FakeSet( Entry<String, Value>[] items ) {
 
             this.items = items;
         }
 
         @Override
         public Iterator<Entry<String, Value>> iterator() {
-            return  new Iterator<Entry<String, Value>> () {
+            return new Iterator<Entry<String, Value>> () {
                 int location = 0;
+
                 @Override
                 public boolean hasNext() {
-                     return location < items.length;
+                    return location < items.length;
                 }
 
                 @Override
                 public Entry<String, Value> next() {
-                       return items[location++];
+                    return items[location++];
 
                 }
 
@@ -72,8 +73,8 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
     public Value get( Object key ) {
         if ( map == null && items.length < 20 ) {
             for ( Object item : items ) {
-                MapItemValue miv = ( MapItemValue) item;
-                if ( key.equals ( miv.name().toValue () ) ) {
+                MapItemValue miv = ( MapItemValue ) item;
+                if ( key.equals ( miv.name ().toValue () ) ) {
                     return miv.value;
                 }
             }
@@ -94,7 +95,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     @Override
     public Set<Entry<String, Value>> entrySet() {
-        if ( map == null )  {
+        if ( map == null ) {
             return set;
         } else {
             return map.entrySet ();

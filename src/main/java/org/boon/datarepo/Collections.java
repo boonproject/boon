@@ -101,14 +101,14 @@ public class Collections {
      * @return generic listStream decorated with criteria features.
      */
     public static <T> List<T> listQuery( final List<T> list, boolean useField, boolean useUnSafe, Class<?>... classes ) {
-        if ( list == null || list.size ( ) == 0 ) {
+        if ( list == null || list.size () == 0 ) {
             return list;
         }
 
         SearchableCollectionComposer query = null;
 
         if ( classes == null || classes.length == 0 ) {
-            Class<?> clazz = list.get ( 0 ).getClass ( );
+            Class<?> clazz = list.get ( 0 ).getClass ();
 
             query = getSearchableCollectionComposer ( list, useField, useUnSafe, clazz );
 
@@ -179,11 +179,11 @@ public class Collections {
      * @return
      */
     public static <T> Set<T> setQuery( final Set<T> set, boolean useField, boolean useUnSafe ) {
-        if ( set == null || set.size ( ) == 0 ) {
+        if ( set == null || set.size () == 0 ) {
             return set;
         }
 
-        Class<?> clazz = set.iterator ( ).next ( ).getClass ( );
+        Class<?> clazz = set.iterator ().next ().getClass ();
 
         SearchableCollectionComposer query = getSearchableCollectionComposer ( set, useField, useUnSafe, clazz );
 
@@ -201,17 +201,17 @@ public class Collections {
      * @return
      */
     private static <T> SearchableCollectionComposer getSearchableCollectionComposer( Collection set, boolean useField, boolean useUnSafe, Class<?>... classes ) {
-        SearchableCollectionComposer query = SPIFactory.getSearchableCollectionFactory ( ).get ( );
+        SearchableCollectionComposer query = SPIFactory.getSearchableCollectionFactory ().get ();
 
 
-        Map<String, FieldAccess> fields = new LinkedHashMap<> ( );
+        Map<String, FieldAccess> fields = new LinkedHashMap<> ();
 
         for ( Class<?> cls : classes ) {
 
             Map<String, FieldAccess> fieldsSubType
                     = Reflection.getPropertyFieldAccessMap ( cls, useField, useUnSafe );
 
-            for ( String sKey : fieldsSubType.keySet ( ) ) {
+            for ( String sKey : fieldsSubType.keySet () ) {
                 if ( !fields.containsKey ( sKey ) ) {
                     fields.put ( sKey, fieldsSubType.get ( sKey ) );
                 }
@@ -227,25 +227,25 @@ public class Collections {
         query.setFields ( fields );
         query.setPrimaryKeyGetter ( keyGetter );
         query.setPrimaryKeyName ( primaryKey );
-        Filter filter = SPIFactory.getFilterFactory ( ).get ( );
+        Filter filter = SPIFactory.getFilterFactory ().get ();
         query.setFilter ( filter );
 
 
-        LookupIndex index = SPIFactory.getUniqueLookupIndexFactory ( ).apply ( fields.get ( primaryKey ).getType ( ) );
+        LookupIndex index = SPIFactory.getUniqueLookupIndexFactory ().apply ( fields.get ( primaryKey ).getType () );
         index.setKeyGetter ( keyGetter );
         ( ( SearchableCollection ) query ).addLookupIndex ( primaryKey, index );
 
 
-        for ( FieldAccess f : fields.values ( ) ) {
-            if ( f.getName ( ).equals ( primaryKey ) ) {
+        for ( FieldAccess f : fields.values () ) {
+            if ( f.getName ().equals ( primaryKey ) ) {
                 continue;
             }
-            if ( Typ.isBasicType ( f.getType ( ) ) ) {
-                configIndexes ( ( SearchableCollection ) query, f.getName ( ), fields );
+            if ( Typ.isBasicType ( f.getType () ) ) {
+                configIndexes ( ( SearchableCollection ) query, f.getName (), fields );
             }
         }
 
-        query.init ( );
+        query.init ();
 
         query.setFilter ( new FilterWithSimpleCache ( filter ) );
 
@@ -265,7 +265,7 @@ public class Collections {
     public static <T> List<T> query( final List<T> list, Criteria... expressions ) {
         if ( list instanceof QList ) {
             QList qlist = ( QList ) list;
-            return qlist.searchCollection ( ).query ( expressions );
+            return qlist.searchCollection ().query ( expressions );
         } else {
             throw new DataRepoException ( "Not a criteria-able listStream." );
         }
@@ -282,7 +282,7 @@ public class Collections {
     public static <T> List<T> sortedQuery( final List<T> list, String sortBy, Criteria... expressions ) {
         if ( list instanceof QList ) {
             QList qlist = ( QList ) list;
-            return qlist.searchCollection ( ).sortedQuery ( sortBy, expressions );
+            return qlist.searchCollection ().sortedQuery ( sortBy, expressions );
         } else {
             throw new DataRepoException ( "Not a criteria-able listStream." );
         }
@@ -300,7 +300,7 @@ public class Collections {
     public static <T> List<T> query( final Set<T> set, Criteria... expressions ) {
         if ( set instanceof QSet ) {
             QSet qset = ( QSet ) set;
-            return qset.searchCollection ( ).query ( expressions );
+            return qset.searchCollection ().query ( expressions );
         }
         return null;
     }
@@ -316,7 +316,7 @@ public class Collections {
     public static <T> List<T> sortedQuery( final Set<T> set, String sortBy, Criteria... expressions ) {
         if ( set instanceof QSet ) {
             QSet qset = ( QSet ) set;
-            return qset.searchCollection ( ).sortedQuery ( sortBy, expressions );
+            return qset.searchCollection ().sortedQuery ( sortBy, expressions );
         }
         return null;
     }
@@ -342,11 +342,11 @@ public class Collections {
     private static Function createKeyGetter( final FieldAccess field ) {
 
         Objects.requireNonNull ( field, "field cannot be null" );
-        return new Function ( ) {
+        return new Function () {
             @Override
             public Object apply( Object o ) {
 
-                if ( Reflection.hasField ( o.getClass ( ), field.getName ( ) ) ) {
+                if ( Reflection.hasField ( o.getClass (), field.getName () ) ) {
                     return field.getValue ( o );
                 } else {
                     return null;
@@ -385,22 +385,22 @@ public class Collections {
 
 
         @Override
-        public Iterator<T> iterator( ) {
-            return set.iterator ( );
+        public Iterator<T> iterator() {
+            return set.iterator ();
         }
 
         @Override
-        public int size( ) {
-            return set.size ( );
+        public int size() {
+            return set.size ();
         }
 
         @Override
-        public SearchableCollection searchCollection( ) {
+        public SearchableCollection searchCollection() {
             return searchCollection;
         }
 
         @Override
-        public Collection collection( ) {
+        public Collection collection() {
             return set;
         }
     }
@@ -437,18 +437,18 @@ public class Collections {
 
 
         @Override
-        public int size( ) {
-            return list.size ( );
+        public int size() {
+            return list.size ();
         }
 
 
         @Override
-        public SearchableCollection searchCollection( ) {
+        public SearchableCollection searchCollection() {
             return query;
         }
 
         @Override
-        public Collection collection( ) {
+        public Collection collection() {
             return this.list;
         }
     }
@@ -464,13 +464,13 @@ public class Collections {
     private static void configIndexes( SearchableCollection query, String prop,
                                        Map<String, FieldAccess> fields ) {
 
-        SearchIndex searchIndex = SPIFactory.getSearchIndexFactory ( ).apply ( fields.get ( prop ).getType ( ) );
-        searchIndex.init ( );
+        SearchIndex searchIndex = SPIFactory.getSearchIndexFactory ().apply ( fields.get ( prop ).getType () );
+        searchIndex.init ();
         Function kg = createKeyGetter ( fields.get ( prop ) );
         searchIndex.setKeyGetter ( kg );
         query.addSearchIndex ( prop, searchIndex );
 
-        LookupIndex index = SPIFactory.getLookupIndexFactory ( ).apply ( fields.get ( prop ).getType ( ) );
+        LookupIndex index = SPIFactory.getLookupIndexFactory ().apply ( fields.get ( prop ).getType () );
         index.setKeyGetter ( kg );
         query.addLookupIndex ( prop, index );
 

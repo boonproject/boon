@@ -16,7 +16,7 @@ import static org.boon.core.reflection.Conversions.*;
 public abstract class UnsafeField implements FieldAccess {
 
 
-    private static Unsafe getUnsafe( ) {
+    private static Unsafe getUnsafe() {
         try {
             Field f = Unsafe.class.getDeclaredField ( "theUnsafe" );
             f.setAccessible ( true );
@@ -26,7 +26,7 @@ public abstract class UnsafeField implements FieldAccess {
         }
     }
 
-    static final Unsafe unsafe = getUnsafe ( );
+    static final Unsafe unsafe = getUnsafe ();
     protected final Field field;
     protected long offset;
     protected final boolean isFinal;
@@ -40,8 +40,8 @@ public abstract class UnsafeField implements FieldAccess {
 
 
     public static UnsafeField createUnsafeField( Field field ) {
-        Class<?> type = field.getType ( );
-        boolean isVolatile = Modifier.isVolatile ( field.getModifiers ( ) );
+        Class<?> type = field.getType ();
+        boolean isVolatile = Modifier.isVolatile ( field.getModifiers () );
         if ( !isVolatile ) {
             if ( type == Typ.intgr ) {
                 return new IntUnsafeField ( field );
@@ -88,11 +88,11 @@ public abstract class UnsafeField implements FieldAccess {
 
 
     protected UnsafeField( Field f ) {
-        name = f.getName ( );
+        name = f.getName ();
         field = f;
 
-        isFinal = Modifier.isFinal ( field.getModifiers ( ) );
-        isStatic = Modifier.isStatic ( field.getModifiers ( ) );
+        isFinal = Modifier.isFinal ( field.getModifiers () );
+        isStatic = Modifier.isStatic ( field.getModifiers () );
 
         if ( isStatic ) {
             base = unsafe.staticFieldBase ( field );
@@ -101,10 +101,10 @@ public abstract class UnsafeField implements FieldAccess {
             offset = unsafe.objectFieldOffset ( field );
             base = null;
         }
-        isVolatile = Modifier.isVolatile ( field.getModifiers ( ) );
+        isVolatile = Modifier.isVolatile ( field.getModifiers () );
         qualified = isFinal || isVolatile;
         readOnly = isFinal || isStatic;
-        type = f.getType ( );
+        type = f.getType ();
     }
 
 
@@ -147,14 +147,13 @@ public abstract class UnsafeField implements FieldAccess {
             return;
         }
 
-        if ( type == Typ.string  ) {
+        if ( type == Typ.string ) {
             setObject ( obj, Conversions.coerce ( type, value ) );
         } else if ( type == Typ.intgr ) {
             setInt ( obj, toInt ( value ) );
-        } else if ( type == Typ.bln )  {
+        } else if ( type == Typ.bln ) {
             setBoolean ( obj, toBoolean ( value ) );
-        }
-        else if ( type == Typ.lng ) {
+        } else if ( type == Typ.lng ) {
             setLong ( obj, toLong ( value ) );
         } else if ( type == Typ.bt ) {
             setByte ( obj, toByte ( value ) );
@@ -177,7 +176,7 @@ public abstract class UnsafeField implements FieldAccess {
 
     }
 
-    public  void setFromValue( Object obj, Value value ) {
+    public void setFromValue( Object obj, Value value ) {
 
         if ( type == Typ.string ) {
             setObject ( obj, value.stringValue () );
@@ -189,7 +188,7 @@ public abstract class UnsafeField implements FieldAccess {
             setDouble ( obj, value.doubleValue () );
         } else if ( type == Typ.lng ) {
             setDouble ( obj, value.longValue () );
-        } else if ( type == Typ.bt)  {
+        } else if ( type == Typ.bt ) {
             setByte ( obj, value.byteValue () );
         } else if ( type == Typ.bln ) {
             setBoolean ( obj, value.booleanValue () );
@@ -203,7 +202,7 @@ public abstract class UnsafeField implements FieldAccess {
             setObject ( obj, value.doubleValue () );
         } else if ( type == Typ.longWrapper ) {
             setObject ( obj, value.longValue () );
-        } else if ( type == Typ.byteWrapper)  {
+        } else if ( type == Typ.byteWrapper ) {
             setObject ( obj, value.byteValue () );
         } else if ( type == Typ.bool ) {
             setObject ( obj, value.booleanValue () );
@@ -213,10 +212,10 @@ public abstract class UnsafeField implements FieldAccess {
             setObject ( obj, value.bigDecimalValue () );
         } else if ( type == Typ.bigInteger ) {
             setObject ( obj, value.bigIntegerValue () );
-        } else if (type == Typ.date) {
-            setObject ( obj, value.dateValue() );
+        } else if ( type == Typ.date ) {
+            setObject ( obj, value.dateValue () );
         } else {
-            setObject (obj, coerce ( type, value ));
+            setObject ( obj, coerce ( type, value ) );
         }
     }
 
@@ -283,68 +282,68 @@ public abstract class UnsafeField implements FieldAccess {
     }
 
 
-    public boolean getStaticBoolean( ) {
+    public boolean getStaticBoolean() {
         return getBoolean ( base );
     }
 
 
-    public int getStaticInt( ) {
+    public int getStaticInt() {
         return getInt ( base );
     }
 
 
-    public short getStaticShort( ) {
+    public short getStaticShort() {
         return getShort ( base );
     }
 
 
-    public long getStaticLong( ) {
+    public long getStaticLong() {
         return getLong ( base );
     }
 
-    public double getStaticDouble( ) {
+    public double getStaticDouble() {
         return getDouble ( base );
     }
 
 
-    public float getStaticFloat( ) {
+    public float getStaticFloat() {
         return getFloat ( base );
     }
 
 
-    public byte getStaticByte( ) {
+    public byte getStaticByte() {
         return getByte ( base );
     }
 
 
-    public Object getObject( ) {
+    public Object getObject() {
         return getObject ( base );
     }
 
 
     @Override
-    public Field getField( ) {
+    public Field getField() {
         return field;
     }
 
 
     @Override
-    public boolean isFinal( ) {
+    public boolean isFinal() {
         return isFinal;
     }
 
-    public Object getBase( ) {
+    public Object getBase() {
         return base;
     }
 
 
-    public ParameterizedType getParameterizedType( ) {
+    public ParameterizedType getParameterizedType() {
 
 
         ParameterizedType type = null;
 
         if ( field != null ) {
-            Object obj = field.getGenericType ( );
+            Object obj = field.getGenericType ();
 
             if ( obj instanceof ParameterizedType ) {
 
@@ -360,55 +359,55 @@ public abstract class UnsafeField implements FieldAccess {
 
     private Class<?> componentClass;
 
-    public Class<?> getComponentClass( ) {
-        if (componentClass==null) {
+    public Class<?> getComponentClass() {
+        if ( componentClass == null ) {
             componentClass = doGetComponentClass ();
         }
         return componentClass;
     }
 
 
-    private Class<?> doGetComponentClass( ) {
-        final ParameterizedType parameterizedType = this.getParameterizedType ( );
+    private Class<?> doGetComponentClass() {
+        final ParameterizedType parameterizedType = this.getParameterizedType ();
         if ( parameterizedType == null ) {
             return null;
         } else {
-            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ( )[0] );
+            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[0] );
         }
     }
 
     @Override
-    public boolean isStatic( ) {
+    public boolean isStatic() {
         return isStatic;
     }
 
 
     @Override
-    public boolean isVolatile( ) {
+    public boolean isVolatile() {
         return isVolatile;
     }
 
 
     @Override
-    public boolean isQualified( ) {
+    public boolean isQualified() {
         return qualified;
     }
 
 
     @Override
-    public boolean isReadOnly( ) {
+    public boolean isReadOnly() {
         return readOnly;
     }
 
 
     @Override
-    public Class<?> getType( ) {
+    public Class<?> getType() {
         return type;
     }
 
 
     @Override
-    public String getName( ) {
+    public String getName() {
         return name;
     }
 
@@ -472,13 +471,13 @@ public abstract class UnsafeField implements FieldAccess {
     @Override
     public void setObject( Object obj, Object value ) {
         die ( String.format ( "Can't call this method on this type %s name = %s  value type = %s", this.type, this.name,
-                value == null ? "null" : value.getClass ()) );
+                value == null ? "null" : value.getClass () ) );
 
     }
 
 
     @Override
-    public String toString( ) {
+    public String toString() {
         return "UnsafeField [field=" + field + ", offset=" + offset
                 + ", isFinal=" + isFinal + ", base=" + base + ", isStatic="
                 + isStatic + ", isVolatile=" + isVolatile + ", qualified="

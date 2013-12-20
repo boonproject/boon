@@ -9,13 +9,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface LongRange {
 
-    long min( );
+    long min();
 
-    long max( );
+    long max();
 
-    String detailMessage( ) default "";
+    String detailMessage() default "";
 
-    String summaryMessage( ) default "";
+    String summaryMessage() default "";
 
 
 }

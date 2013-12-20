@@ -14,8 +14,8 @@ package org.boon.core;
 public interface NameAware {
     void setName( String name );
 
-    String getName( );
+    String getName();
 
-    void init( );
+    void init();
 
 }

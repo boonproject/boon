@@ -23,23 +23,23 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     }
 
     @Override
-    public Object findFirst( ) {
-        return index.findFirst ( );
+    public Object findFirst() {
+        return index.findFirst ();
     }
 
     @Override
-    public Object findLast( ) {
-        return index.findLast ( );
+    public Object findLast() {
+        return index.findLast ();
     }
 
     @Override
-    public Object findFirstKey( ) {
-        return index.findFirstKey ( );
+    public Object findFirstKey() {
+        return index.findFirstKey ();
     }
 
     @Override
-    public Object findLastKey( ) {
-        return index.findLastKey ( );
+    public Object findLastKey() {
+        return index.findLastKey ();
     }
 
     @Override
@@ -89,13 +89,13 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     }
 
     @Override
-    public Object min( ) {
-        return index.min ( );
+    public Object min() {
+        return index.min ();
     }
 
     @Override
-    public Object max( ) {
-        return index.max ( );
+    public Object max() {
+        return index.max ();
     }
 
     @Override
@@ -129,13 +129,13 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     }
 
     @Override
-    public boolean isPrimaryKeyOnly( ) {
-        return index.isPrimaryKeyOnly ( );
+    public boolean isPrimaryKeyOnly() {
+        return index.isPrimaryKeyOnly ();
     }
 
     @Override
-    public void init( ) {
-        index.init ( );
+    public void init() {
+        index.init ();
     }
 
     @Override
@@ -152,23 +152,23 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     public abstract boolean delete( Object o );
 
     @Override
-    public List all( ) {
-        return index.all ( );
+    public List all() {
+        return index.all ();
     }
 
     @Override
-    public int size( ) {
-        return index.size ( );
+    public int size() {
+        return index.size ();
     }
 
     @Override
-    public Collection toCollection( ) {
-        return index.toCollection ( );
+    public Collection toCollection() {
+        return index.toCollection ();
     }
 
     @Override
-    public void clear( ) {
-        index.clear ( );
+    public void clear() {
+        index.clear ();
     }
 
     public void setBucketSize( int size ) {

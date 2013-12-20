@@ -11,7 +11,7 @@ public interface RepoComposer<KEY, ITEM> {
 
     void setSearchableCollection( SearchableCollection<KEY, ITEM> searchableCollection );
 
-    void init( );
+    void init();
 
     void setObjectEditor( ObjectEditor editor );
 }

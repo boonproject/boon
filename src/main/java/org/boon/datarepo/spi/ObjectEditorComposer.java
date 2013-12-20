@@ -10,9 +10,9 @@ public interface ObjectEditorComposer<KEY, ITEM> {
 
     void setSearchableCollection( SearchableCollection<KEY, ITEM> searchableCollection );
 
-    void init( );
+    void init();
 
-    void hashCodeOptimizationOn( );
+    void hashCodeOptimizationOn();
 
     public void setLookupAndExcept( boolean lookupAndExcept );
 

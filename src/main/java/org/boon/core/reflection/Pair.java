@@ -7,7 +7,7 @@ public class Pair<T> {
     private T second;
     private T[] both = ( T[] ) new Object[2];
 
-    public Pair( ) {
+    public Pair() {
     }
 
     public Pair( T f, T s ) {
@@ -18,16 +18,16 @@ public class Pair<T> {
     }
 
 
-    public T getFirst( ) {
+    public T getFirst() {
         return first;
     }
 
-    public T getSecond( ) {
+    public T getSecond() {
         return second;
     }
 
 
-    public T[] getBoth( ) {
+    public T[] getBoth() {
         return both;
     }
 

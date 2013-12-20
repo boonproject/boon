@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
 public @interface StopOnRule {
 
-    String ruleName( ) default "first";
+    String ruleName() default "first";
 
 }

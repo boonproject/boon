@@ -21,7 +21,7 @@ public abstract class BaseValidator extends MessageSpecification implements Name
 
     public boolean noMessages = false;
 
-    public boolean isNoMessages( ) {
+    public boolean isNoMessages() {
         return noMessages;
     }
 

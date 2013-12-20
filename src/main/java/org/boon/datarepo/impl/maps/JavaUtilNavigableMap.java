@@ -10,7 +10,7 @@ import static org.boon.core.reflection.Conversions.wrapAsObject;
 
 public class JavaUtilNavigableMap<K, V> extends ConcurrentSkipListMap<K, V> implements TypedMap<K, V> {
 
-    public JavaUtilNavigableMap( ) {
+    public JavaUtilNavigableMap() {
     }
 
     public JavaUtilNavigableMap( Comparator<? super K> comparator ) {

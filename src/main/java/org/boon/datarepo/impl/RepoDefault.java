@@ -100,9 +100,9 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
         for ( ITEM item : items ) {
 
             for ( Update value : values ) {
-                query.invalidateIndex ( value.getName ( ), item );
+                query.invalidateIndex ( value.getName (), item );
                 value.doSet ( this, item );
-                query.validateIndex ( value.getName ( ), item );
+                query.validateIndex ( value.getName (), item );
             }
         }
     }
@@ -680,19 +680,19 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-    public List<ITEM> all( ) {
-        return editor.all ( );
+    public List<ITEM> all() {
+        return editor.all ();
     }
 
     @Override
-    public int size( ) {
-        return editor.size ( );
+    public int size() {
+        return editor.size ();
     }
 
     @Override
-    public boolean isEmpty( ) {
+    public boolean isEmpty() {
 
-        return query.isEmpty ( );
+        return query.isEmpty ();
     }
 
     @Override
@@ -701,14 +701,14 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-    public Iterator<ITEM> iterator( ) {
-        return query.iterator ( );
+    public Iterator<ITEM> iterator() {
+        return query.iterator ();
     }
 
 
     @Override
-    public Object[] toArray( ) {
-        return query.toArray ( );
+    public Object[] toArray() {
+        return query.toArray ();
 
     }
 
@@ -718,13 +718,13 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-    public Collection<ITEM> toCollection( ) {
-        return editor.toCollection ( );
+    public Collection<ITEM> toCollection() {
+        return editor.toCollection ();
     }
 
     @Override
-    public void clear( ) {
-        editor.clear ( );
+    public void clear() {
+        editor.clear ();
     }
 
 
@@ -734,7 +734,7 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
-    public void init( ) {
+    public void init() {
     }
 
     @Override

@@ -27,6 +27,6 @@ public interface Filter {
 
     ResultSet filter( Criteria... expressions );
 
-    void invalidate( );
+    void invalidate();
 
 }

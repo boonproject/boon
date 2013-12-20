@@ -13,13 +13,13 @@ import java.util.List;
  */
 public interface SearchIndex<KEY, ITEM> extends LookupIndex<KEY, ITEM> {
 
-    ITEM findFirst( );
+    ITEM findFirst();
 
-    ITEM findLast( );
+    ITEM findLast();
 
-    KEY findFirstKey( );
+    KEY findFirstKey();
 
-    KEY findLastKey( );
+    KEY findLastKey();
 
     List<ITEM> findEquals( KEY key );
 
@@ -39,9 +39,9 @@ public interface SearchIndex<KEY, ITEM> extends LookupIndex<KEY, ITEM> {
 
     List<ITEM> findLessThanEqual( KEY key );
 
-    ITEM min( );
+    ITEM min();
 
-    ITEM max( );
+    ITEM max();
 
     int count( KEY key );
 

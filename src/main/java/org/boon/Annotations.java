@@ -26,7 +26,7 @@ public class Annotations {
     }
 
     private static Annotation[] findClassAnnotations( Class<?> clazz ) {
-        return clazz.getAnnotations ( );
+        return clazz.getAnnotations ();
     }
 
     public static Collection<AnnotationData> getAnnotationDataForFieldAndProperty( Class<?> clazz, String propertyName, Set<String> allowedPackages ) {
@@ -39,18 +39,18 @@ public class Annotations {
                 getAnnotationDataForField ( clazz, propertyName, allowedPackages );
 
         /* Combine the annotations from field and properties. Field validations take precedence over property validations. */
-        Map<String, AnnotationData> map = new HashMap<String, AnnotationData> ( propertyAnnotationDataList.size ( ) + fieldAnnotationDataList.size ( ) );
+        Map<String, AnnotationData> map = new HashMap<String, AnnotationData> ( propertyAnnotationDataList.size () + fieldAnnotationDataList.size () );
 
         /* Add the property annotations to the map. */
         for ( AnnotationData annotationData : propertyAnnotationDataList ) {
-            map.put ( annotationData.getName ( ), annotationData );
+            map.put ( annotationData.getName (), annotationData );
         }
 
         /* Add the field annotations to the map allowing them to override the property annotations. */
         for ( AnnotationData annotationData : fieldAnnotationDataList ) {
-            map.put ( annotationData.getName ( ), annotationData );
+            map.put ( annotationData.getName (), annotationData );
         }
-        return map.values ( );
+        return map.values ();
     }
 
 
@@ -62,10 +62,10 @@ public class Annotations {
      */
     public static List<AnnotationData> extractValidationAnnotationData(
             Annotation[] annotations, Set<String> allowedPackages ) {
-        List<AnnotationData> annotationsList = new ArrayList<> ( );
+        List<AnnotationData> annotationsList = new ArrayList<> ();
         for ( Annotation annotation : annotations ) {
             AnnotationData annotationData = new AnnotationData ( annotation, allowedPackages );
-            if ( annotationData.isAllowed ( ) ) {
+            if ( annotationData.isAllowed () ) {
                 annotationsList.add ( annotationData );
             }
         }
@@ -91,7 +91,7 @@ public class Annotations {
              * this class could be a proxy. This seems like a bug
              * waiting to happen. So far it has worked... */
             if ( annotations.length == 0 ) {
-                annotations = findPropertyAnnotations ( clazz.getSuperclass ( ), propertyName, useRead );
+                annotations = findPropertyAnnotations ( clazz.getSuperclass (), propertyName, useRead );
             }
             return annotations;
         } catch ( Exception ex ) {
@@ -125,13 +125,13 @@ public class Annotations {
         Method accessMethod = null;
 
         if ( useRead ) {
-            accessMethod = propertyDescriptor.getReadMethod ( );
+            accessMethod = propertyDescriptor.getReadMethod ();
         } else {
-            accessMethod = propertyDescriptor.getWriteMethod ( );
+            accessMethod = propertyDescriptor.getWriteMethod ();
         }
 
         if ( accessMethod != null ) {
-            Annotation[] annotations = accessMethod.getAnnotations ( );
+            Annotation[] annotations = accessMethod.getAnnotations ();
             return annotations;
         } else {
             return new Annotation[]{};
@@ -158,7 +158,7 @@ public class Annotations {
                 if ( propertyDescriptor == null ) {
                     return null;
                 }
-                clazz = propertyDescriptor.getPropertyType ( );
+                clazz = propertyDescriptor.getPropertyType ();
             }
             return propertyDescriptor;
         }
@@ -170,7 +170,7 @@ public class Annotations {
         if ( field == null ) {
             return new Annotation[]{};
         }
-        Annotation[] annotations = field.getAnnotations ( );
+        Annotation[] annotations = field.getAnnotations ();
         return annotations;
     }
 
@@ -181,13 +181,13 @@ public class Annotations {
     private static PropertyDescriptor doGetPropertyDescriptor( final Class<?> type, final String propertyName ) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo ( type );
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors ( );
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors ();
             for ( PropertyDescriptor pd : propertyDescriptors ) {
-                if ( pd.getName ( ).equals ( propertyName ) ) {
+                if ( pd.getName ().equals ( propertyName ) ) {
                     return pd;
                 }
             }
-            Class<?> superclass = type.getSuperclass ( );
+            Class<?> superclass = type.getSuperclass ();
             if ( superclass != null ) {
                 return doGetPropertyDescriptor ( superclass, propertyName );
             }
@@ -212,7 +212,7 @@ public class Annotations {
                 if ( field == null ) {
                     return null;
                 }
-                clazz = field.getType ( );
+                clazz = field.getType ();
             }
             return field;
         }
@@ -222,12 +222,12 @@ public class Annotations {
     private static Field doFindFieldInHeirarchy( Class<?> clazz, String propertyName ) {
         Field field = doGetField ( clazz, propertyName );
 
-        Class<?> sclazz = clazz.getSuperclass ( );
+        Class<?> sclazz = clazz.getSuperclass ();
         if ( field == null ) {
             while ( true ) {
                 if ( sclazz != null ) {
                     field = doGetField ( sclazz, propertyName );
-                    sclazz = sclazz.getSuperclass ( );
+                    sclazz = sclazz.getSuperclass ();
                 }
                 if ( field != null ) {
                     break;
@@ -250,9 +250,9 @@ public class Annotations {
             field = null;
         }
         if ( field == null ) {
-            Field[] fields = clazz.getDeclaredFields ( );
+            Field[] fields = clazz.getDeclaredFields ();
             for ( Field f : fields ) {
-                if ( f.getName ( ).equals ( fieldName ) ) {
+                if ( f.getName ().equals ( fieldName ) ) {
                     field = f;
                 }
             }

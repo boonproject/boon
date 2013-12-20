@@ -10,9 +10,9 @@ public class MapCreatorImpl implements MapCreator {
     @Override
     public NavigableMap createNavigableMap( Class<?> keyType ) {
         if ( keyType == String.class ) {
-            return new JavaUtilNavigableMap ( );
+            return new JavaUtilNavigableMap ();
         } else {
-            return new JavaUtilNavigableMap ( );
+            return new JavaUtilNavigableMap ();
         }
     }
 
@@ -22,12 +22,12 @@ public class MapCreatorImpl implements MapCreator {
         if ( keyType == String.class ) {
             return new JavaUtilNavigableMap ( collator );
         } else {
-            return new JavaUtilNavigableMap ( );
+            return new JavaUtilNavigableMap ();
         }
     }
 
     @Override
     public Map createMap( Class<?> keyType ) {
-        return new JavaUtilMap ( );
+        return new JavaUtilMap ();
     }
 }

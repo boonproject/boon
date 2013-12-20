@@ -38,7 +38,7 @@ public abstract class AbstractRangeValidator extends BaseValidator {
         return value.compareTo ( realMax ) <= 0;
     }
 
-    public boolean isInitialized( ) {
+    public boolean isInitialized() {
         return isInitialized;
     }
 }

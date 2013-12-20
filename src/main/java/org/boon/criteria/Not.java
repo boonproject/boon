@@ -18,7 +18,7 @@ public class Not extends Criteria {
     }
 
     @Override
-    public void cleanAfterGroupTest( ) {
+    public void cleanAfterGroupTest() {
 
     }
 

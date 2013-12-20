@@ -31,9 +31,9 @@ public class LongRangeValidator extends AbstractRangeValidator {
      * @param fieldValue the value to validate
      * @param fieldLabel the logical name of the value used for generating error messages
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
-        ValidatorMessage validatorMessage = new ValidatorMessage ( );
+        ValidatorMessage validatorMessage = new ValidatorMessage ();
         if ( fieldValue == null ) {
             return validatorMessage;
         }
@@ -52,16 +52,16 @@ public class LongRangeValidator extends AbstractRangeValidator {
 
 
     /* Initialize this instance. */
-    public void init( ) {
+    public void init() {
         /* If the underMin message was not injected, create a default. */
         if ( underMin == null ) {
-            underMin = new MessageSpecification ( );
+            underMin = new MessageSpecification ();
             underMin.setDetailMessage ( "{validator.range.underMin.detail}" );
             underMin.setSummaryMessage ( "{validator.range.underMin.summary}" );
         }
         /* If the overMax message was not injected, create a default. */
         if ( overMax == null ) {
-            overMax = new MessageSpecification ( );
+            overMax = new MessageSpecification ();
             overMax.setDetailMessage ( "{validator.range.overMax.detail}" );
             overMax.setSummaryMessage ( "{validator.range.overMax.summary" );
         }
@@ -69,16 +69,16 @@ public class LongRangeValidator extends AbstractRangeValidator {
         if ( type == null ) {
             return;
         }
-    	/* Initialize based on type for all Integer value
+        /* Initialize based on type for all Integer value
     	 * so that LongRangeValidator can be used
     	 * for int, short, byte, and long. */
-        if ( !isInitialized ( ) ) {
+        if ( !isInitialized () ) {
             if ( type.equals ( Integer.class ) ) {
-                init ( new Integer ( min.intValue ( ) ), new Integer ( max.intValue ( ) ) );
+                init ( new Integer ( min.intValue () ), new Integer ( max.intValue () ) );
             } else if ( type.equals ( Byte.class ) ) {
-                init ( new Byte ( min.byteValue ( ) ), new Byte ( max.byteValue ( ) ) );
+                init ( new Byte ( min.byteValue () ), new Byte ( max.byteValue () ) );
             } else if ( type.equals ( Short.class ) ) {
-                init ( new Short ( min.byteValue ( ) ), new Short ( max.byteValue ( ) ) );
+                init ( new Short ( min.byteValue () ), new Short ( max.byteValue () ) );
             } else {
                 init ( min, max );
             }
@@ -95,13 +95,13 @@ public class LongRangeValidator extends AbstractRangeValidator {
 		/* Check to see if this class was already initialized,
 		 * if not, initialize it based on the type of the value.
 		 */
-        if ( !isInitialized ( ) ) {
+        if ( !isInitialized () ) {
             if ( value instanceof Integer ) {
-                init ( new Integer ( min.intValue ( ) ), new Integer ( max.intValue ( ) ) );
+                init ( new Integer ( min.intValue () ), new Integer ( max.intValue () ) );
             } else if ( value instanceof Byte ) {
-                init ( new Byte ( min.byteValue ( ) ), new Byte ( max.byteValue ( ) ) );
+                init ( new Byte ( min.byteValue () ), new Byte ( max.byteValue () ) );
             } else if ( value instanceof Short ) {
-                init ( new Short ( min.shortValue ( ) ), new Short ( max.shortValue ( ) ) );
+                init ( new Short ( min.shortValue () ), new Short ( max.shortValue () ) );
             } else {
                 init ( min, max );
             }

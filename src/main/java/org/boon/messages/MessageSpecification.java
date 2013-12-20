@@ -64,19 +64,19 @@ public class MessageSpecification implements Serializable {
      * You should only call the init method if you don't inject
      * values into the detailMessage and summaryMessage.
      */
-    public void init( ) {
+    public void init() {
         /* If the parent and name are equal to null,
-    	 * use the classname to load resources.
+         * use the classname to load resources.
     	 * */
         if ( name == null && parent == null ) {
-            this.setDetailMessage ( "{" + this.getClass ( ).getName ( ) + DETAIL_KEY + "}" );
-            this.setSummaryMessage ( "{" + this.getClass ( ).getName ( ) + SUMMARY_KEY + "}" );
+            this.setDetailMessage ( "{" + this.getClass ().getName () + DETAIL_KEY + "}" );
+            this.setSummaryMessage ( "{" + this.getClass ().getName () + SUMMARY_KEY + "}" );
         /* If the parent is null and the name is not,
          * use the name to load resources.
          */
         } else if ( name != null && parent == null ) {
-            this.setDetailMessage ( "{" + "message." + getName ( ) + DETAIL_KEY + "}" );
-            this.setSummaryMessage ( "{" + "message." + getName ( ) + SUMMARY_KEY + "}" );
+            this.setDetailMessage ( "{" + "message." + getName () + DETAIL_KEY + "}" );
+            this.setSummaryMessage ( "{" + "message." + getName () + SUMMARY_KEY + "}" );
         /* If the parent is present, initialize the message keys
          * with the parent name.
          */
@@ -86,7 +86,7 @@ public class MessageSpecification implements Serializable {
         }
     }
 
-    public boolean isNoSummary( ) {
+    public boolean isNoSummary() {
         return noSummary;
     }
 
@@ -148,12 +148,12 @@ public class MessageSpecification implements Serializable {
     @SuppressWarnings("unchecked")
     private String doCreateMessage( String message, Object[] actualArgs ) {
 
-        return ValidationContext.get ( ).createMessage ( message, getSubject ( ), actualArgs );
+        return ValidationContext.get ().createMessage ( message, getSubject (), actualArgs );
     }
 
     private String getMessage( String key ) {
 
-        return ValidationContext.get ( ).getMessage ( key );
+        return ValidationContext.get ().getMessage ( key );
     }
 
 
@@ -161,11 +161,11 @@ public class MessageSpecification implements Serializable {
      * Convert the keys to values.
      */
     private Object[] keysToValues( List<String> argKeys ) {
-        List<String> values = new ArrayList<> ( );
+        List<String> values = new ArrayList<> ();
         for ( String key : argKeys ) {
             values.add ( getMessage ( key ) );
         }
-        return values.toArray ( );
+        return values.toArray ();
     }
 
     /**
@@ -173,20 +173,20 @@ public class MessageSpecification implements Serializable {
      * per instance of the MessageSpecification.
      */
     public void setCurrentSubject( String subject ) {
-        ValidationContext.get ( ).setCurrentSubject ( subject );
+        ValidationContext.get ().setCurrentSubject ( subject );
     }
 
     /**
      * Gets the current subject or the configured subject if the
      * current subject is not found.
      */
-    public String getSubject( ) {
-        return ValidationContext.get ( ).getCurrentSubject ( ) == null ? this.subject :
-                ValidationContext.get ( ).getCurrentSubject ( );
+    public String getSubject() {
+        return ValidationContext.get ().getCurrentSubject () == null ? this.subject :
+                ValidationContext.get ().getCurrentSubject ();
     }
 
 
-    protected String getDetailMessage( ) {
+    protected String getDetailMessage() {
         return this.detailMessage;
     }
 
@@ -194,7 +194,7 @@ public class MessageSpecification implements Serializable {
         this.detailMessage = detailKey;
     }
 
-    protected String getSummaryMessage( ) {
+    protected String getSummaryMessage() {
         return this.summaryMessage;
     }
 
@@ -202,7 +202,7 @@ public class MessageSpecification implements Serializable {
         this.summaryMessage = summaryKey;
     }
 
-    protected List<String> getDetailArgs( ) {
+    protected List<String> getDetailArgs() {
         return this.detailArgs;
     }
 
@@ -210,7 +210,7 @@ public class MessageSpecification implements Serializable {
         this.detailArgs = argKeys;
     }
 
-    protected List<String> getSummaryArgs( ) {
+    protected List<String> getSummaryArgs() {
         return this.summaryArgs;
     }
 
@@ -222,7 +222,7 @@ public class MessageSpecification implements Serializable {
         this.name = aName;
     }
 
-    public String getName( ) {
+    public String getName() {
         return this.name;
     }
 

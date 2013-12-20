@@ -18,10 +18,10 @@ import java.util.logging.Logger;
 
 public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY, ITEM>, ObjectEditor<KEY, ITEM> {
 
-    private Logger log = Logger.getLogger ( ObjectEditorDefault.class.getName ( ) );
+    private Logger log = Logger.getLogger ( ObjectEditorDefault.class.getName () );
 
     protected SearchableCollection<KEY, ITEM> query;
-    protected Map<String, FieldAccess> fields = new LinkedHashMap<> ( );
+    protected Map<String, FieldAccess> fields = new LinkedHashMap<> ();
     private boolean hashCodeOptimization;
 
 
@@ -128,7 +128,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
             return;
         } else {
             hashCode.setInt ( item, -1 );
-            hashCode.setInt ( item, item.hashCode ( ) );
+            hashCode.setInt ( item, item.hashCode () );
         }
     }
 
@@ -200,10 +200,10 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void modify( ITEM item, Update... values ) {
         item = lookupAndExpect ( item );
         for ( Update value : values ) {
-            query.invalidateIndex ( value.getName ( ), item );
+            query.invalidateIndex ( value.getName (), item );
             value.doSet ( this, item );
             optimizeHash ( item );
-            query.validateIndex ( value.getName ( ), item );
+            query.validateIndex ( value.getName (), item );
         }
 
     }
@@ -284,10 +284,10 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         ITEM item = lookupAndExpectByKey ( key );
 
         for ( Update value : values ) {
-            query.invalidateIndex ( value.getName ( ), item );
+            query.invalidateIndex ( value.getName (), item );
             value.doSet ( this, item );
             optimizeHash ( item );
-            query.validateIndex ( value.getName ( ), item );
+            query.validateIndex ( value.getName (), item );
         }
     }
 
@@ -483,11 +483,11 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     }
 
     @Override
-    public void init( ) {
+    public void init() {
     }
 
     @Override
-    public void hashCodeOptimizationOn( ) {
+    public void hashCodeOptimizationOn() {
         this.hashCodeOptimization = true;
     }
 
@@ -538,8 +538,8 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
 
     @Override
-    public void clear( ) {
-        query.clear ( );
+    public void clear() {
+        query.clear ();
     }
 
     @Override
@@ -549,23 +549,23 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     }
 
     @Override
-    public List<ITEM> all( ) {
-        return query.all ( );  //To change body of implemented methods use File | Settings | File Templates.
+    public List<ITEM> all() {
+        return query.all ();  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public int size( ) {
-        return query.size ( );
+    public int size() {
+        return query.size ();
 
     }
 
     @Override
-    public Collection<ITEM> toCollection( ) {
+    public Collection<ITEM> toCollection() {
         return query;
     }
 
 
-    public SearchableCollection<KEY, ITEM> query( ) {
+    public SearchableCollection<KEY, ITEM> query() {
         return query;
     }
 

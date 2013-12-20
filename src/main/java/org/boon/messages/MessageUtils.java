@@ -13,14 +13,14 @@ public final class MessageUtils {
     /**
      * Stops creation of a new MessageUtils object.
      */
-    private MessageUtils( ) {
+    private MessageUtils() {
     }
 
     public static String createLabelNoPlural( String fieldName, final ResourceBundle bundle ) {
         if ( fieldName.endsWith ( "es" ) ) {
-            fieldName = fieldName.substring ( 0, fieldName.length ( ) - 2 );
+            fieldName = fieldName.substring ( 0, fieldName.length () - 2 );
         } else if ( fieldName.endsWith ( "s" ) ) {
-            fieldName = fieldName.substring ( 0, fieldName.length ( ) - 1 );
+            fieldName = fieldName.substring ( 0, fieldName.length () - 1 );
         }
         return getLabel ( fieldName, bundle );
     }
@@ -123,7 +123,7 @@ public final class MessageUtils {
      */
     public static String generateLabelValue( final String fieldName ) {
 
-        final StringBuilder buffer = new StringBuilder ( fieldName.length ( ) * 2 );
+        final StringBuilder buffer = new StringBuilder ( fieldName.length () * 2 );
 
 
         class GenerationCommand {
@@ -132,9 +132,9 @@ public final class MessageUtils {
             boolean lastCharWasNumber = false;
             boolean lastCharWasSpecial = false;
             boolean shouldContinue = true;
-            char[] chars = fieldName.toCharArray ( );
+            char[] chars = fieldName.toCharArray ();
 
-            void processFieldName( ) {
+            void processFieldName() {
 
                 for ( int index = 0; index < chars.length; index++ ) {
                     char cchar = chars[index];
@@ -202,7 +202,7 @@ public final class MessageUtils {
             }
 
             private char processCapitalizeCommand( char cchar ) {
-				/* Capitalize the character. */
+                /* Capitalize the character. */
                 if ( capNextChar ) {
                     capNextChar = false;
                     cchar = Character.toUpperCase ( cchar );
@@ -247,11 +247,11 @@ public final class MessageUtils {
             }
         }
 
-        GenerationCommand gc = new GenerationCommand ( );
-        gc.processFieldName ( );
+        GenerationCommand gc = new GenerationCommand ();
+        gc.processFieldName ();
         
         /* This is a hack to get address.line_1 to work. */
-        return buffer.toString ( ).replace ( "  ", " " );
+        return buffer.toString ().replace ( "  ", " " );
     }
 
 }
