@@ -21,10 +21,12 @@ public class JsonFastParser extends JsonParserCharArray {
 
     private final boolean useValues;
     private final boolean chop;
+    private final boolean lazyChop;
 
     public JsonFastParser() {
         useValues = false;
         chop = false;
+        lazyChop = true;
 
     }
 
@@ -32,15 +34,24 @@ public class JsonFastParser extends JsonParserCharArray {
     public JsonFastParser( boolean useValues ) {
         this.useValues = useValues;
         chop = false;
+        lazyChop = true;
     }
 
 
     public JsonFastParser( boolean useValues, boolean chop ) {
         this.useValues = useValues;
         this.chop = chop;
+        lazyChop = !chop;
 
     }
 
+
+    public JsonFastParser( boolean useValues, boolean chop, boolean lazyChop ) {
+        this.useValues = useValues;
+        this.chop = chop;
+        this.lazyChop = lazyChop;
+
+    }
 
     protected final Object decodeFromChars ( char[] cs ) {
         return ( ( Value ) super.decodeFromChars ( cs ) ).toValue ();
@@ -59,7 +70,7 @@ public class JsonFastParser extends JsonParserCharArray {
             valueMap = new JsonValueMap ();
             value = new ValueBase ( ( Map ) valueMap );
         } else {
-            map = new JsonMap ();
+            map = new JsonMap (lazyChop);
             value = new ValueBase ( map );
         }
 
@@ -381,7 +392,7 @@ public class JsonFastParser extends JsonParserCharArray {
         if ( useValues ) {
             list = new ArrayList<> ();
         } else {
-            list = new JsonList ();
+            list = new JsonList (lazyChop);
         }
 
         Value value = new ValueBase ( list );

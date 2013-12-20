@@ -8,6 +8,12 @@ import java.util.List;
 public class JsonList extends AbstractList<Object> implements List<Object> {
 
     List<Object> list = new ArrayList<> ( 5 );
+    private final boolean lazyChop;
+
+     public JsonList (boolean lazyChop) {
+         this.lazyChop = lazyChop;
+
+     }
 
     @Override
     public Object get ( int index ) {
@@ -82,16 +88,17 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
 
 
     private void chopIfNeeded( Object object ) {
-        if ( object instanceof JsonMap ) {
-            JsonMap m = new JsonMap ();
-            m.chopMap ();
-        } else if ( object instanceof JsonList ) {
-            JsonList list = new JsonList ();
-            list.chopList ();
+        if ( lazyChop ) {
+            if ( object instanceof JsonMap ) {
+                JsonMap m = ( JsonMap ) object;
+                m.chopMap ();
+            } else if ( object instanceof JsonList ) {
+                JsonList list = ( JsonList ) object;
+                list.chopList ();
+            }
         }
 
     }
-
 
 
     void chopContainer( Value value ) {

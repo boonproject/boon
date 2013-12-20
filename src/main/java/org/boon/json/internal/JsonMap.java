@@ -12,6 +12,13 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     int len = 0;
 
+    private final boolean lazyChop;
+
+    public JsonMap( boolean lazyChop ) {
+
+        this.lazyChop = lazyChop;
+    }
+
     public void add( MapItemValue miv ) {
         if ( len == items.length ) {
             items = org.boon.Arrays.grow ( items );
@@ -77,12 +84,14 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
     }
 
     private void chopIfNeeded( Object object ) {
-        if ( object instanceof JsonMap ) {
-            JsonMap m = new JsonMap ();
-            m.chopMap ();
-        } else if ( object instanceof JsonList ) {
-            JsonList list = new JsonList ();
-            list.chopList ();
+        if ( lazyChop ) {
+            if ( object instanceof JsonMap ) {
+                JsonMap m = ( JsonMap ) object;
+                m.chopMap ();
+            } else if ( object instanceof JsonList ) {
+                JsonList list = ( JsonList ) object;
+                list.chopList ();
+            }
         }
 
     }
@@ -98,11 +107,11 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
             return;
         } else {
             for ( Entry e : this.items ) {
-                if (e==null) break;
+                if ( e == null ) break;
                 MapItemValue entry = ( MapItemValue ) e;
 
                 Value value = entry.getValue ();
-                if (value == null) continue;
+                if ( value == null ) continue;
                 if ( value.isContainer () ) {
                     chopContainer ( value );
                 } else {
