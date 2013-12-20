@@ -1,7 +1,6 @@
 package org.boon.primitive;
 
 
-import org.boon.Arrays;
 import org.boon.Exceptions;
 import org.boon.Universal;
 
@@ -35,7 +34,11 @@ public class Chr {
     }
 
     @Universal
+<<<<<<< HEAD
     public static char[] chars ( final String array ) {
+=======
+    public static char[] chars( final String array ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return array.toCharArray ();
     }
 
@@ -249,7 +252,11 @@ public class Chr {
 
 
     @Universal
+<<<<<<< HEAD
     public static char[] add ( char[] array, String str ) {
+=======
+    public static char[] add( char[] array, String str ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return add ( array, str.toCharArray () );
     }
 
@@ -310,7 +317,11 @@ public class Chr {
 
 
     @Universal
+<<<<<<< HEAD
     public static char[] insert ( final char[] array, final int fromIndex, String values ) {
+=======
+    public static char[] insert( final char[] array, final int fromIndex, String values ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return insert ( array, fromIndex, values.toCharArray () );
     }
 
@@ -369,9 +380,15 @@ public class Chr {
     /* End universal methods. */
 
 
+<<<<<<< HEAD
     private static char[] getCharsFromStringBuilder ( StringBuilder sbuf ) {
         int length = sbuf.length ();
         char[] array2 = new char[ sbuf.length () ];
+=======
+    private static char[] getCharsFromStringBuilder( StringBuilder sbuf ) {
+        int length = sbuf.length ();
+        char[] array2 = new char[sbuf.length ()];
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         sbuf.getChars ( 0, sbuf.length (), array2, 0 );
         return array2;
     }
@@ -561,9 +578,15 @@ public class Chr {
     }
 
 
+<<<<<<< HEAD
     public static boolean contains ( char[] chars, char c ) {
         for ( int index = 0; index < chars.length; index++ ) {
             char ch = chars[ index ];
+=======
+    public static boolean contains( char[] chars, char c ) {
+        for ( int index = 0; index < chars.length; index++ ) {
+            char ch = chars[index];
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             if ( ch == c ) {
                 return true;
             }
@@ -572,10 +595,17 @@ public class Chr {
     }
 
 
+<<<<<<< HEAD
     public static boolean contains ( char[] chars, char c, int start, final int length ) {
         final int to = length + start;
         for ( int index = start; index < to; index++ ) {
             char ch = chars[ index ];
+=======
+    public static boolean contains( char[] chars, char c, int start, final int length ) {
+        final int to = length + start;
+        for ( int index = start; index < to; index++ ) {
+            char ch = chars[index];
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             if ( ch == c ) {
                 return true;
             }
@@ -587,12 +617,20 @@ public class Chr {
         int index2 = 0;
         int endLocation = ( location + chars.length );
         for ( int index = location; index < endLocation; index++, index2++ ) {
+<<<<<<< HEAD
             buffer[ index ] = ( char ) chars[ index2 ];
+=======
+            buffer[index] = ( char ) chars[index2];
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
     }
 
 
+<<<<<<< HEAD
     public static void _idx ( final char[] array, int startIndex, char[] input ) {
+=======
+    public static void _idx( final char[] array, int startIndex, char[] input ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         try {
 
             System.arraycopy ( input, 0, array, startIndex, input.length );
@@ -617,12 +655,17 @@ public class Chr {
         int index2 = start;
         int endLocation = ( location + ( end - start ) );
         for ( int index = location; index < endLocation; index++, index2++ ) {
+<<<<<<< HEAD
             buffer[ index ] = ( char ) chars[ index2 ];
+=======
+            buffer[index] = ( char ) chars[index2];
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
 
     }
 
 
+<<<<<<< HEAD
     public static char[] trim ( char[] buffer, int start, int to ) {
 
 
@@ -632,6 +675,17 @@ public class Chr {
         }
         while ( ( start < to ) && (
                 buffer[ to - 1 ] <= ' ' ) ) {
+=======
+    public static char[] trim( char[] buffer, int start, int to ) {
+
+
+        while ( ( start < to ) && (
+                buffer[start] <= ' ' ) ) {
+            start++;
+        }
+        while ( ( start < to ) && (
+                buffer[to - 1] <= ' ' ) ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             to--;
         }
         return ( ( start > 0 ) || ( to < buffer.length ) ) ?

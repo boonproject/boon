@@ -11,7 +11,11 @@ import static org.boon.Boon.sputs;
 public class Exceptions {
 
 
+<<<<<<< HEAD
     public static boolean die () {
+=======
+    public static boolean die() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         throw new SoftenedException ( "died" );
     }
 
@@ -74,11 +78,19 @@ public class Exceptions {
 
 
     public static interface Trial {
+<<<<<<< HEAD
         void tryIt () throws java.lang.Exception;
     }
 
     public static interface TrialWithReturn<T> {
         T tryIt () throws java.lang.Exception;
+=======
+        void tryIt() throws java.lang.Exception;
+    }
+
+    public static interface TrialWithReturn<T> {
+        T tryIt() throws java.lang.Exception;
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
     public static class SoftenedException extends RuntimeException {
@@ -111,23 +123,39 @@ public class Exceptions {
         }
 
         @Override
+<<<<<<< HEAD
         public String getMessage () {
+=======
+        public String getMessage() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return super.getMessage () + ( getCause () == null ? "" :
                     getCauseMessage () );
         }
 
+<<<<<<< HEAD
         private String getCauseMessage () {
+=======
+        private String getCauseMessage() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return "\n CAUSE " + getCause ().getClass ().getName () + " :: " +
                     getCause ().getMessage ();
         }
 
         @Override
+<<<<<<< HEAD
         public String getLocalizedMessage () {
+=======
+        public String getLocalizedMessage() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return this.getMessage ();
         }
 
         @Override
+<<<<<<< HEAD
         public StackTraceElement[] getStackTrace () {
+=======
+        public StackTraceElement[] getStackTrace() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             if ( getCause () != null ) {
                 return getCause ().getStackTrace ();
             } else {
@@ -137,7 +165,11 @@ public class Exceptions {
         }
 
         @Override
+<<<<<<< HEAD
         public Throwable getCause () {
+=======
+        public Throwable getCause() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return super.getCause ();
         }
 
@@ -156,7 +188,11 @@ public class Exceptions {
         }
 
         @Override
+<<<<<<< HEAD
         public void printStackTrace () {
+=======
+        public void printStackTrace() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
             System.err.println ( this.getMessage () );
 

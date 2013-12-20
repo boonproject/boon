@@ -30,13 +30,21 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
         hasError = true;
     }
 
+<<<<<<< HEAD
     public ValidatorMessage () {
+=======
+    public ValidatorMessage() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.summary = "Message not setup!";
         this.detail = "Message not setup!";
         hasError = false;
     }
 
+<<<<<<< HEAD
     public String getDetail () {
+=======
+    public String getDetail() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.detail;
     }
 
@@ -44,7 +52,11 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
         this.detail = detail;
     }
 
+<<<<<<< HEAD
     public String getSummary () {
+=======
+    public String getSummary() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.summary;
     }
 
@@ -52,7 +64,11 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
         this.summary = summary;
     }
 
+<<<<<<< HEAD
     public boolean hasError () {
+=======
+    public boolean hasError() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.hasError;
     }
 
@@ -62,7 +78,11 @@ public class ValidatorMessage implements Serializable, ValidatorMessageHolder {
 
 
     @Override
+<<<<<<< HEAD
     public String toString () {
+=======
+    public String toString() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return "ValidatorMessage{" +
                 "detail='" + detail + '\'' +
                 ", summary='" + summary + '\'' +

@@ -13,7 +13,11 @@ public class MapField implements FieldAccess {
 
     private String name;
 
+<<<<<<< HEAD
     public MapField () {
+=======
+    public MapField() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     }
 
@@ -22,7 +26,11 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+<<<<<<< HEAD
     public String getName () {
+=======
+    public String getName() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 
@@ -222,48 +230,84 @@ public class MapField implements FieldAccess {
 
 
     @Override
+<<<<<<< HEAD
     public Field getField () {
+=======
+    public Field getField() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return die ( Field.class, "Unsupported operation" );
 
     }
 
     @Override
+<<<<<<< HEAD
     public ParameterizedType getParameterizedType () {
+=======
+    public ParameterizedType getParameterizedType() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return null;
     }
 
     @Override
+<<<<<<< HEAD
     public Class<?> getComponentClass () {
+=======
+    public Class<?> getComponentClass() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return null;
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isFinal () {
+=======
+    public boolean isFinal() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return false;
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isStatic () {
+=======
+    public boolean isStatic() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return false;
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isVolatile () {
+=======
+    public boolean isVolatile() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return false;
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isQualified () {
+=======
+    public boolean isQualified() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return false;
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isReadOnly () {
+=======
+    public boolean isReadOnly() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return false;
     }
 
     @Override
+<<<<<<< HEAD
     public Class<?> getType () {
+=======
+    public Class<?> getType() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return Object.class;
     }
 }

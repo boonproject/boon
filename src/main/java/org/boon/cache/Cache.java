@@ -19,7 +19,11 @@ public class Cache<KEY, VALUE> {
     private final int timeSpeed;
 
 
+<<<<<<< HEAD
     public Cache ( int evictSize ) {
+=======
+    public Cache( int evictSize ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
         list = new SortableConcurrentList<> ();
         this.type = CacheType.LFU;
@@ -28,7 +32,11 @@ public class Cache<KEY, VALUE> {
     }
 
 
+<<<<<<< HEAD
     public Cache ( int evictSize, CacheType type ) {
+=======
+    public Cache( int evictSize, CacheType type ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
         list = new SortableConcurrentList<> ();
         this.type = type;
@@ -36,7 +44,11 @@ public class Cache<KEY, VALUE> {
 
     }
 
+<<<<<<< HEAD
     public Cache ( int evictSize, Tradeoffs tradeoffs, CacheType type ) {
+=======
+    public Cache( int evictSize, Tradeoffs tradeoffs, CacheType type ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
 
         this.type = type;
@@ -59,7 +71,11 @@ public class Cache<KEY, VALUE> {
      * @param evictSize
      * @param type
      */
+<<<<<<< HEAD
     public Cache ( int timeSpeed, int evictSize, CacheType type ) {
+=======
+    public Cache( int timeSpeed, int evictSize, CacheType type ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
         list = new SortableConcurrentList<> ();
         this.type = type;
@@ -67,7 +83,11 @@ public class Cache<KEY, VALUE> {
 
     }
 
+<<<<<<< HEAD
     public VALUE get ( KEY key ) {
+=======
+    public VALUE get( KEY key ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         CacheEntry<KEY, VALUE> cacheEntry = map.get ( key );
         if ( cacheEntry != null ) {
             cacheEntry.readCount.incrementAndGet ();
@@ -78,7 +98,11 @@ public class Cache<KEY, VALUE> {
 
     }
 
+<<<<<<< HEAD
     public VALUE getSilent ( KEY key ) {
+=======
+    public VALUE getSilent( KEY key ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         CacheEntry<KEY, VALUE> cacheEntry = map.get ( key );
         if ( cacheEntry != null ) {
             return cacheEntry.value;
@@ -88,7 +112,11 @@ public class Cache<KEY, VALUE> {
 
     }
 
+<<<<<<< HEAD
     public void put ( KEY key, VALUE value ) {
+=======
+    public void put( KEY key, VALUE value ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         CacheEntry<KEY, VALUE> entry = map.get ( key );
 
 
@@ -108,7 +136,11 @@ public class Cache<KEY, VALUE> {
     private final AtomicInteger callEvery10 = new AtomicInteger ();
     private final AtomicLong time = new AtomicLong ();
 
+<<<<<<< HEAD
     private final long time () {
+=======
+    private final long time() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         callEvery10.incrementAndGet ();
         if ( callEvery10.get () > timeSpeed ) {
@@ -118,7 +150,11 @@ public class Cache<KEY, VALUE> {
         return time.get ();
     }
 
+<<<<<<< HEAD
     private final int order () {
+=======
+    private final int order() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         int order = count.incrementAndGet ();
         if ( order > Integer.MAX_VALUE - 100 ) {
             count.set ( 0 );
@@ -126,7 +162,11 @@ public class Cache<KEY, VALUE> {
         return order;
     }
 
+<<<<<<< HEAD
     private final void evictIfNeeded () {
+=======
+    private final void evictIfNeeded() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( list.size () > evictSize ) {
 
             final List<CacheEntry<KEY, VALUE>> killList = list.sortAndReturnPurgeList ( 0.1f );
@@ -138,12 +178,20 @@ public class Cache<KEY, VALUE> {
 
     }
 
+<<<<<<< HEAD
     public String toString () {
+=======
+    public String toString() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return map.toString ();
     }
 
 
+<<<<<<< HEAD
     public int size () {
+=======
+    public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.map.size ();
     }
 }

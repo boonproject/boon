@@ -74,7 +74,11 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
+<<<<<<< HEAD
     public List<ITEM> all () {
+=======
+    public List<ITEM> all() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "all called " );
@@ -94,17 +98,29 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
+<<<<<<< HEAD
     public int size () {
+=======
+    public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.map.size ();
     }
 
     @Override
+<<<<<<< HEAD
     public Collection<ITEM> toCollection () {
+=======
+    public Collection<ITEM> toCollection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return new HashSet ( this.map.values () );
     }
 
     @Override
+<<<<<<< HEAD
     public void clear () {
+=======
+    public void clear() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.map.clear ();
     }
 
@@ -115,12 +131,20 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isPrimaryKeyOnly () {
+=======
+    public boolean isPrimaryKeyOnly() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return false;
     }
 
     @Override
+<<<<<<< HEAD
     public void init () {
+=======
+    public void init() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     }
 

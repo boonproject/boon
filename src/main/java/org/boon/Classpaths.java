@@ -127,7 +127,11 @@ public class Classpaths {
         return resourcePaths;
     }
 
+<<<<<<< HEAD
     private static void resourcesFromFileSystem ( List<Path> resourcePaths, URL u ) {
+=======
+    private static void resourcesFromFileSystem( List<Path> resourcePaths, URL u ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         URI fileURI = IO.createURI ( u.toString () );
 
 

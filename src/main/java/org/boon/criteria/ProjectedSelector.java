@@ -41,7 +41,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
@@ -73,7 +77,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
@@ -107,7 +115,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, sum );
                 }
@@ -140,7 +152,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, sum );
                 }
@@ -179,7 +195,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
@@ -216,7 +236,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
@@ -252,7 +276,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
@@ -288,7 +316,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
@@ -324,7 +356,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, max );
                 }
@@ -361,7 +397,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( this.name, min );
                 }
@@ -388,7 +428,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, max );
                 }
@@ -414,7 +458,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, min );
                 }
@@ -440,7 +488,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, min );
                 }
@@ -466,7 +518,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, max );
                 }
@@ -492,7 +548,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, max );
                 }
@@ -519,7 +579,11 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
+<<<<<<< HEAD
             public void handleComplete ( List<Map<String, Object>> rows ) {
+=======
+            public void handleComplete( List<Map<String, Object>> rows ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 if ( rows.size () > 0 ) {
                     rows.get ( 0 ).put ( name, min );
                 }

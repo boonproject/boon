@@ -23,22 +23,38 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     }
 
     @Override
+<<<<<<< HEAD
     public Object findFirst () {
+=======
+    public Object findFirst() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.findFirst ();
     }
 
     @Override
+<<<<<<< HEAD
     public Object findLast () {
+=======
+    public Object findLast() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.findLast ();
     }
 
     @Override
+<<<<<<< HEAD
     public Object findFirstKey () {
+=======
+    public Object findFirstKey() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.findFirstKey ();
     }
 
     @Override
+<<<<<<< HEAD
     public Object findLastKey () {
+=======
+    public Object findLastKey() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.findLastKey ();
     }
 
@@ -89,12 +105,20 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     }
 
     @Override
+<<<<<<< HEAD
     public Object min () {
+=======
+    public Object min() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.min ();
     }
 
     @Override
+<<<<<<< HEAD
     public Object max () {
+=======
+    public Object max() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.max ();
     }
 
@@ -129,12 +153,20 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isPrimaryKeyOnly () {
+=======
+    public boolean isPrimaryKeyOnly() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.isPrimaryKeyOnly ();
     }
 
     @Override
+<<<<<<< HEAD
     public void init () {
+=======
+    public void init() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         index.init ();
     }
 
@@ -152,22 +184,38 @@ public abstract class BaseIndexWrapper implements SearchIndex {
     public abstract boolean delete ( Object o );
 
     @Override
+<<<<<<< HEAD
     public List all () {
+=======
+    public List all() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.all ();
     }
 
     @Override
+<<<<<<< HEAD
     public int size () {
+=======
+    public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.size ();
     }
 
     @Override
+<<<<<<< HEAD
     public Collection toCollection () {
+=======
+    public Collection toCollection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return index.toCollection ();
     }
 
     @Override
+<<<<<<< HEAD
     public void clear () {
+=======
+    public void clear() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         index.clear ();
     }
 

@@ -34,13 +34,21 @@ public interface LookupIndex<KEY, ITEM> extends Bag<ITEM> {
 
     boolean deleteByKey ( KEY key );
 
+<<<<<<< HEAD
     boolean isPrimaryKeyOnly ();
+=======
+    boolean isPrimaryKeyOnly();
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     void setInputKeyTransformer ( Function<Object, KEY> func );
 
     void setBucketSize ( int size );
 
+<<<<<<< HEAD
     void init ();
+=======
+    void init();
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     boolean has ( KEY key );
 

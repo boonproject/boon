@@ -6,13 +6,21 @@ import org.boon.validation.validators.*;
 public class Validators {
 
 
+<<<<<<< HEAD
     public static RequiredValidator required ( String detailMessage, String summaryMessage ) {
+=======
+    public static RequiredValidator required( String detailMessage, String summaryMessage ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         RequiredValidator validator = new RequiredValidator ();
         init ( detailMessage, summaryMessage, validator );
         return validator;
     }
 
+<<<<<<< HEAD
     public static RequiredValidator required ( String detailMessage ) {
+=======
+    public static RequiredValidator required( String detailMessage ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         RequiredValidator validator = new RequiredValidator ();
         init ( detailMessage, validator );
         return validator;
@@ -31,7 +39,11 @@ public class Validators {
     }
 
 
+<<<<<<< HEAD
     public static LengthValidator length ( int min, int max, String message ) {
+=======
+    public static LengthValidator length( int min, int max, String message ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         LengthValidator v = new LengthValidator ();
         v.setMax ( max );
         v.setMin ( min );
@@ -40,14 +52,22 @@ public class Validators {
     }
 
 
+<<<<<<< HEAD
     public static LengthValidator length ( String message, String summary ) {
+=======
+    public static LengthValidator length( String message, String summary ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         LengthValidator eq = new LengthValidator ();
         init ( message, summary, eq );
         return eq;
     }
 
 
+<<<<<<< HEAD
     public static CompositeValidator validators ( FieldValidator... validators ) {
+=======
+    public static CompositeValidator validators( FieldValidator... validators ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         CompositeValidator compositeValidator = new CompositeValidator ();
         compositeValidator.setValidatorList ( Lists.list ( validators ) );
         return compositeValidator;
@@ -55,7 +75,11 @@ public class Validators {
     }
 
 
+<<<<<<< HEAD
     public static RegexValidator match ( String match, String message, String summary ) {
+=======
+    public static RegexValidator match( String match, String message, String summary ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         RegexValidator v = new RegexValidator ();
         v.setMatch ( match );
         init ( message, summary, v );
@@ -63,7 +87,11 @@ public class Validators {
     }
 
 
+<<<<<<< HEAD
     public static RegexValidator dontMatch ( String match, String message, String summary ) {
+=======
+    public static RegexValidator dontMatch( String match, String message, String summary ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         RegexValidator v = new RegexValidator ();
         v.setMatch ( match );
         v.setNegate ( true );

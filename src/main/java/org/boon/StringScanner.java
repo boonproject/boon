@@ -8,7 +8,11 @@ import java.util.Objects;
 public class StringScanner {
 
 
+<<<<<<< HEAD
     public static boolean isDigits ( String input ) {
+=======
+    public static boolean isDigits( String input ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return CharScanner.isDigits ( Reflection.toCharArray ( input ) );
     }
 
@@ -40,7 +44,11 @@ public class StringScanner {
     }
 
 
+<<<<<<< HEAD
     public static String[] splitByCharsNoneEmpty ( final String string, final char... delimiters ) {
+=======
+    public static String[] splitByCharsNoneEmpty( final String string, final char... delimiters ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Objects.requireNonNull ( string );
 
         char[][] comps = CharScanner.splitByCharsNoneEmpty ( Reflection.toCharArray ( string ), delimiters );
@@ -48,7 +56,11 @@ public class StringScanner {
     }
 
 
+<<<<<<< HEAD
     public static String[] splitByCharsNoneEmpty ( final String string, int start, int end, final char... delimiters ) {
+=======
+    public static String[] splitByCharsNoneEmpty( final String string, int start, int end, final char... delimiters ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Objects.requireNonNull ( string );
 
         char[][] comps = CharScanner.splitByCharsNoneEmpty ( Reflection.toCharArray ( string ), start, end, delimiters );

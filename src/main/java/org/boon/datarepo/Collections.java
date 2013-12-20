@@ -100,7 +100,11 @@ public class Collections {
      * @param classes   listStream of classes that we can criteria against, these can be component classes
      * @return generic listStream decorated with criteria features.
      */
+<<<<<<< HEAD
     public static <T> List<T> listQuery ( final List<T> list, boolean useField, boolean useUnSafe, Class<?>... classes ) {
+=======
+    public static <T> List<T> listQuery( final List<T> list, boolean useField, boolean useUnSafe, Class<?>... classes ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( list == null || list.size () == 0 ) {
             return list;
         }
@@ -178,7 +182,11 @@ public class Collections {
      * @param <T>
      * @return
      */
+<<<<<<< HEAD
     public static <T> Set<T> setQuery ( final Set<T> set, boolean useField, boolean useUnSafe ) {
+=======
+    public static <T> Set<T> setQuery( final Set<T> set, boolean useField, boolean useUnSafe ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( set == null || set.size () == 0 ) {
             return set;
         }
@@ -200,7 +208,11 @@ public class Collections {
      * @param <T>
      * @return
      */
+<<<<<<< HEAD
     private static <T> SearchableCollectionComposer getSearchableCollectionComposer ( Collection set, boolean useField, boolean useUnSafe, Class<?>... classes ) {
+=======
+    private static <T> SearchableCollectionComposer getSearchableCollectionComposer( Collection set, boolean useField, boolean useUnSafe, Class<?>... classes ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         SearchableCollectionComposer query = SPIFactory.getSearchableCollectionFactory ().get ();
 
 
@@ -385,22 +397,38 @@ public class Collections {
 
 
         @Override
+<<<<<<< HEAD
         public Iterator<T> iterator () {
+=======
+        public Iterator<T> iterator() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return set.iterator ();
         }
 
         @Override
+<<<<<<< HEAD
         public int size () {
+=======
+        public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return set.size ();
         }
 
         @Override
+<<<<<<< HEAD
         public SearchableCollection searchCollection () {
+=======
+        public SearchableCollection searchCollection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return searchCollection;
         }
 
         @Override
+<<<<<<< HEAD
         public Collection collection () {
+=======
+        public Collection collection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return set;
         }
     }
@@ -437,18 +465,30 @@ public class Collections {
 
 
         @Override
+<<<<<<< HEAD
         public int size () {
+=======
+        public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return list.size ();
         }
 
 
         @Override
+<<<<<<< HEAD
         public SearchableCollection searchCollection () {
+=======
+        public SearchableCollection searchCollection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return query;
         }
 
         @Override
+<<<<<<< HEAD
         public Collection collection () {
+=======
+        public Collection collection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return this.list;
         }
     }

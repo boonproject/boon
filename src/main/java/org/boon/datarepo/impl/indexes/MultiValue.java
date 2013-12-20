@@ -45,7 +45,11 @@ class MultiValue<T> {
         return org.size () == 0 ? null : org;
     }
 
+<<<<<<< HEAD
     private MultiValue () {
+=======
+    private MultiValue() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     }
 
@@ -64,17 +68,29 @@ class MultiValue<T> {
         values.remove ( item );
     }
 
+<<<<<<< HEAD
     T getValue () {
+=======
+    T getValue() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         return ( values.size () > 0 ) ? values.get ( 0 ) : null;
     }
 
+<<<<<<< HEAD
     final List<T> getValues () {
+=======
+    final List<T> getValues() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return values;
     }
 
 
+<<<<<<< HEAD
     int size () {
+=======
+    int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return values.size ();
     }
 

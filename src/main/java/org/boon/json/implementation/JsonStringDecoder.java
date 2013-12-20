@@ -7,7 +7,11 @@ import org.boon.primitive.Chr;
 
 public class JsonStringDecoder {
 
+<<<<<<< HEAD
     public static String decode ( String string ) {
+=======
+    public static String decode( String string ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( !string.contains ( "\\" ) ) {
             return string;
         }
@@ -21,7 +25,11 @@ public class JsonStringDecoder {
     }
 
 
+<<<<<<< HEAD
     public static String decode ( char[] chars, int start, int to ) {
+=======
+    public static String decode( char[] chars, int start, int to ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( !Chr.contains ( chars, '\\', start, to - start ) ) {
             return new String ( chars, start, to - start );
@@ -30,7 +38,11 @@ public class JsonStringDecoder {
     }
 
 
+<<<<<<< HEAD
     public static String decodeForSure ( CharSequence cs, int start, int to ) {
+=======
+    public static String decodeForSure( CharSequence cs, int start, int to ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( cs instanceof String ) {
             return decodeForSure ( ( String ) cs, start, to );
         } else {
@@ -40,7 +52,11 @@ public class JsonStringDecoder {
     }
 
 
+<<<<<<< HEAD
     public static String decodeForSure ( String string, int start, int to ) {
+=======
+    public static String decodeForSure( String string, int start, int to ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         char[] cs = ( char[] ) Reflection.idx ( string, "value" );
         return decodeForSure ( cs, start, to );
     }
@@ -49,7 +65,11 @@ public class JsonStringDecoder {
         return decodeForSure ( chars, 0, chars.length );
     }
 
+<<<<<<< HEAD
     public static String decodeForSure ( char[] chars, int start, int to ) {
+=======
+    public static String decodeForSure( char[] chars, int start, int to ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         CharBuf builder = CharBuf.create ( to - start );
         for ( int index = start; index < to; index++ ) {
@@ -114,7 +134,11 @@ public class JsonStringDecoder {
     }
 
 
+<<<<<<< HEAD
     public static String decode ( final byte[] chars, int start, int to ) {
+=======
+    public static String decode( final byte[] chars, int start, int to ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         final byte[] cs = chars;
 

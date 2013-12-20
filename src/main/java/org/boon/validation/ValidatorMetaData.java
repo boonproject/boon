@@ -20,7 +20,11 @@ public class ValidatorMetaData {
         return new ValidatorMetaData ( name, properties );
     }
 
+<<<<<<< HEAD
     public ValidatorMetaData () {
+=======
+    public ValidatorMetaData() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
     public ValidatorMetaData ( String name, Map<String, Object> properties ) {
@@ -32,7 +36,11 @@ public class ValidatorMetaData {
         this.name = name;
     }
 
+<<<<<<< HEAD
     public String getName () {
+=======
+    public String getName() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 
@@ -40,7 +48,11 @@ public class ValidatorMetaData {
         this.properties = properties;
     }
 
+<<<<<<< HEAD
     public Map<String, Object> getProperties () {
+=======
+    public Map<String, Object> getProperties() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return properties;
     }
 }

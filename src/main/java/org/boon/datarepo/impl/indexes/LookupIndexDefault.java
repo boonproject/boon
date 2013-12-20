@@ -149,7 +149,11 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
+<<<<<<< HEAD
     public List<ITEM> all () {
+=======
+    public List<ITEM> all() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "all called" );
@@ -163,12 +167,20 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
+<<<<<<< HEAD
     public int size () {
+=======
+    public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.map.size ();
     }
 
     @Override
+<<<<<<< HEAD
     public Collection<ITEM> toCollection () {
+=======
+    public Collection<ITEM> toCollection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ( Collection<ITEM> ) this.map.values ();
     }
 
@@ -217,7 +229,11 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     //TODO implement so we can store only primary keys in a index to make indexes smaller if
     //we ever decide to cache actual items
     @Override
+<<<<<<< HEAD
     public boolean isPrimaryKeyOnly () {
+=======
+    public boolean isPrimaryKeyOnly() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return storeKeyInIndexOnly;
     }
 
@@ -232,7 +248,11 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     }
 
     @Override
+<<<<<<< HEAD
     public void init () {
+=======
+    public void init() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
     }
 
     @Override
@@ -242,7 +262,11 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
 
     @Override
+<<<<<<< HEAD
     public void clear () {
+=======
+    public void clear() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( log.isLoggable ( Level.FINE ) ) {
             log.fine ( "clear called" );

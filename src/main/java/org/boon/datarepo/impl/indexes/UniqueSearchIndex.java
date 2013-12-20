@@ -48,7 +48,11 @@ public class UniqueSearchIndex<KEY, ITEM> extends UniqueLookupIndex<KEY, ITEM> i
     }
 
     @Override
+<<<<<<< HEAD
     public void init () {
+=======
+    public void init() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         super.map
                 = SPIFactory.getMapCreatorFactory ().get ().createNavigableMap ( keyType, collator );
 
@@ -57,22 +61,38 @@ public class UniqueSearchIndex<KEY, ITEM> extends UniqueLookupIndex<KEY, ITEM> i
     }
 
     @Override
+<<<<<<< HEAD
     public ITEM findFirst () {
+=======
+    public ITEM findFirst() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.firstEntry ().getValue ();
     }
 
     @Override
+<<<<<<< HEAD
     public ITEM findLast () {
+=======
+    public ITEM findLast() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.lastEntry ().getValue ();
     }
 
     @Override
+<<<<<<< HEAD
     public KEY findFirstKey () {
+=======
+    public KEY findFirstKey() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.firstEntry ().getKey ();
     }
 
     @Override
+<<<<<<< HEAD
     public KEY findLastKey () {
+=======
+    public KEY findLastKey() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.lastEntry ().getKey ();
     }
 
@@ -172,12 +192,20 @@ public class UniqueSearchIndex<KEY, ITEM> extends UniqueLookupIndex<KEY, ITEM> i
     }
 
     @Override
+<<<<<<< HEAD
     public ITEM min () {
+=======
+    public ITEM min() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.firstEntry ().getValue ();
     }
 
     @Override
+<<<<<<< HEAD
     public ITEM max () {
+=======
+    public ITEM max() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.lastEntry ().getValue ();
     }
 
@@ -187,7 +215,11 @@ public class UniqueSearchIndex<KEY, ITEM> extends UniqueLookupIndex<KEY, ITEM> i
     }
 
     @Override
+<<<<<<< HEAD
     public int size () {
+=======
+    public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.navigableMap.size ();
     }
 

@@ -36,14 +36,22 @@ public class PropertyNameUtils {
 
     public static Function<String, String> upperCase = new Function<String, String> () {
         @Override
+<<<<<<< HEAD
         public String apply ( String in ) {
+=======
+        public String apply( String in ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return in.toUpperCase ();
         }
     };
 
     public static Function<String, String> lowerCase = new Function<String, String> () {
         @Override
+<<<<<<< HEAD
         public String apply ( String in ) {
+=======
+        public String apply( String in ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             return in.toLowerCase ();
         }
     };

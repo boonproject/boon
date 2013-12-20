@@ -31,8 +31,13 @@ public class LongRangeValidator extends AbstractRangeValidator {
      * @param fieldValue the value to validate
      * @param fieldLabel the logical name of the value used for generating error messages
      */
+<<<<<<< HEAD
     @SuppressWarnings ( "unchecked" )
     public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
+=======
+    @SuppressWarnings("unchecked")
+    public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         ValidatorMessage validatorMessage = new ValidatorMessage ();
         if ( fieldValue == null ) {
             return validatorMessage;
@@ -52,7 +57,11 @@ public class LongRangeValidator extends AbstractRangeValidator {
 
 
     /* Initialize this instance. */
+<<<<<<< HEAD
     public void init () {
+=======
+    public void init() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         /* If the underMin message was not injected, create a default. */
         if ( underMin == null ) {
             underMin = new MessageSpecification ();

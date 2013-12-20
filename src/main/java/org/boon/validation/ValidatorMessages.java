@@ -16,7 +16,11 @@ import java.util.List;
 public class ValidatorMessages implements Serializable, ValidatorMessageHolder, Iterable<ValidatorMessage> {
     private List<ValidatorMessage> messages = new ArrayList<ValidatorMessage> ();
 
+<<<<<<< HEAD
     public Iterator<ValidatorMessage> iterator () {
+=======
+    public Iterator<ValidatorMessage> iterator() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.messages.iterator ();
     }
 
@@ -25,7 +29,11 @@ public class ValidatorMessages implements Serializable, ValidatorMessageHolder, 
     }
 
     @Override
+<<<<<<< HEAD
     public boolean hasError () {
+=======
+    public boolean hasError() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         for ( ValidatorMessage message : messages ) {
             if ( message.hasError () ) {
                 return true;

@@ -23,7 +23,11 @@ import static org.boon.Str.slc;
 //import java.util.stream.CloseableStream;
 
 
+<<<<<<< HEAD
 @SuppressWarnings ( "unchecked" )
+=======
+@SuppressWarnings("unchecked")
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 public class IO {
 
 
@@ -376,7 +380,11 @@ public class IO {
 
     }
 
+<<<<<<< HEAD
     public static CharBuf read ( Reader input, CharBuf charBuf ) {
+=======
+    public static CharBuf read( Reader input, CharBuf charBuf ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return read ( input, charBuf, 2048 );
     }
 

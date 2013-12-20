@@ -30,6 +30,7 @@ public class SPIFactory {
     static Supplier<SearchableCollectionComposer> searchableCollectionFactory = null;
     static Supplier<ObjectEditorComposer> objectEditorFactory;
 
+<<<<<<< HEAD
     public static Supplier<MapCreator> getMapCreatorFactory () {
         return mapCreatorFactory;
     }
@@ -67,11 +68,54 @@ public class SPIFactory {
     }
 
     public static void init () {
+=======
+    public static Supplier<MapCreator> getMapCreatorFactory() {
+        return mapCreatorFactory;
+    }
+
+    public static Supplier<SearchableCollectionComposer> getSearchableCollectionFactory() {
+        return searchableCollectionFactory;
+    }
+
+    public static Supplier<RepoBuilder> getRepoBuilderFactory() {
+        return repoBuilderFactory;
+    }
+
+    public static Function<Class, SearchIndex> getSearchIndexFactory() {
+        return searchIndexFactory;
+    }
+
+    public static Function<Class, SearchIndex> getUniqueSearchIndexFactory() {
+        return uniqueSearchIndexFactory;
+    }
+
+    public static Function<Class, LookupIndex> getLookupIndexFactory() {
+        return lookupIndexFactory;
+    }
+
+    public static Function<Class, LookupIndex> getUniqueLookupIndexFactory() {
+        return uniqueLookupIndexFactory;
+    }
+
+    public static Supplier<RepoComposer> getRepoFactory() {
+        return repoFactory;
+    }
+
+    public static Supplier<Filter> getFilterFactory() {
+        return filterFactory;
+    }
+
+    public static void init() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( mapCreatorFactory == null ) {
             mapCreatorFactory = new Supplier<MapCreator> () {
                 @Override
+<<<<<<< HEAD
                 public MapCreator get () {
+=======
+                public MapCreator get() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return new MapCreatorImpl ();
                 }
             };
@@ -79,14 +123,22 @@ public class SPIFactory {
         if ( repoBuilderFactory == null ) {
             repoBuilderFactory = new Supplier<RepoBuilder> () {
                 @Override
+<<<<<<< HEAD
                 public RepoBuilder get () {
+=======
+                public RepoBuilder get() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return new RepoBuilderDefault ();
                 }
             };
         }
         if ( searchIndexFactory == null ) {
             searchIndexFactory = new Function<Class, SearchIndex> () {
+<<<<<<< HEAD
                 public SearchIndex apply ( Class keyType ) {
+=======
+                public SearchIndex apply( Class keyType ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     if ( keyType == Typ.string ) {
                         return new SearchIndexDefault ( keyType );
                     } else {
@@ -123,7 +175,11 @@ public class SPIFactory {
         if ( repoFactory == null ) {
             repoFactory = new Supplier<RepoComposer> () {
                 @Override
+<<<<<<< HEAD
                 public RepoComposer get () {
+=======
+                public RepoComposer get() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return new RepoDefault<> ();
                 }
             };
@@ -132,7 +188,11 @@ public class SPIFactory {
         if ( filterFactory == null ) {
             filterFactory = new Supplier<Filter> () {
                 @Override
+<<<<<<< HEAD
                 public Filter get () {
+=======
+                public Filter get() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return new FilterDefault ();
                 }
             };
@@ -141,7 +201,11 @@ public class SPIFactory {
         if ( searchableCollectionFactory == null ) {
             searchableCollectionFactory = new Supplier<SearchableCollectionComposer> () {
                 @Override
+<<<<<<< HEAD
                 public SearchableCollectionComposer get () {
+=======
+                public SearchableCollectionComposer get() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return new SearchableCollectionDefault ();
                 }
             };
@@ -150,7 +214,11 @@ public class SPIFactory {
         if ( objectEditorFactory == null ) {
             objectEditorFactory = new Supplier<ObjectEditorComposer> () {
                 @Override
+<<<<<<< HEAD
                 public ObjectEditorComposer get () {
+=======
+                public ObjectEditorComposer get() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                     return new ObjectEditorDefault ();
                 }
             };
@@ -196,7 +264,11 @@ public class SPIFactory {
         SPIFactory.filterFactory = filterFactory;
     }
 
+<<<<<<< HEAD
     public static Supplier<ObjectEditorComposer> getObjectEditorFactory () {
+=======
+    public static Supplier<ObjectEditorComposer> getObjectEditorFactory() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return objectEditorFactory;
     }
 }

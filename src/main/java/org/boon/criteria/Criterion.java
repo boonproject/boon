@@ -47,21 +47,37 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
+<<<<<<< HEAD
     public String getName () {
         return name;
     }
 
     public Operator getOperator () {
+=======
+    public String getName() {
+        return name;
+    }
+
+    public Operator getOperator() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return operator;
     }
 
 
+<<<<<<< HEAD
     public VALUE getValue () {
+=======
+    public VALUE getValue() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return value;
     }
 
 
+<<<<<<< HEAD
     public VALUE[] getValues () {
+=======
+    public VALUE[] getValues() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return values;
     }
 
@@ -90,11 +106,19 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
     @Override
+<<<<<<< HEAD
     public int hashCode () {
         return hashCode;
     }
 
     public int doHashCode () {
+=======
+    public int hashCode() {
+        return hashCode;
+    }
+
+    public int doHashCode() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         int result = name != null ? name.hashCode () : 0;
         result = 31 * result + ( operator != null ? operator.hashCode () : 0 );
         result = 31 * result + ( value != null ? value.hashCode () : 0 );
@@ -103,12 +127,20 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
     @Override
+<<<<<<< HEAD
     public String toString () {
+=======
+    public String toString() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return toString;
     }
 
 
+<<<<<<< HEAD
     public String doToString () {
+=======
+    public String doToString() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         CharBuf builder = CharBuf.create ( 80 );
         builder.add ( "c{" );
         builder.add ( "\"name\":'" );
@@ -123,7 +155,11 @@ public abstract class Criterion<VALUE> extends Criteria {
         return builder.toString ();
     }
 
+<<<<<<< HEAD
     public boolean isInitialized () {
+=======
+    public boolean isInitialized() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return initialized;
     }
 
@@ -149,11 +185,19 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     }
 
+<<<<<<< HEAD
     public void cleanAfterGroupTest () {
         clean ();
     }
 
     public void clean () {
+=======
+    public void cleanAfterGroupTest() {
+        clean ();
+    }
+
+    public void clean() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.field = null;
         this.fields = null;
         this.objectUnderTest = null;
@@ -204,14 +248,22 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
+<<<<<<< HEAD
     private FieldAccess field () {
+=======
+    private FieldAccess field() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( field == null ) {
             field = fields ().get ( this.name );
         }
         return field;
     }
 
+<<<<<<< HEAD
     private Map<String, FieldAccess> fields () {
+=======
+    private Map<String, FieldAccess> fields() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( fields == null ) {
             fields = getFieldsInternal ( this.objectUnderTest );
@@ -286,7 +338,11 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
+<<<<<<< HEAD
     private void initIfNeeded () {
+=======
+    private void initIfNeeded() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( initialized ) return;
         initialized = true;
@@ -630,7 +686,11 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
+<<<<<<< HEAD
     private void initForDate () {
+=======
+    private void initForDate() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         value = ( VALUE ) Conversions.toDate ( value );
 
         if ( operator == Operator.BETWEEN ) {

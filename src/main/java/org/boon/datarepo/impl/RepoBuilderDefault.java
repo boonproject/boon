@@ -342,7 +342,11 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @return RepoBuilder
      */
     @Override
+<<<<<<< HEAD
     public RepoBuilder useCache () {
+=======
+    public RepoBuilder useCache() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.cache = true;
         return this;
     }
@@ -354,7 +358,11 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @return RepoBuilder
      */
     @Override
+<<<<<<< HEAD
     public RepoBuilder storeKeyInIndexOnly () {
+=======
+    public RepoBuilder storeKeyInIndexOnly() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.storeKeyInIndexOnly = true;
 
         return this;
@@ -379,7 +387,11 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @return
      */
     @Override
+<<<<<<< HEAD
     public RepoBuilder debug () {
+=======
+    public RepoBuilder debug() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.debug = true;
         return this;
     }
@@ -512,7 +524,11 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @return
      */
     @Override
+<<<<<<< HEAD
     public RepoBuilder collateIndex ( String propertyName ) {
+=======
+    public RepoBuilder collateIndex( String propertyName ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         collators.put ( propertyName, Collator.getInstance () );
         return this;
     }
@@ -567,7 +583,11 @@ public class RepoBuilderDefault implements RepoBuilder {
     /**
      *
      */
+<<<<<<< HEAD
     private void initializeTheFactories () {
+=======
+    private void initializeTheFactories() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( this.repoComposerFactory == null ) {
             this.repoComposerFactory = SPIFactory.getRepoFactory ();
@@ -704,7 +724,11 @@ public class RepoBuilderDefault implements RepoBuilder {
         return query;
     }
 
+<<<<<<< HEAD
     private ObjectEditor constructObjectEditor ( Map<String, FieldAccess> fields ) {
+=======
+    private ObjectEditor constructObjectEditor( Map<String, FieldAccess> fields ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         ObjectEditorComposer editorComposer = this.objectEditorFactory.get ();
         if ( this.hashCodeOptimizationOn ) {
             editorComposer.hashCodeOptimizationOn ();
@@ -787,7 +811,11 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     @Override
+<<<<<<< HEAD
     public RepoBuilder indexHierarchy () {
+=======
+    public RepoBuilder indexHierarchy() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.indexHierarchy = true;
         return this;
     }
@@ -799,7 +827,11 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     @Override
+<<<<<<< HEAD
     public RepoBuilder hashCodeOptimizationOn () {
+=======
+    public RepoBuilder hashCodeOptimizationOn() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.hashCodeOptimizationOn = true;
         return this;
     }

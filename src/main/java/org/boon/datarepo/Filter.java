@@ -27,6 +27,10 @@ public interface Filter {
 
     ResultSet filter ( Criteria... expressions );
 
+<<<<<<< HEAD
     void invalidate ();
+=======
+    void invalidate();
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 }

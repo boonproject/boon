@@ -9,7 +9,11 @@ import java.util.List;
 public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, ITEM> {
     private final ObjectEditor<KEY, ITEM> objectEditorDefault;
 
+<<<<<<< HEAD
     public ObjectEditorDecoratorBase () {
+=======
+    public ObjectEditorDecoratorBase() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         this.objectEditorDefault = null;
     }
 
@@ -18,7 +22,11 @@ public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, I
 
     }
 
+<<<<<<< HEAD
     public ObjectEditor<KEY, ITEM> delegate () {
+=======
+    public ObjectEditor<KEY, ITEM> delegate() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return objectEditorDefault;
     }
 
@@ -343,7 +351,11 @@ public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, I
         return objectEditorDefault.getKey ( item );
     }
 
+<<<<<<< HEAD
     public void clear () {
+=======
+    public void clear() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         objectEditorDefault.clear ();
     }
 
@@ -351,6 +363,7 @@ public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, I
         return objectEditorDefault.delete ( item );
     }
 
+<<<<<<< HEAD
     public List<ITEM> all () {
         return objectEditorDefault.all ();
     }
@@ -360,6 +373,17 @@ public class ObjectEditorDecoratorBase<KEY, ITEM> implements ObjectEditor<KEY, I
     }
 
     public Collection<ITEM> toCollection () {
+=======
+    public List<ITEM> all() {
+        return objectEditorDefault.all ();
+    }
+
+    public int size() {
+        return objectEditorDefault.size ();
+    }
+
+    public Collection<ITEM> toCollection() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return objectEditorDefault.toCollection ();
     }
 

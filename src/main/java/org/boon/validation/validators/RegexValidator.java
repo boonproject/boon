@@ -24,7 +24,11 @@ public class RegexValidator extends BaseValidator {
     private boolean negate;
     private Map<String, Pattern> compiledRegexCache = new HashMap<> ();
 
+<<<<<<< HEAD
     public boolean isNegate () {
+=======
+    public boolean isNegate() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.negate;
     }
 
@@ -37,7 +41,11 @@ public class RegexValidator extends BaseValidator {
      *
      * @return the regular expression
      */
+<<<<<<< HEAD
     protected String getMatch () {
+=======
+    protected String getMatch() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.match;
     }
 
@@ -45,7 +53,11 @@ public class RegexValidator extends BaseValidator {
         this.match = regex;
     }
 
+<<<<<<< HEAD
     public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
+=======
+    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         ValidatorMessage message = new ValidatorMessage ();
         if ( object == null ) {
             return message;
@@ -72,7 +84,11 @@ public class RegexValidator extends BaseValidator {
      *
      * @return the resulting pattern object
      */
+<<<<<<< HEAD
     private Pattern compileRegex () {
+=======
+    private Pattern compileRegex() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         Pattern pattern = compiledRegexCache.get ( getMatch () );
         if ( pattern == null ) {

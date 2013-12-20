@@ -8,7 +8,11 @@ public class ValidationException extends Exception {
         this.field = field;
     }
 
+<<<<<<< HEAD
     public String getField () {
+=======
+    public String getField() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return field;
     }
 

@@ -7,13 +7,21 @@ import java.lang.reflect.ParameterizedType;
 
 
 public interface FieldAccess {
+<<<<<<< HEAD
     String getName ();
+=======
+    String getName();
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     Object getValue ( Object obj );
 
     void setValue ( Object obj, Object value );
 
+<<<<<<< HEAD
     public void setFromValue ( Object obj, Value value );
+=======
+    public void setFromValue( Object obj, Value value );
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     boolean getBoolean ( Object obj );
 
@@ -58,6 +66,7 @@ public interface FieldAccess {
     void setObject ( Object obj, Object value );
 
 
+<<<<<<< HEAD
     boolean isFinal ();
 
     boolean isStatic ();
@@ -77,4 +86,25 @@ public interface FieldAccess {
 
 
     public Class<?> getComponentClass ();
+=======
+    boolean isFinal();
+
+    boolean isStatic();
+
+    boolean isVolatile();
+
+    boolean isQualified();
+
+    boolean isReadOnly();
+
+    Class<?> getType();
+
+    Field getField();
+
+
+    public ParameterizedType getParameterizedType();
+
+
+    public Class<?> getComponentClass();
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 }

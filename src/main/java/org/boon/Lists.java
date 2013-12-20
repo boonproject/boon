@@ -11,11 +11,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Lists {
 
 
+<<<<<<< HEAD
     public static <V> List<V> list ( Class<V> clazz ) {
         return new ArrayList<> ();
     }
 
     public static <V> List<V> list ( Iterable<V> iterable ) {
+=======
+    public static <V> List<V> list( Class<V> clazz ) {
+        return new ArrayList<> ();
+    }
+
+    public static <V> List<V> list( Iterable<V> iterable ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<V> list = new ArrayList<> ();
         for ( V o : iterable ) {
             list.add ( o );
@@ -53,7 +61,11 @@ public class Lists {
         return new ArrayList<> ( collection );
     }
 
+<<<<<<< HEAD
     public static <V> List<V> list ( Enumeration<V> enumeration ) {
+=======
+    public static <V> List<V> list( Enumeration<V> enumeration ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<V> list = new ArrayList<> ();
         while ( enumeration.hasMoreElements () ) {
             list.add ( enumeration.nextElement () );
@@ -62,16 +74,28 @@ public class Lists {
     }
 
 
+<<<<<<< HEAD
     public static <V> Enumeration<V> enumeration ( final List<V> list ) {
         final Iterator<V> iter = list.iterator ();
         return new Enumeration<V> () {
             @Override
             public boolean hasMoreElements () {
+=======
+    public static <V> Enumeration<V> enumeration( final List<V> list ) {
+        final Iterator<V> iter = list.iterator ();
+        return new Enumeration<V> () {
+            @Override
+            public boolean hasMoreElements() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 return iter.hasNext ();
             }
 
             @Override
+<<<<<<< HEAD
             public V nextElement () {
+=======
+            public V nextElement() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                 return iter.next ();
             }
         };
@@ -79,7 +103,11 @@ public class Lists {
     }
 
 
+<<<<<<< HEAD
     public static <V> List<V> list ( Iterator<V> iterator ) {
+=======
+    public static <V> List<V> list( Iterator<V> iterator ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<V> list = new ArrayList<> ();
         while ( iterator.hasNext () ) {
             list.add ( iterator.next () );
@@ -138,11 +166,19 @@ public class Lists {
      * Universal methods
      */
     @Universal
+<<<<<<< HEAD
     public static int len ( List<?> list ) {
         return list.size ();
     }
 
     public static boolean isEmpty ( List<?> list ) {
+=======
+    public static int len( List<?> list ) {
+        return list.size ();
+    }
+
+    public static boolean isEmpty( List<?> list ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return list == null || list.size () == 0;
     }
 
@@ -180,7 +216,11 @@ public class Lists {
     }
 
     @Universal
+<<<<<<< HEAD
     public static <V> List<V> slc ( List<V> list, int startIndex ) {
+=======
+    public static <V> List<V> slc( List<V> list, int startIndex ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return slc ( list, startIndex, list.size () );
     }
 
@@ -229,7 +269,11 @@ public class Lists {
 
 
     /* End universal methods. */
+<<<<<<< HEAD
     private static <T> int calculateIndex ( List<T> list, int originalIndex ) {
+=======
+    private static <T> int calculateIndex( List<T> list, int originalIndex ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         final int length = list.size ();
 
         Objects.requireNonNull ( list, "listStream cannot be null" );
@@ -259,7 +303,11 @@ public class Lists {
     }
 
 
+<<<<<<< HEAD
     public static <T> List<T> listFromProperty ( Class<T> propertyType, String propertyPath, Collection<?> list ) {
+=======
+    public static <T> List<T> listFromProperty( Class<T> propertyType, String propertyPath, Collection<?> list ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<T> newList = new ArrayList<> ( list.size () );
 
         for ( Object item : list ) {

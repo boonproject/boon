@@ -109,7 +109,11 @@ public interface SearchableCollection<KEY, ITEM> extends Collection<ITEM> {
     void addLookupIndex ( String name, LookupIndex<?, ?> si );
 
 
+<<<<<<< HEAD
     List<ITEM> all ();
+=======
+    List<ITEM> all();
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
     void removeByKey ( KEY key );
 

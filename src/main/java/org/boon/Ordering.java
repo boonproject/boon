@@ -30,7 +30,11 @@ public class Ordering {
         sortDesc ( list, "this" );
     }
 
+<<<<<<< HEAD
     public static void sortAsc ( List list, String sortBy ) {
+=======
+    public static void sortAsc( List list, String sortBy ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( list == null || list.size () == 0 ) {
             return;
         }
@@ -39,7 +43,11 @@ public class Ordering {
         sortAsc ( list, sortBy, fields );
     }
 
+<<<<<<< HEAD
     public static void sortDesc ( List list, String sortBy ) {
+=======
+    public static void sortDesc( List list, String sortBy ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( list == null || list.size () == 0 ) {
             return;
         }
@@ -56,7 +64,11 @@ public class Ordering {
         sort ( list, sortBy, fields, false );
     }
 
+<<<<<<< HEAD
     public static void sort ( List list, String sortBy, Map<String, FieldAccess> fields, boolean ascending ) {
+=======
+    public static void sort( List list, String sortBy, Map<String, FieldAccess> fields, boolean ascending ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( list == null || list.size () == 0 ) {
             return;
         }
@@ -79,7 +91,11 @@ public class Ordering {
     }
 
 
+<<<<<<< HEAD
     public static Comparator universalComparator ( final FieldAccess field, final boolean ascending ) {
+=======
+    public static Comparator universalComparator( final FieldAccess field, final boolean ascending ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return new Comparator () {
             @Override
             public int compare ( Object o1, Object o2 ) {
@@ -99,8 +115,13 @@ public class Ordering {
     }
 
 
+<<<<<<< HEAD
     public static Comparator universalComparator ( final String sortBy, final Map<String, FieldAccess> fields,
                                                    final boolean ascending, final List<Comparator> comparators ) {
+=======
+    public static Comparator universalComparator( final String sortBy, final Map<String, FieldAccess> fields,
+                                                  final boolean ascending, final List<Comparator> comparators ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return new Comparator () {
             @Override
             public int compare ( Object o1, Object o2 ) {

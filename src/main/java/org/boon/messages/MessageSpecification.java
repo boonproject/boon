@@ -64,7 +64,11 @@ public class MessageSpecification implements Serializable {
      * You should only call the init method if you don't inject
      * values into the detailMessage and summaryMessage.
      */
+<<<<<<< HEAD
     public void init () {
+=======
+    public void init() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         /* If the parent and name are equal to null,
          * use the classname to load resources.
     	 * */
@@ -86,7 +90,11 @@ public class MessageSpecification implements Serializable {
         }
     }
 
+<<<<<<< HEAD
     public boolean isNoSummary () {
+=======
+    public boolean isNoSummary() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return noSummary;
     }
 
@@ -160,7 +168,11 @@ public class MessageSpecification implements Serializable {
     /**
      * Convert the keys to values.
      */
+<<<<<<< HEAD
     private Object[] keysToValues ( List<String> argKeys ) {
+=======
+    private Object[] keysToValues( List<String> argKeys ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         List<String> values = new ArrayList<> ();
         for ( String key : argKeys ) {
             values.add ( getMessage ( key ) );
@@ -172,7 +184,11 @@ public class MessageSpecification implements Serializable {
      * Allows client objects to set the subject for the current thread
      * per instance of the MessageSpecification.
      */
+<<<<<<< HEAD
     public void setCurrentSubject ( String subject ) {
+=======
+    public void setCurrentSubject( String subject ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         ValidationContext.get ().setCurrentSubject ( subject );
     }
 
@@ -180,13 +196,21 @@ public class MessageSpecification implements Serializable {
      * Gets the current subject or the configured subject if the
      * current subject is not found.
      */
+<<<<<<< HEAD
     public String getSubject () {
+=======
+    public String getSubject() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return ValidationContext.get ().getCurrentSubject () == null ? this.subject :
                 ValidationContext.get ().getCurrentSubject ();
     }
 
 
+<<<<<<< HEAD
     protected String getDetailMessage () {
+=======
+    protected String getDetailMessage() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.detailMessage;
     }
 
@@ -194,7 +218,11 @@ public class MessageSpecification implements Serializable {
         this.detailMessage = detailKey;
     }
 
+<<<<<<< HEAD
     protected String getSummaryMessage () {
+=======
+    protected String getSummaryMessage() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.summaryMessage;
     }
 
@@ -202,7 +230,11 @@ public class MessageSpecification implements Serializable {
         this.summaryMessage = summaryKey;
     }
 
+<<<<<<< HEAD
     protected List<String> getDetailArgs () {
+=======
+    protected List<String> getDetailArgs() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.detailArgs;
     }
 
@@ -210,7 +242,11 @@ public class MessageSpecification implements Serializable {
         this.detailArgs = argKeys;
     }
 
+<<<<<<< HEAD
     protected List<String> getSummaryArgs () {
+=======
+    protected List<String> getSummaryArgs() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.summaryArgs;
     }
 
@@ -222,7 +258,11 @@ public class MessageSpecification implements Serializable {
         this.name = aName;
     }
 
+<<<<<<< HEAD
     public String getName () {
+=======
+    public String getName() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return this.name;
     }
 

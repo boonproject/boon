@@ -15,22 +15,40 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
         private final ReadWriteLock readWriteLock;
         private final int limit;
 
+<<<<<<< HEAD
         CacheMap ( final int limit, boolean fair ) {
+=======
+        CacheMap( final int limit, boolean fair ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             super ( 16, 0.75f, true );
             this.limit = limit;
             readWriteLock = new ReentrantReadWriteLock ( fair );
 
         }
+<<<<<<< HEAD
+=======
+
+        protected boolean removeEldestEntry( final Map.Entry<K, V> eldest ) {
+            return super.size () > limit;
+        }
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         protected boolean removeEldestEntry ( final Map.Entry<K, V> eldest ) {
             return super.size () > limit;
         }
 
+<<<<<<< HEAD
 
         @Override
         public V put ( K key, V value ) {
             readWriteLock.writeLock ().lock ();
 
+=======
+        @Override
+        public V put( K key, V value ) {
+            readWriteLock.writeLock ().lock ();
+
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             V old;
             try {
 
@@ -44,7 +62,11 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
 
         @Override
+<<<<<<< HEAD
         public V get ( Object key ) {
+=======
+        public V get( Object key ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             readWriteLock.writeLock ().lock ();
             V value;
 
@@ -58,7 +80,11 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
         }
 
         @Override
+<<<<<<< HEAD
         public V remove ( Object key ) {
+=======
+        public V remove( Object key ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
             readWriteLock.writeLock ().lock ();
             V value;
@@ -73,7 +99,11 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
         }
 
+<<<<<<< HEAD
         public V getSilent ( K key ) {
+=======
+        public V getSilent( K key ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             readWriteLock.writeLock ().lock ();
 
             V value;
@@ -92,7 +122,11 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
         }
 
+<<<<<<< HEAD
         public int size () {
+=======
+        public int size() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             readWriteLock.readLock ().lock ();
             int size = -1;
             try {
@@ -103,7 +137,11 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
             return size;
         }
 
+<<<<<<< HEAD
         public String toString () {
+=======
+        public String toString() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
             readWriteLock.readLock ().lock ();
             String str;
             try {
@@ -117,6 +155,7 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
     }
 
+<<<<<<< HEAD
     public LruSimpleConcurrentCache ( final int limit, boolean fair ) {
         int cores = Runtime.getRuntime ().availableProcessors ();
         int stripeSize = cores < 2 ? 4 : cores * 2;
@@ -207,7 +246,75 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
         if ( useFastHash ) {
             return sun.misc.Hashing.randomHashSeed ( instance );
+=======
+    public LruSimpleConcurrentCache( final int limit, boolean fair ) {
+        int cores = Runtime.getRuntime ().availableProcessors ();
+        int stripeSize = cores < 2 ? 4 : cores * 2;
+        cacheRegions = new CacheMap[stripeSize];
+        for ( int index = 0; index < cacheRegions.length; index++ ) {
+            cacheRegions[index] = new CacheMap<> ( limit / cacheRegions.length, fair );
         }
+    }
+
+    public LruSimpleConcurrentCache( final int concurrency, final int limit, boolean fair ) {
+
+        cacheRegions = new CacheMap[concurrency];
+        for ( int index = 0; index < cacheRegions.length; index++ ) {
+            cacheRegions[index] = new CacheMap<> ( limit / cacheRegions.length, fair );
+        }
+    }
+
+    private int stripeIndex( K key ) {
+        int hashCode = key.hashCode () * 31;
+        return hashCode % ( cacheRegions.length );
+    }
+
+    private CacheMap<K, V> map( K key ) {
+        return cacheRegions[stripeIndex ( key )];
+    }
+
+    @Override
+    public void put( K key, V value ) {
+
+        map ( key ).put ( key, value );
+    }
+
+    @Override
+    public V get( K key ) {
+        return map ( key ).get ( key );
+    }
+
+    //For testing only
+    @Override
+    public V getSilent( K key ) {
+        return map ( key ).getSilent ( key );
+
+    }
+
+    @Override
+    public void remove( K key ) {
+        map ( key ).remove ( key );
+    }
+
+    @Override
+    public int size() {
+        int size = 0;
+        for ( CacheMap<K, V> cache : cacheRegions ) {
+            size += cache.size ();
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
+        }
+        return size;
+    }
+
+    public String toString() {
+
+        StringBuilder builder = new StringBuilder ();
+        for ( CacheMap<K, V> cache : cacheRegions ) {
+            builder.append ( cache.toString () ).append ( '\n' );
+        }
+
+        return builder.toString ();
+    }
 
         return 0;
     }

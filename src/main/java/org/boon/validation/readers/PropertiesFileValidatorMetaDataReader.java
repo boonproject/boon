@@ -94,7 +94,11 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
          * the resource name is com.foo.Foo.properties.
          */
         String[] sourceParts = className.split ( "[.]" );
+<<<<<<< HEAD
         String resourceName = ( sourceParts[ sourceParts.length - 1 ] ) + ".properties";
+=======
+        String resourceName = ( sourceParts[sourceParts.length - 1] ) + ".properties";
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         /* Check to see if this properties file was already loaded. */
         Properties validationMetaDataProps = metaDataPropsCache.get ( resourceName );
@@ -136,8 +140,13 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
      * @param unparsedString
      * @return
      */
+<<<<<<< HEAD
     private List<ValidatorMetaData> extractMetaDataFromString ( Class<?> clazz,
                                                                 String propertyName, String unparsedString ) {
+=======
+    private List<ValidatorMetaData> extractMetaDataFromString( Class<?> clazz,
+                                                               String propertyName, String unparsedString ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         String propertyKey = clazz.getName () + "." + propertyName;
 
         /* See if we parsed this bad boy already. */
@@ -205,7 +214,11 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
                              * list of properties. 
                              */
                             validatorMetaData.getProperties ().put (
+<<<<<<< HEAD
                                     valueParts[ 0 ], valueParts[ 1 ] );
+=======
+                                    valueParts[0], valueParts[1] );
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
                         }
                     }
                 }

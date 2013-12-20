@@ -16,7 +16,11 @@ import static org.boon.core.reflection.Conversions.*;
 public abstract class UnsafeField implements FieldAccess {
 
 
+<<<<<<< HEAD
     private static Unsafe getUnsafe () {
+=======
+    private static Unsafe getUnsafe() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         try {
             Field f = Unsafe.class.getDeclaredField ( "theUnsafe" );
             f.setAccessible ( true );
@@ -39,7 +43,11 @@ public abstract class UnsafeField implements FieldAccess {
     protected final String name;
 
 
+<<<<<<< HEAD
     public static UnsafeField createUnsafeField ( Field field ) {
+=======
+    public static UnsafeField createUnsafeField( Field field ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         Class<?> type = field.getType ();
         boolean isVolatile = Modifier.isVolatile ( field.getModifiers () );
         if ( !isVolatile ) {
@@ -87,7 +95,11 @@ public abstract class UnsafeField implements FieldAccess {
     }
 
 
+<<<<<<< HEAD
     protected UnsafeField ( Field f ) {
+=======
+    protected UnsafeField( Field f ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         name = f.getName ();
         field = f;
 
@@ -176,7 +188,11 @@ public abstract class UnsafeField implements FieldAccess {
 
     }
 
+<<<<<<< HEAD
     public void setFromValue ( Object obj, Value value ) {
+=======
+    public void setFromValue( Object obj, Value value ) {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
         if ( type == Typ.string ) {
             setObject ( obj, value.stringValue () );
@@ -282,62 +298,110 @@ public abstract class UnsafeField implements FieldAccess {
     }
 
 
+<<<<<<< HEAD
     public boolean getStaticBoolean () {
+=======
+    public boolean getStaticBoolean() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getBoolean ( base );
     }
 
 
+<<<<<<< HEAD
     public int getStaticInt () {
+=======
+    public int getStaticInt() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getInt ( base );
     }
 
 
+<<<<<<< HEAD
     public short getStaticShort () {
+=======
+    public short getStaticShort() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getShort ( base );
     }
 
 
+<<<<<<< HEAD
     public long getStaticLong () {
         return getLong ( base );
     }
 
     public double getStaticDouble () {
+=======
+    public long getStaticLong() {
+        return getLong ( base );
+    }
+
+    public double getStaticDouble() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getDouble ( base );
     }
 
 
+<<<<<<< HEAD
     public float getStaticFloat () {
+=======
+    public float getStaticFloat() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getFloat ( base );
     }
 
 
+<<<<<<< HEAD
     public byte getStaticByte () {
+=======
+    public byte getStaticByte() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getByte ( base );
     }
 
 
+<<<<<<< HEAD
     public Object getObject () {
+=======
+    public Object getObject() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return getObject ( base );
     }
 
 
     @Override
+<<<<<<< HEAD
     public Field getField () {
+=======
+    public Field getField() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return field;
     }
 
 
     @Override
+<<<<<<< HEAD
     public boolean isFinal () {
         return isFinal;
     }
 
     public Object getBase () {
+=======
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public Object getBase() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return base;
     }
 
 
+<<<<<<< HEAD
     public ParameterizedType getParameterizedType () {
+=======
+    public ParameterizedType getParameterizedType() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
 
 
         ParameterizedType type = null;
@@ -359,7 +423,11 @@ public abstract class UnsafeField implements FieldAccess {
 
     private Class<?> componentClass;
 
+<<<<<<< HEAD
     public Class<?> getComponentClass () {
+=======
+    public Class<?> getComponentClass() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         if ( componentClass == null ) {
             componentClass = doGetComponentClass ();
         }
@@ -367,47 +435,79 @@ public abstract class UnsafeField implements FieldAccess {
     }
 
 
+<<<<<<< HEAD
     private Class<?> doGetComponentClass () {
+=======
+    private Class<?> doGetComponentClass() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         final ParameterizedType parameterizedType = this.getParameterizedType ();
         if ( parameterizedType == null ) {
             return null;
         } else {
+<<<<<<< HEAD
             return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[ 0 ] );
+=======
+            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[0] );
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         }
     }
 
     @Override
+<<<<<<< HEAD
     public boolean isStatic () {
+=======
+    public boolean isStatic() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isStatic;
     }
 
 
     @Override
+<<<<<<< HEAD
     public boolean isVolatile () {
+=======
+    public boolean isVolatile() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return isVolatile;
     }
 
 
     @Override
+<<<<<<< HEAD
     public boolean isQualified () {
+=======
+    public boolean isQualified() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return qualified;
     }
 
 
     @Override
+<<<<<<< HEAD
     public boolean isReadOnly () {
+=======
+    public boolean isReadOnly() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return readOnly;
     }
 
 
     @Override
+<<<<<<< HEAD
     public Class<?> getType () {
+=======
+    public Class<?> getType() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return type;
     }
 
 
     @Override
+<<<<<<< HEAD
     public String getName () {
+=======
+    public String getName() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return name;
     }
 
@@ -477,7 +577,11 @@ public abstract class UnsafeField implements FieldAccess {
 
 
     @Override
+<<<<<<< HEAD
     public String toString () {
+=======
+    public String toString() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         return "UnsafeField [field=" + field + ", offset=" + offset
                 + ", isFinal=" + isFinal + ", base=" + base + ", isStatic="
                 + isStatic + ", isVolatile=" + isVolatile + ", qualified="

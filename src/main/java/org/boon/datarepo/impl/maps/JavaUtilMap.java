@@ -8,7 +8,11 @@ import static org.boon.core.reflection.Conversions.wrapAsObject;
 
 public class JavaUtilMap<K, V> extends ConcurrentHashMap<K, V> implements TypedMap<K, V> {
 
+<<<<<<< HEAD
     public JavaUtilMap () {
+=======
+    public JavaUtilMap() {
+>>>>>>> 6573736791d65b6ea53d0b71a4c23db4a87188fc
         super ();
     }
 
