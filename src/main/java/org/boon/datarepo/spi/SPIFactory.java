@@ -10,8 +10,8 @@ import org.boon.datarepo.impl.indexes.SearchIndexDefault;
 import org.boon.datarepo.impl.indexes.UniqueLookupIndex;
 import org.boon.datarepo.impl.indexes.UniqueSearchIndex;
 import org.boon.datarepo.impl.maps.MapCreatorImpl;
-import org.boon.predicates.Function;
-import org.boon.predicates.Supplier;
+import org.boon.core.Function;
+import org.boon.core.Supplier;
 
 
 /**

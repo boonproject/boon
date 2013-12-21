@@ -1,44 +1,51 @@
 package org.boon.datarepo.impl.decorators;
 
+import org.boon.cache.Cache;
+import org.boon.cache.CacheType;
+import org.boon.cache.SimpleConcurrentCache;
 import org.boon.criteria.Criteria;
 import org.boon.criteria.CriteriaFactory;
 import org.boon.criteria.Group;
 import org.boon.datarepo.Filter;
 import org.boon.datarepo.ResultSet;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class FilterWithSimpleCache extends FilterDecoratorBase {
 
-    Map<Criteria, ResultSet> queryCache = new ConcurrentHashMap<> ();
-    AtomicInteger flushCount = new AtomicInteger ();
+    /* The fifo cache is meant for a routine that is maybe using a few queries in a loop. */
+    private Cache<Criteria, ResultSet> fifoCache = new SimpleConcurrentCache<> ( 50, false, CacheType.FIFO );
+    private Cache<Criteria, ResultSet> lruCache = new SimpleConcurrentCache<> ( 1_000, false, CacheType.LRU );
 
 
     @Override
     public ResultSet filter ( Criteria... expressions ) {
         Group and = CriteriaFactory.and ( expressions );
-        checkCache ();
 
-        ResultSet results = queryCache.get ( and );
+        ResultSet results = fifoCache.get ( and );
 
-        if ( results != null ) {
-            return results;
+
+        if ( results == null ) {
+            results = lruCache.get ( and );
+            if ( results != null ) {
+                fifoCache.put ( and, results );
+                return results;
+            }
         }
 
 
         results = super.filter ( expressions );
 
-        queryCache.put ( and, results );
-        flushCount.incrementAndGet ();
+        fifoCache.put ( and, results );
+        lruCache.put ( and, results );
 
         return results;
     }
 
     @Override
     public void invalidate () {
-        queryCache.clear ();
+
+          /* The fifo cache is meant for a routine that is maybe using a few queries in a loop. */
+        fifoCache = new SimpleConcurrentCache<> ( 50, false, CacheType.FIFO );
+        lruCache = new SimpleConcurrentCache<> ( 1_000, false, CacheType.LRU );
         super.invalidate ();
     }
 
@@ -46,11 +53,5 @@ public class FilterWithSimpleCache extends FilterDecoratorBase {
         super ( delegate );
     }
 
-    private void checkCache () {
-        if ( flushCount.get () > 10_000 && queryCache.size () > 10_000 ) {
-            queryCache.clear ();
-            flushCount.set ( 0 );
-        }
-    }
 
 }

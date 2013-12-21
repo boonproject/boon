@@ -14,7 +14,7 @@ import org.boon.datarepo.impl.indexes.UniqueLookupIndex;
 import org.boon.datarepo.spi.FilterComposer;
 import org.boon.datarepo.spi.SearchIndex;
 import org.boon.datarepo.spi.SearchableCollectionComposer;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 
 import java.util.*;
 import java.util.logging.Logger;

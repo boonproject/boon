@@ -2,7 +2,7 @@ package org.boon;
 
 
 import org.boon.core.reflection.Reflection;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 
 import java.lang.reflect.Array;
 import java.util.*;

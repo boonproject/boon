@@ -23,7 +23,7 @@ import org.boon.datarepo.impl.decorators.FilterWithSimpleCache;
 import org.boon.datarepo.spi.SPIFactory;
 import org.boon.datarepo.spi.SearchIndex;
 import org.boon.datarepo.spi.SearchableCollectionComposer;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 
 import java.util.*;
 

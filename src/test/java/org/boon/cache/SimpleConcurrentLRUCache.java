@@ -11,7 +11,7 @@ public class SimpleConcurrentLRUCache {
 
     @Test
     public void test () {
-        LruCache<Integer, Integer> cache = new LruSimpleConcurrentCache<> ( 1, 4, false );
+        Cache<Integer, Integer> cache = new SimpleConcurrentCache<> ( 1, 4, false );
 
 
         cache.put ( 0, 0 );
@@ -60,8 +60,7 @@ public class SimpleConcurrentLRUCache {
 
     @Test
     public void test2 () {
-        LruCache<Integer, Integer> cache = new LruSimpleConcurrentCache<> ( 400, false );
-
+        Cache<Integer, Integer> cache = new SimpleConcurrentCache<> ( 400 );
 
 
         cache.put ( 0, 0 );

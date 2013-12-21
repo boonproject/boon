@@ -8,7 +8,7 @@ public class LruCacheTest {
 
     @Test
     public void test () {
-        LruCache<Integer, Integer> cache = new LruCacheNormal<> ( 4 );
+        Cache<Integer, Integer> cache = new FastReaderSingleThreadedCache<> ( 4 );
 
 
         cache.put ( 0, 0 );

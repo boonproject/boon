@@ -45,7 +45,7 @@ public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
             List<ValidatorMetaData> list = reader.readMetaData ( clazz, propertyName );
 
 			/* Put the validation rules in the linked hash map by name so the last reader can override
-			 * the previous reader. 
+             * the previous reader.
 			 */
             for ( ValidatorMetaData data : list ) {
                 String overrideName = data.getName ();

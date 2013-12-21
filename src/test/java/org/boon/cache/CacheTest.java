@@ -12,11 +12,11 @@ import static org.boon.Exceptions.die;
  */
 public class CacheTest {
 
-    private Cache<Integer, Integer> lruCache;
+    private FastConcurrentReadLruLfuFifoCache<Integer, Integer> lruCache;
 
     @Before
     public void setUp () throws Exception {
-        lruCache = new Cache<> ( 10 );
+        lruCache = new FastConcurrentReadLruLfuFifoCache<> ( 10 );
 
     }
 
@@ -29,7 +29,7 @@ public class CacheTest {
     @Test
     public void fifo () throws Exception {
 
-        lruCache = new Cache<> ( 0, 10, CacheType.FIFO );
+        lruCache = new FastConcurrentReadLruLfuFifoCache<> ( true, 10, CacheType.FIFO );
 
         lruCache.put ( 0, 10 );
         lruCache.put ( 1, 10 );
@@ -67,7 +67,7 @@ public class CacheTest {
     public void test () throws Exception {
 
 
-        lruCache = new Cache<> ( 0, 10, CacheType.LFU );
+        lruCache = new FastConcurrentReadLruLfuFifoCache<> ( true, 10, CacheType.LFU );
 
 
         lruCache.put ( -1, 10 );

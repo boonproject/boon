@@ -15,7 +15,7 @@
  */
 package org.boon.datarepo;
 
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 
 import java.util.List;
 

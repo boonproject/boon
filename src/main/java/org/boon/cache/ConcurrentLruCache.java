@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ConcurrentLruCache<KEY, VALUE> implements LruCache<KEY, VALUE> {
+public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
     private final ReentrantLock lock = new ReentrantLock ();
 

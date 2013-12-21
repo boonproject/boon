@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import static org.boon.Exceptions.die;
 
-@SuppressWarnings ( { "unchecked", "SuspiciousSystemArraycopy" } )
+@SuppressWarnings ({ "unchecked", "SuspiciousSystemArraycopy" })
 public class Arrays {
 
 
@@ -256,7 +256,7 @@ public class Arrays {
     }
 
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <V> V[] array ( Collection<V> collection ) {
         if ( collection.size () > 0 ) {
             Object newInstance = Array.newInstance ( collection.iterator ().next ().getClass (),

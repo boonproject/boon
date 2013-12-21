@@ -596,7 +596,7 @@ public class Reflection {
     }
 
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T idxGeneric ( Class<T> t, Object object, final String path ) {
 
         Objects.requireNonNull ( object );
@@ -1067,7 +1067,7 @@ public class Reflection {
         return fields.containsKey ( name );
     }
 
-    @SuppressWarnings ( "serial" )
+    @SuppressWarnings ("serial")
     public static class ReflectionException extends RuntimeException {
 
         public ReflectionException () {
@@ -1218,20 +1218,20 @@ public class Reflection {
     }
 
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T fromMap ( Map<String, Object> map, Class<T> clazz ) {
 
         return fromMap ( map, newInstance ( clazz ) );
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static Object fromMap ( Map<String, Object> map ) {
         String className = ( String ) map.get ( "class" );
         Object newInstance = newInstance ( className );
         return fromMap ( map, newInstance );
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T fromMap ( Map<String, Object> map, T newInstance ) {
 
 
@@ -1289,12 +1289,12 @@ public class Reflection {
         return newInstance;
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T fromValueMap ( Map<String, Value> map, Class<T> clazz ) {
         return fromValueMap ( map, newInstance ( clazz ) );
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T fromValueMap ( Map<String, Value> map, T newInstance ) {
 
 
@@ -1384,7 +1384,7 @@ public class Reflection {
 
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     private static void handleCollectionOfMaps ( Object newInstance,
                                                  FieldAccess field, Collection<Map<String, Object>> collectionOfMaps ) {
 
@@ -1408,7 +1408,7 @@ public class Reflection {
     }
 
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     private static void handleCollectionOfValues ( Object newInstance,
                                                    FieldAccess field, Collection<Value> collectionOfValues ) {
 

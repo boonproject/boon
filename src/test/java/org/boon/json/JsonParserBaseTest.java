@@ -301,7 +301,7 @@ public class JsonParserBaseTest {
         System.out.println ( obj.getClass () );
     }
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void testBooleanParseError () {
 
         Object obj = jsonParser.parse ( Map.class,
@@ -527,7 +527,7 @@ public class JsonParserBaseTest {
     //
 
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void doubleQuoteInsideOfSingleQuote () {
 
 
@@ -540,7 +540,7 @@ public class JsonParserBaseTest {
 
     }
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void supportSimpleQuoteInNonProtectedStringValue () {
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
@@ -551,7 +551,7 @@ public class JsonParserBaseTest {
         );
     }
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void supportNonProtectedStrings () {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
                 lines (
@@ -562,7 +562,7 @@ public class JsonParserBaseTest {
 
     }
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void crapInAnArray () {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
                 lines (
@@ -574,7 +574,7 @@ public class JsonParserBaseTest {
     }
 
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void randomStringAsValuesWithSpaces () {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
                 lines (
@@ -586,7 +586,7 @@ public class JsonParserBaseTest {
     }
 
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void randomStringAsValuesWithSpaceAndMoreSpaces () {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
                 lines (
@@ -610,7 +610,7 @@ public class JsonParserBaseTest {
     }
 
 
-    @Test ( expected = JsonException.class )
+    @Test (expected = JsonException.class)
     public void singleQuotes () {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
                 lines (

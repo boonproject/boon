@@ -1192,7 +1192,7 @@ public class Maps {
     }
 
 
-    @SuppressWarnings ( { "unchecked", "rawtypes" } )
+    @SuppressWarnings ({ "unchecked", "rawtypes" })
     public static <T> T idx ( Class<T> clz, Map map, Object key ) {
         Object value = map.get ( key.toString () );
         if ( value == null ) {

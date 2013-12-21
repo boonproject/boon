@@ -213,7 +213,7 @@ public final class MessageUtils {
             private void processSpecialChars ( final StringBuilder buffer,
                                                char cchar ) {
                 lastCharWasSpecial = false;
-				/* If the character is '.' or '_' then append a space and mark
+                /* If the character is '.' or '_' then append a space and mark
 				 * the next iteration to capitalize.
 				 */
                 if ( cchar == '.' || cchar == '_' ) {

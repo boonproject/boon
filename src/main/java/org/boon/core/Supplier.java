@@ -1,4 +1,4 @@
-package org.boon.predicates;
+package org.boon.core;
 
 public interface Supplier<T> {
 

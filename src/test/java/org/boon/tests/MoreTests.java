@@ -137,7 +137,7 @@ public class MoreTests {
 
     }
 
-    @Test ( expected = Exception.class )
+    @Test (expected = Exception.class)
     public void fieldOnlyInSubClass4 () throws Exception {
         List<Employee> queryableList = $q ( h_list, Employee.class, SalesEmployee.class );
         List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );

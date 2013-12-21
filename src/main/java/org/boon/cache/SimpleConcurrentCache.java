@@ -1,50 +1,38 @@
 package org.boon.cache;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
+public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
-    final CacheMap<K, V>[] cacheRegions;
+    final SimpleCache<K, V>[] cacheRegions;
 
 
-    private static class CacheMap<K, V> extends LinkedHashMap<K, V> {
+    private static class SimpleThreadSafeCache<K, V> extends SimpleCache<K, V> {
         private final ReadWriteLock readWriteLock;
-        private final int limit;
 
-        CacheMap ( final int limit, boolean fair ) {
-            super ( 16, 0.75f, true );
-            this.limit = limit;
+        SimpleThreadSafeCache ( final int limit, CacheType type, boolean fair ) {
+
+            super ( limit, type );
             readWriteLock = new ReentrantReadWriteLock ( fair );
-
-        }
-
-        protected boolean removeEldestEntry ( final Map.Entry<K, V> eldest ) {
-            return super.size () > limit;
         }
 
 
         @Override
-        public V put ( K key, V value ) {
+        public void put ( K key, V value ) {
             readWriteLock.writeLock ().lock ();
-
-            V old;
             try {
 
-                old = super.put ( key, value );
+                super.put ( key, value );
             } finally {
                 readWriteLock.writeLock ().unlock ();
             }
-            return old;
-
         }
 
 
         @Override
-        public V get ( Object key ) {
+        public V get ( K key ) {
             readWriteLock.writeLock ().lock ();
             V value;
 
@@ -58,18 +46,16 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
         }
 
         @Override
-        public V remove ( Object key ) {
+        public void remove ( K key ) {
 
             readWriteLock.writeLock ().lock ();
-            V value;
 
             try {
 
-                value = super.remove ( key );
+                super.remove ( key );
             } finally {
                 readWriteLock.writeLock ().unlock ();
             }
-            return value;
 
         }
 
@@ -78,16 +64,13 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
             V value;
 
-            try {
 
-                value = this.get ( key );
-                if ( value != null ) {
-                    this.remove ( key );
-                    this.put ( key, value );
-                }
+            try {
+                value = super.getSilent ( key );
             } finally {
                 readWriteLock.writeLock ().unlock ();
             }
+
             return value;
 
         }
@@ -117,28 +100,46 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
     }
 
-    public LruSimpleConcurrentCache ( final int limit, boolean fair ) {
+
+    public SimpleConcurrentCache ( final int limit ) {
+        this ( limit, false, CacheType.LRU );
+    }
+
+    public SimpleConcurrentCache ( final int limit, CacheType type ) {
+        this ( limit, false, type );
+    }
+
+    public SimpleConcurrentCache ( final int limit, boolean fair, CacheType type ) {
         int cores = Runtime.getRuntime ().availableProcessors ();
         int stripeSize = cores < 2 ? 4 : cores * 2;
         stripeSize = roundUpToPowerOf2 ( stripeSize );
-        cacheRegions = new CacheMap[ stripeSize ];
+        cacheRegions = new SimpleCache[ stripeSize ];
         for ( int index = 0; index < cacheRegions.length; index++ ) {
-            cacheRegions[ index ] = new CacheMap<> ( limit / cacheRegions.length, fair );
+            cacheRegions[ index ] = new SimpleThreadSafeCache<> ( limit / cacheRegions.length, type, fair );
         }
     }
 
-    public LruSimpleConcurrentCache ( final int concurrency, final int limit, boolean fair ) {
+    public SimpleConcurrentCache ( final int concurrency, final int limit, boolean fair, CacheType type ) {
 
 
         final int stripeSize = roundUpToPowerOf2 ( concurrency );
-        cacheRegions = new CacheMap[ stripeSize ];
+        cacheRegions = new SimpleCache[ stripeSize ];
         for ( int index = 0; index < cacheRegions.length; index++ ) {
-            cacheRegions[ index ] = new CacheMap<> ( limit / cacheRegions.length, fair );
+            cacheRegions[ index ] = new SimpleThreadSafeCache<> ( limit / cacheRegions.length, type, fair );
         }
     }
 
+    public SimpleConcurrentCache ( final int concurrency, final int limit, boolean fair ) {
 
-    private CacheMap<K, V> map ( K key ) {
+
+        final int stripeSize = roundUpToPowerOf2 ( concurrency );
+        cacheRegions = new SimpleCache[ stripeSize ];
+        for ( int index = 0; index < cacheRegions.length; index++ ) {
+            cacheRegions[ index ] = new SimpleThreadSafeCache<> ( limit / cacheRegions.length, CacheType.LRU, fair );
+        }
+    }
+
+    private SimpleCache<K, V> map ( K key ) {
         return cacheRegions[ stripeIndex ( key ) ];
     }
 
@@ -168,7 +169,7 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
     @Override
     public int size () {
         int size = 0;
-        for ( CacheMap<K, V> cache : cacheRegions ) {
+        for ( SimpleCache<K, V> cache : cacheRegions ) {
             size += cache.size ();
         }
         return size;
@@ -177,7 +178,7 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
     public String toString () {
 
         StringBuilder builder = new StringBuilder ();
-        for ( CacheMap<K, V> cache : cacheRegions ) {
+        for ( SimpleCache<K, V> cache : cacheRegions ) {
             builder.append ( cache.toString () ).append ( '\n' );
         }
 
@@ -202,7 +203,7 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
 
     private transient final int hashSeed = randomHashSeed ( this );
 
-    private static int randomHashSeed ( LruSimpleConcurrentCache instance ) {
+    private static int randomHashSeed ( SimpleConcurrentCache instance ) {
 
 
         if ( useFastHash ) {
@@ -213,14 +214,11 @@ public class LruSimpleConcurrentCache<K, V> implements LruCache<K, V> {
     }
 
 
-    final int hash ( Object k ) {
+    private final int hash ( Object k ) {
         int h = hashSeed;
 
         h ^= k.hashCode ();
 
-        // This function ensures that hashCodes that differ only by
-        // constant multiples at each bit position have a bounded
-        // number of collisions (approximately 8 at default load factor).
         h ^= ( h >>> 20 ) ^ ( h >>> 12 );
         return h ^ ( h >>> 7 ) ^ ( h >>> 4 );
     }

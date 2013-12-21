@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class LruCacheNormal<KEY, VALUE> implements LruCache<KEY, VALUE> {
+public class FastReaderSingleThreadedCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
-    Map<KEY, VALUE> map = new HashMap<> ();
-    Deque<KEY> queue = new LinkedList<> ();
-    final int limit;
+    private final Map<KEY, VALUE> map = new HashMap<> ();
+    private final Deque<KEY> queue = new LinkedList<> ();
+    private final int limit;
 
 
-    public LruCacheNormal ( int limit ) {
+    public FastReaderSingleThreadedCache ( int limit ) {
         this.limit = limit;
     }
 

@@ -8,7 +8,7 @@ public class LruSimpleTest {
 
     @Test
     public void test () {
-        LruCache<Integer, Integer> cache = new LruSimpleCache<> ( 4 );
+        Cache<Integer, Integer> cache = new SimpleCache<> ( 4 );
 
 
         cache.put ( 0, 0 );

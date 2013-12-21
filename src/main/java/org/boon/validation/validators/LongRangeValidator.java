@@ -70,7 +70,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
             return;
         }
         /* Initialize based on type for all Integer value
-    	 * so that LongRangeValidator can be used
+         * so that LongRangeValidator can be used
     	 * for int, short, byte, and long. */
         if ( !isInitialized () ) {
             if ( type.equals ( Integer.class ) ) {

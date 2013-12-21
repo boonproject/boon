@@ -2,7 +2,7 @@ package org.boon;
 
 import org.boon.core.Sys;
 import org.boon.core.Typ;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 import org.boon.primitive.ByteBuf;
 import org.boon.primitive.CharBuf;
 
@@ -23,7 +23,7 @@ import static org.boon.Str.slc;
 //import java.util.stream.CloseableStream;
 
 
-@SuppressWarnings ( "unchecked" )
+@SuppressWarnings ("unchecked")
 public class IO {
 
 

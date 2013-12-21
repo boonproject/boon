@@ -1,7 +1,7 @@
 package org.boon.datarepo.impl.indexes;
 
 import org.boon.datarepo.spi.SearchIndex;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 
 import java.util.Collection;
 import java.util.Comparator;

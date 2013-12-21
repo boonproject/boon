@@ -219,7 +219,7 @@ public class HTTPTest {
 
     }
 
-    @Test ( expected = RuntimeException.class )
+    @Test (expected = RuntimeException.class)
     public void testSad () throws Exception {
 
         HttpServer server = HttpServer.create ( new InetSocketAddress ( 9213 ), 0 );

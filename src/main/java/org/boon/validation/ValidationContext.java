@@ -245,7 +245,7 @@ public class ValidationContext {
         String message = null; //holds the message
 
     	/* If the message starts with an i18nMarker look it up
-    	 * in the resource bundle.
+         * in the resource bundle.
     	 */
         if ( key.startsWith ( this.i18nMarker ) ) {
             try {

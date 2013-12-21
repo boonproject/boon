@@ -7,7 +7,7 @@ import org.boon.datarepo.modification.ModificationEvent;
 import org.boon.datarepo.modification.ModificationListener;
 import org.boon.tests.model.Employee;
 import org.boon.tests.model.SalesEmployee;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 
 import java.util.List;
 import java.util.logging.Level;

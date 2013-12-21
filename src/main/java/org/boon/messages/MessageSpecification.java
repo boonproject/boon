@@ -116,7 +116,7 @@ public class MessageSpecification implements Serializable {
      *                generate the message
      */
     public String createMessage ( String key, List<String> argKeys, Object... args ) {
-    	/* Look up the message. */
+        /* Look up the message. */
         String message = getMessage ( key );
     	
     	/* Holds the actual arguments. */

@@ -1,6 +1,7 @@
 package org.boon.predicates;
 
 import org.boon.Str;
+import org.boon.core.Function;
 
 public class PropertyNameUtils {
 

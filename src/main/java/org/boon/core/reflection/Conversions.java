@@ -271,7 +271,7 @@ public class Conversions {
 
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T coerce ( Class<T> clz, Object value ) {
 
         if ( clz == Typ.string || clz == Typ.chars ) {
@@ -351,7 +351,7 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T toPrimitiveArrayIfPossible ( Class<T> clz, Object value ) {
         if ( clz == Typ.intArray ) {
             return ( T ) iarray ( value );
@@ -487,7 +487,7 @@ public class Conversions {
         return values;
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static Iterator iterator ( final Object value ) {
         return iterator ( null, value );
     }
@@ -527,7 +527,7 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T toCollection ( Class<T> clz, Object value ) {
         if ( Typ.isList ( clz ) ) {
             return ( T ) toList ( value );
@@ -540,7 +540,7 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     public static List toList ( Object value ) {
         if ( value instanceof List ) {
             return ( List ) value;
@@ -556,7 +556,7 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     public static Set toSet ( Object value ) {
         if ( value instanceof Set ) {
             return ( Set ) value;
@@ -572,7 +572,7 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     public static SortedSet toSortedSet ( Object value ) {
         if ( value instanceof Set ) {
             return ( SortedSet ) value;
@@ -648,7 +648,7 @@ public class Conversions {
     public static Object toArrayGuessType ( Collection<?> value ) {
         Class<?> componentType = Reflection.getComponentType ( value );
         Object array = Array.newInstance ( componentType, value.size () );
-        @SuppressWarnings ( "unchecked" )
+        @SuppressWarnings ("unchecked")
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ();
         int index = 0;
         while ( iterator.hasNext () ) {
@@ -661,7 +661,7 @@ public class Conversions {
 
     public static Object toArray ( Class<?> componentType, Collection<?> value ) {
         Object array = Array.newInstance ( componentType, value.size () );
-        @SuppressWarnings ( "unchecked" )
+        @SuppressWarnings ("unchecked")
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator ();
         int index = 0;
         while ( iterator.hasNext () ) {

@@ -2,7 +2,7 @@ package org.boon.datarepo.impl.indexes;
 
 import org.boon.datarepo.LookupIndex;
 import org.boon.datarepo.spi.SPIFactory;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 
 import java.util.*;
 import java.util.logging.Level;

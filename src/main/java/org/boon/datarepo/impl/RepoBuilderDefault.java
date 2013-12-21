@@ -12,9 +12,9 @@ import org.boon.datarepo.impl.indexes.NestedKeySearchIndex;
 import org.boon.datarepo.impl.indexes.TypeHierarchyIndex;
 import org.boon.datarepo.modification.ModificationListener;
 import org.boon.datarepo.spi.*;
-import org.boon.predicates.Function;
+import org.boon.core.Function;
 import org.boon.predicates.PropertyNameUtils;
-import org.boon.predicates.Supplier;
+import org.boon.core.Supplier;
 
 import java.text.Collator;
 import java.util.*;

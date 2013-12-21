@@ -1,4 +1,4 @@
-package org.boon.predicates;
+package org.boon.core;
 
 /**
  * Place holder or JDK 1.8 Function
