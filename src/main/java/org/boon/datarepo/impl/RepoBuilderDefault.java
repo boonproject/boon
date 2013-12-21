@@ -1,6 +1,7 @@
 package org.boon.datarepo.impl;
 
 import org.boon.Str;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.datarepo.*;
@@ -652,11 +653,11 @@ public class RepoBuilderDefault implements RepoBuilder {
         /**
          * Load all of the fields that we need.
          */
-        this.fields = Reflection.getPropertyFieldAccessMap ( clazz, useField, useUnSafe );
+        this.fields = BeanUtils.getPropertyFieldAccessMap ( clazz );
 
         for ( Class<?> cls : classes ) {
             Map<String, FieldAccess> fieldsComponentType
-                    = Reflection.getPropertyFieldAccessMap ( cls, useField, useUnSafe );
+                    = BeanUtils.getPropertyFieldAccessMap ( cls );
 
             for ( String sKey : fieldsComponentType.keySet () ) {
                 if ( !fields.containsKey ( sKey ) ) {

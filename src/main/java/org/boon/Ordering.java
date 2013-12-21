@@ -1,6 +1,7 @@
 package org.boon;
 
 import org.boon.core.Typ;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Conversions;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -34,7 +35,7 @@ public class Ordering {
         if ( list == null || list.size () == 0 ) {
             return;
         }
-        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( list.iterator ().next ().getClass () );
+        Map<String, FieldAccess> fields = BeanUtils.getPropertyFieldAccessMap ( list.iterator ().next ().getClass () );
 
         sortAsc ( list, sortBy, fields );
     }
@@ -43,7 +44,7 @@ public class Ordering {
         if ( list == null || list.size () == 0 ) {
             return;
         }
-        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMap ( list.iterator ().next ().getClass () );
+        Map<String, FieldAccess> fields = BeanUtils.getPropertyFieldAccessMap ( list.iterator ().next ().getClass () );
 
         sortDesc ( list, sortBy, fields );
     }
@@ -176,8 +177,8 @@ public class Ordering {
             return c1.compareTo ( c2 );
         } else {
             String name = Reflection.getSortableField ( value1 );
-            String sv1 = ( String ) Reflection.getPropByPath ( value1, name );
-            String sv2 = ( String ) Reflection.getPropByPath ( value2, name );
+            String sv1 = ( String ) BeanUtils.getPropByPath ( value1, name );
+            String sv2 = ( String ) BeanUtils.getPropByPath ( value2, name );
             return Ordering.compare ( sv1, sv2 );
 
         }

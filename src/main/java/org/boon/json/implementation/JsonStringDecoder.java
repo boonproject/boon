@@ -1,5 +1,6 @@
 package org.boon.json.implementation;
 
+import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.primitive.CharBuf;
@@ -11,7 +12,7 @@ public class JsonStringDecoder {
         if ( !string.contains ( "\\" ) ) {
             return string;
         }
-        char[] cs = ( char[] ) Reflection.idx ( string, "value" );
+        char[] cs = FastStringUtils.toCharArray ( string );
         return decode ( cs, 0, cs.length );
     }
 
@@ -41,7 +42,7 @@ public class JsonStringDecoder {
 
 
     public static String decodeForSure ( String string, int start, int to ) {
-        char[] cs = ( char[] ) Reflection.idx ( string, "value" );
+        char[] cs = FastStringUtils.toCharArray ( string );
         return decodeForSure ( cs, start, to );
     }
 

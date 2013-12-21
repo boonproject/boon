@@ -300,7 +300,7 @@ public class Runner {
     }
 
 
-    @SuppressWarnings ( "serial" )
+    @SuppressWarnings ("serial")
     public static class ProcessException extends RuntimeException {
 
         public ProcessException () {

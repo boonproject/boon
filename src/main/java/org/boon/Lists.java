@@ -1,6 +1,7 @@
 package org.boon;
 
 
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.Function;
 
@@ -263,7 +264,7 @@ public class Lists {
         List<T> newList = new ArrayList<> ( list.size () );
 
         for ( Object item : list ) {
-            T newItem = ( T ) Reflection.idx ( item, propertyPath );
+            T newItem = ( T ) BeanUtils.idx ( item, propertyPath );
             newList.add ( newItem );
         }
 

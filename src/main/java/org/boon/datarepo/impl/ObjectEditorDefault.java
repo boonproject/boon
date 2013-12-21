@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl;
 
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.Update;
@@ -573,50 +574,50 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     @Override
     public Object readNestedValue ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyValue ( item, properties );
+        return BeanUtils.getPropertyValue ( item, properties );
     }
 
 
     @Override
     public int readNestedInt ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyInt ( item, properties );
+        return BeanUtils.getPropertyInt ( item, properties );
     }
 
     @Override
     public short readNestedShort ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyShort ( item, properties );
+        return BeanUtils.getPropertyShort ( item, properties );
     }
 
     @Override
     public char readNestedChar ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyChar ( item, properties );
+        return BeanUtils.getPropertyChar ( item, properties );
     }
 
     @Override
     public byte readNestedByte ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyByte ( item, properties );
+        return BeanUtils.getPropertyByte ( item, properties );
     }
 
     @Override
     public double readNestedDouble ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyDouble ( item, properties );
+        return BeanUtils.getPropertyDouble ( item, properties );
     }
 
     @Override
     public float readNestedFloat ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyFloat ( item, properties );
+        return BeanUtils.getPropertyFloat ( item, properties );
     }
 
     @Override
     public long readNestedLong ( KEY key, String... properties ) {
         ITEM item = this.get ( key );
-        return Reflection.getPropertyLong ( item, properties );
+        return BeanUtils.getPropertyLong ( item, properties );
     }
 
 

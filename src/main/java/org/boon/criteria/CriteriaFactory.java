@@ -2,6 +2,7 @@ package org.boon.criteria;
 
 
 import org.boon.core.Typ;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 
@@ -27,7 +28,7 @@ public class CriteriaFactory {
         return new Criterion<Object> ( Reflection.joinBy ( '.', path ), Operator.EQUAL, value ) {
             @Override
             public boolean resolve ( Map<String, FieldAccess> fields, Object owner ) {
-                Object v = Reflection.getPropByPath ( path );
+                Object v = BeanUtils.getPropByPath ( path );
                 if ( v instanceof List ) {
                     List list = ( List ) v;
                     for ( Object i : list ) {
@@ -49,7 +50,7 @@ public class CriteriaFactory {
         return new Criterion<Object> ( Reflection.joinBy ( '.', path ), Operator.EQUAL, value ) {
             @Override
             public boolean resolve ( Map<String, FieldAccess> fields, Object owner ) {
-                Object v = Reflection.getPropertyValue ( owner, path );
+                Object v = BeanUtils.getPropertyValue ( owner, path );
                 if ( v instanceof List ) {
                     List list = ( List ) v;
                     for ( Object i : list ) {

@@ -16,6 +16,7 @@
 package org.boon.datarepo;
 
 import org.boon.core.Typ;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.Criteria;
@@ -209,7 +210,7 @@ public class Collections {
         for ( Class<?> cls : classes ) {
 
             Map<String, FieldAccess> fieldsSubType
-                    = Reflection.getPropertyFieldAccessMap ( cls, useField, useUnSafe );
+                    = BeanUtils.getPropertyFieldAccessMap ( cls );
 
             for ( String sKey : fieldsSubType.keySet () ) {
                 if ( !fields.containsKey ( sKey ) ) {

@@ -1,6 +1,7 @@
 package org.boon.criteria;
 
 
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.predicates.Predicate;
@@ -39,7 +40,7 @@ public abstract class Criteria implements Predicate {
     protected Map<String, FieldAccess> getFieldsInternal ( Class clazz ) {
         Map<String, FieldAccess> fields = fieldsLocal == null ? null : fieldsLocal.get ();
         if ( fields == null ) {
-            fields = Reflection.getPropertyFieldAccessMap ( clazz );
+            fields = BeanUtils.getPropertyFieldAccessMap ( clazz );
         }
         return fields;
     }

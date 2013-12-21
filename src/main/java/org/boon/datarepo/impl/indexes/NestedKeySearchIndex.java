@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl.indexes;
 
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class NestedKeySearchIndex extends BaseIndexWrapper {
 
     @Override
     protected List getKeys ( Object o ) {
-        Object list = Reflection.getPropByPath ( o, this.path );
+        Object list = BeanUtils.getPropByPath ( o, this.path );
         return toList ( list );
     }
 

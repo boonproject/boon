@@ -195,11 +195,10 @@ public class Sets {
 
     @SafeVarargs
     public static <V> Set<V> safeSet ( final V... array ) {
-        Set<V> set = new CopyOnWriteArraySet<> ();
 
-        for ( V v : array ) {
-            set.add ( v );
-        }
+        List<V> list = Lists.list ( array );
+        Set<V> set = new CopyOnWriteArraySet<> ( list );
+
         return set;
     }
 

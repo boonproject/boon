@@ -2,6 +2,7 @@ package org.boon.criteria;
 
 
 import org.boon.Ordering;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 
@@ -129,7 +130,7 @@ public class Sort {
 
         Object item = list.iterator ().next ();
 
-        Map<String, FieldAccess> fields = Reflection.getFieldsFromObject ( item );
+        Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject ( item );
         Collections.sort ( list, this.comparator ( fields ) );
     }
 

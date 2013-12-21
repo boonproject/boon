@@ -3,6 +3,7 @@ package org.boon.validation.validators;
 import org.boon.AnnotationData;
 import org.boon.Annotations;
 import org.boon.Maps;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.validation.ValidationContext;
 import org.boon.validation.ValidatorMessage;
@@ -92,7 +93,7 @@ public class DomainValidator extends BaseValidator {
             if ( ( parentReference != null ) && ( !"".equals ( parentReference ) ) ) {
                 // If the parentProperty is specified, then find the parent class
 
-                Reflection.getPropertyValue ( child, ( String ) parentReference );
+                BeanUtils.getPropertyValue ( child, ( String ) parentReference );
 
             } else {
                 // Otherwise, the validation method is assumed to be in the child
@@ -115,14 +116,14 @@ public class DomainValidator extends BaseValidator {
                     } else if ( sameLevel ) {
                         Class[] parameters = new Class[ 1 ];
 
-                        parameters[ 0 ] = Reflection.getPropertyType ( child, fieldLabel );
+                        parameters[ 0 ] = BeanUtils.getPropertyType ( child, fieldLabel );
                         m = validator.getClass ().getDeclaredMethod ( methodName, parameters );
                     } else {
                         Class[] parameters = new Class[ 2 ];
                         parameters[ 0 ] = child.getClass ();
 
 
-                        parameters[ 1 ] = Reflection.getPropertyType ( child, fieldLabel );
+                        parameters[ 1 ] = BeanUtils.getPropertyType ( child, fieldLabel );
 
                         m = validator.getClass ().getDeclaredMethod ( methodName, parameters );
                     }

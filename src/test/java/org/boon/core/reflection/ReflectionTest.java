@@ -226,95 +226,95 @@ public class ReflectionTest {
             }
         }
 
-        Map<String, FieldAccess> fields = Reflection.getFieldsFromObject ( dog );
+        Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject ( dog );
 
         ok &= in ( "name", fields ) || die ();
 
-        fields = Reflection.getFieldsFromObject ( employee );
+        fields = BeanUtils.getFieldsFromObject ( employee );
 
         ok &= in ( "firstName", fields ) || die ();
 
-        fields = Reflection.getFieldsFromObject ( cat );
+        fields = BeanUtils.getFieldsFromObject ( cat );
 
         ok &= !in ( "name", fields ) || die ();
 
 
-        fields = Reflection.getFieldsFromObject ( bird );
+        fields = BeanUtils.getFieldsFromObject ( bird );
 
         ok &= in ( "name", fields ) || die ();
 
 
         //Get Property value
 
-        Object value = Reflection.getPropertyValue ( bird, "name" );
+        Object value = BeanUtils.getPropertyValue ( bird, "name" );
 
         ok &= "bird".equals ( value ) || die ();
 
 
-        value = Reflection.getPropertyValue ( employee, "firstName" );
+        value = BeanUtils.getPropertyValue ( employee, "firstName" );
 
         ok &= "Rick".equals ( value ) || die ();
 
 
-        value = Reflection.getPropertyValue ( dog, "name" );
+        value = BeanUtils.getPropertyValue ( dog, "name" );
 
         ok &= "Mooney".equals ( value ) || die ();
 
 
         Husband husband = new Husband ();
-        value = Reflection.getPropertyValue ( husband, "firstName" );
+        value = BeanUtils.getPropertyValue ( husband, "firstName" );
 
         ok &= "Rick".equals ( value ) || die ();
 
 
-        value = Reflection.getPropertyValue ( husband, "wife", "name" );
+        value = BeanUtils.getPropertyValue ( husband, "wife", "name" );
 
         ok &= "Diana".equals ( value ) || die ();
 
         //idx simple
 
-        value = Reflection.idx ( bird, "name" );
+        value = BeanUtils.idx ( bird, "name" );
 
         ok &= "bird".equals ( value ) || die ();
 
 
-        value = Reflection.idx ( employee, "firstName" );
+        value = BeanUtils.idx ( employee, "firstName" );
 
         ok &= "Rick".equals ( value ) || die ();
 
 
-        value = Reflection.idx ( dog, "name" );
+        value = BeanUtils.idx ( dog, "name" );
 
         ok &= "Mooney".equals ( value ) || die ();
 
 
         //idx nested
-        value = Reflection.idx ( husband, "wife.name" );
+        value = BeanUtils.idx ( husband, "wife.name" );
 
         ok &= "Diana".equals ( value ) || die ();
 
 
-        value = Reflection.idx ( bird, "friends[1]" );
+        value = BeanUtils.idx ( bird, "friends[1]" );
 
         ok &= "Chicken hawk".equals ( value ) || die ();
 
 
         //idx nested int     left off here.
-        value = Reflection.idxInt ( husband, "wife.age" );
+        value = BeanUtils.idxInt ( husband, "wife.age" );
 
         ok &= value.equals ( 30 ) || die ();
 
 
         TypeTester typeTest = new TypeTester ();
 
-        ok &= Reflection.idxLong ( typeTest, "types.long0" ) == typeTest.types.long0 || die ();
-        ok &= Reflection.idxByte ( typeTest, "types.byte0" ) == typeTest.types.byte0 || die ();
-        ok &= Reflection.idxShort ( typeTest, "types.short0" ) == typeTest.types.short0 || die ();
-        ok &= Reflection.idxDouble ( typeTest, "types.double0" ) == typeTest.types.double0 || die ();
-        ok &= Reflection.idxFloat ( typeTest, "types.float0" ) == typeTest.types.float0 || die ();
-        ok &= Reflection.idxChar ( typeTest, "types.char0" ) == typeTest.types.char0 || die ();
-        ok &= Reflection.idxInt ( typeTest, "types.int0" ) == typeTest.types.int0 || die ();
-        ok &= Reflection.idxBoolean ( typeTest, "types.boolean0" ) == typeTest.types.boolean0 || die ();
+        ok &= BeanUtils.idxLong ( typeTest, "types.long0" ) == typeTest.types.long0 || die ();
+        ok &= BeanUtils.idxByte ( typeTest, "types.byte0" ) == typeTest.types.byte0 || die ();
+        ok &= BeanUtils.idxShort ( typeTest, "types.short0" ) == typeTest.types.short0 || die ();
+        ok &= BeanUtils.idxDouble ( typeTest, "types.double0" ) == typeTest.types.double0 || die ();
+        ok &= BeanUtils.idxFloat ( typeTest, "types.float0" ) == typeTest.types.float0 || die ();
+        ok &= BeanUtils.idxChar ( typeTest, "types.char0" ) == typeTest.types.char0 || die ();
+        ok &= BeanUtils.idxInt ( typeTest, "types.int0" ) == typeTest.types.int0 || die ();
+        ok &= BeanUtils.idxBoolean ( typeTest, "types.boolean0" ) == typeTest.types.boolean0 || die ();
 
 
         final List<Integer> list = Lists.list ( 1, 2, 3 );

@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 
 import org.boon.Lists;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.criteria.CriteriaFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class CriteriaTest {
 
     @Before
     public void setUp () throws Exception {
-        fields = Reflection.getPropertyFieldAccessMap ( TestClass.class, true, true );
+        fields = BeanUtils.getPropertyFieldAccessMap ( TestClass.class );
 
         items = Lists.list (
                 new TestClass ( 0, 0.1f, "a", ( short ) 1, "dog", "cat", "girl" ),

@@ -2,6 +2,7 @@ package org.boon;
 
 
 import org.boon.core.Typ;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Conversions;
 import org.boon.core.reflection.Reflection;
 
@@ -1192,7 +1193,7 @@ public class Maps {
     }
 
 
-    @SuppressWarnings ({ "unchecked", "rawtypes" })
+    @SuppressWarnings ( { "unchecked", "rawtypes" } )
     public static <T> T idx ( Class<T> clz, Map map, Object key ) {
         Object value = map.get ( key.toString () );
         if ( value == null ) {
@@ -1225,7 +1226,7 @@ public class Maps {
         LinkedHashMap<String, List<T>> map = new LinkedHashMap<> ( collection.size () );
 
         for ( T item : collection ) {
-            Object oKey = Reflection.idx ( item, propertyPath );
+            Object oKey = BeanUtils.idx ( item, propertyPath );
             if ( oKey == null ) {
                 continue;
             }
@@ -1288,7 +1289,7 @@ public class Maps {
 
     private static <K, T> void doPopulateMapWithCollectionAndPropPath ( Class<K> keyType, String propertyPath, Collection<T> collection, Map<K, T> map ) {
         for ( T item : collection ) {
-            Object oKey = Reflection.idx ( item, propertyPath );
+            Object oKey = BeanUtils.idx ( item, propertyPath );
             if ( oKey == null ) {
                 continue;
             }

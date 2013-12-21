@@ -1,7 +1,7 @@
 package org.boon.cache;
 
-import org.boon.core.TimeKeeper;
-import org.boon.core.TimeKeeperBasic;
+import org.boon.core.timer.TimeKeeper;
+import org.boon.core.timer.TimeKeeperBasic;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

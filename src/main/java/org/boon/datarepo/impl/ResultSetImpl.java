@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl;
 
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Conversions;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -43,7 +44,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
     public ResultSetImpl ( List<T> results ) {
         if ( results.size () > 0 ) {
-            this.fields = Reflection.getPropertyFieldAccessMap ( results.get ( 0 ).getClass () );
+            this.fields = BeanUtils.getPropertyFieldAccessMap ( results.get ( 0 ).getClass () );
         } else {
             this.fields = Collections.EMPTY_MAP;
         }

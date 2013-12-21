@@ -4,7 +4,7 @@ package org.boon.validation.validators;
 /**
  * Abstract class for range validation.
  */
-@SuppressWarnings ( "unchecked" )
+@SuppressWarnings ("unchecked")
 public abstract class AbstractRangeValidator extends BaseValidator {
 
     /* The min value for comparison. */

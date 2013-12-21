@@ -118,7 +118,7 @@ public class MessageSpecification implements Serializable {
     public String createMessage ( String key, List<String> argKeys, Object... args ) {
         /* Look up the message. */
         String message = getMessage ( key );
-    	
+
     	/* Holds the actual arguments. */
         Object[] actualArgs;
     	
@@ -145,7 +145,7 @@ public class MessageSpecification implements Serializable {
      * @param actualArgs Arguments to the message.
      * @return
      */
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     private String doCreateMessage ( String message, Object[] actualArgs ) {
 
         return ValidationContext.get ().createMessage ( message, getSubject (), actualArgs );

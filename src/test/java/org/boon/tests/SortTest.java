@@ -2,6 +2,7 @@ package org.boon.tests;
 
 import org.boon.Lists;
 import org.boon.core.Typ;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.criteria.Sort;
 import org.boon.criteria.SortType;
 import org.boon.tests.model.Employee;
@@ -38,7 +39,7 @@ public class SortTest {
     public void simpleSort () throws Exception {
         Sort sort = new Sort ( "firstName", SortType.ASCENDING );
         sort.sort ( list );
-        List<String> firstNames = Reflection.idxList ( Typ.string, list, "firstName" );
+        List<String> firstNames = BeanUtils.idxList ( Typ.string, list, "firstName" );
         assertEquals ( "bababa", firstNames.get ( 0 ) );
         assertEquals ( "BAbaba", firstNames.get ( 1 ) );
         assertEquals ( "zaaa", firstNames.get ( 2 ) );
@@ -52,8 +53,8 @@ public class SortTest {
         Sort sort = new Sort ( "firstName", SortType.ASCENDING );
         sort.then ( "lastName" );
         sort.sort ( list );
-        List<String> firstNames = Reflection.idxList ( Typ.string, list, "firstName" );
-        List<String> lastNames = Reflection.idxList ( Typ.string, list, "lastName" );
+        List<String> firstNames = BeanUtils.idxList ( Typ.string, list, "firstName" );
+        List<String> lastNames = BeanUtils.idxList ( Typ.string, list, "lastName" );
 
         assertEquals ( "bababa", firstNames.get ( 0 ) );
         assertEquals ( "BAbaba", firstNames.get ( 1 ) );

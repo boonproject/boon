@@ -56,7 +56,7 @@ public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
                 overrideMap.put ( overrideName, data );
             }
         }
-		/* Turn the map into a list. */
+        /* Turn the map into a list. */
         return new ArrayList<ValidatorMetaData> ( overrideMap.values () );
     }
 

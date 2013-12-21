@@ -31,7 +31,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
      * @param fieldValue the value to validate
      * @param fieldLabel the logical name of the value used for generating error messages
      */
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
         ValidatorMessage validatorMessage = new ValidatorMessage ();
         if ( fieldValue == null ) {
@@ -92,7 +92,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
      * @param value
      */
     private void dynamicallyInitIfNeeded ( Object value ) {
-		/* Check to see if this class was already initialized,
+        /* Check to see if this class was already initialized,
 		 * if not, initialize it based on the type of the value.
 		 */
         if ( !isInitialized () ) {

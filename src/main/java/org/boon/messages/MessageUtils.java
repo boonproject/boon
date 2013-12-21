@@ -214,7 +214,7 @@ public final class MessageUtils {
                                                char cchar ) {
                 lastCharWasSpecial = false;
                 /* If the character is '.' or '_' then append a space and mark
-				 * the next iteration to capitalize.
+                 * the next iteration to capitalize.
 				 */
                 if ( cchar == '.' || cchar == '_' ) {
                     buffer.append ( ' ' );

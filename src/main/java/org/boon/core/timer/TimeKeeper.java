@@ -1,4 +1,4 @@
-package org.boon.core;
+package org.boon.core.timer;
 
 
 public interface TimeKeeper {

@@ -3,6 +3,7 @@ package org.boon.validation;
 
 import org.boon.Maps;
 import org.boon.core.Typ;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.validation.readers.AnnotationValidatorMetaDataReader;
 import org.boon.validation.validators.CompositeValidator;
@@ -227,7 +228,7 @@ public class RecursiveDescentPropertyValidator {
         ifPropertyBlankRemove ( properties, "detailMessage" );
         ifPropertyBlankRemove ( properties, "summaryMessage" );
 
-        Reflection.copyProperties ( validator,
+        BeanUtils.copyProperties ( validator,
                 properties );
     }
 

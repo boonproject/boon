@@ -1,6 +1,7 @@
 package org.boon.criteria;
 
 
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 
 import java.util.ArrayList;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.boon.Lists.list;
-import static org.boon.core.reflection.Reflection.getPropByPath;
 import static org.boon.core.reflection.Reflection.joinBy;
 
 public abstract class Selector {
@@ -90,7 +90,7 @@ public abstract class Selector {
             public void handleRow ( int rowNum, Map<String, Object> row,
                                     Object item, Map<String, FieldAccess> fields ) {
 
-                Object o = getPropByPath ( item, path );
+                Object o = BeanUtils.getPropByPath ( item, path );
 
 
                 row.put ( this.name, o );
@@ -115,7 +115,7 @@ public abstract class Selector {
             public void handleRow ( int rowNum, Map<String, Object> row,
                                     Object item, Map<String, FieldAccess> fields ) {
 
-                Object o = getPropByPath ( item, path );
+                Object o = BeanUtils.getPropByPath ( item, path );
 
 
                 row.put ( this.name, o == null ? "" : o.toString () );
@@ -138,7 +138,7 @@ public abstract class Selector {
             public void handleRow ( int rowNum, Map<String, Object> row,
                                     Object item, Map<String, FieldAccess> fields ) {
 
-                Object o = getPropByPath ( item, path );
+                Object o = BeanUtils.getPropByPath ( item, path );
 
                 row.put ( this.name, o );
             }
