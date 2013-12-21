@@ -256,7 +256,7 @@ public class ValidationContext {
             }
         } else {
             /*
-			 * If it does not start with those markers see if it has a ".". If
+             * If it does not start with those markers see if it has a ".". If
 			 * it has a dot, try to look it up. If it is not found then just
 			 * return the key as the message.
 			 */

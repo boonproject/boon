@@ -19,7 +19,7 @@ public class ExceptionsTest {
     }
 
 
-    @Test (expected = Exceptions.SoftenedException.class)
+    @Test ( expected = Exceptions.SoftenedException.class )
     public void testException () {
 
         try {
@@ -30,7 +30,7 @@ public class ExceptionsTest {
 
     }
 
-    @Test (expected = Exceptions.SoftenedException.class)
+    @Test ( expected = Exceptions.SoftenedException.class )
     public void die () {
 
         try {
@@ -42,7 +42,7 @@ public class ExceptionsTest {
     }
 
 
-    @Test (expected = Exceptions.SoftenedException.class)
+    @Test ( expected = Exceptions.SoftenedException.class )
     public void testExceptionWithMessage () {
 
         try {
@@ -53,7 +53,7 @@ public class ExceptionsTest {
 
     }
 
-    @Test (expected = Exceptions.SoftenedException.class)
+    @Test ( expected = Exceptions.SoftenedException.class )
     public void testTryIt () {
 
         tryIt ( new Exceptions.Trial () {
@@ -88,7 +88,7 @@ public class ExceptionsTest {
     }
 
 
-    @Test (expected = Exceptions.SoftenedException.class)
+    @Test ( expected = Exceptions.SoftenedException.class )
     public void testTryItWithMessage () {
 
         tryIt ( "Calling method that throws exception", new Exceptions.Trial () {

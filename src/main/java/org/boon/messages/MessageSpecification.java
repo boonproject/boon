@@ -121,7 +121,7 @@ public class MessageSpecification implements Serializable {
 
     	/* Holds the actual arguments. */
         Object[] actualArgs;
-    	
+
     	/* If they passed arguments, 
     	 * then use this as the actual arguments. */
         if ( args.length > 0 ) {
@@ -145,7 +145,7 @@ public class MessageSpecification implements Serializable {
      * @param actualArgs Arguments to the message.
      * @return
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings ( "unchecked" )
     private String doCreateMessage ( String message, Object[] actualArgs ) {
 
         return ValidationContext.get ().createMessage ( message, getSubject (), actualArgs );

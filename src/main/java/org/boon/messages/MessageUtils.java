@@ -228,7 +228,7 @@ public final class MessageUtils {
 
             private void processCharWasUpperCase ( final StringBuilder buffer,
                                                    int index, char cchar ) {
-				/* If the character is uppercase, append a space and keep track
+                /* If the character is uppercase, append a space and keep track
 				 * that the last character was uppercase for the next iteration.
 				 */
                 if ( Character.isUpperCase ( cchar ) ) {

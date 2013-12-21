@@ -256,12 +256,12 @@ public class SimpleValidationTest {
     public static class Employee2 {
 
 
-        @ProperNoun (detailMessage = "First Name must be a proper noun")
+        @ProperNoun ( detailMessage = "First Name must be a proper noun" )
         String firstName;
         int age;
 
 
-        @Length (max = 12, min = 5, detailMessage = "Phone number must be a phone number")
+        @Length ( max = 12, min = 5, detailMessage = "Phone number must be a phone number" )
         String phone;
 
         public Employee2 ( String name, int age, String phone ) {
