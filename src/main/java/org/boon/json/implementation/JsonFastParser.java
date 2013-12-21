@@ -21,10 +21,12 @@ public class JsonFastParser extends JsonParserCharArray {
 
     private final boolean useValues;
     private final boolean chop;
+    private final boolean lazyChop;
 
     public JsonFastParser () {
         useValues = false;
         chop = false;
+        lazyChop = true;
 
     }
 
@@ -32,15 +34,24 @@ public class JsonFastParser extends JsonParserCharArray {
     public JsonFastParser ( boolean useValues ) {
         this.useValues = useValues;
         chop = false;
+        lazyChop = true;
     }
 
 
     public JsonFastParser ( boolean useValues, boolean chop ) {
         this.useValues = useValues;
         this.chop = chop;
+        lazyChop = !chop;
 
     }
 
+
+    public JsonFastParser ( boolean useValues, boolean chop, boolean lazyChop ) {
+        this.useValues = useValues;
+        this.chop = chop;
+        this.lazyChop = lazyChop;
+
+    }
 
     protected final Object decodeFromChars ( char[] cs ) {
         return ( ( Value ) super.decodeFromChars ( cs ) ).toValue ();
@@ -59,7 +70,7 @@ public class JsonFastParser extends JsonParserCharArray {
             valueMap = new JsonValueMap ();
             value = new ValueBase ( ( Map ) valueMap );
         } else {
-            map = new JsonMap ();
+            map = new JsonMap ( lazyChop );
             value = new ValueBase ( map );
         }
 
@@ -326,6 +337,10 @@ public class JsonFastParser extends JsonParserCharArray {
 
         boolean encoded = false;
 
+        int minusCount = 0;
+        int colonCount = 0;
+
+
         done:
         for (; __index < this.charArray.length; __index++ ) {
             __currentChar = charArray[ __index ];
@@ -345,16 +360,30 @@ public class JsonFastParser extends JsonParserCharArray {
                     escape = true;
                     continue;
 
+                case '-':
+                    minusCount++;
+                    break;
+                case ':':
+                    colonCount++;
+                    break;
+
+
             }
             escape = false;
         }
+
+
+        boolean checkDate = !encoded && minusCount >= 2 && colonCount >= 2;
+
+
+        Value value = new ValueInCharBuf ( chop, Type.STRING, startIndex, __index - 1, this.charArray, encoded, checkDate );
 
 
         if ( __index < charArray.length ) {
             __index++;
         }
 
-        return new ValueInCharBuf ( chop, Type.STRING, startIndex, __index - 1, this.charArray, encoded );
+        return value;
     }
 
 
@@ -380,7 +409,7 @@ public class JsonFastParser extends JsonParserCharArray {
         if ( useValues ) {
             list = new ArrayList<> ();
         } else {
-            list = new JsonList ();
+            list = new JsonList ( lazyChop );
         }
 
         Value value = new ValueBase ( list );

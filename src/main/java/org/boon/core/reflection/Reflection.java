@@ -10,7 +10,6 @@ import sun.misc.Unsafe;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -114,8 +113,6 @@ public class Reflection {
         private Map<Class<?>, Map<String, FieldAccess>> _allAccessorUnsafeFieldsCache = new ConcurrentHashMap<> ( 200 );
 
 
-        private FieldAccess stringValueField;
-
     }
 
 
@@ -123,7 +120,6 @@ public class Reflection {
         try {
             if ( _useUnsafe ) {
                 Field field = String.class.getDeclaredField ( "value" );
-                context ().stringValueField = UnsafeField.createUnsafeField ( field );
             }
         } catch ( Exception ex ) {
             Exceptions.handle ( ex );
@@ -415,25 +411,6 @@ public class Reflection {
         }
         return fieldName;
 
-    }
-
-
-    public static char[] toCharArray ( String str ) {
-
-        if ( _useUnsafe ) {
-            return ( char[] ) context ().stringValueField.getObject ( str );
-        } else {
-            return str.toCharArray ();
-        }
-    }
-
-
-    public static char[] toCharArray ( byte[] bytes ) {
-        if ( _useUnsafe ) {
-            return ( char[] ) context ().stringValueField.getObject ( new String ( bytes, StandardCharsets.UTF_8 ) );
-        } else {
-            return new String ( bytes, StandardCharsets.UTF_8 ).toCharArray ();
-        }
     }
 
 

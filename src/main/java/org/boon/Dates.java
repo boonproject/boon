@@ -1,6 +1,7 @@
 package org.boon;
 
 import org.boon.core.Sys;
+import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.primitive.CharBuf;
@@ -374,18 +375,18 @@ public class Dates {
 
     public static Date fromJsonDate ( String string ) {
 
-        return fromJsonDate ( Reflection.toCharArray ( string ), 0, string.length () );
+        return fromJsonDate ( FastStringUtils.toCharArray ( string ), 0, string.length () );
 
     }
 
     public static Date fromISO8601 ( String string ) {
 
-        return fromISO8601 ( Reflection.toCharArray ( string ), 0, string.length () );
+        return fromISO8601 ( FastStringUtils.toCharArray ( string ), 0, string.length () );
 
     }
 
     public static Date fromISO8601DateLoose ( String string ) {
-        return fromISO8601DateLoose ( Reflection.toCharArray ( string ), 0, string.length () );
+        return fromISO8601DateLoose ( FastStringUtils.toCharArray ( string ), 0, string.length () );
 
     }
 
@@ -518,7 +519,7 @@ public class Dates {
 
     public static boolean isISO8601 ( String string ) {
 
-        return isISO8601 ( Reflection.toCharArray ( string ) );
+        return isISO8601 ( FastStringUtils.toCharArray ( string ) );
     }
 
 

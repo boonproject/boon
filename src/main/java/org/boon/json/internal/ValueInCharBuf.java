@@ -7,7 +7,8 @@ import org.boon.json.implementation.JsonStringDecoder;
 import org.boon.primitive.CharScanner;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
 
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
@@ -15,6 +16,8 @@ import static org.boon.primitive.CharScanner.*;
 public class ValueInCharBuf extends ValueBase {
 
     public char[] buffer;
+
+    boolean checkDate;
 
     public ValueInCharBuf ( Type type ) {
         this.type = type;
@@ -40,9 +43,10 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
-    public ValueInCharBuf ( boolean chop, Type type, int startIndex, int endIndex, char[] buffer, boolean encoded ) {
+    public ValueInCharBuf ( boolean chop, Type type, int startIndex, int endIndex, char[] buffer,
+                            boolean encoded, boolean checkDate ) {
         this.type = type;
-
+        this.checkDate = checkDate;
         if ( chop ) {
 
             this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
@@ -101,6 +105,11 @@ public class ValueInCharBuf extends ValueBase {
                     return longValue () * sign;
                 }
             case STRING:
+                if ( checkDate ) {
+                    if ( Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex ) ) {
+                        return Dates.fromISO8601DateLoose ( buffer, startIndex, endIndex );
+                    }
+                }
                 return stringValue ();
         }
         die ();
