@@ -2,6 +2,7 @@ package org.boon.json;
 
 import org.boon.IO;
 import org.boon.Lists;
+import org.boon.json.implementation.JsonParserCharArray;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,6 +29,10 @@ public class JsonParserBaseTest {
         return new JsonParserFactory ();
     }
 
+    public JsonParser parser () {
+        return new JsonParserCharArray ();
+    }
+
     @Before
     public void setup () {
 
@@ -37,12 +42,34 @@ public class JsonParserBaseTest {
 
 
     @Test
+    public void testParserSimpleMapWithNumber () {
+
+        Object obj = jsonParser.parse ( Map.class,
+                " { 'foo': 1 }  ".replace ( '\'', '"' )
+        );
+
+        boolean ok = true;
+
+        ok &= obj instanceof Map || die ( "Object was not a map" );
+
+        Map<String, Object> map = ( Map<String, Object> ) obj;
+
+        System.out.println ( obj );
+
+        ok &= idx ( map, "foo" ).equals ( 1 ) || die ( "I did not find 1" + idx ( map, "foo" ) );
+    }
+
+
+
+    @Test
     public void objectSerialization () {
 
 
         String fileContents = IO.read ( "files/AllTypes.json" );
 
         AllTypes types = jsonParser.parse ( AllTypes.class, fileContents );
+
+        puts (types);
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -92,24 +119,6 @@ public class JsonParserBaseTest {
         ok |= types.getString ().equals ( "test" ) || die ( "" + types.getString () );
     }
 
-
-    @Test
-    public void testParserSimpleMapWithNumber () {
-
-        Object obj = jsonParser.parse ( Map.class,
-                " { 'foo': 1 }  ".replace ( '\'', '"' )
-        );
-
-        boolean ok = true;
-
-        ok &= obj instanceof Map || die ( "Object was not a map" );
-
-        Map<String, Object> map = ( Map<String, Object> ) obj;
-
-        System.out.println ( obj );
-
-        ok &= idx ( map, "foo" ).equals ( 1 ) || die ( "I did not find 1" + idx ( map, "foo" ) );
-    }
 
 
     @Test
@@ -486,10 +495,10 @@ public class JsonParserBaseTest {
                 lines (
 
                         "{ \"v\":\"\\u00c1\\u00e1\"}"
-                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
+                )
         );
 
-
+        puts (map);
         boolean ok = map.get ( "v" ).equals ( "Áá" ) || die ( "map " + map.get ( "v" ) );
     }
 
@@ -501,10 +510,11 @@ public class JsonParserBaseTest {
                 lines (
 
                         "{ \"v\":\"\\u00C1\\u00E1\"}"
-                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
+                )
         );
 
 
+        puts (map);
         boolean ok = map.get ( "v" ).equals ( "Áá" ) || die ( "map " + map.get ( "v" ) );
     }
 
@@ -517,7 +527,7 @@ public class JsonParserBaseTest {
                 lines (
 
                         "{ \"v\":1.7976931348623157E308}"
-                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
+                )
         );
 
 

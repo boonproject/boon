@@ -103,6 +103,11 @@ public class JsonParserLax extends JsonParserCharArray {
 
     }
 
+    protected final Object decodeFromChars ( char[] cs ) {
+        return ( ( Value ) super.decodeFromChars ( cs ) ).toValue ();
+    }
+
+
 
     protected void init () {
         super.init ();

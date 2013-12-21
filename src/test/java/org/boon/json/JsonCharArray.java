@@ -1,6 +1,7 @@
 package org.boon.json;
 
 import org.boon.IO;
+import org.boon.json.implementation.JsonParserCharArray;
 import org.junit.Test;
 
 import java.util.Map;
@@ -12,13 +13,9 @@ import java.util.Map;
 public class JsonCharArray extends JsonParserBaseTest {
 
 
-    public JsonParserFactory factory () {
-        return new JsonParserFactory ()
-                .neverPreferCharSequence ()
-                .neverUseDirectBytes ()
-                .neverUseLazyFinalParse ().setSizeToForceLazyFinalParse ( 0 );
-    }
-
+   public JsonParser parser() {
+       return new JsonParserCharArray ();
+   }
 
     @Test
     public void testNest () {

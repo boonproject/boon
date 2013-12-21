@@ -109,4 +109,21 @@ public class AllTypes {
     public void setMyDouble ( double myDouble ) {
         this.myDouble = myDouble;
     }
+
+    @Override
+    public String toString () {
+        return "AllTypes{" +
+                "myInt=" + myInt +
+                ", myBoolean=" + myBoolean +
+                ", myShort=" + myShort +
+                ", myLong=" + myLong +
+                ", string='" + string + '\'' +
+                ", string2='" + string2 + '\'' +
+                ", myFloat=" + myFloat +
+                ", myDouble=" + myDouble +
+                ", myByte=" + myByte +
+                ", allType=" + allType +
+                ", allTypes=" + allTypes +
+                '}';
+    }
 }

@@ -35,7 +35,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
         boolean ok = true;
 
-        ok &= obj instanceof Map || die ( "Object was not a map" );
+        ok &= obj instanceof Map || die ( "Object was not a map" + obj);
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
