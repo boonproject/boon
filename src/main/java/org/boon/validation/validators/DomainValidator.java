@@ -43,10 +43,10 @@ public class DomainValidator extends BaseValidator {
         this.rootObject = rootObject;
     }
 
-    private static Set<String> allowedPackages = new HashSet<String> ();
+    private static Set<String> allowedPackages = new HashSet<String>();
 
     static {
-        allowedPackages.add ( "org.boon.annotations.validation" );
+        allowedPackages.add( "org.boon.annotations.validation" );
     }
 
     public DomainValidator () {
@@ -67,33 +67,33 @@ public class DomainValidator extends BaseValidator {
         // The first "parent" is actually the child decorated with the validation annotation
         if ( rootObject == null ) {
             // Grab it from the validation context if it hasn't been provided
-            child = ValidationContext.getCurrentInstance ().getParentObject ();
+            child = ValidationContext.getCurrentInstance().getParentObject();
         } else {
             // Useful if the rootObject is injected, i.e. from a Unit test
             child = rootObject;
         }
 
 
-        List<AnnotationData> annotationDataForProperty = Annotations.getAnnotationDataForProperty ( child.getClass (), fieldLabel, false, allowedPackages );
-        if ( annotationDataForProperty.size () == 0 ) {
-            annotationDataForProperty = Annotations.getAnnotationDataForField ( child.getClass (), fieldLabel, allowedPackages );
+        List<AnnotationData> annotationDataForProperty = Annotations.getAnnotationDataForProperty( child.getClass(), fieldLabel, false, allowedPackages );
+        if ( annotationDataForProperty.size() == 0 ) {
+            annotationDataForProperty = Annotations.getAnnotationDataForField( child.getClass(), fieldLabel, allowedPackages );
         }
 
-        Map map = Maps.toMap ( "name", annotationDataForProperty );
+        Map map = Maps.toMap( "name", annotationDataForProperty );
 
-        boolean found = map.get ( "domainValidation" ) != null;
+        boolean found = map.get( "domainValidation" ) != null;
         boolean sameLevel = false;
         boolean noArgs = false;
 
         if ( found ) {
-            AnnotationData ad = ( AnnotationData ) map.get ( "domainValidation" );
-            Object parentReference = ad.getValues ().get ( "parentProperty" );
+            AnnotationData ad = ( AnnotationData ) map.get( "domainValidation" );
+            Object parentReference = ad.getValues().get( "parentProperty" );
             Object validator = null;
 
-            if ( ( parentReference != null ) && ( !"".equals ( parentReference ) ) ) {
+            if ( ( parentReference != null ) && ( !"".equals( parentReference ) ) ) {
                 // If the parentProperty is specified, then find the parent class
 
-                BeanUtils.getPropertyValue ( child, ( String ) parentReference );
+                BeanUtils.getPropertyValue( child, ( String ) parentReference );
 
             } else {
                 // Otherwise, the validation method is assumed to be in the child
@@ -101,7 +101,7 @@ public class DomainValidator extends BaseValidator {
                 sameLevel = true;
             }
 
-            noArgs = ( Boolean ) ad.getValues ().get ( "global" );
+            noArgs = ( Boolean ) ad.getValues().get( "global" );
 
             // Make sure the method exists
             Method m = null;
@@ -109,32 +109,32 @@ public class DomainValidator extends BaseValidator {
             if ( validator != null ) {
                 try {
 
-                    String methodName = ( String ) ad.getValues ().get ( "method" );
+                    String methodName = ( String ) ad.getValues().get( "method" );
 
                     if ( noArgs ) {
-                        m = validator.getClass ().getDeclaredMethod ( methodName );
+                        m = validator.getClass().getDeclaredMethod( methodName );
                     } else if ( sameLevel ) {
                         Class[] parameters = new Class[ 1 ];
 
-                        parameters[ 0 ] = BeanUtils.getPropertyType ( child, fieldLabel );
-                        m = validator.getClass ().getDeclaredMethod ( methodName, parameters );
+                        parameters[ 0 ] = BeanUtils.getPropertyType( child, fieldLabel );
+                        m = validator.getClass().getDeclaredMethod( methodName, parameters );
                     } else {
                         Class[] parameters = new Class[ 2 ];
-                        parameters[ 0 ] = child.getClass ();
+                        parameters[ 0 ] = child.getClass();
 
 
-                        parameters[ 1 ] = BeanUtils.getPropertyType ( child, fieldLabel );
+                        parameters[ 1 ] = BeanUtils.getPropertyType( child, fieldLabel );
 
-                        m = validator.getClass ().getDeclaredMethod ( methodName, parameters );
+                        m = validator.getClass().getDeclaredMethod( methodName, parameters );
                     }
 
                 } catch ( NoSuchMethodException nsme ) {
-                    detailMessage = nsme.getMessage ();
-                    summaryMessage = nsme.getMessage ();
+                    detailMessage = nsme.getMessage();
+                    summaryMessage = nsme.getMessage();
                     error = true;
                 } catch ( Exception e ) {
-                    detailMessage = e.getMessage ();
-                    summaryMessage = e.getMessage ();
+                    detailMessage = e.getMessage();
+                    summaryMessage = e.getMessage();
                     error = true;
                 }
             }
@@ -142,33 +142,33 @@ public class DomainValidator extends BaseValidator {
             // Invoke the validation method and watch for any exceptions
             try {
                 if ( noArgs ) {
-                    m.invoke ( validator );
+                    m.invoke( validator );
                 } else if ( sameLevel ) {
-                    m.invoke ( validator, new Object[]{ fieldValue } );
+                    m.invoke( validator, new Object[]{ fieldValue } );
                 } else {
-                    m.invoke ( validator, new Object[]{ child, fieldValue } );
+                    m.invoke( validator, new Object[]{ child, fieldValue } );
                 }
             } catch ( IllegalAccessException iae ) {
-                detailMessage = iae.getCause ().getMessage ();
-                summaryMessage = iae.getCause ().getMessage ();
+                detailMessage = iae.getCause().getMessage();
+                summaryMessage = iae.getCause().getMessage();
                 error = true;
             } catch ( InvocationTargetException ite ) {
-                detailMessage = ite.getCause ().getMessage ();
-                summaryMessage = ite.getCause ().getMessage ();
+                detailMessage = ite.getCause().getMessage();
+                summaryMessage = ite.getCause().getMessage();
                 error = true;
             } catch ( Exception e ) {
-                detailMessage = e.getCause ().getMessage ();
-                summaryMessage = e.getCause ().getMessage ();
+                detailMessage = e.getCause().getMessage();
+                summaryMessage = e.getCause().getMessage();
                 error = true;
             }
         }
 
-        ValidatorMessage message = new ValidatorMessage ();
+        ValidatorMessage message = new ValidatorMessage();
 
         // If there were any errors, populate the validation message
         if ( error ) {
-            message = new ValidatorMessage ( summaryMessage, detailMessage );
-            populateMessage ( message, ( noArgs ? null : fieldLabel ) );
+            message = new ValidatorMessage( summaryMessage, detailMessage );
+            populateMessage( message, ( noArgs ? null : fieldLabel ) );
         }
 
         return message;

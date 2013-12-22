@@ -7,7 +7,7 @@ import java.util.List;
 
 public class JsonList extends AbstractList<Object> implements List<Object> {
 
-    List<Object> list = new ArrayList<> ( 5 );
+    List<Object> list = new ArrayList<>( 5 );
 
     private final boolean lazyChop;
 
@@ -19,32 +19,32 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
     @Override
     public Object get ( int index ) {
 
-        Object obj = list.get ( index );
+        Object obj = list.get( index );
 
         if ( obj instanceof ValueBase ) {
-            obj = convert ( ( ValueBase ) obj );
-            list.set ( index, obj );
+            obj = convert( ( ValueBase ) obj );
+            list.set( index, obj );
         }
 
-        chopIfNeeded ( obj );
+        chopIfNeeded( obj );
         return obj;
 
     }
 
 
     private Object convert ( ValueBase value ) {
-        return value.toValue ();
+        return value.toValue();
     }
 
     @Override
     public int size () {
-        return list.size ();
+        return list.size();
     }
 
     @Override
     public Iterator<Object> iterator () {
-        convertAllIfNeeded ();
-        return list.iterator ();
+        convertAllIfNeeded();
+        return list.iterator();
     }
 
     boolean converted = false;
@@ -52,8 +52,8 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
     private void convertAllIfNeeded () {
         if ( !converted ) {
             converted = true;
-            for ( int index = 0; index < list.size (); index++ ) {
-                this.get ( index );
+            for ( int index = 0; index < list.size(); index++ ) {
+                this.get( index );
             }
         }
 
@@ -62,12 +62,12 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
 
     @Override
     public void clear () {
-        list.clear ();
+        list.clear();
     }
 
 
     public boolean add ( Object obj ) {
-        return list.add ( obj );
+        return list.add( obj );
     }
 
 
@@ -78,10 +78,10 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
 
             if ( obj instanceof Value ) {
                 Value value = ( Value ) obj;
-                if ( value.isContainer () ) {
-                    chopContainer ( value );
+                if ( value.isContainer() ) {
+                    chopContainer( value );
                 } else {
-                    value.chop ();
+                    value.chop();
                 }
             }
         }
@@ -91,10 +91,10 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
         if ( lazyChop ) {
             if ( object instanceof JsonMap ) {
                 JsonMap m = ( JsonMap ) object;
-                m.chopMap ();
+                m.chopMap();
             } else if ( object instanceof JsonList ) {
                 JsonList list = ( JsonList ) object;
-                list.chopList ();
+                list.chopList();
             }
         }
 
@@ -102,13 +102,13 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
 
 
     void chopContainer ( Value value ) {
-        Object obj = value.toValue ();
+        Object obj = value.toValue();
         if ( obj instanceof JsonMap ) {
             JsonMap map = ( JsonMap ) obj;
-            map.chopMap ();
+            map.chopMap();
         } else if ( obj instanceof JsonList ) {
             JsonList list = ( JsonList ) obj;
-            list.chopList ();
+            list.chopList();
         }
     }
 }

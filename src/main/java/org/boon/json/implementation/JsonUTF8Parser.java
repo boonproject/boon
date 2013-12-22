@@ -40,43 +40,43 @@ public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParse
         if ( ( b1 >> 5 ) == -2 ) {
             int b2;
 
-            ok = hasMore () || die ( "unable to parse 2 byte utf 8 - b2" );
+            ok = hasMore() || die( "unable to parse 2 byte utf 8 - b2" );
             __index++;
             b2 = this.charArray[ __index ];
 
-            if ( isMalformed2 ( b1, b2 ) ) {
-                builder.addChar ( '#' );
+            if ( isMalformed2( b1, b2 ) ) {
+                builder.addChar( '#' );
             } else {
-                builder.addChar ( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 );
+                builder.addChar( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 );
             }
         } else if ( ( b1 >> 4 ) == -2 ) {
             int b2;
             int b3;
 
-            ok = hasMore () || die ( "unable to parse 3 byte utf 8 - b2" );
+            ok = hasMore() || die( "unable to parse 3 byte utf 8 - b2" );
             __index++;
             b2 = this.charArray[ __index ];
-            ok = hasMore () || die ( "unable to parse 3 byte utf 8 - b3" );
+            ok = hasMore() || die( "unable to parse 3 byte utf 8 - b3" );
             __index++;
             b3 = this.charArray[ __index ];
 
-            if ( isMalformed3 ( b1, b2, b3 ) ) {
-                builder.addChar ( '#' );
+            if ( isMalformed3( b1, b2, b3 ) ) {
+                builder.addChar( '#' );
             } else {
-                builder.addChar ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 );
+                builder.addChar( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 );
             }
         } else if ( ( b1 >> 3 ) == -2 ) {
             int b2;
             int b3;
             int b4;
 
-            ok = hasMore () || die ( "unable to parse 4 byte utf 8 - b2" );
+            ok = hasMore() || die( "unable to parse 4 byte utf 8 - b2" );
             __index++;
             b2 = this.charArray[ __index ];
-            ok = hasMore () || die ( "unable to parse 4 byte utf 8 - b3" );
+            ok = hasMore() || die( "unable to parse 4 byte utf 8 - b3" );
             __index++;
             b3 = this.charArray[ __index ];
-            ok = hasMore () || die ( "unable to parse 4 byte utf 8 - b4" );
+            ok = hasMore() || die( "unable to parse 4 byte utf 8 - b4" );
             __index++;
             b4 = this.charArray[ __index ];
 
@@ -85,15 +85,15 @@ public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParse
                     ( ( b3 & 0x3f ) << 6 ) |
                     ( b4 & 0x3f );
 
-            if ( isMalformed4 ( b2, b3, b4 ) && !Surrogate.neededFor ( uc ) ) {
-                builder.addChar ( '#' );
+            if ( isMalformed4( b2, b3, b4 ) && !Surrogate.neededFor( uc ) ) {
+                builder.addChar( '#' );
             } else {
 
-                final char high = Surrogate.high ( uc );
-                final char low = Surrogate.low ( uc );
+                final char high = Surrogate.high( uc );
+                final char low = Surrogate.low( uc );
 
-                builder.addChar ( high );
-                builder.addChar ( low );
+                builder.addChar( high );
+                builder.addChar( low );
 
             }
         }
@@ -103,9 +103,9 @@ public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParse
 
     protected final void addChar () {
         if ( __currentChar >= 0 ) {
-            builder.addChar ( __currentChar );
+            builder.addChar( __currentChar );
         } else {
-            utf8MultiByte ( __currentChar, builder );
+            utf8MultiByte( __currentChar, builder );
         }
     }
 

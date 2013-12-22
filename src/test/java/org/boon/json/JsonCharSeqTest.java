@@ -7,10 +7,10 @@ package org.boon.json;
 public class JsonCharSeqTest extends JsonParserBaseTest {
 
     public JsonParserFactory factory () {
-        return new JsonParserFactory ()
-                .preferCharSequence ()
-                .neverUseDirectBytes ()
-                .neverUseLazyFinalParse ().setSizeToForceLazyFinalParse ( 0 );
+        return new JsonParserFactory()
+                .preferCharSequence()
+                .neverUseDirectBytes()
+                .neverUseLazyFinalParse().setSizeToForceLazyFinalParse( 0 );
     }
 
 

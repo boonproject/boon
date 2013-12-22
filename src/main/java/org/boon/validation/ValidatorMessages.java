@@ -14,20 +14,20 @@ import java.util.List;
  * @author Rick Hightower
  */
 public class ValidatorMessages implements Serializable, ValidatorMessageHolder, Iterable<ValidatorMessage> {
-    private List<ValidatorMessage> messages = new ArrayList<ValidatorMessage> ();
+    private List<ValidatorMessage> messages = new ArrayList<ValidatorMessage>();
 
     public Iterator<ValidatorMessage> iterator () {
-        return this.messages.iterator ();
+        return this.messages.iterator();
     }
 
     public void add ( ValidatorMessage message ) {
-        messages.add ( message );
+        messages.add( message );
     }
 
     @Override
     public boolean hasError () {
         for ( ValidatorMessage message : messages ) {
-            if ( message.hasError () ) {
+            if ( message.hasError() ) {
                 return true;
             }
 

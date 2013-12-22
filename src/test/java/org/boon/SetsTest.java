@@ -22,10 +22,10 @@ public class SetsTest {
     @Test
     public void simple () {
         Set<String> set =
-                set ( "apple", "oranges", "pears", "grapes", "kiwi" );
+                set( "apple", "oranges", "pears", "grapes", "kiwi" );
 
-        assertEquals ( 5, len ( set ) );
-        assertTrue ( in ( "apple", set ) );
+        assertEquals( 5, len( set ) );
+        assertTrue( in( "apple", set ) );
 
     }
 
@@ -33,76 +33,76 @@ public class SetsTest {
     @Test
     public void sorted () {
         NavigableSet<String> set =
-                sortedSet ( "apple", "kiwi", "oranges", "pears", "pineapple" );
+                sortedSet( "apple", "kiwi", "oranges", "pears", "pineapple" );
 
-        assertEquals (
+        assertEquals(
                 5,
-                len ( set )
+                len( set )
         );
 
-        assertTrue (
-                in ( "apple", set )
+        assertTrue(
+                in( "apple", set )
         );
 
-        assertEquals (
+        assertEquals(
 
-                "oranges", idx ( set, "ora" )
-
-        );
-
-        assertEquals (
-
-                "oranges", idx ( set, "o" )
+                "oranges", idx( set, "ora" )
 
         );
 
-        assertEquals (
+        assertEquals(
+
+                "oranges", idx( set, "o" )
+
+        );
+
+        assertEquals(
 
                 "pears",
-                idx ( set, "p" )
+                idx( set, "p" )
 
         );
 
-        assertEquals (
+        assertEquals(
 
                 "pineapple",
-                idx ( set, "pi" )
+                idx( set, "pi" )
 
         );
 
-        assertEquals (
+        assertEquals(
 
                 "pineapple",
-                after ( set, "pi" )
+                after( set, "pi" )
 
         );
 
-        assertEquals (
+        assertEquals(
 
                 "pears",
-                before ( set, "pi" )
+                before( set, "pi" )
 
         );
 
 
-        assertEquals (
+        assertEquals(
 
-                sortedSet ( "apple", "kiwi" ),
-                slc ( set, "ap", "o" )
-
-        );
-
-        assertEquals (
-
-                sortedSet ( "apple", "kiwi" ),
-                slc ( set, "o" )
+                sortedSet( "apple", "kiwi" ),
+                slc( set, "ap", "o" )
 
         );
 
-        assertEquals (
+        assertEquals(
 
-                sortedSet ( "oranges", "pears", "pineapple" ),
-                slcEnd ( set, "o" )
+                sortedSet( "apple", "kiwi" ),
+                slc( set, "o" )
+
+        );
+
+        assertEquals(
+
+                sortedSet( "oranges", "pears", "pineapple" ),
+                slcEnd( set, "o" )
         );
 
     }
@@ -110,29 +110,29 @@ public class SetsTest {
 
     @Test
     public void copyTest () {
-        Set<String> set = set ( "apple", "pear", "orange" );
+        Set<String> set = set( "apple", "pear", "orange" );
 
         Set<String> set2;
 
-        set2 = set ( copy ( set ) );
-        assertEquals (
+        set2 = set( copy( set ) );
+        assertEquals(
                 set, set2
         );
 
-        set2 = set ( copy ( sortedSet ( set ) ) );
-        assertEquals (
-                set, set2
-        );
-
-
-        set2 = set ( copy ( safeSet ( set ) ) );
-        assertEquals (
+        set2 = set( copy( sortedSet( set ) ) );
+        assertEquals(
                 set, set2
         );
 
 
-        set2 = set ( copy ( safeSortedSet ( set ) ) );
-        assertEquals (
+        set2 = set( copy( safeSet( set ) ) );
+        assertEquals(
+                set, set2
+        );
+
+
+        set2 = set( copy( safeSortedSet( set ) ) );
+        assertEquals(
                 set, set2
         );
 
@@ -142,94 +142,94 @@ public class SetsTest {
     @Test
     public void creation () {
 
-        Set<String> set = set ( "apple", "pear", "orange" );
+        Set<String> set = set( "apple", "pear", "orange" );
 
-        Set<String> set2 = set ( enumeration ( set ) );
-        assertEquals (
+        Set<String> set2 = set( enumeration( set ) );
+        assertEquals(
                 set, set2
         );
 
-        set2 = sortedSet ( enumeration ( set ) );
-        assertEquals (
+        set2 = sortedSet( enumeration( set ) );
+        assertEquals(
                 set, set2
         );
 
 
-        set2 = safeSet ( enumeration ( set ) );
-        assertEquals (
+        set2 = safeSet( enumeration( set ) );
+        assertEquals(
                 set, set2
         );
 
-        set2 = safeSortedSet ( enumeration ( set ) );
-        assertEquals (
+        set2 = safeSortedSet( enumeration( set ) );
+        assertEquals(
                 set, set2
         );
 
-        Set<String> set3 = set ( ( Iterable ) set2 );
-        assertEquals (
+        Set<String> set3 = set( ( Iterable ) set2 );
+        assertEquals(
                 set2, set3
         );
 
-        set3 = sortedSet ( ( Iterable ) set2 );
-        assertEquals (
-                set2, set3
-        );
-
-
-        set3 = safeSortedSet ( ( Iterable ) set2 );
-        assertEquals (
+        set3 = sortedSet( ( Iterable ) set2 );
+        assertEquals(
                 set2, set3
         );
 
 
-        set3 = safeSet ( ( Iterable ) set2 );
-        assertEquals (
+        set3 = safeSortedSet( ( Iterable ) set2 );
+        assertEquals(
                 set2, set3
         );
 
 
-        Set<String> set4 = set ( ( Collection ) set3 );
-        assertEquals (
+        set3 = safeSet( ( Iterable ) set2 );
+        assertEquals(
+                set2, set3
+        );
+
+
+        Set<String> set4 = set( ( Collection ) set3 );
+        assertEquals(
                 set3, set4
         );
 
 
-        set4 = safeSet ( ( Collection ) set3 );
-        assertEquals (
+        set4 = safeSet( ( Collection ) set3 );
+        assertEquals(
                 set3, set4
         );
 
 
-        set4 = safeSortedSet ( ( Collection ) set3 );
-        assertEquals (
+        set4 = safeSortedSet( ( Collection ) set3 );
+        assertEquals(
                 set3, set4
         );
 
-        set4 = sortedSet ( ( Collection ) set3 );
-        assertEquals (
+        set4 = sortedSet( ( Collection ) set3 );
+        assertEquals(
                 set3, set4
         );
 
-        Set<String> set5 = set ( set4.iterator () );
-        assertEquals (
+        Set<String> set5 = set( set4.iterator() );
+        assertEquals(
                 set4, set5
         );
 
 
-        set5 = sortedSet ( set4.iterator () );
-        assertEquals (
+        set5 = sortedSet( set4.iterator() );
+        assertEquals(
                 set4, set5
         );
 
 
-        set5 = safeSortedSet ( set4.iterator () );
-        assertEquals (
+        set5 = safeSortedSet( set4.iterator() );
+        assertEquals(
                 set4, set5
         );
 
 
-        set5 = safeSet ( set4.iterator () );
-        assertEquals (
+        set5 = safeSet( set4.iterator() );
+        assertEquals(
                 set4, set5
         );
 
@@ -238,14 +238,14 @@ public class SetsTest {
     @Test
     public void creationalEquals () {
 
-        assertTrue (
+        assertTrue(
 
-                sortedSet ( "apple", "pear", "orange" ).equals (
-                        set ( "apple", "pear", "orange" ) ) &&
-                        safeSet ( "apple", "pear", "orange" ).equals (
-                                safeSortedSet ( "apple", "pear", "orange" ) ) &&
-                        sortedSet ( "apple", "pear", "orange" ).equals (
-                                safeSortedSet ( "apple", "pear", "orange" ) )
+                sortedSet( "apple", "pear", "orange" ).equals(
+                        set( "apple", "pear", "orange" ) ) &&
+                        safeSet( "apple", "pear", "orange" ).equals(
+                                safeSortedSet( "apple", "pear", "orange" ) ) &&
+                        sortedSet( "apple", "pear", "orange" ).equals(
+                                safeSortedSet( "apple", "pear", "orange" ) )
 
         );
 
@@ -253,9 +253,9 @@ public class SetsTest {
 
     @Test
     public void enumerationTest () {
-        Set<String> set = set ( "apple", "grape", "pears" );
-        Set<String> set2 = set ( enumeration ( set ) );
-        assertEquals (
+        Set<String> set = set( "apple", "grape", "pears" );
+        Set<String> set2 = set( enumeration( set ) );
+        assertEquals(
                 set, set2
         );
     }
@@ -265,32 +265,32 @@ public class SetsTest {
 
     private void simpleOperations ( Set<String> set ) {
 
-        add ( set, "apple" );
+        add( set, "apple" );
 
-        assertTrue (
+        assertTrue(
 
-                len ( set ) == 1
-
-        );
-
-
-        assertTrue (
-
-                !( set instanceof SortedSet ) || idx ( set, "a" ).equals ( "apple" )
+                len( set ) == 1
 
         );
 
 
-        Set<String> set2 = copy ( set );
-        assertTrue (
+        assertTrue(
 
-                !( set2 instanceof SortedSet ) || idx ( set2, "a" ).equals ( "apple" )
+                !( set instanceof SortedSet ) || idx( set, "a" ).equals( "apple" )
 
         );
 
-        assertTrue (
 
-                len ( set2 ) == 1
+        Set<String> set2 = copy( set );
+        assertTrue(
+
+                !( set2 instanceof SortedSet ) || idx( set2, "a" ).equals( "apple" )
+
+        );
+
+        assertTrue(
+
+                len( set2 ) == 1
 
         );
 
@@ -301,27 +301,27 @@ public class SetsTest {
     @Test
     public void simpleOperationsSortedSet () {
 
-        simpleOperations ( sortedSet ( string ) );
+        simpleOperations( sortedSet( string ) );
     }
 
     @Test
     public void simpleOperationsSet () {
 
-        simpleOperations ( set ( string ) );
+        simpleOperations( set( string ) );
 
     }
 
     @Test
     public void simpleOperationsSafeSet () {
 
-        simpleOperations ( safeSet ( string ) );
+        simpleOperations( safeSet( string ) );
 
     }
 
     @Test
     public void simpleOperationsSafeSortedSet () {
 
-        simpleOperations ( safeSortedSet ( string ) );
+        simpleOperations( safeSortedSet( string ) );
 
     }
 

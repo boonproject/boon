@@ -13,42 +13,42 @@ public class ByteScannerTest {
     public void autoSplitThisEndsInSpace () {
 
         byte[] letters =
-                bytes ( "This is a string " );
+                bytes( "This is a string " );
 
 
-        byte[][] splitted = ByteScanner.split ( letters, ' ' );
+        byte[][] splitted = ByteScanner.split( letters, ' ' );
 
 
-        assertEquals (
+        assertEquals(
                 4,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 3 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -59,42 +59,42 @@ public class ByteScannerTest {
     public void autoSplitThis () {
 
         byte[] letters =
-                bytes ( "This is a string" );
+                bytes( "This is a string" );
 
 
-        byte[][] splitted = ByteScanner.split ( letters, ' ' );
+        byte[][] splitted = ByteScanner.split( letters, ' ' );
 
 
-        assertEquals (
+        assertEquals(
                 4,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 3 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -106,48 +106,48 @@ public class ByteScannerTest {
     public void autoSplitThisStartSpace () {
 
         byte[] letters =
-                bytes ( " This is a string" );
+                bytes( " This is a string" );
 
 
-        byte[][] splitted = ByteScanner.split ( letters, ' ' );
+        byte[][] splitted = ByteScanner.split( letters, ' ' );
 
 
-        assertEquals (
+        assertEquals(
                 5,
                 splitted.length
         );
 
 
-        assertEquals (
+        assertEquals(
                 0,
                 splitted[ 0 ].length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 3 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 4 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "" ), bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "" ), bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -159,42 +159,42 @@ public class ByteScannerTest {
     public void autoSplitThisByTabOrSpace () {
 
         byte[] letters =
-                bytes ( "This\tis a string" );
+                bytes( "This\tis a string" );
 
 
-        byte[][] splitted = ByteScanner.splitByChars ( letters, '\t', ' ' );
+        byte[][] splitted = ByteScanner.splitByChars( letters, '\t', ' ' );
 
 
-        assertEquals (
+        assertEquals(
                 4,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 3 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -206,46 +206,46 @@ public class ByteScannerTest {
     public void autoSplitThis3DoubleSpaceAfterA () {
 
         byte[] letters =
-                bytes ( "This is a  string" );
+                bytes( "This is a  string" );
 
 
-        byte[][] splitted = ByteScanner.split ( letters, ' ' );
+        byte[][] splitted = ByteScanner.split( letters, ' ' );
 
 
-        assertEquals (
+        assertEquals(
                 5,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
-        assertEquals (
+        assertEquals(
                 0,
                 splitted[ 3 ].length
         );
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 4 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "" ), bytes( "string" ) },
                 splitted
         );
 
@@ -257,42 +257,42 @@ public class ByteScannerTest {
     public void splitThisEndsInSpace () {
 
         byte[] letters =
-                bytes ( "This is a string " );
+                bytes( "This is a string " );
 
 
-        byte[][] splitted = ByteScanner.splitExact ( letters, ' ', 10 );
+        byte[][] splitted = ByteScanner.splitExact( letters, ' ', 10 );
 
 
-        assertEquals (
+        assertEquals(
                 4,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 3 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -303,42 +303,42 @@ public class ByteScannerTest {
     public void splitThis () {
 
         byte[] letters =
-                bytes ( "This is a string" );
+                bytes( "This is a string" );
 
 
-        byte[][] splitted = ByteScanner.splitExact ( letters, ' ', 10 );
+        byte[][] splitted = ByteScanner.splitExact( letters, ' ', 10 );
 
 
-        assertEquals (
+        assertEquals(
                 4,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 3 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -350,48 +350,48 @@ public class ByteScannerTest {
     public void splitThisStartSpace () {
 
         byte[] letters =
-                bytes ( " This is a string" );
+                bytes( " This is a string" );
 
 
-        byte[][] splitted = ByteScanner.splitExact ( letters, ' ', 10 );
+        byte[][] splitted = ByteScanner.splitExact( letters, ' ', 10 );
 
 
-        assertEquals (
+        assertEquals(
                 5,
                 splitted.length
         );
 
 
-        assertEquals (
+        assertEquals(
                 0,
                 splitted[ 0 ].length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 3 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 4 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "" ), bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "" ), bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -403,42 +403,42 @@ public class ByteScannerTest {
     public void splitThisByTabOrSpace () {
 
         byte[] letters =
-                bytes ( "This\tis a string" );
+                bytes( "This\tis a string" );
 
 
-        byte[][] splitted = ByteScanner.splitExact ( letters, 10, '\t', ' ' );
+        byte[][] splitted = ByteScanner.splitExact( letters, 10, '\t', ' ' );
 
 
-        assertEquals (
+        assertEquals(
                 4,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 3 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "string" ) },
                 splitted
         );
 
@@ -450,46 +450,46 @@ public class ByteScannerTest {
     public void splitThis3DoubleSpaceAfterA () {
 
         byte[] letters =
-                bytes ( "This is a  string" );
+                bytes( "This is a  string" );
 
 
-        byte[][] splitted = ByteScanner.splitExact ( letters, ' ', 10 );
+        byte[][] splitted = ByteScanner.splitExact( letters, ' ', 10 );
 
 
-        assertEquals (
+        assertEquals(
                 5,
                 splitted.length
         );
 
-        assertArrayEquals (
-                bytes ( "This" ),
+        assertArrayEquals(
+                bytes( "This" ),
                 splitted[ 0 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "is" ),
+        assertArrayEquals(
+                bytes( "is" ),
                 splitted[ 1 ]
         );
 
 
-        assertArrayEquals (
-                bytes ( "a" ),
+        assertArrayEquals(
+                bytes( "a" ),
                 splitted[ 2 ]
         );
 
-        assertEquals (
+        assertEquals(
                 0,
                 splitted[ 3 ].length
         );
 
-        assertArrayEquals (
-                bytes ( "string" ),
+        assertArrayEquals(
+                bytes( "string" ),
                 splitted[ 4 ]
         );
 
-        assertArrayEquals (
-                new byte[][]{ bytes ( "This" ), bytes ( "is" ), bytes ( "a" ), bytes ( "" ), bytes ( "string" ) },
+        assertArrayEquals(
+                new byte[][]{ bytes( "This" ), bytes( "is" ), bytes( "a" ), bytes( "" ), bytes( "string" ) },
                 splitted
         );
 

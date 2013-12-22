@@ -42,20 +42,20 @@ public class MoreTests {
 
     @Before
     public void setUp () throws Exception {
-        list = Lists.list (
-                Employee.employee ( "firstA", "LastA", "123", "5.29.1970:00:00:01", 100 ),
-                Employee.employee ( "firstB", "LastB", "124", "5.29.1960:00:00:00", 200 )
+        list = Lists.list(
+                Employee.employee( "firstA", "LastA", "123", "5.29.1970:00:00:01", 100 ),
+                Employee.employee( "firstB", "LastB", "124", "5.29.1960:00:00:00", 200 )
         );
 
-        h_list = Lists.list (
-                Employee.employee ( "firstA", "LastA", "123", "5.29.1970:00:00:01", 100 ),
-                Employee.employee ( "firstB", "LastB", "124", "5.29.1960:00:00:00", 200 ),
-                Employee.employee ( "firstZ", "LastB", "125", "5.29.1960:00:00:00", 200, true ),
-                new HourlyEmployee ()
+        h_list = Lists.list(
+                Employee.employee( "firstA", "LastA", "123", "5.29.1970:00:00:01", 100 ),
+                Employee.employee( "firstB", "LastB", "124", "5.29.1960:00:00:00", 200 ),
+                Employee.employee( "firstZ", "LastB", "125", "5.29.1960:00:00:00", 200, true ),
+                new HourlyEmployee()
 
         );
 
-        bigList = copy ( list );
+        bigList = copy( list );
 
         for ( int index = 0; index < 2000; index++ ) {
 
@@ -67,7 +67,7 @@ public class MoreTests {
                 dateString = "5.29.1990:00:00:01";
 
             }
-            bigList.add ( Employee.employee ( "firstC" + index, "last" + index, "ssn" + index, dateString, 1000 + index ) );
+            bigList.add( Employee.employee( "firstC" + index, "last" + index, "ssn" + index, dateString, 1000 + index ) );
         }
 
     }
@@ -75,157 +75,157 @@ public class MoreTests {
     @Test
     public void testProjections () throws Exception {
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "salary" )
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "salary" )
+                        .build( Typ.string, Employee.class );
 
-        repo.addAll ( bigList );
+        repo.addAll( bigList );
 
-        int max = repo.results ( CriteriaFactory.gt ( "salary", 100 ) )
-                .firstInt ( ProjectedSelector.max ( "salary" ) );
-
-
-        assertEquals ( 2999, max );
-
-        max = repo.results ( CriteriaFactory.gt ( "salary", 100 ) )
-                .firstInt ( ProjectedSelector.maxInt ( "salary" ) );
-
-        assertEquals ( 2999, max );
+        int max = repo.results( CriteriaFactory.gt( "salary", 100 ) )
+                .firstInt( ProjectedSelector.max( "salary" ) );
 
 
-        int min = repo.results ( CriteriaFactory.gt ( "salary", 0 ) )
-                .firstInt ( ProjectedSelector.min ( "salary" ) );
+        assertEquals( 2999, max );
 
-        assertEquals ( 100, min );
+        max = repo.results( CriteriaFactory.gt( "salary", 100 ) )
+                .firstInt( ProjectedSelector.maxInt( "salary" ) );
+
+        assertEquals( 2999, max );
 
 
-        min = repo.results ( CriteriaFactory.gt ( "salary", 0 ) )
-                .firstInt ( ProjectedSelector.minInt ( "salary" ) );
+        int min = repo.results( CriteriaFactory.gt( "salary", 0 ) )
+                .firstInt( ProjectedSelector.min( "salary" ) );
 
-        assertEquals ( 100, min );
+        assertEquals( 100, min );
+
+
+        min = repo.results( CriteriaFactory.gt( "salary", 0 ) )
+                .firstInt( ProjectedSelector.minInt( "salary" ) );
+
+        assertEquals( 100, min );
 
     }
 
     @Test
     public void fieldOnlyInSubClass () throws Exception {
-        List<Employee> queryableList = $q ( h_list, SalesEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list, SalesEmployee.class );
+        List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
     }
 
     @Test
     public void fieldOnlyInSubClass2 () throws Exception {
-        List<Employee> queryableList = $q ( h_list, Employee.class, SalesEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list, Employee.class, SalesEmployee.class );
+        List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
     }
 
     @Test
     public void fieldOnlyInSubClass3 () throws Exception {
-        List<Employee> queryableList = $q ( h_list, Employee.class, SalesEmployee.class, HourlyEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list, Employee.class, SalesEmployee.class, HourlyEmployee.class );
+        List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
-        results = sortedQuery ( queryableList, "firstName", eq ( "weeklyHours", 40 ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "HourlyEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        results = sortedQuery( queryableList, "firstName", eq( "weeklyHours", 40 ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "HourlyEmployee", results.get( 0 ).getClass().getSimpleName() );
 
     }
 
-    @Test (expected = Exception.class)
+    @Test ( expected = Exception.class )
     public void fieldOnlyInSubClass4 () throws Exception {
-        List<Employee> queryableList = $q ( h_list, Employee.class, SalesEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", eq ( "commissionRate", 1 ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list, Employee.class, SalesEmployee.class );
+        List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
-        results = sortedQuery ( queryableList, "firstName", eq ( "weeklyHours", 40 ) );
-        assertEquals ( 0, results.size () );
+        results = sortedQuery( queryableList, "firstName", eq( "weeklyHours", 40 ) );
+        assertEquals( 0, results.size() );
 
     }
 
     @Test
     public void typeOfTestLongName () throws Exception {
-        List<Employee> queryableList = $q ( h_list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.typeOf ( "SalesEmployee" ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "SalesEmployee" ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
     }
 
     @Test
     public void typeOfTest () throws Exception {
-        List<Employee> queryableList = $q ( h_list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.typeOf ( "SalesEmployee" ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "SalesEmployee" ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
     }
 
     @Test
     public void instanceOfTest () throws Exception {
-        List<Employee> queryableList = $q ( h_list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.instanceOf ( SalesEmployee.class ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.instanceOf( SalesEmployee.class ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
     }
 
     @Test
     public void implementsTest () throws Exception {
-        List<Employee> queryableList = $q ( h_list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.implementsInterface ( Comparable.class ) );
-        assertEquals ( 1, results.size () );
-        assertEquals ( "SalesEmployee", results.get ( 0 ).getClass ().getSimpleName () );
+        List<Employee> queryableList = $q( h_list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.implementsInterface( Comparable.class ) );
+        assertEquals( 1, results.size() );
+        assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
     }
 
     @Test
     public void superClassTest () throws Exception {
-        List<Employee> queryableList = $q ( h_list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.typeOf ( "ZSalaryEmployee" ) );
-        assertEquals ( 0, results.size () );
+        List<Employee> queryableList = $q( h_list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "ZSalaryEmployee" ) );
+        assertEquals( 0, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_AND_LOTS_OF_TERMS_BIG_LIST () throws Exception {
-        List<Employee> queryableList = $q ( bigList, Employee.class, HourlyEmployee.class );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and (
-                        CriteriaFactory.between ( "salary", 1000, 2000 ),
-                        eq ( "firstName", "firstC1" ),
-                        CriteriaFactory.startsWith ( "lastName", "last" ),
-                        CriteriaFactory.gt ( "birthDate", toDate ( "5.29.1940" ) ),
-                        CriteriaFactory.startsWith ( "id", "ssn" ),
-                        CriteriaFactory.gt ( "salary", 1000 )
+        List<Employee> queryableList = $q( bigList, Employee.class, HourlyEmployee.class );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.and(
+                        CriteriaFactory.between( "salary", 1000, 2000 ),
+                        eq( "firstName", "firstC1" ),
+                        CriteriaFactory.startsWith( "lastName", "last" ),
+                        CriteriaFactory.gt( "birthDate", toDate( "5.29.1940" ) ),
+                        CriteriaFactory.startsWith( "id", "ssn" ),
+                        CriteriaFactory.gt( "salary", 1000 )
                 ) );
 
-        assertEquals ( 1, results.size () );
+        assertEquals( 1, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_OR_PRECISE_NESTED_OR_AND () throws Exception {
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or (
-                        CriteriaFactory.between ( "salary", 1001, 1002 ),
-                        CriteriaFactory.between ( "salary", 1002, 1003 ),
-                        CriteriaFactory.or ( eq ( "firstName", "firstC12" ), CriteriaFactory.and ( eq ( "firstName", "firstC10" ), eq ( "firstName", "firstC11" ) ) ),
-                        CriteriaFactory.and ( eq ( "firstName", "firstC20" ), eq ( "firstName", "firstC21" ), eq ( "firstName", "first22" ),
-                                CriteriaFactory.or ( eq ( "firstName", "firstC30" ), eq ( "firstName", "firstC31" ) ) ),
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or(
+                        CriteriaFactory.between( "salary", 1001, 1002 ),
+                        CriteriaFactory.between( "salary", 1002, 1003 ),
+                        CriteriaFactory.or( eq( "firstName", "firstC12" ), CriteriaFactory.and( eq( "firstName", "firstC10" ), eq( "firstName", "firstC11" ) ) ),
+                        CriteriaFactory.and( eq( "firstName", "firstC20" ), eq( "firstName", "firstC21" ), eq( "firstName", "first22" ),
+                                CriteriaFactory.or( eq( "firstName", "firstC30" ), eq( "firstName", "firstC31" ) ) ),
 
-                        CriteriaFactory.or (
-                                CriteriaFactory.or (
-                                        CriteriaFactory.or (
-                                                eq ( "firstName", "firstC52" ),
-                                                CriteriaFactory.and (
-                                                        eq ( "firstName", "firstC60" ),
-                                                        eq ( "firstName", "firstC61" )
+                        CriteriaFactory.or(
+                                CriteriaFactory.or(
+                                        CriteriaFactory.or(
+                                                eq( "firstName", "firstC52" ),
+                                                CriteriaFactory.and(
+                                                        eq( "firstName", "firstC60" ),
+                                                        eq( "firstName", "firstC61" )
                                                 )
                                         )
                                 )
@@ -234,12 +234,12 @@ public class MoreTests {
 
                 ) );
 
-        System.out.println ( results );
-        assertEquals ( 4, results.size () );
-        assertEquals ( "firstC1", results.get ( 0 ).getFirstName () );
-        assertEquals ( "firstC12", results.get ( 1 ).getFirstName () );
-        assertEquals ( "firstC2", results.get ( 2 ).getFirstName () );
-        assertEquals ( "firstC52", results.get ( 3 ).getFirstName () );
+        System.out.println( results );
+        assertEquals( 4, results.size() );
+        assertEquals( "firstC1", results.get( 0 ).getFirstName() );
+        assertEquals( "firstC12", results.get( 1 ).getFirstName() );
+        assertEquals( "firstC2", results.get( 2 ).getFirstName() );
+        assertEquals( "firstC52", results.get( 3 ).getFirstName() );
 
 
     }
@@ -247,104 +247,104 @@ public class MoreTests {
 
     @Test
     public void testBetweenSalary_OR_PRECISE_NESTED_AND () throws Exception {
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or (
-                        CriteriaFactory.between ( "salary", 1001, 1002 ),
-                        CriteriaFactory.between ( "salary", 1002, 1003 ),
-                        CriteriaFactory.and ( eq ( "firstName", "firstC10" ), eq ( "firstName", "firstC11" ) )
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or(
+                        CriteriaFactory.between( "salary", 1001, 1002 ),
+                        CriteriaFactory.between( "salary", 1002, 1003 ),
+                        CriteriaFactory.and( eq( "firstName", "firstC10" ), eq( "firstName", "firstC11" ) )
 
                 ) );
 
-        assertEquals ( 2, results.size () );
+        assertEquals( 2, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_OR_PRECISE () throws Exception {
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or (
-                        CriteriaFactory.between ( "salary", 1001, 1002 ),
-                        CriteriaFactory.between ( "salary", 1002, 1003 ),
-                        eq ( "firstName", "firstC10" ),
-                        eq ( "firstName", "firstC11" )
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or(
+                        CriteriaFactory.between( "salary", 1001, 1002 ),
+                        CriteriaFactory.between( "salary", 1002, 1003 ),
+                        eq( "firstName", "firstC10" ),
+                        eq( "firstName", "firstC11" )
 
                 ) );
 
-        assertEquals ( 4, results.size () );
+        assertEquals( 4, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_OR_LOTS_OF_TERMS_BIG_LIST () throws Exception {
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or (
-                        CriteriaFactory.between ( "salary", 1000, 2000 ),
-                        eq ( "firstName", "firstC1" ),
-                        CriteriaFactory.startsWith ( "lastName", "last" ),
-                        CriteriaFactory.gt ( "birthDate", toDate ( "5.29.1940" ) ),
-                        CriteriaFactory.startsWith ( "id", "ssn" ),
-                        CriteriaFactory.gt ( "salary", 1000 )
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or(
+                        CriteriaFactory.between( "salary", 1000, 2000 ),
+                        eq( "firstName", "firstC1" ),
+                        CriteriaFactory.startsWith( "lastName", "last" ),
+                        CriteriaFactory.gt( "birthDate", toDate( "5.29.1940" ) ),
+                        CriteriaFactory.startsWith( "id", "ssn" ),
+                        CriteriaFactory.gt( "salary", 1000 )
                 ) );
 
-        assertEquals ( 2002, results.size () );
+        assertEquals( 2002, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_OR_FirstNameEQ_SECOND_TERM_NOT_FOUND_BIG_LIST () throws Exception {
 
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or ( CriteriaFactory.between ( "salary", 1000, 2000 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or( CriteriaFactory.between( "salary", 1000, 2000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
 
-        assertEquals ( 1000, results.size () );
+        assertEquals( 1000, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_AND_FirstNameEQ_SECOND_TERM_NOT_FOUND_BIG_LIST () throws Exception {
 
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.between ( "salary", 1000, 2000 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) );
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.between( "salary", 1000, 2000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) );
 
-        assertEquals ( 0, results.size () );
+        assertEquals( 0, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_OR_FirstNameEQ_FIRST_TERM_NOT_FOUND_BIG_LIST () throws Exception {
 
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or ( CriteriaFactory.between ( "salary", 1, 3 ), CriteriaFactory.startsWith ( "firstName", "firstC" ) ) );
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or( CriteriaFactory.between( "salary", 1, 3 ), CriteriaFactory.startsWith( "firstName", "firstC" ) ) );
 
-        assertEquals ( 2000, results.size () );
+        assertEquals( 2000, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_AND_FirstNameEQ_FIRST_TERM_NOT_FOUND_BIG_LIST () throws Exception {
 
-        List<Employee> queryableList = $q ( bigList );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and ( CriteriaFactory.between ( "salary", 1, 3 ), CriteriaFactory.startsWith ( "firstName", "firstC" ) ) );
+        List<Employee> queryableList = $q( bigList );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.and( CriteriaFactory.between( "salary", 1, 3 ), CriteriaFactory.startsWith( "firstName", "firstC" ) ) );
 
-        assertEquals ( 0, results.size () );
+        assertEquals( 0, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary_OR_FirstNameEQ_SECOND_TERM_NOT_FOUND () throws Exception {
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or ( CriteriaFactory.between ( "salary", 199, 201 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or( CriteriaFactory.between( "salary", 199, 201 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
 
-        assertEquals ( 1, results.size () );
+        assertEquals( 1, results.size() );
 
     }
 
@@ -352,67 +352,67 @@ public class MoreTests {
     @Test
     public void testBetweenSalary_OR_FirstNameEQ_FIRST_TERM_NOT_FOUND () throws Exception {
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.or ( CriteriaFactory.between ( "salary", -1, -1 ), eq ( "firstName", "firstA" ) ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.or( CriteriaFactory.between( "salary", -1, -1 ), eq( "firstName", "firstA" ) ) );
 
-        assertEquals ( 1, results.size () );
+        assertEquals( 1, results.size() );
 
     }
 
     @Test
     public void testBetweenSalaryAndFirstNameEQ_FIRST_TERM_NOT_FOUND () throws Exception {
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and ( CriteriaFactory.between ( "salary", -1, -1 ), eq ( "firstName", "firstA" ) ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.and( CriteriaFactory.between( "salary", -1, -1 ), eq( "firstName", "firstA" ) ) );
 
-        assertEquals ( 0, results.size () );
+        assertEquals( 0, results.size() );
 
     }
 
     @Test
     public void testBetweenSalaryAndFirstNameEQ_SECOND_TERM_NOT_FOUND () throws Exception {
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and ( CriteriaFactory.between ( "salary", 0, 1000 ), eq ( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis () ) ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.and( CriteriaFactory.between( "salary", 0, 1000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
 
-        assertEquals ( 0, results.size () );
+        assertEquals( 0, results.size() );
 
     }
 
     @Test
     public void testBetweenSalaryAndFirstNameEQ_SECOND_TERM_FOUND () throws Exception {
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName",
-                CriteriaFactory.and ( CriteriaFactory.between ( "salary", 0, 1000 ), eq ( "firstName", "firstA" ) ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                CriteriaFactory.and( CriteriaFactory.between( "salary", 0, 1000 ), eq( "firstName", "firstA" ) ) );
 
-        assertEquals ( 1, results.size () );
+        assertEquals( 1, results.size() );
 
     }
 
     @Test
     public void testBetweenSalary () throws Exception {
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.between ( "salary", 100, 200 ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 100, 200 ) );
 
-        assertEquals ( 1, results.size () );
-        assertEquals ( "firstA", results.get ( 0 ).getFirstName () );
+        assertEquals( 1, results.size() );
+        assertEquals( "firstA", results.get( 0 ).getFirstName() );
 
     }
 
     @Test
     public void testBetweenSalaryExact () throws Exception {
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.between ( "salary", 100, 201 ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 100, 201 ) );
 
-        assertEquals ( 2, results.size () );
-        assertEquals ( "firstA", results.get ( 0 ).getFirstName () );
-        assertEquals ( "firstB", results.get ( 1 ).getFirstName () );
+        assertEquals( 2, results.size() );
+        assertEquals( "firstA", results.get( 0 ).getFirstName() );
+        assertEquals( "firstB", results.get( 1 ).getFirstName() );
 
     }
 
@@ -420,10 +420,10 @@ public class MoreTests {
     @Test
     public void testBetweenSalaryExactOutOfRange () throws Exception {
         //rint(listStream);
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.between ( "salary", 400, 500 ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 400, 500 ) );
 
-        assertEquals ( 0, results.size () );
+        assertEquals( 0, results.size() );
 
     }
 
@@ -432,46 +432,46 @@ public class MoreTests {
 
         //rint(listStream);
 
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.between ( "birthDate", "5/29/1960:00:00:01", "5/29/1970:00:00:00" ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1960:00:00:01", "5/29/1970:00:00:00" ) );
 
-        assertEquals ( 2, results.size () );
-        assertEquals ( "firstA", results.get ( 0 ).getFirstName () );
-        assertEquals ( "firstB", results.get ( 1 ).getFirstName () );
+        assertEquals( 2, results.size() );
+        assertEquals( "firstA", results.get( 0 ).getFirstName() );
+        assertEquals( "firstB", results.get( 1 ).getFirstName() );
 
     }
 
 
     @Test
     public void testBetweenDateExactJustOverAndUnder1Year () throws Exception {
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.between ( "birthDate", "5/29/1959", "5/29/1971" ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1959", "5/29/1971" ) );
 
-        assertEquals ( 2, results.size () );
-        assertEquals ( "firstA", results.get ( 0 ).getFirstName () );
-        assertEquals ( "firstB", results.get ( 1 ).getFirstName () );
+        assertEquals( 2, results.size() );
+        assertEquals( "firstA", results.get( 0 ).getFirstName() );
+        assertEquals( "firstB", results.get( 1 ).getFirstName() );
 
     }
 
 
     @Test
     public void testBetweenDate () throws Exception {
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.between ( "birthDate", "5/29/1950", "5/29/1990" ) );
-        assertEquals ( 2, results.size () );
-        assertEquals ( "firstA", results.get ( 0 ).getFirstName () );
-        assertEquals ( "firstB", results.get ( 1 ).getFirstName () );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1950", "5/29/1990" ) );
+        assertEquals( 2, results.size() );
+        assertEquals( "firstA", results.get( 0 ).getFirstName() );
+        assertEquals( "firstB", results.get( 1 ).getFirstName() );
 
     }
 
     @Test
     public void testBetweenDatePreInit () throws Exception {
-        List<Employee> queryableList = $q ( list );
-        List<Employee> results = sortedQuery ( queryableList, "firstName", CriteriaFactory.between ( Employee.class, "birthDate", "5/29/1950", "5/29/1990" ) );
+        List<Employee> queryableList = $q( list );
+        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( Employee.class, "birthDate", "5/29/1950", "5/29/1990" ) );
 
-        assertEquals ( 2, results.size () );
-        assertEquals ( "firstA", results.get ( 0 ).getFirstName () );
-        assertEquals ( "firstB", results.get ( 1 ).getFirstName () );
+        assertEquals( 2, results.size() );
+        assertEquals( "firstA", results.get( 0 ).getFirstName() );
+        assertEquals( "firstB", results.get( 1 ).getFirstName() );
 
     }
 
@@ -481,98 +481,98 @@ public class MoreTests {
 
 
         //Add 2,000 users 1000 with no last name, and 1000 Smith
-        List<Employee> employees = new ArrayList<> ();
+        List<Employee> employees = new ArrayList<>();
         for ( int i = 0; i < 2000; i++ ) {
-            Employee e = new Employee ();
+            Employee e = new Employee();
             if ( i % 2 == 0 ) {
-                e.setLastName ( "" );
+                e.setLastName( "" );
             } else {
-                e.setLastName ( "Smith" );
+                e.setLastName( "Smith" );
             }
-            e.setId ( "" + i ); //NO ID no employee added
-            employees.add ( e );
+            e.setId( "" + i ); //NO ID no employee added
+            employees.add( e );
         }
 
-        RepoBuilder indexedRepoBuilder = new RepoBuilderDefault ();
+        RepoBuilder indexedRepoBuilder = new RepoBuilderDefault();
 
 
         //build repo indexed on id, with search index on lastName
-        Repo<String, Employee> indexedRepo = indexedRepoBuilder.primaryKey ( "id" )
-                .searchIndex ( "lastName" )
-                .build ( String.class, Employee.class );
+        Repo<String, Employee> indexedRepo = indexedRepoBuilder.primaryKey( "id" )
+                .searchIndex( "lastName" )
+                .build( String.class, Employee.class );
 
         //dump employees into repo
-        indexedRepo.addAll ( employees );
+        indexedRepo.addAll( employees );
 
 
         //now see who does not have a lastName
-        List<Employee> indexedResult = indexedRepo.query ( empty ( "lastName" ) );
+        List<Employee> indexedResult = indexedRepo.query( empty( "lastName" ) );
 
         //Test
-        assertEquals ( 1000, indexedResult.size () );
+        assertEquals( 1000, indexedResult.size() );
 
 
-        RepoBuilder nonindexedRepoBuilder = new RepoBuilderDefault ();
-        Repo<String, Employee> nonindexedRepo = nonindexedRepoBuilder.primaryKey ( "id" )
-                .build ( String.class, Employee.class );
-        nonindexedRepo.addAll ( employees );
-        assertEquals ( 2000, nonindexedRepo.size () );
+        RepoBuilder nonindexedRepoBuilder = new RepoBuilderDefault();
+        Repo<String, Employee> nonindexedRepo = nonindexedRepoBuilder.primaryKey( "id" )
+                .build( String.class, Employee.class );
+        nonindexedRepo.addAll( employees );
+        assertEquals( 2000, nonindexedRepo.size() );
 
-        List<Employee> nonindexedResult = nonindexedRepo.query ( empty ( "lastName" ) );
+        List<Employee> nonindexedResult = nonindexedRepo.query( empty( "lastName" ) );
 
-        assertEquals ( 1000, nonindexedResult.size () );
+        assertEquals( 1000, nonindexedResult.size() );
     }
 
     @Test
     public void testLinearVsIndexedEqNested () {
-        List<Employee> employees = new ArrayList<> ();
+        List<Employee> employees = new ArrayList<>();
         for ( int i = 0; i < 2000; i++ ) {
-            Employee e = new Employee ();
+            Employee e = new Employee();
             if ( i % 2 == 0 ) {
-                Department d = new Department ();
-                d.setName ( "development" );
-                e.setDepartment ( d );
+                Department d = new Department();
+                d.setName( "development" );
+                e.setDepartment( d );
             } else {
-                e.setDepartment ( new Department () );
+                e.setDepartment( new Department() );
             }
-            e.setId ( "" + i ); //NO ID no employee added
-            employees.add ( e );
+            e.setId( "" + i ); //NO ID no employee added
+            employees.add( e );
         }
 
-        RepoBuilder indexedRepoBuilder = new RepoBuilderDefault ();
-        Repo<String, Employee> indexedRepo = indexedRepoBuilder.primaryKey ( "id" )
-                .nestedIndex ( "department", "name" )
-                .build ( String.class, Employee.class );
-        indexedRepo.addAll ( employees );
-        List<Employee> indexedResult = indexedRepo.query ( eqNestedAdvanced ( "development", "department", "name" ) );
+        RepoBuilder indexedRepoBuilder = new RepoBuilderDefault();
+        Repo<String, Employee> indexedRepo = indexedRepoBuilder.primaryKey( "id" )
+                .nestedIndex( "department", "name" )
+                .build( String.class, Employee.class );
+        indexedRepo.addAll( employees );
+        List<Employee> indexedResult = indexedRepo.query( eqNestedAdvanced( "development", "department", "name" ) );
 
-        RepoBuilder nonindexedRepoBuilder = new RepoBuilderDefault ();
-        Repo<String, Employee> nonindexedRepo = nonindexedRepoBuilder.primaryKey ( "id" )
-                .build ( String.class, Employee.class );
-        nonindexedRepo.addAll ( employees );
-        List<Employee> nonindexedResult = nonindexedRepo.query ( eqNested ( "development", "department", "name" ) );
+        RepoBuilder nonindexedRepoBuilder = new RepoBuilderDefault();
+        Repo<String, Employee> nonindexedRepo = nonindexedRepoBuilder.primaryKey( "id" )
+                .build( String.class, Employee.class );
+        nonindexedRepo.addAll( employees );
+        List<Employee> nonindexedResult = nonindexedRepo.query( eqNested( "development", "department", "name" ) );
 
-        assertEquals ( 1000, indexedResult.size () );
-        assertEquals ( 1000, nonindexedResult.size () );
+        assertEquals( 1000, indexedResult.size() );
+        assertEquals( 1000, nonindexedResult.size() );
     }
 
 
     @Test
     public void testDeleteWithNullIndexedField () {
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" )
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "firstName" )
+                        .build( Typ.string, Employee.class );
 
-        Employee e = Employee.employee ( null, "LastA", "9131971", "5.29.1970:00:00:01", 100 );
-        repo.put ( e );
+        Employee e = Employee.employee( null, "LastA", "9131971", "5.29.1970:00:00:01", 100 );
+        repo.put( e );
 
-        e = repo.get ( "9131971" );
-        assertEquals ( "9131971", e.getId () );
+        e = repo.get( "9131971" );
+        assertEquals( "9131971", e.getId() );
 
-        repo.delete ( e );
-        e = repo.get ( "9131971" );
-        assertEquals ( null, e );
+        repo.delete( e );
+        e = repo.get( "9131971" );
+        assertEquals( null, e );
     }
 
 
@@ -581,29 +581,29 @@ public class MoreTests {
         String id = "9131971";
 
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" )
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "firstName" )
+                        .build( Typ.string, Employee.class );
 
-        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
-        repo.put ( e );
-        assertEquals ( 1, repo.size () );
+        Employee e = Employee.employee( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put( e );
+        assertEquals( 1, repo.size() );
 
         // Find the new employee
-        Criteria exp = eq ( "firstName", "FirstA" );
-        List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size () );
+        Criteria exp = eq( "firstName", "FirstA" );
+        List<Employee> results = repo.query( exp );
+        assertEquals( 1, results.size() );
 
-        Employee e2 = repo.get ( id );
-        repo.modify ( e2 );
-        assertEquals ( 1, repo.size () );
+        Employee e2 = repo.get( id );
+        repo.modify( e2 );
+        assertEquals( 1, repo.size() );
 
-        Employee e3 = repo.get ( id );
-        repo.modify ( e3 );
-        assertEquals ( 1, repo.size () );
+        Employee e3 = repo.get( id );
+        repo.modify( e3 );
+        assertEquals( 1, repo.size() );
 
-        List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size () );
+        List<Employee> results2 = repo.query( exp );
+        assertEquals( 1, results2.size() );
     }
 
 
@@ -612,36 +612,36 @@ public class MoreTests {
         String id = "9131971";
 
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" )
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "firstName" )
+                        .build( Typ.string, Employee.class );
 
-        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
-        repo.put ( e );
-        assertEquals ( 1, repo.size () );
+        Employee e = Employee.employee( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put( e );
+        assertEquals( 1, repo.size() );
 
         // Find the new employee
-        Criteria exp = eq ( "firstName", "FirstA" );
-        List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size () );
+        Criteria exp = eq( "firstName", "FirstA" );
+        List<Employee> results = repo.query( exp );
+        assertEquals( 1, results.size() );
 
 
         // Add returns true or false based on whether it was able to add
         // the object to the repo.
-        Employee e2 = repo.get ( id );
-        assertEquals ( false, repo.add ( e2 ) );
+        Employee e2 = repo.get( id );
+        assertEquals( false, repo.add( e2 ) );
 
 
         try {
-            Employee e3 = repo.get ( id );
-            repo.put ( e3 );
-            die ( "you never get here" );
+            Employee e3 = repo.get( id );
+            repo.put( e3 );
+            die( "you never get here" );
         } catch ( DataRepoException dre ) {
-            puts ( "you tried to put something in the repo that is already there", dre.getMessage () );
+            puts( "you tried to put something in the repo that is already there", dre.getMessage() );
         }
 
-        List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size () );
+        List<Employee> results2 = repo.query( exp );
+        assertEquals( 1, results2.size() );
     }
 
 
@@ -650,44 +650,44 @@ public class MoreTests {
         String id = "9131971";
 
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" )
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "firstName" )
+                        .build( Typ.string, Employee.class );
 
-        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
-        repo.put ( e );
-        assertEquals ( 1, repo.size () );
+        Employee e = Employee.employee( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put( e );
+        assertEquals( 1, repo.size() );
 
         // Find the new employee
-        Criteria exp = eq ( "firstName", "FirstA" );
-        List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size () );
+        Criteria exp = eq( "firstName", "FirstA" );
+        List<Employee> results = repo.query( exp );
+        assertEquals( 1, results.size() );
 
 
         // Add returns true or false based on whether it was able to add
         // the object to the repo.
-        Employee e2 = repo.get ( id );
-        assertEquals ( false, repo.add ( e2 ) );
+        Employee e2 = repo.get( id );
+        assertEquals( false, repo.add( e2 ) );
 
 
-        Employee e3 = repo.get ( id );
-        repo.update ( e3 );
+        Employee e3 = repo.get( id );
+        repo.update( e3 );
 
 
-        Employee e4 = Employee.employee ( "FirstA", "LastA", "9131971777" + System.currentTimeMillis (),
+        Employee e4 = Employee.employee( "FirstA", "LastA", "9131971777" + System.currentTimeMillis(),
                 "5.29.1970:00:00:01", 100 );
 
 
         try {
-            repo.update ( e4 );
-            die ( "you never get here" );
+            repo.update( e4 );
+            die( "you never get here" );
         } catch ( DataRepoException dre ) {
-            puts ( "you tried to update something but it does not exist", dre.getMessage () );
+            puts( "you tried to update something but it does not exist", dre.getMessage() );
         }
 
 
-        List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size () );
+        List<Employee> results2 = repo.query( exp );
+        assertEquals( 1, results2.size() );
     }
 
 
@@ -698,37 +698,37 @@ public class MoreTests {
 
 
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" )
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "firstName" )
+                        .build( Typ.string, Employee.class );
 
 
-        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
-        repo.put ( e );
-        assertEquals ( 1, repo.size () );
+        Employee e = Employee.employee( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put( e );
+        assertEquals( 1, repo.size() );
 
 
         // Find the new employee by first name
 
-        Criteria exp = eq ( "firstName", "FirstA" );
-        List<Employee> results = repo.query ( exp );
-        assertEquals ( 1, results.size () );
+        Criteria exp = eq( "firstName", "FirstA" );
+        List<Employee> results = repo.query( exp );
+        assertEquals( 1, results.size() );
 
 
         // Change first name
-        e.setFirstName ( "NewFirstName" );
-        repo.update ( e );
+        e.setFirstName( "NewFirstName" );
+        repo.update( e );
 
 
         // We should not find any results when searching for the old first name
-        List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 1, results2.size () );
+        List<Employee> results2 = repo.query( exp );
+        assertEquals( 1, results2.size() );
 
 
         // We should find one result when searching for the new first name
-        Criteria expNewFirstName = eq ( "firstName", "NewFirstName" );
-        List<Employee> results3 = repo.query ( expNewFirstName );
-        assertEquals ( 1, results3.size () );
+        Criteria expNewFirstName = eq( "firstName", "NewFirstName" );
+        List<Employee> results3 = repo.query( expNewFirstName );
+        assertEquals( 1, results3.size() );
 
     }
 
@@ -740,41 +740,41 @@ public class MoreTests {
 
 
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" ).cloneEdits ( true )     //<--- Clone edits makes a clone
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "firstName" ).cloneEdits( true )     //<--- Clone edits makes a clone
+                        .build( Typ.string, Employee.class );
 
 
-        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
-        repo.put ( e );
+        Employee e = Employee.employee( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put( e );
 
-        assertEquals ( 1, repo.size () );
+        assertEquals( 1, repo.size() );
 
 
         // Find the new employee by first name
-        Criteria exp = eq ( "firstName", "FirstA" );
-        List<Employee> results = repo.query ( exp );
+        Criteria exp = eq( "firstName", "FirstA" );
+        List<Employee> results = repo.query( exp );
 
-        assertEquals ( 1, results.size () );
+        assertEquals( 1, results.size() );
 
 
         // Change first name
-        e.setFirstName ( "NewFirstName" );
-        repo.update ( e );
+        e.setFirstName( "NewFirstName" );
+        repo.update( e );
 
 
         // We should not find any results when searching for the old first name
-        List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 0, results2.size () );
+        List<Employee> results2 = repo.query( exp );
+        assertEquals( 0, results2.size() );
 
 
         // We should find one result when searching for the new first name
 
-        Criteria expNewFirstName = eq ( "firstName", "NewFirstName" );
+        Criteria expNewFirstName = eq( "firstName", "NewFirstName" );
 
-        List<Employee> results3 = repo.query ( expNewFirstName );
+        List<Employee> results3 = repo.query( expNewFirstName );
 
-        assertEquals ( 1, results3.size () );
+        assertEquals( 1, results3.size() );
 
     }
 
@@ -786,40 +786,40 @@ public class MoreTests {
 
 
         Repo<String, Employee> repo =
-                Repos.builder ().primaryKey ( "id" )
-                        .searchIndex ( "firstName" ).cloneEdits ( false )     //<--- No cloning
-                        .build ( Typ.string, Employee.class );
+                Repos.builder().primaryKey( "id" )
+                        .searchIndex( "firstName" ).cloneEdits( false )     //<--- No cloning
+                        .build( Typ.string, Employee.class );
 
 
-        Employee e = Employee.employee ( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
-        repo.put ( e );
+        Employee e = Employee.employee( "FirstA", "LastA", id, "5.29.1970:00:00:01", 100 );
+        repo.put( e );
 
-        assertEquals ( 1, repo.size () );
+        assertEquals( 1, repo.size() );
 
 
         // Find the new employee by first name
-        Criteria exp = eq ( "firstName", "FirstA" );
-        List<Employee> results = repo.query ( exp );
+        Criteria exp = eq( "firstName", "FirstA" );
+        List<Employee> results = repo.query( exp );
 
-        assertEquals ( 1, results.size () );
+        assertEquals( 1, results.size() );
 
 
         // Change first name
-        repo.update ( e.getId (), "firstName", "NewFirstName" );
+        repo.update( e.getId(), "firstName", "NewFirstName" );
 
 
         // We should not find any results when searching for the old first name
-        List<Employee> results2 = repo.query ( exp );
-        assertEquals ( 0, results2.size () );
+        List<Employee> results2 = repo.query( exp );
+        assertEquals( 0, results2.size() );
 
 
         // We should find one result when searching for the new first name
 
-        Criteria expNewFirstName = eq ( "firstName", "NewFirstName" );
+        Criteria expNewFirstName = eq( "firstName", "NewFirstName" );
 
-        List<Employee> results3 = repo.query ( expNewFirstName );
+        List<Employee> results3 = repo.query( expNewFirstName );
 
-        assertEquals ( 1, results3.size () );
+        assertEquals( 1, results3.size() );
 
     }
 

@@ -51,13 +51,13 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
      * Holds a cache of Properties file contents to reduce IO.
      */
     private Map<String, Properties> metaDataPropsCache =
-            new HashMap<String, Properties> ();
+            new HashMap<String, Properties>();
 
     /**
      * Holds a cache of meta-data to reduce parsing with regex.
      */
     private Map<String, List<ValidatorMetaData>> metaDataCache =
-            new HashMap<String, List<ValidatorMetaData>> ();
+            new HashMap<String, List<ValidatorMetaData>>();
 
     /**
      * Read the meta-data from a properties file.
@@ -65,51 +65,52 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
     public List<ValidatorMetaData> readMetaData ( Class<?> clazz, String propertyName ) {
 
         /* Load the properties file. */
-        Properties props = loadMetaDataPropsFile ( clazz );
+        Properties props = loadMetaDataPropsFile( clazz );
         /* Get the raw validation data for the given property. */
-        String unparsedString = props.getProperty ( propertyName );
+        String unparsedString = props.getProperty( propertyName );
         /* Parse the string into a list of ValidationMetaData. */
-        return extractMetaDataFromString ( clazz, propertyName, unparsedString );
+        return extractMetaDataFromString( clazz, propertyName, unparsedString );
     }
 
     /**
      * This method loads the MetaData properties file. The Properties are cached
      * in <b>metaDataPropsCache</b> and will not be reloaded twice.
      *
-     * @param clazzWhoseValidationMetaDataWeAreReading The class whose property meta-data we are retrieving.
+     * @param clazzWhoseValidationMetaDataWeAreReading
+     *         The class whose property meta-data we are retrieving.
      * @return
      */
     private Properties loadMetaDataPropsFile (
             Class<?> clazzWhoseValidationMetaDataWeAreReading ) {
-        String className = clazzWhoseValidationMetaDataWeAreReading.getName ();
+        String className = clazzWhoseValidationMetaDataWeAreReading.getName();
 
         /*
          * If the class is proxied there will be a $CGLIB on the end of it.
          * Remove this.
          */
-        className = className.split ( "[$]" )[ 0 ];
+        className = className.split( "[$]" )[ 0 ];
         
         /*
          * The resourceName is as follows: If the class name is com.foo.Foo Then
          * the resource name is com.foo.Foo.properties.
          */
-        String[] sourceParts = className.split ( "[.]" );
+        String[] sourceParts = className.split( "[.]" );
         String resourceName = ( sourceParts[ sourceParts.length - 1 ] ) + ".properties";
 
         /* Check to see if this properties file was already loaded. */
-        Properties validationMetaDataProps = metaDataPropsCache.get ( resourceName );
+        Properties validationMetaDataProps = metaDataPropsCache.get( resourceName );
 
         /* If the properties file was not loaded, then load it. */
         if ( validationMetaDataProps == null ) {
-            validationMetaDataProps = new Properties ();
+            validationMetaDataProps = new Properties();
             try {
                 /*
                  * Try to load the properties file that contains the validation
                  * meta-data.
                  */
-                validationMetaDataProps.load ( this.getClass ()
-                        .getClassLoader ()
-                        .getResourceAsStream ( resourceName ) );
+                validationMetaDataProps.load( this.getClass()
+                        .getClassLoader()
+                        .getResourceAsStream( resourceName ) );
             } catch ( IOException ioex ) {
                 /*
                  * This can happen and is not an error. It just means there is
@@ -121,7 +122,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
              * Put the properties file into the cache so we don't have to read
              * it again.
              */
-            metaDataPropsCache.put ( resourceName, validationMetaDataProps );
+            metaDataPropsCache.put( resourceName, validationMetaDataProps );
         }
         assert validationMetaDataProps != null :
                 "Properties for validation meta-data were loaded";
@@ -138,23 +139,23 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
      */
     private List<ValidatorMetaData> extractMetaDataFromString ( Class<?> clazz,
                                                                 String propertyName, String unparsedString ) {
-        String propertyKey = clazz.getName () + "." + propertyName;
+        String propertyKey = clazz.getName() + "." + propertyName;
 
         /* See if we parsed this bad boy already. */
         List<ValidatorMetaData> validatorMetaDataList =
-                metaDataCache.get ( propertyKey );
+                metaDataCache.get( propertyKey );
 
         
         /* If we did not find the list, then we have some work to do.*/
         if ( validatorMetaDataList == null ) {
             /* Initialize a new list. */
-            validatorMetaDataList = new ArrayList<ValidatorMetaData> ();
+            validatorMetaDataList = new ArrayList<ValidatorMetaData>();
             
             /* Remember we have a string that looks like this:
              * required; length min=10, max=100
              * So we need to split on semi-colon.
              */
-            String[] validatorsParts = unparsedString.split ( "[;]" );
+            String[] validatorsParts = unparsedString.split( "[;]" );
             
             /* Now we have the two strings as follows:
              *  ["required",
@@ -162,20 +163,20 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
              *
              */
             for ( String validatorString : validatorsParts ) {
-                ValidatorMetaData validatorMetaData = new ValidatorMetaData ();
-                validatorMetaDataList.add ( validatorMetaData );
+                ValidatorMetaData validatorMetaData = new ValidatorMetaData();
+                validatorMetaDataList.add( validatorMetaData );
                 
                 /* Now we split one of the string (we will use length) 
                  * as follows: 
                  * parts=["length", "min=10", "max=100"]
                  * */
-                String[] parts = validatorString.trim ().split ( "[ ,]" );
+                String[] parts = validatorString.trim().split( "[ ,]" );
                 
                 /* The first part is the name of the validation, 
                  * e.g., "length".
                  * 
                  */
-                validatorMetaData.setName ( parts[ 0 ] );
+                validatorMetaData.setName( parts[ 0 ] );
 
                 /* If the string has more than one part, then there must
                  * be arguments as in: ["min=10", "max=100"]
@@ -193,24 +194,24 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
                      * ["min=10", "max=100"]
                      */
                     List<String> values =
-                            Arrays.asList ( parts ).subList ( 1, parts.length );
+                            Arrays.asList( parts ).subList( 1, parts.length );
                     
                     /* For each value convert it into name value pairs. */
                     for ( String value : values ) {
 
-                        if ( value.indexOf ( "=" ) != -1 ) {
+                        if ( value.indexOf( "=" ) != -1 ) {
                             /* Split "min=10" into ["min", "10"] */
-                            String[] valueParts = value.split ( "[=]" );
+                            String[] valueParts = value.split( "[=]" );
                             /* Stick this value into validatorMetaData's
                              * list of properties. 
                              */
-                            validatorMetaData.getProperties ().put (
+                            validatorMetaData.getProperties().put(
                                     valueParts[ 0 ], valueParts[ 1 ] );
                         }
                     }
                 }
             }
-            metaDataCache.put ( propertyKey, validatorMetaDataList );
+            metaDataCache.put( propertyKey, validatorMetaDataList );
         }
         return validatorMetaDataList;
     }

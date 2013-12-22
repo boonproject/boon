@@ -31,32 +31,32 @@ public class ZipFileSystemTest {
         String someResource = args.length > 0 ? args[ 0 ] :
                 "classpath:///org/node/";                 //It also works with directories
 
-        URI someResourceURI = URI.create ( someResource );
+        URI someResourceURI = URI.create( someResource );
 
-        System.out.println ( "URI of resource = " + someResourceURI );
+        System.out.println( "URI of resource = " + someResourceURI );
 
-        someResource = someResourceURI.getPath ();
+        someResource = someResourceURI.getPath();
 
-        System.out.println ( "PATH of resource =" + someResource );
-
-
-        File file = new File ( "files/node-1.0-SNAPSHOT.jar" );
+        System.out.println( "PATH of resource =" + someResource );
 
 
-        URL url = file.getAbsoluteFile ().toURI ().toURL ();
+        File file = new File( "files/node-1.0-SNAPSHOT.jar" );
 
 
-        URLClassLoader loader = new URLClassLoader ( new URL[]{ url,
-                new File ( "files/invoke-1.0-SNAPSHOT.jar" ).getAbsoluteFile ().toURI ().toURL () } );
+        URL url = file.getAbsoluteFile().toURI().toURL();
 
-        final List<Path> resourcePaths = Classpaths.resources ( loader, someResource );
+
+        URLClassLoader loader = new URLClassLoader( new URL[]{ url,
+                new File( "files/invoke-1.0-SNAPSHOT.jar" ).getAbsoluteFile().toURI().toURL() } );
+
+        final List<Path> resourcePaths = Classpaths.resources( loader, someResource );
 
 
         for ( Path path : resourcePaths ) {
-            if ( !Files.isDirectory ( path ) ) {
-                puts ( IO.read ( path ) );
+            if ( !Files.isDirectory( path ) ) {
+                puts( IO.read( path ) );
             } else {
-                puts ( IO.list ( path ) );
+                puts( IO.list( path ) );
             }
         }
 

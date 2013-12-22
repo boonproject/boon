@@ -61,23 +61,23 @@ public class JsonParserImpl implements JsonParser {
 
         if ( lax ) {
             //For now there is only one lax parser so force it to that if they are using lax.
-            this.basicParser = new JsonParserLax ( plistStyle );
+            this.basicParser = new JsonParserLax( plistStyle );
             this.lazyFinalParseParser = this.basicParser;
             this.objectParser = this.basicParser;
             this.charSequenceParser = this.basicParser;
         } else {
-            this.lazyFinalParseParser = new JsonFastParser ();
+            this.lazyFinalParseParser = new JsonFastParser();
 
             if ( overlay ) {
                 this.basicParser = lazyFinalParseParser;
             } else {
-                this.basicParser = new JsonParserCharArray ();
+                this.basicParser = new JsonParserCharArray();
             }
 
-            this.objectParser = new JsonFastParser ( true );
+            this.objectParser = new JsonFastParser( true );
 
             if ( preferCharSequence ) {
-                this.charSequenceParser = new JsonParserCharSequence ();
+                this.charSequenceParser = new JsonParserCharSequence();
             } else {
                 this.charSequenceParser = basicParser;
             }
@@ -91,15 +91,15 @@ public class JsonParserImpl implements JsonParser {
     public final <T> T parse ( Class<T> type, String value ) {
 
         if ( type == Map.class || type == List.class ) {
-            return charSequenceParser.parse ( type, value );
+            return charSequenceParser.parse( type, value );
         } else {
 
             if ( !lax ) {
-                Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse ( Map.class, value );
-                return Reflection.fromValueMap ( objectMap, type );
+                Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
+                return Reflection.fromValueMap( objectMap, type );
             } else {
-                Map<String, Object> objectMap = ( Map<String, Object> ) objectParser.parse ( Map.class, value );
-                return Reflection.fromMap ( objectMap, type );
+                Map<String, Object> objectMap = ( Map<String, Object> ) objectParser.parse( Map.class, value );
+                return Reflection.fromMap( objectMap, type );
             }
         }
     }
@@ -110,35 +110,35 @@ public class JsonParserImpl implements JsonParser {
 
         if ( type == Map.class || type == List.class ) {
             if ( value.length < this.sizeSmallerUseLazyFinalParseAlways ) {
-                return lazyFinalParseParser.parse ( type, value );
+                return lazyFinalParseParser.parse( type, value );
             } else {
                 this.bufSize = value.length;
-                return this.basicParser.parse ( type, value );
+                return this.basicParser.parse( type, value );
             }
 
         } else {
-            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse ( Map.class, value );
-            return Reflection.fromValueMap ( objectMap, type );
+            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
+            return Reflection.fromValueMap( objectMap, type );
         }
     }
 
     @Override
     public final <T> T parse ( Class<T> type, CharSequence value ) {
         if ( type == Map.class || type == List.class ) {
-            return charSequenceParser.parse ( type, value );
+            return charSequenceParser.parse( type, value );
         } else {
-            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse ( Map.class, value );
-            return Reflection.fromValueMap ( objectMap, type );
+            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
+            return Reflection.fromValueMap( objectMap, type );
         }
     }
 
     @Override
     public final <T> T parse ( Class<T> type, char[] value ) {
         if ( type == Map.class || type == List.class ) {
-            return basicParser.parse ( type, value );
+            return basicParser.parse( type, value );
         } else {
-            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse ( Map.class, value );
-            return Reflection.fromValueMap ( objectMap, type );
+            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
+            return Reflection.fromValueMap( objectMap, type );
         }
 
     }
@@ -149,37 +149,37 @@ public class JsonParserImpl implements JsonParser {
     @Override
     public final <T> T parse ( Class<T> type, Reader reader ) {
 
-        charBuf = IO.read ( reader, charBuf, bufSize );
-        return parse ( type, charBuf.readForRecycle () );
+        charBuf = IO.read( reader, charBuf, bufSize );
+        return parse( type, charBuf.readForRecycle() );
 
     }
 
     @Override
     public final <T> T parse ( Class<T> type, InputStream input ) {
-        charBuf = IO.read ( input, charBuf, this.charset, bufSize );
-        return parse ( type, charBuf.readForRecycle () );
+        charBuf = IO.read( input, charBuf, this.charset, bufSize );
+        return parse( type, charBuf.readForRecycle() );
     }
 
     @Override
     public final <T> T parse ( Class<T> type, InputStream input, Charset charset ) {
-        charBuf = IO.read ( input, charBuf, charset, bufSize );
-        return parse ( type, charBuf.readForRecycle () );
+        charBuf = IO.read( input, charBuf, charset, bufSize );
+        return parse( type, charBuf.readForRecycle() );
     }
 
 
     @Override
     public final <T> T parseDirect ( Class<T> type, byte[] value ) {
         if ( value.length < 20_000 ) {
-            CharBuf builder = CharBuf.createFromUTF8Bytes ( value );
-            return parse ( type, builder.toCharArray () );
+            CharBuf builder = CharBuf.createFromUTF8Bytes( value );
+            return parse( type, builder.toCharArray() );
         } else {
-            return this.parse ( type, new ByteArrayInputStream ( value ) );
+            return this.parse( type, new ByteArrayInputStream( value ) );
         }
     }
 
     @Override
     public final <T> T parseAsStream ( Class<T> type, byte[] value ) {
-        return this.parse ( type, new ByteArrayInputStream ( value ) );
+        return this.parse( type, new ByteArrayInputStream( value ) );
     }
 
 

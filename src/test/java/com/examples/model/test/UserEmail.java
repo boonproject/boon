@@ -7,7 +7,7 @@ public class UserEmail {
 
     public UserEmail ( String email ) {
 
-        this.email = new Email ( email );
+        this.email = new Email( email );
 
     }
 

@@ -46,7 +46,7 @@ public abstract class MeasuredRun implements Runnable {
         this.warmupCount = warmupCount;
         this.iterations = iterations;
         this.results = results;
-        this.key = name + System.nanoTime ();
+        this.key = name + System.nanoTime();
     }
 
 
@@ -56,37 +56,37 @@ public abstract class MeasuredRun implements Runnable {
 
     @Override
     public void run () {
-        this.init ();
+        this.init();
 
         for ( int index = 0; index < warmupCount; index++ ) {
-            this.test ();
+            this.test();
         }
 
         try {
-            Thread.sleep ( 1 );
+            Thread.sleep( 1 );
         } catch ( InterruptedException e ) {
 
         }
-        startTime = System.nanoTime ();
+        startTime = System.nanoTime();
 
-        startMemory = Runtime.getRuntime ().freeMemory ();
+        startMemory = Runtime.getRuntime().freeMemory();
 
         for ( int index = 0; index < iterations; index++ ) {
-            this.test ();
+            this.test();
         }
 
-        endTime = System.nanoTime ();
-        endMemory = Runtime.getRuntime ().freeMemory ();
+        endTime = System.nanoTime();
+        endMemory = Runtime.getRuntime().freeMemory();
 
 
         totalTime = endTime - startTime;
         time = totalTime / iterations;
-        List<MeasuredRun> runs = results.get ( this.name );
+        List<MeasuredRun> runs = results.get( this.name );
         if ( runs == null ) {
-            runs = Collections.synchronizedList ( new ArrayList () );
-            results.put ( this.name, runs );
+            runs = Collections.synchronizedList( new ArrayList() );
+            results.put( this.name, runs );
         }
-        runs.add ( this );
+        runs.add( this );
     }
 
     @Override

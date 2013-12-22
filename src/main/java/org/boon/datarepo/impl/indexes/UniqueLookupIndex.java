@@ -16,7 +16,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     protected Map<KEY, ITEM> map = null;
 
 
-    private Logger log = Logger.getLogger ( UniqueLookupIndex.class.getName () );
+    private Logger log = Logger.getLogger( UniqueLookupIndex.class.getName() );
 
     private Function<Object, KEY> keyTransformer;
 
@@ -24,14 +24,14 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         if ( keyType == null ) {
             return;
         }
-        map = SPIFactory.getMapCreatorFactory ().get ().createMap ( keyType );
+        map = SPIFactory.getMapCreatorFactory().get().createMap( keyType );
 
     }
 
     @Override
     public ITEM get ( KEY key ) {
-        key = getKey ( key );
-        return map.get ( key );
+        key = getKey( key );
+        return map.get( key );
     }
 
     @Override
@@ -42,21 +42,21 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     @Override
     public boolean add ( ITEM item ) {
 
-        if ( log.isLoggable ( Level.FINE ) ) {
-            log.fine ( String.format ( "add item = %s", item ) );
+        if ( log.isLoggable( Level.FINE ) ) {
+            log.fine( String.format( "add item = %s", item ) );
         }
 
-        KEY key = keyGetter.apply ( item );
+        KEY key = keyGetter.apply( item );
         if ( key == null ) {
             return false;
         }
 
         /* You can not add the same key twice. */
-        if ( this.map.containsKey ( key ) ) {
+        if ( this.map.containsKey( key ) ) {
             return false;
         }
 
-        map.put ( key, item );
+        map.put( key, item );
         return true;
 
     }
@@ -64,54 +64,54 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     @Override
     public boolean delete ( ITEM item ) {
 
-        if ( log.isLoggable ( Level.FINE ) ) {
-            log.fine ( String.format ( "delete item = %s", item ) );
+        if ( log.isLoggable( Level.FINE ) ) {
+            log.fine( String.format( "delete item = %s", item ) );
         }
 
-        KEY key = keyGetter.apply ( item );
-        key = getKey ( key );
-        return map.remove ( key ) != null;
+        KEY key = keyGetter.apply( item );
+        key = getKey( key );
+        return map.remove( key ) != null;
     }
 
     @Override
     public List<ITEM> all () {
 
-        if ( log.isLoggable ( Level.FINE ) ) {
-            log.fine ( "all called " );
+        if ( log.isLoggable( Level.FINE ) ) {
+            log.fine( "all called " );
         }
 
-        return new ArrayList<> ( map.values () );
+        return new ArrayList<>( map.values() );
     }
 
     @Override
     public List<ITEM> getAll ( KEY key ) {
 
-        if ( log.isLoggable ( Level.FINE ) ) {
-            log.fine ( "getAll called " );
+        if ( log.isLoggable( Level.FINE ) ) {
+            log.fine( "getAll called " );
         }
 
-        return list ( this.get ( key ) );
+        return list( this.get( key ) );
     }
 
     @Override
     public int size () {
-        return this.map.size ();
+        return this.map.size();
     }
 
     @Override
     public Collection<ITEM> toCollection () {
-        return new HashSet ( this.map.values () );
+        return new HashSet( this.map.values() );
     }
 
     @Override
     public void clear () {
-        this.map.clear ();
+        this.map.clear();
     }
 
     @Override
     public boolean deleteByKey ( KEY key ) {
-        key = getKey ( key );
-        return this.map.remove ( key ) != null;
+        key = getKey( key );
+        return this.map.remove( key ) != null;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         if ( key == null ) {
             return false;
         }
-        return this.map.containsKey ( key );
+        return this.map.containsKey( key );
     }
 
 
@@ -145,7 +145,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     protected KEY getKey ( KEY key ) {
         if ( keyTransformer != null ) {
-            key = this.keyTransformer.apply ( key );
+            key = this.keyTransformer.apply( key );
         }
         return key;
     }

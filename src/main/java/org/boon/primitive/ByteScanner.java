@@ -24,7 +24,7 @@ public class ByteScanner {
             c = inputArray[ index ];
             if ( c == split ) {
 
-                results[ resultIndex ] = Byt.copy (
+                results[ resultIndex ] = Byt.copy(
                         inputArray, startCurrentLineIndex, currentLineLength - 1 );
                 startCurrentLineIndex = index + 1; //skip the byte
 
@@ -35,7 +35,7 @@ public class ByteScanner {
 
         if ( c != split ) {
 
-            results[ resultIndex ] = Byt.copy (
+            results[ resultIndex ] = Byt.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -43,7 +43,7 @@ public class ByteScanner {
         int actualLength = resultIndex;
         if ( actualLength < resultsArrayLength ) {
             final int newSize = resultsArrayLength - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -72,7 +72,7 @@ public class ByteScanner {
                 split = delims[ j ];
                 if ( c == split ) {
 
-                    results[ resultIndex ] = Byt.copy (
+                    results[ resultIndex ] = Byt.copy(
                             inputArray, startCurrentLineIndex, currentLineLength - 1 );
                     startCurrentLineIndex = index + 1; //skip the byte
 
@@ -83,9 +83,9 @@ public class ByteScanner {
             }
         }
 
-        if ( !Byt.inIntArray ( c, delims ) ) {
+        if ( !Byt.inIntArray( c, delims ) ) {
 
-            results[ resultIndex ] = Byt.copy (
+            results[ resultIndex ] = Byt.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -94,7 +94,7 @@ public class ByteScanner {
         int actualLength = resultIndex;
         if ( actualLength < resultsArrayLength ) {
             final int newSize = resultsArrayLength - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -118,11 +118,11 @@ public class ByteScanner {
 
                 if ( resultIndex == results.length ) {
 
-                    results = _grow ( results );
+                    results = _grow( results );
                 }
 
 
-                results[ resultIndex ] = Byt.copy (
+                results[ resultIndex ] = Byt.copy(
                         inputArray, startCurrentLineIndex, currentLineLength - 1 );
                 startCurrentLineIndex = index + 1; //skip the byte
 
@@ -133,7 +133,7 @@ public class ByteScanner {
 
         if ( c != split ) {
 
-            results[ resultIndex ] = Byt.copy (
+            results[ resultIndex ] = Byt.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -141,7 +141,7 @@ public class ByteScanner {
         int actualLength = resultIndex;
         if ( actualLength < results.length ) {
             final int newSize = results.length - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -173,11 +173,11 @@ public class ByteScanner {
 
                     if ( resultIndex == results.length ) {
 
-                        results = _grow ( results );
+                        results = _grow( results );
                     }
 
 
-                    results[ resultIndex ] = Byt.copy (
+                    results[ resultIndex ] = Byt.copy(
                             inputArray, startCurrentLineIndex, currentLineLength - 1 );
                     startCurrentLineIndex = index + 1; //skip the byte
 
@@ -188,9 +188,9 @@ public class ByteScanner {
             }
         }
 
-        if ( !Byt.inIntArray ( c, delims ) ) {
+        if ( !Byt.inIntArray( c, delims ) ) {
 
-            results[ resultIndex ] = Byt.copy (
+            results[ resultIndex ] = Byt.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -199,45 +199,45 @@ public class ByteScanner {
         int actualLength = resultIndex;
         if ( actualLength < results.length ) {
             final int newSize = results.length - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
 
     private static byte[][] _grow ( byte[][] array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         byte[][] newArray = new byte[ array.length * 2 ][];
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
     private static byte[][] __shrink ( byte[][] array, int size ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
         byte[][] newArray = new byte[ array.length - size ][];
 
-        System.arraycopy ( array, 0, newArray, 0, array.length - size );
+        System.arraycopy( array, 0, newArray, 0, array.length - size );
         return newArray;
     }
 
 
-    final static String MIN_INT_STR_NO_SIGN = String.valueOf ( Integer.MIN_VALUE ).substring ( 1 );
-    final static String MAX_INT_STR = String.valueOf ( Integer.MAX_VALUE );
+    final static String MIN_INT_STR_NO_SIGN = String.valueOf( Integer.MIN_VALUE ).substring( 1 );
+    final static String MAX_INT_STR = String.valueOf( Integer.MAX_VALUE );
 
 
-    final static String MIN_LONG_STR_NO_SIGN = String.valueOf ( Long.MIN_VALUE ).substring ( 1 );
-    final static String MAX_LONG_STR = String.valueOf ( Long.MAX_VALUE );
+    final static String MIN_LONG_STR_NO_SIGN = String.valueOf( Long.MIN_VALUE ).substring( 1 );
+    final static String MAX_LONG_STR = String.valueOf( Long.MAX_VALUE );
 
 
     public static boolean isInteger ( byte[] digitChars, int offset, int len,
                                       boolean negative ) {
         String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
-        int cmpLen = cmpStr.length ();
+        int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
 
         for ( int i = 0; i < cmpLen; ++i ) {
-            int diff = digitChars[ offset + i ] - cmpStr.charAt ( i );
+            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
             if ( diff != 0 ) {
                 return ( diff < 0 );
             }
@@ -248,12 +248,12 @@ public class ByteScanner {
     public static boolean isLong ( byte[] digitChars, int offset, int len,
                                    boolean negative ) {
         String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
-        int cmpLen = cmpStr.length ();
+        int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
 
         for ( int i = 0; i < cmpLen; ++i ) {
-            int diff = digitChars[ offset + i ] - cmpStr.charAt ( i );
+            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
             if ( diff != 0 ) {
                 return ( diff < 0 );
             }
@@ -330,14 +330,14 @@ public class ByteScanner {
 
     public static long parseLong ( byte[] digitChars, int offset, int len ) {
         int len1 = len - 9;
-        long val = parseInt ( digitChars, offset, len1 ) * L_BILLION;
-        return val + ( long ) parseInt ( digitChars, offset + len1, 9 );
+        long val = parseInt( digitChars, offset, len1 ) * L_BILLION;
+        return val + ( long ) parseInt( digitChars, offset + len1, 9 );
     }
 
     public static long parseLongIgnoreDot ( byte[] digitChars, int offset, int len ) {
         int len1 = len - 9;
-        long val = parseIntIgnoreDot ( digitChars, offset, len1 ) * L_BILLION;
-        return val + ( long ) parseIntIgnoreDot ( digitChars, offset + len1, 9 );
+        long val = parseIntIgnoreDot( digitChars, offset, len1 ) * L_BILLION;
+        return val + ( long ) parseIntIgnoreDot( digitChars, offset + len1, 9 );
     }
 
     private final static long L_BILLION = 1000000000;
@@ -394,10 +394,10 @@ public class ByteScanner {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger ( buffer, startIndex, length, negative ) ) {
-                value = parseIntIgnoreDot ( buffer, startIndex, length );
+            if ( isInteger( buffer, startIndex, length, negative ) ) {
+                value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
-                value = parseLongIgnoreDot ( buffer, startIndex, length );
+                value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
                 double power = powersOf10[ digitsPastPoint ] * sign;
@@ -408,7 +408,7 @@ public class ByteScanner {
 
         }
 
-        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
     }
 
 
@@ -427,10 +427,10 @@ public class ByteScanner {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger ( buffer, startIndex, length, negative ) ) {
-                value = parseIntIgnoreDot ( buffer, startIndex, length );
+            if ( isInteger( buffer, startIndex, length, negative ) ) {
+                value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
-                value = parseLongIgnoreDot ( buffer, startIndex, length );
+                value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
                 double power = powersOf10[ digitsPastPoint ] * sign;
@@ -441,7 +441,7 @@ public class ByteScanner {
 
         }
 
-        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
     }
 
 

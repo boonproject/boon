@@ -1,6 +1,7 @@
 package org.boon.json.implementation;
 
 
+import org.boon.core.reflection.Reflection;
 import org.boon.json.internal.*;
 
 import java.util.*;
@@ -23,7 +24,7 @@ public class JsonParserLax extends JsonParserCharArray {
     private final char KEY_ASSIGNMENT_OPERATOR;
 
 
-    private static ValueBase EMPTY_LIST = new ValueBase ( Collections.EMPTY_LIST );
+    private static ValueBase EMPTY_LIST = new ValueBase( Collections.EMPTY_LIST );
 
 
     private final boolean useValues;
@@ -103,35 +104,29 @@ public class JsonParserLax extends JsonParserCharArray {
 
     }
 
-    protected final Object decodeFromChars ( char[] cs ) {
-        return ( ( Value ) super.decodeFromChars ( cs ) ).toValue ();
-    }
-
-
-
     protected void init () {
-        super.init ();
+        super.init();
     }
 
 
     private Value decodeJsonObjectLax () {
 
         if ( __currentChar == '{' )
-            this.nextChar ();
+            this.nextChar();
 
         JsonMap map = null;
         JsonValueMap valueMap = null;
         org.boon.json.internal.Value value;
         if ( useValues ) {
-            valueMap = new JsonValueMap ();
-            value = new ValueBase ( ( Map ) valueMap );
+            valueMap = new JsonValueMap();
+            value = new ValueBase( ( Map ) valueMap );
         } else {
-            map = new JsonMap ( lazyChop );
-            value = new ValueBase ( map );
+            map = new JsonMap( lazyChop );
+            value = new ValueBase( map );
         }
 
 
-        skipWhiteSpace ();
+        skipWhiteSpace();
         int startIndexOfKey = __index;
         Value key;
         MapItemValue miv;
@@ -140,16 +135,16 @@ public class JsonParserLax extends JsonParserCharArray {
         done:
         for (; __index < this.charArray.length; __index++ ) {
 
-            skipWhiteSpace ();
+            skipWhiteSpace();
 
             switch ( __currentChar ) {
                 case '/': /* */ //
-                    handleComment ();
+                    handleComment();
                     startIndexOfKey = __index;
                     break;
 
                 case '#':
-                    handleBashComment ();
+                    handleBashComment();
                     startIndexOfKey = __index;
                     break;
 
@@ -160,26 +155,25 @@ public class JsonParserLax extends JsonParserCharArray {
                     }
 
                     char startChar = charArray[ startIndexOfKey ];
-
                     if ( startChar == OBJECT_ITEM_DELIMITER_TOKEN ) {
                         startIndexOfKey++;
                     }
 
-                    key = new ValueInCharBuf ( chop, Type.STRING, startIndexOfKey, __index - 1, this.charArray, false, false );
 
-
+                    key = extractLaxString( startIndexOfKey, __index - 1, false, false );
                     __index++; //skip :
 
-                    item = ( Value ) decodeValueInternal ();
-                    skipWhiteSpace ();
 
-                    miv = new MapItemValue ( key, item );
+                    item = decodeValueInternal();
+                    skipWhiteSpace();
+
+                    miv = new MapItemValue( key, item );
 
 
                     if ( useValues ) {
-                        valueMap.add ( miv );
+                        valueMap.add( miv );
                     } else {
-                        map.add ( miv );
+                        map.add( miv );
                     }
                     //puts ( "key no quote", "#" + key + "#", value );
 
@@ -193,35 +187,35 @@ public class JsonParserLax extends JsonParserCharArray {
 
                 case '\'':
                 case '"':
-                    key = decodeString ( __currentChar );
+                    key = decodeString( __currentChar );
 
                     //puts ( "key with quote", key );
 
-                    skipWhiteSpace ();
+                    skipWhiteSpace();
 
                     if ( __currentChar != KEY_ASSIGNMENT_OPERATOR ) {
 
-                        complain ( "expecting current character to be " + KEY_ASSIGNMENT_OPERATOR + " but got " + charDescription ( __currentChar ) + "\n" );
+                        complain( "expecting current character to be " + KEY_ASSIGNMENT_OPERATOR + " but got " + charDescription( __currentChar ) + "\n" );
                     }
                     __index++;
-                    item = decodeValueInternal ();
+                    item = decodeValueInternal();
 
                     //puts ( "key", "#" + key + "#", value );
 
-                    skipWhiteSpace ();
+                    skipWhiteSpace();
 
-                    miv = new MapItemValue ( key, item );
+                    miv = new MapItemValue( key, item );
 
 
                     if ( useValues ) {
-                        valueMap.add ( miv );
+                        valueMap.add( miv );
                     } else {
-                        map.add ( miv );
+                        map.add( miv );
                     }
                     startIndexOfKey = __index;
                     if ( __currentChar == '}' ) {
                         __index++;
-                        if ( hasMore () && OBJECT_ITEM_DELIMITER_TOKEN == ';' ) {
+                        if ( hasMore() && OBJECT_ITEM_DELIMITER_TOKEN == ';' ) {
                             if ( charArray[ __index ] == ';' ) {
                                 __index++;
                             }
@@ -234,7 +228,7 @@ public class JsonParserLax extends JsonParserCharArray {
 
                 case '}':
                     __index++;
-                    if ( hasMore () && OBJECT_ITEM_DELIMITER_TOKEN == ';' ) {
+                    if ( hasMore() && OBJECT_ITEM_DELIMITER_TOKEN == ';' ) {
                         if ( charArray[ __index ] == ';' ) {
                             __index++;
                         }
@@ -247,9 +241,51 @@ public class JsonParserLax extends JsonParserCharArray {
         return value;
     }
 
+    private Value extractLaxString ( int startIndexOfKey, int end, boolean encoded, boolean checkDate ) {
+        char startChar;
+        startIndexLookup:
+        for (; startIndexOfKey < __index && startIndexOfKey < charArray.length; startIndexOfKey++ ) {
+            startChar = charArray[ startIndexOfKey ];
+            switch ( startChar ) {
+                case ' ':
+                case '\n':
+                case '\t':
+                    continue;
 
-    protected Object decodeValue () {
-        return this.decodeValueInternal ();
+                default:
+                    break startIndexLookup;
+            }
+        }
+
+        char endChar;
+        int endIndex = end >= charArray.length ? charArray.length - 1 : end;
+        endIndexLookup:
+        for (; endIndex >= startIndexOfKey + 1 && endIndex >= 0; endIndex-- ) {
+            endChar = charArray[ endIndex ];
+            switch ( endChar ) {
+                case ' ':
+                case '\n':
+                case '\t':
+                case '}':
+                    continue;
+                case ',':
+                case ';':
+                    continue;
+
+                case ']':
+                case ')':
+                    if ( endChar == END_ARRAY_TOKEN )
+                        continue;
+                default:
+                    break endIndexLookup;
+            }
+        }
+        return new ValueInCharBuf( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
+    }
+
+
+    protected final Object decodeValue () {
+        return this.decodeValueInternal();
     }
 
     private Value decodeValueInternal () {
@@ -257,7 +293,7 @@ public class JsonParserLax extends JsonParserCharArray {
 
 
         for (; __index < charArray.length; __index++ ) {
-            skipWhiteSpace ();
+            skipWhiteSpace();
 
 
             switch ( __currentChar ) {
@@ -280,102 +316,103 @@ public class JsonParserLax extends JsonParserCharArray {
                     break;
 
                 case '/': /* */ //
-                    handleComment ();
+                    handleComment();
                     break;
 
                 case '#':
-                    handleBashComment ();
+                    handleBashComment();
                     break;
 
                 case '"':
-                    value = decodeString ( '"' );
+                    value = decodeString( '"' );
                     break;
 
                 case '\'':
-                    value = decodeString ( '\'' );
+                    value = decodeString( '\'' );
                     break;
 
 
                 case 't':
-                    if ( isTrue () ) {
-                        return decodeTrue () == true ? Value.TRUE : Value.FALSE;
+                    if ( isTrue() ) {
+                        return decodeTrue() == true ? Value.TRUE : Value.FALSE;
                     } else {
-                        value = decodeStringLax ();
+                        value = decodeStringLax();
                     }
                     break;
 
                 case 'f':
-                    if ( isFalse () ) {
-                        return decodeFalse () == false ? Value.FALSE : Value.TRUE;
+                    if ( isFalse() ) {
+                        return decodeFalse() == false ? Value.FALSE : Value.TRUE;
                     } else {
-                        value = decodeStringLax ();
+                        value = decodeStringLax();
                     }
                     break;
 
                 case 'n':
-                    if ( isNull () ) {
-                        return decodeNull () == null ? Value.NULL : Value.NULL;
+                    if ( isNull() ) {
+                        return decodeNull() == null ? Value.NULL : Value.NULL;
                     } else {
-                        value = decodeStringLax ();
+                        value = decodeStringLax();
                     }
 
                     break;
 
                 case '(':
                 case '[':
-                    value = decodeJsonArrayLax ();
+                    value = decodeJsonArrayLax();
                     break;
 
                 case '{':
-                    value = decodeJsonObjectLax ();
+                    value = decodeJsonObjectLax();
                     break;
 
                 case '1':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '2':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '3':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '4':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '5':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '6':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '7':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '8':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '9':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '0':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
                 case '-':
-                    value = decodeNumberLax ();
+                    value = decodeNumberLax();
                     break;
 
+
                 default:
-                    value = decodeStringLax ();
+                    value = decodeStringLax();
 
             }
 
@@ -392,6 +429,7 @@ public class JsonParserLax extends JsonParserCharArray {
             __currentChar = charArray[ __index ];
 
             if ( __currentChar == '\n' ) {
+                __index++;
                 return;
             }
         }
@@ -400,7 +438,7 @@ public class JsonParserLax extends JsonParserCharArray {
     private void handleComment () {
 
 
-        if ( hasMore () ) {
+        if ( hasMore() ) {
 
             __index++;
             __currentChar = charArray[ __index ];
@@ -411,17 +449,17 @@ public class JsonParserLax extends JsonParserCharArray {
                         __currentChar = charArray[ __index ];
 
                         if ( __currentChar == '*' ) {
-                            if ( hasMore () ) {
+                            if ( hasMore() ) {
                                 __index++;
                                 __currentChar = charArray[ __index ];
                                 if ( __currentChar == '/' ) {
-                                    if ( hasMore () ) {
+                                    if ( hasMore() ) {
                                         __index++;
                                         return;
                                     }
                                 }
                             } else {
-                                complain ( "missing close of comment" );
+                                complain( "missing close of comment" );
                             }
                         }
 
@@ -433,7 +471,12 @@ public class JsonParserLax extends JsonParserCharArray {
                         __currentChar = charArray[ __index ];
 
                         if ( __currentChar == '\n' ) {
-                            return;
+                            if ( hasMore() ) {
+                                __index++;
+                                return;
+                            } else {
+                                return;
+                            }
                         }
                     }
             }
@@ -473,7 +516,9 @@ public class JsonParserLax extends JsonParserCharArray {
                     break loop;
 
                 case ',':
-                    break loop;
+                case ';':
+                    if ( __currentChar == END_ARRAY_TOKEN )
+                        break loop;
 
                 case ']':
                     break loop;
@@ -533,16 +578,16 @@ public class JsonParserLax extends JsonParserCharArray {
 
             }
 
-            complain ( "expecting number char but got current char " + charDescription ( __currentChar ) );
+            complain( "expecting number char but got current char " + charDescription( __currentChar ) );
         }
 
         __index = index;
 
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        ValueInCharBuf value = new ValueInCharBuf ( chop, type, startIndex, __index, this.charArray );
+        ValueInCharBuf value = new ValueInCharBuf( chop, type, startIndex, __index, this.charArray );
 
-        skipWhiteSpace ();
+        skipWhiteSpace();
 
         return value;
 
@@ -598,62 +643,41 @@ public class JsonParserLax extends JsonParserCharArray {
 
         __currentChar = charArray[ __index ];
 
-        if ( __index < charArray.length && __currentChar == '"' ) {
-            __index++;
-
-        }
-
 
         final int startIndex = __index;
 
 
-        boolean escape = false;
         boolean encoded = false;
-        boolean skip = false;
 
         int minusCount = 0;
         int colonCount = 0;
-
 
         done:
         for (; __index < this.charArray.length; __index++ ) {
             __currentChar = charArray[ __index ];
             switch ( __currentChar ) {
 
-                case '"':
-                    if ( !escape ) {
-                        skip = true;
-                        break done;
-                    } else {
-                        escape = false;
-                        continue;
-                    }
 
                 case ']':
                 case ')':
                     if ( __currentChar == END_ARRAY_TOKEN ) {
-
-                        skip = false;
                         break done;
                     }
 
                 case '}':
-                    skip = false;
                     break done;
 
 
                 case ';':
                 case ',':
                     if ( __currentChar == OBJECT_ITEM_DELIMITER_TOKEN || __currentChar == ',' ) {
-                        skip = false;
                         break done;
                     } else {
-                        complain ( "unexpected token " + __currentChar );
+                        complain( "unexpected token " + __currentChar );
                     }
 
                 case '\\':
                     encoded = true;
-                    escape = true;
                     continue;
 
 
@@ -663,22 +687,19 @@ public class JsonParserLax extends JsonParserCharArray {
                 case ':':
                     colonCount++;
                     break;
-
+                //
+                /**/
+                //#
 
             }
-            escape = false;
         }
 
 
         boolean checkDate = !encoded && minusCount >= 2 && colonCount >= 2;
 
 
-        Value value = new ValueInCharBuf ( chop, Type.STRING, startIndex, __index - 1, this.charArray, encoded, checkDate );
+        Value value = this.extractLaxString( startIndex, __index, encoded, checkDate );
 
-
-        if ( __index < charArray.length && skip ) {
-            __index++;
-        }
 
         return value;
 
@@ -741,7 +762,7 @@ public class JsonParserLax extends JsonParserCharArray {
         boolean checkDate = !encoded && minusCount >= 2 && colonCount >= 2;
 
 
-        Value value = new ValueInCharBuf ( chop, Type.STRING, startIndex, __index - 1, this.charArray, encoded, checkDate );
+        Value value = new ValueInCharBuf( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDate );
 
 
         if ( __index < charArray.length ) {
@@ -754,67 +775,85 @@ public class JsonParserLax extends JsonParserCharArray {
     private Value decodeJsonArrayLax () {
 
         if ( __currentChar == START_ARRAY_TOKEN ) {
-            this.nextChar ();
+            this.nextChar();
         }
 
 
-        skipWhiteSpace ();
+        skipWhiteSpace();
 
 
                 /* the list might be empty  */
         if ( __currentChar == END_ARRAY_TOKEN ) {
-            this.nextChar ();
+            this.nextChar();
             return EMPTY_LIST;
         }
 
         List<Object> list;
 
         if ( useValues ) {
-            list = new ArrayList<> ();
+            list = new ArrayList<>();
         } else {
-            list = new JsonList ( lazyChop );
+            list = new JsonList( lazyChop );
         }
 
-        Value value = new ValueBase ( list );
+        Value value = new ValueBase( list );
 
 
-        skipWhiteSpace ();
+        skipWhiteSpace();
 
         do {
 
-            skipWhiteSpace ();
+            skipWhiteSpace();
 
-            Object arrayItem = decodeValueInternal ();
+            Object arrayItem = decodeValueInternal();
 
-            list.add ( arrayItem );
+            list.add( arrayItem );
 
 
-            skipWhiteSpace ();
+            skipWhiteSpace();
 
             char c = __currentChar;
 
             if ( c == ',' ) {
-                this.nextChar ();
+                this.nextChar();
                 continue;
             } else if ( c == END_ARRAY_TOKEN ) {
-                this.nextChar ();
+                this.nextChar();
                 break;
             } else {
 
-                String charString = charDescription ( c );
+                String charString = charDescription( c );
 
-                complain (
-                        String.format ( "expecting a ',' or a ']', " +
+                complain(
+                        String.format( "expecting a ',' or a ']', " +
                                 " but got \nthe current character of  %s " +
-                                " on array index of %s \n", charString, list.size () )
+                                " on array index of %s \n", charString, list.size() )
                 );
 
             }
-        } while ( this.hasMore () );
+        } while ( this.hasMore() );
 
 
         return value;
 
+    }
+
+
+    protected <T> T convert ( Class<T> type, T object ) {
+        if ( type == Map.class || type == List.class ) {
+            return object;
+        } else {
+            if ( object instanceof Map ) {
+                return Reflection.fromValueMap( ( Map<String, org.boon.core.Value> ) object, type );
+            } else {
+                return object;
+            }
+        }
+    }
+
+
+    protected Object decodeFromChars ( char[] cs ) {
+        return ( ( Value ) super.decodeFromChars( cs ) ).toValue();
     }
 
 

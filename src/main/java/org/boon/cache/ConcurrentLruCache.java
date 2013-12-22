@@ -8,11 +8,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
-    private final ReentrantLock lock = new ReentrantLock ();
+    private final ReentrantLock lock = new ReentrantLock();
 
 
-    private final Map<KEY, VALUE> map = new ConcurrentHashMap<> ();
-    private final Deque<KEY> queue = new LinkedList<> ();
+    private final Map<KEY, VALUE> map = new ConcurrentHashMap<>();
+    private final Deque<KEY> queue = new LinkedList<>();
     private final int limit;
 
 
@@ -22,63 +22,63 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
     @Override
     public void put ( KEY key, VALUE value ) {
-        VALUE oldValue = map.put ( key, value );
+        VALUE oldValue = map.put( key, value );
         if ( oldValue != null ) {
-            removeThenAddKey ( key );
+            removeThenAddKey( key );
         } else {
-            addKey ( key );
+            addKey( key );
         }
-        if ( map.size () > limit ) {
-            map.remove ( removeLast () );
+        if ( map.size() > limit ) {
+            map.remove( removeLast() );
         }
     }
 
 
     @Override
     public VALUE get ( KEY key ) {
-        removeThenAddKey ( key );
-        return map.get ( key );
+        removeThenAddKey( key );
+        return map.get( key );
     }
 
 
     private void addKey ( KEY key ) {
-        lock.lock ();
+        lock.lock();
         try {
-            queue.addFirst ( key );
+            queue.addFirst( key );
         } finally {
-            lock.unlock ();
+            lock.unlock();
         }
 
 
     }
 
     private KEY removeLast () {
-        lock.lock ();
+        lock.lock();
         try {
-            final KEY removedKey = queue.removeLast ();
+            final KEY removedKey = queue.removeLast();
             return removedKey;
         } finally {
-            lock.unlock ();
+            lock.unlock();
         }
     }
 
     private void removeThenAddKey ( KEY key ) {
-        lock.lock ();
+        lock.lock();
         try {
-            queue.removeFirstOccurrence ( key );
-            queue.addFirst ( key );
+            queue.removeFirstOccurrence( key );
+            queue.addFirst( key );
         } finally {
-            lock.unlock ();
+            lock.unlock();
         }
 
     }
 
     private void removeFirstOccurrence ( KEY key ) {
-        lock.lock ();
+        lock.lock();
         try {
-            queue.removeFirstOccurrence ( key );
+            queue.removeFirstOccurrence( key );
         } finally {
-            lock.unlock ();
+            lock.unlock();
         }
 
     }
@@ -86,21 +86,21 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
     @Override
     public VALUE getSilent ( KEY key ) {
-        return map.get ( key );
+        return map.get( key );
     }
 
     @Override
     public void remove ( KEY key ) {
-        removeFirstOccurrence ( key );
-        map.remove ( key );
+        removeFirstOccurrence( key );
+        map.remove( key );
     }
 
     @Override
     public int size () {
-        return map.size ();
+        return map.size();
     }
 
     public String toString () {
-        return map.toString ();
+        return map.toString();
     }
 }

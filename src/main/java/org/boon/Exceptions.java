@@ -12,20 +12,20 @@ public class Exceptions {
 
 
     public static boolean die () {
-        throw new SoftenedException ( "died" );
+        throw new SoftenedException( "died" );
     }
 
     public static boolean die ( String message ) {
-        throw new SoftenedException ( message );
+        throw new SoftenedException( message );
     }
 
 
     public static <T> T die ( Class<T> clazz, String message ) {
-        throw new SoftenedException ( message );
+        throw new SoftenedException( message );
     }
 
     public static void handle ( java.lang.Exception e ) {
-        throw new SoftenedException ( e );
+        throw new SoftenedException( e );
     }
 
 
@@ -34,41 +34,41 @@ public class Exceptions {
         if ( e instanceof SoftenedException ) {
             throw ( SoftenedException ) e;
         }
-        throw new SoftenedException ( e );
+        throw new SoftenedException( e );
     }
 
     public static <T> T handle ( Class<T> clazz, String message, java.lang.Exception e ) {
 
-        throw new SoftenedException ( message, e );
+        throw new SoftenedException( message, e );
     }
 
 
     public static <T> T tryIt ( Class<T> clazz, TrialWithReturn<T> tryIt ) {
         try {
-            return tryIt.tryIt ();
+            return tryIt.tryIt();
         } catch ( java.lang.Exception ex ) {
-            throw new SoftenedException ( ex );
+            throw new SoftenedException( ex );
         }
     }
 
 
     public static void tryIt ( Trial tryIt ) {
         try {
-            tryIt.tryIt ();
+            tryIt.tryIt();
         } catch ( java.lang.Exception ex ) {
-            throw new SoftenedException ( ex );
+            throw new SoftenedException( ex );
         }
     }
 
     public static void handle ( String message, Throwable e ) {
-        throw new SoftenedException ( message, e );
+        throw new SoftenedException( message, e );
     }
 
     public static void tryIt ( String message, Trial tryIt ) {
         try {
-            tryIt.tryIt ();
+            tryIt.tryIt();
         } catch ( java.lang.Exception ex ) {
-            throw new SoftenedException ( message, ex );
+            throw new SoftenedException( message, ex );
         }
     }
 
@@ -84,145 +84,145 @@ public class Exceptions {
     public static class SoftenedException extends RuntimeException {
 
         public SoftenedException ( String message ) {
-            super ( message );
+            super( message );
         }
 
         public SoftenedException ( String message, Throwable cause ) {
-            super ( message, cause );
+            super( message, cause );
         }
 
         public SoftenedException ( Throwable cause ) {
-            super ( "Wrapped Exception", cause );
+            super( "Wrapped Exception", cause );
         }
 
 
         @Override
         public void printStackTrace ( PrintStream s ) {
 
-            s.println ( this.getMessage () );
-            if ( getCause () != null ) {
-                s.println ( "This Exception was wrapped, the original exception\n" +
+            s.println( this.getMessage() );
+            if ( getCause() != null ) {
+                s.println( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
-                getCause ().printStackTrace ( s );
+                getCause().printStackTrace( s );
             } else {
-                super.printStackTrace ( s );
+                super.printStackTrace( s );
             }
 
         }
 
         @Override
         public String getMessage () {
-            return super.getMessage () + ( getCause () == null ? "" :
-                    getCauseMessage () );
+            return super.getMessage() + ( getCause() == null ? "" :
+                    getCauseMessage() );
         }
 
         private String getCauseMessage () {
-            return "\n CAUSE " + getCause ().getClass ().getName () + " :: " +
-                    getCause ().getMessage ();
+            return "\n CAUSE " + getCause().getClass().getName() + " :: " +
+                    getCause().getMessage();
         }
 
         @Override
         public String getLocalizedMessage () {
-            return this.getMessage ();
+            return this.getMessage();
         }
 
         @Override
         public StackTraceElement[] getStackTrace () {
-            if ( getCause () != null ) {
-                return getCause ().getStackTrace ();
+            if ( getCause() != null ) {
+                return getCause().getStackTrace();
             } else {
-                return super.getStackTrace ();
+                return super.getStackTrace();
             }
 
         }
 
         @Override
         public Throwable getCause () {
-            return super.getCause ();
+            return super.getCause();
         }
 
         @Override
         public void printStackTrace ( PrintWriter s ) {
 
-            s.println ( this.getMessage () );
+            s.println( this.getMessage() );
 
-            if ( getCause () != null ) {
-                s.println ( "This Exception was wrapped, the original exception\n" +
+            if ( getCause() != null ) {
+                s.println( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
-                getCause ().printStackTrace ( s );
+                getCause().printStackTrace( s );
             } else {
-                super.printStackTrace ( s );
+                super.printStackTrace( s );
             }
         }
 
         @Override
         public void printStackTrace () {
 
-            System.err.println ( this.getMessage () );
+            System.err.println( this.getMessage() );
 
-            if ( getCause () != null ) {
-                System.err.println ( "This Exception was wrapped, the original exception\n" +
+            if ( getCause() != null ) {
+                System.err.println( "This Exception was wrapped, the original exception\n" +
                         "stack trace is:\n" );
-                getCause ().printStackTrace ();
+                getCause().printStackTrace();
             } else {
-                super.printStackTrace ();
+                super.printStackTrace();
             }
         }
     }
 
 
     public static String toString ( Exception ex ) {
-        CharBuf buffer = CharBuf.create ( 255 );
-        buffer.addLine ( ex.getLocalizedMessage () );
+        CharBuf buffer = CharBuf.create( 255 );
+        buffer.addLine( ex.getLocalizedMessage() );
 
-        final StackTraceElement[] stackTrace = ex.getStackTrace ();
+        final StackTraceElement[] stackTrace = ex.getStackTrace();
         for ( StackTraceElement element : stackTrace ) {
-            buffer.add ( element.getClassName () );
-            sputs ( buffer, "class", element.getClassName (),
-                    "method", element.getMethodName (), "line", element.getLineNumber () );
+            buffer.add( element.getClassName() );
+            sputs( buffer, "class", element.getClassName(),
+                    "method", element.getMethodName(), "line", element.getLineNumber() );
         }
 
-        return buffer.toString ();
+        return buffer.toString();
 
     }
 
 
     public static String toJSON ( Exception ex ) {
-        ByteBuf buffer = ByteBuf.create ( 255 );
-        buffer.addByte ( '{' );
+        ByteBuf buffer = ByteBuf.create( 255 );
+        buffer.addByte( '{' );
 
-        buffer.add ( "\n    " ).addJSONEncodedString ( "message" ).add ( " : " )
-                .addJSONEncodedString ( ex.getMessage () ).add ( ",\n" );
+        buffer.add( "\n    " ).addJSONEncodedString( "message" ).add( " : " )
+                .addJSONEncodedString( ex.getMessage() ).add( ",\n" );
 
-        buffer.add ( "    " ).addJSONEncodedString ( "localizedMessage" ).add ( " : " )
-                .addJSONEncodedString ( ex.getLocalizedMessage () ).add ( ",\n" );
+        buffer.add( "    " ).addJSONEncodedString( "localizedMessage" ).add( " : " )
+                .addJSONEncodedString( ex.getLocalizedMessage() ).add( ",\n" );
 
-        buffer.add ( "    " ).addJSONEncodedString ( "stackTrace" ).add ( " : " )
-                .addByte ( '[' ).addByte ( '\n' );
+        buffer.add( "    " ).addJSONEncodedString( "stackTrace" ).add( " : " )
+                .addByte( '[' ).addByte( '\n' );
 
-        final StackTraceElement[] stackTrace = ex.getStackTrace ();
+        final StackTraceElement[] stackTrace = ex.getStackTrace();
 
         for ( int index = 0; index < ( stackTrace.length > 10 ? 10 : stackTrace.length ); index++ ) {
             StackTraceElement element = stackTrace[ index ];
             if ( index != 0 ) {
-                buffer.addByte ( ',' );
-                buffer.addByte ( '\n' );
+                buffer.addByte( ',' );
+                buffer.addByte( '\n' );
             }
             index++;
-            buffer.add ( "           { " );
-            buffer.add ( "             " ).addJSONEncodedString ( "className" ).add ( " : " )
-                    .addJSONEncodedString ( element.getClassName () ).add ( ",\n" );
+            buffer.add( "           { " );
+            buffer.add( "             " ).addJSONEncodedString( "className" ).add( " : " )
+                    .addJSONEncodedString( element.getClassName() ).add( ",\n" );
 
-            buffer.add ( "             " ).addJSONEncodedString ( "methodName" ).add ( " : " )
-                    .addJSONEncodedString ( element.getMethodName () ).add ( ",\n" );
+            buffer.add( "             " ).addJSONEncodedString( "methodName" ).add( " : " )
+                    .addJSONEncodedString( element.getMethodName() ).add( ",\n" );
 
-            buffer.add ( "             " ).addJSONEncodedString ( "lineNumber" ).add ( " : " )
-                    .add ( "" + element.getLineNumber () ).add ( "}\n" );
+            buffer.add( "             " ).addJSONEncodedString( "lineNumber" ).add( " : " )
+                    .add( "" + element.getLineNumber() ).add( "}\n" );
 
         }
 
-        buffer.add ( "\n    ]\n}" );
-        return buffer.toString ();
+        buffer.add( "\n    ]\n}" );
+        return buffer.toString();
 
     }
 

@@ -13,34 +13,34 @@ public class ObjectEditorCloneDecorator<KEY, ITEM> extends ObjectEditorDecorator
 
 
     public void modify ( ITEM item ) {
-        item = copy ( item );
-        super.modify ( item );
+        item = copy( item );
+        super.modify( item );
     }
 
     @Override
     public void put ( ITEM item ) {
-        item = copy ( item );
-        super.put ( item );
+        item = copy( item );
+        super.put( item );
     }
 
 
     @Override
     public boolean add ( ITEM item ) {
-        item = copy ( item );
-        return super.add ( item );
+        item = copy( item );
+        return super.add( item );
     }
 
     @Override
     public ITEM get ( KEY key ) {
-        ITEM item = super.get ( key );
+        ITEM item = super.get( key );
         if ( item != null ) {
-            return copy ( item );
+            return copy( item );
         }
         return item;
     }
 
     public ObjectEditorCloneDecorator ( ObjectEditor oe ) {
-        super ( oe );
+        super( oe );
 
     }
 

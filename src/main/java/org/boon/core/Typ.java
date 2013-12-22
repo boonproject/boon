@@ -63,7 +63,7 @@ public class Typ {
     public static final Class<Object[]> objectArray = Object[].class;
 
     public static boolean doesMapHaveKeyTypeString ( Object value ) {
-        return getKeyType ( ( Map<?, ?> ) value ) == string;
+        return getKeyType( ( Map<?, ?> ) value ) == string;
     }
 
     public static boolean isBasicType ( Object value ) {
@@ -72,45 +72,45 @@ public class Typ {
     }
 
     public static boolean isBasicType ( Class<?> theClass ) {
-        return ( number.isAssignableFrom ( theClass )
-                || chars.isAssignableFrom ( theClass )
-                || date.isAssignableFrom ( theClass )
-                || calendar.isAssignableFrom ( theClass )
-                || bool.isAssignableFrom ( theClass )
-                || theClass.isPrimitive () );
+        return ( number.isAssignableFrom( theClass )
+                || chars.isAssignableFrom( theClass )
+                || date.isAssignableFrom( theClass )
+                || calendar.isAssignableFrom( theClass )
+                || bool.isAssignableFrom( theClass )
+                || theClass.isPrimitive() );
     }
 
     public static boolean isMap ( Class<?> thisType ) {
-        return isSuperType ( thisType, Map.class );
+        return isSuperType( thisType, Map.class );
     }
 
 
     public static boolean isValue ( Class<?> thisType ) {
-        return isSuperType ( thisType, Value.class );
+        return isSuperType( thisType, Value.class );
     }
 
     public static boolean isCharSequence ( Class<?> thisType ) {
-        return isSuperType ( thisType, CharSequence.class );
+        return isSuperType( thisType, CharSequence.class );
     }
 
     public static boolean isCollection ( Class<?> thisType ) {
-        return isSuperType ( thisType, Collection.class );
+        return isSuperType( thisType, Collection.class );
     }
 
     public static boolean isList ( Class<?> thisType ) {
-        return isSuperType ( thisType, List.class );
+        return isSuperType( thisType, List.class );
     }
 
     public static boolean isSet ( Class<?> thisType ) {
-        return isSuperType ( thisType, Set.class );
+        return isSuperType( thisType, Set.class );
     }
 
     public static boolean isSortedSet ( Class<?> thisType ) {
-        return isSuperType ( thisType, SortedSet.class );
+        return isSuperType( thisType, SortedSet.class );
     }
 
     public static boolean isType ( Class<?> thisType, Class<?> isThisType ) {
-        return isSuperType ( thisType, isThisType );
+        return isSuperType( thisType, isThisType );
     }
 
     public static boolean isComparable ( Object o ) {
@@ -118,34 +118,34 @@ public class Typ {
     }
 
     public static boolean isComparable ( Class<?> type ) {
-        return implementsInterface ( type, comparable );
+        return implementsInterface( type, comparable );
     }
 
     public static boolean isSuperClass ( Class<?> type, Class<?> possibleSuperType ) {
-        if ( possibleSuperType.isInterface () ) {
+        if ( possibleSuperType.isInterface() ) {
             return false;
         } else {
-            return possibleSuperType.isAssignableFrom ( type );
+            return possibleSuperType.isAssignableFrom( type );
         }
 
     }
 
     public static boolean isSuperType ( Class<?> type, Class<?> possibleSuperType ) {
-        return possibleSuperType.isAssignableFrom ( type );
+        return possibleSuperType.isAssignableFrom( type );
     }
 
     public static boolean implementsInterface ( Class<?> type, Class<?> interfaceType ) {
-        if ( !interfaceType.isInterface () ) {
+        if ( !interfaceType.isInterface() ) {
             return false;
         } else {
-            return interfaceType.isAssignableFrom ( type );
+            return interfaceType.isAssignableFrom( type );
         }
 
     }
 
     public static Class<?> getKeyType ( Map<?, ?> value ) {
-        if ( value.size () > 0 ) {
-            return value.keySet ().iterator ().next ().getClass ();
+        if ( value.size() > 0 ) {
+            return value.keySet().iterator().next().getClass();
         } else {
             return null;
         }

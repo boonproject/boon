@@ -17,11 +17,11 @@ public class FilterDecoratorBase implements Filter {
 
     @Override
     public ResultSet filter ( Criteria... expressions ) {
-        return delegate.filter ( expressions );
+        return delegate.filter( expressions );
     }
 
     @Override
     public void invalidate () {
-        delegate.invalidate ();
+        delegate.invalidate();
     }
 }

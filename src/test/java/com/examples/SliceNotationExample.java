@@ -20,12 +20,12 @@ public class SliceNotationExample {
 
     @Test
     public void test () {
-        SliceNotationExample.main ();
+        SliceNotationExample.main();
     }
 
     public static void main ( String... args ) {
-        collectionAndBasicTypes ();
-        strings ();
+        collectionAndBasicTypes();
+        strings();
 
     }
 
@@ -37,57 +37,57 @@ public class SliceNotationExample {
 
         worked &=
 
-                Str.idx ( letters, 0 ) == 'a'
-                        || Exceptions.die ( "0 index is equal to a" );
+                Str.idx( letters, 0 ) == 'a'
+                        || Exceptions.die( "0 index is equal to a" );
 
 
         worked &=
 
-                Str.idx ( letters, -1 ) == 'd'
-                        || Exceptions.die ( "-1 index is equal to a" );
+                Str.idx( letters, -1 ) == 'd'
+                        || Exceptions.die( "-1 index is equal to a" );
 
 
         worked &=
 
-                Str.idx ( letters, letters.length () - 1 ) == 'd'
-                        || Exceptions.die ( "another way to express what the -1 means" );
+                Str.idx( letters, letters.length() - 1 ) == 'd'
+                        || Exceptions.die( "another way to express what the -1 means" );
 
 
         //We can modify too
-        letters = Str.idx ( letters, 1, 'z' );
+        letters = Str.idx( letters, 1, 'z' );
 
         worked &=
 
-                Str.idx ( letters, 1 ) == 'z'
-                        || Exceptions.die ( "Set the 1 index of letters to 'z'" );
+                Str.idx( letters, 1 ) == 'z'
+                        || Exceptions.die( "Set the 1 index of letters to 'z'" );
 
 
         worked &= (
-                Str.in ( 'a', letters ) &&
-                        Str.in ( 'z', letters )
-        ) || Exceptions.die ( "'z' is in letters and 'a' is in letters" );
+                Str.in( 'a', letters ) &&
+                        Str.in( 'z', letters )
+        ) || Exceptions.die( "'z' is in letters and 'a' is in letters" );
 
 
         letters = "abcd";
 
         worked &=
-                Str.slc ( letters, 0, 2 ).equals ( "ab" )
-                        || Exceptions.die ( "index 0 through index 2 is equal to \"ab\"" );
+                Str.slc( letters, 0, 2 ).equals( "ab" )
+                        || Exceptions.die( "index 0 through index 2 is equal to \"ab\"" );
 
 
         worked &=
-                Str.slc ( letters, 1, -1 ).equals ( "bc" )
-                        || Exceptions.die ( "index 1 through index (length -1) is equal to \"bc\"" );
+                Str.slc( letters, 1, -1 ).equals( "bc" )
+                        || Exceptions.die( "index 1 through index (length -1) is equal to \"bc\"" );
 
 
         worked &=
-                Str.slcEnd ( letters, -2 ).equals ( "ab" )
-                        || Exceptions.die ( "" );
+                Str.slcEnd( letters, -2 ).equals( "ab" )
+                        || Exceptions.die( "" );
 
 
         worked &=
-                Str.slcEnd ( letters, 2 ).equals ( "ab" )
-                        || Exceptions.die ( "" );
+                Str.slcEnd( letters, 2 ).equals( "ab" )
+                        || Exceptions.die( "" );
 
     }
 
@@ -105,14 +105,14 @@ public class SliceNotationExample {
         // Sets and lists have concurrent and non concurrent variants
         // Set also has sorted and non sorted variants
         // This makes safeList, listStream, set, sortedSet, safeSet, safeSortedSet
-        veggiesSet = Sets.sortedSet ( "salad", "broccoli", "spinach" );
-        fruitList = Lists.list ( "apple", "oranges", "pineapple" );
-        fruitArray = array ( "apple", "oranges", "pineapple" );
-        letters = Chr.array ( 'a', 'b', 'c' );
-        bytes = array ( new byte[]{ 0x1, 0x2, 0x3, 0x4 } );
+        veggiesSet = Sets.sortedSet( "salad", "broccoli", "spinach" );
+        fruitList = Lists.list( "apple", "oranges", "pineapple" );
+        fruitArray = array( "apple", "oranges", "pineapple" );
+        letters = Chr.array( 'a', 'b', 'c' );
+        bytes = array( new byte[]{ 0x1, 0x2, 0x3, 0x4 } );
 
         //You add up name / value pairs as a pseudo literal for map
-        favoritesMap = Maps.sortedMap (
+        favoritesMap = Maps.sortedMap(
                 2, "pineapple",
                 1, "oranges",
                 3, "apple"
@@ -122,7 +122,7 @@ public class SliceNotationExample {
         // You add up name / value pairs as a pseudo literal for map
         // map, sortedMap, safeMap (thread safe concurrent), and sortedSafeMap are
         // supported.
-        map = Maps.map (
+        map = Maps.map(
                 "pineapple", 2,
                 "oranges", 1,
                 "apple", 3
@@ -130,39 +130,39 @@ public class SliceNotationExample {
 
 
         // Getting the length
-        assert Sets.len ( veggiesSet ) == 3;
-        assert Lists.len ( fruitList ) == 3;
-        assert len ( fruitArray ) == 3;
-        assert len ( letters ) == 3;
-        assert len ( bytes ) == 4;
-        assert Maps.len ( favoritesMap ) == 3;
-        assert Maps.len ( map ) == 3;
+        assert Sets.len( veggiesSet ) == 3;
+        assert Lists.len( fruitList ) == 3;
+        assert len( fruitArray ) == 3;
+        assert len( letters ) == 3;
+        assert len( bytes ) == 4;
+        assert Maps.len( favoritesMap ) == 3;
+        assert Maps.len( map ) == 3;
 
 
         //Using idx to access a value.
 
-        assert Sets.idx ( veggiesSet, "b" ).equals ( "broccoli" );
+        assert Sets.idx( veggiesSet, "b" ).equals( "broccoli" );
 
-        assert Lists.idx ( fruitList, 1 ).equals ( "oranges" );
+        assert Lists.idx( fruitList, 1 ).equals( "oranges" );
 
-        assert idx ( fruitArray, 1 ).equals ( "oranges" );
+        assert idx( fruitArray, 1 ).equals( "oranges" );
 
-        assert idx ( letters, 1 ) == 'b';
+        assert idx( letters, 1 ) == 'b';
 
-        assert idx ( bytes, 1 ) == 0x2;
+        assert idx( bytes, 1 ) == 0x2;
 
-        assert Maps.idx ( favoritesMap, 2 ).equals ( "pineapple" );
+        assert Maps.idx( favoritesMap, 2 ).equals( "pineapple" );
 
-        assert Maps.idx ( map, "pineapple" ) == 2;
+        assert Maps.idx( map, "pineapple" ) == 2;
 
 
         //Negative indexes
-        assert Lists.idx ( fruitList, -2 ).equals ( "oranges" );
+        assert Lists.idx( fruitList, -2 ).equals( "oranges" );
 
-        assert idx ( fruitArray, -2 ).equals ( "oranges" );
+        assert idx( fruitArray, -2 ).equals( "oranges" );
 
-        assert idx ( letters, -2 ) == 'b';
+        assert idx( letters, -2 ) == 'b';
 
-        assert idx ( bytes, -3 ) == 0x2;
+        assert idx( bytes, -3 ) == 0x2;
     }
 }

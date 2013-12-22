@@ -64,17 +64,17 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * Since this could get hit by multiple threads.
      */
     private Map<String, List<ValidatorMetaData>> metaDataCache =
-            new ConcurrentHashMap<> ();
+            new ConcurrentHashMap<>();
 
     /**
      * Holds a list of packages that contain annotations that we will process.
      * If the annotation package is not in this list, it will not be processed.
      */
-    private Set<String> validationAnnotationPackages = new HashSet<> ();
+    private Set<String> validationAnnotationPackages = new HashSet<>();
 
     {
             /* By default, we only process our own annotations. */
-        validationAnnotationPackages.add ( "org.boon.validation.annotations" );
+        validationAnnotationPackages.add( "org.boon.validation.annotations" );
     }
 
     /**
@@ -90,19 +90,19 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
     public List<ValidatorMetaData> readMetaData ( Class<?> clazz, String propertyName ) {
 
         /* Generate a key to the cache based on the classname and the propertyName. */
-        String propertyKey = clazz.getName () + "." + propertyName;
+        String propertyKey = clazz.getName() + "." + propertyName;
 
         /* Look up the validation meta data in the cache. */
-        List<ValidatorMetaData> validatorMetaDataList = metaDataCache.get ( propertyKey );
+        List<ValidatorMetaData> validatorMetaDataList = metaDataCache.get( propertyKey );
 
         /* If the meta-data was not found, then generate it. */
         if ( validatorMetaDataList == null ) { // if not found
-            validatorMetaDataList = extractValidatorMetaData ( clazz, propertyName, validatorMetaDataList );
+            validatorMetaDataList = extractValidatorMetaData( clazz, propertyName, validatorMetaDataList );
             /* Put it in the cache to avoid the processing in the future.
              * Design notes: The processing does a lot of reflection, there
              * is no need to do this each time.
              */
-            metaDataCache.put ( propertyKey, validatorMetaDataList );
+            metaDataCache.put( propertyKey, validatorMetaDataList );
         }
 
         return validatorMetaDataList;
@@ -121,11 +121,11 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
         /* If the meta-data was not found, then generate it. */
         if ( validatorMetaDataList == null ) { // if not found
             /* Read the annotations from the class based on the property name. */
-            Collection<AnnotationData> annotations = Annotations.getAnnotationDataForFieldAndProperty ( clazz, propertyName, this.validationAnnotationPackages );
+            Collection<AnnotationData> annotations = Annotations.getAnnotationDataForFieldAndProperty( clazz, propertyName, this.validationAnnotationPackages );
 
             /* Extract the POJO based meta-data from the annotations. */
             validatorMetaDataList =
-                    extractMetaDataFromAnnotations ( annotations );
+                    extractMetaDataFromAnnotations( annotations );
 
         }
         return validatorMetaDataList;
@@ -139,11 +139,11 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      */
     private List<ValidatorMetaData> extractMetaDataFromAnnotations (
             Collection<AnnotationData> annotations ) {
-        List<ValidatorMetaData> list = new ArrayList<ValidatorMetaData> ();
+        List<ValidatorMetaData> list = new ArrayList<ValidatorMetaData>();
 
         for ( AnnotationData annotationData : annotations ) {
-            ValidatorMetaData validatorMetaData = convertAnnotationDataToValidatorMetaData ( annotationData );
-            list.add ( validatorMetaData );
+            ValidatorMetaData validatorMetaData = convertAnnotationDataToValidatorMetaData( annotationData );
+            list.add( validatorMetaData );
         }
 
         return list;
@@ -154,8 +154,8 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      *
      * @param annotationData annotationData
      * @return validator meta data
-     * <p/>
-     * TODO
+     *         <p/>
+     *         TODO
      * @NeedsRefactoring("This method shows we are calling annotationData.getValues a lot. " +
      * "Therefore, we must cache the results of getValues as the annoationData is static " +
      * "per property per class. ")
@@ -163,10 +163,10 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
     private ValidatorMetaData convertAnnotationDataToValidatorMetaData (
             AnnotationData annotationData ) {
 
-        ValidatorMetaData metaData = new ValidatorMetaData ();
-        metaData.setName ( annotationData.getName () );
+        ValidatorMetaData metaData = new ValidatorMetaData();
+        metaData.setName( annotationData.getName() );
 
-        metaData.setProperties ( annotationData.getValues () );
+        metaData.setProperties( annotationData.getValues() );
 
         return metaData;
     }

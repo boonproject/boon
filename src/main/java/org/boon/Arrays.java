@@ -17,38 +17,38 @@ public class Arrays {
 
     @Universal
     public static <V> V[] array ( Class<V> clasz, int size ) {
-        Object newArray = Array.newInstance ( clasz, size );
+        Object newArray = Array.newInstance( clasz, size );
         return ( V[] ) newArray;
     }
 
 
     public static <V> V[] grow ( V[] array, int size ) {
-        Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
+        Objects.requireNonNull( array );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(),
                 array.length + size );
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return ( V[] ) newArray;
     }
 
 
     public static <V> V[] grow ( V[] array ) {
-        Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
+        Objects.requireNonNull( array );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(),
                 array.length * 2 );
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return ( V[] ) newArray;
     }
 
     public static <V> V[] shrink ( V[] array, int size ) {
-        Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
+        Objects.requireNonNull( array );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(),
                 array.length - size );
-        System.arraycopy ( array, 0, ( V[] ) newArray, 0, array.length - size );
+        System.arraycopy( array, 0, ( V[] ) newArray, 0, array.length - size );
         return ( V[] ) newArray;
     }
 
     public static <V> V[] compact ( V[] array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         int nullCount = 0;
         for ( V anArray1 : array ) {
@@ -57,7 +57,7 @@ public class Arrays {
                 nullCount++;
             }
         }
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (),
+        Object newArray = Array.newInstance( array.getClass().getComponentType(),
                 array.length - nullCount );
 
         int j = 0;
@@ -67,7 +67,7 @@ public class Arrays {
                 continue;
             }
 
-            Array.set ( newArray, j, anArray );
+            Array.set( newArray, j, anArray );
             j++;
         }
         return ( V[] ) newArray;
@@ -88,7 +88,7 @@ public class Arrays {
 
     @Universal
     public static <V> V idx ( final V[] array, int index ) {
-        final int i = calculateIndex ( array, index );
+        final int i = calculateIndex( array, index );
 
         return array[ i ];
     }
@@ -96,7 +96,7 @@ public class Arrays {
 
     @Universal
     public static <V> void idx ( final V[] array, int index, V value ) {
-        final int i = calculateIndex ( array, index );
+        final int i = calculateIndex( array, index );
 
         array[ i ] = value;
     }
@@ -104,27 +104,27 @@ public class Arrays {
 
     @Universal
     public static <V> V[] slc ( V[] array, int startIndex, int endIndex ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
-        final int start = calculateIndex ( array, startIndex );
-        final int end = calculateIndex ( array, endIndex );
+        final int start = calculateIndex( array, startIndex );
+        final int end = calculateIndex( array, endIndex );
         final int newLength = end - start;
         if ( newLength < 0 ) {
-            throw new ArrayIndexOutOfBoundsException (
-                    String.format ( "start index %d, end index %d, length %d",
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, end index %d, length %d",
                             startIndex, endIndex, array.length )
             );
         }
 
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), newLength );
-        System.arraycopy ( array, start, newArray, 0, newLength );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), newLength );
+        System.arraycopy( array, start, newArray, 0, newLength );
         return ( V[] ) newArray;
     }
 
     @Universal
     public static <V> boolean in ( V value, V[] array ) {
         for ( V currentValue : array ) {
-            if ( currentValue.equals ( value ) ) {
+            if ( currentValue.equals( value ) ) {
                 return true;
             }
         }
@@ -133,60 +133,60 @@ public class Arrays {
 
     @Universal
     public static <V> V[] slc ( V[] array, int startIndex ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
 
-        final int start = calculateIndex ( array, startIndex );
+        final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
 
         if ( newLength < 0 ) {
-            throw new ArrayIndexOutOfBoundsException (
-                    String.format ( "start index %d, length %d",
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
                             startIndex, array.length )
             );
         }
 
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), newLength );
-        System.arraycopy ( array, start, newArray, 0, newLength );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), newLength );
+        System.arraycopy( array, start, newArray, 0, newLength );
         return ( V[] ) newArray;
     }
 
 
     @Universal
     public static <V> V[] copy ( V[] array ) {
-        Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length );
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        Objects.requireNonNull( array );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return ( V[] ) newArray;
     }
 
 
     @Universal
     public static <V> V[] add ( V[] array, V v ) {
-        Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length + 1 );
-        System.arraycopy ( array, 0, newArray, 0, array.length );
-        Array.set ( newArray, array.length, v );
+        Objects.requireNonNull( array );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length + 1 );
+        System.arraycopy( array, 0, newArray, 0, array.length );
+        Array.set( newArray, array.length, v );
         return ( V[] ) newArray;
     }
 
 
     @Universal
     public static <V> V[] add ( V[] array, V[] array2 ) {
-        Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length + array2.length );
-        System.arraycopy ( array, 0, newArray, 0, array.length );
-        System.arraycopy ( array2, 0, newArray, array.length, array2.length );
+        Objects.requireNonNull( array );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length + array2.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
+        System.arraycopy( array2, 0, newArray, array.length, array2.length );
 
         return ( V[] ) newArray;
     }
 
     @Universal
     public static <V> V[] insert ( V[] array, int index, V v ) {
-        Objects.requireNonNull ( array );
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), array.length + 1 );
+        Objects.requireNonNull( array );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length + 1 );
         if ( index != 0 ) {
-            System.arraycopy ( array, 0, newArray, 0, index );
+            System.arraycopy( array, 0, newArray, 0, index );
         }
 
 
@@ -194,34 +194,34 @@ public class Arrays {
         int remainingArrayLengthAfterIndex = array.length - index;
 
         if ( lastIndex ) {
-            System.arraycopy ( array, index, newArray, index + 1, remainingArrayLengthAfterIndex );
+            System.arraycopy( array, index, newArray, index + 1, remainingArrayLengthAfterIndex );
 
         } else {
-            System.arraycopy ( array, index, newArray, index + 1, remainingArrayLengthAfterIndex );
+            System.arraycopy( array, index, newArray, index + 1, remainingArrayLengthAfterIndex );
 
         }
 
-        Array.set ( newArray, index, v );
+        Array.set( newArray, index, v );
         return ( V[] ) newArray;
     }
 
     @Universal
     public static <V> V[] slcEnd ( V[] array, int endIndex ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
 
-        final int end = calculateIndex ( array, endIndex );
+        final int end = calculateIndex( array, endIndex );
         final int newLength = end;
 
         if ( newLength < 0 ) {
-            throw new ArrayIndexOutOfBoundsException (
-                    String.format ( "end index %d, length %d",
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "end index %d, length %d",
                             endIndex, array.length )
             );
         }
 
-        Object newArray = Array.newInstance ( array.getClass ().getComponentType (), newLength );
-        System.arraycopy ( array, 0, newArray, 0, newLength );
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), newLength );
+        System.arraycopy( array, 0, newArray, 0, newLength );
         return ( V[] ) newArray;
     }
 
@@ -230,7 +230,7 @@ public class Arrays {
     private static <T> int calculateIndex ( T[] array, int originalIndex ) {
         final int length = array.length;
 
-        Objects.requireNonNull ( array, "array cannot be null" );
+        Objects.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;
@@ -258,19 +258,19 @@ public class Arrays {
 
     @SuppressWarnings ("unchecked")
     public static <V> V[] array ( Collection<V> collection ) {
-        if ( collection.size () > 0 ) {
-            Object newInstance = Array.newInstance ( collection.iterator ().next ().getClass (),
-                    collection.size () );
-            return collection.toArray ( ( V[] ) newInstance );
+        if ( collection.size() > 0 ) {
+            Object newInstance = Array.newInstance( collection.iterator().next().getClass(),
+                    collection.size() );
+            return collection.toArray( ( V[] ) newInstance );
         } else {
-            die ( "array(listStream): The collection has to have at least one item in it" );
+            die( "array(listStream): The collection has to have at least one item in it" );
             return null;
         }
     }
 
 
     public static List<Map<String, Object>> toListOfMaps ( Object... array ) {
-        return Reflection.toListOfMaps ( Lists.list ( array ) );
+        return Reflection.toListOfMaps( Lists.list( array ) );
     }
 
 

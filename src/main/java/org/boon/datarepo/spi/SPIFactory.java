@@ -69,89 +69,89 @@ public class SPIFactory {
     public static void init () {
 
         if ( mapCreatorFactory == null ) {
-            mapCreatorFactory = new Supplier<MapCreator> () {
+            mapCreatorFactory = new Supplier<MapCreator>() {
                 @Override
                 public MapCreator get () {
-                    return new MapCreatorImpl ();
+                    return new MapCreatorImpl();
                 }
             };
         }
         if ( repoBuilderFactory == null ) {
-            repoBuilderFactory = new Supplier<RepoBuilder> () {
+            repoBuilderFactory = new Supplier<RepoBuilder>() {
                 @Override
                 public RepoBuilder get () {
-                    return new RepoBuilderDefault ();
+                    return new RepoBuilderDefault();
                 }
             };
         }
         if ( searchIndexFactory == null ) {
-            searchIndexFactory = new Function<Class, SearchIndex> () {
+            searchIndexFactory = new Function<Class, SearchIndex>() {
                 public SearchIndex apply ( Class keyType ) {
                     if ( keyType == Typ.string ) {
-                        return new SearchIndexDefault ( keyType );
+                        return new SearchIndexDefault( keyType );
                     } else {
-                        return new SearchIndexDefault ( keyType );
+                        return new SearchIndexDefault( keyType );
                     }
                 }
             };
         }
         if ( lookupIndexFactory == null ) {
-            lookupIndexFactory = new Function<Class, LookupIndex> () {
+            lookupIndexFactory = new Function<Class, LookupIndex>() {
                 @Override
                 public LookupIndex apply ( Class keyType ) {
-                    return new LookupIndexDefault ( keyType );
+                    return new LookupIndexDefault( keyType );
                 }
             };
         }
         if ( uniqueLookupIndexFactory == null ) {
-            uniqueLookupIndexFactory = new Function<Class, LookupIndex> () {
+            uniqueLookupIndexFactory = new Function<Class, LookupIndex>() {
                 @Override
                 public LookupIndex apply ( Class keyType ) {
-                    return new UniqueLookupIndex ( keyType );
+                    return new UniqueLookupIndex( keyType );
                 }
             };
         }
         if ( uniqueSearchIndexFactory == null ) {
-            uniqueSearchIndexFactory = new Function<Class, SearchIndex> () {
+            uniqueSearchIndexFactory = new Function<Class, SearchIndex>() {
                 @Override
                 public SearchIndex apply ( Class keyType ) {
-                    return new UniqueSearchIndex ( keyType );
+                    return new UniqueSearchIndex( keyType );
                 }
             };
         }
 
         if ( repoFactory == null ) {
-            repoFactory = new Supplier<RepoComposer> () {
+            repoFactory = new Supplier<RepoComposer>() {
                 @Override
                 public RepoComposer get () {
-                    return new RepoDefault<> ();
+                    return new RepoDefault<>();
                 }
             };
         }
 
         if ( filterFactory == null ) {
-            filterFactory = new Supplier<Filter> () {
+            filterFactory = new Supplier<Filter>() {
                 @Override
                 public Filter get () {
-                    return new FilterDefault ();
+                    return new FilterDefault();
                 }
             };
         }
 
         if ( searchableCollectionFactory == null ) {
-            searchableCollectionFactory = new Supplier<SearchableCollectionComposer> () {
+            searchableCollectionFactory = new Supplier<SearchableCollectionComposer>() {
                 @Override
                 public SearchableCollectionComposer get () {
-                    return new SearchableCollectionDefault ();
+                    return new SearchableCollectionDefault();
                 }
             };
         }
 
         if ( objectEditorFactory == null ) {
-            objectEditorFactory = new Supplier<ObjectEditorComposer> () {
+            objectEditorFactory = new Supplier<ObjectEditorComposer>() {
                 @Override
                 public ObjectEditorComposer get () {
-                    return new ObjectEditorDefault ();
+                    return new ObjectEditorDefault();
                 }
             };
         }
@@ -159,7 +159,7 @@ public class SPIFactory {
     }
 
     static {
-        init ();
+        init();
     }
 
 

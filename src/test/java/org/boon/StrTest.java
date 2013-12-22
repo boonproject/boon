@@ -15,29 +15,29 @@ public class StrTest {
 
         String letters = "abcd";
 
-        assertEquals (
+        assertEquals(
                 'a',
-                idx ( letters, 0 )
+                idx( letters, 0 )
         );
 
 
-        assertEquals (
+        assertEquals(
                 'd',
-                idx ( letters, -1 )
+                idx( letters, -1 )
         );
 
 
-        assertEquals (
+        assertEquals(
                 'd',
-                idx ( letters, letters.length () - 1 )
+                idx( letters, letters.length() - 1 )
         );
 
 
-        letters = idx ( letters, 1, 'z' );
+        letters = idx( letters, 1, 'z' );
 
-        assertEquals (
+        assertEquals(
                 'z',
-                idx ( letters, 1 )
+                idx( letters, 1 )
         );
     }
 
@@ -48,12 +48,12 @@ public class StrTest {
         String letters = "abcd";
 
 
-        assertTrue (
-                in ( 'a', letters )
+        assertTrue(
+                in( 'a', letters )
         );
 
-        assertFalse (
-                in ( 'z', letters )
+        assertFalse(
+                in( 'z', letters )
         );
 
     }
@@ -65,12 +65,12 @@ public class StrTest {
         String letters = "abcd";
 
 
-        assertFalse (
-                in ( 'a', 1, letters )
+        assertFalse(
+                in( 'a', 1, letters )
         );
 
-        assertTrue (
-                in ( 'c', 1, letters )
+        assertTrue(
+                in( 'c', 1, letters )
         );
 
     }
@@ -81,12 +81,12 @@ public class StrTest {
         String letters = "abcd";
 
 
-        assertFalse (
-                in ( 'a', 1, 2, letters )
+        assertFalse(
+                in( 'a', 1, 2, letters )
         );
 
-        assertTrue (
-                in ( 'c', 1, 3, letters )
+        assertTrue(
+                in( 'c', 1, 3, letters )
         );
 
     }
@@ -97,14 +97,14 @@ public class StrTest {
         String letters = "abcd";
 
 
-        assertEquals (
+        assertEquals(
                 "ab",
-                slc ( letters, 0, 2 )
+                slc( letters, 0, 2 )
         );
 
-        assertEquals (
+        assertEquals(
                 "bc",
-                slc ( letters, 1, -1 )
+                slc( letters, 1, -1 )
         );
 
         //>>> letters[2:]
@@ -112,31 +112,31 @@ public class StrTest {
         //>>> letters[-2:]
         //['c', 'd']
 
-        assertEquals (
+        assertEquals(
                 "cd",
-                slc ( letters, -2 )
+                slc( letters, -2 )
         );
 
 
-        assertEquals (
+        assertEquals(
                 "cd",
-                slc ( letters, 2 )
+                slc( letters, 2 )
         );
 
 
         //>>> letters[:-2]
         //     ['a', 'b']
-        assertEquals (
+        assertEquals(
                 "ab",
-                slcEnd ( letters, -2 )
+                slcEnd( letters, -2 )
         );
 
 
         //>>> letters[:-2]
         //     ['a', 'b']
-        assertEquals (
+        assertEquals(
                 "ab",
-                slcEnd ( letters, 2 )
+                slcEnd( letters, 2 )
         );
 
     }
@@ -147,30 +147,30 @@ public class StrTest {
 
         String letters = "abcde";
 
-        slcEnd ( letters, 100 );
-        slcEnd ( letters, -100 );
+        slcEnd( letters, 100 );
+        slcEnd( letters, -100 );
 
-        slc ( letters, 100 );
-        slc ( letters, -100 );
-        idx ( letters, 100 );
-        idx ( letters, -100 );
-
-
-        letters = idx ( letters, 100, 'x' );
+        slc( letters, 100 );
+        slc( letters, -100 );
+        idx( letters, 100 );
+        idx( letters, -100 );
 
 
-        letters = idx ( letters, -100, 'z' );
+        letters = idx( letters, 100, 'x' );
 
 
-        assertEquals (
+        letters = idx( letters, -100, 'z' );
+
+
+        assertEquals(
                 'x',
-                idx ( letters, -1 )
+                idx( letters, -1 )
         );
 
 
-        assertEquals (
+        assertEquals(
                 'z',
-                idx ( letters, 0 )
+                idx( letters, 0 )
         );
 
     }
@@ -181,9 +181,9 @@ public class StrTest {
         String letters =
                 "ab\0\0\0\0\0\0c\0d\0\0e";
 
-        letters = compact ( letters );
+        letters = compact( letters );
 
-        assertEquals (
+        assertEquals(
                 "abcde",
                 letters
 
@@ -195,10 +195,10 @@ public class StrTest {
 
     @Test
     public void joinByTest () {
-        String foo = Str.join ( ',', "foo", "bar", "baz" );
+        String foo = Str.join( ',', "foo", "bar", "baz" );
         boolean ok = true;
 
-        ok |= foo.equals ( "foo,bar,baz" ) || die ( "Foo was not equal to foo,bar,baz" );
+        ok |= foo.equals( "foo,bar,baz" ) || die( "Foo was not equal to foo,bar,baz" );
 
 
     }
@@ -206,7 +206,7 @@ public class StrTest {
 
     @Test
     public void lines () {
-        String foo = Str.lines (
+        String foo = Str.lines(
                 "Line 1",
                 "Line 2",
                 "Line 3" );
@@ -214,9 +214,9 @@ public class StrTest {
         boolean ok = true;
 
 
-        ok |= foo.startsWith ( "Line 1" ) || die ( "foo string started with Line 1" );
+        ok |= foo.startsWith( "Line 1" ) || die( "foo string started with Line 1" );
 
-        ok |= foo.endsWith ( "Line 3" ) || die ( "foo string ends with Line 3 \n" + foo );
+        ok |= foo.endsWith( "Line 3" ) || die( "foo string ends with Line 3 \n" + foo );
 
     }
 

@@ -9,21 +9,21 @@ public class RepoBuilderTest {
 
     @Before
     public void setup () {
-        test = new RepoDefaultTest ();
+        test = new RepoDefaultTest();
 
     }
 
     public void runAll () throws Exception {
 
-        test.testAdd ();
-        test.testGet ();
+        test.testAdd();
+        test.testGet();
 
-        test.testEasyFilter ();
-        test.testHarderFilter ();
-        test.testModify ();
-        test.testFilterLogicalOperators2 ();
-        test.testUpdateByKeyUsingValues ();
-        test.testIndexedLookup ();
+        test.testEasyFilter();
+        test.testHarderFilter();
+        test.testModify();
+        test.testFilterLogicalOperators2();
+        test.testUpdateByKeyUsingValues();
+        test.testIndexedLookup();
 
     }
 
@@ -31,56 +31,56 @@ public class RepoBuilderTest {
     @Test
     public void testCreateFromBuilderNestedIndex () throws Exception {
 
-        test.repo = TestHelper.createFromBuilderNestedIndex ();
-        runAll ();
+        test.repo = TestHelper.createFromBuilderNestedIndex();
+        runAll();
 
     }
 
     @Test
     public void testWithTransformAndCollation () throws Exception {
 
-        test.repo = TestHelper.createFromBuilderWithTransformAndCollation ();
-        runAll ();
+        test.repo = TestHelper.createFromBuilderWithTransformAndCollation();
+        runAll();
 
     }
 
     @Test
     public void testNormal () throws Exception {
 
-        test.repo = TestHelper.createFromBuilder ();
-        runAll ();
+        test.repo = TestHelper.createFromBuilder();
+        runAll();
 
     }
 
     @Test
     public void testNoIndexes () throws Exception {
 
-        test.repo = TestHelper.createWithNoIndexes ();
-        runAll ();
+        test.repo = TestHelper.createWithNoIndexes();
+        runAll();
 
     }
 
     @Test
     public void testNormalLogAndClone () throws Exception {
 
-        test.repo = TestHelper.createFromBuilderLogAndClone ();
-        runAll ();
+        test.repo = TestHelper.createFromBuilderLogAndClone();
+        runAll();
 
     }
 
     @Test
     public void testNoReflect () throws Exception {
 
-        test.repo = TestHelper.createBuilderNoReflection ();
-        runAll ();
+        test.repo = TestHelper.createBuilderNoReflection();
+        runAll();
 
     }
 
     @Test
     public void testWithProps () throws Exception {
 
-        test.repo = TestHelper.createFromBuilderUsingPropertyAccess ();
-        runAll ();
+        test.repo = TestHelper.createFromBuilderUsingPropertyAccess();
+        runAll();
 
     }
 
@@ -88,8 +88,8 @@ public class RepoBuilderTest {
     @Test
     public void testWithEvents () throws Exception {
 
-        test.repo = TestHelper.createFromBuilderEvents ();
-        runAll ();
+        test.repo = TestHelper.createFromBuilderEvents();
+        runAll();
 
     }
 

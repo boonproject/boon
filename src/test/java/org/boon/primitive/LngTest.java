@@ -9,10 +9,10 @@ public class LngTest {
 
     @Test
     public void test () {
-        main ();
+        main();
     }
 
     public static void main ( String... args ) {
-        puts ( "data", Lng.str ( 1_000_000_000L ) );
+        puts( "data", Lng.str( 1_000_000_000L ) );
     }
 }

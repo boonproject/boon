@@ -13,17 +13,17 @@ import java.util.Map;
 public class JsonCharArray extends JsonParserBaseTest {
 
 
-   public JsonParser parser() {
-       return new JsonParserCharArray ();
-   }
+    public JsonParser parser () {
+        return new JsonParserCharArray();
+    }
 
     @Test
     public void testNest () {
 
 
-        String nest = IO.read ( "files/nest.json" );
+        String nest = IO.read( "files/nest.json" );
 
-        this.jsonParser.parse ( Map.class, nest );
+        this.jsonParser.parse( Map.class, nest );
 
 
     }
@@ -32,9 +32,9 @@ public class JsonCharArray extends JsonParserBaseTest {
     public void noNest () {
 
 
-        String json = IO.read ( "files/nonest.json" );
+        String json = IO.read( "files/nonest.json" );
 
-        this.jsonParser.parse ( Map.class, json );
+        this.jsonParser.parse( Map.class, json );
 
 
     }

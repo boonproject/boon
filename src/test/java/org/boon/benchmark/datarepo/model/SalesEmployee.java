@@ -25,7 +25,7 @@ public class SalesEmployee extends Employee implements Comparable<SalesEmployee>
     }
 
     public String getLastName () {
-        return super.getLastName ();
+        return super.getLastName();
     }
 
 }

@@ -15,7 +15,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     public void add ( MapItemValue miv ) {
         if ( len == items.length ) {
-            items = org.boon.Arrays.grow ( items );
+            items = org.boon.Arrays.grow( items );
         }
         items[ len ] = miv;
         len++;
@@ -38,7 +38,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
         @Override
         public Iterator<Entry<String, Value>> iterator () {
-            return new Iterator<Entry<String, Value>> () {
+            return new Iterator<Entry<String, Value>>() {
                 int location = 0;
 
                 @Override
@@ -67,28 +67,28 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     }
 
-    private FakeSet set = new FakeSet ( items );
+    private FakeSet set = new FakeSet( items );
 
     @Override
     public Value get ( Object key ) {
         if ( map == null && items.length < 20 ) {
             for ( Object item : items ) {
                 MapItemValue miv = ( MapItemValue ) item;
-                if ( key.equals ( miv.name ().toValue () ) ) {
+                if ( key.equals( miv.name().toValue() ) ) {
                     return miv.value;
                 }
             }
             return null;
         } else {
-            if ( map == null ) buildIfNeededMap ();
-            return map.get ( key );
+            if ( map == null ) buildIfNeededMap();
+            return map.get( key );
         }
     }
 
 
     @Override
     public Value put ( String key, Value value ) {
-        die ( "Not that kind of map" );
+        die( "Not that kind of map" );
         return null;
     }
 
@@ -98,26 +98,35 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
         if ( map == null ) {
             return set;
         } else {
-            return map.entrySet ();
+            return map.entrySet();
         }
     }
 
     private final void buildIfNeededMap () {
+        if ( map == null ) {
+            map = new HashMap<>( items.length );
 
-        map = new HashMap<> ( items.length );
-
-        for ( Entry<String, Value> miv : items ) {
-            map.put ( miv.getKey (), miv.getValue () );
+            for ( Entry<String, Value> miv : items ) {
+                if ( miv == null ) {
+                    break;
+                }
+                map.put( miv.getKey(), miv.getValue() );
+            }
         }
     }
 
 
     public Collection<Value> values () {
-        return map.values ();
+        this.buildIfNeededMap();
+        return map.values();
     }
 
 
     public int size () {
-        return len;
+        if ( map != null ) {
+            return map.size();
+        } else {
+            return len;
+        }
     }
 }

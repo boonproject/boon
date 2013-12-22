@@ -29,7 +29,7 @@ public class MBeansTest {
         private String name = "value";
 
         public void sayHello () {
-            System.out.println ( "hello, world" );
+            System.out.println( "hello, world" );
         }
 
         public int add ( int x, int y ) {
@@ -46,12 +46,12 @@ public class MBeansTest {
     public void test () throws Exception {
 
 
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer ();
-        Set<ObjectName> objectNames = server.queryNames ( null, null );
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        Set<ObjectName> objectNames = server.queryNames( null, null );
 
         for ( ObjectName name : objectNames ) {
-            System.out.println ( name.toString () );
-            System.out.println ( MBeans.map ( server, name ) );
+            System.out.println( name.toString() );
+            System.out.println( MBeans.map( server, name ) );
 
         }
 
@@ -64,18 +64,18 @@ public class MBeansTest {
     @Test
     public void createTest () throws Exception {
 
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer ();
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 
-        Hello hello = new Hello ();
-        DynamicMBean dynamicMBean = MBeans.createMBean ( hello, HelloMBean.class );
+        Hello hello = new Hello();
+        DynamicMBean dynamicMBean = MBeans.createMBean( hello, HelloMBean.class );
 
-        MBeans.registerMBean ( "com.example", "hello", dynamicMBean );
-        Set<ObjectName> objectNames = server.queryNames ( null, null );
+        MBeans.registerMBean( "com.example", "hello", dynamicMBean );
+        Set<ObjectName> objectNames = server.queryNames( null, null );
 
 
         for ( ObjectName name : objectNames ) {
-            System.out.println ( name.toString () );
-            System.out.println ( MBeans.map ( server, name ) );
+            System.out.println( name.toString() );
+            System.out.println( MBeans.map( server, name ) );
 
         }
 
@@ -83,8 +83,8 @@ public class MBeansTest {
 
 
         for ( ObjectName name : objectNames ) {
-            System.out.println ( name.toString () );
-            System.out.println ( MBeans.map ( server, name ) );
+            System.out.println( name.toString() );
+            System.out.println( MBeans.map( server, name ) );
 
         }
 

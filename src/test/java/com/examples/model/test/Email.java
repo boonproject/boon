@@ -28,13 +28,13 @@ public class Email {
 
         Email email = ( Email ) o;
 
-        if ( content != null ? !content.equals ( email.content ) : email.content != null ) return false;
+        if ( content != null ? !content.equals( email.content ) : email.content != null ) return false;
 
         return true;
     }
 
     @Override
     public int hashCode () {
-        return content != null ? content.hashCode () : 0;
+        return content != null ? content.hashCode() : 0;
     }
 }

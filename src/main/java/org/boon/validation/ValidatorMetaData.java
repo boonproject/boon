@@ -13,11 +13,11 @@ import java.util.Map;
 public class ValidatorMetaData {
     private String name = null;
 
-    private Map<String, Object> properties = new HashMap<> ();
+    private Map<String, Object> properties = new HashMap<>();
 
 
     public static ValidatorMetaData validatorMeta ( String name, Map<String, Object> properties ) {
-        return new ValidatorMetaData ( name, properties );
+        return new ValidatorMetaData( name, properties );
     }
 
     public ValidatorMetaData () {

@@ -32,18 +32,18 @@ public class HTTPTest {
         public void handle ( HttpExchange t ) throws IOException {
 
             String contentType = null;
-            final List<String> strings = t.getRequestHeaders ().get ( "Content-Type" );
-            if ( strings.size () > 0 ) {
-                contentType = strings.get ( 0 );
+            final List<String> strings = t.getRequestHeaders().get( "Content-Type" );
+            if ( strings.size() > 0 ) {
+                contentType = strings.get( 0 );
             }
 
             if ( contentType == null ) {
-                testResponse ( t );
-            } else if ( contentType.equals ( "application/java-archive" ) ) {
-                binaryResponse ( t );
+                testResponse( t );
+            } else if ( contentType.equals( "application/java-archive" ) ) {
+                binaryResponse( t );
 
             } else {
-                testResponse ( t );
+                testResponse( t );
             }
         }
 
@@ -51,18 +51,18 @@ public class HTTPTest {
 
             int boonSize = -1;
 
-            final List<String> strings = t.getRequestHeaders ().get ( "Boon-Size" );
-            if ( strings != null && strings.size () > 0 ) {
-                boonSize = Integer.parseInt ( strings.get ( 0 ) );
+            final List<String> strings = t.getRequestHeaders().get( "Boon-Size" );
+            if ( strings != null && strings.size() > 0 ) {
+                boonSize = Integer.parseInt( strings.get( 0 ) );
             }
 
             boonSize = boonSize == -1 ? 19 : boonSize;
 
 
-            t.getResponseHeaders ().put ( "Content-Type", Lists.list ( "application/java-archive" ) );
-            t.sendResponseHeaders ( 200, boonSize );
+            t.getResponseHeaders().put( "Content-Type", Lists.list( "application/java-archive" ) );
+            t.sendResponseHeaders( 200, boonSize );
 
-            OutputStream os = t.getResponseBody ();
+            OutputStream os = t.getResponseBody();
 
             byte[] buffer = new byte[ boonSize ];
 
@@ -73,41 +73,41 @@ public class HTTPTest {
                     value = 0;
                 }
             }
-            os.write ( buffer );
-            os.close ();
+            os.write( buffer );
+            os.close();
         }
 
         private void testResponse ( HttpExchange t ) throws IOException {
 
-            if ( t.getRequestMethod ().equals ( "GET" ) ) {
+            if ( t.getRequestMethod().equals( "GET" ) ) {
 
-                Headers requestHeaders = t.getRequestHeaders ();
+                Headers requestHeaders = t.getRequestHeaders();
                 String body = "";
-                body = body + "\n" + copy ( requestHeaders ).toString ();
+                body = body + "\n" + copy( requestHeaders ).toString();
                 body = body + "\n\n" + "Boon test";
 
-                byte[] buffer = body.getBytes ( "UTF-8" );
-                t.sendResponseHeaders ( 200, buffer.length );
+                byte[] buffer = body.getBytes( "UTF-8" );
+                t.sendResponseHeaders( 200, buffer.length );
 
-                try ( OutputStream os = t.getResponseBody () ) {
+                try ( OutputStream os = t.getResponseBody() ) {
 
-                    os.write ( buffer );
-                    os.flush ();
+                    os.write( buffer );
+                    os.flush();
                 }
 
 
-            } else if ( t.getRequestMethod ().equals ( "POST" ) ) {
-                InputStream requestBody = t.getRequestBody ();
-                String body = IO.read ( requestBody );
-                Headers requestHeaders = t.getRequestHeaders ();
-                body = body + "\n" + copy ( requestHeaders ).toString ();
+            } else if ( t.getRequestMethod().equals( "POST" ) ) {
+                InputStream requestBody = t.getRequestBody();
+                String body = IO.read( requestBody );
+                Headers requestHeaders = t.getRequestHeaders();
+                body = body + "\n" + copy( requestHeaders ).toString();
                 body = body + "\n\n" + "Boon test";
 
-                byte[] buffer = body.getBytes ( "UTF-8" );
-                t.sendResponseHeaders ( 200, buffer.length );
-                OutputStream os = t.getResponseBody ();
-                os.write ( buffer );
-                os.close ();
+                byte[] buffer = body.getBytes( "UTF-8" );
+                t.sendResponseHeaders( 200, buffer.length );
+                OutputStream os = t.getResponseBody();
+                os.write( buffer );
+                os.close();
 
             }
         }
@@ -117,14 +117,14 @@ public class HTTPTest {
     static class MyHandler implements HttpHandler {
         public void handle ( HttpExchange t ) throws IOException {
 
-            InputStream requestBody = t.getRequestBody ();
-            String body = IO.read ( requestBody );
-            Headers requestHeaders = t.getRequestHeaders ();
-            body = body + "\n" + copy ( requestHeaders ).toString ();
-            t.sendResponseHeaders ( 200, body.length () );
-            OutputStream os = t.getResponseBody ();
-            os.write ( body.getBytes () );
-            os.close ();
+            InputStream requestBody = t.getRequestBody();
+            String body = IO.read( requestBody );
+            Headers requestHeaders = t.getRequestHeaders();
+            body = body + "\n" + copy( requestHeaders ).toString();
+            t.sendResponseHeaders( 200, body.length() );
+            OutputStream os = t.getResponseBody();
+            os.write( body.getBytes() );
+            os.close();
         }
     }
 
@@ -132,17 +132,17 @@ public class HTTPTest {
     @Test
     public void testBinary () throws Exception {
 
-        HttpServer server = HttpServer.create ( new InetSocketAddress ( 7212 ), 0 );
-        server.createContext ( "/test", new MyHandler2 () );
-        server.setExecutor ( null ); // creates a default executor
-        server.start ();
+        HttpServer server = HttpServer.create( new InetSocketAddress( 7212 ), 0 );
+        server.createContext( "/test", new MyHandler2() );
+        server.setExecutor( null ); // creates a default executor
+        server.start();
 
-        Thread.sleep ( 10 );
+        Thread.sleep( 10 );
 
-        byte[] response = HTTP.getBytesWithHeaders (
+        byte[] response = HTTP.getBytesWithHeaders(
                 "http://localhost:7212/test",
                 "application/java-archive",
-                Maps.map (
+                Maps.map(
                         "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
                         "Accept-Encoding", "gzip,deflate,sdch",
                         "Accept-Language", "en-US,en;q=0.8"
@@ -152,17 +152,17 @@ public class HTTPTest {
 
         boolean ok = true;
 
-        ok &= response.length == 19 || die ( "response is the wrong length" + response.length );
+        ok &= response.length == 19 || die( "response is the wrong length" + response.length );
 
         for ( int index = 0; index < 19; index++ ) {
-            ok &= response[ index ] == index || die ( sputs ( "index", index, "ressponse at index", response[ index ] ) );
+            ok &= response[ index ] == index || die( sputs( "index", index, "ressponse at index", response[ index ] ) );
 
         }
-        Thread.sleep ( 10 );
+        Thread.sleep( 10 );
 
-        puts ( "binary test passed", ok );
+        puts( "binary test passed", ok );
 
-        server.stop ( 0 );
+        server.stop( 0 );
 
 
     }
@@ -171,22 +171,22 @@ public class HTTPTest {
     @Test
     public void testPostBody () throws Exception {
 
-        HttpServer server = HttpServer.create ( new InetSocketAddress ( 9290 ), 0 );
-        server.createContext ( "/test", new MyHandler () );
-        server.setExecutor ( null ); // creates a default executor
-        server.start ();
+        HttpServer server = HttpServer.create( new InetSocketAddress( 9290 ), 0 );
+        server.createContext( "/test", new MyHandler() );
+        server.setExecutor( null ); // creates a default executor
+        server.start();
 
-        Thread.sleep ( 10 );
-
-
-        String response = HTTP.post ( "http://localhost:9290/test", "hi mom" );
-
-        assertTrue ( response.contains ( "hi mom" ) );
+        Thread.sleep( 10 );
 
 
-        Thread.sleep ( 10 );
+        String response = HTTP.post( "http://localhost:9290/test", "hi mom" );
 
-        server.stop ( 0 );
+        assertTrue( response.contains( "hi mom" ) );
+
+
+        Thread.sleep( 10 );
+
+        server.stop( 0 );
 
 
     }
@@ -195,26 +195,26 @@ public class HTTPTest {
     @Test
     public void testPostForm () throws Exception {
 
-        HttpServer server = HttpServer.create ( new InetSocketAddress ( 9220 ), 0 );
-        server.createContext ( "/test", new MyHandler () );
-        server.setExecutor ( null ); // creates a default executor
-        server.start ();
+        HttpServer server = HttpServer.create( new InetSocketAddress( 9220 ), 0 );
+        server.createContext( "/test", new MyHandler() );
+        server.setExecutor( null ); // creates a default executor
+        server.start();
 
-        Thread.sleep ( 10 );
+        Thread.sleep( 10 );
 
 
-        String response = HTTP.postForm ( "http://localhost:9220/test",
+        String response = HTTP.postForm( "http://localhost:9220/test",
                 Collections.EMPTY_MAP,
-                map ( "hI", ( Object ) "hi-mom", "image", new byte[]{ 1, 2, 3 } )
+                map( "hI", ( Object ) "hi-mom", "image", new byte[]{ 1, 2, 3 } )
         );
 
         boolean ok = true;
-        ok |= response.startsWith ( "hI=hi-mom&image=%01%02%03" ) ||
-                die ( "encoding did not work --" + response + "--" );
+        ok |= response.startsWith( "hI=hi-mom&image=%01%02%03" ) ||
+                die( "encoding did not work --" + response + "--" );
 
-        Thread.sleep ( 10 );
+        Thread.sleep( 10 );
 
-        server.stop ( 0 );
+        server.stop( 0 );
 
 
     }
@@ -222,26 +222,26 @@ public class HTTPTest {
     @Test ( expected = RuntimeException.class )
     public void testSad () throws Exception {
 
-        HttpServer server = HttpServer.create ( new InetSocketAddress ( 9213 ), 0 );
-        server.createContext ( "/test", new MyHandler () );
-        server.setExecutor ( null ); // creates a default executor
-        server.start ();
+        HttpServer server = HttpServer.create( new InetSocketAddress( 9213 ), 0 );
+        server.createContext( "/test", new MyHandler() );
+        server.setExecutor( null ); // creates a default executor
+        server.start();
 
-        Thread.sleep ( 10 );
+        Thread.sleep( 10 );
 
 
-        Map<String, String> headers = map ( "foo", "bar", "fun", "sun" );
+        Map<String, String> headers = map( "foo", "bar", "fun", "sun" );
 
-        String response = HTTP.postWithContentType ( "http://localhost:9213/foo", headers, "text/plain", "hi mom" );
+        String response = HTTP.postWithContentType( "http://localhost:9213/foo", headers, "text/plain", "hi mom" );
 
-        System.out.println ( response );
+        System.out.println( response );
 
-        assertTrue ( response.contains ( "hi mom" ) );
-        assertTrue ( response.contains ( "Fun=[sun], Foo=[bar]" ) );
+        assertTrue( response.contains( "hi mom" ) );
+        assertTrue( response.contains( "Fun=[sun], Foo=[bar]" ) );
 
-        Thread.sleep ( 10 );
+        Thread.sleep( 10 );
 
-        server.stop ( 0 );
+        server.stop( 0 );
 
 
     }
@@ -249,44 +249,44 @@ public class HTTPTest {
     @Test
     public void testHappyFeet () throws Exception {
 
-        HttpServer server = HttpServer.create ( new InetSocketAddress ( 8888 ), 0 );
-        server.createContext ( "/test", new MyHandler () );
-        server.setExecutor ( null ); // creates a default executor
-        server.start ();
+        HttpServer server = HttpServer.create( new InetSocketAddress( 8888 ), 0 );
+        server.createContext( "/test", new MyHandler() );
+        server.setExecutor( null ); // creates a default executor
+        server.start();
 
-        Thread.sleep ( 10 );
+        Thread.sleep( 10 );
 
-        Map<String, String> headers = map ( "foo", "bar", "fun", "sun" );
-
-
-        String response = HTTP.get ( "http://localhost:8888/test" );
+        Map<String, String> headers = map( "foo", "bar", "fun", "sun" );
 
 
-        System.out.println ( response );
+        String response = HTTP.get( "http://localhost:8888/test" );
 
 
-        response = HTTP.getWithHeaders ( "http://localhost:8888/test", headers );
-
-        System.out.println ( response );
-
-        assertTrue ( response.contains ( "Fun=[sun]" ) );
-        assertTrue ( response.contains ( "Foo=[bar]" ) );
+        System.out.println( response );
 
 
-        response = HTTP.getWithContentType ( "http://localhost:8888/test", headers, "text/plain" );
+        response = HTTP.getWithHeaders( "http://localhost:8888/test", headers );
 
-        System.out.println ( response );
+        System.out.println( response );
 
-        assertTrue ( response.contains ( "Fun=[sun]" ) );
-        assertTrue ( response.contains ( "Foo=[bar]" ) );
+        assertTrue( response.contains( "Fun=[sun]" ) );
+        assertTrue( response.contains( "Foo=[bar]" ) );
 
 
-        response = HTTP.getWithCharSet ( "http://localhost:8888/test", headers, "text/plain", "UTF-8" );
+        response = HTTP.getWithContentType( "http://localhost:8888/test", headers, "text/plain" );
 
-        System.out.println ( response );
+        System.out.println( response );
 
-        assertTrue ( response.contains ( "Fun=[sun]" ) );
-        assertTrue ( response.contains ( "Foo=[bar]" ) );
+        assertTrue( response.contains( "Fun=[sun]" ) );
+        assertTrue( response.contains( "Foo=[bar]" ) );
+
+
+        response = HTTP.getWithCharSet( "http://localhost:8888/test", headers, "text/plain", "UTF-8" );
+
+        System.out.println( response );
+
+        assertTrue( response.contains( "Fun=[sun]" ) );
+        assertTrue( response.contains( "Foo=[bar]" ) );
 
 
     }
@@ -294,45 +294,45 @@ public class HTTPTest {
     @Test
     public void testHappy () throws Exception {
 
-        HttpServer server = HttpServer.create ( new InetSocketAddress ( 9212 ), 0 );
-        server.createContext ( "/test", new MyHandler () );
-        server.setExecutor ( null ); // creates a default executor
-        server.start ();
+        HttpServer server = HttpServer.create( new InetSocketAddress( 9212 ), 0 );
+        server.createContext( "/test", new MyHandler() );
+        server.setExecutor( null ); // creates a default executor
+        server.start();
 
-        Thread.sleep ( 10 );
-
-
-        Map<String, String> headers = map ( "foo", "bar", "fun", "sun" );
-
-        String response = HTTP.postWithContentType ( "http://localhost:9212/test", headers, "text/plain", "hi mom" );
-
-        System.out.println ( response );
-
-        assertTrue ( response.contains ( "hi mom" ) );
-        assertTrue ( response.contains ( "Fun=[sun]" ) );
-        assertTrue ( response.contains ( "Foo=[bar]" ) );
+        Thread.sleep( 10 );
 
 
-        response = HTTP.postWithCharset ( "http://localhost:9212/test", headers, "text/plain", "UTF-8", "hi mom" );
+        Map<String, String> headers = map( "foo", "bar", "fun", "sun" );
 
-        System.out.println ( response );
+        String response = HTTP.postWithContentType( "http://localhost:9212/test", headers, "text/plain", "hi mom" );
 
-        assertTrue ( response.contains ( "hi mom" ) );
-        assertTrue ( response.contains ( "Fun=[sun]" ) );
-        assertTrue ( response.contains ( "Foo=[bar]" ) );
+        System.out.println( response );
 
-        response = HTTP.postWithHeaders ( "http://localhost:9212/test", headers, "hi mom" );
-
-        System.out.println ( response );
-
-        assertTrue ( response.contains ( "hi mom" ) );
-        assertTrue ( response.contains ( "Fun=[sun]" ) );
-        assertTrue ( response.contains ( "Foo=[bar]" ) );
+        assertTrue( response.contains( "hi mom" ) );
+        assertTrue( response.contains( "Fun=[sun]" ) );
+        assertTrue( response.contains( "Foo=[bar]" ) );
 
 
-        Thread.sleep ( 10 );
+        response = HTTP.postWithCharset( "http://localhost:9212/test", headers, "text/plain", "UTF-8", "hi mom" );
 
-        server.stop ( 0 );
+        System.out.println( response );
+
+        assertTrue( response.contains( "hi mom" ) );
+        assertTrue( response.contains( "Fun=[sun]" ) );
+        assertTrue( response.contains( "Foo=[bar]" ) );
+
+        response = HTTP.postWithHeaders( "http://localhost:9212/test", headers, "hi mom" );
+
+        System.out.println( response );
+
+        assertTrue( response.contains( "hi mom" ) );
+        assertTrue( response.contains( "Fun=[sun]" ) );
+        assertTrue( response.contains( "Foo=[bar]" ) );
+
+
+        Thread.sleep( 10 );
+
+        server.stop( 0 );
 
 
     }

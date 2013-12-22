@@ -57,12 +57,12 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
 
     @Override
     public int intValue () {
-        return Integer.parseInt ( toString () );
+        return Integer.parseInt( toString() );
     }
 
     @Override
     public long longValue () {
-        return Long.parseLong ( toString () );
+        return Long.parseLong( toString() );
     }
 
 
@@ -75,7 +75,7 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
             case TRUE:
                 return true;
         }
-        die ();
+        die();
         return false;
 
     }
@@ -83,17 +83,17 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
 
     @Override
     public String stringValue () {
-        return type.toString ();
+        return type.toString();
     }
 
     @Override
     public String stringValueEncoded () {
-        return toString ();
+        return toString();
     }
 
 
     public String toString () {
-        return type.toString ();
+        return type.toString();
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
             case NULL:
                 return null;
         }
-        die ();
+        die();
         return null;
 
     }
@@ -118,13 +118,13 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
     public Enum toEnum ( Class<? extends Enum> cls ) {
         switch ( type ) {
             case STRING:
-                return Conversions.toEnum ( cls, stringValue () );
+                return Conversions.toEnum( cls, stringValue() );
             case INTEGER:
-                return Conversions.toEnum ( cls, intValue () );
+                return Conversions.toEnum( cls, intValue() );
             case NULL:
                 return null;
         }
-        die ( "toEnum " + cls + " value was " + stringValue () );
+        die( "toEnum " + cls + " value was " + stringValue() );
         return null;
 
     }
@@ -161,45 +161,45 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
 
         if ( type == Type.STRING ) {
 
-            String string = stringValue ();
+            String string = stringValue();
 
-            return Dates.fromISO8601 ( string );
+            return Dates.fromISO8601( string );
         } else {
 
-            return new Date ( Dates.utc ( longValue () ) );
+            return new Date( Dates.utc( longValue() ) );
         }
 
     }
 
 
     public byte byteValue () {
-        return Byte.parseByte ( toString () );
+        return Byte.parseByte( toString() );
     }
 
     public short shortValue () {
-        return Short.parseShort ( toString () );
+        return Short.parseShort( toString() );
     }
 
 
     public BigDecimal bigDecimalValue () {
-        return new BigDecimal ( toString () );
+        return new BigDecimal( toString() );
     }
 
     public BigInteger bigIntegerValue () {
-        return new BigInteger ( toString () );
+        return new BigInteger( toString() );
     }
 
 
     @Override
     public double doubleValue () {
-        return Double.parseDouble ( toString () );
+        return Double.parseDouble( toString() );
 
     }
 
 
     @Override
     public float floatValue () {
-        return Float.parseFloat ( toString () );
+        return Float.parseFloat( toString() );
     }
 
 

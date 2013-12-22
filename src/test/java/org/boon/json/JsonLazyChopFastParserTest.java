@@ -7,7 +7,7 @@ public class JsonLazyChopFastParserTest extends JsonParserBaseTest {
 
 
     public JsonParserFactory factory () {
-        return new JsonParserFactory ().neverPreferCharSequence ().neverUseDirectBytes ().useLazyFinalParse ().setSizeToForceLazyFinalParse ( Integer.MAX_VALUE );
+        return new JsonParserFactory().neverPreferCharSequence().neverUseDirectBytes().useLazyFinalParse().setSizeToForceLazyFinalParse( Integer.MAX_VALUE );
     }
 
 }

@@ -9,9 +9,9 @@ public class UTF8ByteParser extends JsonParserBaseTest {
 
 
     public JsonParserFactory factory () {
-        return new JsonParserFactory () {
+        return new JsonParserFactory() {
             public JsonParser create () {
-                return new JsonUTF8Parser ();
+                return new JsonUTF8Parser();
             }
         };
 

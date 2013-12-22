@@ -20,38 +20,38 @@ public class StringScannerTest {
     @Test
     public void testCreateFromString () {
 
-        String[] split = StringScanner.splitByCharsNoneEmpty ( TEST_STRING, '[', ',', '"', '\\', ':', ']', '/' );
+        String[] split = StringScanner.splitByCharsNoneEmpty( TEST_STRING, '[', ',', '"', '\\', ':', ']', '/' );
 
-        String first = idx ( split, 0 );
-        String second = idx ( split, 1 );
-        String third = idx ( split, 2 );
-        String fourth = idx ( split, 3 );
-        String fifth = idx ( split, 4 );
-        String sixth = idx ( split, 5 );
-        String seventh = idx ( split, 6 );
+        String first = idx( split, 0 );
+        String second = idx( split, 1 );
+        String third = idx( split, 2 );
+        String fourth = idx( split, 3 );
+        String fifth = idx( split, 4 );
+        String sixth = idx( split, 5 );
+        String seventh = idx( split, 6 );
 
-        String last = idx ( split, -1 );
-
-
-        assertEquals ( "199984", first );
+        String last = idx( split, -1 );
 
 
-        assertEquals ( "1384795052823", second );
+        assertEquals( "199984", first );
 
 
-        assertEquals ( "127.0.0.1", third );
+        assertEquals( "1384795052823", second );
 
 
-        assertEquals ( "51706", fourth );
+        assertEquals( "127.0.0.1", third );
 
 
-        assertEquals ( "abc123", fifth );
+        assertEquals( "51706", fourth );
 
-        assertEquals ( "rickHigh", sixth );
-        assertEquals ( "217.0.0.1", seventh );
-        assertEquals ( "asdfasdf", last );
 
-        assertEquals ( 12, len ( split ) );
+        assertEquals( "abc123", fifth );
+
+        assertEquals( "rickHigh", sixth );
+        assertEquals( "217.0.0.1", seventh );
+        assertEquals( "asdfasdf", last );
+
+        assertEquals( 12, len( split ) );
 
 
     }
@@ -60,28 +60,28 @@ public class StringScannerTest {
     @Test
     public void testSimple () {
 
-        String[] split = StringScanner.splitByCharsNoneEmpty ( "1,2,3", ',' );
+        String[] split = StringScanner.splitByCharsNoneEmpty( "1,2,3", ',' );
 
-        String firstArg = idx ( split, 0 );
+        String firstArg = idx( split, 0 );
 
-        assertEquals ( "1", firstArg );
+        assertEquals( "1", firstArg );
     }
 
     @Test
     public void testSimple2 () {
 
-        String[] split = StringScanner.splitByCharsNoneEmpty ( "1,2,,4", ',' );
+        String[] split = StringScanner.splitByCharsNoneEmpty( "1,2,,4", ',' );
 
-        String firstArg = idx ( split, 0 );
-        String second = idx ( split, 1 );
-        String third = idx ( split, 2 );
+        String firstArg = idx( split, 0 );
+        String second = idx( split, 1 );
+        String third = idx( split, 2 );
 
-        assertEquals ( "1", firstArg );
+        assertEquals( "1", firstArg );
 
-        assertEquals ( "2", second );
+        assertEquals( "2", second );
 
 
-        assertEquals ( "4", third );
+        assertEquals( "4", third );
     }
 
 }

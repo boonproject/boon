@@ -17,30 +17,30 @@ import org.boon.validation.ValidatorMessageHolder;
 public class RequiredValidator extends BaseValidator {
 
     public void init () {
-        if ( Str.isEmpty ( this.getDetailMessage () ) ) {
-            this.setDetailMessage ( "{validator.required.detail}" );
+        if ( Str.isEmpty( this.getDetailMessage() ) ) {
+            this.setDetailMessage( "{validator.required.detail}" );
         }
 
-        if ( !this.isNoSummary () ) {
-            if ( Str.isEmpty ( this.getSummaryMessage () ) ) {
-                this.setSummaryMessage ( "{validator.required.summary}" );
+        if ( !this.isNoSummary() ) {
+            if ( Str.isEmpty( this.getSummaryMessage() ) ) {
+                this.setSummaryMessage( "{validator.required.summary}" );
             }
         }
     }
 
     public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
-        ValidatorMessage message = new ValidatorMessage ();
+        ValidatorMessage message = new ValidatorMessage();
 
         if ( object instanceof String ) {
             String string = ( String ) object;
-            boolean valid = string != null && !string.trim ().equals ( "" );
+            boolean valid = string != null && !string.trim().equals( "" );
             if ( !valid ) {
-                populateMessage ( message, fieldLabel );
+                populateMessage( message, fieldLabel );
             }
 
         } else {
             if ( object == null ) {
-                populateMessage ( message, fieldLabel );
+                populateMessage( message, fieldLabel );
             }
         }
 

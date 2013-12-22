@@ -14,7 +14,7 @@ class MultiValue<T> {
 
     public static <T> MultiValue<T> add ( MultiValue<T> org, T newItem, int bucketSize ) {
         if ( org == null ) {
-            return new MultiValue<> ( newItem, bucketSize );
+            return new MultiValue<>( newItem, bucketSize );
         } else {
 
             //This fixes Jeff's issues but introduces a performance problem.
@@ -28,7 +28,7 @@ class MultiValue<T> {
 //            if ( ! found ) {
 //                org.add(newItem);
 //            }
-            org.add ( newItem );
+            org.add( newItem );
         }
         return org;
     }
@@ -39,10 +39,10 @@ class MultiValue<T> {
         }
 
         if ( removeItem != null ) {
-            org.remove ( removeItem );
+            org.remove( removeItem );
         }
 
-        return org.size () == 0 ? null : org;
+        return org.size() == 0 ? null : org;
     }
 
     private MultiValue () {
@@ -50,23 +50,23 @@ class MultiValue<T> {
     }
 
     private MultiValue ( T item, int bucketSize ) {
-        values = new ArrayList ( bucketSize );
-        values.add ( item );
+        values = new ArrayList( bucketSize );
+        values.add( item );
 
     }
 
     private void add ( T item ) {
 
-        values.add ( item );
+        values.add( item );
     }
 
     private void remove ( T item ) {
-        values.remove ( item );
+        values.remove( item );
     }
 
     T getValue () {
 
-        return ( values.size () > 0 ) ? values.get ( 0 ) : null;
+        return ( values.size() > 0 ) ? values.get( 0 ) : null;
     }
 
     final List<T> getValues () {
@@ -75,11 +75,11 @@ class MultiValue<T> {
 
 
     int size () {
-        return values.size ();
+        return values.size();
     }
 
     void addTo ( List<T> results ) {
-        results.addAll ( values );
+        results.addAll( values );
     }
 
 

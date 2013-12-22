@@ -15,12 +15,12 @@ public class Meta2 {
     }
 
 
-    List<Meta3> metas3 = new ArrayList<> ();
+    List<Meta3> metas3 = new ArrayList<>();
 
     {
-        metas3.add ( new Meta3 ( "3tag1" ) );
-        metas3.add ( new Meta3 ( "3tag2" ) );
-        metas3.add ( new Meta3 ( "3tag3" ) );
+        metas3.add( new Meta3( "3tag1" ) );
+        metas3.add( new Meta3( "3tag2" ) );
+        metas3.add( new Meta3( "3tag3" ) );
 
     }
 

@@ -12,7 +12,7 @@ public class Employee {
     private String id;
     private Date birthDate;
     private int salary;
-    private Department department = new Department ();
+    private Department department = new Department();
     private long empNum;
     //private int _hashCode = -1;
 
@@ -24,24 +24,24 @@ public class Employee {
         this.id = id;
     }
 
-    List<Tag> tags = new ArrayList<> ();
+    List<Tag> tags = new ArrayList<>();
 
     {
-        tags.add ( new Tag ( "tag1" ) );
-        tags.add ( new Tag ( "tag2" ) );
-        tags.add ( new Tag ( "tag3" ) );
+        tags.add( new Tag( "tag1" ) );
+        tags.add( new Tag( "tag2" ) );
+        tags.add( new Tag( "tag3" ) );
 
     }
 
-    public static long num = System.currentTimeMillis ();
+    public static long num = System.currentTimeMillis();
 
     {
-        setEmpNum ( num );
+        setEmpNum( num );
         num++;
     }
 
     public static Employee employee ( String f, String l ) {
-        return employee ( f, l, "" + System.nanoTime (), "05.05.50", 100_000_000, false );
+        return employee( f, l, "" + System.nanoTime(), "05.05.50", 100_000_000, false );
 
     }
 
@@ -49,11 +49,11 @@ public class Employee {
         Employee e = null;
 
         if ( sales ) {
-            e = new SalesEmployee ( 1 );
+            e = new SalesEmployee( 1 );
         } else {
-            e = new Employee ();
+            e = new Employee();
         }
-        e.birthDate = Conversions.toDate ( d );
+        e.birthDate = Conversions.toDate( d );
         e.lastName = l;
         e.firstName = f;
         e.id = s;
@@ -63,8 +63,8 @@ public class Employee {
     }
 
     public static Employee employee ( String f, String l, String s, String d, int salary ) {
-        Employee e = new Employee ();
-        e.birthDate = Conversions.toDate ( d );
+        Employee e = new Employee();
+        e.birthDate = Conversions.toDate( d );
         e.lastName = l;
         e.firstName = f;
         e.id = s;
@@ -73,9 +73,9 @@ public class Employee {
     }
 
     public static List<Employee> employees ( Employee... _employees ) {
-        List<Employee> employees = new ArrayList<Employee> ( _employees.length );
+        List<Employee> employees = new ArrayList<Employee>( _employees.length );
         for ( Employee emp : _employees ) {
-            employees.add ( emp );
+            employees.add( emp );
         }
         return employees;
     }
@@ -116,14 +116,14 @@ public class Employee {
     @Override
     public boolean equals ( Object o ) {
         if ( this == o ) return true;
-        if ( o == null || getClass () != o.getClass () ) return false;
+        if ( o == null || getClass() != o.getClass() ) return false;
 
         Employee employee = ( Employee ) o;
 
-        if ( birthDate != null ? !birthDate.equals ( employee.birthDate ) : employee.birthDate != null ) return false;
-        if ( firstName != null ? !firstName.equals ( employee.firstName ) : employee.firstName != null ) return false;
-        if ( lastName != null ? !lastName.equals ( employee.lastName ) : employee.lastName != null ) return false;
-        if ( id != null ? !id.equals ( employee.id ) : employee.id != null ) return false;
+        if ( birthDate != null ? !birthDate.equals( employee.birthDate ) : employee.birthDate != null ) return false;
+        if ( firstName != null ? !firstName.equals( employee.firstName ) : employee.firstName != null ) return false;
+        if ( lastName != null ? !lastName.equals( employee.lastName ) : employee.lastName != null ) return false;
+        if ( id != null ? !id.equals( employee.id ) : employee.id != null ) return false;
 
         return true;
     }
@@ -133,10 +133,10 @@ public class Employee {
 //        if (_hashCode != -1) {
 //            return _hashCode;
 //        }
-        int result = firstName != null ? firstName.hashCode () : 0;
-        result = 31 * result + ( lastName != null ? lastName.hashCode () : 0 );
-        result = 31 * result + ( id != null ? id.hashCode () : 0 );
-        result = 31 * result + ( birthDate != null ? birthDate.hashCode () : 0 );
+        int result = firstName != null ? firstName.hashCode() : 0;
+        result = 31 * result + ( lastName != null ? lastName.hashCode() : 0 );
+        result = 31 * result + ( id != null ? id.hashCode() : 0 );
+        result = 31 * result + ( birthDate != null ? birthDate.hashCode() : 0 );
         return result;
     }
 
@@ -157,8 +157,8 @@ public class Employee {
                 ", id='" + id + '\'' +
                 ", birthDate=" + birthDate +
                 ", salary=" + salary +
-                ", department=" + getDepartment () +
-                ", empNum=" + getEmpNum () +
+                ", department=" + getDepartment() +
+                ", empNum=" + getEmpNum() +
                 ", tags=" + tags +
                 '}';
     }

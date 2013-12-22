@@ -24,6 +24,6 @@ public class Not extends Criteria {
 
     @Override
     public boolean resolve ( Map<String, FieldAccess> fields, Object owner ) {
-        return !this.expression.resolve ( fields, owner );
+        return !this.expression.resolve( fields, owner );
     }
 }

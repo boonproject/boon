@@ -34,7 +34,7 @@ public class DataRepoExamples {
 
     @Test
     public void test () {
-        DataRepoExamples.main ();
+        DataRepoExamples.main();
     }
 
     public static void main ( String... args ) {
@@ -46,110 +46,110 @@ public class DataRepoExamples {
         /* Create a repo builder that creates a user repo.
         *  A repo is just a new type of collection that allows queries.
         * */
-        RepoBuilder repoBuilder = Repos.builder ();
-        repoBuilder.primaryKey ( EMAIL );
+        RepoBuilder repoBuilder = Repos.builder();
+        repoBuilder.primaryKey( EMAIL );
 
 
         /** Create a repo of type String.class and User.class */
-        final Repo<String, User> userRepo = repoBuilder.build ( Typ.string, user );
+        final Repo<String, User> userRepo = repoBuilder.build( Typ.string, user );
 
-        final List<User> users = Lists.list (
-                user ( "rick.hightower@foo.com" ),
-                user ( "bob.jones@foo.com" ),
-                user ( "sam.jones@google.com" )
+        final List<User> users = Lists.list(
+                user( "rick.hightower@foo.com" ),
+                user( "bob.jones@foo.com" ),
+                user( "sam.jones@google.com" )
         );
 
 
-        userRepo.addAll ( users );
+        userRepo.addAll( users );
 
         /** SliceNotationExample 1: Query with eq. */
 
         /** Simple query. */
         List<User> results =
-                userRepo.query ( eq ( EMAIL, "rick.hightower@foo.com" ) );
+                userRepo.query( eq( EMAIL, "rick.hightower@foo.com" ) );
 
-        putl ( "SliceNotationExample 1: Simple Query using Equals Results", results );
+        putl( "SliceNotationExample 1: Simple Query using Equals Results", results );
 
         /** Same as results.get(0) */
-        User rick = idx ( results, 0 );
+        User rick = idx( results, 0 );
 
         /* Make sure we got what we wanted. */
-        test |= Objects.equals ( rick.getEmail (), "rick.hightower@foo.com" ) ||
-                die ( "Rick's email not equal to 'rick.hightower@foo.com' " );
+        test |= Objects.equals( rick.getEmail(), "rick.hightower@foo.com" ) ||
+                die( "Rick's email not equal to 'rick.hightower@foo.com' " );
 
 
         ////// 2
         /** SliceNotationExample 2: Simple not query. */
         results =
-                userRepo.query ( notEq ( EMAIL, "rick.hightower@foo.com" ) );
+                userRepo.query( notEq( EMAIL, "rick.hightower@foo.com" ) );
 
-        putl ( "SliceNotationExample 2: Simple Query using Not Equals Results", results );
+        putl( "SliceNotationExample 2: Simple Query using Not Equals Results", results );
 
         /** Same as results.get(0) */
-        User notRick = idx ( results, 0 );
+        User notRick = idx( results, 0 );
 
-        putl ( notRick );
+        putl( notRick );
 
         /* Make sure we got what we wanted. */
-        test |= !Objects.equals ( notRick.getEmail (), "rick.hightower@foo.com" ) ||
-                die ( "User Not Rick's email should NOT be equal " +
+        test |= !Objects.equals( notRick.getEmail(), "rick.hightower@foo.com" ) ||
+                die( "User Not Rick's email should NOT be equal " +
                         "to 'rick.hightower@foo.com' " );
 
 
         /////// 3
         /** SliceNotationExample 3: Simple query using ResultSet.firstItem. */
         rick =
-                userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) ).firstItem ();
-        putl ( "SliceNotationExample 3: Simple query using ResultSet.firstItem", rick );
+                userRepo.results( eq( EMAIL, "rick.hightower@foo.com" ) ).firstItem();
+        putl( "SliceNotationExample 3: Simple query using ResultSet.firstItem", rick );
 
 
                 /* Make sure we got what we wanted. */
-        test |= Objects.equals ( rick.getEmail (), "rick.hightower@foo.com" ) ||
-                die ( "Rick's email not equal to 'rick.hightower@foo.com' " );
+        test |= Objects.equals( rick.getEmail(), "rick.hightower@foo.com" ) ||
+                die( "Rick's email not equal to 'rick.hightower@foo.com' " );
 
 
         /////// 4
         /** SliceNotationExample 4: Expect only one item with expectOne().firstItem() . */
         rick = ( User )     //expectOne is not generic
-                userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) )
-                        .expectOne ().firstItem ();
-        putl ( "SliceNotationExample 4: Simple query using ResultSet.expectOne().firstItem", rick );
+                userRepo.results( eq( EMAIL, "rick.hightower@foo.com" ) )
+                        .expectOne().firstItem();
+        putl( "SliceNotationExample 4: Simple query using ResultSet.expectOne().firstItem", rick );
 
 
                 /* Make sure we got what we wanted. */
-        test |= Objects.equals ( rick.getEmail (), "rick.hightower@foo.com" ) ||
-                die ( "Rick's email not equal to 'rick.hightower@foo.com' " );
+        test |= Objects.equals( rick.getEmail(), "rick.hightower@foo.com" ) ||
+                die( "Rick's email not equal to 'rick.hightower@foo.com' " );
 
 
         /////// 5
         /** SliceNotationExample 5: Expect only one item with expectOne(user).firstItem() . */
-        rick = userRepo.results ( eq ( EMAIL, "rick.hightower@foo.com" ) )
-                .expectOne ( user ).firstItem ();
-        putl ( "SliceNotationExample 5: Simple query using ResultSet.expectOne(user).firstItem", rick );
+        rick = userRepo.results( eq( EMAIL, "rick.hightower@foo.com" ) )
+                .expectOne( user ).firstItem();
+        putl( "SliceNotationExample 5: Simple query using ResultSet.expectOne(user).firstItem", rick );
 
 
                 /* Make sure we got what we wanted. */
-        test |= Objects.equals ( rick.getEmail (), "rick.hightower@foo.com" ) ||
-                die ( "Rick's email not equal to 'rick.hightower@foo.com' " );
+        test |= Objects.equals( rick.getEmail(), "rick.hightower@foo.com" ) ||
+                die( "Rick's email not equal to 'rick.hightower@foo.com' " );
 
 
         /////// 6
         /** SliceNotationExample 6: Expect only one item with expectOne(user).firstItem() and we have many. */
 
         try {
-            putl ( "SliceNotationExample 6: Failure case, we have more than one for",
+            putl( "SliceNotationExample 6: Failure case, we have more than one for",
                     "query using ResultSet.expectOne(user).firstItem" );
 
-            rick = userRepo.results ( notEq ( EMAIL, "rick.hightower@foo.com" ) )
-                    .expectOne ( user ).firstItem ();
-            die ( "We should never get here!" );
+            rick = userRepo.results( notEq( EMAIL, "rick.hightower@foo.com" ) )
+                    .expectOne( user ).firstItem();
+            die( "We should never get here!" );
 
         } catch ( DataRepoException ex ) {
-            puts ( "success for SliceNotationExample 6" );
+            puts( "success for SliceNotationExample 6" );
         }
 
 
-        runComponentClassTestForIssue ();
+        runComponentClassTestForIssue();
 
 
     }
@@ -157,7 +157,7 @@ public class DataRepoExamples {
     private static void runComponentClassTestForIssue () {
         //TESTS
 
-        putl ( "EXAMPLE: Simple Composite Object query example",
+        putl( "EXAMPLE: Simple Composite Object query example",
                 "See com.examples.model.test",
                 "See Email and UserEmail classes",
                 "__________________________________________"
@@ -166,63 +166,63 @@ public class DataRepoExamples {
 
         boolean ok = true;
 
-        RepoBuilder repoBuilder = Repos.builder ();
+        RepoBuilder repoBuilder = Repos.builder();
 
-        repoBuilder.usePropertyForAccess ( true );
-
-
-        putl ( "The primary key is set to email" );
-
-        repoBuilder.primaryKey ( "email" );
+        repoBuilder.usePropertyForAccess( true );
 
 
-        putl ( "For ease of use you can setup nested properties ",
+        putl( "The primary key is set to email" );
+
+        repoBuilder.primaryKey( "email" );
+
+
+        putl( "For ease of use you can setup nested properties ",
                 "UserEmail.email property is a Email object not a string",
                 "Email.email is a string." );
 
         //You can index component objects if you want
-        repoBuilder.nestedIndex ( "email", "email" );
+        repoBuilder.nestedIndex( "email", "email" );
 
 
         /** Create a repo of type String.class and User.class */
-        final Repo<Email, UserEmail> userRepo = repoBuilder.build (
+        final Repo<Email, UserEmail> userRepo = repoBuilder.build(
                 Email.class, UserEmail.class );
 
 
-        puts ( "Adding three test objects for bob, sam and joe " );
-        userRepo.add ( new UserEmail ( "bob@bob.com" ) );
-        userRepo.add ( new UserEmail ( "sam@bob.com" ) );
-        userRepo.add ( new UserEmail ( "joe@bob.com" ) );
+        puts( "Adding three test objects for bob, sam and joe " );
+        userRepo.add( new UserEmail( "bob@bob.com" ) );
+        userRepo.add( new UserEmail( "sam@bob.com" ) );
+        userRepo.add( new UserEmail( "joe@bob.com" ) );
 
 
-        putl ( "Query using nested query Repo.eqNestedAdvanced()" );
-        UserEmail bob = ( UserEmail ) userRepo.results (
-                eqNestedAdvanced ( "bob@bob.com", "email", "email" ) )
-                .expectOne ().firstItem ();
+        putl( "Query using nested query Repo.eqNestedAdvanced()" );
+        UserEmail bob = ( UserEmail ) userRepo.results(
+                eqNestedAdvanced( "bob@bob.com", "email", "email" ) )
+                .expectOne().firstItem();
 
-        ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die ();
+        ok |= bob.getEmail().getEmail().equals( "bob@bob.com" ) || die();
 
 
-        putl ( "Avoid the cast with using nested query Repo.eqNestedAdvanced(UserEmail.class)" );
+        putl( "Avoid the cast with using nested query Repo.eqNestedAdvanced(UserEmail.class)" );
 
         //NOT IN JDK7 Branch yet , but there is a generic version coming
-        bob = userRepo.results ( eqNestedAdvanced ( "bob@bob.com", "email", "email" ) )
-                .expectOne ( UserEmail.class ).firstItem ();
+        bob = userRepo.results( eqNestedAdvanced( "bob@bob.com", "email", "email" ) )
+                .expectOne( UserEmail.class ).firstItem();
 
 
-        ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die ();
+        ok |= bob.getEmail().getEmail().equals( "bob@bob.com" ) || die();
 
 
-        Email email = new Email ( "bob@bob.com" );
-        bob = ( UserEmail ) userRepo.results ( eq ( EMAIL, email ) )
-                .expectOne ().firstItem ();
+        Email email = new Email( "bob@bob.com" );
+        bob = ( UserEmail ) userRepo.results( eq( EMAIL, email ) )
+                .expectOne().firstItem();
 
-        ok |= bob.getEmail ().getEmail ().equals ( "bob@bob.com" ) || die ();
+        ok |= bob.getEmail().getEmail().equals( "bob@bob.com" ) || die();
 
-        puts ( "success=", ok );
+        puts( "success=", ok );
 
 
-        putl ( "__________________________________________",
+        putl( "__________________________________________",
                 "__________________________________________",
                 "__________________________________________" );
 

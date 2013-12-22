@@ -24,7 +24,7 @@ public class BeanUtils {
      * @return
      */
     public static Map<String, FieldAccess> getPropertyFieldAccessMap ( Class<?> clazz ) {
-        return Reflection.getPropertyFieldAccessMapFieldFirst ( clazz );
+        return Reflection.getPropertyFieldAccessMapFieldFirst( clazz );
     }
 
 
@@ -38,10 +38,10 @@ public class BeanUtils {
     public static Map<String, FieldAccess> getFieldsFromObject ( Object item ) {
         Map<String, FieldAccess> fields = null;
 
-        fields = getPropertyFieldAccessMap ( item.getClass () );
+        fields = getPropertyFieldAccessMap( item.getClass() );
 
         if ( item instanceof Map ) {
-            fields = getFieldsFromMap ( fields, ( Map<String, Object> ) item );
+            fields = getFieldsFromMap( fields, ( Map<String, Object> ) item );
         }
         return fields;
 
@@ -57,8 +57,8 @@ public class BeanUtils {
      */
     private static Map<String, FieldAccess> getFieldsFromMap ( Map<String, FieldAccess> fields, Map<String, Object> map ) {
 
-        for ( Map.Entry<String, Object> entry : map.entrySet () ) {
-            fields.put ( entry.getKey (), new MapField ( entry.getKey () ) );
+        for ( Map.Entry<String, Object> entry : map.entrySet() ) {
+            fields.put( entry.getKey(), new MapField( entry.getKey() ) );
         }
         return fields;
 
@@ -73,8 +73,8 @@ public class BeanUtils {
      * @return
      */
     public static void setPropertyValue ( final Object root, final Object newValue, final String... properties ) {
-        Objects.requireNonNull ( root );
-        Objects.requireNonNull ( properties );
+        Objects.requireNonNull( root );
+        Objects.requireNonNull( properties );
 
 
         Object object = root;
@@ -82,32 +82,32 @@ public class BeanUtils {
 
         int index = 0;
         for ( String property : properties ) {
-            Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+            Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
 
-            FieldAccess field = fields.get ( property );
+            FieldAccess field = fields.get( property );
 
 
-            if ( isDigits ( property ) ) {
+            if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-                object = Reflection.idx ( object, Integer.parseInt ( property ) );
+                object = Reflection.idx( object, Integer.parseInt( property ) );
 
             } else {
 
                 if ( field == null ) {
-                    die ( sputs (
+                    die( sputs(
                             "We were unable to access property=", property,
                             "\nThe properties passed were=", properties,
-                            "\nThe root object is =", root.getClass ().getName (),
-                            "\nThe current object is =", object.getClass ().getName ()
+                            "\nThe root object is =", root.getClass().getName(),
+                            "\nThe current object is =", object.getClass().getName()
                     )
                     );
                 }
 
 
                 if ( index == properties.length - 1 ) {
-                    field.setValue ( object, newValue );
+                    field.setValue( object, newValue );
                 } else {
-                    object = field.getObject ( object );
+                    object = field.getObject( object );
                 }
             }
 
@@ -125,35 +125,35 @@ public class BeanUtils {
      * @return
      */
     public static Object getPropertyValue ( final Object root, final String... properties ) {
-        Objects.requireNonNull ( root );
-        Objects.requireNonNull ( properties );
+        Objects.requireNonNull( root );
+        Objects.requireNonNull( properties );
 
 
         Object object = root;
 
         for ( String property : properties ) {
 
-            Map<String, FieldAccess> fields = getFieldsFromObject ( object );
+            Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
-            FieldAccess field = fields.get ( property );
+            FieldAccess field = fields.get( property );
 
-            if ( isDigits ( property ) ) {
+            if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-                object = Reflection.idx ( object, Integer.parseInt ( property ) );
+                object = Reflection.idx( object, Integer.parseInt( property ) );
 
             } else {
 
                 if ( field == null ) {
-                    die ( sputs (
+                    die( sputs(
                             "We were unable to access property=", property,
                             "\nThe properties passed were=", properties,
-                            "\nThe root object is =", root.getClass ().getName (),
-                            "\nThe current object is =", object.getClass ().getName ()
+                            "\nThe root object is =", root.getClass().getName(),
+                            "\nThe current object is =", object.getClass().getName()
                     )
                     );
                 }
 
-                object = field.getObject ( object );
+                object = field.getObject( object );
             }
         }
         return object;
@@ -168,31 +168,31 @@ public class BeanUtils {
      * @return
      */
     public static Class<?> getPropertyType ( final Object root, final String property ) {
-        Objects.requireNonNull ( root );
-        Objects.requireNonNull ( property );
+        Objects.requireNonNull( root );
+        Objects.requireNonNull( property );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( root.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( root.getClass() );
 
-        FieldAccess field = fields.get ( property );
-        return field.getType ();
+        FieldAccess field = fields.get( property );
+        return field.getType();
     }
 
 
-    @SuppressWarnings ( "unchecked" )
+    @SuppressWarnings ("unchecked")
     public static <T> T idxGeneric ( Class<T> t, Object object, final String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return ( T ) getPropByPath ( object, properties );
+        return ( T ) getPropByPath( object, properties );
 
 
     }
 
     public static <T> List<T> idxList ( Class<T> cls, Object items, String... path ) {
-        return ( List<T> ) getPropByPath ( items, path );
+        return ( List<T> ) getPropByPath( items, path );
     }
 
 
@@ -209,14 +209,14 @@ public class BeanUtils {
             String propName = path[ index ];
             if ( o == null ) {
                 return null;
-            } else if ( Reflection.isArray ( o ) || o instanceof Collection ) {
-                o = getCollecitonProp ( o, propName, index, path );
+            } else if ( Reflection.isArray( o ) || o instanceof Collection ) {
+                o = getCollecitonProp( o, propName, index, path );
                 break;
             } else {
-                o = getProp ( o, propName );
+                o = getProp( o, propName );
             }
         }
-        return Conversions.unifyList ( o );
+        return Conversions.unifyList( o );
     }
 
 
@@ -229,12 +229,12 @@ public class BeanUtils {
      */
     public static Object idx ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyValue ( object, properties );
+        return getPropertyValue( object, properties );
     }
 
     /**
@@ -243,12 +243,12 @@ public class BeanUtils {
      * @return
      */
     public static Object idxRelax ( Object object, final String path ) {
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropByPath ( object, properties );
+        return getPropByPath( object, properties );
     }
 
 
@@ -257,13 +257,13 @@ public class BeanUtils {
      * nested collection to pull out the leaf nodes
      */
     private static Object getCollecitonProp ( Object o, String propName, int index, String[] path ) {
-        o = Reflection.getFieldValues ( o, propName );
+        o = Reflection.getFieldValues( o, propName );
 
         if ( index + 1 == path.length ) {
             return o;
         } else {
             index++;
-            return getCollecitonProp ( o, path[ index ], index, path );
+            return getCollecitonProp( o, path[ index ], index, path );
         }
     }
 
@@ -281,25 +281,25 @@ public class BeanUtils {
             return null;
         }
 
-        if ( isDigits ( property ) ) {
+        if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-            object = Reflection.idx ( object, Integer.parseInt ( property ) );
+            object = Reflection.idx( object, Integer.parseInt( property ) );
 
         }
 
-        Class<?> cls = object.getClass ();
+        Class<?> cls = object.getClass();
 
         /** Tries the getters first. */
-        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessors ( cls );
+        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessors( cls );
 
-        if ( !fields.containsKey ( property ) ) {
-            fields = Reflection.getAllAccessorFields ( cls );
+        if ( !fields.containsKey( property ) ) {
+            fields = Reflection.getAllAccessorFields( cls );
         }
 
-        if ( !fields.containsKey ( property ) ) {
+        if ( !fields.containsKey( property ) ) {
             return null;
         } else {
-            return fields.get ( property ).getValue ( object );
+            return fields.get( property ).getValue( object );
         }
 
     }
@@ -310,20 +310,20 @@ public class BeanUtils {
      */
     public static int getPropertyInt ( final Object root, final String... properties ) {
 
-        Objects.requireNonNull ( root );
-        Objects.requireNonNull ( properties );
+        Objects.requireNonNull( root );
+        Objects.requireNonNull( properties );
 
 
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType () == Typ.intgr ) {
-            return field.getInt ( object );
+        if ( field.getType() == Typ.intgr ) {
+            return field.getInt( object );
         } else {
-            return Conversions.toInt ( field.getValue ( object ) );
+            return Conversions.toInt( field.getValue( object ) );
         }
 
     }
@@ -340,28 +340,28 @@ public class BeanUtils {
         Map<String, FieldAccess> fields = null;
 
         for ( int index = 0; index < properties.length - 1; index++ ) {
-            fields = getPropertyFieldAccessMap ( object.getClass () );
+            fields = getPropertyFieldAccessMap( object.getClass() );
 
             String property = properties[ index ];
-            FieldAccess field = fields.get ( property );
+            FieldAccess field = fields.get( property );
 
-            if ( isDigits ( property ) ) {
+            if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-                object = Reflection.idx ( object, Integer.parseInt ( property ) );
+                object = Reflection.idx( object, Integer.parseInt( property ) );
 
             } else {
 
                 if ( field == null ) {
-                    die ( sputs (
+                    die( sputs(
                             "We were unable to access property=", property,
                             "\nThe properties passed were=", properties,
-                            "\nThe root object is =", root.getClass ().getName (),
-                            "\nThe current object is =", object.getClass ().getName ()
+                            "\nThe root object is =", root.getClass().getName(),
+                            "\nThe current object is =", object.getClass().getName()
                     )
                     );
                 }
 
-                object = field.getObject ( object );
+                object = field.getObject( object );
             }
         }
         return object;
@@ -376,12 +376,12 @@ public class BeanUtils {
      */
     public static int idxInt ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyInt ( object, properties );
+        return getPropertyInt( object, properties );
     }
 
 
@@ -391,16 +391,16 @@ public class BeanUtils {
      * @return
      */
     public static byte getPropertyByte ( final Object root, final String... properties ) {
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType () == Typ.bt ) {
-            return field.getByte ( object );
+        if ( field.getType() == Typ.bt ) {
+            return field.getByte( object );
         } else {
-            return Conversions.toByte ( field.getValue ( object ) );
+            return Conversions.toByte( field.getValue( object ) );
         }
     }
 
@@ -411,12 +411,12 @@ public class BeanUtils {
      */
     public static byte idxByte ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyByte ( object, properties );
+        return getPropertyByte( object, properties );
     }
 
     /**
@@ -425,16 +425,16 @@ public class BeanUtils {
      * @return
      */
     public static float getPropertyFloat ( final Object root, final String... properties ) {
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType () == Typ.flt ) {
-            return field.getFloat ( object );
+        if ( field.getType() == Typ.flt ) {
+            return field.getFloat( object );
         } else {
-            return Conversions.toFloat ( field.getValue ( object ) );
+            return Conversions.toFloat( field.getValue( object ) );
         }
     }
 
@@ -446,12 +446,12 @@ public class BeanUtils {
      */
     public static float idxFloat ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyFloat ( object, properties );
+        return getPropertyFloat( object, properties );
     }
 
 
@@ -464,17 +464,17 @@ public class BeanUtils {
                                            final String... properties ) {
 
 
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
 
-        if ( field.getType () == Typ.shrt ) {
-            return field.getShort ( object );
+        if ( field.getType() == Typ.shrt ) {
+            return field.getShort( object );
         } else {
-            return Conversions.toShort ( field.getValue ( object ) );
+            return Conversions.toShort( field.getValue( object ) );
         }
     }
 
@@ -486,12 +486,12 @@ public class BeanUtils {
      */
     public static short idxShort ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyShort ( object, properties );
+        return getPropertyShort( object, properties );
     }
 
     /**
@@ -502,16 +502,16 @@ public class BeanUtils {
     public static char getPropertyChar ( final Object root,
                                          final String... properties ) {
 
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType () == Typ.chr ) {
-            return field.getChar ( object );
+        if ( field.getType() == Typ.chr ) {
+            return field.getChar( object );
         } else {
-            return Conversions.toChar ( field.getValue ( object ) );
+            return Conversions.toChar( field.getValue( object ) );
         }
     }
 
@@ -523,12 +523,12 @@ public class BeanUtils {
      */
     public static char idxChar ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyChar ( object, properties );
+        return getPropertyChar( object, properties );
     }
 
 
@@ -541,16 +541,16 @@ public class BeanUtils {
                                              final String... properties ) {
 
 
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType () == Typ.dbl ) {
-            return field.getDouble ( object );
+        if ( field.getType() == Typ.dbl ) {
+            return field.getDouble( object );
         } else {
-            return Conversions.toDouble ( field.getValue ( object ) );
+            return Conversions.toDouble( field.getValue( object ) );
         }
     }
 
@@ -562,12 +562,12 @@ public class BeanUtils {
      */
     public static double idxDouble ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyDouble ( object, properties );
+        return getPropertyDouble( object, properties );
     }
 
 
@@ -580,16 +580,16 @@ public class BeanUtils {
                                          final String... properties ) {
 
 
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType () == Typ.lng ) {
-            return field.getLong ( object );
+        if ( field.getType() == Typ.lng ) {
+            return field.getLong( object );
         } else {
-            return Conversions.toLong ( field.getValue ( object ) );
+            return Conversions.toLong( field.getValue( object ) );
         }
     }
 
@@ -601,12 +601,12 @@ public class BeanUtils {
      */
     public static long idxLong ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyLong ( object, properties );
+        return getPropertyLong( object, properties );
     }
 
 
@@ -619,37 +619,37 @@ public class BeanUtils {
                                                final String... properties ) {
 
 
-        Object object = baseForGetProperty ( root, properties );
+        Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap ( object.getClass () );
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
         final String lastProperty = properties[ properties.length - 1 ];
-        FieldAccess field = fields.get ( lastProperty );
+        FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType () == Typ.bln ) {
-            return field.getBoolean ( object );
+        if ( field.getType() == Typ.bln ) {
+            return field.getBoolean( object );
         } else {
-            return Conversions.toBoolean ( field.getValue ( object ) );
+            return Conversions.toBoolean( field.getValue( object ) );
         }
     }
 
 
     public static boolean idxBoolean ( Object object, String path ) {
 
-        Objects.requireNonNull ( object );
-        Objects.requireNonNull ( path );
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters ( path, ".[]" );
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
-        return getPropertyBoolean ( object, properties );
+        return getPropertyBoolean( object, properties );
     }
 
 
     public static <V> Map<String, V> collectionToMap ( String propertyKey, Collection<V> values ) {
-        LinkedHashMap<String, V> map = new LinkedHashMap<String, V> ( values.size () );
-        Iterator<V> iterator = values.iterator ();
+        LinkedHashMap<String, V> map = new LinkedHashMap<String, V>( values.size() );
+        Iterator<V> iterator = values.iterator();
         for ( V v : values ) {
-            String key = idxGeneric ( Typ.string, v, propertyKey );
-            map.put ( key, v );
+            String key = idxGeneric( Typ.string, v, propertyKey );
+            map.put( key, v );
         }
         return map;
     }
@@ -657,9 +657,9 @@ public class BeanUtils {
 
     public static void copyProperties ( Object object, Map<String, Object> properties ) {
 
-        Set<Map.Entry<String, Object>> props = properties.entrySet ();
+        Set<Map.Entry<String, Object>> props = properties.entrySet();
         for ( Map.Entry<String, Object> entry : props ) {
-            setPropertyValue ( object, entry.getValue (), entry.getKey () );
+            setPropertyValue( object, entry.getValue(), entry.getKey() );
         }
     }
 

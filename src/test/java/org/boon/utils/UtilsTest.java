@@ -11,11 +11,11 @@ public class UtilsTest {
     public void testCamel () throws Exception {
         String myFoo = "MY FOO_BAR_FUN\t_STUFF";
 
-        String camelCaseUpper = Str.camelCaseUpper ( myFoo );
-        assertEquals ( "MyFooBarFunStuff", camelCaseUpper );
+        String camelCaseUpper = Str.camelCaseUpper( myFoo );
+        assertEquals( "MyFooBarFunStuff", camelCaseUpper );
 
-        String camelCaseLower = Str.camelCaseLower ( myFoo );
-        assertEquals ( "myFooBarFunStuff", camelCaseLower );
+        String camelCaseLower = Str.camelCaseLower( myFoo );
+        assertEquals( "myFooBarFunStuff", camelCaseLower );
 
     }
 
@@ -23,8 +23,8 @@ public class UtilsTest {
     public void testUnderBarCase () throws Exception {
         String myFoo = "FooFunFaceFact";
 
-        String underBar = Str.underBarCase ( myFoo );
-        assertEquals ( "FOO_FUN_FACE_FACT", underBar );
+        String underBar = Str.underBarCase( myFoo );
+        assertEquals( "FOO_FUN_FACE_FACT", underBar );
 
     }
 
@@ -32,8 +32,8 @@ public class UtilsTest {
     public void testUnderBarCase2 () throws Exception {
         String myFoo = "FooFunFaceFact Fire Free FOO foo\tbar";
 
-        String underBar = Str.underBarCase ( myFoo );
-        assertEquals ( "FOO_FUN_FACE_FACT_FIRE_FREE_FOO_FOO_BAR", underBar );
+        String underBar = Str.underBarCase( myFoo );
+        assertEquals( "FOO_FUN_FACE_FACT_FIRE_FREE_FOO_FOO_BAR", underBar );
 
     }
 

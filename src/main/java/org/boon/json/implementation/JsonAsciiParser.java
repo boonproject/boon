@@ -9,7 +9,7 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
 
 
     protected final void addChar () {
-        builder.addChar ( __currentChar );
+        builder.addChar( __currentChar );
     }
 
 }

@@ -14,34 +14,34 @@ import static org.boon.core.reflection.Conversions.toList;
 public class NestedKeySearchIndex extends BaseIndexWrapper {
 
     public NestedKeySearchIndex ( String... path ) {
-        super ( path );
+        super( path );
 
     }
 
     @Override
     public boolean add ( Object o ) {
 
-        List keys = getKeys ( o );
-        index.addManyKeys ( o, keys );
+        List keys = getKeys( o );
+        index.addManyKeys( o, keys );
         return true;
     }
 
     @Override
     protected List getKeys ( Object o ) {
-        Object list = BeanUtils.getPropByPath ( o, this.path );
-        return toList ( list );
+        Object list = BeanUtils.getPropByPath( o, this.path );
+        return toList( list );
     }
 
     @Override
     public boolean delete ( Object o ) {
-        List keys = getKeys ( o );
-        index.removeManyKeys ( o, keys );
+        List keys = getKeys( o );
+        index.removeManyKeys( o, keys );
 
         return true;
     }
 
     @Override
     public boolean has ( Object o ) {
-        return index.has ( o );
+        return index.has( o );
     }
 }

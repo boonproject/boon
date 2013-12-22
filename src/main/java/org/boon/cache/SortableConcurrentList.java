@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class SortableConcurrentList<T extends Comparable> implements List<T> {
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock ();
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final List<T> list;
 
     public SortableConcurrentList ( List<T> list ) {
@@ -14,277 +14,277 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     public SortableConcurrentList () {
-        this.list = new ArrayList<> ();
+        this.list = new ArrayList<>();
     }
 
     public boolean remove ( Object o ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         boolean ret;
         try {
-            ret = list.remove ( o );
+            ret = list.remove( o );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
         return ret;
     }
 
     @Override
     public boolean containsAll ( Collection<?> c ) {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.containsAll ( c );
+            return list.containsAll( c );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public boolean addAll ( Collection<? extends T> c ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            return list.addAll ( c );
+            return list.addAll( c );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
     @Override
     public boolean addAll ( int index, Collection<? extends T> c ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            return list.addAll ( index, c );
+            return list.addAll( index, c );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
     @Override
     public boolean removeAll ( Collection<?> c ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            return list.removeAll ( c );
+            return list.removeAll( c );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
     @Override
     public boolean retainAll ( Collection<?> c ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            return list.retainAll ( c );
+            return list.retainAll( c );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
     public boolean add ( T t ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         boolean ret;
         try {
-            ret = list.add ( t );
+            ret = list.add( t );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
         return ret;
     }
 
     public void clear () {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            list.clear ();
+            list.clear();
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
 
     public int size () {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.size ();
+            return list.size();
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public boolean isEmpty () {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.isEmpty ();
+            return list.isEmpty();
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     public boolean contains ( Object o ) {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.contains ( o );
+            return list.contains( o );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public Iterator<T> iterator () {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return new ArrayList<> ( list ).iterator ();
+            return new ArrayList<>( list ).iterator();
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public Object[] toArray () {
 
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.toArray ();
+            return list.toArray();
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public <T> T[] toArray ( final T[] a ) {
 
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.toArray ( a );
+            return list.toArray( a );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     public T get ( int index ) {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.get ( index );
+            return list.get( index );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public T set ( int index, T element ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            return list.set ( index, element );
+            return list.set( index, element );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
     @Override
     public void add ( int index, T element ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            list.add ( index, element );
+            list.add( index, element );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
 
     }
 
     @Override
     public T remove ( int index ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            return list.remove ( index );
+            return list.remove( index );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
     @Override
     public int indexOf ( Object o ) {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.indexOf ( o );
+            return list.indexOf( o );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public int lastIndexOf ( Object o ) {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.lastIndexOf ( o );
+            return list.lastIndexOf( o );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public ListIterator<T> listIterator () {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return new ArrayList ( list ).listIterator ();
+            return new ArrayList( list ).listIterator();
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public ListIterator<T> listIterator ( int index ) {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return new ArrayList ( list ).listIterator ( index );
+            return new ArrayList( list ).listIterator( index );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public List<T> subList ( int fromIndex, int toIndex ) {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.subList ( fromIndex, toIndex );
+            return list.subList( fromIndex, toIndex );
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
     @Override
     public String toString () {
-        readWriteLock.readLock ().lock ();
+        readWriteLock.readLock().lock();
         try {
-            return list.toString ();
+            return list.toString();
         } finally {
-            readWriteLock.readLock ().unlock ();
+            readWriteLock.readLock().unlock();
         }
     }
 
 
     public void sort () {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
 
-            Collections.sort ( list );
+            Collections.sort( list );
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 
 
     public List<T> sortAndReturnPurgeList ( float removePercent ) {
-        readWriteLock.writeLock ().lock ();
+        readWriteLock.writeLock().lock();
         try {
-            int size = list.size ();
+            int size = list.size();
             int removeSize = ( int ) ( size - ( size * removePercent ) );
             int start = size - removeSize;
 
-            Collections.sort ( list );
+            Collections.sort( list );
 
-            List<T> removeList = new ArrayList<> ( list.subList ( 0, start ) );
-            list.removeAll ( removeList );
+            List<T> removeList = new ArrayList<>( list.subList( 0, start ) );
+            list.removeAll( removeList );
             return removeList;
         } finally {
-            readWriteLock.writeLock ().unlock ();
+            readWriteLock.writeLock().unlock();
         }
     }
 }

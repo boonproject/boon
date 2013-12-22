@@ -27,15 +27,15 @@ public class LengthValidator extends BaseValidator {
      * @param fieldLabel the logical name of the value used for generating error messages
      */
     public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
-        ValidatorMessage validatorMessage = new ValidatorMessage ();
+        ValidatorMessage validatorMessage = new ValidatorMessage();
         if ( fieldValue == null ) {
             return validatorMessage;
         }
 
-        int len = Reflection.len ( fieldValue );
+        int len = Reflection.len( fieldValue );
 
         if ( !( len >= min && len <= max ) ) {
-            populateMessage ( validatorMessage, fieldLabel, min, max );
+            populateMessage( validatorMessage, fieldLabel, min, max );
         }
 
 

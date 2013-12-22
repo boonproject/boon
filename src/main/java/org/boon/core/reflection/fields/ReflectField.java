@@ -26,35 +26,35 @@ public class ReflectField implements FieldAccess {
 
     public ReflectField ( Field f ) {
         field = f;
-        isFinal = Modifier.isFinal ( field.getModifiers () );
-        isStatic = Modifier.isStatic ( field.getModifiers () );
-        isVolatile = Modifier.isVolatile ( field.getModifiers () );
+        isFinal = Modifier.isFinal( field.getModifiers() );
+        isStatic = Modifier.isStatic( field.getModifiers() );
+        isVolatile = Modifier.isVolatile( field.getModifiers() );
         qualified = isFinal || isVolatile;
         readOnly = isFinal || isStatic;
-        type = f.getType ();
-        name = f.getName ();
+        type = f.getType();
+        name = f.getName();
     }
 
     @Override
     public Object getValue ( Object obj ) {
         try {
-            Objects.requireNonNull ( field );
-            Objects.requireNonNull ( obj );
+            Objects.requireNonNull( field );
+            Objects.requireNonNull( obj );
 
-            return field.get ( obj );
+            return field.get( obj );
         } catch ( Exception e ) {
-            e.printStackTrace ();
-            analyzeError ( e, obj );
+            e.printStackTrace();
+            analyzeError( e, obj );
             return null;
         }
     }
 
     private void analyzeError ( Exception e, Object obj ) {
-        Exceptions.handle ( Str.lines (
-                e.getClass ().getName (),
-                String.format ( "cause %s", e.getCause () ),
-                String.format ( "Field info name %s, type %s, class that declared field %s", this.getName (), this.getType (), this.getField ().getDeclaringClass () ),
-                String.format ( "Type of object passed %s", obj.getClass ().getName () )
+        Exceptions.handle( Str.lines(
+                e.getClass().getName(),
+                String.format( "cause %s", e.getCause() ),
+                String.format( "Field info name %s, type %s, class that declared field %s", this.getName(), this.getType(), this.getField().getDeclaringClass() ),
+                String.format( "Type of object passed %s", obj.getClass().getName() )
         ), e );
 
     }
@@ -65,7 +65,7 @@ public class ReflectField implements FieldAccess {
         ParameterizedType type = null;
 
         if ( field != null ) {
-            Object obj = field.getGenericType ();
+            Object obj = field.getGenericType();
 
             if ( obj instanceof ParameterizedType ) {
 
@@ -82,27 +82,27 @@ public class ReflectField implements FieldAccess {
 
     public Class<?> getComponentClass () {
         if ( componentClass == null ) {
-            componentClass = doGetComponentClass ();
+            componentClass = doGetComponentClass();
         }
         return componentClass;
     }
 
 
     private Class<?> doGetComponentClass () {
-        final ParameterizedType parameterizedType = this.getParameterizedType ();
+        final ParameterizedType parameterizedType = this.getParameterizedType();
         if ( parameterizedType == null ) {
             return null;
         } else {
-            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[ 0 ] );
+            return ( Class<?> ) ( parameterizedType.getActualTypeArguments()[ 0 ] );
         }
     }
 
 
     public boolean getBoolean ( Object obj ) {
         try {
-            return field.getBoolean ( obj );
+            return field.getBoolean( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return false;
         }
 
@@ -111,9 +111,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public int getInt ( Object obj ) {
         try {
-            return field.getInt ( obj );
+            return field.getInt( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return 0;
         }
     }
@@ -121,9 +121,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public short getShort ( Object obj ) {
         try {
-            return field.getShort ( obj );
+            return field.getShort( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return 0;
         }
     }
@@ -131,9 +131,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public char getChar ( Object obj ) {
         try {
-            return field.getChar ( obj );
+            return field.getChar( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return 0;
         }
     }
@@ -141,9 +141,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public long getLong ( Object obj ) {
         try {
-            return field.getLong ( obj );
+            return field.getLong( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return 0;
         }
     }
@@ -151,9 +151,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public double getDouble ( Object obj ) {
         try {
-            return field.getDouble ( obj );
+            return field.getDouble( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return 0;
         }
 
@@ -162,9 +162,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public float getFloat ( Object obj ) {
         try {
-            return field.getFloat ( obj );
+            return field.getFloat( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return 0;
         }
     }
@@ -172,51 +172,51 @@ public class ReflectField implements FieldAccess {
     @Override
     public byte getByte ( Object obj ) {
         try {
-            return field.getByte ( obj );
+            return field.getByte( obj );
         } catch ( Exception e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
             return 0;
         }
     }
 
     @Override
     public Object getObject ( Object obj ) {
-        return getValue ( obj );
+        return getValue( obj );
     }
 
     public boolean getStaticBoolean () {
-        return getBoolean ( null );
+        return getBoolean( null );
     }
 
     public int getStaticInt () {
-        return getInt ( null );
+        return getInt( null );
 
     }
 
     public short getStaticShort () {
-        return getShort ( null );
+        return getShort( null );
     }
 
 
     public long getStaticLong () {
-        return getLong ( null );
+        return getLong( null );
     }
 
 
     public double getStaticDouble () {
-        return getDouble ( null );
+        return getDouble( null );
     }
 
     public float getStaticFloat () {
-        return getFloat ( null );
+        return getFloat( null );
     }
 
     public byte getStaticByte () {
-        return getByte ( null );
+        return getByte( null );
     }
 
     public Object getObject () {
-        return getObject ( null );
+        return getObject( null );
     }
 
     @Override
@@ -265,36 +265,36 @@ public class ReflectField implements FieldAccess {
 
     @Override
     public void setValue ( Object obj, Object value ) {
-        if ( value != null && value.getClass () == this.type ) {
-            this.setObject ( obj, value );
+        if ( value != null && value.getClass() == this.type ) {
+            this.setObject( obj, value );
             return;
         }
 
         if ( value instanceof Value ) {
-            setFromValue ( obj, ( Value ) value );
+            setFromValue( obj, ( Value ) value );
         } else if ( type == Typ.string ) {
-            setObject ( obj, coerce ( type, value ) );
+            setObject( obj, coerce( type, value ) );
         } else if ( type == Typ.intgr ) {
-            setInt ( obj, toInt ( value ) );
+            setInt( obj, toInt( value ) );
         } else if ( type == Typ.lng ) {
-            setLong ( obj, toLong ( value ) );
+            setLong( obj, toLong( value ) );
         } else if ( type == Typ.bt ) {
-            setByte ( obj, toByte ( value ) );
+            setByte( obj, toByte( value ) );
 
         } else if ( type == Typ.shrt ) {
-            setShort ( obj, toShort ( value ) );
+            setShort( obj, toShort( value ) );
 
         } else if ( type == Typ.chr ) {
-            setChar ( obj, toChar ( value ) );
+            setChar( obj, toChar( value ) );
 
         } else if ( type == Typ.dbl ) {
-            setDouble ( obj, toDouble ( value ) );
+            setDouble( obj, toDouble( value ) );
 
         } else if ( type == Typ.flt ) {
-            setFloat ( obj, toFloat ( value ) );
+            setFloat( obj, toFloat( value ) );
 
         } else {
-            setObject ( obj, Conversions.coerce ( type, value ) );
+            setObject( obj, Conversions.coerce( type, value ) );
         }
     }
 
@@ -302,43 +302,43 @@ public class ReflectField implements FieldAccess {
     public final void setFromValue ( Object obj, Value value ) {
 
         if ( type == Typ.string ) {
-            setObject ( obj, value.stringValue () );
+            setObject( obj, value.stringValue() );
         } else if ( type == Typ.intgr ) {
-            setInt ( obj, value.intValue () );
+            setInt( obj, value.intValue() );
         } else if ( type == Typ.flt ) {
-            setFloat ( obj, value.floatValue () );
+            setFloat( obj, value.floatValue() );
         } else if ( type == Typ.dbl ) {
-            setDouble ( obj, value.doubleValue () );
+            setDouble( obj, value.doubleValue() );
         } else if ( type == Typ.lng ) {
-            setDouble ( obj, value.longValue () );
+            setDouble( obj, value.longValue() );
         } else if ( type == Typ.bt ) {
-            setByte ( obj, value.byteValue () );
+            setByte( obj, value.byteValue() );
         } else if ( type == Typ.bln ) {
-            setBoolean ( obj, value.booleanValue () );
+            setBoolean( obj, value.booleanValue() );
         } else if ( type == Typ.shrt ) {
-            setObject ( obj, value.shortValue () );
+            setObject( obj, value.shortValue() );
         } else if ( type == Typ.integer ) {
-            setObject ( obj, value.intValue () );
+            setObject( obj, value.intValue() );
         } else if ( type == Typ.floatWrapper ) {
-            setObject ( obj, value.floatValue () );
+            setObject( obj, value.floatValue() );
         } else if ( type == Typ.doubleWrapper ) {
-            setObject ( obj, value.doubleValue () );
+            setObject( obj, value.doubleValue() );
         } else if ( type == Typ.longWrapper ) {
-            setObject ( obj, value.longValue () );
+            setObject( obj, value.longValue() );
         } else if ( type == Typ.byteWrapper ) {
-            setObject ( obj, value.byteValue () );
+            setObject( obj, value.byteValue() );
         } else if ( type == Typ.bool ) {
-            setObject ( obj, value.booleanValue () );
+            setObject( obj, value.booleanValue() );
         } else if ( type == Typ.shortWrapper ) {
-            setObject ( obj, value.shortValue () );
+            setObject( obj, value.shortValue() );
         } else if ( type == Typ.bigDecimal ) {
-            setObject ( obj, value.bigDecimalValue () );
+            setObject( obj, value.bigDecimalValue() );
         } else if ( type == Typ.bigInteger ) {
-            setObject ( obj, value.bigIntegerValue () );
+            setObject( obj, value.bigIntegerValue() );
         } else if ( type == Typ.date ) {
-            setObject ( obj, value.dateValue () );
+            setObject( obj, value.dateValue() );
         } else {
-            setValue ( obj, coerce ( type, value ) );
+            setValue( obj, coerce( type, value ) );
         }
 
     }
@@ -347,9 +347,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setBoolean ( Object obj, boolean value ) {
         try {
-            field.setBoolean ( obj, value );
+            field.setBoolean( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -357,9 +357,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setInt ( Object obj, int value ) {
         try {
-            field.setInt ( obj, value );
+            field.setInt( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -367,9 +367,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setShort ( Object obj, short value ) {
         try {
-            field.setShort ( obj, value );
+            field.setShort( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -377,9 +377,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setChar ( Object obj, char value ) {
         try {
-            field.setChar ( obj, value );
+            field.setChar( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -387,9 +387,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setLong ( Object obj, long value ) {
         try {
-            field.setLong ( obj, value );
+            field.setLong( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -397,9 +397,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setDouble ( Object obj, double value ) {
         try {
-            field.setDouble ( obj, value );
+            field.setDouble( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -407,9 +407,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setFloat ( Object obj, float value ) {
         try {
-            field.setFloat ( obj, value );
+            field.setFloat( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -417,9 +417,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setByte ( Object obj, byte value ) {
         try {
-            field.setByte ( obj, value );
+            field.setByte( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }
@@ -427,9 +427,9 @@ public class ReflectField implements FieldAccess {
     @Override
     public void setObject ( Object obj, Object value ) {
         try {
-            field.set ( obj, value );
+            field.set( obj, value );
         } catch ( IllegalAccessException e ) {
-            analyzeError ( e, obj );
+            analyzeError( e, obj );
         }
 
     }

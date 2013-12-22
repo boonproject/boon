@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.boon.Exceptions.die;
 
 class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
-    final AtomicInteger readCount = new AtomicInteger ();
+    final AtomicInteger readCount = new AtomicInteger();
     final int order;
     VALUE value;
     final KEY key;
@@ -27,13 +27,13 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         switch ( type ) {
 
             case LFU:
-                return compareToLFU ( other );
+                return compareToLFU( other );
             case LRU:
-                return compareToLRU ( other );
+                return compareToLRU( other );
             case FIFO:
-                return compareToFIFO ( other );
+                return compareToFIFO( other );
             default:
-                die ();
+                die();
                 return 0;
 
         }
@@ -42,14 +42,14 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
 
     private final int compareReadCount ( CacheEntry other ) {
 
-        if ( readCount.get () > other.readCount.get () ) {  //this read count is greater so it has higher priority
+        if ( readCount.get() > other.readCount.get() ) {  //this read count is greater so it has higher priority
             return 1;
-        } else if ( readCount.get () < other.readCount.get () ) {//this read count is lower so it has lower priority
+        } else if ( readCount.get() < other.readCount.get() ) {//this read count is lower so it has lower priority
             return -1;
-        } else if ( readCount.get () == other.readCount.get () ) {
+        } else if ( readCount.get() == other.readCount.get() ) {
             return 0;
         }
-        die ();
+        die();
         return 0;
     }
 
@@ -62,7 +62,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         } else if ( time == other.time ) {//equal priority
             return 0;
         }
-        die ();
+        die();
         return 0;
     }
 
@@ -75,58 +75,58 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         } else if ( order == other.order ) {//equal priority
             return 0;
         }
-        die ();
+        die();
         return 0;
     }
 
     private final int compareToLFU ( CacheEntry other ) {
 
-        int cmp = compareReadCount ( other );
+        int cmp = compareReadCount( other );
         if ( cmp != 0 ) {
             return cmp;
         }
 
-        cmp = compareTime ( other );
+        cmp = compareTime( other );
         if ( cmp != 0 ) {
             return cmp;
         }
 
-        return cmp = compareOrder ( other );
+        return cmp = compareOrder( other );
     }
 
 
     private final int compareToLRU ( CacheEntry other ) {
 
-        int cmp = compareTime ( other );
+        int cmp = compareTime( other );
         if ( cmp != 0 ) {
             return cmp;
         }
 
 
-        cmp = compareOrder ( other );
+        cmp = compareOrder( other );
         if ( cmp != 0 ) {
             return cmp;
         }
 
 
-        return cmp = compareReadCount ( other );
+        return cmp = compareReadCount( other );
     }
 
 
     private final int compareToFIFO ( CacheEntry other ) {
-        int cmp = compareOrder ( other );
+        int cmp = compareOrder( other );
         if ( cmp != 0 ) {
             return cmp;
         }
 
 
-        cmp = compareTime ( other );
+        cmp = compareTime( other );
         if ( cmp != 0 ) {
             return cmp;
         }
 
 
-        return cmp = compareReadCount ( other );
+        return cmp = compareReadCount( other );
     }
 
     @Override

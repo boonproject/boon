@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.json.implementation.JsonParserLax;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,7 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import static org.boon.Boon.putl;
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.idx;
 
@@ -16,17 +20,29 @@ import static org.boon.Maps.idx;
  */
 public class PlistTest {
 
-    JsonParser jsonParser;
 
+    protected void inspectMap ( Map<String, Object> map ) {
+        final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+        putl( "map", map, "size", map.size(), "keys", map.keySet(), "values", map.values() );
 
-    public JsonParserFactory factory () {
-        return new JsonParserFactory ();
+        for ( String key : map.keySet() ) {
+            puts( "key", "#" + key + "#" );
+        }
+
+        for ( Object value : map.values() ) {
+            puts( "value", "#" + value + "#" );
+        }
+
     }
 
-    @Before
-    public void setup () {
 
-        jsonParser = factory ().plistStyle ().create ();
+    public JsonParser parser () {
+        return new JsonParserLax( false, true, true, true );
+
+    }
+
+    public JsonParser objectParser () {
+        return new JsonParserLax( true, false, false, true );
 
     }
 
@@ -62,34 +78,33 @@ public class PlistTest {
                 "        /* etc. */\n" +
                 "}";
 
-        Map<String, Object> map = jsonParser.parse ( Map.class, testString );
+        Map<String, Object> map = parser().parse( Map.class, testString );
 
-        boolean ok = map.size () == 5 || die ( "" + map.size () );
+        boolean ok = map.size() == 5 || die( "" + map.size() );
 
-        Map<String, Object> applications = ( Map<String, Object> ) map.get ( "Applications" );
+        Map<String, Object> applications = ( Map<String, Object> ) map.get( "Applications" );
 
-        ok = idx ( map, "date" ).toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die ( "I did not find:" + idx ( map, "date" ) + "#" );
+        ok = idx( map, "date" ).toString().equals( "Sat Nov 05 00:15:30 PST 1994" ) || die( "I did not find:" + idx( map, "date" ) + "#" );
 
 
-        int symlink = ( Integer ) applications.get ( "isSymLink" );
-        ok = symlink == 1 || die ();
+        int symlink = ( Integer ) applications.get( "isSymLink" );
+        ok = symlink == 1 || die();
 
-        Map<String, Object> library = ( Map<String, Object> ) map.get ( "Library" );
-        symlink = ( Integer ) library.get ( "isSymLink" );
-        ok = symlink == 0 || die ();
+        Map<String, Object> library = ( Map<String, Object> ) map.get( "Library" );
+        symlink = ( Integer ) library.get( "isSymLink" );
+        ok = symlink == 0 || die();
 
-        int numberOfFilesIncluded = ( Integer ) library.get ( "numberOfFilesIncluded" );
-        ok = numberOfFilesIncluded == 23 || die ();
+        int numberOfFilesIncluded = ( Integer ) library.get( "numberOfFilesIncluded" );
+        ok = numberOfFilesIncluded == 23 || die();
 
-        Map<String, Object> permissions2 = ( Map<String, Object> ) library.get ( "permissions" );
-        ok = permissions2.get ( "root" ).toString ().equals ( "[read, write, execute]" ) || die ();
+        Map<String, Object> permissions2 = ( Map<String, Object> ) library.get( "permissions" );
+        ok = permissions2.get( "root" ).toString().equals( "[read, write, execute]" ) || die( "" + permissions2 );
 
     }
 
 
     @Test
     public void basic2 () {
-//                "  b = { b1 = (read, write); \n b2 = (execute);\n };\n" +
 
         String testString = "{\n" +
                 " a = {\n" +
@@ -104,40 +119,43 @@ public class PlistTest {
                 "}";
 
 
-        Map<String, Object> map = jsonParser.parse ( Map.class, testString );
-        boolean ok = map.size () == 2 || die ();
-        ok = map.containsKey ( "a" ) || die ();
-        ok = !map.containsKey ( "b" ) || die ();
-        ok = !map.containsKey ( "c" ) || die ();
-        ok = !map.containsKey ( "d" ) || die ();
+        Map<String, Object> map = parser().parse( Map.class, testString );
 
-        Map<String, Object> a = ( Map<String, Object> ) map.get ( "a" );
+        inspectMap( map );
+        inspectMap( map );
+        boolean ok = map.size() == 2 || die();
+        ok = map.containsKey( "a" ) || die();
+        ok = !map.containsKey( "b" ) || die();
+        ok = !map.containsKey( "c" ) || die();
+        ok = !map.containsKey( "d" ) || die();
 
-        int c = ( int ) a.get ( "c" );
-        ok = c == 31 || die ();
+        Map<String, Object> a = ( Map<String, Object> ) map.get( "a" );
 
-        Date d = ( Date ) a.get ( "d" );
+        int c = ( int ) a.get( "c" );
+        ok = c == 31 || die();
 
-        ok = d.toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die ( "" + d );
+        Date d = ( Date ) a.get( "d" );
 
-
-        Map<String, Object> b = ( Map<String, Object> ) a.get ( "b" );
-        String b1 = ( String ) b.get ( "b1" );
-        int b2 = ( int ) b.get ( "b2" );
-
-        ok = b1.equals ( "foo" ) || die ( "" + b1 );
-
-        Map<String, Object> b3 = ( Map<String, Object> ) b.get ( "b3" );
+        ok = d.toString().equals( "Sat Nov 05 00:15:30 PST 1994" ) || die( "" + d );
 
 
-        ok = b3.toString ().equals ( "{}" ) || die ( "" + b3 );
+        Map<String, Object> b = ( Map<String, Object> ) a.get( "b" );
+        String b1 = ( String ) b.get( "b1" );
+        int b2 = ( int ) b.get( "b2" );
+
+        ok = b1.equals( "foo" ) || die( "" + b1 );
+
+        Map<String, Object> b3 = ( Map<String, Object> ) b.get( "b3" );
 
 
-        List<Object> b4 = ( List<Object> ) b.get ( "b4" );
+        ok = b3.toString().equals( "{}" ) || die( "" + b3 );
 
-        ok = b4.toString ().equals ( "[]" ) || die ( "" + b4 );
 
-        Map<String, Object> map2 = ( Map<String, Object> ) map.get ( "map2" );
+        List<Object> b4 = ( List<Object> ) b.get( "b4" );
+
+        ok = b4.toString().equals( "[]" ) || die( "" + b4 );
+
+        Map<String, Object> map2 = ( Map<String, Object> ) map.get( "map2" );
 
 
     }
@@ -160,38 +178,39 @@ public class PlistTest {
                 "}";
 
 
-        Map<String, Object> map = jsonParser.parse ( Map.class, testString.getBytes ( StandardCharsets.US_ASCII ) );
-        boolean ok = map.size () == 1 || die ();
-        ok = map.containsKey ( "a" ) || die ();
-        ok = !map.containsKey ( "b" ) || die ();
-        ok = !map.containsKey ( "c" ) || die ();
-        ok = !map.containsKey ( "d" ) || die ();
+        Map<String, Object> map = parser().parse( Map.class, testString );
+        inspectMap( map );
+        boolean ok = map.size() == 1 || die();
+        ok = map.containsKey( "a" ) || die();
+        ok = !map.containsKey( "b" ) || die();
+        ok = !map.containsKey( "c" ) || die();
+        ok = !map.containsKey( "d" ) || die();
 
-        Map<String, Object> a = ( Map<String, Object> ) map.get ( "a" );
+        Map<String, Object> a = ( Map<String, Object> ) map.get( "a" );
 
-        int c = ( int ) a.get ( "c" );
-        ok = c == 31 || die ();
+        int c = ( int ) a.get( "c" );
+        ok = c == 31 || die();
 
-        Date d = ( Date ) a.get ( "d" );
+        Date d = ( Date ) a.get( "d" );
 
-        ok = d.toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die ( "" + d );
-
-
-        Map<String, Object> b = ( Map<String, Object> ) a.get ( "b" );
-        String b1 = ( String ) b.get ( "b1" );
-        int b2 = ( int ) b.get ( "b2" );
-
-        ok = b1.equals ( "foo" ) || die ( "" + b1 );
-
-        Map<String, Object> b3 = ( Map<String, Object> ) b.get ( "b3" );
+        ok = d.toString().equals( "Sat Nov 05 00:15:30 PST 1994" ) || die( "" + d );
 
 
-        ok = b3.toString ().equals ( "{}" ) || die ( "" + b3 );
+        Map<String, Object> b = ( Map<String, Object> ) a.get( "b" );
+        String b1 = ( String ) b.get( "b1" );
+        int b2 = ( int ) b.get( "b2" );
+
+        ok = b1.equals( "foo" ) || die( "" + b1 );
+
+        Map<String, Object> b3 = ( Map<String, Object> ) b.get( "b3" );
 
 
-        List<Object> b4 = ( List<Object> ) b.get ( "b4" );
+        ok = b3.toString().equals( "{}" ) || die( "" + b3 );
 
-        ok = b4.toString ().equals ( "[]" ) || die ( "" + b4 );
+
+        List<Object> b4 = ( List<Object> ) b.get( "b4" );
+
+        ok = b4.toString().equals( "[]" ) || die( "" + b4 );
 
     }
 

@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Dates {
 
-    private static TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone ( "UTC" );
+    private static TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone( "UTC" );
     private static volatile long lastNow;
     private static long MILLI_SECOND = 1;
     private static long SECOND = MILLI_SECOND * 1000;
@@ -26,20 +26,20 @@ public class Dates {
 
 
     public static long utcNow () {
-        long now = System.currentTimeMillis ();
-        Calendar calendar = Calendar.getInstance ();
-        calendar.setTimeInMillis ( now );
-        calendar.setTimeZone ( UTC_TIME_ZONE );
-        long utcNow = calendar.getTime ().getTime ();
+        long now = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis( now );
+        calendar.setTimeZone( UTC_TIME_ZONE );
+        long utcNow = calendar.getTime().getTime();
         lastNow = now;
         return utcNow;
     }
 
     public static long utc ( long time ) {
-        Calendar calendar = Calendar.getInstance ();
-        calendar.setTimeInMillis ( time );
-        calendar.setTimeZone ( UTC_TIME_ZONE );
-        long utcNow = calendar.getTime ().getTime ();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis( time );
+        calendar.setTimeZone( UTC_TIME_ZONE );
+        long utcNow = calendar.getTime().getTime();
         lastNow = time;
         return utcNow;
     }
@@ -54,10 +54,10 @@ public class Dates {
 
     public static long fromUtcTimeToTimeZone ( long utcTime, TimeZone timeZone ) {
 
-        Calendar calendar = Calendar.getInstance ( UTC_TIME_ZONE );
-        calendar.setTimeInMillis ( utcTime );
-        calendar.setTimeZone ( timeZone );
-        return calendar.getTime ().getTime ();
+        Calendar calendar = Calendar.getInstance( UTC_TIME_ZONE );
+        calendar.setTimeInMillis( utcTime );
+        calendar.setTimeZone( timeZone );
+        return calendar.getTime().getTime();
     }
 
 
@@ -100,167 +100,167 @@ public class Dates {
     }
 
     public static long utcDate ( int year, int month, int day ) {
-        Calendar calendar = Calendar.getInstance ();
+        Calendar calendar = Calendar.getInstance();
 
         /* Set to midnight. */
-        midnight ( calendar );
+        midnight( calendar );
 
         /* This might change the date, but when you convert it
         back to the clocktime timezone, it will be correct.
          */
-        calendar.setTimeZone ( UTC_TIME_ZONE );
+        calendar.setTimeZone( UTC_TIME_ZONE );
 
 
-        return internalDate ( year, month, day, calendar );
+        return internalDate( year, month, day, calendar );
     }
 
     public static long utcDate ( int year, int month, int day,
                                  int hour, int minute ) {
-        Calendar calendar = Calendar.getInstance ();
-        midnight ( calendar );
+        Calendar calendar = Calendar.getInstance();
+        midnight( calendar );
 
         /* This might change the date, but when you convert it
         back to the clocktime timezone, it will be correct.
          */
-        calendar.setTimeZone ( UTC_TIME_ZONE );
+        calendar.setTimeZone( UTC_TIME_ZONE );
 
-        return internalDateLong ( year, month, day, hour, minute, calendar );
+        return internalDateLong( year, month, day, hour, minute, calendar );
     }
 
     private static long internalDateLong ( int year, int month, int day, int hour, int minute, Calendar calendar ) {
 
-        return internalDate ( year, month, day, hour, minute, calendar ).getTime ();
+        return internalDate( year, month, day, hour, minute, calendar ).getTime();
 
     }
 
 
     private static Date internalDate ( int year, int month, int day, int hour, int minute, Calendar calendar ) {
-        calendar.set ( Calendar.YEAR, year );
-        calendar.set ( Calendar.MONTH, month );
-        calendar.set ( Calendar.DAY_OF_MONTH, day );
-        calendar.set ( Calendar.HOUR_OF_DAY, hour );
-        calendar.set ( Calendar.MINUTE, minute );
+        calendar.set( Calendar.YEAR, year );
+        calendar.set( Calendar.MONTH, month );
+        calendar.set( Calendar.DAY_OF_MONTH, day );
+        calendar.set( Calendar.HOUR_OF_DAY, hour );
+        calendar.set( Calendar.MINUTE, minute );
 
-        return calendar.getTime ();
+        return calendar.getTime();
     }
 
 
     private static Date internalDate ( TimeZone tz, int year, int month, int day, int hour, int minute, int second ) {
 
-        Calendar calendar = Calendar.getInstance ();
+        Calendar calendar = Calendar.getInstance();
 
-        calendar.set ( Calendar.YEAR, year );
-        calendar.set ( Calendar.MONTH, month - 1 );
-        calendar.set ( Calendar.DAY_OF_MONTH, day );
-        calendar.set ( Calendar.HOUR_OF_DAY, hour );
-        calendar.set ( Calendar.MINUTE, minute );
-        calendar.set ( Calendar.SECOND, second );
-        calendar.setTimeZone ( tz );
+        calendar.set( Calendar.YEAR, year );
+        calendar.set( Calendar.MONTH, month - 1 );
+        calendar.set( Calendar.DAY_OF_MONTH, day );
+        calendar.set( Calendar.HOUR_OF_DAY, hour );
+        calendar.set( Calendar.MINUTE, minute );
+        calendar.set( Calendar.SECOND, second );
+        calendar.setTimeZone( tz );
 
-        return calendar.getTime ();
+        return calendar.getTime();
     }
 
 
     private static Date internalDate ( TimeZone tz, int year, int month, int day, int hour,
                                        int minute, int second, int miliseconds ) {
 
-        Calendar calendar = Calendar.getInstance ();
+        Calendar calendar = Calendar.getInstance();
 
-        calendar.set ( Calendar.YEAR, year );
-        calendar.set ( Calendar.MONTH, month - 1 );
-        calendar.set ( Calendar.DAY_OF_MONTH, day );
-        calendar.set ( Calendar.HOUR_OF_DAY, hour );
-        calendar.set ( Calendar.MINUTE, minute );
-        calendar.set ( Calendar.SECOND, second );
-        calendar.set ( Calendar.MILLISECOND, miliseconds );
+        calendar.set( Calendar.YEAR, year );
+        calendar.set( Calendar.MONTH, month - 1 );
+        calendar.set( Calendar.DAY_OF_MONTH, day );
+        calendar.set( Calendar.HOUR_OF_DAY, hour );
+        calendar.set( Calendar.MINUTE, minute );
+        calendar.set( Calendar.SECOND, second );
+        calendar.set( Calendar.MILLISECOND, miliseconds );
 
-        calendar.setTimeZone ( tz );
+        calendar.setTimeZone( tz );
 
-        return calendar.getTime ();
+        return calendar.getTime();
     }
 
     public static long wallTimeDate ( int year, int month, int day ) {
-        Calendar calendar = Calendar.getInstance ();
+        Calendar calendar = Calendar.getInstance();
 
         /* Set to midnight. */
-        midnight ( calendar );
+        midnight( calendar );
 
 
-        return internalDate ( year, month, day, calendar );
+        return internalDate( year, month, day, calendar );
     }
 
 
     public static long date ( int year, int month, int day ) {
-        return utcDate ( year, month, day );
+        return utcDate( year, month, day );
     }
 
     public static long date ( int year, int month, int day,
                               int hour, int minute ) {
-        return utcDate ( year, month, day, hour, minute );
+        return utcDate( year, month, day, hour, minute );
 
     }
 
 
     public static long date ( TimeZone tz, int year, int month, int day ) {
-        Calendar calendar = Calendar.getInstance ();
+        Calendar calendar = Calendar.getInstance();
 
         /* Set to midnight. */
-        midnight ( calendar );
+        midnight( calendar );
 
-        calendar.setTimeZone ( tz );
+        calendar.setTimeZone( tz );
 
-        return internalDate ( year, month, day, calendar );
+        return internalDate( year, month, day, calendar );
     }
 
     private static long internalDate ( int year, int month, int day, Calendar calendar ) {
-        calendar.set ( Calendar.YEAR, year );
-        calendar.set ( Calendar.MONTH, month );
-        calendar.set ( Calendar.DAY_OF_MONTH, day );
+        calendar.set( Calendar.YEAR, year );
+        calendar.set( Calendar.MONTH, month );
+        calendar.set( Calendar.DAY_OF_MONTH, day );
 
-        return calendar.getTime ().getTime ();
+        return calendar.getTime().getTime();
     }
 
     public static long wallTimeDate ( int year, int month, int day,
                                       int hour, int minute ) {
-        Calendar calendar = Calendar.getInstance ();
-        midnight ( calendar );
+        Calendar calendar = Calendar.getInstance();
+        midnight( calendar );
 
 
-        return internalDateLong ( year, month, day, hour, minute, calendar );
+        return internalDateLong( year, month, day, hour, minute, calendar );
     }
 
 
     public static Date toDate ( TimeZone tz, int year, int month, int day,
                                 int hour, int minute, int second ) {
-        return internalDate ( tz, year, month, day, hour, minute, second );
+        return internalDate( tz, year, month, day, hour, minute, second );
     }
 
 
     public static Date toDate ( TimeZone tz, int year, int month, int day,
                                 int hour, int minute, int second, int miliseconds ) {
-        return internalDate ( tz, year, month, day, hour, minute, second, miliseconds );
+        return internalDate( tz, year, month, day, hour, minute, second, miliseconds );
     }
 
     public static Date toDate ( int year, int month, int day,
                                 int hour, int minute, int second, int miliseconds ) {
-        return internalDate ( TimeZone.getDefault (), year, month, day, hour, minute, second, miliseconds );
+        return internalDate( TimeZone.getDefault(), year, month, day, hour, minute, second, miliseconds );
     }
 
     public static long date ( TimeZone tz, int year, int month, int day,
                               int hour, int minute ) {
-        Calendar calendar = Calendar.getInstance ();
-        midnight ( calendar );
-        calendar.setTimeZone ( tz );
+        Calendar calendar = Calendar.getInstance();
+        midnight( calendar );
+        calendar.setTimeZone( tz );
 
-        return internalDateLong ( year, month, day, hour, minute, calendar );
+        return internalDateLong( year, month, day, hour, minute, calendar );
     }
 
     private static void midnight ( Calendar calendar ) {
         /* Set to midnight. */
-        calendar.set ( Calendar.HOUR_OF_DAY, 0 );
-        calendar.set ( Calendar.MINUTE, 0 );
-        calendar.set ( Calendar.SECOND, 0 );
-        calendar.set ( Calendar.MILLISECOND, 0 );
+        calendar.set( Calendar.HOUR_OF_DAY, 0 );
+        calendar.set( Calendar.MINUTE, 0 );
+        calendar.set( Calendar.SECOND, 0 );
+        calendar.set( Calendar.MILLISECOND, 0 );
     }
 
     /**
@@ -269,8 +269,8 @@ public class Dates {
      * @return euro style format.
      */
     public static String euroUTCSystemDateNowString () {
-        long now = System.currentTimeMillis ();
-        return euroUTCSystemDateString ( now );
+        long now = System.currentTimeMillis();
+        return euroUTCSystemDateString( now );
     }
 
 
@@ -281,70 +281,70 @@ public class Dates {
      * @return euro style format.
      */
     public static String euroUTCSystemDateString ( long timestamp ) {
-        Calendar calendar = Calendar.getInstance ();
-        calendar.setTimeInMillis ( timestamp );
-        calendar.setTimeZone ( UTC_TIME_ZONE );
-        int day = calendar.get ( Calendar.DAY_OF_MONTH );
-        int month = calendar.get ( Calendar.MONTH );
-        int year = calendar.get ( Calendar.YEAR );
-        int hour = calendar.get ( Calendar.HOUR_OF_DAY );
-        int minute = calendar.get ( Calendar.MINUTE );
-        int second = calendar.get ( Calendar.SECOND );
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis( timestamp );
+        calendar.setTimeZone( UTC_TIME_ZONE );
+        int day = calendar.get( Calendar.DAY_OF_MONTH );
+        int month = calendar.get( Calendar.MONTH );
+        int year = calendar.get( Calendar.YEAR );
+        int hour = calendar.get( Calendar.HOUR_OF_DAY );
+        int minute = calendar.get( Calendar.MINUTE );
+        int second = calendar.get( Calendar.SECOND );
 
-        CharBuf buf = CharBuf.create ( 16 );
-        buf.add ( Str.zfill ( day, 2 ) ).add ( '_' );
-        buf.add ( Str.zfill ( month, 2 ) ).add ( '_' );
-        buf.add ( year ).add ( '_' );
-        buf.add ( Str.zfill ( hour, 2 ) ).add ( '_' );
-        buf.add ( Str.zfill ( minute, 2 ) ).add ( '_' );
-        buf.add ( Str.zfill ( second, 2 ) ).add ( "_utc_euro" );
+        CharBuf buf = CharBuf.create( 16 );
+        buf.add( Str.zfill( day, 2 ) ).add( '_' );
+        buf.add( Str.zfill( month, 2 ) ).add( '_' );
+        buf.add( year ).add( '_' );
+        buf.add( Str.zfill( hour, 2 ) ).add( '_' );
+        buf.add( Str.zfill( minute, 2 ) ).add( '_' );
+        buf.add( Str.zfill( second, 2 ) ).add( "_utc_euro" );
 
-        return buf.toString ();
+        return buf.toString();
     }
 
 
     public static void main ( String... args ) {
 
-        Sys.println ( euroUTCSystemDateNowString () );
+        Sys.println( euroUTCSystemDateNowString() );
 
     }
 
 
     public static Date year ( int year ) {
-        Calendar c = Calendar.getInstance ();
-        c.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
-        c.set ( 1970, Calendar.JANUARY, 2, 0, 0, 0 );
-        c.set ( Calendar.YEAR, year );
-        return c.getTime ();
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.set( 1970, Calendar.JANUARY, 2, 0, 0, 0 );
+        c.set( Calendar.YEAR, year );
+        return c.getTime();
     }
 
     public static Date getUSDate ( int month, int day, int year ) {
-        Calendar c = Calendar.getInstance ();
-        c.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
-        c.set ( year, month - 1, day + 1, 0, 0, 0 );
-        return c.getTime ();
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.set( year, month - 1, day + 1, 0, 0, 0 );
+        return c.getTime();
     }
 
 
     public static Date getUSDate ( int month, int day, int year, int hour, int minute, int second ) {
-        Calendar c = Calendar.getInstance ();
-        c.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
-        c.set ( year, month - 1, day + 1, hour, minute, second );
-        return c.getTime ();
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.set( year, month - 1, day + 1, hour, minute, second );
+        return c.getTime();
     }
 
     public static Date getEuroDate ( int day, int month, int year ) {
-        Calendar c = Calendar.getInstance ();
-        c.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
-        c.set ( year, month - 1, day + 1, 0, 0, 0 );
-        return c.getTime ();
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.set( year, month - 1, day + 1, 0, 0, 0 );
+        return c.getTime();
     }
 
     public static Date getEuroDate ( int day, int month, int year, int hour, int minute, int second ) {
-        Calendar c = Calendar.getInstance ();
-        c.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
-        c.set ( year, month - 1, day + 1, hour, minute, second );
-        return c.getTime ();
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.set( year, month - 1, day + 1, hour, minute, second );
+        return c.getTime();
     }
 
 
@@ -352,9 +352,9 @@ public class Dates {
 
         try {
 
-            return new SimpleDateFormat ( "yyyy-MM-dd'T'HH:mm:ssXXX" ).parse ( string );
+            return new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssXXX" ).parse( string );
         } catch ( ParseException e ) {
-            return Exceptions.handle ( Date.class, "Not a valid ISO8601", e );
+            return Exceptions.handle( Date.class, "Not a valid ISO8601", e );
         }
 
 
@@ -364,9 +364,9 @@ public class Dates {
 
         try {
 
-            return new SimpleDateFormat ( "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" ).parse ( string );
+            return new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSXXX" ).parse( string );
         } catch ( ParseException e ) {
-            return Exceptions.handle ( Date.class, "Not a valid JSON date", e );
+            return Exceptions.handle( Date.class, "Not a valid JSON date", e );
         }
 
 
@@ -375,50 +375,50 @@ public class Dates {
 
     public static Date fromJsonDate ( String string ) {
 
-        return fromJsonDate ( FastStringUtils.toCharArray ( string ), 0, string.length () );
+        return fromJsonDate( FastStringUtils.toCharArray( string ), 0, string.length() );
 
     }
 
     public static Date fromISO8601 ( String string ) {
 
-        return fromISO8601 ( FastStringUtils.toCharArray ( string ), 0, string.length () );
+        return fromISO8601( FastStringUtils.toCharArray( string ), 0, string.length() );
 
     }
 
     public static Date fromISO8601DateLoose ( String string ) {
-        return fromISO8601DateLoose ( FastStringUtils.toCharArray ( string ), 0, string.length () );
+        return fromISO8601DateLoose( FastStringUtils.toCharArray( string ), 0, string.length() );
 
     }
 
 
-    final static int SHORT_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30Z".length ();
+    final static int SHORT_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30Z".length();
     // 01234567890123456789012
-    final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length ();
+    final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length();
     // 01234567890123456789012
-    final static int JSON_TIME_LENGTH = "2013-12-14T01:55:33.412Z".length ();
+    final static int JSON_TIME_LENGTH = "2013-12-14T01:55:33.412Z".length();
 
     public static Date fromISO8601DateLoose ( char[] buffer, int startIndex, int endIndex ) {
 
-        if ( Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex ) ) {
+        if ( Dates.isISO8601QuickCheck( buffer, startIndex, endIndex ) ) {
 
-            if ( Dates.isJsonDate ( buffer, startIndex, endIndex ) ) {
-                return Dates.fromJsonDate ( buffer, startIndex, endIndex );
+            if ( Dates.isJsonDate( buffer, startIndex, endIndex ) ) {
+                return Dates.fromJsonDate( buffer, startIndex, endIndex );
 
-            } else if ( Dates.isISO8601 ( buffer, startIndex, endIndex ) ) {
-                return Dates.fromISO8601 ( buffer, startIndex, endIndex );
+            } else if ( Dates.isISO8601( buffer, startIndex, endIndex ) ) {
+                return Dates.fromISO8601( buffer, startIndex, endIndex );
             } else {
                 try {
-                    return looseParse ( buffer, startIndex, endIndex );
+                    return looseParse( buffer, startIndex, endIndex );
                 } catch ( Exception ex ) {
-                    throw new JsonException ( "unable to do a loose parse", ex );
+                    throw new JsonException( "unable to do a loose parse", ex );
                 }
             }
         } else {
 
             try {
-                return looseParse ( buffer, startIndex, endIndex );
+                return looseParse( buffer, startIndex, endIndex );
             } catch ( Exception ex ) {
-                throw new JsonException ( "unable to do a loose parse", ex );
+                throw new JsonException( "unable to do a loose parse", ex );
             }
         }
 
@@ -426,7 +426,7 @@ public class Dates {
     }
 
     private static Date looseParse ( char[] buffer, int startIndex, int endIndex ) {
-        final char[][] parts = CharScanner.splitByCharsNoneEmpty ( buffer, startIndex, endIndex, '-', ':', 'T', '.' );
+        final char[][] parts = CharScanner.splitByCharsNoneEmpty( buffer, startIndex, endIndex, '-', ':', 'T', '.' );
         int year = 0;
         int month = 0;
         int day = 0;
@@ -438,53 +438,53 @@ public class Dates {
         int mili = 0;
 
         if ( parts.length >= 3 ) {
-            year = CharScanner.parseInt ( parts[ 0 ] );
-            month = CharScanner.parseInt ( parts[ 1 ] );
-            day = CharScanner.parseInt ( parts[ 2 ] );
+            year = CharScanner.parseInt( parts[ 0 ] );
+            month = CharScanner.parseInt( parts[ 1 ] );
+            day = CharScanner.parseInt( parts[ 2 ] );
         }
 
         if ( parts.length >= 6 ) {
-            hour = CharScanner.parseInt ( parts[ 3 ] );
-            minutes = CharScanner.parseInt ( parts[ 4 ] );
-            seconds = CharScanner.parseInt ( parts[ 5 ] );
+            hour = CharScanner.parseInt( parts[ 3 ] );
+            minutes = CharScanner.parseInt( parts[ 4 ] );
+            seconds = CharScanner.parseInt( parts[ 5 ] );
         }
 
         if ( parts.length >= 7 ) {
-            mili = CharScanner.parseInt ( parts[ 6 ] );
+            mili = CharScanner.parseInt( parts[ 6 ] );
         }
 
 
-        return toDate ( year, month, day, hour, minutes, seconds, mili );
+        return toDate( year, month, day, hour, minutes, seconds, mili );
     }
 
     public static Date fromISO8601 ( char[] charArray, int from, int to ) {
 
         int length = to - from;
-        if ( isISO8601 ( charArray, from, to ) ) {
-            int year = CharScanner.parseIntFromTo ( charArray, from + 0, from + 4 );
-            int month = CharScanner.parseIntFromTo ( charArray, from + 5, from + 7 );
-            int day = CharScanner.parseIntFromTo ( charArray, from + 8, from + 10 );
-            int hour = CharScanner.parseIntFromTo ( charArray, from + 11, from + 13 );
+        if ( isISO8601( charArray, from, to ) ) {
+            int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
+            int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
+            int day = CharScanner.parseIntFromTo( charArray, from + 8, from + 10 );
+            int hour = CharScanner.parseIntFromTo( charArray, from + 11, from + 13 );
 
-            int minute = CharScanner.parseIntFromTo ( charArray, from + 14, from + 16 );
+            int minute = CharScanner.parseIntFromTo( charArray, from + 14, from + 16 );
 
-            int second = CharScanner.parseIntFromTo ( charArray, from + 17, from + 19 );
+            int second = CharScanner.parseIntFromTo( charArray, from + 17, from + 19 );
             TimeZone tz = null;
 
             if ( charArray[ from + 19 ] == 'Z' ) {
 
-                tz = TimeZone.getTimeZone ( "GMT" );
+                tz = TimeZone.getTimeZone( "GMT" );
 
             } else {
 
-                StringBuilder builder = new StringBuilder ( 9 );
-                builder.append ( "GMT" );
-                builder.append ( charArray, from + 19, 6 );
-                String tzStr = builder.toString ();
-                tz = TimeZone.getTimeZone ( tzStr );
+                StringBuilder builder = new StringBuilder( 9 );
+                builder.append( "GMT" );
+                builder.append( charArray, from + 19, 6 );
+                String tzStr = builder.toString();
+                tz = TimeZone.getTimeZone( tzStr );
 
             }
-            return toDate ( tz, year, month, day, hour, minute, second );
+            return toDate( tz, year, month, day, hour, minute, second );
 
         } else {
             return null;
@@ -494,22 +494,22 @@ public class Dates {
 
     public static Date fromJsonDate ( char[] charArray, int from, int to ) {
 
-        if ( isJsonDate ( charArray, from, to ) ) {
-            int year = CharScanner.parseIntFromTo ( charArray, from + 0, from + 4 );
-            int month = CharScanner.parseIntFromTo ( charArray, from + 5, from + 7 );
-            int day = CharScanner.parseIntFromTo ( charArray, from + 8, from + 10 );
-            int hour = CharScanner.parseIntFromTo ( charArray, from + 11, from + 13 );
+        if ( isJsonDate( charArray, from, to ) ) {
+            int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
+            int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
+            int day = CharScanner.parseIntFromTo( charArray, from + 8, from + 10 );
+            int hour = CharScanner.parseIntFromTo( charArray, from + 11, from + 13 );
 
-            int minute = CharScanner.parseIntFromTo ( charArray, from + 14, from + 16 );
+            int minute = CharScanner.parseIntFromTo( charArray, from + 14, from + 16 );
 
-            int second = CharScanner.parseIntFromTo ( charArray, from + 17, from + 19 );
+            int second = CharScanner.parseIntFromTo( charArray, from + 17, from + 19 );
 
-            int miliseconds = CharScanner.parseIntFromTo ( charArray, from + 20, from + 23 );
+            int miliseconds = CharScanner.parseIntFromTo( charArray, from + 20, from + 23 );
 
-            TimeZone tz = TimeZone.getTimeZone ( "GMT" );
+            TimeZone tz = TimeZone.getTimeZone( "GMT" );
 
 
-            return toDate ( tz, year, month, day, hour, minute, second, miliseconds );
+            return toDate( tz, year, month, day, hour, minute, second, miliseconds );
 
         } else {
             return null;
@@ -519,12 +519,12 @@ public class Dates {
 
     public static boolean isISO8601 ( String string ) {
 
-        return isISO8601 ( FastStringUtils.toCharArray ( string ) );
+        return isISO8601( FastStringUtils.toCharArray( string ) );
     }
 
 
     public static boolean isISO8601 ( char[] charArray ) {
-        return isISO8601 ( charArray, 0, charArray.length );
+        return isISO8601( charArray, 0, charArray.length );
     }
 
     public static boolean isISO8601 ( char[] charArray, int start, int to ) {

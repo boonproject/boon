@@ -23,12 +23,12 @@ public class Meta {
     }
 
 
-    List<Meta2> metas2 = new ArrayList<> ();
+    List<Meta2> metas2 = new ArrayList<>();
 
     {
-        metas2.add ( new Meta2 ( "2tag1" ) );
-        metas2.add ( new Meta2 ( "2tag2" ) );
-        metas2.add ( new Meta2 ( "2tag3" ) );
+        metas2.add( new Meta2( "2tag1" ) );
+        metas2.add( new Meta2( "2tag2" ) );
+        metas2.add( new Meta2( "2tag3" ) );
 
     }
 

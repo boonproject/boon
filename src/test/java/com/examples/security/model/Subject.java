@@ -21,13 +21,13 @@ public class Subject {
 
         Subject subject = ( Subject ) o;
 
-        if ( name != null ? !name.equals ( subject.name ) : subject.name != null ) return false;
+        if ( name != null ? !name.equals( subject.name ) : subject.name != null ) return false;
 
         return true;
     }
 
     @Override
     public int hashCode () {
-        return name != null ? name.hashCode () : 0;
+        return name != null ? name.hashCode() : 0;
     }
 }

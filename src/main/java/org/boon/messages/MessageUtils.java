@@ -17,12 +17,12 @@ public final class MessageUtils {
     }
 
     public static String createLabelNoPlural ( String fieldName, final ResourceBundle bundle ) {
-        if ( fieldName.endsWith ( "es" ) ) {
-            fieldName = fieldName.substring ( 0, fieldName.length () - 2 );
-        } else if ( fieldName.endsWith ( "s" ) ) {
-            fieldName = fieldName.substring ( 0, fieldName.length () - 1 );
+        if ( fieldName.endsWith( "es" ) ) {
+            fieldName = fieldName.substring( 0, fieldName.length() - 2 );
+        } else if ( fieldName.endsWith( "s" ) ) {
+            fieldName = fieldName.substring( 0, fieldName.length() - 1 );
         }
-        return getLabel ( fieldName, bundle );
+        return getLabel( fieldName, bundle );
     }
 
 
@@ -40,9 +40,9 @@ public final class MessageUtils {
 
         /** Look for fieldName, e.g., firstName. */
         try {
-            label = bundle.getString ( fieldName );
+            label = bundle.getString( fieldName );
         } catch ( MissingResourceException mre ) {
-            label = generateLabelValue ( fieldName );
+            label = generateLabelValue( fieldName );
         }
 
         return label;
@@ -63,14 +63,14 @@ public final class MessageUtils {
         try {
             try {
                 /** Look for name-space + . + fieldName, e.g., Employee.firstName. */
-                label = bundle.getString ( namespace + '.' + fieldName );
+                label = bundle.getString( namespace + '.' + fieldName );
             } catch ( MissingResourceException mre ) {
                 /** Look for fieldName only, e.g., firstName. */
-                label = bundle.getString ( fieldName );
+                label = bundle.getString( fieldName );
             }
         } catch ( MissingResourceException mre ) {
             /** If you can't find the label, generate it thus, "firstName" becomes "First Name".*/
-            label = generateLabelValue ( fieldName );
+            label = generateLabelValue( fieldName );
         }
 
         return label;
@@ -101,11 +101,11 @@ public final class MessageUtils {
         try {
             try {
                 /** Look for name-space + . + fieldName, e.g., Employee.firstName.toolTip. */
-                toolTip = bundle.getString ( namespace + '.' + fieldName + '.'
+                toolTip = bundle.getString( namespace + '.' + fieldName + '.'
                         + toolTipType );
             } catch ( MissingResourceException mre ) {
                 /** Look for fieldName only, e.g., firstName.toolTip. */
-                toolTip = bundle.getString ( fieldName + '.' + toolTipType );
+                toolTip = bundle.getString( fieldName + '.' + toolTipType );
             }
         } catch ( MissingResourceException mre ) {
         }
@@ -123,7 +123,7 @@ public final class MessageUtils {
      */
     public static String generateLabelValue ( final String fieldName ) {
 
-        final StringBuilder buffer = new StringBuilder ( fieldName.length () * 2 );
+        final StringBuilder buffer = new StringBuilder( fieldName.length() * 2 );
 
 
         class GenerationCommand {
@@ -132,7 +132,7 @@ public final class MessageUtils {
             boolean lastCharWasNumber = false;
             boolean lastCharWasSpecial = false;
             boolean shouldContinue = true;
-            char[] chars = fieldName.toCharArray ();
+            char[] chars = fieldName.toCharArray();
 
             void processFieldName () {
 
@@ -140,31 +140,31 @@ public final class MessageUtils {
                     char cchar = chars[ index ];
                     shouldContinue = true;
 
-                    processCharWasNumber ( buffer, index, cchar );
+                    processCharWasNumber( buffer, index, cchar );
                     if ( !shouldContinue ) {
                         continue;
                     }
 
-                    processCharWasUpperCase ( buffer, index, cchar );
+                    processCharWasUpperCase( buffer, index, cchar );
                     if ( !shouldContinue ) {
                         continue;
                     }
 
-                    processSpecialChars ( buffer, cchar );
-
-                    if ( !shouldContinue ) {
-                        continue;
-                    }
-
-                    cchar = processCapitalizeCommand ( cchar );
-
-                    cchar = processFirstCharacterCheck ( buffer, index, cchar );
+                    processSpecialChars( buffer, cchar );
 
                     if ( !shouldContinue ) {
                         continue;
                     }
 
-                    buffer.append ( cchar );
+                    cchar = processCapitalizeCommand( cchar );
+
+                    cchar = processFirstCharacterCheck( buffer, index, cchar );
+
+                    if ( !shouldContinue ) {
+                        continue;
+                    }
+
+                    buffer.append( cchar );
                 }
 
             }
@@ -175,14 +175,14 @@ public final class MessageUtils {
                     return;
                 }
 
-                if ( Character.isDigit ( cchar ) ) {
+                if ( Character.isDigit( cchar ) ) {
 
                     if ( index != 0 && !lastCharWasNumber ) {
-                        buffer.append ( ' ' );
+                        buffer.append( ' ' );
                     }
 
                     lastCharWasNumber = true;
-                    buffer.append ( cchar );
+                    buffer.append( cchar );
 
                     this.shouldContinue = false;
                 } else {
@@ -194,8 +194,8 @@ public final class MessageUtils {
                                                       int index, char cchar ) {
                 /* Always capitalize the first character. */
                 if ( index == 0 ) {
-                    cchar = Character.toUpperCase ( cchar );
-                    buffer.append ( cchar );
+                    cchar = Character.toUpperCase( cchar );
+                    buffer.append( cchar );
                     this.shouldContinue = false;
                 }
                 return cchar;
@@ -205,7 +205,7 @@ public final class MessageUtils {
                 /* Capitalize the character. */
                 if ( capNextChar ) {
                     capNextChar = false;
-                    cchar = Character.toUpperCase ( cchar );
+                    cchar = Character.toUpperCase( cchar );
                 }
                 return cchar;
             }
@@ -217,7 +217,7 @@ public final class MessageUtils {
                  * the next iteration to capitalize.
 				 */
                 if ( cchar == '.' || cchar == '_' ) {
-                    buffer.append ( ' ' );
+                    buffer.append( ' ' );
                     capNextChar = true;
                     lastCharWasSpecial = false;
                     this.shouldContinue = false;
@@ -229,16 +229,16 @@ public final class MessageUtils {
             private void processCharWasUpperCase ( final StringBuilder buffer,
                                                    int index, char cchar ) {
                 /* If the character is uppercase, append a space and keep track
-				 * that the last character was uppercase for the next iteration.
+                 * that the last character was uppercase for the next iteration.
 				 */
-                if ( Character.isUpperCase ( cchar ) ) {
+                if ( Character.isUpperCase( cchar ) ) {
 
                     if ( index != 0 && !lastCharWasUpperCase ) {
-                        buffer.append ( ' ' );
+                        buffer.append( ' ' );
                     }
 
                     lastCharWasUpperCase = true;
-                    buffer.append ( cchar );
+                    buffer.append( cchar );
 
                     this.shouldContinue = false;
                 } else {
@@ -247,11 +247,11 @@ public final class MessageUtils {
             }
         }
 
-        GenerationCommand gc = new GenerationCommand ();
-        gc.processFieldName ();
+        GenerationCommand gc = new GenerationCommand();
+        gc.processFieldName();
         
         /* This is a hack to get address.line_1 to work. */
-        return buffer.toString ().replace ( "  ", " " );
+        return buffer.toString().replace( "  ", " " );
     }
 
 }

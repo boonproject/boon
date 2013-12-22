@@ -4,7 +4,7 @@ public class ValidationException extends Exception {
     private String field;
 
     public ValidationException ( String message, String field ) {
-        super ( message );
+        super( message );
         this.field = field;
     }
 

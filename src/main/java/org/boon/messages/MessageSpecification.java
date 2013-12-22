@@ -69,20 +69,20 @@ public class MessageSpecification implements Serializable {
          * use the classname to load resources.
     	 * */
         if ( name == null && parent == null ) {
-            this.setDetailMessage ( "{" + this.getClass ().getName () + DETAIL_KEY + "}" );
-            this.setSummaryMessage ( "{" + this.getClass ().getName () + SUMMARY_KEY + "}" );
+            this.setDetailMessage( "{" + this.getClass().getName() + DETAIL_KEY + "}" );
+            this.setSummaryMessage( "{" + this.getClass().getName() + SUMMARY_KEY + "}" );
         /* If the parent is null and the name is not,
          * use the name to load resources.
          */
         } else if ( name != null && parent == null ) {
-            this.setDetailMessage ( "{" + "message." + getName () + DETAIL_KEY + "}" );
-            this.setSummaryMessage ( "{" + "message." + getName () + SUMMARY_KEY + "}" );
+            this.setDetailMessage( "{" + "message." + getName() + DETAIL_KEY + "}" );
+            this.setSummaryMessage( "{" + "message." + getName() + SUMMARY_KEY + "}" );
         /* If the parent is present, initialize the message keys
          * with the parent name.
          */
         } else if ( parent != null ) {
-            this.setDetailMessage ( "{" + "message." + parent + DETAIL_KEY + "}" );
-            this.setSummaryMessage ( "{" + "message." + parent + SUMMARY_KEY + "}" );
+            this.setDetailMessage( "{" + "message." + parent + DETAIL_KEY + "}" );
+            this.setSummaryMessage( "{" + "message." + parent + SUMMARY_KEY + "}" );
         }
     }
 
@@ -98,14 +98,14 @@ public class MessageSpecification implements Serializable {
      * Create the summaryMessage message.
      */
     public String createSummaryMessage ( Object... args ) {
-        return createMessage ( summaryMessage, summaryArgs, args );
+        return createMessage( summaryMessage, summaryArgs, args );
     }
 
     /**
      * Create the detailMessage message.
      */
     public String createDetailMessage ( Object... args ) {
-        return createMessage ( detailMessage, detailArgs, args );
+        return createMessage( detailMessage, detailArgs, args );
     }
 
     /**
@@ -117,24 +117,24 @@ public class MessageSpecification implements Serializable {
      */
     public String createMessage ( String key, List<String> argKeys, Object... args ) {
         /* Look up the message. */
-        String message = getMessage ( key );
+        String message = getMessage( key );
 
     	/* Holds the actual arguments. */
         Object[] actualArgs;
 
     	/* If they passed arguments, 
-    	 * then use this as the actual arguments. */
+         * then use this as the actual arguments. */
         if ( args.length > 0 ) {
             actualArgs = args;
     	/* If they did not pass arguments, use the configured ones. */
         } else if ( argKeys != null ) {
     		/* Convert the keys to values. */
-            actualArgs = keysToValues ( argKeys );
+            actualArgs = keysToValues( argKeys );
         } else {
             actualArgs = new Object[]{ };
         }
 
-        return doCreateMessage ( message, actualArgs );
+        return doCreateMessage( message, actualArgs );
 
     }
 
@@ -148,12 +148,12 @@ public class MessageSpecification implements Serializable {
     @SuppressWarnings ( "unchecked" )
     private String doCreateMessage ( String message, Object[] actualArgs ) {
 
-        return ValidationContext.get ().createMessage ( message, getSubject (), actualArgs );
+        return ValidationContext.get().createMessage( message, getSubject(), actualArgs );
     }
 
     private String getMessage ( String key ) {
 
-        return ValidationContext.get ().getMessage ( key );
+        return ValidationContext.get().getMessage( key );
     }
 
 
@@ -161,11 +161,11 @@ public class MessageSpecification implements Serializable {
      * Convert the keys to values.
      */
     private Object[] keysToValues ( List<String> argKeys ) {
-        List<String> values = new ArrayList<> ();
+        List<String> values = new ArrayList<>();
         for ( String key : argKeys ) {
-            values.add ( getMessage ( key ) );
+            values.add( getMessage( key ) );
         }
-        return values.toArray ();
+        return values.toArray();
     }
 
     /**
@@ -173,7 +173,7 @@ public class MessageSpecification implements Serializable {
      * per instance of the MessageSpecification.
      */
     public void setCurrentSubject ( String subject ) {
-        ValidationContext.get ().setCurrentSubject ( subject );
+        ValidationContext.get().setCurrentSubject( subject );
     }
 
     /**
@@ -181,8 +181,8 @@ public class MessageSpecification implements Serializable {
      * current subject is not found.
      */
     public String getSubject () {
-        return ValidationContext.get ().getCurrentSubject () == null ? this.subject :
-                ValidationContext.get ().getCurrentSubject ();
+        return ValidationContext.get().getCurrentSubject() == null ? this.subject :
+                ValidationContext.get().getCurrentSubject();
     }
 
 

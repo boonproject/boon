@@ -26,7 +26,7 @@ public class PropertyField implements FieldAccess {
     private final String name;
     private final Method getter;
     private final Method setter;
-    private final Logger log = Logger.getLogger ( PropertyField.class.getName () );
+    private final Logger log = Logger.getLogger( PropertyField.class.getName() );
 
 
     public PropertyField ( String name, Method setter, Method getter ) {
@@ -37,39 +37,39 @@ public class PropertyField implements FieldAccess {
             this.getter = getter;
 
             if ( getter != null ) {
-                isStatic = Modifier.isStatic ( getter.getModifiers () );
-                isFinal = Modifier.isFinal ( getter.getModifiers () );
-                type = getter.getReturnType ();
+                isStatic = Modifier.isStatic( getter.getModifiers() );
+                isFinal = Modifier.isFinal( getter.getModifiers() );
+                type = getter.getReturnType();
             } else {
-                isStatic = Modifier.isStatic ( setter.getModifiers () );
-                isFinal = Modifier.isFinal ( setter.getModifiers () );
-                type = setter.getParameterTypes ()[ 0 ];
+                isStatic = Modifier.isStatic( setter.getModifiers() );
+                isFinal = Modifier.isFinal( setter.getModifiers() );
+                type = setter.getParameterTypes()[ 0 ];
             }
 
 
             readOnly = setter == null;
             this.name = name;
         } catch ( Exception ex ) {
-            Exceptions.handle ( "name " + name + " setter " + setter + " getter " + getter, ex );
-            throw new RuntimeException ( "die" );
+            Exceptions.handle( "name " + name + " setter " + setter + " getter " + getter, ex );
+            throw new RuntimeException( "die" );
         }
     }
 
     @Override
     public Object getValue ( Object obj ) {
         try {
-            return getter.invoke ( obj );
+            return getter.invoke( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle ( Object.class, sputs ( "unable to call getValue for property ", this.name,
+            return Exceptions.handle( Object.class, sputs( "unable to call getValue for property ", this.name,
                     "for class ", this.type ), e );
         }
     }
 
     public boolean getBoolean ( Object obj ) {
         try {
-            return ( Boolean ) this.getValue ( obj );
+            return ( Boolean ) this.getValue( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle ( boolean.class, sputs ( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( boolean.class, sputs( "unable to call getValue for property", this.name ), e );
         }
 
     }
@@ -77,45 +77,45 @@ public class PropertyField implements FieldAccess {
     @Override
     public int getInt ( Object obj ) {
         try {
-            return ( Integer ) this.getValue ( obj );
+            return ( Integer ) this.getValue( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle ( int.class, sputs ( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( int.class, sputs( "unable to call getValue for property", this.name ), e );
         }
     }
 
     @Override
     public short getShort ( Object obj ) {
         try {
-            return ( Short ) this.getValue ( obj );
+            return ( Short ) this.getValue( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle ( short.class, sputs ( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( short.class, sputs( "unable to call getValue for property", this.name ), e );
         }
     }
 
     @Override
     public char getChar ( Object obj ) {
         try {
-            return ( Character ) this.getValue ( obj );
+            return ( Character ) this.getValue( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle ( char.class, sputs ( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( char.class, sputs( "unable to call getValue for property", this.name ), e );
         }
     }
 
     @Override
     public long getLong ( Object obj ) {
         try {
-            return ( Long ) this.getValue ( obj );
+            return ( Long ) this.getValue( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
     }
 
     @Override
     public double getDouble ( Object obj ) {
         try {
-            return ( Double ) this.getValue ( obj );
+            return ( Double ) this.getValue( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -123,24 +123,24 @@ public class PropertyField implements FieldAccess {
     @Override
     public float getFloat ( Object obj ) {
         try {
-            return ( Float ) this.getValue ( obj );
+            return ( Float ) this.getValue( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
     }
 
     @Override
     public byte getByte ( Object obj ) {
         try {
-            return ( Byte ) this.getValue ( obj );
+            return ( Byte ) this.getValue( obj );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
     }
 
     @Override
     public Object getObject ( Object obj ) {
-        return getValue ( obj );
+        return getValue( obj );
     }
 
     @Override
@@ -161,18 +161,18 @@ public class PropertyField implements FieldAccess {
 
     public Class<?> getComponentClass () {
         if ( componentClass == null ) {
-            componentClass = doGetComponentClass ();
+            componentClass = doGetComponentClass();
         }
         return componentClass;
     }
 
 
     private Class<?> doGetComponentClass () {
-        final ParameterizedType parameterizedType = this.getParameterizedType ();
+        final ParameterizedType parameterizedType = this.getParameterizedType();
         if ( parameterizedType == null ) {
             return null;
         } else {
-            return ( Class<?> ) ( parameterizedType.getActualTypeArguments ()[ 0 ] );
+            return ( Class<?> ) ( parameterizedType.getActualTypeArguments()[ 0 ] );
         }
     }
 
@@ -217,36 +217,36 @@ public class PropertyField implements FieldAccess {
 
     @Override
     public void setValue ( Object obj, Object value ) {
-        if ( value != null && value.getClass () == this.type ) {
-            this.setObject ( obj, value );
+        if ( value != null && value.getClass() == this.type ) {
+            this.setObject( obj, value );
             return;
         }
 
         if ( value instanceof Value ) {
-            setFromValue ( obj, ( Value ) value );
+            setFromValue( obj, ( Value ) value );
         } else if ( type == Typ.string ) {
-            setObject ( obj, coerce ( type, value ) );
+            setObject( obj, coerce( type, value ) );
         } else if ( type == Typ.intgr ) {
-            setInt ( obj, toInt ( value ) );
+            setInt( obj, toInt( value ) );
         } else if ( type == Typ.lng ) {
-            setLong ( obj, toLong ( value ) );
+            setLong( obj, toLong( value ) );
         } else if ( type == Typ.bt ) {
-            setByte ( obj, toByte ( value ) );
+            setByte( obj, toByte( value ) );
 
         } else if ( type == Typ.shrt ) {
-            setShort ( obj, toShort ( value ) );
+            setShort( obj, toShort( value ) );
 
         } else if ( type == Typ.chr ) {
-            setChar ( obj, toChar ( value ) );
+            setChar( obj, toChar( value ) );
 
         } else if ( type == Typ.dbl ) {
-            setDouble ( obj, toDouble ( value ) );
+            setDouble( obj, toDouble( value ) );
 
         } else if ( type == Typ.flt ) {
-            setFloat ( obj, toFloat ( value ) );
+            setFloat( obj, toFloat( value ) );
 
         } else {
-            setObject ( obj, Conversions.coerce ( type, value ) );
+            setObject( obj, Conversions.coerce( type, value ) );
         }
     }
 
@@ -254,43 +254,43 @@ public class PropertyField implements FieldAccess {
     public final void setFromValue ( Object obj, Value value ) {
 
         if ( type == Typ.string ) {
-            setObject ( obj, value.stringValue () );
+            setObject( obj, value.stringValue() );
         } else if ( type == Typ.intgr ) {
-            setInt ( obj, value.intValue () );
+            setInt( obj, value.intValue() );
         } else if ( type == Typ.flt ) {
-            setFloat ( obj, value.floatValue () );
+            setFloat( obj, value.floatValue() );
         } else if ( type == Typ.dbl ) {
-            setDouble ( obj, value.doubleValue () );
+            setDouble( obj, value.doubleValue() );
         } else if ( type == Typ.lng ) {
-            setDouble ( obj, value.longValue () );
+            setDouble( obj, value.longValue() );
         } else if ( type == Typ.bt ) {
-            setByte ( obj, value.byteValue () );
+            setByte( obj, value.byteValue() );
         } else if ( type == Typ.bln ) {
-            setBoolean ( obj, value.booleanValue () );
+            setBoolean( obj, value.booleanValue() );
         } else if ( type == Typ.shrt ) {
-            setObject ( obj, value.shortValue () );
+            setObject( obj, value.shortValue() );
         } else if ( type == Typ.integer ) {
-            setObject ( obj, value.intValue () );
+            setObject( obj, value.intValue() );
         } else if ( type == Typ.floatWrapper ) {
-            setObject ( obj, value.floatValue () );
+            setObject( obj, value.floatValue() );
         } else if ( type == Typ.doubleWrapper ) {
-            setObject ( obj, value.doubleValue () );
+            setObject( obj, value.doubleValue() );
         } else if ( type == Typ.longWrapper ) {
-            setObject ( obj, value.longValue () );
+            setObject( obj, value.longValue() );
         } else if ( type == Typ.byteWrapper ) {
-            setObject ( obj, value.byteValue () );
+            setObject( obj, value.byteValue() );
         } else if ( type == Typ.bool ) {
-            setObject ( obj, value.booleanValue () );
+            setObject( obj, value.booleanValue() );
         } else if ( type == Typ.shortWrapper ) {
-            setObject ( obj, value.shortValue () );
+            setObject( obj, value.shortValue() );
         } else if ( type == Typ.bigDecimal ) {
-            setObject ( obj, value.bigDecimalValue () );
+            setObject( obj, value.bigDecimalValue() );
         } else if ( type == Typ.bigInteger ) {
-            setObject ( obj, value.bigIntegerValue () );
+            setObject( obj, value.bigIntegerValue() );
         } else if ( type == Typ.date ) {
-            setObject ( obj, value.dateValue () );
+            setObject( obj, value.dateValue() );
         } else {
-            setValue ( obj, coerce ( type, value ) );
+            setValue( obj, coerce( type, value ) );
         }
 
     }
@@ -299,9 +299,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setBoolean ( Object obj, boolean value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -309,9 +309,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setInt ( Object obj, int value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -319,9 +319,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setShort ( Object obj, short value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -329,9 +329,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setChar ( Object obj, char value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -339,9 +339,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setLong ( Object obj, long value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -349,9 +349,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setDouble ( Object obj, double value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -359,9 +359,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setFloat ( Object obj, float value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
         }
 
     }
@@ -369,9 +369,9 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setByte ( Object obj, byte value ) {
         try {
-            this.setObject ( obj, value );
+            this.setObject( obj, value );
         } catch ( Exception e ) {
-            throw new RuntimeException ( e );
+            throw new RuntimeException( e );
 
         }
 
@@ -380,15 +380,15 @@ public class PropertyField implements FieldAccess {
     @Override
     public void setObject ( Object obj, Object value ) {
         if ( readOnly ) {
-            log.warning ( String.format ( "You tried to modify property %s of %s for instance %s with set %s",
-                    name, obj.getClass ().getSimpleName (), obj, value ) );
+            log.warning( String.format( "You tried to modify property %s of %s for instance %s with set %s",
+                    name, obj.getClass().getSimpleName(), obj, value ) );
             return;
         }
         try {
-            setter.invoke ( obj, value );
+            setter.invoke( obj, value );
         } catch ( Exception e ) {
-            Exceptions.handle ( String.format ( "You tried to modify property %s of %s for instance %s with set %s using %s",
-                    name, obj.getClass ().getSimpleName (), obj, value, setter.getName () ), e );
+            Exceptions.handle( String.format( "You tried to modify property %s of %s for instance %s with set %s using %s",
+                    name, obj.getClass().getSimpleName(), obj, value, setter.getName() ), e );
 
         }
 

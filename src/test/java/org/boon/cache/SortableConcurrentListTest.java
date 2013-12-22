@@ -20,7 +20,7 @@ public class SortableConcurrentListTest {
     @Before
     public void before () {
 
-        list = new SortableConcurrentList ();
+        list = new SortableConcurrentList();
     }
 
     @After
@@ -31,22 +31,22 @@ public class SortableConcurrentListTest {
 
     @Test
     public void test () {
-        list.add ( 9 );
-        list.add ( 66 );
-        list.add ( 7 );
-        list.add ( 55 );
-        list.add ( 5 );
-        list.add ( 33 );
-        list.add ( 3 );
-        list.add ( 2 );
-        list.add ( 1 );
-        list.add ( 0 );
-        list.sort ();
-        boolean ok = Lists.list ( 0, 1, 2, 3, 5, 7, 9, 33, 55, 66 ).equals ( list ) || die ();
-        final List purgeList = list.sortAndReturnPurgeList ( 0.20f );
-        ok |= Lists.list ( 0, 1 ).equals ( purgeList ) || die ();
-        ok |= Lists.list ( 2, 3, 5, 7, 9, 33, 55, 66 ).equals ( list ) || die ();
-        puts ( "test", ok );
+        list.add( 9 );
+        list.add( 66 );
+        list.add( 7 );
+        list.add( 55 );
+        list.add( 5 );
+        list.add( 33 );
+        list.add( 3 );
+        list.add( 2 );
+        list.add( 1 );
+        list.add( 0 );
+        list.sort();
+        boolean ok = Lists.list( 0, 1, 2, 3, 5, 7, 9, 33, 55, 66 ).equals( list ) || die();
+        final List purgeList = list.sortAndReturnPurgeList( 0.20f );
+        ok |= Lists.list( 0, 1 ).equals( purgeList ) || die();
+        ok |= Lists.list( 2, 3, 5, 7, 9, 33, 55, 66 ).equals( list ) || die();
+        puts( "test", ok );
 
     }
 

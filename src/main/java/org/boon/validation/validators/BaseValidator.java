@@ -30,7 +30,7 @@ public abstract class BaseValidator extends MessageSpecification implements Name
     }
 
     protected void populateMessage ( ValidatorMessage message, String fieldLabel, Object... args ) {
-        populateMessage ( null, message, fieldLabel, args );
+        populateMessage( null, message, fieldLabel, args );
     }
 
     protected void populateMessage ( MessageSpecification ms, ValidatorMessage message, String fieldLabel, Object... args ) {
@@ -38,13 +38,13 @@ public abstract class BaseValidator extends MessageSpecification implements Name
             ms = this;
         }
 
-        ms.setCurrentSubject ( fieldLabel );
+        ms.setCurrentSubject( fieldLabel );
         if ( !noMessages ) {
-            message.setSummary ( ms.createSummaryMessage ( args ) );
-            message.setDetail ( ms.createDetailMessage ( args ) );
+            message.setSummary( ms.createSummaryMessage( args ) );
+            message.setDetail( ms.createDetailMessage( args ) );
         }
-        ms.setCurrentSubject ( null );
-        message.setHasError ( true );
+        ms.setCurrentSubject( null );
+        message.setHasError( true );
 
     }
 

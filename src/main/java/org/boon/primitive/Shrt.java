@@ -8,35 +8,35 @@ public class Shrt {
 
 
     public static short[] grow ( short[] array, final int size ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         short[] newArray = new short[ array.length + size ];
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
     public static short[] grow ( short[] array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         short[] newArray = new short[ array.length * 2 ];
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
     public static short[] shrink ( short[] array, int size ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         short[] newArray = new short[ array.length - size ];
 
-        System.arraycopy ( array, 0, newArray, 0, array.length - size );
+        System.arraycopy( array, 0, newArray, 0, array.length - size );
         return newArray;
     }
 
 
     public static short[] compact ( short[] array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         int nullCount = 0;
         for ( short ch : array ) {
@@ -77,7 +77,7 @@ public class Shrt {
      */
     @Universal
     public static short[] array ( final short... array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
         return array;
     }
 
@@ -90,7 +90,7 @@ public class Shrt {
 
     @Universal
     public static short idx ( final short[] array, final int index ) {
-        final int i = calculateIndex ( array, index );
+        final int i = calculateIndex( array, index );
 
         return array[ i ];
     }
@@ -98,7 +98,7 @@ public class Shrt {
 
     @Universal
     public static void idx ( final short[] array, int index, short value ) {
-        final int i = calculateIndex ( array, index );
+        final int i = calculateIndex( array, index );
 
         array[ i ] = value;
     }
@@ -106,59 +106,59 @@ public class Shrt {
 
     @Universal
     public static short[] slc ( short[] array, int startIndex, int endIndex ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
-        final int start = calculateIndex ( array, startIndex );
-        final int end = calculateIndex ( array, endIndex );
+        final int start = calculateIndex( array, startIndex );
+        final int end = calculateIndex( array, endIndex );
         final int newLength = end - start;
 
         if ( newLength < 0 ) {
-            throw new ArrayIndexOutOfBoundsException (
-                    String.format ( "start index %d, end index %d, length %d",
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, end index %d, length %d",
                             startIndex, endIndex, array.length )
             );
         }
 
         short[] newArray = new short[ newLength ];
-        System.arraycopy ( array, start, newArray, 0, newLength );
+        System.arraycopy( array, start, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
     public static short[] slc ( short[] array, int startIndex ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
-        final int start = calculateIndex ( array, startIndex );
+        final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
 
         if ( newLength < 0 ) {
-            throw new ArrayIndexOutOfBoundsException (
-                    String.format ( "start index %d, length %d",
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
                             startIndex, array.length )
             );
         }
 
         short[] newArray = new short[ newLength ];
-        System.arraycopy ( array, start, newArray, 0, newLength );
+        System.arraycopy( array, start, newArray, 0, newLength );
         return newArray;
     }
 
     @Universal
     public static short[] slcEnd ( short[] array, int endIndex ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
-        final int end = calculateIndex ( array, endIndex );
+        final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
-            throw new ArrayIndexOutOfBoundsException (
-                    String.format ( "start index %d, length %d",
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
                             endIndex, array.length )
             );
         }
 
         short[] newArray = new short[ newLength ];
-        System.arraycopy ( array, 0, newArray, 0, newLength );
+        System.arraycopy( array, 0, newArray, 0, newLength );
         return newArray;
     }
 
@@ -175,41 +175,41 @@ public class Shrt {
 
     @Universal
     public static short[] copy ( short[] array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
         short[] newArray = new short[ array.length ];
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
     @Universal
     public static short[] add ( short[] array, short v ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
         short[] newArray = new short[ array.length + 1 ];
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
         return newArray;
     }
 
     @Universal
     public static short[] add ( short[] array, short[] array2 ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
         short[] newArray = new short[ array.length + array2.length ];
-        System.arraycopy ( array, 0, newArray, 0, array.length );
-        System.arraycopy ( array2, 0, newArray, array.length, array2.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
+        System.arraycopy( array2, 0, newArray, array.length, array2.length );
         return newArray;
     }
 
 
     @Universal
     public static short[] insert ( final short[] array, final int idx, final short v ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         if ( idx >= array.length ) {
-            return add ( array, v );
+            return add( array, v );
         }
 
-        final int index = calculateIndex ( array, idx );
+        final int index = calculateIndex( array, idx );
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
         short[] newArray = new short[ array.length + 1 ];
@@ -217,7 +217,7 @@ public class Shrt {
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
-            System.arraycopy ( array, 0, newArray, 0, index );
+            System.arraycopy( array, 0, newArray, 0, index );
         }
 
 
@@ -227,12 +227,12 @@ public class Shrt {
         if ( lastIndex ) {
             /* Copy the area after the insert. Make sure we don't write over the end. */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy ( array, index, newArray, index + 1, remainingIndex );
+            System.arraycopy( array, index, newArray, index + 1, remainingIndex );
 
         } else {
             /* Copy the area after the insert.  */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy ( array, index, newArray, index + 1, remainingIndex );
+            System.arraycopy( array, index, newArray, index + 1, remainingIndex );
 
         }
 
@@ -243,13 +243,13 @@ public class Shrt {
 
     @Universal
     public static short[] insert ( final short[] array, final int fromIndex, final short[] values ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
-            return add ( array, values );
+            return add( array, values );
         }
 
-        final int index = calculateIndex ( array, fromIndex );
+        final int index = calculateIndex( array, fromIndex );
 
         //Object newArray = Array.newInstance(array.getClass().getComponentType(), array.length+1);
         short[] newArray = new short[ array.length + values.length ];
@@ -257,7 +257,7 @@ public class Shrt {
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
-            System.arraycopy ( array, 0, newArray, 0, index );
+            System.arraycopy( array, 0, newArray, 0, index );
         }
 
 
@@ -269,12 +269,12 @@ public class Shrt {
         if ( lastIndex ) {
             /* Copy the area after the insert. Make sure we don't write over the end. */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy ( array, index, newArray, index + values.length, remainingIndex );
+            System.arraycopy( array, index, newArray, index + values.length, remainingIndex );
 
         } else {
             /* Copy the area after the insert.  */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy ( array, index, newArray, index + values.length, remainingIndex );
+            System.arraycopy( array, index, newArray, index + values.length, remainingIndex );
 
         }
 
@@ -289,7 +289,7 @@ public class Shrt {
     private static int calculateIndex ( short[] array, int originalIndex ) {
         final int length = array.length;
 
-        Objects.requireNonNull ( array, "array cannot be null" );
+        Objects.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;

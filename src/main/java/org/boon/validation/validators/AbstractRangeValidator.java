@@ -18,7 +18,7 @@ public abstract class AbstractRangeValidator extends BaseValidator {
     protected void init ( Comparable min, Comparable max ) {
         this.realMin = min;
         this.realMax = max;
-        assert min.compareTo ( max ) < 0;
+        assert min.compareTo( max ) < 0;
         isInitialized = true;
     }
 
@@ -27,7 +27,7 @@ public abstract class AbstractRangeValidator extends BaseValidator {
         if ( realMin == null ) {
             return true;
         }
-        return value.compareTo ( realMin ) >= 0;
+        return value.compareTo( realMin ) >= 0;
     }
 
     /* Checks to see if the value is greater than the max. */
@@ -35,7 +35,7 @@ public abstract class AbstractRangeValidator extends BaseValidator {
         if ( realMax == null ) {
             return true;
         }
-        return value.compareTo ( realMax ) <= 0;
+        return value.compareTo( realMax ) <= 0;
     }
 
     public boolean isInitialized () {

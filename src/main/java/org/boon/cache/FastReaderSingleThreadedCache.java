@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class FastReaderSingleThreadedCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
-    private final Map<KEY, VALUE> map = new HashMap<> ();
-    private final Deque<KEY> queue = new LinkedList<> ();
+    private final Map<KEY, VALUE> map = new HashMap<>();
+    private final Deque<KEY> queue = new LinkedList<>();
     private final int limit;
 
 
@@ -18,20 +18,20 @@ public class FastReaderSingleThreadedCache<KEY, VALUE> implements Cache<KEY, VAL
     }
 
     public void put ( KEY key, VALUE value ) {
-        VALUE oldValue = map.put ( key, value );
+        VALUE oldValue = map.put( key, value );
 
             /*If there was already an object under this key,
              then remove it before adding to queue
              Frequently used keys will be at the top so the search could be fast.
              */
         if ( oldValue != null ) {
-            queue.removeFirstOccurrence ( key );
+            queue.removeFirstOccurrence( key );
         }
-        queue.addFirst ( key );
+        queue.addFirst( key );
 
-        if ( map.size () > limit ) {
-            final KEY removedKey = queue.removeLast ();
-            map.remove ( removedKey );
+        if ( map.size() > limit ) {
+            final KEY removedKey = queue.removeLast();
+            map.remove( removedKey );
         }
 
     }
@@ -40,29 +40,29 @@ public class FastReaderSingleThreadedCache<KEY, VALUE> implements Cache<KEY, VAL
     public VALUE get ( KEY key ) {
 
             /* Frequently used keys will be at the top so the search could be fast.*/
-        queue.removeFirstOccurrence ( key );
-        queue.addFirst ( key );
-        return map.get ( key );
+        queue.removeFirstOccurrence( key );
+        queue.addFirst( key );
+        return map.get( key );
     }
 
 
     public VALUE getSilent ( KEY key ) {
 
-        return map.get ( key );
+        return map.get( key );
     }
 
     public void remove ( KEY key ) {
 
             /* Frequently used keys will be at the top so the search could be fast.*/
-        queue.removeFirstOccurrence ( key );
-        map.remove ( key );
+        queue.removeFirstOccurrence( key );
+        map.remove( key );
     }
 
     public int size () {
-        return map.size ();
+        return map.size();
     }
 
     public String toString () {
-        return map.toString ();
+        return map.toString();
     }
 }

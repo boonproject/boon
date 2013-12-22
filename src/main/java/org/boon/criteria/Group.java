@@ -30,13 +30,13 @@ public abstract class Group extends Criteria {
     public Group ( Grouping grouping, Criteria... expressions ) {
         this.grouping = grouping;
         this.expressions = expressions;
-        hashCode = doHashCode ();
+        hashCode = doHashCode();
 
     }
 
     private int doHashCode () {
-        int result = expressions != null ? Arrays.hashCode ( expressions ) : 0;
-        result = 31 * result + ( grouping != null ? grouping.hashCode () : 0 );
+        int result = expressions != null ? Arrays.hashCode( expressions ) : 0;
+        result = 31 * result + ( grouping != null ? grouping.hashCode() : 0 );
         return result;
 
     }
@@ -46,14 +46,14 @@ public abstract class Group extends Criteria {
         if ( toString == null ) {
 
 
-            CharBuf builder = CharBuf.create ( 80 );
-            builder.add ( "{" );
-            builder.add ( "\"expressions\":" );
-            builder.add ( Arrays.toString ( expressions ) );
-            builder.add ( ", \"grouping\":" );
-            builder.add ( String.valueOf ( grouping ) );
-            builder.add ( '}' );
-            toString = builder.toString ();
+            CharBuf builder = CharBuf.create( 80 );
+            builder.add( "{" );
+            builder.add( "\"expressions\":" );
+            builder.add( Arrays.toString( expressions ) );
+            builder.add( ", \"grouping\":" );
+            builder.add( String.valueOf( grouping ) );
+            builder.add( '}' );
+            toString = builder.toString();
         }
         return toString;
 
@@ -71,11 +71,11 @@ public abstract class Group extends Criteria {
     @Override
     public boolean equals ( Object o ) {
         if ( this == o ) return true;
-        if ( o == null || getClass () != o.getClass () ) return false;
+        if ( o == null || getClass() != o.getClass() ) return false;
 
         Group group = ( Group ) o;
 
-        if ( !Arrays.equals ( expressions, group.expressions ) ) return false;
+        if ( !Arrays.equals( expressions, group.expressions ) ) return false;
         if ( grouping != group.grouping ) return false;
 
         return true;
@@ -88,24 +88,24 @@ public abstract class Group extends Criteria {
 
     @Override
     public String toString () {
-        return doToString ();
+        return doToString();
     }
 
     public static class And extends Group {
 
         public And ( Criteria... expressions ) {
-            super ( Grouping.AND, expressions );
+            super( Grouping.AND, expressions );
         }
 
 
         @Override
         public boolean resolve ( Map<String, FieldAccess> fields, Object owner ) {
             for ( Criteria c : expressions ) {
-                c.prepareForGroupTest ( fields, owner );
-                if ( !c.test ( owner ) ) {
+                c.prepareForGroupTest( fields, owner );
+                if ( !c.test( owner ) ) {
                     return false;
                 }
-                c.cleanAfterGroupTest ();
+                c.cleanAfterGroupTest();
             }
             return true;
         }
@@ -114,7 +114,7 @@ public abstract class Group extends Criteria {
     public static class Or extends Group {
 
         public Or ( Criteria... expressions ) {
-            super ( Grouping.OR, expressions );
+            super( Grouping.OR, expressions );
         }
 
         @Override
@@ -125,11 +125,11 @@ public abstract class Group extends Criteria {
         @Override
         public boolean resolve ( Map<String, FieldAccess> fields, Object owner ) {
             for ( Criteria c : expressions ) {
-                c.prepareForGroupTest ( fields, owner );
-                if ( c.test ( owner ) ) {
+                c.prepareForGroupTest( fields, owner );
+                if ( c.test( owner ) ) {
                     return true;
                 }
-                c.cleanAfterGroupTest ();
+                c.cleanAfterGroupTest();
             }
             return false;
         }

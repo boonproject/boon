@@ -22,7 +22,7 @@ public class CharScanner {
     public static boolean isDigits ( final char[] inputArray ) {
         for ( int index = 0; index < inputArray.length; index++ ) {
             char a = inputArray[ index ];
-            if ( !isDigit ( a ) ) {
+            if ( !isDigit( a ) ) {
                 return false;
             }
         }
@@ -46,7 +46,7 @@ public class CharScanner {
             c = inputArray[ index ];
             if ( c == split ) {
 
-                results[ resultIndex ] = Chr.copy (
+                results[ resultIndex ] = Chr.copy(
                         inputArray, startCurrentLineIndex, currentLineLength - 1 );
                 startCurrentLineIndex = index + 1; //skip the char
 
@@ -57,7 +57,7 @@ public class CharScanner {
 
         if ( c != split ) {
 
-            results[ resultIndex ] = Chr.copy (
+            results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -65,7 +65,7 @@ public class CharScanner {
         int actualLength = resultIndex;
         if ( actualLength < resultsArrayLength ) {
             final int newSize = resultsArrayLength - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -94,7 +94,7 @@ public class CharScanner {
                 split = delims[ j ];
                 if ( c == split ) {
 
-                    results[ resultIndex ] = Chr.copy (
+                    results[ resultIndex ] = Chr.copy(
                             inputArray, startCurrentLineIndex, currentLineLength - 1 );
                     startCurrentLineIndex = index + 1; //skip the char
 
@@ -105,9 +105,9 @@ public class CharScanner {
             }
         }
 
-        if ( !Chr.in ( c, delims ) ) {
+        if ( !Chr.in( c, delims ) ) {
 
-            results[ resultIndex ] = Chr.copy (
+            results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -116,7 +116,7 @@ public class CharScanner {
         int actualLength = resultIndex;
         if ( actualLength < resultsArrayLength ) {
             final int newSize = resultsArrayLength - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -140,11 +140,11 @@ public class CharScanner {
 
                 if ( resultIndex == results.length ) {
 
-                    results = _grow ( results );
+                    results = _grow( results );
                 }
 
 
-                results[ resultIndex ] = Chr.copy (
+                results[ resultIndex ] = Chr.copy(
                         inputArray, startCurrentLineIndex, currentLineLength - 1 );
                 startCurrentLineIndex = index + 1; //skip the char
 
@@ -155,7 +155,7 @@ public class CharScanner {
 
         if ( c != split ) {
 
-            results[ resultIndex ] = Chr.copy (
+            results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -163,7 +163,7 @@ public class CharScanner {
         int actualLength = resultIndex;
         if ( actualLength < results.length ) {
             final int newSize = results.length - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -195,11 +195,11 @@ public class CharScanner {
 
                     if ( resultIndex == results.length ) {
 
-                        results = _grow ( results );
+                        results = _grow( results );
                     }
 
 
-                    results[ resultIndex ] = Chr.copy (
+                    results[ resultIndex ] = Chr.copy(
                             inputArray, startCurrentLineIndex, currentLineLength - 1 );
                     startCurrentLineIndex = index + 1; //skip the char
 
@@ -210,9 +210,9 @@ public class CharScanner {
             }
         }
 
-        if ( !Chr.in ( c, delims ) ) {
+        if ( !Chr.in( c, delims ) ) {
 
-            results[ resultIndex ] = Chr.copy (
+            results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -221,7 +221,7 @@ public class CharScanner {
         int actualLength = resultIndex;
         if ( actualLength < results.length ) {
             final int newSize = results.length - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -255,11 +255,11 @@ public class CharScanner {
 
                     if ( resultIndex == results.length ) {
 
-                        results = _grow ( results );
+                        results = _grow( results );
                     }
 
 
-                    results[ resultIndex ] = Chr.copy (
+                    results[ resultIndex ] = Chr.copy(
                             inputArray, startCurrentLineIndex, currentLineLength - 1 );
                     startCurrentLineIndex = index + 1; //skip the char
 
@@ -270,9 +270,9 @@ public class CharScanner {
             }
         }
 
-        if ( !Chr.in ( c, delims ) ) {
+        if ( !Chr.in( c, delims ) ) {
 
-            results[ resultIndex ] = Chr.copy (
+            results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
             resultIndex++;
         }
@@ -281,7 +281,7 @@ public class CharScanner {
         int actualLength = resultIndex;
         if ( actualLength < results.length ) {
             final int newSize = results.length - actualLength;
-            results = __shrink ( results, newSize );
+            results = __shrink( results, newSize );
         }
         return results;
     }
@@ -289,20 +289,20 @@ public class CharScanner {
     public static char[][] splitByCharsNoneEmpty ( final char[] inputArray,
                                                    final char... delims ) {
 
-        final char[][] results = splitByChars ( inputArray, delims );
-        return compact ( results );
+        final char[][] results = splitByChars( inputArray, delims );
+        return compact( results );
     }
 
 
     public static char[][] splitByCharsNoneEmpty ( final char[] inputArray, int from, int to,
                                                    final char... delims ) {
 
-        final char[][] results = splitByCharsFromToDelims ( inputArray, from, to, delims );
-        return compact ( results );
+        final char[][] results = splitByCharsFromToDelims( inputArray, from, to, delims );
+        return compact( results );
     }
 
     public static char[][] compact ( char[][] array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         int nullCount = 0;
         for ( char[] ch : array ) {
@@ -328,38 +328,38 @@ public class CharScanner {
 
 
     private static char[][] _grow ( char[][] array ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
 
         char[][] newArray = new char[ array.length * 2 ][];
-        System.arraycopy ( array, 0, newArray, 0, array.length );
+        System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
     private static char[][] __shrink ( char[][] array, int size ) {
-        Objects.requireNonNull ( array );
+        Objects.requireNonNull( array );
         char[][] newArray = new char[ array.length - size ][];
 
-        System.arraycopy ( array, 0, ( char[][] ) newArray, 0, array.length - size );
+        System.arraycopy( array, 0, ( char[][] ) newArray, 0, array.length - size );
         return newArray;
     }
 
 
-    final static String MIN_LONG_STR_NO_SIGN = String.valueOf ( Long.MIN_VALUE ).substring ( 1 );
-    final static String MAX_LONG_STR = String.valueOf ( Long.MAX_VALUE );
+    final static String MIN_LONG_STR_NO_SIGN = String.valueOf( Long.MIN_VALUE ).substring( 1 );
+    final static String MAX_LONG_STR = String.valueOf( Long.MAX_VALUE );
 
 
-    final static String MIN_INT_STR_NO_SIGN = String.valueOf ( Integer.MIN_VALUE ).substring ( 1 );
-    final static String MAX_INT_STR = String.valueOf ( Integer.MAX_VALUE );
+    final static String MIN_INT_STR_NO_SIGN = String.valueOf( Integer.MIN_VALUE ).substring( 1 );
+    final static String MAX_INT_STR = String.valueOf( Integer.MAX_VALUE );
 
     public static boolean isLong ( char[] digitChars, int offset, int len,
                                    boolean negative ) {
         String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
-        int cmpLen = cmpStr.length ();
+        int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
 
         for ( int i = 0; i < cmpLen; ++i ) {
-            int diff = digitChars[ offset + i ] - cmpStr.charAt ( i );
+            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
             if ( diff != 0 ) {
                 return ( diff < 0 );
             }
@@ -370,12 +370,12 @@ public class CharScanner {
     public static boolean isInteger ( char[] digitChars, int offset, int len,
                                       boolean negative ) {
         String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
-        int cmpLen = cmpStr.length ();
+        int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
 
         for ( int i = 0; i < cmpLen; ++i ) {
-            int diff = digitChars[ offset + i ] - cmpStr.charAt ( i );
+            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
             if ( diff != 0 ) {
                 return ( diff < 0 );
             }
@@ -384,7 +384,7 @@ public class CharScanner {
     }
 
     public static int parseInt ( char[] digitChars ) {
-        return parseInt ( digitChars, 0, digitChars.length );
+        return parseInt( digitChars, 0, digitChars.length );
     }
 
     public static int parseInt ( char[] digitChars, int offset, int len ) {
@@ -485,14 +485,14 @@ public class CharScanner {
 
     public static long parseLong ( char[] digitChars, int offset, int len ) {
         int len1 = len - 9;
-        long val = parseInt ( digitChars, offset, len1 ) * L_BILLION;
-        return val + ( long ) parseInt ( digitChars, offset + len1, 9 );
+        long val = parseInt( digitChars, offset, len1 ) * L_BILLION;
+        return val + ( long ) parseInt( digitChars, offset + len1, 9 );
     }
 
     public static long parseLongIgnoreDot ( char[] digitChars, int offset, int len ) {
         int len1 = len - 9;
-        long val = parseIntIgnoreDot ( digitChars, offset, len1 ) * L_BILLION;
-        return val + ( long ) parseIntIgnoreDot ( digitChars, offset + len1, 9 );
+        long val = parseIntIgnoreDot( digitChars, offset, len1 ) * L_BILLION;
+        return val + ( long ) parseIntIgnoreDot( digitChars, offset + len1, 9 );
     }
 
     private final static long L_BILLION = 1000000000;
@@ -549,10 +549,10 @@ public class CharScanner {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger ( buffer, startIndex, length, negative ) ) {
-                value = parseIntIgnoreDot ( buffer, startIndex, length );
+            if ( isInteger( buffer, startIndex, length, negative ) ) {
+                value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
-                value = parseLongIgnoreDot ( buffer, startIndex, length );
+                value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
                 double power = powersOf10[ digitsPastPoint ] * sign;
@@ -563,7 +563,7 @@ public class CharScanner {
 
         }
 
-        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
     }
 
 
@@ -582,10 +582,10 @@ public class CharScanner {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger ( buffer, startIndex, length, negative ) ) {
-                value = parseIntIgnoreDot ( buffer, startIndex, length );
+            if ( isInteger( buffer, startIndex, length, negative ) ) {
+                value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
-                value = parseLongIgnoreDot ( buffer, startIndex, length );
+                value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
                 double power = powersOf10[ digitsPastPoint ] * sign;
@@ -596,7 +596,7 @@ public class CharScanner {
 
         }
 
-        return Double.parseDouble ( new String ( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
     }
 
 

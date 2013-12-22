@@ -14,11 +14,11 @@ public class Sys {
 
 
     public static void println ( String message ) {
-        System.out.println ( message );
+        System.out.println( message );
     }
 
     public static void print ( String message ) {
-        System.out.print ( message );
+        System.out.print( message );
     }
 
 
@@ -28,7 +28,7 @@ public class Sys {
 
 
     static {
-        if ( System.getProperty ( "os.name" ).contains ( "Windows" ) ) {
+        if ( System.getProperty( "os.name" ).contains( "Windows" ) ) {
             isWindows = true;
         } else {
             isWindows = false;
@@ -41,28 +41,28 @@ public class Sys {
     }
 
 
-    final static AtomicReference<TimeKeeper> timer = new AtomicReference<TimeKeeper> ( new TimeKeeperBasic () );
+    final static AtomicReference<TimeKeeper> timer = new AtomicReference<TimeKeeper>( new TimeKeeperBasic() );
 
     public static TimeKeeper timer () {
-        return timer.get ();
+        return timer.get();
     }
 
     public static long time () {
-        return timer.get ().time ();
+        return timer.get().time();
     }
 
 
     static {
         boolean _inContainer;
-        boolean forceInContainer = Boolean.parseBoolean ( System.getProperty ( "org.boon.forceInContainer", "false" ) );
-        boolean forceNoContainer = Boolean.parseBoolean ( System.getProperty ( "org.boon.forceNoContainer", "false" ) );
+        boolean forceInContainer = Boolean.parseBoolean( System.getProperty( "org.boon.forceInContainer", "false" ) );
+        boolean forceNoContainer = Boolean.parseBoolean( System.getProperty( "org.boon.forceNoContainer", "false" ) );
 
         if ( forceNoContainer ) {
             _inContainer = false;
         } else if ( forceInContainer ) {
             _inContainer = true;
         } else {
-            _inContainer = detectContainer ();
+            _inContainer = detectContainer();
         }
 
         inContainer = _inContainer;
@@ -73,7 +73,7 @@ public class Sys {
         boolean _inContainer;
 
         try {
-            Class.forName ( "javax.servlet.http.HttpServlet" );
+            Class.forName( "javax.servlet.http.HttpServlet" );
 
             _inContainer = true;
         } catch ( ClassNotFoundException e ) {
@@ -81,7 +81,7 @@ public class Sys {
         }
         if ( !_inContainer ) {
             try {
-                Class.forName ( "javax.ejb.EJBContext" );
+                Class.forName( "javax.ejb.EJBContext" );
 
                 _inContainer = true;
             } catch ( ClassNotFoundException e ) {
@@ -102,8 +102,8 @@ public class Sys {
 
     static {
         if ( !inContainer ) {
-            SystemTimeKeeper.start ();
-            timer.set ( new SystemTimeKeeper () );
+            SystemTimeKeeper.start();
+            timer.set( new SystemTimeKeeper() );
         }
     }
 
@@ -112,7 +112,7 @@ public class Sys {
      * all be stuffed into application context. */
     public static Object contextToHold () {
 
-        return Reflection.contextToHold ();
+        return Reflection.contextToHold();
     }
 
 

@@ -21,7 +21,7 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     public void add ( MapItemValue miv ) {
         if ( len == items.length ) {
-            items = org.boon.Arrays.grow ( items );
+            items = org.boon.Arrays.grow( items );
         }
         items[ len ] = miv;
         len++;
@@ -44,7 +44,7 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
         @Override
         public Iterator<Entry<String, Object>> iterator () {
-            return new Iterator<Entry<String, Object>> () {
+            return new Iterator<Entry<String, Object>>() {
                 int location = 0;
 
                 @Override
@@ -73,13 +73,13 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     }
 
-    private FakeSet set = new FakeSet ( items );
+    private FakeSet set = new FakeSet( items );
 
     @Override
     public Object get ( Object key ) {
-        if ( map == null ) buildMap ();
-        Object object = map.get ( key );
-        chopIfNeeded ( object );
+        if ( map == null ) buildMap();
+        Object object = map.get( key );
+        chopIfNeeded( object );
         return object;
     }
 
@@ -87,10 +87,10 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
         if ( lazyChop ) {
             if ( object instanceof JsonMap ) {
                 JsonMap m = ( JsonMap ) object;
-                m.chopMap ();
+                m.chopMap();
             } else if ( object instanceof JsonList ) {
                 JsonList list = ( JsonList ) object;
-                list.chopList ();
+                list.chopList();
             }
         }
 
@@ -110,12 +110,12 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
                 if ( e == null ) break;
                 MapItemValue entry = ( MapItemValue ) e;
 
-                Value value = entry.getValue ();
+                Value value = entry.getValue();
                 if ( value == null ) continue;
-                if ( value.isContainer () ) {
-                    chopContainer ( value );
+                if ( value.isContainer() ) {
+                    chopContainer( value );
                 } else {
-                    value.chop ();
+                    value.chop();
                 }
             }
         }
@@ -123,20 +123,20 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
     }
 
     void chopContainer ( Value value ) {
-        Object obj = value.toValue ();
+        Object obj = value.toValue();
         if ( obj instanceof JsonMap ) {
             JsonMap map = ( JsonMap ) obj;
-            map.chopMap ();
+            map.chopMap();
         } else if ( obj instanceof JsonList ) {
             JsonList list = ( JsonList ) obj;
-            list.chopList ();
+            list.chopList();
         }
     }
 
 
     @Override
     public Value put ( String key, Object value ) {
-        die ( "Not that kind of map" );
+        die( "Not that kind of map" );
         return null;
     }
 
@@ -146,35 +146,41 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
         if ( map == null ) {
             return set;
         } else {
-            return map.entrySet ();
+            return map.entrySet();
         }
     }
 
     private final void buildMap () {
 
-        map = new HashMap<> ( items.length );
+        map = new HashMap<>( items.length );
 
         for ( Entry<String, Value> miv : items ) {
             if ( miv == null ) {
                 break;
             }
-            map.put ( miv.getKey (), miv.getValue ().toValue () );
+            map.put( miv.getKey(), miv.getValue().toValue() );
         }
     }
 
 
     public Collection<Object> values () {
-        return map.values ();
+        if ( map == null ) buildMap();
+        return map.values();
     }
 
 
     public int size () {
-        return len;
+
+        if ( map == null ) {
+            return len;
+        } else {
+            return map.size();
+        }
     }
 
     public String toString () {
-        if ( map == null ) buildMap ();
-        return map.toString ();
+        if ( map == null ) buildMap();
+        return map.toString();
 
     }
 }

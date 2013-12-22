@@ -27,14 +27,14 @@ public abstract class Selector {
     }
 
     public static List<Selector> selects ( Selector... selects ) {
-        return list ( selects );
+        return list( selects );
     }
 
     public static Selector select ( final String name ) {
-        return new Selector ( name ) {
+        return new Selector( name ) {
             @Override
             public void handleRow ( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-                row.put ( this.name, fields.get ( this.name ).getValue ( item ) );
+                row.put( this.name, fields.get( this.name ).getValue( item ) );
             }
 
             @Override
@@ -48,11 +48,11 @@ public abstract class Selector {
     }
 
     public static Selector toStr ( final String name ) {
-        return new Selector ( name + ".toString()" ) {
+        return new Selector( name + ".toString()" ) {
             @Override
             public void handleRow ( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-                Object selected = fields.get ( this.name ).getValue ( item );
-                row.put ( this.name, selected == null ? "" : selected.toString () );
+                Object selected = fields.get( this.name ).getValue( item );
+                row.put( this.name, selected == null ? "" : selected.toString() );
             }
 
             @Override
@@ -66,10 +66,10 @@ public abstract class Selector {
     }
 
     public static Selector toStr () {
-        return new Selector ( "toString()" ) {
+        return new Selector( "toString()" ) {
             @Override
             public void handleRow ( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-                row.put ( this.name, item.toString () );
+                row.put( this.name, item.toString() );
             }
 
             @Override
@@ -83,17 +83,17 @@ public abstract class Selector {
     }
 
     public static Selector select ( final String... path ) {
-        return new Selector ( joinBy ( '.', path ) ) {
+        return new Selector( joinBy( '.', path ) ) {
             int index = 0;
 
             @Override
             public void handleRow ( int rowNum, Map<String, Object> row,
                                     Object item, Map<String, FieldAccess> fields ) {
 
-                Object o = BeanUtils.getPropByPath ( item, path );
+                Object o = BeanUtils.getPropByPath( item, path );
 
 
-                row.put ( this.name, o );
+                row.put( this.name, o );
             }
 
 
@@ -108,17 +108,17 @@ public abstract class Selector {
     }
 
     public static Selector toStr ( final String... path ) {
-        return new Selector ( joinBy ( '.', path ) + ".toString()" ) {
+        return new Selector( joinBy( '.', path ) + ".toString()" ) {
             int index = 0;
 
             @Override
             public void handleRow ( int rowNum, Map<String, Object> row,
                                     Object item, Map<String, FieldAccess> fields ) {
 
-                Object o = BeanUtils.getPropByPath ( item, path );
+                Object o = BeanUtils.getPropByPath( item, path );
 
 
-                row.put ( this.name, o == null ? "" : o.toString () );
+                row.put( this.name, o == null ? "" : o.toString() );
             }
 
 
@@ -133,14 +133,14 @@ public abstract class Selector {
     }
 
     public static Selector selectPropPath ( final String... path ) {
-        return new Selector ( joinBy ( '.', path ) ) {
+        return new Selector( joinBy( '.', path ) ) {
             @Override
             public void handleRow ( int rowNum, Map<String, Object> row,
                                     Object item, Map<String, FieldAccess> fields ) {
 
-                Object o = BeanUtils.getPropByPath ( item, path );
+                Object o = BeanUtils.getPropByPath( item, path );
 
-                row.put ( this.name, o );
+                row.put( this.name, o );
             }
 
             @Override
@@ -155,10 +155,10 @@ public abstract class Selector {
 
     public static Selector rowId () {
 
-        return new Selector ( "rowId" ) {
+        return new Selector( "rowId" ) {
             @Override
             public void handleRow ( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-                row.put ( name, index );
+                row.put( name, index );
             }
 
             @Override
@@ -173,26 +173,26 @@ public abstract class Selector {
 
 
     public static <ITEM> List<Map<String, Object>> performSelection ( List<Selector> selectors, List<ITEM> results, Map<String, FieldAccess> fields ) {
-        List<Map<String, Object>> rows = new ArrayList<> ( results.size () );
+        List<Map<String, Object>> rows = new ArrayList<>( results.size() );
 
 
         for ( Selector s : selectors ) {
-            s.handleStart ( results );
+            s.handleStart( results );
         }
 
 
         int index = 0;
         for ( ITEM item : results ) {
-            Map<String, Object> row = new LinkedHashMap<> ();
+            Map<String, Object> row = new LinkedHashMap<>();
             for ( Selector s : selectors ) {
-                s.handleRow ( index, row, item, fields );
+                s.handleRow( index, row, item, fields );
             }
             index++;
-            rows.add ( row );
+            rows.add( row );
         }
 
         for ( Selector s : selectors ) {
-            s.handleComplete ( rows );
+            s.handleComplete( rows );
         }
 
         return rows;

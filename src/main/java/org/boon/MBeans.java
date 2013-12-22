@@ -17,8 +17,8 @@ public class MBeans {
                                             final ObjectName name ) {
 
 
-        Objects.requireNonNull ( server, "server cannot be null" );
-        Objects.requireNonNull ( name, "name cannot be null" );
+        Objects.requireNonNull( server, "server cannot be null" );
+        Objects.requireNonNull( name, "name cannot be null" );
 
 
             /* Return the bean attributes converted to a map. */
@@ -28,38 +28,38 @@ public class MBeans {
         try {
 
 
-            info = server.getMBeanInfo ( name );
+            info = server.getMBeanInfo( name );
 
-            final String[] attributeNames = getAttributeNames ( info );
-            result = new HashMap<> ( attributeNames.length );
+            final String[] attributeNames = getAttributeNames( info );
+            result = new HashMap<>( attributeNames.length );
 
 
-            final AttributeList attributeList = server.getAttributes ( name, attributeNames );
+            final AttributeList attributeList = server.getAttributes( name, attributeNames );
 
 
             for ( Object obj : attributeList ) {
                 final Attribute attribute = ( Attribute ) obj;
-                result.put ( attribute.getName (), convertValue ( attribute.getValue () ) );
+                result.put( attribute.getName(), convertValue( attribute.getValue() ) );
             }
 
             return result;
 
         } catch ( Exception ex ) {
 
-            return Exceptions.handle ( Map.class, String.format (
-                    "Unable to turn mbean into map %s ", name.getCanonicalName ()
+            return Exceptions.handle( Map.class, String.format(
+                    "Unable to turn mbean into map %s ", name.getCanonicalName()
             ), ex );
         }
 
     }
 
     public static String[] getAttributeNames ( MBeanInfo info ) {
-        final MBeanAttributeInfo[] attributes = info.getAttributes ();
+        final MBeanAttributeInfo[] attributes = info.getAttributes();
         final String[] attributeNames = new String[ attributes.length ];
 
         for ( int index = 0; index < attributes.length; index++ ) {
 
-            attributeNames[ index ] = attributes[ index ].getName ();
+            attributeNames[ index ] = attributes[ index ].getName();
         }
         return attributeNames;
     }
@@ -74,16 +74,16 @@ public class MBeans {
 
             /* convert an array to a List and convert the component objects of the array.
             */
-        if ( value.getClass ().isArray () ) {
+        if ( value.getClass().isArray() ) {
 
-            value = convertFromArrayToList ( value );
+            value = convertFromArrayToList( value );
 
         } else if ( value instanceof CompositeData ) {
 
-            value = convertFromCompositeDataToToMap ( value );
+            value = convertFromCompositeDataToToMap( value );
 
         } else if ( value instanceof TabularData ) {
-            value = convertFromTabularDataToMap ( value );
+            value = convertFromTabularDataToMap( value );
         }
 
         return value;
@@ -92,16 +92,16 @@ public class MBeans {
     private static Object convertFromTabularDataToMap ( Object value ) {
         final TabularData data = ( TabularData ) value;
 
-        final Set<List<?>> keys = ( Set<List<?>> ) data.keySet ();
+        final Set<List<?>> keys = ( Set<List<?>> ) data.keySet();
 
-        final Map<String, Object> map = new HashMap<> ();
+        final Map<String, Object> map = new HashMap<>();
         for ( final List<?> key : keys ) {
-            final Object subValue = convertValue ( data.get ( key.toArray () ) );
+            final Object subValue = convertValue( data.get( key.toArray() ) );
 
-            if ( key.size () == 1 ) {
-                map.put ( convertValue ( key.get ( 0 ) ).toString (), subValue );
+            if ( key.size() == 1 ) {
+                map.put( convertValue( key.get( 0 ) ).toString(), subValue );
             } else {
-                map.put ( convertValue ( key ).toString (), subValue );
+                map.put( convertValue( key ).toString(), subValue );
             }
         }
 
@@ -111,11 +111,11 @@ public class MBeans {
 
     private static Object convertFromCompositeDataToToMap ( Object value ) {
         final CompositeData data = ( CompositeData ) value;
-        final Map<String, Object> map = new HashMap<String, Object> ();
-        final Set<String> keySet = data.getCompositeType ().keySet ();
+        final Map<String, Object> map = new HashMap<String, Object>();
+        final Set<String> keySet = data.getCompositeType().keySet();
 
         for ( final String key : keySet ) {
-            map.put ( key, convertValue ( data.get ( key ) ) );
+            map.put( key, convertValue( data.get( key ) ) );
         }
 
         value = map;
@@ -123,12 +123,12 @@ public class MBeans {
     }
 
     private static Object convertFromArrayToList ( Object value ) {
-        final List<Object> list = new ArrayList<Object> ();
+        final List<Object> list = new ArrayList<Object>();
 
-        final int length = Array.getLength ( value );
+        final int length = Array.getLength( value );
 
         for ( int index = 0; index < length; index++ ) {
-            list.add ( convertValue ( Array.get ( value, index ) ) );
+            list.add( convertValue( Array.get( value, index ) ) );
         }
 
         value = list;
@@ -138,19 +138,19 @@ public class MBeans {
 
     public static DynamicMBean createMBean ( final Object instance, final Class<?> managedInterface ) {
 
-        Objects.requireNonNull ( instance, "instance cannot be null" );
-        Objects.requireNonNull ( managedInterface, "managedInterface cannot be null" );
+        Objects.requireNonNull( instance, "instance cannot be null" );
+        Objects.requireNonNull( managedInterface, "managedInterface cannot be null" );
 
 
         try {
 
                 /* Create the bean. */
-            return new StandardMBean ( instance, ( Class ) managedInterface );
+            return new StandardMBean( instance, ( Class ) managedInterface );
 
         } catch ( final NotCompliantMBeanException ex ) {
-            return Exceptions.handle ( DynamicMBean.class, String.format (
+            return Exceptions.handle( DynamicMBean.class, String.format(
                     "createMBean unable to register %s under interface %s",
-                    instance.getClass ().getName (), managedInterface.getClass ().getName ()
+                    instance.getClass().getName(), managedInterface.getClass().getName()
             ), ex );
 
         }
@@ -158,25 +158,25 @@ public class MBeans {
 
     public static void registerMBean ( final String prefix, final String name, final Object mbean ) {
 
-        Objects.requireNonNull ( prefix, "prefix can't be null" );
-        Objects.requireNonNull ( name, "name can't be null" );
-        Objects.requireNonNull ( mbean, "mbean can't be null" );
+        Objects.requireNonNull( prefix, "prefix can't be null" );
+        Objects.requireNonNull( name, "name can't be null" );
+        Objects.requireNonNull( mbean, "mbean can't be null" );
 
-        String nameOfBean = nameOfBean = String.format ( "%s.%s:type=%s",
-                prefix, mbean.getClass ().getSimpleName (),
+        String nameOfBean = nameOfBean = String.format( "%s.%s:type=%s",
+                prefix, mbean.getClass().getSimpleName(),
                 name );
 
         try {
 
 
-            final ObjectName objectName = new ObjectName ( nameOfBean );
+            final ObjectName objectName = new ObjectName( nameOfBean );
 
-            final MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer ();
+            final MBeanServer beanServer = ManagementFactory.getPlatformMBeanServer();
 
-            beanServer.registerMBean ( mbean, objectName );
+            beanServer.registerMBean( mbean, objectName );
 
         } catch ( final Exception ex ) {
-            Exceptions.handle ( String.format (
+            Exceptions.handle( String.format(
                     "registerMBean %s %s %s %s", prefix, name, mbean, nameOfBean
             ), ex );
 

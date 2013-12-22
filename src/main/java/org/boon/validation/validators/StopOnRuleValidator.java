@@ -26,7 +26,7 @@ public class StopOnRuleValidator implements FieldValidator {
     }
 
     public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
-        return new ValidatorMessage ();
+        return new ValidatorMessage();
     }
 
 }

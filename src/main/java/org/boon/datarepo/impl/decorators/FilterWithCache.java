@@ -15,27 +15,27 @@ public class FilterWithCache extends FilterDecoratorBase {
     private Cache<Group, ResultSet> cache;
 
     public FilterWithCache ( final Filter delegate, final Supplier<Cache<Group, ResultSet>> cacheFactory ) {
-        super ( delegate );
+        super( delegate );
         this.cacheFactory = cacheFactory;
-        this.cache = cacheFactory.get ();
+        this.cache = cacheFactory.get();
     }
 
     @Override
     public ResultSet filter ( Criteria... expressions ) {
-        Group and = CriteriaFactory.and ( expressions );
+        Group and = CriteriaFactory.and( expressions );
 
-        ResultSet results = cache.get ( and );
+        ResultSet results = cache.get( and );
 
 
         if ( results != null ) {
-            cache.put ( and, results );
+            cache.put( and, results );
             return results;
         }
 
 
-        results = super.filter ( expressions );
+        results = super.filter( expressions );
 
-        cache.put ( and, results );
+        cache.put( and, results );
 
         return results;
     }
@@ -43,8 +43,8 @@ public class FilterWithCache extends FilterDecoratorBase {
     @Override
     public void invalidate () {
 
-        cache = this.cacheFactory.get ();
-        super.invalidate ();
+        cache = this.cacheFactory.get();
+        super.invalidate();
     }
 
 

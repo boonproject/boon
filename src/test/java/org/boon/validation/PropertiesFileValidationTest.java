@@ -27,45 +27,45 @@ public class PropertiesFileValidationTest {
 
     @Before
     public void setup () {
-        ValidationContext.create ();
+        ValidationContext.create();
     }
 
     @After
     public void cleanup () {
-        ValidationContext.destroy ();
+        ValidationContext.destroy();
     }
 
 
     @Test
     public void testRecursiveWithPropertyFile () {
 
-        Map<String, Object> objectMap = map (
-                "/org/boon/validator/required", ( Object ) new RequiredValidator (),
-                "/org/boon/validator/range", ( Object ) new LongRangeValidator (),
-                "/org/boon/validator/length", ( Object ) new LengthValidator (),
-                "/org/boon/validator/personName", Validators.personName ( "", "" )
+        Map<String, Object> objectMap = map(
+                "/org/boon/validator/required", ( Object ) new RequiredValidator(),
+                "/org/boon/validator/range", ( Object ) new LongRangeValidator(),
+                "/org/boon/validator/length", ( Object ) new LengthValidator(),
+                "/org/boon/validator/personName", Validators.personName( "", "" )
         );
 
-        RecursiveDescentPropertyValidator validator = new RecursiveDescentPropertyValidator ();
-        validator.setValidatorMetaDataReader ( new PropertiesFileValidatorMetaDataReader () );
+        RecursiveDescentPropertyValidator validator = new RecursiveDescentPropertyValidator();
+        validator.setValidatorMetaDataReader( new PropertiesFileValidatorMetaDataReader() );
 
         List<MessageHolder> messageHolders = Collections.EMPTY_LIST;
-        messageHolders = validator.validateObject ( new Employee ( "Selwyn", 21, "555-555-5555" ), objectMap );
+        messageHolders = validator.validateObject( new Employee( "Selwyn", 21, "555-555-5555" ), objectMap );
 
 
         int errors = 0;
 
         for ( MessageHolder messageHolder : messageHolders ) {
-            puts ( messageHolder.propertyPath );
-            puts ( messageHolder.holder.hasError () );
+            puts( messageHolder.propertyPath );
+            puts( messageHolder.holder.hasError() );
 
-            if ( messageHolder.holder.hasError () ) {
+            if ( messageHolder.holder.hasError() ) {
                 errors++;
             }
         }
 
         if ( errors > 0 ) {
-            die ( " Not expecting any errors " );
+            die( " Not expecting any errors " );
         }
     }
 }

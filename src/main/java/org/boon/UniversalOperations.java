@@ -302,7 +302,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * </pre>
      *
      * @return for arrays, this will return the new array,
-     * for all other collection like things, it returns void.
+     *         for all other collection like things, it returns void.
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int

@@ -32,19 +32,19 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
             values[ size ] = value;
             size++;
             if ( size == keys.length ) {
-                keys = org.boon.Arrays.grow ( keys );
-                values = org.boon.Arrays.grow ( values );
+                keys = org.boon.Arrays.grow( keys );
+                values = org.boon.Arrays.grow( values );
             }
             return null;
         } else {
-            return map.put ( key, value );
+            return map.put( key, value );
         }
     }
 
     @Override
     public Set<Entry<String, Object>> entrySet () {
-        buildIfNeeded ();
-        return map.entrySet ();
+        buildIfNeeded();
+        return map.entrySet();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             return size;
         } else {
-            return map.size ();
+            return map.size();
         }
     }
 
@@ -61,36 +61,36 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             return size == 0;
         } else {
-            return map.isEmpty ();
+            return map.isEmpty();
         }
     }
 
     @Override
     public boolean containsValue ( Object value ) {
         if ( map == null ) {
-            throw new RuntimeException ( "wrong type of map" );
+            throw new RuntimeException( "wrong type of map" );
         } else {
-            return map.containsValue ( value );
+            return map.containsValue( value );
         }
     }
 
     @Override
     public boolean containsKey ( Object key ) {
-        buildIfNeeded ();
-        return map.containsKey ( key );
+        buildIfNeeded();
+        return map.containsKey( key );
     }
 
     @Override
     public Object get ( Object key ) {
-        buildIfNeeded ();
-        return map.get ( key );
+        buildIfNeeded();
+        return map.get( key );
     }
 
     private void buildIfNeeded () {
         if ( map == null ) {
-            map = new LinkedHashMap<> ( size, 0.01f );
+            map = new LinkedHashMap<>( size, 0.01f );
             for ( int index = 0; index < size; index++ ) {
-                map.put ( keys[ index ], values[ index ] );
+                map.put( keys[ index ], values[ index ] );
             }
             this.keys = null;
             this.values = null;
@@ -101,9 +101,9 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
     public Object remove ( Object key ) {
 
         if ( map == null ) {
-            throw new RuntimeException ( "wrong type of map" );
+            throw new RuntimeException( "wrong type of map" );
         } else {
-            return map.remove ( key );
+            return map.remove( key );
         }
     }
 
@@ -111,9 +111,9 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
     public void putAll ( Map m ) {
 
         if ( map == null ) {
-            throw new RuntimeException ( "wrong type of map" );
+            throw new RuntimeException( "wrong type of map" );
         } else {
-            map.putAll ( m );
+            map.putAll( m );
         }
     }
 
@@ -122,7 +122,7 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             size = 0;
         } else {
-            map.clear ();
+            map.clear();
         }
     }
 
@@ -132,7 +132,7 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             return null;
         } else {
-            return map.keySet ();
+            return map.keySet();
         }
 
     }
@@ -140,9 +140,9 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
     @Override
     public Collection<Object> values () {
         if ( map == null ) {
-            return Arrays.asList ( values );
+            return Arrays.asList( values );
         } else {
-            return map.values ();
+            return map.values();
         }
 
     }
@@ -152,16 +152,16 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             return false;
         } else {
-            return map.equals ( o );
+            return map.equals( o );
         }
     }
 
     @Override
     public int hashCode () {
         if ( map == null ) {
-            return "{}".hashCode ();
+            return "{}".hashCode();
         } else {
-            return map.hashCode ();
+            return map.hashCode();
         }
     }
 
@@ -171,7 +171,7 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             return "{}";
         } else {
-            return map.toString ();
+            return map.toString();
         }
     }
 
@@ -181,14 +181,14 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             return null;
         } else {
-            return map.clone ();
+            return map.clone();
         }
     }
 
     public JsonLazyLinkedMap clearAndCopy () {
-        JsonLazyLinkedMap map = new JsonLazyLinkedMap ();
+        JsonLazyLinkedMap map = new JsonLazyLinkedMap();
         for ( int index = 0; index < size; index++ ) {
-            map.put ( keys[ index ], values[ index ] );
+            map.put( keys[ index ], values[ index ] );
         }
         size = 0;
         return map;

@@ -6,7 +6,7 @@ public class Partner extends Subject {
     private final long partnerId;
 
     public Partner ( long partnerId ) {
-        super ( "Partner:" + partnerId );
+        super( "Partner:" + partnerId );
         this.partnerId = partnerId;
 
     }
