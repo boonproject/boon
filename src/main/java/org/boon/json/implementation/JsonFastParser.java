@@ -1,6 +1,5 @@
 package org.boon.json.implementation;
 
-import org.boon.core.*;
 import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.json.internal.*;
@@ -375,7 +374,7 @@ public class JsonFastParser extends JsonParserCharArray {
         boolean checkDate = !encoded && minusCount >= 2 && colonCount >= 2;
 
 
-        Value value = new ValueInCharBuf( chop, Type.STRING, startIndex, __index - 1, this.charArray, encoded, checkDate );
+        Value value = new ValueInCharBuf( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDate );
 
 
         if ( __index < charArray.length ) {

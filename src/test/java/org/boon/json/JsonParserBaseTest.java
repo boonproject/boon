@@ -77,9 +77,13 @@ public class JsonParserBaseTest {
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
+        inspectMap ( map );
+
         System.out.println( obj );
 
-        ok &= idx( map, "foo" ).equals( 1 ) || die( "I did not find 1" + idx( map, "foo" ) );
+        puts (idx( map, "foo" ).getClass ());
+
+        ok &= idx( map, "foo" ).equals( 1 ) || die( "I did not find 1 " + idx( map, "foo" ) );
     }
 
 
