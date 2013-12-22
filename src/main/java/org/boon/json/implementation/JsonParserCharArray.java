@@ -139,14 +139,8 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             __currentChar = charArray[ __index ];
             switch ( __currentChar ) {
                 case ' ':
-                    continue label;
-
                 case '\n':
-                    continue label;
-
                 case '\r':
-                    continue label;
-
                 case '\t':
                     continue label;
 
@@ -161,8 +155,9 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     protected final Object decodeJsonObject() {
 
 
-        if ( __currentChar == '{' )
-            this.nextChar();
+        if ( __currentChar == '{' )  {
+            __index++;
+        }
 
         JsonLazyLinkedMap map = null;
         if ( heavyCache ) {
@@ -197,7 +192,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
                     complain( "expecting current character to be " + charDescription( __currentChar ) + "\n" );
                 }
-                this.nextChar(); // skip past ':'
+                __index++;
 
                 Object value = decodeValueInternal();
 
@@ -493,7 +488,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                     charArray[ ++__index ] == 'u' &&
                     charArray[ ++__index ] == 'l' &&
                     charArray[ ++__index ] == 'l' ) {
-                nextChar();
+                __index++;
                 return null;
             }
         }
@@ -511,7 +506,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                     charArray[ ++__index ] == 'u' &&
                     charArray[ ++__index ] == 'e' ) {
 
-                nextChar();
+                __index++;
                 return true;
 
             }
@@ -531,7 +526,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                     charArray[ ++__index ] == 'l' &&
                     charArray[ ++__index ] == 's' &&
                     charArray[ ++__index ] == 'e' ) {
-                nextChar();
+                __index++;
                 return false;
             }
         }
@@ -594,7 +589,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     protected final List decodeJsonArray() {
         if ( __currentChar == '[' ) {
-            this.nextChar();
+            __index++;
         }
 
 
@@ -603,7 +598,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
-            this.nextChar();
+            __index++;
             return Collections.EMPTY_LIST;
         }
 
@@ -628,10 +623,10 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             char c = __currentChar;
 
             if ( c == ',' ) {
-                this.nextChar();
+                __index++;
                 continue;
             } else if ( c == ']' ) {
-                this.nextChar();
+                __index++;
                 break;
             } else {
 

@@ -415,6 +415,7 @@ public class JsonFastParser extends JsonParserCharArray {
         int arrayIndex = 0;
 
         do {
+            skipWhiteSpace ();
             Value arrayItem = decodeValueOverlay();
 
             if ( arrayItem == null ) {

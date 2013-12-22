@@ -1,6 +1,7 @@
 package org.boon.json;
 
 import org.boon.json.implementation.JsonParserLax;
+import org.boon.json.implementation.PlistParser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,12 +38,12 @@ public class PlistTest {
 
 
     public JsonParser parser() {
-        return new JsonParserLax( false, true, true, true );
+        return new PlistParser ( false, true, true );
 
     }
 
     public JsonParser objectParser() {
-        return new JsonParserLax( true, false, false, true );
+        return new JsonParserLax( true, false, false );
 
     }
 
@@ -62,7 +63,7 @@ public class PlistTest {
                 "                numberOfFilesIncluded = 31;\n" +
                 "                date=\"1994-11-05T08:15:30Z\";//lovebucket\n" +
                 "        };\n" +
-                "        anotherComment=bar;//lovebucket \n" +
+                "        anotherComment=bar;\n" +
                 "        Library = {\n" +
                 "                isSymLink = 0;\n" +
                 "                owner     = root;\n" +
@@ -87,6 +88,7 @@ public class PlistTest {
         ok = idx( map, "date" ).toString().equals( "Sat Nov 05 00:15:30 PST 1994" ) || die( "I did not find:" + idx( map, "date" ) + "#" );
 
 
+        inspectMap ( map );
         int symlink = ( Integer ) applications.get( "isSymLink" );
         ok = symlink == 1 || die();
 

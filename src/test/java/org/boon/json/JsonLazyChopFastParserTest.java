@@ -10,4 +10,9 @@ public class JsonLazyChopFastParserTest extends JsonParserBaseTest {
    public JsonParser parser() {
        return new JsonFastParser ( false, true, true );
    }
+
+    public JsonParser objectParser() {
+        return new JsonFastParser ( true, false, false );
+    }
+
 }
