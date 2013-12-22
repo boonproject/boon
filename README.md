@@ -1,4 +1,18 @@
+Dec 21:
+```
+Benchmark                                                              Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.Gatling BoonBenchmark.parseBytesPrecompiledRoundRobin          thrpt   8         6    1   125093.867     2447.914    ops/s
+i.g.b.j.Gatling BoonBenchmark.parseCharsPrecompiledRoundRobin          thrpt   8         6    1   117296.464     5713.760    ops/s
+i.g.b.j.Lazy BoonJsonPathBM.parseBytesPrecompiledRoundRobin            thrpt   8         6    1    93338.431    12747.054    ops/s
+i.g.b.j.Lazy BoonJsonPathBM.parseCharsPrecompiledRoundRobin            thrpt   8         6    1    96480.847     3097.341    ops/s
+i.g.b.j.Gatling JacksonBenchmark.parseBytesPrecompiledRoundRobin       thrpt   8         6    1    83151.900     1084.591    ops/s
+i.g.b.j.Gatling JacksonBenchmark.parseStringPrecompiledRoundRobin      thrpt   8         6    1    62074.683     1025.949    ops/s
+i.g.b.j.Gatling JsonSmartBenchmark.parseStringPrecompiledRoundRobin    thrpt   8         6    1    58692.028     1583.224    ops/s
+i.g.b.j.Jayway JacksonBenchmark.parseBytesPrecompiledRoundRobin        thrpt   8         6    1    23116.650    13294.959    ops/s
+i.g.b.j.Jayway JacksonBenchmark.parseStringPrecompiledRoundRobin       thrpt   8         6    1    17084.089    12348.386    ops/s
+$ java -jar target/microbenchmarks.jar ".*" -wi 3 -i 3 -f 2 -t 8
 
+```
 Dec 17: 0.3 released.
 
 For the next 15 minutes, before Cowboy coder wakes up and tunes Jackson, Boon has the fastest JSON parser.
