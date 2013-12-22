@@ -22,7 +22,7 @@ public class Conversions {
     private static final Logger log = Logger.getLogger( Conversions.class.getName() );
 
 
-    public static int toInt ( Object obj ) {
+    public static int toInt( Object obj ) {
         if ( obj.getClass() == int.class ) {
             return int.class.cast( obj );
         }
@@ -72,7 +72,7 @@ public class Conversions {
 
     }
 
-    public static byte toByte ( Object obj ) {
+    public static byte toByte( Object obj ) {
         if ( obj.getClass() == byte.class ) {
             return byte.class.cast( obj );
         } else if ( obj instanceof Number ) {
@@ -82,7 +82,7 @@ public class Conversions {
         }
     }
 
-    public static short toShort ( Object obj ) {
+    public static short toShort( Object obj ) {
 
         if ( obj.getClass() == short.class ) {
             return short.class.cast( obj );
@@ -93,7 +93,7 @@ public class Conversions {
         }
     }
 
-    public static char toChar ( Object obj ) {
+    public static char toChar( Object obj ) {
         if ( obj.getClass() == char.class ) {
             return char.class.cast( obj );
         } else if ( obj instanceof Character ) {
@@ -117,7 +117,7 @@ public class Conversions {
         }
     }
 
-    public static long toLong ( Object obj ) {
+    public static long toLong( Object obj ) {
 
         if ( obj.getClass() == long.class ) {
             return long.class.cast( obj );
@@ -172,7 +172,7 @@ public class Conversions {
     final static Set<String> TRUE_SET = Sets.set( "t", "true", "True", "y", "yes", "1", "aye",
             "T", "TRUE", "ok" );
 
-    public static boolean toBoolean ( Object obj ) {
+    public static boolean toBoolean( Object obj ) {
 
         if ( obj.getClass() == boolean.class ) {
             return boolean.class.cast( obj );
@@ -196,7 +196,7 @@ public class Conversions {
         }
     }
 
-    public static double toDouble ( Object obj ) {
+    public static double toDouble( Object obj ) {
         if ( obj.getClass() == double.class ) {
             return ( Double ) obj;
         }
@@ -233,7 +233,7 @@ public class Conversions {
 
     }
 
-    public static float toFloat ( Object obj ) {
+    public static float toFloat( Object obj ) {
         if ( obj.getClass() == float.class ) {
             return ( Float ) obj;
         }
@@ -271,8 +271,8 @@ public class Conversions {
 
     }
 
-    @SuppressWarnings ("unchecked")
-    public static <T> T coerce ( Class<T> clz, Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T coerce( Class<T> clz, Object value ) {
 
         if ( clz == Typ.string || clz == Typ.chars ) {
             return ( T ) value.toString();
@@ -314,13 +314,13 @@ public class Conversions {
         }
     }
 
-    public static <T> T toEnum ( Class<? extends Enum> cls, String value ) {
+    public static <T> T toEnum( Class<? extends Enum> cls, String value ) {
         return ( T ) Enum.valueOf( cls, value );
 
     }
 
 
-    public static <T> T toEnum ( Class<? extends Enum> cls, int value ) {
+    public static <T> T toEnum( Class<? extends Enum> cls, int value ) {
         Class<? extends Enum> clsEnum = ( Class<? extends Enum> ) cls;
 
         Enum[] enumConstants = clsEnum.getEnumConstants();
@@ -337,7 +337,7 @@ public class Conversions {
     }
 
 
-    public static <T> T toEnum ( Class<?> cls, Object value ) {
+    public static <T> T toEnum( Class<?> cls, Object value ) {
 
         if ( value instanceof CharSequence ) {
             return toEnum( cls, value.toString() );
@@ -351,8 +351,8 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ("unchecked")
-    public static <T> T toPrimitiveArrayIfPossible ( Class<T> clz, Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T toPrimitiveArrayIfPossible( Class<T> clz, Object value ) {
         if ( clz == Typ.intArray ) {
             return ( T ) iarray( value );
         } else if ( clz == Typ.byteArray ) {
@@ -382,7 +382,7 @@ public class Conversions {
     }
 
 
-    public static double[] darray ( Object value ) {
+    public static double[] darray( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
         if ( value.getClass() == Typ.shortArray ) {
             return ( double[] ) value;
@@ -397,7 +397,7 @@ public class Conversions {
         return values;
     }
 
-    public static float[] farray ( Object value ) {
+    public static float[] farray( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
         if ( value.getClass() == Typ.floatArray ) {
             return ( float[] ) value;
@@ -412,7 +412,7 @@ public class Conversions {
         return values;
     }
 
-    public static long[] larray ( Object value ) {
+    public static long[] larray( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
         if ( value.getClass() == Typ.shortArray ) {
             return ( long[] ) value;
@@ -427,7 +427,7 @@ public class Conversions {
         return values;
     }
 
-    public static short[] sarray ( Object value ) {
+    public static short[] sarray( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
         if ( value.getClass() == Typ.shortArray ) {
             return ( short[] ) value;
@@ -442,7 +442,7 @@ public class Conversions {
         return values;
     }
 
-    public static int[] iarray ( Object value ) {
+    public static int[] iarray( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
         if ( value.getClass() == Typ.intArray ) {
             return ( int[] ) value;
@@ -457,7 +457,7 @@ public class Conversions {
         return values;
     }
 
-    public static byte[] barray ( Object value ) {
+    public static byte[] barray( Object value ) {
         //You could handleUnexpectedException shorts, ints, longs and chars more efficiently
         if ( value.getClass() == Typ.byteArray ) {
             return ( byte[] ) value;
@@ -472,7 +472,7 @@ public class Conversions {
         return values;
     }
 
-    public static char[] carray ( Object value ) {
+    public static char[] carray( Object value ) {
         //You could handleUnexpectedException shorts, ints, longs and chars more efficiently
         if ( value.getClass() == Typ.charArray ) {
             return ( char[] ) value;
@@ -487,12 +487,12 @@ public class Conversions {
         return values;
     }
 
-    @SuppressWarnings ("unchecked")
-    public static Iterator iterator ( final Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static Iterator iterator( final Object value ) {
         return iterator( null, value );
     }
 
-    public static <T> Iterator<T> iterator ( Class<T> class1, final Object value ) {
+    public static <T> Iterator<T> iterator( Class<T> class1, final Object value ) {
 
 
         if ( Reflection.isArray( value ) ) {
@@ -502,19 +502,19 @@ public class Conversions {
                 int i = 0;
 
                 @Override
-                public boolean hasNext () {
+                public boolean hasNext() {
                     return i < length;
                 }
 
                 @Override
-                public T next () {
+                public T next() {
                     T next = ( T ) Reflection.idx( value, i );
                     i++;
                     return next;
                 }
 
                 @Override
-                public void remove () {
+                public void remove() {
                 }
             };
         } else if ( Typ.isCollection( value.getClass() ) ) {
@@ -527,8 +527,8 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ("unchecked")
-    public static <T> T toCollection ( Class<T> clz, Object value ) {
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T toCollection( Class<T> clz, Object value ) {
         if ( Typ.isList( clz ) ) {
             return ( T ) toList( value );
         } else if ( Typ.isSortedSet( clz ) ) {
@@ -540,8 +540,8 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ({ "rawtypes", "unchecked" })
-    public static List toList ( Object value ) {
+    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    public static List toList( Object value ) {
         if ( value instanceof List ) {
             return ( List ) value;
         } else if ( value instanceof Collection ) {
@@ -556,8 +556,8 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ({ "rawtypes", "unchecked" })
-    public static Set toSet ( Object value ) {
+    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    public static Set toSet( Object value ) {
         if ( value instanceof Set ) {
             return ( Set ) value;
         } else if ( value instanceof Collection ) {
@@ -572,8 +572,8 @@ public class Conversions {
         }
     }
 
-    @SuppressWarnings ({ "rawtypes", "unchecked" })
-    public static SortedSet toSortedSet ( Object value ) {
+    @SuppressWarnings ( { "rawtypes", "unchecked" } )
+    public static SortedSet toSortedSet( Object value ) {
         if ( value instanceof Set ) {
             return ( SortedSet ) value;
         } else if ( value instanceof Collection ) {
@@ -589,16 +589,16 @@ public class Conversions {
     }
 
 
-    public static Map<String, Object> toMap ( Object value ) {
+    public static Map<String, Object> toMap( Object value ) {
         return Reflection.toMap( value );
     }
 
 
-    public static String toString ( Object obj ) {
+    public static String toString( Object obj ) {
         return String.valueOf( obj );
     }
 
-    public static Number toWrapper ( long l ) {
+    public static Number toWrapper( long l ) {
         if ( l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE ) {
             return toWrapper( ( int ) l );
         } else {
@@ -606,7 +606,7 @@ public class Conversions {
         }
     }
 
-    public static Number toWrapper ( int i ) {
+    public static Number toWrapper( int i ) {
         if ( i >= Byte.MIN_VALUE && i <= Byte.MAX_VALUE ) {
             return Byte.valueOf( ( byte ) i );
         } else if ( i >= Short.MIN_VALUE && i <= Short.MAX_VALUE ) {
@@ -616,39 +616,39 @@ public class Conversions {
         }
     }
 
-    public static Object wrapAsObject ( boolean i ) {
+    public static Object wrapAsObject( boolean i ) {
         return Boolean.valueOf( i );
     }
 
 
-    public static Object wrapAsObject ( byte i ) {
+    public static Object wrapAsObject( byte i ) {
         return Byte.valueOf( i );
     }
 
-    public static Object wrapAsObject ( short i ) {
+    public static Object wrapAsObject( short i ) {
         return Short.valueOf( i );
     }
 
-    public static Object wrapAsObject ( int i ) {
+    public static Object wrapAsObject( int i ) {
         return Integer.valueOf( i );
     }
 
-    public static Object wrapAsObject ( long i ) {
+    public static Object wrapAsObject( long i ) {
         return Long.valueOf( i );
     }
 
-    public static Object wrapAsObject ( double i ) {
+    public static Object wrapAsObject( double i ) {
         return Double.valueOf( i );
     }
 
-    public static Object wrapAsObject ( float i ) {
+    public static Object wrapAsObject( float i ) {
         return Float.valueOf( i );
     }
 
-    public static Object toArrayGuessType ( Collection<?> value ) {
+    public static Object toArrayGuessType( Collection<?> value ) {
         Class<?> componentType = Reflection.getComponentType( value );
         Object array = Array.newInstance( componentType, value.size() );
-        @SuppressWarnings ("unchecked")
+        @SuppressWarnings ( "unchecked" )
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator();
         int index = 0;
         while ( iterator.hasNext() ) {
@@ -659,9 +659,9 @@ public class Conversions {
     }
 
 
-    public static Object toArray ( Class<?> componentType, Collection<?> value ) {
+    public static Object toArray( Class<?> componentType, Collection<?> value ) {
         Object array = Array.newInstance( componentType, value.size() );
-        @SuppressWarnings ("unchecked")
+        @SuppressWarnings ( "unchecked" )
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator();
         int index = 0;
         while ( iterator.hasNext() ) {
@@ -671,25 +671,25 @@ public class Conversions {
         return array;
     }
 
-    public static <V> V[] array ( Class<V> type, final Collection<V> array ) {
+    public static <V> V[] array( Class<V> type, final Collection<V> array ) {
         return ( V[] ) Conversions.toArray( type, array );
     }
 
 
-    public static Date toDate ( Calendar c ) {
+    public static Date toDate( Calendar c ) {
         return c.getTime();
 
     }
 
-    public static Date toDate ( long value ) {
+    public static Date toDate( long value ) {
         return new Date( value );
     }
 
-    public static Date toDate ( Long value ) {
+    public static Date toDate( Long value ) {
         return new Date( value );
     }
 
-    public static Date toDate ( String value ) {
+    public static Date toDate( String value ) {
         try {
             return toDateUS( value );
         } catch ( Exception ex ) {
@@ -704,7 +704,7 @@ public class Conversions {
     }
 
 
-    public static Date toDateUS ( String string ) {
+    public static Date toDateUS( String string ) {
 
         String[] split = StringScanner.splitByChars( string, new char[]{ '.', '\\', '/', ':' } );
 
@@ -721,7 +721,7 @@ public class Conversions {
 
     }
 
-    public static Date toEuroDate ( String string ) {
+    public static Date toEuroDate( String string ) {
 
         String[] split = StringScanner.splitByChars( string, new char[]{ '.', '\\', '/', ':' } );
 
@@ -739,7 +739,7 @@ public class Conversions {
     }
 
 
-    public static Date toDate ( Object value ) {
+    public static Date toDate( Object value ) {
         if ( value instanceof Long ) {
             return toDate( ( Long ) value );
         } else if ( value instanceof String ) {
@@ -756,12 +756,12 @@ public class Conversions {
 
 
     public interface Converter<TO, FROM> {
-        TO convert ( FROM from );
+        TO convert( FROM from );
     }
 
 
-    public static <TO, FROM> List<TO> map ( Converter<TO, FROM> converter,
-                                            List<FROM> fromList ) {
+    public static <TO, FROM> List<TO> map( Converter<TO, FROM> converter,
+                                           List<FROM> fromList ) {
 
         ArrayList<TO> toList = new ArrayList<TO>( fromList.size() );
 
@@ -773,8 +773,8 @@ public class Conversions {
     }
 
 
-    public static <TO, FROM> List<TO> mapFilterNulls ( Converter<TO, FROM> converter,
-                                                       List<FROM> fromList ) {
+    public static <TO, FROM> List<TO> mapFilterNulls( Converter<TO, FROM> converter,
+                                                      List<FROM> fromList ) {
 
         ArrayList<TO> toList = new ArrayList<TO>( fromList.size() );
 
@@ -789,11 +789,11 @@ public class Conversions {
     }
 
 
-    public static Object unifyList ( Object o ) {
+    public static Object unifyList( Object o ) {
         return unifyList( o, null );
     }
 
-    public static Object unifyList ( Object o, List list ) {
+    public static Object unifyList( Object o, List list ) {
 
         if ( list == null && !Reflection.isArray( o ) && !( o instanceof Iterable ) ) {
             return o;
@@ -822,7 +822,7 @@ public class Conversions {
     }
 
 
-    public Number coerceNumber ( Object inputArgument, Class<?> paraType ) {
+    public Number coerceNumber( Object inputArgument, Class<?> paraType ) {
         Number number = ( Number ) inputArgument;
         if ( paraType == int.class || paraType == Integer.class ) {
             return number.intValue();

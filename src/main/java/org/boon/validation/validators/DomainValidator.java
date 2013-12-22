@@ -39,7 +39,7 @@ public class DomainValidator extends BaseValidator {
 
     private Object rootObject;
 
-    public void setRootObject ( Object rootObject ) {
+    public void setRootObject( Object rootObject ) {
         this.rootObject = rootObject;
     }
 
@@ -49,11 +49,11 @@ public class DomainValidator extends BaseValidator {
         allowedPackages.add( "org.boon.annotations.validation" );
     }
 
-    public DomainValidator () {
+    public DomainValidator() {
     }
 
     @SuppressWarnings ( "unchecked" )
-    public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
+    public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
         // So, we already know that this field has been decorated with @DomainValidation annotation.
         // That's why we're here. We need to read the validation attributes to find the appropriate
         // template method (parent or child) to invoke for validation.

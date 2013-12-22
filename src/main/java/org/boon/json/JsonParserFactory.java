@@ -18,94 +18,94 @@ public class JsonParserFactory {
     private boolean plistStyle;
 
 
-    public JsonParserFactory lax () {
+    public JsonParserFactory lax() {
         lax = true;
         return this;
     }
 
-    public JsonParserFactory strict () {
+    public JsonParserFactory strict() {
         lax = false;
         return this;
     }
 
-    public JsonParserFactory useDirectBytes () {
+    public JsonParserFactory useDirectBytes() {
         useDirectBytes = true;
         return this;
     }
 
 
-    public JsonParserFactory neverUseDirectBytes () {
+    public JsonParserFactory neverUseDirectBytes() {
         useDirectBytes = false;
         return this;
     }
 
 
-    public JsonParserFactory setCharset ( Charset charset ) {
+    public JsonParserFactory setCharset( Charset charset ) {
         this.charset = charset;
         return this;
     }
 
 
-    public JsonParserFactory setSizeToForceLazyFinalParse ( int size ) {
+    public JsonParserFactory setSizeToForceLazyFinalParse( int size ) {
         this.sizeToForceLazyFinalParse = size;
         return this;
     }
 
-    public JsonParserFactory preferCharSequence () {
+    public JsonParserFactory preferCharSequence() {
         this.preferCharSequence = true;
         return this;
     }
 
 
-    public JsonParserFactory neverPreferCharSequence () {
+    public JsonParserFactory neverPreferCharSequence() {
         this.preferCharSequence = false;
         return this;
     }
 
-    public JsonParserFactory useLazyFinalParse () {
+    public JsonParserFactory useLazyFinalParse() {
         lazyFinalParse = true;
         return this;
     }
 
 
-    public JsonParserFactory neverUseLazyFinalParse () {
+    public JsonParserFactory neverUseLazyFinalParse() {
         lazyFinalParse = false;
         return this;
     }
 
 
-    public JsonParser createFastParser () {
+    public JsonParser createFastParser() {
         return new JsonFastParser( false, true );
     }
 
 
-    public JsonParser createCharSequenceParser () {
+    public JsonParser createCharSequenceParser() {
         return new JsonParserCharSequence();
     }
 
 
-    public JsonParser createUTFDirectByteParser () {
+    public JsonParser createUTFDirectByteParser() {
         return new JsonUTF8Parser();
     }
 
-    public JsonParser createASCIIParser () {
+    public JsonParser createASCIIParser() {
         return new JsonAsciiParser();
     }
 
 
-    public JsonParser createLaxParser () {
+    public JsonParser createLaxParser() {
         return new JsonParserLax();
     }
 
-    public JsonParser createLazyFinalParser () {
+    public JsonParser createLazyFinalParser() {
         return new JsonFastParser();
     }
 
-    public JsonParser createJsonParserForJsonPath () {
+    public JsonParser createJsonParserForJsonPath() {
         return new JsonFastParser();
     }
 
-    public JsonParser create () {
+    public JsonParser create() {
 
 
         if ( lax && plistStyle && ( charset == null || charset == StandardCharsets.US_ASCII ) ) {
@@ -125,7 +125,7 @@ public class JsonParserFactory {
     }
 
 
-    public JsonParserFactory plistStyle () {
+    public JsonParserFactory plistStyle() {
         lax = true;
         plistStyle = true;
         return this;

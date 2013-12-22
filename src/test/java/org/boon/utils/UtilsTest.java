@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 public class UtilsTest {
 
     @Test
-    public void testCamel () throws Exception {
+    public void testCamel() throws Exception {
         String myFoo = "MY FOO_BAR_FUN\t_STUFF";
 
         String camelCaseUpper = Str.camelCaseUpper( myFoo );
@@ -20,7 +20,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void testUnderBarCase () throws Exception {
+    public void testUnderBarCase() throws Exception {
         String myFoo = "FooFunFaceFact";
 
         String underBar = Str.underBarCase( myFoo );
@@ -29,7 +29,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void testUnderBarCase2 () throws Exception {
+    public void testUnderBarCase2() throws Exception {
         String myFoo = "FooFunFaceFact Fire Free FOO foo\tbar";
 
         String underBar = Str.underBarCase( myFoo );

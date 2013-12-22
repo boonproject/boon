@@ -15,17 +15,17 @@ public class JsonSerializer {
 
     private final boolean outputType;
 
-    public JsonSerializer () {
+    public JsonSerializer() {
         this.outputType = false;
 
     }
 
-    public JsonSerializer ( final boolean outputType ) {
+    public JsonSerializer( final boolean outputType ) {
         this.outputType = outputType;
 
     }
 
-    public void serializeString ( String str, CharBuf builder ) {
+    public void serializeString( String str, CharBuf builder ) {
         builder.addChar( '\"' );
         char[] charArray = str.toCharArray();
 
@@ -88,7 +88,7 @@ public class JsonSerializer {
         builder.addChar( '\"' );
     }
 
-    public CharBuf serialize ( Object obj ) {
+    public CharBuf serialize( Object obj ) {
         CharBuf builder = CharBuf.create( 64 );
 
         try {
@@ -99,7 +99,7 @@ public class JsonSerializer {
         return builder;
     }
 
-    public void serializeObject ( Object obj, CharBuf builder ) throws Exception {
+    public void serializeObject( Object obj, CharBuf builder ) throws Exception {
 
         if ( obj == null ) {
             builder.add( "null" );
@@ -153,7 +153,7 @@ public class JsonSerializer {
         }
     }
 
-    private void serializeMap ( Map<Object, Object> map, CharBuf builder ) throws Exception {
+    private void serializeMap( Map<Object, Object> map, CharBuf builder ) throws Exception {
         final Set<Map.Entry<Object, Object>> entrySet = map.entrySet();
         for ( Map.Entry<Object, Object> entry : entrySet ) {
             builder.addChar( '\"' );
@@ -164,13 +164,13 @@ public class JsonSerializer {
         }
     }
 
-    private void serializeCollection ( Collection<?> collection, CharBuf builder ) throws Exception {
+    private void serializeCollection( Collection<?> collection, CharBuf builder ) throws Exception {
         for ( Object o : collection ) {
             serializeObject( o, builder );
         }
     }
 
-    private void serializeArray ( Object[] array, CharBuf builder ) throws Exception {
+    private void serializeArray( Object[] array, CharBuf builder ) throws Exception {
         builder.addChar( '[' );
         for ( int index = 0; index < array.length; index++ ) {
             serializeObject( array[ index ], builder );

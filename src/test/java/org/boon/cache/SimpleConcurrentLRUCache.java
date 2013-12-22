@@ -10,7 +10,7 @@ public class SimpleConcurrentLRUCache {
 
 
     @Test
-    public void test () {
+    public void test() {
         Cache<Integer, Integer> cache = new SimpleConcurrentCache<>( 1, 4, false );
 
 
@@ -59,7 +59,7 @@ public class SimpleConcurrentLRUCache {
 
 
     @Test
-    public void test2 () {
+    public void test2() {
         Cache<Integer, Integer> cache = new SimpleConcurrentCache<>( 400 );
 
 

@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Int {
 
 
-    public static int[] grow ( int[] array, final int size ) {
+    public static int[] grow( int[] array, final int size ) {
         Objects.requireNonNull( array );
 
         int[] newArray = new int[ array.length + size ];
@@ -16,7 +16,7 @@ public class Int {
     }
 
 
-    public static int[] grow ( int[] array ) {
+    public static int[] grow( int[] array ) {
         Objects.requireNonNull( array );
 
         int[] newArray = new int[ array.length * 2 ];
@@ -25,7 +25,7 @@ public class Int {
     }
 
 
-    public static int[] shrink ( int[] array, int size ) {
+    public static int[] shrink( int[] array, int size ) {
         Objects.requireNonNull( array );
 
         int[] newArray = new int[ array.length - size ];
@@ -35,7 +35,7 @@ public class Int {
     }
 
 
-    public static int[] compact ( int[] array ) {
+    public static int[] compact( int[] array ) {
         Objects.requireNonNull( array );
 
         int nullCount = 0;
@@ -67,7 +67,7 @@ public class Int {
      * @param size size of the array you want to make
      * @return
      */
-    public static int[] arrayOfInt ( final int size ) {
+    public static int[] arrayOfInt( final int size ) {
         return new int[ size ];
     }
 
@@ -76,20 +76,20 @@ public class Int {
      * @return
      */
     @Universal
-    public static int[] array ( final int... array ) {
+    public static int[] array( final int... array ) {
         Objects.requireNonNull( array );
         return array;
     }
 
 
     @Universal
-    public static int len ( int[] array ) {
+    public static int len( int[] array ) {
         return array.length;
     }
 
 
     @Universal
-    public static int idx ( final int[] array, final int index ) {
+    public static int idx( final int[] array, final int index ) {
         final int i = calculateIndex( array, index );
 
         return array[ i ];
@@ -97,7 +97,7 @@ public class Int {
 
 
     @Universal
-    public static void idx ( final int[] array, int index, int value ) {
+    public static void idx( final int[] array, int index, int value ) {
         final int i = calculateIndex( array, index );
 
         array[ i ] = value;
@@ -105,7 +105,7 @@ public class Int {
 
 
     @Universal
-    public static int[] slc ( int[] array, int startIndex, int endIndex ) {
+    public static int[] slc( int[] array, int startIndex, int endIndex ) {
         Objects.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
@@ -125,7 +125,7 @@ public class Int {
     }
 
     @Universal
-    public static int[] slc ( int[] array, int startIndex ) {
+    public static int[] slc( int[] array, int startIndex ) {
         Objects.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
@@ -144,7 +144,7 @@ public class Int {
     }
 
     @Universal
-    public static int[] slcEnd ( int[] array, int endIndex ) {
+    public static int[] slcEnd( int[] array, int endIndex ) {
         Objects.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
@@ -163,7 +163,7 @@ public class Int {
     }
 
     @Universal
-    public static boolean in ( int value, int[] array ) {
+    public static boolean in( int value, int[] array ) {
         for ( int currentValue : array ) {
             if ( currentValue == value ) {
                 return true;
@@ -174,7 +174,7 @@ public class Int {
 
 
     @Universal
-    public static int[] copy ( int[] array ) {
+    public static int[] copy( int[] array ) {
         Objects.requireNonNull( array );
         int[] newArray = new int[ array.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -183,7 +183,7 @@ public class Int {
 
 
     @Universal
-    public static int[] add ( int[] array, int v ) {
+    public static int[] add( int[] array, int v ) {
         Objects.requireNonNull( array );
         int[] newArray = new int[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -192,7 +192,7 @@ public class Int {
     }
 
     @Universal
-    public static int[] add ( int[] array, int[] array2 ) {
+    public static int[] add( int[] array, int[] array2 ) {
         Objects.requireNonNull( array );
         int[] newArray = new int[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -202,7 +202,7 @@ public class Int {
 
 
     @Universal
-    public static int[] insert ( final int[] array, final int idx, final int v ) {
+    public static int[] insert( final int[] array, final int idx, final int v ) {
         Objects.requireNonNull( array );
 
         if ( idx >= array.length ) {
@@ -242,7 +242,7 @@ public class Int {
 
 
     @Universal
-    public static int[] insert ( final int[] array, final int fromIndex, final int[] values ) {
+    public static int[] insert( final int[] array, final int fromIndex, final int[] values ) {
         Objects.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
@@ -286,7 +286,7 @@ public class Int {
 
 
     /* End universal methods. */
-    private static int calculateIndex ( int[] array, int originalIndex ) {
+    private static int calculateIndex( int[] array, int originalIndex ) {
         final int length = array.length;
 
         Objects.requireNonNull( array, "array cannot be null" );

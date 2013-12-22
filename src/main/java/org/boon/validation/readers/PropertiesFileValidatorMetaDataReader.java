@@ -62,7 +62,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
     /**
      * Read the meta-data from a properties file.
      */
-    public List<ValidatorMetaData> readMetaData ( Class<?> clazz, String propertyName ) {
+    public List<ValidatorMetaData> readMetaData( Class<?> clazz, String propertyName ) {
 
         /* Load the properties file. */
         Properties props = loadMetaDataPropsFile( clazz );
@@ -80,7 +80,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
      *         The class whose property meta-data we are retrieving.
      * @return
      */
-    private Properties loadMetaDataPropsFile (
+    private Properties loadMetaDataPropsFile(
             Class<?> clazzWhoseValidationMetaDataWeAreReading ) {
         String className = clazzWhoseValidationMetaDataWeAreReading.getName();
 
@@ -137,8 +137,8 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
      * @param unparsedString
      * @return
      */
-    private List<ValidatorMetaData> extractMetaDataFromString ( Class<?> clazz,
-                                                                String propertyName, String unparsedString ) {
+    private List<ValidatorMetaData> extractMetaDataFromString( Class<?> clazz,
+                                                               String propertyName, String unparsedString ) {
         String propertyKey = clazz.getName() + "." + propertyName;
 
         /* See if we parsed this bad boy already. */

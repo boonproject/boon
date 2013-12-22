@@ -9,6 +9,6 @@ package org.boon.validation;
  */
 public interface ValidatorMessageHolder {
 
-    boolean hasError ();
+    boolean hasError();
 
 }

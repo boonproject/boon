@@ -220,7 +220,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Maps
      * @see Sets
      */
-    ITEM idx ( INDEX index );
+    ITEM idx( INDEX index );
 
     /**
      * Sets the value at an index.
@@ -228,7 +228,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @param index index
      * @param item  item you are setting
      */
-    void idx ( INDEX index, ITEM item );
+    void idx( INDEX index, ITEM item );
 
     /**
      * Gets the length
@@ -278,7 +278,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Maps
      * @see Sets
      */
-    int len ();
+    int len();
 
 
     /**
@@ -311,7 +311,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Maps
      * @see Sets
      */
-    Returns add ( ITEM item );
+    Returns add( ITEM item );
 
 
     /**
@@ -344,7 +344,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Maps
      * @see Sets
      */
-    UniversalOperations copy ( UniversalOperations thing );
+    UniversalOperations copy( UniversalOperations thing );
 
 
     /**
@@ -376,7 +376,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Maps
      * @see Sets
      */
-    UniversalOperations clone ( UniversalOperations thing );
+    UniversalOperations clone( UniversalOperations thing );
 
 
     /**
@@ -407,7 +407,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Arrays#insert
      * @see Lists#insert
      */
-    void insert ( ITEM item );
+    void insert( ITEM item );
 
 
     /**
@@ -521,19 +521,19 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see Maps#slc
      * @see Sets#slc
      */
-    void slc ( INDEX start, INDEX end );
+    void slc( INDEX start, INDEX end );
 
     /**
      * @param start index start
      * @see UniversalOperations#slc(Object, Object)
      */
-    void slc ( INDEX start );
+    void slc( INDEX start );
 
     /**
      * @param end index end
      * @see UniversalOperations#slc(Object, Object)
      */
-    void slcEnd ( INDEX end );
+    void slcEnd( INDEX end );
 
 
 }

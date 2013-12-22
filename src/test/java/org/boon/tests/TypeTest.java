@@ -15,7 +15,7 @@ public class TypeTest {
     Repo<String, ClassForTest> repo;
 
     @Before
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
         repo = Repos.builder().primaryKey( "strings" )
                 .searchIndex( "ints" ).searchIndex( "floats" )
                 .searchIndex( "doubles" ).searchIndex( "shorts" )
@@ -23,7 +23,7 @@ public class TypeTest {
                 .searchIndex( "chars" ).searchIndex( "bytes" )
                 .events( new ModificationListener() {
                     @Override
-                    public void modification ( ModificationEvent event ) {
+                    public void modification( ModificationEvent event ) {
                         System.out.println( event );
                     }
                 } )
@@ -41,7 +41,7 @@ public class TypeTest {
 
     }
 
-    public void setUp2 () throws Exception {
+    public void setUp2() throws Exception {
         repo = Repos.builder().primaryKey( "strings" ).usePropertyForAccess( true )
                 .searchIndex( "ints" ).searchIndex( "floats" )
                 .searchIndex( "doubles" ).searchIndex( "shorts" )
@@ -49,7 +49,7 @@ public class TypeTest {
                 .searchIndex( "chars" ).searchIndex( "bytes" )
                 .events( new ModificationListener() {
                     @Override
-                    public void modification ( ModificationEvent event ) {
+                    public void modification( ModificationEvent event ) {
                         System.out.println( event );
                     }
                 } )
@@ -65,7 +65,7 @@ public class TypeTest {
         repo.add( new ClassForTest() );
     }
 
-    public void setUp3 () throws Exception {
+    public void setUp3() throws Exception {
         repo = Repos.builder().primaryKey( "strings" ).useUnsafe( false )
                 .searchIndex( "ints" ).searchIndex( "floats" )
                 .searchIndex( "doubles" ).searchIndex( "shorts" )
@@ -73,7 +73,7 @@ public class TypeTest {
                 .searchIndex( "chars" ).searchIndex( "bytes" )
                 .events( new ModificationListener() {
                     @Override
-                    public void modification ( ModificationEvent event ) {
+                    public void modification( ModificationEvent event ) {
                         System.out.println( event );
                     }
                 } )
@@ -89,11 +89,11 @@ public class TypeTest {
 
     }
 
-    public void setUp4 () throws Exception {
+    public void setUp4() throws Exception {
         repo = Repos.builder().primaryKey( "strings" ).useUnsafe( false )
                 .events( new ModificationListener() {
                     @Override
-                    public void modification ( ModificationEvent event ) {
+                    public void modification( ModificationEvent event ) {
                         System.out.println( event );
                     }
                 } )
@@ -111,25 +111,25 @@ public class TypeTest {
 
 
     @Test
-    public void testQuery3 () throws Exception {
+    public void testQuery3() throws Exception {
         setUp4();
         testQuery();
     }
 
     @Test
-    public void testQuery2 () throws Exception {
+    public void testQuery2() throws Exception {
         setUp3();
         testQuery();
     }
 
     @Test
-    public void testQuery1 () throws Exception {
+    public void testQuery1() throws Exception {
         setUp2();
         testQuery();
     }
 
     @Test
-    public void testQuery () throws Exception {
+    public void testQuery() throws Exception {
         repo.query( CriteriaFactory.eq( "ints", 1 ), CriteriaFactory.eq( "floats", 1.1f ),
                 CriteriaFactory.eq( "doubles", 1.1 ), CriteriaFactory.eq( "shorts", ( short ) 1 ),
                 CriteriaFactory.eq( "chars", 'c' ), CriteriaFactory.eq( "longs", 1L ),
@@ -178,7 +178,7 @@ public class TypeTest {
     }
 
     @Test
-    public void testMods () throws Exception {
+    public void testMods() throws Exception {
         ClassForTest forTest = new ClassForTest();
         String key = "AAAA";
         forTest.setStrings( key );

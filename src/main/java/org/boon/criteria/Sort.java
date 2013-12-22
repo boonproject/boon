@@ -21,7 +21,7 @@ public class Sort {
     private List<Comparator> comparators;
     private Comparator comparator;
 
-    public static Sort sorts ( Sort... sorts ) {
+    public static Sort sorts( Sort... sorts ) {
         if ( sorts == null || sorts.length == 0 ) {
             return null;
         }
@@ -33,34 +33,34 @@ public class Sort {
         return main;
     }
 
-    public static Sort asc ( String name ) {
+    public static Sort asc( String name ) {
         return new Sort( name, SortType.ASCENDING );
     }
 
 
-    public static Sort desc ( String name ) {
+    public static Sort desc( String name ) {
         return new Sort( name, SortType.DESCENDING );
     }
 
-    public Sort () {
+    public Sort() {
     }
 
-    public Sort ( String name, SortType type ) {
+    public Sort( String name, SortType type ) {
         this.name = name;
         this.type = type;
         this.hashCode = doHashCode();
         this.toString = doToString();
     }
 
-    public SortType getType () {
+    public SortType getType() {
         return type;
     }
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    private String doToString () {
+    private String doToString() {
         return "Sort{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
@@ -68,33 +68,33 @@ public class Sort {
 
     }
 
-    public Sort then ( Sort sort ) {
+    public Sort then( Sort sort ) {
         this.sorts.add( sort );
         return this;
     }
 
-    public Sort then ( String name ) {
+    public Sort then( String name ) {
         this.sorts.add( new Sort( name, SortType.ASCENDING ) );
         return this;
     }
 
-    public Sort thenAsc ( String name ) {
+    public Sort thenAsc( String name ) {
         this.sorts.add( new Sort( name, SortType.ASCENDING ) );
         return this;
     }
 
-    public Sort thenDesc ( String name ) {
+    public Sort thenDesc( String name ) {
         this.sorts.add( new Sort( name, SortType.DESCENDING ) );
         return this;
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return toString;
     }
 
     @Override
-    public boolean equals ( Object o ) {
+    public boolean equals( Object o ) {
         if ( this == o ) return true;
         if ( !( o instanceof Sort ) ) return false;
 
@@ -106,7 +106,7 @@ public class Sort {
         return true;
     }
 
-    private int doHashCode () {
+    private int doHashCode() {
         int result = name.hashCode();
         result = 31 * result + type.hashCode();
         return result;
@@ -114,16 +114,16 @@ public class Sort {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return hashCode;
     }
 
-    public void sort ( List list, Map<String, FieldAccess> fields ) {
+    public void sort( List list, Map<String, FieldAccess> fields ) {
         Collections.sort( list, this.comparator( fields ) );
     }
 
 
-    public void sort ( List list ) {
+    public void sort( List list ) {
         if ( list == null || list.size() == 0 ) {
             return;
         }
@@ -134,7 +134,7 @@ public class Sort {
         Collections.sort( list, this.comparator( fields ) );
     }
 
-    public Comparator comparator ( Map<String, FieldAccess> fields ) {
+    public Comparator comparator( Map<String, FieldAccess> fields ) {
         if ( comparator == null ) {
             comparator = Ordering.universalComparator( this.getName(), fields,
                     this.getType() == SortType.ASCENDING, this.childComparators( fields ) );
@@ -142,7 +142,7 @@ public class Sort {
         return comparator;
     }
 
-    private List<Comparator> childComparators ( Map<String, FieldAccess> fields ) {
+    private List<Comparator> childComparators( Map<String, FieldAccess> fields ) {
         if ( this.comparators == null ) {
             this.comparators = new ArrayList<Comparator>( this.sorts.size() + 1 );
 

@@ -11,7 +11,7 @@ public class CharBufTest {
 
 
     @Test
-    public void testMe () {
+    public void testMe() {
         CharBuf buf = new CharBuf();
         buf.add( chars( "0123456789\n" ) );
         buf.add( "0123456789\n" );
@@ -28,7 +28,7 @@ public class CharBufTest {
     }
 
     @Test
-    public void testExact () {
+    public void testExact() {
         CharBuf buf = CharBuf.createExact( 66 );
         buf.add( chars( "0123456789\n" ) );
         buf.add( "0123456789\n" );

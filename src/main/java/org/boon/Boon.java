@@ -8,25 +8,25 @@ import static org.boon.Lists.toList;
 
 public class Boon {
 
-    public static void println ( String message ) {
+    public static void println( String message ) {
         Sys.println( message );
     }
 
-    public static void println () {
+    public static void println() {
         Sys.println( "" );
     }
 
-    public static void println ( Object message ) {
+    public static void println( Object message ) {
 
         print( message );
         println();
     }
 
-    public static void print ( String message ) {
+    public static void print( String message ) {
         Sys.print( message );
     }
 
-    public static void print ( Object message ) {
+    public static void print( Object message ) {
 
         if ( message == null ) {
             print( "<NULL>" );
@@ -37,7 +37,7 @@ public class Boon {
         }
     }
 
-    public static void puts ( Object... messages ) {
+    public static void puts( Object... messages ) {
 
         for ( Object message : messages ) {
             print( message );
@@ -47,7 +47,7 @@ public class Boon {
 
     }
 
-    public static void putl ( Object... messages ) {
+    public static void putl( Object... messages ) {
 
         for ( Object message : messages ) {
             print( message );
@@ -57,18 +57,18 @@ public class Boon {
 
     }
 
-    public static String sputl ( Object... messages ) {
+    public static String sputl( Object... messages ) {
         CharBuf buf = CharBuf.create( 100 );
         return sputl( buf, messages );
     }
 
-    public static String sputs ( Object... messages ) {
+    public static String sputs( Object... messages ) {
         CharBuf buf = CharBuf.create( 100 );
         return sputs( buf, messages );
     }
 
 
-    public static String sputl ( CharBuf buf, Object... messages ) {
+    public static String sputl( CharBuf buf, Object... messages ) {
 
         for ( Object message : messages ) {
             if ( message == null ) {
@@ -87,7 +87,7 @@ public class Boon {
 
     }
 
-    public static String sputs ( CharBuf buf, Object... messages ) {
+    public static String sputs( CharBuf buf, Object... messages ) {
 
         int index = 0;
         for ( Object message : messages ) {

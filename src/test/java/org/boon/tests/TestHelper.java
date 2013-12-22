@@ -30,7 +30,7 @@ public class TestHelper {
             Employee.employee( "ZZZ", "Zmm", "777-333-3333", "05.29.70", 10_000 ) );
 
 
-    static Repo<String, Employee> createBuilderNoReflection () {
+    static Repo<String, Employee> createBuilderNoReflection() {
         Repo<String, Employee> repo;
 
         RepoBuilder repoBuilder = Repos.builder();
@@ -40,28 +40,28 @@ public class TestHelper {
 
         repoBuilder.keyGetter( "id", new Function<Employee, String>() {
             @Override
-            public String apply ( Employee employee ) {
+            public String apply( Employee employee ) {
                 return employee.getSsn();
             }
         } );
 
         repoBuilder.keyGetter( "firstName", new Function<Employee, String>() {
             @Override
-            public String apply ( Employee employee ) {
+            public String apply( Employee employee ) {
                 return employee.getFirstName();
             }
         } );
 
         repoBuilder.keyGetter( "lastName", new Function<Employee, String>() {
             @Override
-            public String apply ( Employee employee ) {
+            public String apply( Employee employee ) {
                 return employee.getLastName();
             }
         } );
 
         repoBuilder.keyGetter( "salary", new Function<Employee, Integer>() {
             @Override
-            public Integer apply ( Employee employee ) {
+            public Integer apply( Employee employee ) {
                 return employee.getSalary();
             }
         } );
@@ -77,7 +77,7 @@ public class TestHelper {
 
     //"tags", "metas", "metas2", "name2"
 
-    static Repo<String, Employee> createFromBuilderNestedIndex () {
+    static Repo<String, Employee> createFromBuilderNestedIndex() {
 
         /* Create a repo, and decide what to index. */
         RepoBuilder repoBuilder = Repos.builder();
@@ -97,7 +97,7 @@ public class TestHelper {
         return repo;
     }
 
-    static Repo<String, Employee> createFromBuilder () {
+    static Repo<String, Employee> createFromBuilder() {
 
         /* Create a repo, and decide what to index. */
         RepoBuilder repoBuilder = Repos.builder();
@@ -118,7 +118,7 @@ public class TestHelper {
     }
 
 
-    static Repo<String, Employee> createFromBuilderWithTransformAndCollation () {
+    static Repo<String, Employee> createFromBuilderWithTransformAndCollation() {
 
         /* Create a repo, and decide what to index. */
         RepoBuilder repoBuilder = Repos.builder();
@@ -140,7 +140,7 @@ public class TestHelper {
     }
 
 
-    public static Repo<String, Employee> createFromBuilderLogAndClone () {
+    public static Repo<String, Employee> createFromBuilderLogAndClone() {
         /* Create a repo, and decide what to index. */
         RepoBuilder repoBuilder = Repos.builder();
 
@@ -151,7 +151,7 @@ public class TestHelper {
                 .debug().level( Level.INFO ).cloneEdits( true ).events( new ModificationListener() {
 
             @Override
-            public void modification ( ModificationEvent event ) {
+            public void modification( ModificationEvent event ) {
                 System.out.print( event );
             }
         } );
@@ -168,7 +168,7 @@ public class TestHelper {
     }
 
 
-    public static Repo<String, Employee> createWithNoIndexes () {
+    public static Repo<String, Employee> createWithNoIndexes() {
         /* Create a repo, and decide what to index. */
         RepoBuilder repoBuilder = Repos.builder();
 
@@ -188,7 +188,7 @@ public class TestHelper {
     }
 
 
-    static Repo<String, Employee> createFromBuilderUsingPropertyAccess () {
+    static Repo<String, Employee> createFromBuilderUsingPropertyAccess() {
 
         /* Create a repo, and decide what to index. */
         RepoBuilder repoBuilder = Repos.builder();
@@ -209,7 +209,7 @@ public class TestHelper {
         return repo;
     }
 
-    static Repo<String, Employee> createFromBuilderEvents () {
+    static Repo<String, Employee> createFromBuilderEvents() {
 
         /* Create a repo, and decide what to index. */
         RepoBuilder repoBuilder = Repos.builder();
@@ -219,7 +219,7 @@ public class TestHelper {
                 .searchIndex( "firstName" ).searchIndex( "lastName" )
                 .searchIndex( "salary" ).uniqueSearchIndex( "empNum" ).events( new ModificationListener() {
             @Override
-            public void modification ( ModificationEvent event ) {
+            public void modification( ModificationEvent event ) {
                 System.out.printf( "event %s %s", event.getKey(), event.getItem() );
             }
         } )

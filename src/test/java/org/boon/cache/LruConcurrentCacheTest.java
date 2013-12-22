@@ -8,7 +8,7 @@ public class LruConcurrentCacheTest {
 
 
     @Test
-    public void test () {
+    public void test() {
         Cache<Integer, Integer> cache = new ConcurrentLruCache<>( 4 );
 
 

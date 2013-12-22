@@ -15,7 +15,7 @@ import static org.boon.Lists.*;
 public class Classpaths {
 
 
-    private static FileSystem zipFileSystem ( URI fileJarURI ) {
+    private static FileSystem zipFileSystem( URI fileJarURI ) {
 
 
         final Map<String, Object> env = Maps.map( "create", ( Object ) "true" );
@@ -52,7 +52,7 @@ public class Classpaths {
     }
 
 
-    public static List<URL> classpathResources ( ClassLoader loader, String resource ) {
+    public static List<URL> classpathResources( ClassLoader loader, String resource ) {
         try {
 
             Enumeration<URL> resources = loader.getResources( resource );
@@ -75,7 +75,7 @@ public class Classpaths {
 
     }
 
-    public static List<URL> classpathResources ( Class<?> clazz, String resource ) {
+    public static List<URL> classpathResources( Class<?> clazz, String resource ) {
 
 
         List<URL> list = classpathResources( Thread.currentThread().getContextClassLoader(), resource );
@@ -93,7 +93,7 @@ public class Classpaths {
         return list;
     }
 
-    public static List<Path> resources ( Class<?> clazz, String resource ) {
+    public static List<Path> resources( Class<?> clazz, String resource ) {
 
 
         List<Path> list = resources( Thread.currentThread().getContextClassLoader(), resource );
@@ -111,7 +111,7 @@ public class Classpaths {
         return list;
     }
 
-    public static List<Path> resources ( ClassLoader loader, String resource ) {
+    public static List<Path> resources( ClassLoader loader, String resource ) {
         final List<URL> resourceURLs = Classpaths.classpathResources( loader, resource );
         final List<Path> resourcePaths = Lists.list( Path.class );
         final Map<URI, FileSystem> pathToZipFileSystems = new HashMap<>();
@@ -127,7 +127,7 @@ public class Classpaths {
         return resourcePaths;
     }
 
-    private static void resourcesFromFileSystem ( List<Path> resourcePaths, URL u ) {
+    private static void resourcesFromFileSystem( List<Path> resourcePaths, URL u ) {
         URI fileURI = IO.createURI( u.toString() );
 
 
@@ -135,7 +135,7 @@ public class Classpaths {
     }
 
 
-    private static void resourcesFromJar ( List<Path> resourcePaths, URL resourceURL, Map<URI, FileSystem> pathToZipFileSystems ) {
+    private static void resourcesFromJar( List<Path> resourcePaths, URL resourceURL, Map<URI, FileSystem> pathToZipFileSystems ) {
 
         String str = resourceURL.toString();
 

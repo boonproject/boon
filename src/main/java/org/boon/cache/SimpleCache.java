@@ -14,18 +14,18 @@ public class SimpleCache<K, V> implements Cache<K, V> {
     private static class InternalCacheLinkedList<K, V> extends LinkedHashMap<K, V> {
         final int limit;
 
-        InternalCacheLinkedList ( final int limit, final boolean lru ) {
+        InternalCacheLinkedList( final int limit, final boolean lru ) {
             super( 16, 0.75f, lru );
             this.limit = limit;
         }
 
-        protected final boolean removeEldestEntry ( final Map.Entry<K, V> eldest ) {
+        protected final boolean removeEldestEntry( final Map.Entry<K, V> eldest ) {
             return super.size() > limit;
         }
     }
 
 
-    public SimpleCache ( final int limit, CacheType type ) {
+    public SimpleCache( final int limit, CacheType type ) {
 
         if ( type.equals( CacheType.LRU ) ) {
             map = new InternalCacheLinkedList<>( limit, true );
@@ -34,25 +34,25 @@ public class SimpleCache<K, V> implements Cache<K, V> {
         }
     }
 
-    public SimpleCache ( final int limit ) {
+    public SimpleCache( final int limit ) {
 
         map = new InternalCacheLinkedList<>( limit, true );
 
     }
 
     @Override
-    public void put ( K key, V value ) {
+    public void put( K key, V value ) {
         map.put( key, value );
     }
 
     @Override
-    public V get ( K key ) {
+    public V get( K key ) {
         return map.get( key );
     }
 
     //For testing only
     @Override
-    public V getSilent ( K key ) {
+    public V getSilent( K key ) {
         V value = map.get( key );
         if ( value != null ) {
             map.remove( key );
@@ -62,16 +62,16 @@ public class SimpleCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public void remove ( K key ) {
+    public void remove( K key ) {
         map.remove( key );
     }
 
     @Override
-    public int size () {
+    public int size() {
         return map.size();
     }
 
-    public String toString () {
+    public String toString() {
         return map.toString();
     }
 

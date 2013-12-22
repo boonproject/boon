@@ -44,11 +44,11 @@ public class AnnotationData {
 
     private Map<String, Object> values;
 
-    public AnnotationData ( Annotation annotation ) {
+    public AnnotationData( Annotation annotation ) {
         this( annotation, new HashSet<String>() );
     }
 
-    public AnnotationData ( Annotation annotation, Set<String> allowedAnnotations ) {
+    public AnnotationData( Annotation annotation, Set<String> allowedAnnotations ) {
 
         this.annotationSimpleName = annotation.annotationType().getSimpleName();
         this.annotationClassName = annotation.annotationType().getName();
@@ -62,7 +62,7 @@ public class AnnotationData {
 
 
     /* TODO this needs to be in Str or StringScanner, but it is here for now. */
-    private static String unCapitalize ( String string ) {
+    private static String unCapitalize( String string ) {
         StringBuilder rv = new StringBuilder();
         if ( string.length() > 0 ) {
             rv.append( Character.toLowerCase( string.charAt( 0 ) ) );
@@ -78,7 +78,7 @@ public class AnnotationData {
      * Determines if this is an annotation we care about.
      * Checks to see if the package name is in the set.
      */
-    public boolean isAllowed () {
+    public boolean isAllowed() {
         return allowedAnnotations.contains( annotationPackageName );
     }
 
@@ -88,7 +88,7 @@ public class AnnotationData {
      *
      * @return
      */
-    public String getName () {
+    public String getName() {
         return name;
     }
 
@@ -99,7 +99,7 @@ public class AnnotationData {
      *
      * @return
      */
-    Map<String, Object> doGetValues () {
+    Map<String, Object> doGetValues() {
         /* Holds the value map. */
         Map<String, Object> values = new HashMap<String, Object>();
         /* Get the declared methods from the actual annotation. */
@@ -125,11 +125,11 @@ public class AnnotationData {
         return values;
     }
 
-    public Map<String, Object> getValues () {
+    public Map<String, Object> getValues() {
         return values;
     }
 
-    public String toString () {
+    public String toString() {
         return name;
     }
 }

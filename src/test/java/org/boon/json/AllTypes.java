@@ -21,97 +21,97 @@ public class AllTypes {
     List<AllTypes> allTypes;
 
 
-    public String getString2 () {
+    public String getString2() {
         return string2;
     }
 
-    public void setString2 ( String string2 ) {
+    public void setString2( String string2 ) {
         this.string2 = string2;
     }
 
-    public List<AllTypes> getAllTypes () {
+    public List<AllTypes> getAllTypes() {
         return allTypes;
     }
 
-    public void setAllTypes ( List<AllTypes> allTypes ) {
+    public void setAllTypes( List<AllTypes> allTypes ) {
         this.allTypes = allTypes;
     }
 
-    public AllTypes getAllType () {
+    public AllTypes getAllType() {
         return allType;
     }
 
-    public void setAllType ( AllTypes allType ) {
+    public void setAllType( AllTypes allType ) {
         this.allType = allType;
     }
 
-    public byte getMyByte () {
+    public byte getMyByte() {
         return myByte;
     }
 
-    public void setMyByte ( byte myByte ) {
+    public void setMyByte( byte myByte ) {
         this.myByte = myByte;
     }
 
-    public int getMyInt () {
+    public int getMyInt() {
         return myInt;
     }
 
-    public void setMyInt ( int myInt ) {
+    public void setMyInt( int myInt ) {
         this.myInt = myInt;
     }
 
-    public boolean isMyBoolean () {
+    public boolean isMyBoolean() {
         return myBoolean;
     }
 
-    public void setMyBoolean ( boolean myBoolean ) {
+    public void setMyBoolean( boolean myBoolean ) {
         this.myBoolean = myBoolean;
     }
 
-    public short getMyShort () {
+    public short getMyShort() {
         return myShort;
     }
 
-    public void setMyShort ( short myShort ) {
+    public void setMyShort( short myShort ) {
         this.myShort = myShort;
     }
 
-    public long getMyLong () {
+    public long getMyLong() {
         return myLong;
     }
 
-    public void setMyLong ( long myLong ) {
+    public void setMyLong( long myLong ) {
         this.myLong = myLong;
     }
 
-    public String getString () {
+    public String getString() {
         return string;
     }
 
-    public void setString ( String string ) {
+    public void setString( String string ) {
         this.string = string;
     }
 
 
-    public float getMyFloat () {
+    public float getMyFloat() {
         return myFloat;
     }
 
-    public void setMyFloat ( float myFloat ) {
+    public void setMyFloat( float myFloat ) {
         this.myFloat = myFloat;
     }
 
-    public double getMyDouble () {
+    public double getMyDouble() {
         return myDouble;
     }
 
-    public void setMyDouble ( double myDouble ) {
+    public void setMyDouble( double myDouble ) {
         this.myDouble = myDouble;
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "AllTypes{" +
                 "myInt=" + myInt +
                 ", myBoolean=" + myBoolean +

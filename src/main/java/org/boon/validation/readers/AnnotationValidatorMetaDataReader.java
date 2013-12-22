@@ -87,7 +87,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * @param propertyName The name of the property that we are reading
      *                     the annotation meta-data from.
      */
-    public List<ValidatorMetaData> readMetaData ( Class<?> clazz, String propertyName ) {
+    public List<ValidatorMetaData> readMetaData( Class<?> clazz, String propertyName ) {
 
         /* Generate a key to the cache based on the classname and the propertyName. */
         String propertyKey = clazz.getName() + "." + propertyName;
@@ -117,7 +117,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * @param validatorMetaDataList validatorMetaDataList
      * @return validator meta data
      */
-    private List<ValidatorMetaData> extractValidatorMetaData ( Class<?> clazz, String propertyName, List<ValidatorMetaData> validatorMetaDataList ) {
+    private List<ValidatorMetaData> extractValidatorMetaData( Class<?> clazz, String propertyName, List<ValidatorMetaData> validatorMetaDataList ) {
         /* If the meta-data was not found, then generate it. */
         if ( validatorMetaDataList == null ) { // if not found
             /* Read the annotations from the class based on the property name. */
@@ -137,7 +137,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * @param annotations The annotationData (preprocessed annotations).
      * @return list of validation meta data.
      */
-    private List<ValidatorMetaData> extractMetaDataFromAnnotations (
+    private List<ValidatorMetaData> extractMetaDataFromAnnotations(
             Collection<AnnotationData> annotations ) {
         List<ValidatorMetaData> list = new ArrayList<ValidatorMetaData>();
 
@@ -160,7 +160,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * "Therefore, we must cache the results of getValues as the annoationData is static " +
      * "per property per class. ")
      */
-    private ValidatorMetaData convertAnnotationDataToValidatorMetaData (
+    private ValidatorMetaData convertAnnotationDataToValidatorMetaData(
             AnnotationData annotationData ) {
 
         ValidatorMetaData metaData = new ValidatorMetaData();
@@ -176,7 +176,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      *
      * @param validationAnnotationPackages validationAnnotationPackages
      */
-    public void setValidationAnnotationPackages ( Set<String> validationAnnotationPackages ) {
+    public void setValidationAnnotationPackages( Set<String> validationAnnotationPackages ) {
         this.validationAnnotationPackages = validationAnnotationPackages;
     }
 

@@ -18,30 +18,30 @@ public abstract class MeasuredRun implements Runnable {
     private long totalTime;
     private long time;
 
-    public String name () {
+    public String name() {
         return name;
     }
 
-    public long startMemoryFree () {
+    public long startMemoryFree() {
         return startMemory;
     }
 
-    public long endMemoryFree () {
+    public long endMemoryFree() {
         return endMemory;
     }
 
     private long startMemory;
     private long endMemory;
 
-    public long time () {
+    public long time() {
         return totalTime / iterations;
     }
 
     private Map<String, List<MeasuredRun>> results;
 
 
-    public MeasuredRun ( String name, int warmupCount, int iterations,
-                         Map<String, List<MeasuredRun>> results ) {
+    public MeasuredRun( String name, int warmupCount, int iterations,
+                        Map<String, List<MeasuredRun>> results ) {
         this.name = name;
         this.warmupCount = warmupCount;
         this.iterations = iterations;
@@ -50,12 +50,12 @@ public abstract class MeasuredRun implements Runnable {
     }
 
 
-    protected abstract void init ();
+    protected abstract void init();
 
-    protected abstract void test ();
+    protected abstract void test();
 
     @Override
-    public void run () {
+    public void run() {
         this.init();
 
         for ( int index = 0; index < warmupCount; index++ ) {
@@ -90,7 +90,7 @@ public abstract class MeasuredRun implements Runnable {
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "MeasuredRun{" +
                 "name=" + name +
                 ", time='" + ( totalTime / iterations / 1000.0 ) + "'     micro seconds" +

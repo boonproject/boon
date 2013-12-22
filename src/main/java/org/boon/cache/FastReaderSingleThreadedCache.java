@@ -13,11 +13,11 @@ public class FastReaderSingleThreadedCache<KEY, VALUE> implements Cache<KEY, VAL
     private final int limit;
 
 
-    public FastReaderSingleThreadedCache ( int limit ) {
+    public FastReaderSingleThreadedCache( int limit ) {
         this.limit = limit;
     }
 
-    public void put ( KEY key, VALUE value ) {
+    public void put( KEY key, VALUE value ) {
         VALUE oldValue = map.put( key, value );
 
             /*If there was already an object under this key,
@@ -37,7 +37,7 @@ public class FastReaderSingleThreadedCache<KEY, VALUE> implements Cache<KEY, VAL
     }
 
 
-    public VALUE get ( KEY key ) {
+    public VALUE get( KEY key ) {
 
             /* Frequently used keys will be at the top so the search could be fast.*/
         queue.removeFirstOccurrence( key );
@@ -46,23 +46,23 @@ public class FastReaderSingleThreadedCache<KEY, VALUE> implements Cache<KEY, VAL
     }
 
 
-    public VALUE getSilent ( KEY key ) {
+    public VALUE getSilent( KEY key ) {
 
         return map.get( key );
     }
 
-    public void remove ( KEY key ) {
+    public void remove( KEY key ) {
 
             /* Frequently used keys will be at the top so the search could be fast.*/
         queue.removeFirstOccurrence( key );
         map.remove( key );
     }
 
-    public int size () {
+    public int size() {
         return map.size();
     }
 
-    public String toString () {
+    public String toString() {
         return map.toString();
     }
 }

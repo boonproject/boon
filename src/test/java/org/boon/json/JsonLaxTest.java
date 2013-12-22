@@ -24,18 +24,18 @@ import static org.boon.Str.lines;
 public class JsonLaxTest extends JsonParserBaseTest {
 
 
-    public JsonParser parser () {
+    public JsonParser parser() {
         return new JsonParserLax( false, true, true );
 
     }
 
-    public JsonParser objectParser () {
+    public JsonParser objectParser() {
         return new JsonParserLax( true, false, false );
 
     }
 
     @Test
-    public void testLax () {
+    public void testLax() {
 
         Object obj = jsonParser.parse( Map.class,
                 " {foo: hi mom hi dad how are you? }  "
@@ -59,7 +59,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test
-    public void testComment () {
+    public void testComment() {
 
         String testString = " {foo:\"bar\", //hi mom \n" +
                 " foo2:baz }  ";
@@ -77,7 +77,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test
-    public void testComment2 () {
+    public void testComment2() {
 
         String testString = " {foo:bar, #hi mom \n" +
                 " foo2:baz }  ";
@@ -94,7 +94,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test
-    public void testComment3 () {
+    public void testComment3() {
 
         String testString = " {foo:bar, /* hi mom */" +
                 " foo2:baz }  ";
@@ -110,7 +110,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test
-    public void testLax2 () {
+    public void testLax2() {
 
         String testString = " {foo: hi mom hi dad how are you?,\n" +
                 "thanks:I am good thanks for asking,\t\n" +
@@ -168,7 +168,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test
-    public void testLax3 () {
+    public void testLax3() {
 
         String testString = "/* in theory you can put a comment here. */ " +
                 " {foo: hi mom hi dad how are you?, //here too\n" +
@@ -228,7 +228,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test
-    public void textInMiddleOfArray () {
+    public void textInMiddleOfArray() {
 
         try {
             Object obj = jsonParser.parse( Map.class,
@@ -245,7 +245,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
     @Test ()
-    public void testBooleanParseError () {
+    public void testBooleanParseError() {
 
         Object obj = jsonParser.parse( Map.class,
                 "  tbone  "
@@ -255,7 +255,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
     @Test ()
-    public void doubleQuoteInsideOfSingleQuote () {
+    public void doubleQuoteInsideOfSingleQuote() {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
@@ -268,7 +268,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test ()
-    public void supportSimpleQuoteInNonProtectedStringValue () {
+    public void supportSimpleQuoteInNonProtectedStringValue() {
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
@@ -279,7 +279,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test ()
-    public void supportNonProtectedStrings () {
+    public void supportNonProtectedStrings() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -290,7 +290,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
     @Test ()
-    public void crapInAnArray () {
+    public void crapInAnArray() {
         jsonParser.parse( Map.class,
                 lines(
 
@@ -302,7 +302,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
     @Test ()
-    public void randomStringAsValuesWithSpaces () {
+    public void randomStringAsValuesWithSpaces() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -314,7 +314,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
     @Test ()
-    public void randomStringAsValuesWithSpaceAndMoreSpaces () {
+    public void randomStringAsValuesWithSpaceAndMoreSpaces() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -326,7 +326,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
     @Test ()
-    public void singleQuotes () {
+    public void singleQuotes() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 

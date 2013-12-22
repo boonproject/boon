@@ -22,12 +22,12 @@ public class MapsTest {
     class Dog {
         String name = "dog";
 
-        Dog ( String name ) {
+        Dog( String name ) {
             this.name = name;
         }
 
         @Override
-        public String toString () {
+        public String toString() {
             return "Dog{\"name\":\"" + name + "\"}";
         }
     }
@@ -40,7 +40,7 @@ public class MapsTest {
 
 
     @Test
-    public void testToMap () {
+    public void testToMap() {
 
 
         final Map<String, Dog> dogMap = Maps.toMap( "name", dogs );
@@ -50,7 +50,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testToSafeMap () {
+    public void testToSafeMap() {
 
 
         final Map<String, Dog> dogMap = Maps.toSafeMap( "name", dogs );
@@ -60,7 +60,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testToSortedMap () {
+    public void testToSortedMap() {
 
 
         final Map<String, Dog> dogMap = Maps.toSortedMap( "name", dogs );
@@ -70,7 +70,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testToSafeSortedMap () {
+    public void testToSafeSortedMap() {
 
 
         final Map<String, Dog> dogMap = Maps.toSafeSortedMap( "name", dogs );
@@ -79,7 +79,7 @@ public class MapsTest {
 
     }
 
-    private void validateForToMap ( Map<String, Dog> dogMap ) {
+    private void validateForToMap( Map<String, Dog> dogMap ) {
         boolean ok = true;
 
         ok &= dogMap.size() == 2 || die( "should be 2 and was " + len( dogMap ) );
@@ -94,7 +94,7 @@ public class MapsTest {
 
 
     @Test
-    public void testEntry () {
+    public void testEntry() {
 
         Dog dog = new Dog( "dog" );
         Entry<String, Dog> entry = entry( "dog", dog );
@@ -120,7 +120,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testUniversal () {
+    public void testUniversal() {
 
         Dog dog = new Dog( "dog" );
         Map<String, Dog> dogMap = map( "dog", dog );
@@ -153,7 +153,7 @@ public class MapsTest {
 
 
     @Test
-    public void testHashMap () {
+    public void testHashMap() {
         Map<String, Dog> dogMap = Maps.map( "dog", new Dog( "dog" ) );
         assertEquals( "dog", dogMap.get( "dog" ).name );
 
@@ -342,7 +342,7 @@ public class MapsTest {
 
 
     @Test
-    public void testTreeMap () {
+    public void testTreeMap() {
         Map<String, Dog> dogMap = sortedMap( "dog", new Dog( "dog" ) );
         assertEquals( "dog", dogMap.get( "dog" ).name );
 
@@ -529,11 +529,11 @@ public class MapsTest {
     }
 
     @Test
-    public void testComparator () {
+    public void testComparator() {
 
         Comparator<String> comparator = new Comparator<String>() {
             @Override
-            public int compare ( String o1, String o2 ) {
+            public int compare( String o1, String o2 ) {
                 return o1.toString().compareTo( o2.toString() );
             }
         };
@@ -716,7 +716,7 @@ public class MapsTest {
 
 
     @Test
-    public void testSafeMap () {
+    public void testSafeMap() {
 
         Map<String, Dog> dogMap = Maps.safeMap( "dog", new Dog( "dog" ) );
         assertEquals( "dog", dogMap.get( "dog" ).name );
@@ -906,11 +906,11 @@ public class MapsTest {
 
 
     @Test
-    public void testComparatorSkipMap () {
+    public void testComparatorSkipMap() {
 
         Comparator<String> comparator = new Comparator<String>() {
             @Override
-            public int compare ( String o1, String o2 ) {
+            public int compare( String o1, String o2 ) {
                 return o1.toString().compareTo( o2.toString() );
             }
         };
@@ -1093,7 +1093,7 @@ public class MapsTest {
 
 
     @Test
-    public void testSkipMap () {
+    public void testSkipMap() {
 
         Map<String, Dog> dogMap = Maps.safeSortedMap( "dog", new Dog( "dog" ) );
         assertEquals( "dog", dogMap.get( "dog" ).name );

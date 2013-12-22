@@ -21,7 +21,7 @@ import static org.boon.Maps.idx;
 public class PlistTest {
 
 
-    protected void inspectMap ( Map<String, Object> map ) {
+    protected void inspectMap( Map<String, Object> map ) {
         final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
         putl( "map", map, "size", map.size(), "keys", map.keySet(), "values", map.values() );
 
@@ -36,18 +36,18 @@ public class PlistTest {
     }
 
 
-    public JsonParser parser () {
+    public JsonParser parser() {
         return new JsonParserLax( false, true, true, true );
 
     }
 
-    public JsonParser objectParser () {
+    public JsonParser objectParser() {
         return new JsonParserLax( true, false, false, true );
 
     }
 
     @Test
-    public void basic () {
+    public void basic() {
         String testString = "{\n" +
                 "                date=\"1994-11-05T08:15:30Z\";\n" +
                 "                \"foo\" = \"bar\";\n" +
@@ -104,7 +104,7 @@ public class PlistTest {
 
 
     @Test
-    public void basic2 () {
+    public void basic2() {
 
         String testString = "{\n" +
                 " a = {\n" +
@@ -162,7 +162,7 @@ public class PlistTest {
 
 
     @Test
-    public void basic3 () {
+    public void basic3() {
 //                "  b = { b1 = (read, write); \n b2 = (execute);\n };\n" +
 
         String testString = "{\n" +

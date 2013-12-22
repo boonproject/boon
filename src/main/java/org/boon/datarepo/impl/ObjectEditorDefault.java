@@ -29,52 +29,52 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     private boolean lookupAndExcept;
 
 
-    public void put ( ITEM item ) {
+    public void put( ITEM item ) {
         if ( !this.add( item ) ) {
             throw new DataRepoException( "Unable to add item " + item );
         }
     }
 
-    public void removeByKey ( KEY key ) {
+    public void removeByKey( KEY key ) {
         query.removeByKey( key );
     }
 
-    public void removeAll ( ITEM... items ) {
+    public void removeAll( ITEM... items ) {
         for ( ITEM item : items ) {
             this.delete( item );
         }
     }
 
-    public void removeAllAsync ( Collection<ITEM> items ) {
+    public void removeAllAsync( Collection<ITEM> items ) {
         for ( ITEM item : items ) {
             this.delete( item );
         }
     }
 
-    public void addAll ( ITEM... items ) {
+    public void addAll( ITEM... items ) {
         for ( ITEM item : items ) {
             this.add( item );
         }
     }
 
 
-    public void addAllAsync ( Collection<ITEM> items ) {
+    public void addAllAsync( Collection<ITEM> items ) {
         query.addAll( items );
     }
 
-    public void modifyAll ( ITEM... items ) {
+    public void modifyAll( ITEM... items ) {
         for ( ITEM item : items ) {
             this.modify( item );
         }
     }
 
-    public void modifyAll ( Collection<ITEM> items ) {
+    public void modifyAll( Collection<ITEM> items ) {
         for ( ITEM item : items ) {
             this.modify( item );
         }
     }
 
-    public void modify ( ITEM item ) {
+    public void modify( ITEM item ) {
 
         /** See if we have an original. */
         KEY key = query.getKey( item );
@@ -96,7 +96,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     }
 
     @Override
-    public void update ( ITEM item ) {
+    public void update( ITEM item ) {
         KEY key = query.getKey( item );
         ITEM oldItem = this.doGet( key );
 
@@ -112,7 +112,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
     }
 
-    public void modify ( ITEM item, String property, Object value ) {
+    public void modify( ITEM item, String property, Object value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setObject( item, value );
@@ -120,7 +120,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    private void optimizeHash ( ITEM item ) {
+    private void optimizeHash( ITEM item ) {
         if ( !hashCodeOptimization ) {
             return;
         }
@@ -133,7 +133,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         }
     }
 
-    public void modifyByValue ( ITEM item, String property, String value ) {
+    public void modifyByValue( ITEM item, String property, String value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setValue( item, value );
@@ -142,7 +142,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
     }
 
-    public void modify ( ITEM item, String property, int value ) {
+    public void modify( ITEM item, String property, int value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setInt( item, value );
@@ -150,7 +150,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void modify ( ITEM item, String property, long value ) {
+    public void modify( ITEM item, String property, long value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setLong( item, value );
@@ -158,7 +158,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void modify ( ITEM item, String property, char value ) {
+    public void modify( ITEM item, String property, char value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setChar( item, value );
@@ -166,7 +166,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void modify ( ITEM item, String property, short value ) {
+    public void modify( ITEM item, String property, short value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setShort( item, value );
@@ -174,7 +174,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void modify ( ITEM item, String property, byte value ) {
+    public void modify( ITEM item, String property, byte value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setByte( item, value );
@@ -182,7 +182,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void modify ( ITEM item, String property, float value ) {
+    public void modify( ITEM item, String property, float value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setFloat( item, value );
@@ -190,7 +190,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void modify ( ITEM item, String property, double value ) {
+    public void modify( ITEM item, String property, double value ) {
         item = lookupAndExpect( item );
         query.invalidateIndex( property, item );
         fields.get( property ).setDouble( item, value );
@@ -198,7 +198,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void modify ( ITEM item, Update... values ) {
+    public void modify( ITEM item, Update... values ) {
         item = lookupAndExpect( item );
         for ( Update value : values ) {
             query.invalidateIndex( value.getName(), item );
@@ -209,7 +209,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
     }
 
-    public void update ( KEY key, String property, Object value ) {
+    public void update( KEY key, String property, Object value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setObject( item, value );
@@ -217,7 +217,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void updateByValue ( KEY key, String property, String value ) {
+    public void updateByValue( KEY key, String property, String value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setValue( item, value );
@@ -225,7 +225,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, String property, int value ) {
+    public void update( KEY key, String property, int value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setInt( item, value );
@@ -233,7 +233,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, String property, long value ) {
+    public void update( KEY key, String property, long value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setLong( item, value );
@@ -241,7 +241,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, String property, char value ) {
+    public void update( KEY key, String property, char value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setChar( item, value );
@@ -249,7 +249,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, String property, short value ) {
+    public void update( KEY key, String property, short value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setShort( item, value );
@@ -257,7 +257,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, String property, byte value ) {
+    public void update( KEY key, String property, byte value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setByte( item, value );
@@ -265,7 +265,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, String property, float value ) {
+    public void update( KEY key, String property, float value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setFloat( item, value );
@@ -273,7 +273,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, String property, double value ) {
+    public void update( KEY key, String property, double value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
         fields.get( property ).setDouble( item, value );
@@ -281,7 +281,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         query.validateIndex( property, item );
     }
 
-    public void update ( KEY key, Update... values ) {
+    public void update( KEY key, Update... values ) {
         ITEM item = lookupAndExpectByKey( key );
 
         for ( Update value : values ) {
@@ -292,7 +292,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         }
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, Object compare, Object value ) {
+    public boolean compareAndUpdate( KEY key, String property, Object compare, Object value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -306,7 +306,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, int compare, int value ) {
+    public boolean compareAndUpdate( KEY key, String property, int compare, int value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -320,7 +320,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, long compare, long value ) {
+    public boolean compareAndUpdate( KEY key, String property, long compare, long value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -334,7 +334,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, char compare, char value ) {
+    public boolean compareAndUpdate( KEY key, String property, char compare, char value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -348,7 +348,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, short compare, short value ) {
+    public boolean compareAndUpdate( KEY key, String property, short compare, short value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -363,7 +363,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, byte compare, byte value ) {
+    public boolean compareAndUpdate( KEY key, String property, byte compare, byte value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -377,7 +377,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, float compare, float value ) {
+    public boolean compareAndUpdate( KEY key, String property, float compare, float value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -391,7 +391,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndUpdate ( KEY key, String property, double compare, double value ) {
+    public boolean compareAndUpdate( KEY key, String property, double compare, double value ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -405,7 +405,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndIncrement ( KEY key, String property, int compare ) {
+    public boolean compareAndIncrement( KEY key, String property, int compare ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -420,7 +420,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
     }
 
-    public boolean compareAndIncrement ( KEY key, String property, long compare ) {
+    public boolean compareAndIncrement( KEY key, String property, long compare ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -434,7 +434,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndIncrement ( KEY key, String property, short compare ) {
+    public boolean compareAndIncrement( KEY key, String property, short compare ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -448,7 +448,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return set;
     }
 
-    public boolean compareAndIncrement ( KEY key, String property, byte compare ) {
+    public boolean compareAndIncrement( KEY key, String property, byte compare ) {
         ITEM item = lookupAndExpectByKey( key );
         FieldAccess field = fields.get( property );
         boolean set = false;
@@ -463,50 +463,50 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     }
 
     @Override
-    public void addAll ( List<ITEM> items ) {
+    public void addAll( List<ITEM> items ) {
         query.addAll( items );
     }
 
 
-    public boolean add ( ITEM item ) {
+    public boolean add( ITEM item ) {
         return query.add( item );
     }
 
 
-    public void setFields ( Map<String, FieldAccess> fields ) {
+    public void setFields( Map<String, FieldAccess> fields ) {
         this.fields = fields;
     }
 
 
     @Override
-    public void setSearchableCollection ( SearchableCollection searchableCollection ) {
+    public void setSearchableCollection( SearchableCollection searchableCollection ) {
         this.query = searchableCollection;
     }
 
     @Override
-    public void init () {
+    public void init() {
     }
 
     @Override
-    public void hashCodeOptimizationOn () {
+    public void hashCodeOptimizationOn() {
         this.hashCodeOptimization = true;
     }
 
 
-    public ITEM get ( KEY key ) {
+    public ITEM get( KEY key ) {
         return ( ITEM ) query.get( key );
     }
 
-    private ITEM doGet ( KEY key ) {
+    private ITEM doGet( KEY key ) {
         return ( ITEM ) query.get( key );
     }
 
     @Override
-    public KEY getKey ( ITEM item ) {
+    public KEY getKey( ITEM item ) {
         return ( KEY ) query.getKey( item );
     }
 
-    private ITEM lookupAndExpect ( ITEM item ) {
+    private ITEM lookupAndExpect( ITEM item ) {
         if ( !lookupAndExcept ) {
             return item;
         }
@@ -523,7 +523,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         return oldItem;
     }
 
-    private ITEM lookupAndExpectByKey ( KEY key ) {
+    private ITEM lookupAndExpectByKey( KEY key ) {
         ITEM oldItem = this.doGet( key );
 
         if ( oldItem == null ) {
@@ -539,192 +539,192 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
 
     @Override
-    public void clear () {
+    public void clear() {
         query.clear();
     }
 
     @Override
-    public boolean delete ( ITEM item ) {
+    public boolean delete( ITEM item ) {
         return query.delete( item );
 
     }
 
     @Override
-    public List<ITEM> all () {
+    public List<ITEM> all() {
         return query.all();  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public int size () {
+    public int size() {
         return query.size();
 
     }
 
     @Override
-    public Collection<ITEM> toCollection () {
+    public Collection<ITEM> toCollection() {
         return query;
     }
 
 
-    public SearchableCollection<KEY, ITEM> query () {
+    public SearchableCollection<KEY, ITEM> query() {
         return query;
     }
 
 
     @Override
-    public Object readNestedValue ( KEY key, String... properties ) {
+    public Object readNestedValue( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyValue( item, properties );
     }
 
 
     @Override
-    public int readNestedInt ( KEY key, String... properties ) {
+    public int readNestedInt( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyInt( item, properties );
     }
 
     @Override
-    public short readNestedShort ( KEY key, String... properties ) {
+    public short readNestedShort( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyShort( item, properties );
     }
 
     @Override
-    public char readNestedChar ( KEY key, String... properties ) {
+    public char readNestedChar( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyChar( item, properties );
     }
 
     @Override
-    public byte readNestedByte ( KEY key, String... properties ) {
+    public byte readNestedByte( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyByte( item, properties );
     }
 
     @Override
-    public double readNestedDouble ( KEY key, String... properties ) {
+    public double readNestedDouble( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyDouble( item, properties );
     }
 
     @Override
-    public float readNestedFloat ( KEY key, String... properties ) {
+    public float readNestedFloat( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyFloat( item, properties );
     }
 
     @Override
-    public long readNestedLong ( KEY key, String... properties ) {
+    public long readNestedLong( KEY key, String... properties ) {
         ITEM item = this.get( key );
         return BeanUtils.getPropertyLong( item, properties );
     }
 
 
     @Override
-    public Object readObject ( KEY key, String property ) {
+    public Object readObject( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getObject( item );
     }
 
 
     @Override
-    public <T> T readValue ( KEY key, String property, Class<T> type ) {
+    public <T> T readValue( KEY key, String property, Class<T> type ) {
         ITEM item = this.get( key );
         return ( T ) this.fields.get( property ).getValue( item );
     }
 
     @Override
-    public int readInt ( KEY key, String property ) {
+    public int readInt( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getInt( item );
     }
 
     @Override
-    public long readLong ( KEY key, String property ) {
+    public long readLong( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getLong( item );
     }
 
     @Override
-    public char readChar ( KEY key, String property ) {
+    public char readChar( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getChar( item );
     }
 
     @Override
-    public short readShort ( KEY key, String property ) {
+    public short readShort( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getShort( item );
     }
 
     @Override
-    public byte readByte ( KEY key, String property ) {
+    public byte readByte( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getByte( item );
     }
 
     @Override
-    public float readFloat ( KEY key, String property ) {
+    public float readFloat( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getFloat( item );
 
     }
 
     @Override
-    public double readDouble ( KEY key, String property ) {
+    public double readDouble( KEY key, String property ) {
         ITEM item = this.get( key );
         return this.fields.get( property ).getDouble( item );
 
     }
 
     @Override
-    public Object getObject ( ITEM item, String property ) {
+    public Object getObject( ITEM item, String property ) {
         return this.fields.get( property ).getObject( item );
     }
 
     @Override
-    public <T> T getValue ( ITEM item, String property, Class<T> type ) {
+    public <T> T getValue( ITEM item, String property, Class<T> type ) {
         return ( T ) this.fields.get( property ).getValue( item );
     }
 
     @Override
-    public int getInt ( ITEM item, String property ) {
+    public int getInt( ITEM item, String property ) {
         return this.fields.get( property ).getInt( item );
     }
 
     @Override
-    public long getLong ( ITEM item, String property ) {
+    public long getLong( ITEM item, String property ) {
         return this.fields.get( property ).getLong( item );
     }
 
     @Override
-    public char getChar ( ITEM item, String property ) {
+    public char getChar( ITEM item, String property ) {
         return this.fields.get( property ).getChar( item );
     }
 
     @Override
-    public short getShort ( ITEM item, String property ) {
+    public short getShort( ITEM item, String property ) {
         return this.fields.get( property ).getShort( item );
     }
 
     @Override
-    public byte getByte ( ITEM item, String property ) {
+    public byte getByte( ITEM item, String property ) {
         return this.fields.get( property ).getByte( item );
     }
 
     @Override
-    public float getFloat ( ITEM item, String property ) {
+    public float getFloat( ITEM item, String property ) {
         return this.fields.get( property ).getFloat( item );
     }
 
     @Override
-    public double getDouble ( ITEM item, String property ) {
+    public double getDouble( ITEM item, String property ) {
         return this.fields.get( property ).getDouble( item );
     }
 
 
-    public void setLookupAndExcept ( boolean lookupAndExcept ) {
+    public void setLookupAndExcept( boolean lookupAndExcept ) {
         this.lookupAndExcept = lookupAndExcept;
     }
 

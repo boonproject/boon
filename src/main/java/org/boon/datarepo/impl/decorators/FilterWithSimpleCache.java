@@ -17,7 +17,7 @@ public class FilterWithSimpleCache extends FilterDecoratorBase {
 
 
     @Override
-    public ResultSet filter ( Criteria... expressions ) {
+    public ResultSet filter( Criteria... expressions ) {
         Group and = CriteriaFactory.and( expressions );
 
         ResultSet results = fifoCache.get( and );
@@ -41,7 +41,7 @@ public class FilterWithSimpleCache extends FilterDecoratorBase {
     }
 
     @Override
-    public void invalidate () {
+    public void invalidate() {
 
           /* The fifo cache is meant for a routine that is maybe using a few queries in a loop. */
         fifoCache = new SimpleConcurrentCache<>( 50, false, CacheType.FIFO );
@@ -49,7 +49,7 @@ public class FilterWithSimpleCache extends FilterDecoratorBase {
         super.invalidate();
     }
 
-    public FilterWithSimpleCache ( Filter delegate ) {
+    public FilterWithSimpleCache( Filter delegate ) {
         super( delegate );
     }
 

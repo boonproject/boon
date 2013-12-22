@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class StrTest {
 
     @Test
-    public void index () {
+    public void index() {
 
         String letters = "abcd";
 
@@ -43,7 +43,7 @@ public class StrTest {
 
 
     @Test
-    public void isIn () {
+    public void isIn() {
 
         String letters = "abcd";
 
@@ -60,7 +60,7 @@ public class StrTest {
 
 
     @Test
-    public void isInAtOffset () {
+    public void isInAtOffset() {
 
         String letters = "abcd";
 
@@ -76,7 +76,7 @@ public class StrTest {
     }
 
     @Test
-    public void isInAtRange () {
+    public void isInAtRange() {
 
         String letters = "abcd";
 
@@ -92,7 +92,7 @@ public class StrTest {
     }
 
     @Test
-    public void slice () {
+    public void slice() {
 
         String letters = "abcd";
 
@@ -143,7 +143,7 @@ public class StrTest {
 
 
     @Test
-    public void outOfBounds () {
+    public void outOfBounds() {
 
         String letters = "abcde";
 
@@ -177,7 +177,7 @@ public class StrTest {
 
 
     @Test
-    public void compactTest () {
+    public void compactTest() {
         String letters =
                 "ab\0\0\0\0\0\0c\0d\0\0e";
 
@@ -194,7 +194,7 @@ public class StrTest {
 
 
     @Test
-    public void joinByTest () {
+    public void joinByTest() {
         String foo = Str.join( ',', "foo", "bar", "baz" );
         boolean ok = true;
 
@@ -205,7 +205,7 @@ public class StrTest {
 
 
     @Test
-    public void lines () {
+    public void lines() {
         String foo = Str.lines(
                 "Line 1",
                 "Line 2",

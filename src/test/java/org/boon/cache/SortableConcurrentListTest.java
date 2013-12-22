@@ -18,19 +18,19 @@ public class SortableConcurrentListTest {
     private SortableConcurrentList list;
 
     @Before
-    public void before () {
+    public void before() {
 
         list = new SortableConcurrentList();
     }
 
     @After
-    public void after () {
+    public void after() {
 
     }
 
 
     @Test
-    public void test () {
+    public void test() {
         list.add( 9 );
         list.add( 66 );
         list.add( 7 );

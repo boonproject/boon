@@ -14,12 +14,12 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     private final boolean lazyChop;
 
-    public JsonMap ( boolean lazyChop ) {
+    public JsonMap( boolean lazyChop ) {
 
         this.lazyChop = lazyChop;
     }
 
-    public void add ( MapItemValue miv ) {
+    public void add( MapItemValue miv ) {
         if ( len == items.length ) {
             items = org.boon.Arrays.grow( items );
         }
@@ -31,42 +31,42 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     static class FakeSet extends AbstractSet<Entry<String, Object>> {
         @Override
-        public <T> T[] toArray ( T[] a ) {
+        public <T> T[] toArray( T[] a ) {
             return ( T[] ) items;
         }
 
         Entry<String, Value>[] items;
 
-        FakeSet ( Entry<String, Value>[] items ) {
+        FakeSet( Entry<String, Value>[] items ) {
 
             this.items = items;
         }
 
         @Override
-        public Iterator<Entry<String, Object>> iterator () {
+        public Iterator<Entry<String, Object>> iterator() {
             return new Iterator<Entry<String, Object>>() {
                 int location = 0;
 
                 @Override
-                public boolean hasNext () {
+                public boolean hasNext() {
                     return location < items.length;
                 }
 
                 @Override
-                public Entry<String, Object> next () {
+                public Entry<String, Object> next() {
                     Object o = items[ location++ ];
                     return ( Entry<String, Object> ) o;
                 }
 
                 @Override
-                public void remove () {
+                public void remove() {
 
                 }
             };
         }
 
         @Override
-        public int size () {
+        public int size() {
             return items.length;
         }
 
@@ -76,14 +76,14 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
     private FakeSet set = new FakeSet( items );
 
     @Override
-    public Object get ( Object key ) {
+    public Object get( Object key ) {
         if ( map == null ) buildMap();
         Object object = map.get( key );
         chopIfNeeded( object );
         return object;
     }
 
-    private void chopIfNeeded ( Object object ) {
+    private void chopIfNeeded( Object object ) {
         if ( lazyChop ) {
             if ( object instanceof JsonMap ) {
                 JsonMap m = ( JsonMap ) object;
@@ -98,7 +98,7 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     boolean mapChopped = false;
 
-    void chopMap () {
+    void chopMap() {
         if ( mapChopped ) {
             return;
         }
@@ -122,7 +122,7 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
     }
 
-    void chopContainer ( Value value ) {
+    void chopContainer( Value value ) {
         Object obj = value.toValue();
         if ( obj instanceof JsonMap ) {
             JsonMap map = ( JsonMap ) obj;
@@ -135,14 +135,14 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
 
 
     @Override
-    public Value put ( String key, Object value ) {
+    public Value put( String key, Object value ) {
         die( "Not that kind of map" );
         return null;
     }
 
 
     @Override
-    public Set<Entry<String, Object>> entrySet () {
+    public Set<Entry<String, Object>> entrySet() {
         if ( map == null ) {
             return set;
         } else {
@@ -150,7 +150,7 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
         }
     }
 
-    private final void buildMap () {
+    private final void buildMap() {
 
         map = new HashMap<>( items.length );
 
@@ -163,13 +163,13 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
     }
 
 
-    public Collection<Object> values () {
+    public Collection<Object> values() {
         if ( map == null ) buildMap();
         return map.values();
     }
 
 
-    public int size () {
+    public int size() {
 
         if ( map == null ) {
             return len;
@@ -178,7 +178,7 @@ public class JsonMap extends AbstractMap<String, Object> implements Map<String, 
         }
     }
 
-    public String toString () {
+    public String toString() {
         if ( map == null ) buildMap();
         return map.toString();
 

@@ -27,7 +27,7 @@ public class TimeKeeperBasic implements TimeKeeper {
 
 
     @Override
-    public final long time () {
+    public final long time() {
 
         long limit = callEveryNowAndThen.incrementAndGet();
         long time;
@@ -51,7 +51,7 @@ public class TimeKeeperBasic implements TimeKeeper {
     }
 
     /* Never let the drift get greater than 200 ms. */
-    private long checkForDrift ( long time ) {
+    private long checkForDrift( long time ) {
         long delta = Math.abs( System.currentTimeMillis() - time );
         long lastDelta = lastDeltaTime.getAndSet( delta );
         if ( delta > lastDelta + 200 ) {
@@ -60,7 +60,7 @@ public class TimeKeeperBasic implements TimeKeeper {
         return time;
     }
 
-    private long getTheTime ( long time ) {
+    private long getTheTime( long time ) {
         boolean locked = lock.tryLock(); //make sure two or more threads are not calling nanoTime.
         if ( locked ) {
             try {

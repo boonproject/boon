@@ -11,7 +11,7 @@ public class ChrTest {
 
 
     @Test
-    public void trimTest () {
+    public void trimTest() {
 
         char[] letters =
                 array( ' ', '\n', 'a', 'b', 'c', ' ', '\n', '\t' );
@@ -26,7 +26,7 @@ public class ChrTest {
 
 
     @Test
-    public void rpadTest () {
+    public void rpadTest() {
 
         char[] letters =
                 array( 'a', 'b', 'c' );
@@ -40,7 +40,7 @@ public class ChrTest {
 
 
     @Test
-    public void lpadTest () {
+    public void lpadTest() {
 
         char[] letters =
                 array( 'a', 'b', 'c' );
@@ -56,7 +56,7 @@ public class ChrTest {
     }
 
     @Test
-    public void allocate () {
+    public void allocate() {
 
         char[] letters =
                 arrayOfChar( 500 );
@@ -70,7 +70,7 @@ public class ChrTest {
 
 
     @Test
-    public void create () {
+    public void create() {
 
         char[] letters =
                 array( 'a', 'b', 'c', 'd' );
@@ -84,7 +84,7 @@ public class ChrTest {
 
 
     @Test
-    public void index () {
+    public void index() {
 
         char[] letters =
                 array( 'a', 'b', 'c', 'd' );
@@ -116,7 +116,7 @@ public class ChrTest {
     }
 
     @Test
-    public void isIn () {
+    public void isIn() {
 
         char[] letters =
                 array( 'a', 'b', 'c', 'd' );
@@ -133,7 +133,7 @@ public class ChrTest {
     }
 
     @Test
-    public void isInAtOffset () {
+    public void isInAtOffset() {
 
         char[] letters =
                 array( 'a', 'b', 'c', 'd' );
@@ -150,7 +150,7 @@ public class ChrTest {
     }
 
     @Test
-    public void isInAtRange () {
+    public void isInAtRange() {
 
         char[] letters =
                 array( 'a', 'b', 'c', 'd' );
@@ -167,7 +167,7 @@ public class ChrTest {
     }
 
     @Test
-    public void slice () {
+    public void slice() {
 
         char[] letters =
                 array( 'a', 'b', 'c', 'd' );
@@ -219,7 +219,7 @@ public class ChrTest {
 
 
     @Test
-    public void outOfBounds () {
+    public void outOfBounds() {
 
         char[] fruit =
                 array( 'a', 'b', 'c', 'd', 'e' );
@@ -254,7 +254,7 @@ public class ChrTest {
 
 
     @Test
-    public void growTest () {
+    public void growTest() {
         char[] letters =
                 array( 'a', 'b', 'c', 'd', 'e' );
 
@@ -297,7 +297,7 @@ public class ChrTest {
 
 
     @Test
-    public void growFast () {
+    public void growFast() {
         char[] letters =
                 array( 'a', 'b', 'c', 'd', 'e' );
 
@@ -332,7 +332,7 @@ public class ChrTest {
 
 
     @Test
-    public void compactTest () {
+    public void compactTest() {
         char[] letters =
                 array( 'a', 'b', '\0', '\0', '\0', '\0', '\0', 'c', '\0', 'd', 'e' );
 
@@ -349,7 +349,7 @@ public class ChrTest {
 
 
     @Test
-    public void copyTest () {
+    public void copyTest() {
 
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e' ),
@@ -362,7 +362,7 @@ public class ChrTest {
 
 
     @Test
-    public void addTest () {
+    public void addTest() {
 
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e', 'f' ),
@@ -374,7 +374,7 @@ public class ChrTest {
     }
 
     @Test
-    public void addTestArray () {
+    public void addTestArray() {
 
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e', 'f', 'e' ),
@@ -387,7 +387,7 @@ public class ChrTest {
 
 
     @Test
-    public void addInsertSingle () {
+    public void addInsertSingle() {
 
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e', 'f', 'g' ),
@@ -412,7 +412,7 @@ public class ChrTest {
 
 
     @Test
-    public void addInsertEdge () {
+    public void addInsertEdge() {
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e', 'f', 'g' ),
                 insert( array( 'a', 'b', 'c', 'd', 'e', 'f' ), 6, 'g' )
@@ -428,7 +428,7 @@ public class ChrTest {
     }
 
     @Test
-    public void addInsertArray () {
+    public void addInsertArray() {
 
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e', 'f', 'g' ),
@@ -447,7 +447,7 @@ public class ChrTest {
 
 
     @Test
-    public void addInsertArrayEnd () {
+    public void addInsertArrayEnd() {
 
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' ),
@@ -460,7 +460,7 @@ public class ChrTest {
 
 
     @Test
-    public void addInsertArrayEnd2 () {
+    public void addInsertArrayEnd2() {
 
 
         assertArrayEquals(
@@ -473,7 +473,7 @@ public class ChrTest {
 
 
     @Test
-    public void addInsertArrayEnd3 () {
+    public void addInsertArrayEnd3() {
 
 
         assertArrayEquals(
@@ -486,7 +486,7 @@ public class ChrTest {
 
 
     @Test
-    public void testByteCopyIntoCharArray () {
+    public void testByteCopyIntoCharArray() {
 
         char[] charArray = new char[ 1000 ];
         byte[] bytes = Byt.bytes( "0123456789000" );

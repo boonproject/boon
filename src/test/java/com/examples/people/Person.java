@@ -10,27 +10,27 @@ public class Person {
     private User user;
 
 
-    public Person () {
+    public Person() {
     }
 
 
-    public Person ( String firstName, String lastName ) {
+    public Person( String firstName, String lastName ) {
 
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
 
-    public boolean isUser () {
+    public boolean isUser() {
         return user != null;
     }
 
-    public String getFirstName () {
+    public String getFirstName() {
 
         return firstName;
     }
 
-    public void setFirstName ( String firstName ) {
+    public void setFirstName( String firstName ) {
         this.firstName = firstName;
     }
 

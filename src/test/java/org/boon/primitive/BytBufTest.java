@@ -21,7 +21,7 @@ public class BytBufTest {
 
 
     @Test
-    public void test4 () {
+    public void test4() {
         ByteBuf buf = new ByteBuf();
         buf.writeUnsignedShort( Short.MAX_VALUE + 1 );
         buf.writeUnsignedInt( ( ( long ) Integer.MAX_VALUE ) + 1L );
@@ -243,7 +243,7 @@ public class BytBufTest {
 
 
     @Test
-    public void test2 () {
+    public void test2() {
         ByteBuf buf = new ByteBuf();
         buf.add( "abc" );
         buf.add( "def" );
@@ -253,7 +253,7 @@ public class BytBufTest {
     }
 
     @Test
-    public void test3 () throws UnsupportedEncodingException {
+    public void test3() throws UnsupportedEncodingException {
         ByteBuf buf = new ByteBuf();
         buf.add( URLEncoder.encode( "abc", "UTF-8" ) );
         buf.addUrlEncodedByteArray( new byte[]{ ( byte ) 1, 2, 3 } );
@@ -274,7 +274,7 @@ public class BytBufTest {
     }
 
     @Test
-    public void testMe () {
+    public void testMe() {
         ByteBuf buf = new ByteBuf();
         buf.add( bytes( "0123456789\n" ) );
         buf.add( "0123456789\n" );
@@ -291,7 +291,7 @@ public class BytBufTest {
     }
 
     @Test
-    public void testExact () {
+    public void testExact() {
         ByteBuf buf = ByteBuf.createExact( 66 );
         buf.add( bytes( "0123456789\n" ) );
         buf.add( "0123456789\n" );
@@ -308,7 +308,7 @@ public class BytBufTest {
     }
 
     @Test ( expected = Exceptions.SoftenedException.class )
-    public void testExact2TooSmall () {
+    public void testExact2TooSmall() {
         ByteBuf buf = ByteBuf.createExact( 22 );
         buf.add( bytes( "0123456789\n" ) );
         buf.add( "0123456789\n" );
@@ -322,7 +322,7 @@ public class BytBufTest {
 
 
     @Test
-    public void doubleTest () {
+    public void doubleTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
         //add the double
@@ -337,7 +337,7 @@ public class BytBufTest {
 
 
     @Test
-    public void floatTest () {
+    public void floatTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
         //add the float
@@ -357,7 +357,7 @@ public class BytBufTest {
     }
 
     @Test
-    public void intTest () {
+    public void intTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
         //Add the int to the array
@@ -376,7 +376,7 @@ public class BytBufTest {
     }
 
     @Test
-    public void charTest () {
+    public void charTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
         //Add the char to the array
@@ -396,7 +396,7 @@ public class BytBufTest {
 
 
     @Test
-    public void shortTest () {
+    public void shortTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
         //Add the short to the array
@@ -416,7 +416,7 @@ public class BytBufTest {
 
 
     @Test
-    public void byteTest () {
+    public void byteTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
         //Add the byte to the array
@@ -436,7 +436,7 @@ public class BytBufTest {
 
 
     @Test
-    public void addRockSockEmRobotEm () {
+    public void addRockSockEmRobotEm() {
         boolean worked = true;
         ByteBuf buf = ByteBuf.create( 1 );
 

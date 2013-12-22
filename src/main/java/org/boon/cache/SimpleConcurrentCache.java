@@ -12,7 +12,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     private static class SimpleThreadSafeCache<K, V> extends SimpleCache<K, V> {
         private final ReadWriteLock readWriteLock;
 
-        SimpleThreadSafeCache ( final int limit, CacheType type, boolean fair ) {
+        SimpleThreadSafeCache( final int limit, CacheType type, boolean fair ) {
 
             super( limit, type );
             readWriteLock = new ReentrantReadWriteLock( fair );
@@ -20,7 +20,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
 
         @Override
-        public void put ( K key, V value ) {
+        public void put( K key, V value ) {
             readWriteLock.writeLock().lock();
             try {
 
@@ -32,7 +32,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
 
         @Override
-        public V get ( K key ) {
+        public V get( K key ) {
             readWriteLock.writeLock().lock();
             V value;
 
@@ -46,7 +46,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         }
 
         @Override
-        public void remove ( K key ) {
+        public void remove( K key ) {
 
             readWriteLock.writeLock().lock();
 
@@ -59,7 +59,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
         }
 
-        public V getSilent ( K key ) {
+        public V getSilent( K key ) {
             readWriteLock.writeLock().lock();
 
             V value;
@@ -75,7 +75,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
         }
 
-        public int size () {
+        public int size() {
             readWriteLock.readLock().lock();
             int size = -1;
             try {
@@ -86,7 +86,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
             return size;
         }
 
-        public String toString () {
+        public String toString() {
             readWriteLock.readLock().lock();
             String str;
             try {
@@ -101,15 +101,15 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
-    public SimpleConcurrentCache ( final int limit ) {
+    public SimpleConcurrentCache( final int limit ) {
         this( limit, false, CacheType.LRU );
     }
 
-    public SimpleConcurrentCache ( final int limit, CacheType type ) {
+    public SimpleConcurrentCache( final int limit, CacheType type ) {
         this( limit, false, type );
     }
 
-    public SimpleConcurrentCache ( final int limit, boolean fair, CacheType type ) {
+    public SimpleConcurrentCache( final int limit, boolean fair, CacheType type ) {
         int cores = Runtime.getRuntime().availableProcessors();
         int stripeSize = cores < 2 ? 4 : cores * 2;
         stripeSize = roundUpToPowerOf2( stripeSize );
@@ -119,7 +119,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         }
     }
 
-    public SimpleConcurrentCache ( final int concurrency, final int limit, boolean fair, CacheType type ) {
+    public SimpleConcurrentCache( final int concurrency, final int limit, boolean fair, CacheType type ) {
 
 
         final int stripeSize = roundUpToPowerOf2( concurrency );
@@ -129,7 +129,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         }
     }
 
-    public SimpleConcurrentCache ( final int concurrency, final int limit, boolean fair ) {
+    public SimpleConcurrentCache( final int concurrency, final int limit, boolean fair ) {
 
 
         final int stripeSize = roundUpToPowerOf2( concurrency );
@@ -139,35 +139,35 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         }
     }
 
-    private SimpleCache<K, V> map ( K key ) {
+    private SimpleCache<K, V> map( K key ) {
         return cacheRegions[ stripeIndex( key ) ];
     }
 
     @Override
-    public void put ( K key, V value ) {
+    public void put( K key, V value ) {
 
         map( key ).put( key, value );
     }
 
     @Override
-    public V get ( K key ) {
+    public V get( K key ) {
         return map( key ).get( key );
     }
 
     //For testing only
     @Override
-    public V getSilent ( K key ) {
+    public V getSilent( K key ) {
         return map( key ).getSilent( key );
 
     }
 
     @Override
-    public void remove ( K key ) {
+    public void remove( K key ) {
         map( key ).remove( key );
     }
 
     @Override
-    public int size () {
+    public int size() {
         int size = 0;
         for ( SimpleCache<K, V> cache : cacheRegions ) {
             size += cache.size();
@@ -175,7 +175,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         return size;
     }
 
-    public String toString () {
+    public String toString() {
 
         StringBuilder builder = new StringBuilder();
         for ( SimpleCache<K, V> cache : cacheRegions ) {
@@ -203,7 +203,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
     private transient final int hashSeed = randomHashSeed( this );
 
-    private static int randomHashSeed ( SimpleConcurrentCache instance ) {
+    private static int randomHashSeed( SimpleConcurrentCache instance ) {
 
 
         if ( useFastHash ) {
@@ -214,7 +214,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
-    private final int hash ( Object k ) {
+    private final int hash( Object k ) {
         int h = hashSeed;
 
         h ^= k.hashCode();
@@ -227,12 +227,12 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     /**
      * Returns index for hash code h.
      */
-    static int indexFor ( int h, int length ) {
+    static int indexFor( int h, int length ) {
         return h & ( length - 1 );
     }
 
 
-    private static int roundUpToPowerOf2 ( int number ) {
+    private static int roundUpToPowerOf2( int number ) {
         int rounded = number >= 1_000
                 ? 1_000
                 : ( rounded = Integer.highestOneBit( number ) ) != 0
@@ -243,7 +243,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
-    private int stripeIndex ( K key ) {
+    private int stripeIndex( K key ) {
         return indexFor( hash( key ), cacheRegions.length );
     }
 

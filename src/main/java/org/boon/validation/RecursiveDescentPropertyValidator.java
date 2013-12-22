@@ -22,7 +22,7 @@ public class RecursiveDescentPropertyValidator {
         public final String propertyPath;
         public final ValidatorMessageHolder holder;
 
-        MessageHolder ( String propertyPath, ValidatorMessageHolder holder ) {
+        MessageHolder( String propertyPath, ValidatorMessageHolder holder ) {
             this.propertyPath = propertyPath;
             this.holder = holder;
         }
@@ -36,7 +36,7 @@ public class RecursiveDescentPropertyValidator {
      * @param validationMetaDataList Holds metadataInformation about validation.
      * @return composite validator with all of the validators for this property present.
      */
-    protected CompositeValidator createValidator (
+    protected CompositeValidator createValidator(
             List<ValidatorMetaData> validationMetaDataList ) {
 
         /*
@@ -67,7 +67,7 @@ public class RecursiveDescentPropertyValidator {
     }
 
 
-    private List<PropertyDescriptor> getFieldsToValidate ( Object object ) {
+    private List<PropertyDescriptor> getFieldsToValidate( Object object ) {
         List<PropertyDescriptor> properties;
         BeanInfo beanInfo;
         try {
@@ -86,14 +86,14 @@ public class RecursiveDescentPropertyValidator {
         return properties;
     }
 
-    protected List<ValidatorMetaData> readMetaData ( Class<?> clazz,
-                                                     String propertyName ) {
+    protected List<ValidatorMetaData> readMetaData( Class<?> clazz,
+                                                    String propertyName ) {
         return validatorMetaDataReader.readMetaData( clazz,
                 propertyName );
     }
 
-    private void validateProperty ( final Object object, final Object objectProperty, final String property,
-                                    List<MessageHolder> vMessageHolders ) {
+    private void validateProperty( final Object object, final Object objectProperty, final String property,
+                                   List<MessageHolder> vMessageHolders ) {
 
         List<ValidatorMetaData> metaDataList = readMetaData( object.getClass(),
                 property );
@@ -102,12 +102,12 @@ public class RecursiveDescentPropertyValidator {
         vMessageHolders.add( new MessageHolder( ValidationContext.getBindingPath(), holder ) );
     }
 
-    protected boolean shouldFieldBeValidated () {
+    protected boolean shouldFieldBeValidated() {
         return true;
     }
 
 
-    public List<MessageHolder> validateObject ( final Object object ) {
+    public List<MessageHolder> validateObject( final Object object ) {
 
 
         List<MessageHolder> list = Collections.EMPTY_LIST;
@@ -120,7 +120,7 @@ public class RecursiveDescentPropertyValidator {
         return list;
     }
 
-    public List<MessageHolder> validateObject ( final Object object, Map<String, Object> registry ) {
+    public List<MessageHolder> validateObject( final Object object, Map<String, Object> registry ) {
 
 
         List<MessageHolder> list = Collections.EMPTY_LIST;
@@ -135,7 +135,7 @@ public class RecursiveDescentPropertyValidator {
     }
 
 
-    public List<MessageHolder> validateObjectWithMessages ( final Object object, List<MessageHolder> validationMessages ) {
+    public List<MessageHolder> validateObjectWithMessages( final Object object, List<MessageHolder> validationMessages ) {
         List<PropertyDescriptor> fieldsToValidate = getFieldsToValidate( object );
         Map<String, Object> objectPropertiesAsMap = Maps.toMap( object );
         if ( validationMessages == null ) {
@@ -172,7 +172,7 @@ public class RecursiveDescentPropertyValidator {
      * @return list of field validators.
      */
     private List<FieldValidator>
-    lookupTheListOfValidatorsAndInitializeThemWithMetaDataProperties (
+    lookupTheListOfValidatorsAndInitializeThemWithMetaDataProperties(
             List<ValidatorMetaData> validationMetaDataList ) {
 
         List<FieldValidator> validatorsList = new ArrayList<>();
@@ -203,7 +203,7 @@ public class RecursiveDescentPropertyValidator {
      * @param validationMetaDataName The name of the validator that we are looking up.
      * @return field validator
      */
-    private FieldValidator lookupValidatorInRegistry (
+    private FieldValidator lookupValidatorInRegistry(
             String validationMetaDataName ) {
 
 
@@ -222,7 +222,7 @@ public class RecursiveDescentPropertyValidator {
      * @param metaData  validation meta data
      * @param validator field validator
      */
-    private void applyValidationMetaDataPropertiesToValidator (
+    private void applyValidationMetaDataPropertiesToValidator(
             ValidatorMetaData metaData, FieldValidator validator ) {
         Map<String, Object> properties = metaData.getProperties();
         ifPropertyBlankRemove( properties, "detailMessage" );
@@ -241,7 +241,7 @@ public class RecursiveDescentPropertyValidator {
      * @param properties properties
      * @param property   property
      */
-    private void ifPropertyBlankRemove ( Map<String, Object> properties, String property ) {
+    private void ifPropertyBlankRemove( Map<String, Object> properties, String property ) {
 
         Object object = properties.get( property );
         if ( object == null ) {
@@ -254,7 +254,7 @@ public class RecursiveDescentPropertyValidator {
         }
     }
 
-    public void setValidatorMetaDataReader (
+    public void setValidatorMetaDataReader(
             ValidatorMetaDataReader validatorMetaDataReader ) {
         this.validatorMetaDataReader = validatorMetaDataReader;
     }

@@ -17,12 +17,12 @@ public class HTTP {
     public static final int DEFAULT_TIMEOUT_SECONDS =
             Integer.parseInt( System.getProperty( "org.boon.HTTP.timeout.seconds", "5" ) );
 
-    public static String get (
+    public static String get(
             final String url ) {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
 
                 final Map<String, String> accept = Maps.map(
@@ -36,12 +36,12 @@ public class HTTP {
 
     }
 
-    public static byte[] getBytes (
+    public static byte[] getBytes(
             final String url, final String contentType ) {
 
         return Exceptions.tryIt( byte[].class, new Exceptions.TrialWithReturn<byte[]>() {
             @Override
-            public byte[] tryIt () throws Exception {
+            public byte[] tryIt() throws Exception {
                 URLConnection connection;
                 connection = doGet( url, null, contentType, null, true );
                 return extractResponseBytes( connection );
@@ -50,12 +50,12 @@ public class HTTP {
 
     }
 
-    public static byte[] getBytesWithHeaders (
+    public static byte[] getBytesWithHeaders(
             final String url, final String contentType, final Map<String, ?> headers ) {
 
         return Exceptions.tryIt( byte[].class, new Exceptions.TrialWithReturn<byte[]>() {
             @Override
-            public byte[] tryIt () throws Exception {
+            public byte[] tryIt() throws Exception {
                 URLConnection connection;
                 connection = doGet( url, headers, contentType, null, true );
                 return extractResponseBytes( connection );
@@ -64,13 +64,13 @@ public class HTTP {
 
     }
 
-    public static String getWithHeaders (
+    public static String getWithHeaders(
             final String url,
             final Map<String, ?> headers ) {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doGet( url, headers, null, null );
                 return extractResponseString( connection );
@@ -79,14 +79,14 @@ public class HTTP {
 
     }
 
-    public static String getWithContentType (
+    public static String getWithContentType(
             final String url,
             final Map<String, ?> headers,
             final String contentType ) {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doGet( url, headers, contentType, null );
                 return extractResponseString( connection );
@@ -95,7 +95,7 @@ public class HTTP {
 
     }
 
-    public static String getWithCharSet (
+    public static String getWithCharSet(
             final String url,
             final Map<String, ?> headers,
             final String contentType,
@@ -104,7 +104,7 @@ public class HTTP {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doGet( url, headers, contentType, charSet );
                 return extractResponseString( connection );
@@ -113,13 +113,13 @@ public class HTTP {
 
     }
 
-    public static String postText (
+    public static String postText(
             final String url,
             final String body ) {
         return postBodyTextWithContentType( url, "text/plain", body );
     }
 
-    public static String postBodyTextWithContentType (
+    public static String postBodyTextWithContentType(
             final String url,
             final String contentType,
             final String body ) {
@@ -127,7 +127,7 @@ public class HTTP {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doPost( url, null, contentType, null, body );
                 return extractResponseString( connection );
@@ -136,35 +136,35 @@ public class HTTP {
 
     }
 
-    public static String post (
+    public static String post(
             final String url,
             final String body ) {
 
         return postBodyTextWithContentType( url, "text/plain", body );
     }
 
-    public static String postJSON (
+    public static String postJSON(
             final String url,
             final String jsonString ) {
 
         return postBodyTextWithContentType( url, "application/json", jsonString );
     }
 
-    public static String postXML (
+    public static String postXML(
             final String url,
             final String jsonString ) {
 
         return postBodyTextWithContentType( url, "text/xml", jsonString );
     }
 
-    public static String postWithHeaders (
+    public static String postWithHeaders(
             final String url,
             final Map<String, ?> headers,
             final String body ) {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doPost( url, headers, "text/plain", null, body );
                 return extractResponseString( connection );
@@ -174,7 +174,7 @@ public class HTTP {
     }
 
 
-    public static String postWithContentType (
+    public static String postWithContentType(
             final String url,
             final Map<String, ?> headers,
             final String contentType,
@@ -183,7 +183,7 @@ public class HTTP {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doPost( url, headers, contentType, null, body );
                 return extractResponseString( connection );
@@ -193,7 +193,7 @@ public class HTTP {
     }
 
 
-    public static String postWithCharset (
+    public static String postWithCharset(
             final String url,
             final Map<String, ?> headers,
             final String contentType,
@@ -203,7 +203,7 @@ public class HTTP {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doPost( url, headers, contentType, charSet, body );
                 return extractResponseString( connection );
@@ -212,8 +212,8 @@ public class HTTP {
 
     }
 
-    private static URLConnection doPost ( String url, Map<String, ?> headers,
-                                          String contentType, String charset, String body
+    private static URLConnection doPost( String url, Map<String, ?> headers,
+                                         String contentType, String charset, String body
     ) throws IOException {
         HttpURLConnection connection;/* Handle output. */
 
@@ -231,12 +231,12 @@ public class HTTP {
         return connection;
     }
 
-    public static String postForm ( final String url, final Map<String, ?> headers,
-                                    final Map<String, Object> formData
+    public static String postForm( final String url, final Map<String, ?> headers,
+                                   final Map<String, Object> formData
     ) {
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
-            public String tryIt () throws Exception {
+            public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doPostFormData( url, headers, formData );
                 return extractResponseString( connection );
@@ -245,8 +245,8 @@ public class HTTP {
 
     }
 
-    private static URLConnection doPostFormData ( String url, Map<String, ?> headers,
-                                                  Map<String, Object> formData
+    private static URLConnection doPostFormData( String url, Map<String, ?> headers,
+                                                 Map<String, Object> formData
     ) throws IOException {
         HttpURLConnection connection;/* Handle output. */
 
@@ -295,7 +295,7 @@ public class HTTP {
         return connection;
     }
 
-    private static void manageHeaders ( Map<String, ?> headers, URLConnection connection ) {
+    private static void manageHeaders( Map<String, ?> headers, URLConnection connection ) {
         if ( headers != null ) {
             for ( Map.Entry<String, ?> entry : headers.entrySet() ) {
                 connection.setRequestProperty( entry.getKey(), entry.getValue().toString() );
@@ -304,7 +304,7 @@ public class HTTP {
     }
 
 
-    private static void manageContentTypeHeaders ( String contentType, String charset, URLConnection connection, boolean binary ) {
+    private static void manageContentTypeHeaders( String contentType, String charset, URLConnection connection, boolean binary ) {
 
         if ( !binary ) {
             connection.setRequestProperty( "Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset );
@@ -315,8 +315,8 @@ public class HTTP {
 
     }
 
-    private static URLConnection doGet ( String url, Map<String, ?> headers,
-                                         String contentType, String charset, boolean binary ) throws IOException {
+    private static URLConnection doGet( String url, Map<String, ?> headers,
+                                        String contentType, String charset, boolean binary ) throws IOException {
         URLConnection connection;/* Handle output. */
         connection = new URL( url ).openConnection();
         manageContentTypeHeaders( contentType, charset, connection, binary );
@@ -327,7 +327,7 @@ public class HTTP {
     }
 
 
-    private static String extractResponseString ( URLConnection connection ) throws IOException {
+    private static String extractResponseString( URLConnection connection ) throws IOException {
 
         /* Handle input. */
         HttpURLConnection http = ( HttpURLConnection ) connection;
@@ -341,7 +341,7 @@ public class HTTP {
         }
     }
 
-    private static byte[] extractResponseBytes ( URLConnection connection ) throws IOException {
+    private static byte[] extractResponseBytes( URLConnection connection ) throws IOException {
 
         /* Handle input. */
         HttpURLConnection http = ( HttpURLConnection ) connection;
@@ -360,7 +360,7 @@ public class HTTP {
         }
     }
 
-    private static byte[] readResponseBodyAsBytes ( HttpURLConnection http ) {
+    private static byte[] readResponseBodyAsBytes( HttpURLConnection http ) {
         try {
             return IO.input( http.getInputStream() );
         } catch ( IOException e ) {
@@ -369,7 +369,7 @@ public class HTTP {
 
     }
 
-    private static String readErrorResponseBody ( HttpURLConnection http, int status, String charset ) {
+    private static String readErrorResponseBody( HttpURLConnection http, int status, String charset ) {
         InputStream errorStream = http.getErrorStream();
         if ( errorStream != null ) {
             String error = charset == null ? IO.read( errorStream ) :
@@ -380,7 +380,7 @@ public class HTTP {
         }
     }
 
-    private static String readResponseBody ( HttpURLConnection http, String charset ) throws IOException {
+    private static String readResponseBody( HttpURLConnection http, String charset ) throws IOException {
         if ( charset != null ) {
             return IO.read( http.getInputStream(), charset );
         } else {
@@ -388,7 +388,7 @@ public class HTTP {
         }
     }
 
-    private static String getCharset ( String contentType ) {
+    private static String getCharset( String contentType ) {
         if ( contentType == null ) {
             return null;
         }
@@ -405,15 +405,15 @@ public class HTTP {
     }
 
 
-    private static void manageContentTypeHeaders ( String contentType, String charset, URLConnection connection ) {
+    private static void manageContentTypeHeaders( String contentType, String charset, URLConnection connection ) {
         connection.setRequestProperty( "Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset );
         if ( contentType != null && !contentType.isEmpty() ) {
             connection.setRequestProperty( "Content-Type", contentType );
         }
     }
 
-    private static URLConnection doGet ( String url, Map<String, ?> headers,
-                                         String contentType, String charset ) throws IOException {
+    private static URLConnection doGet( String url, Map<String, ?> headers,
+                                        String contentType, String charset ) throws IOException {
         URLConnection connection;/* Handle output. */
         connection = new URL( url ).openConnection();
         manageContentTypeHeaders( contentType, charset, connection );

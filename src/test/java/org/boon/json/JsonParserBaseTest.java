@@ -28,7 +28,7 @@ public class JsonParserBaseTest {
     JsonParser jsonParser;
 
 
-    protected void inspectMap ( Map<String, Object> map ) {
+    protected void inspectMap( Map<String, Object> map ) {
         final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
         putl( "map", map, "size", map.size(), "keys", map.keySet(), "values", map.values() );
 
@@ -43,21 +43,21 @@ public class JsonParserBaseTest {
     }
 
 
-    public JsonParserFactory factory () {
+    public JsonParserFactory factory() {
         return new JsonParserFactory();
     }
 
-    public JsonParser parser () {
+    public JsonParser parser() {
         return new JsonParserCharArray();
     }
 
-    public JsonParser objectParser () {
+    public JsonParser objectParser() {
         return new JsonParserCharArray();
     }
 
 
     @Before
-    public void setup () {
+    public void setup() {
 
         jsonParser = parser();
 
@@ -65,7 +65,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void testParserSimpleMapWithNumber () {
+    public void testParserSimpleMapWithNumber() {
 
         Object obj = jsonParser.parse( Map.class,
                 " { 'foo': 1 }  ".replace( '\'', '"' )
@@ -84,7 +84,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void objectSerialization () {
+    public void objectSerialization() {
 
 
         String fileContents = IO.read( "files/AllTypes.json" );
@@ -107,7 +107,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void testFiles () {
+    public void testFiles() {
 
 
         final List<String> list = IO.listByExt( "files", ".json" );
@@ -124,7 +124,7 @@ public class JsonParserBaseTest {
 
     }
 
-    private void validateAllTypes ( AllTypes types ) {
+    private void validateAllTypes( AllTypes types ) {
         boolean ok = true;
         ok |= types.getMyInt() == 1 || die( "" + types.getMyInt() );
 
@@ -143,7 +143,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void testParseFalse () {
+    public void testParseFalse() {
 
         Object obj = jsonParser.parse( Map.class,
                 " { 'foo': false }  ".replace( '\'', '"' )
@@ -161,7 +161,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void testParseNull () {
+    public void testParseNull() {
 
         Object obj = jsonParser.parse( Map.class,
                 " { 'foo': null }  ".replace( '\'', '"' )
@@ -179,7 +179,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void testParserSimpleMapWithBoolean () {
+    public void testParserSimpleMapWithBoolean() {
 
         Object obj = jsonParser.parse( Map.class,
                 " { 'foo': true }  ".replace( '\'', '"' )
@@ -198,7 +198,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void testParserSimpleMapWithList () {
+    public void testParserSimpleMapWithList() {
 
         Object obj = jsonParser.parse( Map.class,
                 " { 'foo': [0,1,2] }  ".replace( '\'', '"' )
@@ -216,7 +216,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void testParserSimpleMapWithString () {
+    public void testParserSimpleMapWithString() {
 
         Object obj = jsonParser.parse( Map.class,
                 " { 'foo': 'str ' }  ".replace( '\'', '"' )
@@ -238,7 +238,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void testLists () {
+    public void testLists() {
         String[][] testLists = {
                 { "emptyList", "[]" },                  //0
                 { "emptyList", " [ ]" },                  //1  fails
@@ -277,7 +277,7 @@ public class JsonParserBaseTest {
     }
 
 
-    public void helper ( String name, String json, Object compareTo ) {
+    public void helper( String name, String json, Object compareTo ) {
 
         System.out.printf( "%s, %s, %s", name, json, compareTo );
 
@@ -296,7 +296,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void testNumber () {
+    public void testNumber() {
 
         Object obj = jsonParser.parse( Map.class,
                 "1".replace( '\'', '"' )
@@ -314,7 +314,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void testBoolean () {
+    public void testBoolean() {
 
         Object obj = jsonParser.parse( Map.class,
                 "  true  ".replace( '\'', '"' )
@@ -332,7 +332,7 @@ public class JsonParserBaseTest {
     }
 
     @Test ( expected = JsonException.class )
-    public void testBooleanParseError () {
+    public void testBooleanParseError() {
 
         Object obj = jsonParser.parse( Map.class,
                 "  tbone  ".replace( '\'', '"' )
@@ -350,7 +350,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void testString () {
+    public void testString() {
 
         String testString =
                 ( "  'this is all sort of text, " +
@@ -374,7 +374,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void testStringInsideOfList () {
+    public void testStringInsideOfList() {
 
         String testString = (
                 "  [ 'this is all sort of text, " +
@@ -400,7 +400,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void testStringInsideOfList2 () {
+    public void testStringInsideOfList2() {
 
         String testString =
                 "[ 'abc','def' ]".replace( '\'', '"' );
@@ -423,7 +423,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void textInMiddleOfArray () {
+    public void textInMiddleOfArray() {
 
         try {
             Object obj = jsonParser.parse( Map.class,
@@ -440,7 +440,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void oddlySpaced2 () {
+    public void oddlySpaced2() {
 
         Object obj = jsonParser.parse( Map.class,
                 lines( "[   2   ,    1, 0]"
@@ -454,7 +454,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void complex () {
+    public void complex() {
 
 
         Object obj = jsonParser.parse( Map.class,
@@ -473,7 +473,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void bug2 () {
+    public void bug2() {
 
 
         Object obj = jsonParser.parse( Map.class,
@@ -493,7 +493,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void complianceFromJsonSmartForPI () {
+    public void complianceFromJsonSmartForPI() {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
@@ -509,7 +509,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void complianceForLowerCaseNumber () {
+    public void complianceForLowerCaseNumber() {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
@@ -524,7 +524,7 @@ public class JsonParserBaseTest {
     }
 
     @Test
-    public void complianceForUpperCaseNumber () {
+    public void complianceForUpperCaseNumber() {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
@@ -541,7 +541,7 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void doublePrecisionFloatingPoint () {
+    public void doublePrecisionFloatingPoint() {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
@@ -559,7 +559,7 @@ public class JsonParserBaseTest {
 
 
     @Test ( expected = JsonException.class )
-    public void doubleQuoteInsideOfSingleQuote () {
+    public void doubleQuoteInsideOfSingleQuote() {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
@@ -572,7 +572,7 @@ public class JsonParserBaseTest {
     }
 
     @Test ( expected = JsonException.class )
-    public void supportSimpleQuoteInNonProtectedStringValue () {
+    public void supportSimpleQuoteInNonProtectedStringValue() {
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
@@ -583,7 +583,7 @@ public class JsonParserBaseTest {
     }
 
     @Test ( expected = JsonException.class )
-    public void supportNonProtectedStrings () {
+    public void supportNonProtectedStrings() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -594,7 +594,7 @@ public class JsonParserBaseTest {
     }
 
     @Test ( expected = JsonException.class )
-    public void crapInAnArray () {
+    public void crapInAnArray() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -606,7 +606,7 @@ public class JsonParserBaseTest {
 
 
     @Test ( expected = JsonException.class )
-    public void randomStringAsValuesWithSpaces () {
+    public void randomStringAsValuesWithSpaces() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -618,7 +618,7 @@ public class JsonParserBaseTest {
 
 
     @Test ( expected = JsonException.class )
-    public void randomStringAsValuesWithSpaceAndMoreSpaces () {
+    public void randomStringAsValuesWithSpaceAndMoreSpaces() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -630,7 +630,7 @@ public class JsonParserBaseTest {
 
 
     @Test ()
-    public void garbageAtEndOfString () {
+    public void garbageAtEndOfString() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 
@@ -642,7 +642,7 @@ public class JsonParserBaseTest {
 
 
     @Test ( expected = JsonException.class )
-    public void singleQuotes () {
+    public void singleQuotes() {
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
                 lines(
 

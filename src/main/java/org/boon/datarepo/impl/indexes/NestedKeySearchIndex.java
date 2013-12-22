@@ -13,13 +13,13 @@ import static org.boon.core.reflection.Conversions.toList;
  */
 public class NestedKeySearchIndex extends BaseIndexWrapper {
 
-    public NestedKeySearchIndex ( String... path ) {
+    public NestedKeySearchIndex( String... path ) {
         super( path );
 
     }
 
     @Override
-    public boolean add ( Object o ) {
+    public boolean add( Object o ) {
 
         List keys = getKeys( o );
         index.addManyKeys( o, keys );
@@ -27,13 +27,13 @@ public class NestedKeySearchIndex extends BaseIndexWrapper {
     }
 
     @Override
-    protected List getKeys ( Object o ) {
+    protected List getKeys( Object o ) {
         Object list = BeanUtils.getPropByPath( o, this.path );
         return toList( list );
     }
 
     @Override
-    public boolean delete ( Object o ) {
+    public boolean delete( Object o ) {
         List keys = getKeys( o );
         index.removeManyKeys( o, keys );
 
@@ -41,7 +41,7 @@ public class NestedKeySearchIndex extends BaseIndexWrapper {
     }
 
     @Override
-    public boolean has ( Object o ) {
+    public boolean has( Object o ) {
         return index.has( o );
     }
 }

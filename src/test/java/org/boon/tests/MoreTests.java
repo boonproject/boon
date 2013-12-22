@@ -41,7 +41,7 @@ public class MoreTests {
 
 
     @Before
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
         list = Lists.list(
                 Employee.employee( "firstA", "LastA", "123", "5.29.1970:00:00:01", 100 ),
                 Employee.employee( "firstB", "LastB", "124", "5.29.1960:00:00:00", 200 )
@@ -73,7 +73,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testProjections () throws Exception {
+    public void testProjections() throws Exception {
         Repo<String, Employee> repo =
                 Repos.builder().primaryKey( "id" )
                         .searchIndex( "salary" )
@@ -107,7 +107,7 @@ public class MoreTests {
     }
 
     @Test
-    public void fieldOnlyInSubClass () throws Exception {
+    public void fieldOnlyInSubClass() throws Exception {
         List<Employee> queryableList = $q( h_list, SalesEmployee.class );
         List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
         assertEquals( 1, results.size() );
@@ -116,7 +116,7 @@ public class MoreTests {
     }
 
     @Test
-    public void fieldOnlyInSubClass2 () throws Exception {
+    public void fieldOnlyInSubClass2() throws Exception {
         List<Employee> queryableList = $q( h_list, Employee.class, SalesEmployee.class );
         List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
         assertEquals( 1, results.size() );
@@ -125,7 +125,7 @@ public class MoreTests {
     }
 
     @Test
-    public void fieldOnlyInSubClass3 () throws Exception {
+    public void fieldOnlyInSubClass3() throws Exception {
         List<Employee> queryableList = $q( h_list, Employee.class, SalesEmployee.class, HourlyEmployee.class );
         List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
         assertEquals( 1, results.size() );
@@ -138,7 +138,7 @@ public class MoreTests {
     }
 
     @Test ( expected = Exception.class )
-    public void fieldOnlyInSubClass4 () throws Exception {
+    public void fieldOnlyInSubClass4() throws Exception {
         List<Employee> queryableList = $q( h_list, Employee.class, SalesEmployee.class );
         List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
         assertEquals( 1, results.size() );
@@ -150,7 +150,7 @@ public class MoreTests {
     }
 
     @Test
-    public void typeOfTestLongName () throws Exception {
+    public void typeOfTestLongName() throws Exception {
         List<Employee> queryableList = $q( h_list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "SalesEmployee" ) );
         assertEquals( 1, results.size() );
@@ -159,7 +159,7 @@ public class MoreTests {
     }
 
     @Test
-    public void typeOfTest () throws Exception {
+    public void typeOfTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "SalesEmployee" ) );
         assertEquals( 1, results.size() );
@@ -168,7 +168,7 @@ public class MoreTests {
     }
 
     @Test
-    public void instanceOfTest () throws Exception {
+    public void instanceOfTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.instanceOf( SalesEmployee.class ) );
         assertEquals( 1, results.size() );
@@ -176,7 +176,7 @@ public class MoreTests {
     }
 
     @Test
-    public void implementsTest () throws Exception {
+    public void implementsTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.implementsInterface( Comparable.class ) );
         assertEquals( 1, results.size() );
@@ -184,7 +184,7 @@ public class MoreTests {
     }
 
     @Test
-    public void superClassTest () throws Exception {
+    public void superClassTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "ZSalaryEmployee" ) );
         assertEquals( 0, results.size() );
@@ -192,7 +192,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_AND_LOTS_OF_TERMS_BIG_LIST () throws Exception {
+    public void testBetweenSalary_AND_LOTS_OF_TERMS_BIG_LIST() throws Exception {
         List<Employee> queryableList = $q( bigList, Employee.class, HourlyEmployee.class );
         List<Employee> results = sortedQuery( queryableList, "firstName",
                 CriteriaFactory.and(
@@ -209,7 +209,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_OR_PRECISE_NESTED_OR_AND () throws Exception {
+    public void testBetweenSalary_OR_PRECISE_NESTED_OR_AND() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
                 CriteriaFactory.or(
@@ -246,7 +246,7 @@ public class MoreTests {
 
 
     @Test
-    public void testBetweenSalary_OR_PRECISE_NESTED_AND () throws Exception {
+    public void testBetweenSalary_OR_PRECISE_NESTED_AND() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
                 CriteriaFactory.or(
@@ -261,7 +261,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_OR_PRECISE () throws Exception {
+    public void testBetweenSalary_OR_PRECISE() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
                 CriteriaFactory.or(
@@ -277,7 +277,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_OR_LOTS_OF_TERMS_BIG_LIST () throws Exception {
+    public void testBetweenSalary_OR_LOTS_OF_TERMS_BIG_LIST() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
                 CriteriaFactory.or(
@@ -294,7 +294,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_OR_FirstNameEQ_SECOND_TERM_NOT_FOUND_BIG_LIST () throws Exception {
+    public void testBetweenSalary_OR_FirstNameEQ_SECOND_TERM_NOT_FOUND_BIG_LIST() throws Exception {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -305,7 +305,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_AND_FirstNameEQ_SECOND_TERM_NOT_FOUND_BIG_LIST () throws Exception {
+    public void testBetweenSalary_AND_FirstNameEQ_SECOND_TERM_NOT_FOUND_BIG_LIST() throws Exception {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -316,7 +316,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_OR_FirstNameEQ_FIRST_TERM_NOT_FOUND_BIG_LIST () throws Exception {
+    public void testBetweenSalary_OR_FirstNameEQ_FIRST_TERM_NOT_FOUND_BIG_LIST() throws Exception {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -327,7 +327,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_AND_FirstNameEQ_FIRST_TERM_NOT_FOUND_BIG_LIST () throws Exception {
+    public void testBetweenSalary_AND_FirstNameEQ_FIRST_TERM_NOT_FOUND_BIG_LIST() throws Exception {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -338,7 +338,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary_OR_FirstNameEQ_SECOND_TERM_NOT_FOUND () throws Exception {
+    public void testBetweenSalary_OR_FirstNameEQ_SECOND_TERM_NOT_FOUND() throws Exception {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -350,7 +350,7 @@ public class MoreTests {
 
 
     @Test
-    public void testBetweenSalary_OR_FirstNameEQ_FIRST_TERM_NOT_FOUND () throws Exception {
+    public void testBetweenSalary_OR_FirstNameEQ_FIRST_TERM_NOT_FOUND() throws Exception {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -361,7 +361,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalaryAndFirstNameEQ_FIRST_TERM_NOT_FOUND () throws Exception {
+    public void testBetweenSalaryAndFirstNameEQ_FIRST_TERM_NOT_FOUND() throws Exception {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -372,7 +372,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalaryAndFirstNameEQ_SECOND_TERM_NOT_FOUND () throws Exception {
+    public void testBetweenSalaryAndFirstNameEQ_SECOND_TERM_NOT_FOUND() throws Exception {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -383,7 +383,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalaryAndFirstNameEQ_SECOND_TERM_FOUND () throws Exception {
+    public void testBetweenSalaryAndFirstNameEQ_SECOND_TERM_FOUND() throws Exception {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
@@ -394,7 +394,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalary () throws Exception {
+    public void testBetweenSalary() throws Exception {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 100, 200 ) );
@@ -405,7 +405,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenSalaryExact () throws Exception {
+    public void testBetweenSalaryExact() throws Exception {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 100, 201 ) );
@@ -418,7 +418,7 @@ public class MoreTests {
 
 
     @Test
-    public void testBetweenSalaryExactOutOfRange () throws Exception {
+    public void testBetweenSalaryExactOutOfRange() throws Exception {
         //rint(listStream);
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 400, 500 ) );
@@ -428,7 +428,7 @@ public class MoreTests {
     }
 
     //@Test  //Java data handling SUCKS! I don't think it is an issue with index lib.
-    public void testBetweenDateExact () throws Exception {
+    public void testBetweenDateExact() throws Exception {
 
         //rint(listStream);
 
@@ -443,7 +443,7 @@ public class MoreTests {
 
 
     @Test
-    public void testBetweenDateExactJustOverAndUnder1Year () throws Exception {
+    public void testBetweenDateExactJustOverAndUnder1Year() throws Exception {
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1959", "5/29/1971" ) );
 
@@ -455,7 +455,7 @@ public class MoreTests {
 
 
     @Test
-    public void testBetweenDate () throws Exception {
+    public void testBetweenDate() throws Exception {
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1950", "5/29/1990" ) );
         assertEquals( 2, results.size() );
@@ -465,7 +465,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testBetweenDatePreInit () throws Exception {
+    public void testBetweenDatePreInit() throws Exception {
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( Employee.class, "birthDate", "5/29/1950", "5/29/1990" ) );
 
@@ -477,7 +477,7 @@ public class MoreTests {
 
 
     @Test                                //Test from chris
-    public void testLinearVsIndexedEmpty () {
+    public void testLinearVsIndexedEmpty() {
 
 
         //Add 2,000 users 1000 with no last name, and 1000 Smith
@@ -524,7 +524,7 @@ public class MoreTests {
     }
 
     @Test
-    public void testLinearVsIndexedEqNested () {
+    public void testLinearVsIndexedEqNested() {
         List<Employee> employees = new ArrayList<>();
         for ( int i = 0; i < 2000; i++ ) {
             Employee e = new Employee();
@@ -558,7 +558,7 @@ public class MoreTests {
 
 
     @Test
-    public void testDeleteWithNullIndexedField () {
+    public void testDeleteWithNullIndexedField() {
         Repo<String, Employee> repo =
                 Repos.builder().primaryKey( "id" )
                         .searchIndex( "firstName" )
@@ -577,7 +577,7 @@ public class MoreTests {
 
 
     @Test
-    public void testQueryAfterUpdate () {
+    public void testQueryAfterUpdate() {
         String id = "9131971";
 
         Repo<String, Employee> repo =
@@ -608,7 +608,7 @@ public class MoreTests {
 
 
     @Test
-    public void testQueryAfterUpdate2 () {
+    public void testQueryAfterUpdate2() {
         String id = "9131971";
 
         Repo<String, Employee> repo =
@@ -646,7 +646,7 @@ public class MoreTests {
 
 
     @Test
-    public void testQueryAfterUpdate3 () {
+    public void testQueryAfterUpdate3() {
         String id = "9131971";
 
         Repo<String, Employee> repo =
@@ -692,7 +692,7 @@ public class MoreTests {
 
 
     @Test
-    public void testQueryAfterUpdate4 () {
+    public void testQueryAfterUpdate4() {
 
         String id = "3212333222333";
 
@@ -734,7 +734,7 @@ public class MoreTests {
 
 
     @Test
-    public void testQueryAfterUpdateUseCloneEdits () {
+    public void testQueryAfterUpdateUseCloneEdits() {
 
         String id = "3212333222333";
 
@@ -780,7 +780,7 @@ public class MoreTests {
 
 
     @Test
-    public void testQueryAfterUpdateUseUpdateMethod () {
+    public void testQueryAfterUpdateUseUpdateMethod() {
 
         String id = "3212333222333";
 

@@ -43,11 +43,11 @@ public class FastStringUtils {
 
     }
 
-    public static boolean hasUnsafe () {
+    public static boolean hasUnsafe() {
         return HAS_UNSAFE;
     }
 
-    public static char[] toCharArray ( final String string ) {
+    public static char[] toCharArray( final String string ) {
         return HAS_UNSAFE ?
                 ( char[] ) UNSAFE.getObject( string, STRING_VALUE_FIELD_OFFSET ) :
                 string.toCharArray();
@@ -55,7 +55,7 @@ public class FastStringUtils {
     }
 
 
-    public static char[] toCharArrayFromBytes ( final byte[] bytes ) {
+    public static char[] toCharArrayFromBytes( final byte[] bytes ) {
         final String string = new String( bytes, StandardCharsets.UTF_8 );
         return HAS_UNSAFE ?
                 ( char[] ) UNSAFE.getObject( string, STRING_VALUE_FIELD_OFFSET ) :
@@ -63,7 +63,7 @@ public class FastStringUtils {
     }
 
 
-    public static String noCopyStringFromChars ( final char[] chars ) {
+    public static String noCopyStringFromChars( final char[] chars ) {
 
         if ( HAS_UNSAFE && WRITE_TO_FINAL_FIELDS ) {
 

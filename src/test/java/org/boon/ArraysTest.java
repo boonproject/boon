@@ -12,7 +12,7 @@ public class ArraysTest {
 
 
     @Test
-    public void allocate () {
+    public void allocate() {
 
         String[] fruit =
                 array( String.class, 500 );
@@ -25,7 +25,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void addArrayTest () {
+    public void addArrayTest() {
 
         String[] fruit =
                 array( "apple", "oranges" );
@@ -67,7 +67,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void shrinkTest () {
+    public void shrinkTest() {
 
         String[] fruit =
                 array( "apple", "oranges", null, "grapes", "kiwi" );
@@ -92,7 +92,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void growTest () {
+    public void growTest() {
 
         String[] fruit =
                 array( "apple", "oranges", null, "grapes", "kiwi" );
@@ -143,7 +143,7 @@ public class ArraysTest {
 
 
     @Test
-    public void compactTest () {
+    public void compactTest() {
 
         String[] fruit =
                 array( "apple", "oranges", null, "grapes", "kiwi" );
@@ -182,7 +182,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void insertTest () {
+    public void insertTest() {
 
         String[] fruit =
                 array( "apple", "oranges", "pears", "grapes", "kiwi" );
@@ -216,7 +216,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void insertTest2 () {
+    public void insertTest2() {
 
         String[] fruit =
                 array( "apple", "oranges", "pears", "grapes", "kiwi" );
@@ -250,7 +250,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void insertTest3 () {
+    public void insertTest3() {
 
         String[] fruit =
                 array( "apple", "oranges", "pears", "grapes", "kiwi" );
@@ -300,7 +300,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void addTest () {
+    public void addTest() {
 
         String[] fruit =
                 array( "apple", "oranges", "pears", "grapes", "kiwi" );
@@ -339,7 +339,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void basicTest () {
+    public void basicTest() {
 
         String[] fruit =
                 array( "apple", "oranges", "pears", "grapes", "kiwi" );
@@ -377,7 +377,7 @@ public class ArraysTest {
     }
 
     @Test
-    public void sliceTest () {
+    public void sliceTest() {
 
         String[] fruit =
                 array( "apple", "oranges", "pears", "grapes", "kiwi" );
@@ -415,7 +415,7 @@ public class ArraysTest {
 
 
     @Test
-    public void outOfBounds () {
+    public void outOfBounds() {
 
         String[] fruit =
                 array( "apple", "oranges", "pears", "grapes", "kiwi" );
@@ -441,7 +441,7 @@ public class ArraysTest {
 
 
     @Test
-    public void addInsertSingle () {
+    public void addInsertSingle() {
 
         assertArrayEquals(
                 array( 'a', 'b', 'c', 'd', 'e', 'f', 'g' ),

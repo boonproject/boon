@@ -5,24 +5,24 @@ public class Email {
 
     private String content;
 
-    public String getEmail () {
+    public String getEmail() {
         return content;
     }
 
-    public void setEmail ( String content ) {
+    public void setEmail( String content ) {
         this.content = content;
     }
 
-    public Email ( String content ) {
+    public Email( String content ) {
         this.content = content;
     }
 
 
-    public Email () {
+    public Email() {
     }
 
     @Override
-    public boolean equals ( Object o ) {
+    public boolean equals( Object o ) {
         if ( this == o ) return true;
         if ( !( o instanceof Email ) ) return false;
 
@@ -34,7 +34,7 @@ public class Email {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return content != null ? content.hashCode() : 0;
     }
 }

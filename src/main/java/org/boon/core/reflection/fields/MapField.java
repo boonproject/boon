@@ -13,21 +13,21 @@ public class MapField implements FieldAccess {
 
     private String name;
 
-    public MapField () {
+    public MapField() {
 
     }
 
-    public MapField ( String name ) {
+    public MapField( String name ) {
         this.name = name;
     }
 
     @Override
-    public String getName () {
+    public String getName() {
         return name;
     }
 
     @Override
-    public Object getValue ( Object obj ) {
+    public Object getValue( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return map.get( name );
@@ -36,7 +36,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setValue ( Object obj, Object value ) {
+    public void setValue( Object obj, Object value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -45,12 +45,12 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setFromValue ( Object obj, Value value ) {
+    public void setFromValue( Object obj, Value value ) {
         setValue( obj, value.toValue() );
     }
 
     @Override
-    public boolean getBoolean ( Object obj ) {
+    public boolean getBoolean( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toBoolean( map.get( name ) );
@@ -59,7 +59,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setBoolean ( Object obj, boolean value ) {
+    public void setBoolean( Object obj, boolean value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -68,7 +68,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public int getInt ( Object obj ) {
+    public int getInt( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toInt( map.get( name ) );
@@ -78,7 +78,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setInt ( Object obj, int value ) {
+    public void setInt( Object obj, int value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -87,7 +87,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public short getShort ( Object obj ) {
+    public short getShort( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toShort( map.get( name ) );
@@ -97,7 +97,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setShort ( Object obj, short value ) {
+    public void setShort( Object obj, short value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -106,7 +106,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public char getChar ( Object obj ) {
+    public char getChar( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toChar( map.get( name ) );
@@ -116,7 +116,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setChar ( Object obj, char value ) {
+    public void setChar( Object obj, char value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -125,7 +125,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public long getLong ( Object obj ) {
+    public long getLong( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toLong( map.get( name ) );
@@ -135,7 +135,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setLong ( Object obj, long value ) {
+    public void setLong( Object obj, long value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -144,7 +144,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public double getDouble ( Object obj ) {
+    public double getDouble( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toDouble( map.get( name ) );
@@ -154,7 +154,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setDouble ( Object obj, double value ) {
+    public void setDouble( Object obj, double value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -163,7 +163,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public float getFloat ( Object obj ) {
+    public float getFloat( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toFloat( map.get( name ) );
@@ -173,7 +173,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setFloat ( Object obj, float value ) {
+    public void setFloat( Object obj, float value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -182,7 +182,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public byte getByte ( Object obj ) {
+    public byte getByte( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toByte( map.get( name ) );
@@ -192,7 +192,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setByte ( Object obj, byte value ) {
+    public void setByte( Object obj, byte value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -202,7 +202,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public Object getObject ( Object obj ) {
+    public Object getObject( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return map.get( name );
@@ -212,7 +212,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setObject ( Object obj, Object value ) {
+    public void setObject( Object obj, Object value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -222,48 +222,48 @@ public class MapField implements FieldAccess {
 
 
     @Override
-    public Field getField () {
+    public Field getField() {
         return die( Field.class, "Unsupported operation" );
 
     }
 
     @Override
-    public ParameterizedType getParameterizedType () {
+    public ParameterizedType getParameterizedType() {
         return null;
     }
 
     @Override
-    public Class<?> getComponentClass () {
+    public Class<?> getComponentClass() {
         return null;
     }
 
     @Override
-    public boolean isFinal () {
+    public boolean isFinal() {
         return false;
     }
 
     @Override
-    public boolean isStatic () {
+    public boolean isStatic() {
         return false;
     }
 
     @Override
-    public boolean isVolatile () {
+    public boolean isVolatile() {
         return false;
     }
 
     @Override
-    public boolean isQualified () {
+    public boolean isQualified() {
         return false;
     }
 
     @Override
-    public boolean isReadOnly () {
+    public boolean isReadOnly() {
         return false;
     }
 
     @Override
-    public Class<?> getType () {
+    public Class<?> getType() {
         return Object.class;
     }
 }

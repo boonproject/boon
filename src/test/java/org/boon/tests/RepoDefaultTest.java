@@ -28,12 +28,12 @@ public class RepoDefaultTest {
 
 
     @Before
-    public void setup () {
+    public void setup() {
         repo = TestHelper.createFromBuilder();
     }
 
     @Test
-    public void testGet () throws Exception {
+    public void testGet() throws Exception {
         Employee employee = repo.get( TestHelper.getTestSSN );
         assertNotNull( "employee should not be null", employee );
         String firstName = employee.getFirstName();
@@ -42,7 +42,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testAdd () throws Exception {
+    public void testAdd() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "21785999", "08.15.82", 100_000 );
         repo.add( emp );
         assertNotNull( repo.get( "21785999" ) );
@@ -53,7 +53,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testRemove () throws Exception {
+    public void testRemove() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "21785999", "08.15.82", 100_000 );
         repo.add( emp );
         assertNotNull( repo.get( "21785999" ) );
@@ -63,7 +63,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testModify () throws Exception {
+    public void testModify() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "21785999", "08.15.82", 100_000 );
         repo.add( emp );
         assertNotNull( repo.get( "21785999" ) );
@@ -78,7 +78,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testUpdateByKey () throws Exception {
+    public void testUpdateByKey() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "21785999", "08.15.82", 100_000 );
         repo.add( emp );
         assertNotNull( repo.get( "21785999" ) );
@@ -93,7 +93,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testUpdateByKeyUsingValues () throws Exception {
+    public void testUpdateByKeyUsingValues() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "217859991", "08.15.82", 100_000 );
         repo.add( emp );
         assertNotNull( repo.get( "217859991" ) );
@@ -108,7 +108,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testUpdateByFilter () throws Exception {
+    public void testUpdateByFilter() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "217859992", "08.15.82", 100_000 );
         repo.add( emp );
         assertNotNull( repo.get( "217859992" ) );
@@ -129,7 +129,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testUpdateByFilterUsingValues () throws Exception {
+    public void testUpdateByFilterUsingValues() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599917788", "08.15.82", 100_000 );
         repo.add( emp );
         assertNotNull( repo.get( "2178599917788" ) );
@@ -150,7 +150,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testEasyFilter2 () throws Exception {
+    public void testEasyFilter2() throws Exception {
         Employee emp = employee( "Dianazzz", "Hightower", "8178599912", "08.15.82", 100_000 );
         repo.add( emp );
         emp = employee( "Dianazzz", "Hightower", "8178599912", "08.15.82", 100_000 );
@@ -163,7 +163,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testEasyFilter () throws Exception {
+    public void testEasyFilter() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599912", "08.15.82", 100_000 );
         repo.add( emp );
         List<Employee> employees = repo.query( CriteriaFactory.eq( "firstName", "Diana" ) );
@@ -173,7 +173,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testEasyFilterByMap () throws Exception {
+    public void testEasyFilterByMap() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "3178599912", "08.15.82", 100_000 );
         repo.add( emp );
         List<Map<String, Object>> employees = repo.queryAsMaps( CriteriaFactory.eq( "firstName", "Diana" ) );
@@ -184,7 +184,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testEasySelect () throws Exception {
+    public void testEasySelect() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "21785999661234", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "217859901234", "08.15.82", 100_000 );
 
@@ -201,7 +201,7 @@ public class RepoDefaultTest {
 
 
     @Test
-    public void testMax () throws Exception {
+    public void testMax() throws Exception {
         List<Map<String, Object>> list = repo.query( selects( max( "salary" ) ) );
 
         assertEquals( 666_000, list.get( 0 ).get( "max.salary" ) );
@@ -209,7 +209,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testQueryOnUniqueIndex () throws Exception {
+    public void testQueryOnUniqueIndex() throws Exception {
         List<Map<String, Object>> list = repo.query( selects( select( "firstName" ) ), CriteriaFactory.gt( "empNum", 5l ) );
         assertNotNull( list );
         assertTrue( list.size() > 1 );
@@ -217,7 +217,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFieldPathSelect () throws Exception {
+    public void testFieldPathSelect() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599966", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "21785990", "08.15.82", 100_000 );
 
@@ -234,7 +234,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFieldPathSelectToCollection () throws Exception {
+    public void testFieldPathSelectToCollection() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599966", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "21785990", "08.15.82", 100_000 );
 
@@ -251,7 +251,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFieldPathSelectToCollection2 () throws Exception {
+    public void testFieldPathSelectToCollection2() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599966", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "21785990", "08.15.82", 100_000 );
 
@@ -268,7 +268,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFieldPathSelectToCollection3 () throws Exception {
+    public void testFieldPathSelectToCollection3() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599966", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "21785990", "08.15.82", 100_000 );
 
@@ -286,7 +286,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testIndexedLookup () throws Exception {
+    public void testIndexedLookup() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599966", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "21785990", "08.15.82", 100_000 );
 
@@ -304,7 +304,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testPropertyPathSelect () throws Exception {
+    public void testPropertyPathSelect() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599966", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "21785990", "08.15.82", 100_000 );
 
@@ -321,7 +321,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testEasySelectWithSort () throws Exception {
+    public void testEasySelectWithSort() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599990", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "2178599088", "08.15.82", 100_000 );
 
@@ -337,7 +337,7 @@ public class RepoDefaultTest {
 
 
     @Test
-    public void testHarderFilter () throws Exception {
+    public void testHarderFilter() throws Exception {
         Employee emp = employee( "Diana222", "Hightower", "217859997", "08.15.82", 100_000 );
         repo.add( emp );
         List<Employee> employees = repo.query(
@@ -348,7 +348,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFilterLogicalOperators () throws Exception {
+    public void testFilterLogicalOperators() throws Exception {
         List<Employee> employees = repo.query(
                 CriteriaFactory.startsWith( "firstName", "Bob" ), CriteriaFactory.eq( "lastName", "Smith" ),
                 CriteriaFactory.lte( "salary", 200_000 ), CriteriaFactory.gte( "salary", 190_000 ) );
@@ -360,7 +360,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFilterLogicalOperators2 () throws Exception {
+    public void testFilterLogicalOperators2() throws Exception {
         List<Employee> employees = repo.query(
                 CriteriaFactory.startsWith( "firstName", "Bob" ),
                 CriteriaFactory.eq( "lastName", "Smith" ),
@@ -374,7 +374,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFilterLT () throws Exception {
+    public void testFilterLT() throws Exception {
         List<Employee> employees = repo.query(
                 CriteriaFactory.gt( "salary", 200_000 ), CriteriaFactory.eq( "lastName", "Smith" ) );
         assertNotNull( employees );
@@ -385,7 +385,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFilterLogicalOperators3 () throws Exception {
+    public void testFilterLogicalOperators3() throws Exception {
         List<Employee> employees = repo.query(
                 CriteriaFactory.startsWith( "firstName", "Bob" ), CriteriaFactory.eq( "lastName", "Smith" ), CriteriaFactory.between( "salary", 190_000, 200_000 ) );
         assertNotNull( employees );
@@ -396,7 +396,7 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testFieldPathSelectToCollection4 () throws Exception {
+    public void testFieldPathSelectToCollection4() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "asdf", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "217asdfasdfasdf85990", "08.15.82", 100_000 );
 
@@ -414,11 +414,11 @@ public class RepoDefaultTest {
     }
 
     @Test
-    public void testVisitor () throws Exception {
+    public void testVisitor() throws Exception {
 
         repo.query( new Visitor<String, Employee>() {
             @Override
-            public void visit ( String s, Employee employee, Object currentProperty, List<String> propertyPath ) {
+            public void visit( String s, Employee employee, Object currentProperty, List<String> propertyPath ) {
                 System.out.printf( "VISITOR TEST key %s, \t employee=%s \t \n currentProperty=%s \t \npath=%s\n\n", s, employee, currentProperty, propertyPath );
             }
         } );
@@ -427,7 +427,7 @@ public class RepoDefaultTest {
 
 
     @Test
-    public void testClear () {
+    public void testClear() {
         Employee emp = employee( "Clear", "Day", "asdf", "08.15.72", 70_000 );
         repo.add( emp );
         assertTrue( repo.size() > 1 );

@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Dbl {
 
 
-    public static double[] grow ( double[] array, final int size ) {
+    public static double[] grow( double[] array, final int size ) {
         Objects.requireNonNull( array );
 
         double[] newArray = new double[ array.length + size ];
@@ -16,7 +16,7 @@ public class Dbl {
     }
 
 
-    public static double[] grow ( double[] array ) {
+    public static double[] grow( double[] array ) {
         Objects.requireNonNull( array );
 
         double[] newArray = new double[ array.length * 2 ];
@@ -25,7 +25,7 @@ public class Dbl {
     }
 
 
-    public static double[] shrink ( double[] array, int size ) {
+    public static double[] shrink( double[] array, int size ) {
         Objects.requireNonNull( array );
 
         double[] newArray = new double[ array.length - size ];
@@ -35,7 +35,7 @@ public class Dbl {
     }
 
 
-    public static double[] compact ( double[] array ) {
+    public static double[] compact( double[] array ) {
         Objects.requireNonNull( array );
 
         int nullCount = 0;
@@ -67,7 +67,7 @@ public class Dbl {
      * @param size size of the array you want to make
      * @return
      */
-    public static double[] arrayOfDouble ( final int size ) {
+    public static double[] arrayOfDouble( final int size ) {
         return new double[ size ];
     }
 
@@ -76,20 +76,20 @@ public class Dbl {
      * @return
      */
     @Universal
-    public static double[] array ( final double... array ) {
+    public static double[] array( final double... array ) {
         Objects.requireNonNull( array );
         return array;
     }
 
 
     @Universal
-    public static int len ( double[] array ) {
+    public static int len( double[] array ) {
         return array.length;
     }
 
 
     @Universal
-    public static double idx ( final double[] array, final int index ) {
+    public static double idx( final double[] array, final int index ) {
         final int i = calculateIndex( array, index );
 
         return array[ i ];
@@ -97,7 +97,7 @@ public class Dbl {
 
 
     @Universal
-    public static void idx ( final double[] array, int index, double value ) {
+    public static void idx( final double[] array, int index, double value ) {
         final int i = calculateIndex( array, index );
 
         array[ i ] = value;
@@ -105,7 +105,7 @@ public class Dbl {
 
 
     @Universal
-    public static double[] slc ( double[] array, int startIndex, int endIndex ) {
+    public static double[] slc( double[] array, int startIndex, int endIndex ) {
         Objects.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
@@ -125,7 +125,7 @@ public class Dbl {
     }
 
     @Universal
-    public static double[] slc ( double[] array, int startIndex ) {
+    public static double[] slc( double[] array, int startIndex ) {
         Objects.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
@@ -144,7 +144,7 @@ public class Dbl {
     }
 
     @Universal
-    public static double[] slcEnd ( double[] array, int endIndex ) {
+    public static double[] slcEnd( double[] array, int endIndex ) {
         Objects.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
@@ -163,7 +163,7 @@ public class Dbl {
     }
 
     @Universal
-    public static boolean in ( double value, double[] array ) {
+    public static boolean in( double value, double[] array ) {
         for ( double currentValue : array ) {
             if ( currentValue == value ) {
                 return true;
@@ -174,7 +174,7 @@ public class Dbl {
 
 
     @Universal
-    public static double[] copy ( double[] array ) {
+    public static double[] copy( double[] array ) {
         Objects.requireNonNull( array );
         double[] newArray = new double[ array.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -183,7 +183,7 @@ public class Dbl {
 
 
     @Universal
-    public static double[] add ( double[] array, double v ) {
+    public static double[] add( double[] array, double v ) {
         Objects.requireNonNull( array );
         double[] newArray = new double[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -192,7 +192,7 @@ public class Dbl {
     }
 
     @Universal
-    public static double[] add ( double[] array, double[] array2 ) {
+    public static double[] add( double[] array, double[] array2 ) {
         Objects.requireNonNull( array );
         double[] newArray = new double[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -202,7 +202,7 @@ public class Dbl {
 
 
     @Universal
-    public static double[] insert ( final double[] array, final int idx, final double v ) {
+    public static double[] insert( final double[] array, final int idx, final double v ) {
         Objects.requireNonNull( array );
 
         if ( idx >= array.length ) {
@@ -242,7 +242,7 @@ public class Dbl {
 
 
     @Universal
-    public static double[] insert ( final double[] array, final int fromIndex, final double[] values ) {
+    public static double[] insert( final double[] array, final int fromIndex, final double[] values ) {
         Objects.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
@@ -286,7 +286,7 @@ public class Dbl {
 
 
     /* End universal methods. */
-    private static int calculateIndex ( double[] array, int originalIndex ) {
+    private static int calculateIndex( double[] array, int originalIndex ) {
         final int length = array.length;
 
         Objects.requireNonNull( array, "array cannot be null" );

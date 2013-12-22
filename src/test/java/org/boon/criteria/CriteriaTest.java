@@ -10,14 +10,14 @@ import static org.boon.criteria.CriteriaFactory.*;
 public class CriteriaTest {
 
     @Before
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
 
 
     }
 
 
     @Test
-    public void testMe () {
+    public void testMe() {
         main();
 
     }
@@ -38,7 +38,7 @@ public class CriteriaTest {
 
     }
 
-    public static void main ( String... args ) {
+    public static void main( String... args ) {
 
 
         MyObject o = new MyObject();

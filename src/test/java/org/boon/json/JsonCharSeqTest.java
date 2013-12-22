@@ -6,7 +6,7 @@ package org.boon.json;
  */
 public class JsonCharSeqTest extends JsonParserBaseTest {
 
-    public JsonParserFactory factory () {
+    public JsonParserFactory factory() {
         return new JsonParserFactory()
                 .preferCharSequence()
                 .neverUseDirectBytes()

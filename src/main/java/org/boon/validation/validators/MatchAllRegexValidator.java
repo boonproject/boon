@@ -25,7 +25,7 @@ public class MatchAllRegexValidator extends BaseValidator {
     private Map<String, Pattern> compiledRegexCache = new HashMap<String, Pattern>();
 
 
-    public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
+    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
         ValidatorMessage message = new ValidatorMessage();
         if ( object == null ) {
             return message;
@@ -53,7 +53,7 @@ public class MatchAllRegexValidator extends BaseValidator {
      *
      * @return the resulting pattern object
      */
-    private Pattern compileRegex ( String match ) {
+    private Pattern compileRegex( String match ) {
 
         Pattern pattern = compiledRegexCache.get( match );
         if ( pattern == null ) {
@@ -63,7 +63,7 @@ public class MatchAllRegexValidator extends BaseValidator {
         return pattern;
     }
 
-    public void setMatches ( String[] matches ) {
+    public void setMatches( String[] matches ) {
         this.matches = matches;
     }
 

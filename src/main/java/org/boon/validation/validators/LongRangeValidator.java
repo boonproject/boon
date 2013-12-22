@@ -32,7 +32,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
      * @param fieldLabel the logical name of the value used for generating error messages
      */
     @SuppressWarnings ( "unchecked" )
-    public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
+    public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
         ValidatorMessage validatorMessage = new ValidatorMessage();
         if ( fieldValue == null ) {
             return validatorMessage;
@@ -52,7 +52,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
 
 
     /* Initialize this instance. */
-    public void init () {
+    public void init() {
         /* If the underMin message was not injected, create a default. */
         if ( underMin == null ) {
             underMin = new MessageSpecification();
@@ -91,7 +91,7 @@ public class LongRangeValidator extends AbstractRangeValidator {
      *
      * @param value
      */
-    private void dynamicallyInitIfNeeded ( Object value ) {
+    private void dynamicallyInitIfNeeded( Object value ) {
         /* Check to see if this class was already initialized,
          * if not, initialize it based on the type of the value.
 		 */
@@ -108,24 +108,24 @@ public class LongRangeValidator extends AbstractRangeValidator {
         }
     }
 
-    public void setMax ( Long max ) {
+    public void setMax( Long max ) {
         this.max = max;
     }
 
 
-    public void setMin ( Long min ) {
+    public void setMin( Long min ) {
         this.min = min;
     }
 
-    public void setType ( Class<?> type ) {
+    public void setType( Class<?> type ) {
         this.type = type;
     }
 
-    protected void setOverMax ( MessageSpecification overMax ) {
+    protected void setOverMax( MessageSpecification overMax ) {
         this.overMax = overMax;
     }
 
-    protected void setUnderMin ( MessageSpecification underMin ) {
+    protected void setUnderMin( MessageSpecification underMin ) {
         this.underMin = underMin;
     }
 

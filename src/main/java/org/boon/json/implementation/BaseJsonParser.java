@@ -30,13 +30,13 @@ public class BaseJsonParser {
     }
 
 
-    protected void init () {
+    protected void init() {
         objectLevel = 0;
         listLevel = 0;
     }
 
 
-    protected JsonLazyLinkedMap createMap () {
+    protected JsonLazyLinkedMap createMap() {
         if ( objectLevel == levelMaps.length ) {
             objectLevel++;
             return new JsonLazyLinkedMap( 7 );
@@ -51,7 +51,7 @@ public class BaseJsonParser {
     }
 
 
-    protected ArrayList createList () {
+    protected ArrayList createList() {
 
         if ( listLevel == levelLists.length ) {
             listLevel++;
@@ -68,7 +68,7 @@ public class BaseJsonParser {
     }
 
 
-    protected final ArrayList prepareList ( ArrayList old ) {
+    protected final ArrayList prepareList( ArrayList old ) {
 
 
         if ( listLevel < levelLists.length ) {
@@ -83,7 +83,7 @@ public class BaseJsonParser {
     }
 
 
-    protected Object prepareMap ( final JsonLazyLinkedMap map ) {
+    protected Object prepareMap( final JsonLazyLinkedMap map ) {
 
         if ( objectLevel < levelMaps.length ) {
             objectLevel--;
@@ -95,7 +95,7 @@ public class BaseJsonParser {
     }
 
 
-    protected String charDescription ( char c ) {
+    protected String charDescription( char c ) {
         String charString;
         if ( c == ' ' ) {
             charString = "[SPACE]";
@@ -114,7 +114,7 @@ public class BaseJsonParser {
     }
 
 
-    protected <T> T convert ( Class<T> type, T object ) {
+    protected <T> T convert( Class<T> type, T object ) {
         if ( type == Map.class || type == List.class ) {
             return object;
         } else {

@@ -9,7 +9,7 @@ public class RandomWordUtil {
     static String consonants = "bcdfghjklmnpqrstvwxyz";
     static String vowels = "aeiou";
 
-    public static void main ( String[] args ) {
+    public static void main( String[] args ) {
 
         SortedSet<String> set = generateWords( 10_000 );
 
@@ -21,7 +21,7 @@ public class RandomWordUtil {
 
     }
 
-    public static SortedSet<String> generateWords ( int wordCount ) {
+    public static SortedSet<String> generateWords( int wordCount ) {
 
         SortedSet<String> set = new TreeSet<String>();
         set.add( "Rick" );
@@ -52,7 +52,7 @@ public class RandomWordUtil {
         return set;
     }
 
-    private static void makeWords ( SortedSet<String> set, int wordCount ) {
+    private static void makeWords( SortedSet<String> set, int wordCount ) {
         boolean flip = true;
         while ( set.size() < wordCount ) {
             if ( flip ) {
@@ -64,7 +64,7 @@ public class RandomWordUtil {
         }
     }
 
-    private static void makeWord ( SortedSet<String> set, boolean consonantFirst, int maxLength, int minLength ) {
+    private static void makeWord( SortedSet<String> set, boolean consonantFirst, int maxLength, int minLength ) {
         Random random = new Random();
         int wordLength = Math.abs( random.nextInt() % maxLength );
         StringBuilder buffer = new StringBuilder();
@@ -98,13 +98,13 @@ public class RandomWordUtil {
         set.add( buffer.toString() );
     }
 
-    private static char randomVowel ( Random random ) {
+    private static char randomVowel( Random random ) {
         char letter;
         letter = vowels.charAt( Math.abs( random.nextInt() % vowels.length() ) );
         return letter;
     }
 
-    private static char randomConsonant ( Random random ) {
+    private static char randomConsonant( Random random ) {
         char letter;
         letter = consonants.charAt( Math.abs( random.nextInt() % consonants.length() ) );
         return letter;

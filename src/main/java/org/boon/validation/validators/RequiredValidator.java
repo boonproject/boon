@@ -16,7 +16,7 @@ import org.boon.validation.ValidatorMessageHolder;
  */
 public class RequiredValidator extends BaseValidator {
 
-    public void init () {
+    public void init() {
         if ( Str.isEmpty( this.getDetailMessage() ) ) {
             this.setDetailMessage( "{validator.required.detail}" );
         }
@@ -28,7 +28,7 @@ public class RequiredValidator extends BaseValidator {
         }
     }
 
-    public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
+    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
         ValidatorMessage message = new ValidatorMessage();
 
         if ( object instanceof String ) {

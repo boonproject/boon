@@ -13,23 +13,23 @@ import static org.boon.Boon.sputs;
 
 public class Annotations {
 
-    public static List<AnnotationData> getAnnotationDataForProperty ( Class<?> clazz, String propertyName, boolean useReadMethod, Set<String> allowedPackages ) {
+    public static List<AnnotationData> getAnnotationDataForProperty( Class<?> clazz, String propertyName, boolean useReadMethod, Set<String> allowedPackages ) {
         return extractValidationAnnotationData( extractAllAnnotationsForProperty( clazz, propertyName, useReadMethod ), allowedPackages );
     }
 
-    public static List<AnnotationData> getAnnotationDataForField ( Class<?> clazz, String propertyName, Set<String> allowedPackages ) {
+    public static List<AnnotationData> getAnnotationDataForField( Class<?> clazz, String propertyName, Set<String> allowedPackages ) {
         return extractValidationAnnotationData( findFieldAnnotations( clazz, propertyName ), allowedPackages );
     }
 
-    public static List<AnnotationData> getAnnotationDataForClass ( Class<?> clazz, Set<String> allowedPackages ) {
+    public static List<AnnotationData> getAnnotationDataForClass( Class<?> clazz, Set<String> allowedPackages ) {
         return extractValidationAnnotationData( findClassAnnotations( clazz ), allowedPackages );
     }
 
-    private static Annotation[] findClassAnnotations ( Class<?> clazz ) {
+    private static Annotation[] findClassAnnotations( Class<?> clazz ) {
         return clazz.getAnnotations();
     }
 
-    public static Collection<AnnotationData> getAnnotationDataForFieldAndProperty ( Class<?> clazz, String propertyName, Set<String> allowedPackages ) {
+    public static Collection<AnnotationData> getAnnotationDataForFieldAndProperty( Class<?> clazz, String propertyName, Set<String> allowedPackages ) {
         /* Extract the AnnotationData from the Java annotations. */
         List<AnnotationData> propertyAnnotationDataList =
                 getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages );
@@ -60,7 +60,7 @@ public class Annotations {
      * @param annotations list of annotations.
      * @return
      */
-    public static List<AnnotationData> extractValidationAnnotationData (
+    public static List<AnnotationData> extractValidationAnnotationData(
             Annotation[] annotations, Set<String> allowedPackages ) {
         List<AnnotationData> annotationsList = new ArrayList<>();
         for ( Annotation annotation : annotations ) {
@@ -82,7 +82,7 @@ public class Annotations {
      * @param propertyName The name of the property.
      * @return
      */
-    private static Annotation[] extractAllAnnotationsForProperty ( Class<?> clazz, String propertyName, boolean useRead ) {
+    private static Annotation[] extractAllAnnotationsForProperty( Class<?> clazz, String propertyName, boolean useRead ) {
         try {
 
             Annotation[] annotations = findPropertyAnnotations( clazz, propertyName, useRead );
@@ -115,7 +115,7 @@ public class Annotations {
      * @throws java.beans.IntrospectionException
      *
      */
-    private static Annotation[] findPropertyAnnotations ( Class<?> clazz, String propertyName, boolean useRead )
+    private static Annotation[] findPropertyAnnotations( Class<?> clazz, String propertyName, boolean useRead )
             throws IntrospectionException {
 
         PropertyDescriptor propertyDescriptor = getPropertyDescriptor( clazz, propertyName );
@@ -142,7 +142,7 @@ public class Annotations {
     /**
      * This needs refactor and put into Refleciton.
      */
-    private static PropertyDescriptor getPropertyDescriptor ( final Class<?> type, final String propertyName ) {
+    private static PropertyDescriptor getPropertyDescriptor( final Class<?> type, final String propertyName ) {
 
         Objects.requireNonNull( type );
         Objects.requireNonNull( propertyName );
@@ -165,7 +165,7 @@ public class Annotations {
     }
 
 
-    private static Annotation[] findFieldAnnotations ( Class<?> clazz, String propertyName ) {
+    private static Annotation[] findFieldAnnotations( Class<?> clazz, String propertyName ) {
         Field field = getField( clazz, propertyName );
         if ( field == null ) {
             return new Annotation[]{ };
@@ -178,7 +178,7 @@ public class Annotations {
     /**
      * This needs to be refactored and put into Reflection or something.
      */
-    private static PropertyDescriptor doGetPropertyDescriptor ( final Class<?> type, final String propertyName ) {
+    private static PropertyDescriptor doGetPropertyDescriptor( final Class<?> type, final String propertyName ) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo( type );
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -200,7 +200,7 @@ public class Annotations {
     }
 
 
-    private static Field getField ( final Class<?> type, final String fieldName ) {
+    private static Field getField( final Class<?> type, final String fieldName ) {
         if ( !fieldName.contains( "." ) ) {
             return doFindFieldInHeirarchy( type, fieldName );
         } else {
@@ -219,7 +219,7 @@ public class Annotations {
     }
 
 
-    private static Field doFindFieldInHeirarchy ( Class<?> clazz, String propertyName ) {
+    private static Field doFindFieldInHeirarchy( Class<?> clazz, String propertyName ) {
         Field field = doGetField( clazz, propertyName );
 
         Class<?> sclazz = clazz.getSuperclass();
@@ -240,7 +240,7 @@ public class Annotations {
         return field;
     }
 
-    private static Field doGetField ( Class<?> clazz, String fieldName ) {
+    private static Field doGetField( Class<?> clazz, String fieldName ) {
         Field field = null;
         try {
             field = clazz.getDeclaredField( fieldName );

@@ -25,11 +25,11 @@ public class BenchMarkMainSimpleSearch {
     static int numCreations = 100_000;
 
     @Test
-    public void test () {
+    public void test() {
         numCreations = 100;
     }
 
-    public static void main ( String[] args ) throws Exception {
+    public static void main( String[] args ) throws Exception {
 
 
         final List<Employee> employees = BenchmarkHelper.createMetricTonOfEmployees( numCreations );
@@ -71,19 +71,19 @@ public class BenchMarkMainSimpleSearch {
 
     }
 
-    private static MeasuredRun firstNameSearchTest ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun firstNameSearchTest( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "A_linear_search", 1000, 10_000, results ) {
 
             List<Employee> employeesList;
 
             @Override
-            protected void init () {
+            protected void init() {
 
                 employeesList = employees;
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 List<Employee> results = employeesList;
 
                 boolean found = false;
@@ -102,13 +102,13 @@ public class BenchMarkMainSimpleSearch {
     }
 
 
-    private static MeasuredRun firstNameSearchNoIndexTest_DR ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun firstNameSearchNoIndexTest_DR( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "A_no_index_DR", 1000, 10_000, results ) {
             Repo repo;
             Criteria exp = eq( "firstName", "Mike" );
 
             @Override
-            protected void init () {
+            protected void init() {
                                                     /* Create a repo, and decide what to index. */
                 repo = Repos.builder().primaryKey( "id" )
                         .build( String.class, Employee.class );
@@ -119,7 +119,7 @@ public class BenchMarkMainSimpleSearch {
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 List<Employee> results = repo.query( exp );
 
                 boolean found = false;
@@ -139,13 +139,13 @@ public class BenchMarkMainSimpleSearch {
         };
     }
 
-    private static MeasuredRun firstNameSearchNoIndexTestUnsafe_DR ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun firstNameSearchNoIndexTestUnsafe_DR( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "A_no_index_unsafe_DR", 1000, 10_000, results ) {
             Repo repo;
             Criteria exp = eq( "firstName", "Mike" );
 
             @Override
-            protected void init () {
+            protected void init() {
                                                     /* Create a repo, and decide what to index. */
                 repo = Repos.builder().primaryKey( "id" ).useUnsafe( true )
                         .build( String.class, Employee.class );
@@ -156,7 +156,7 @@ public class BenchMarkMainSimpleSearch {
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 List<Employee> results = repo.query( exp );
 
                 boolean found = false;
@@ -176,13 +176,13 @@ public class BenchMarkMainSimpleSearch {
         };
     }
 
-    private static MeasuredRun linearSearchWithCache_DR ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun linearSearchWithCache_DR( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "A_no_index_with_cache_DR", 1000, 10_000, results ) {
             Repo repo;
             Criteria exp = eq( "firstName", "Mike" );
 
             @Override
-            protected void init () {
+            protected void init() {
                                                     /* Create a repo, and decide what to index. */
                 repo = Repos.builder().primaryKey( "id" ).useCache()
                         .build( String.class, Employee.class );
@@ -193,7 +193,7 @@ public class BenchMarkMainSimpleSearch {
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 List<Employee> results = repo.query( exp );
 
                 boolean found = false;
@@ -213,13 +213,13 @@ public class BenchMarkMainSimpleSearch {
         };
     }
 
-    private static MeasuredRun firstNameSearchIndexTest_DR ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun firstNameSearchIndexTest_DR( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "A_with_search_index_DR", 1000, 10_000, results ) {
             Repo repo;
             Criteria exp = eq( "firstName", "Mike" );
 
             @Override
-            protected void init () {
+            protected void init() {
                                                     /* Create a repo, and decide what to index. */
                 repo = Repos.builder().primaryKey( "id" )
                         .searchIndex( "firstName" ).build( String.class, Employee.class );
@@ -230,7 +230,7 @@ public class BenchMarkMainSimpleSearch {
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 List<Employee> results = repo.query( exp );
 
                 boolean found = false;

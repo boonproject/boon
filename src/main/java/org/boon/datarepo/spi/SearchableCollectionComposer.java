@@ -7,16 +7,16 @@ import org.boon.core.Function;
 import java.util.Map;
 
 public interface SearchableCollectionComposer {
-    void setPrimaryKeyName ( String primaryKey );
+    void setPrimaryKeyName( String primaryKey );
 
 
-    void setPrimaryKeyGetter ( Function function );
+    void setPrimaryKeyGetter( Function function );
 
-    void init ();
+    void init();
 
-    void setFields ( Map<String, FieldAccess> fields );
+    void setFields( Map<String, FieldAccess> fields );
 
-    void setFilter ( Filter filter );
+    void setFilter( Filter filter );
 
-    void setRemoveDuplication ( boolean b );
+    void setRemoveDuplication( boolean b );
 }

@@ -13,7 +13,7 @@ public class CharScannerTest {
     ///
     ///
     @Test
-    public void autoSplitThisEndsInSpace () {
+    public void autoSplitThisEndsInSpace() {
 
         char[] letters =
                 chars( "This is a string " );
@@ -59,7 +59,7 @@ public class CharScannerTest {
     }
 
     @Test
-    public void autoSplitThis () {
+    public void autoSplitThis() {
 
         char[] letters =
                 chars( "This is a string" );
@@ -106,7 +106,7 @@ public class CharScannerTest {
 
 
     @Test
-    public void autoSplitThisStartSpace () {
+    public void autoSplitThisStartSpace() {
 
         char[] letters =
                 chars( " This is a string" );
@@ -159,7 +159,7 @@ public class CharScannerTest {
 
 
     @Test
-    public void autoSplitThisByTabOrSpace () {
+    public void autoSplitThisByTabOrSpace() {
 
         char[] letters =
                 chars( "This\tis a string" );
@@ -206,7 +206,7 @@ public class CharScannerTest {
 
 
     @Test
-    public void autoSplitThis3DoubleSpaceAfterA () {
+    public void autoSplitThis3DoubleSpaceAfterA() {
 
         char[] letters =
                 chars( "This is a  string" );
@@ -257,7 +257,7 @@ public class CharScannerTest {
 
 
     @Test
-    public void splitThisEndsInSpace () {
+    public void splitThisEndsInSpace() {
 
         char[] letters =
                 chars( "This is a string " );
@@ -303,7 +303,7 @@ public class CharScannerTest {
     }
 
     @Test
-    public void splitThis () {
+    public void splitThis() {
 
         char[] letters =
                 chars( "This is a string" );
@@ -350,7 +350,7 @@ public class CharScannerTest {
 
 
     @Test
-    public void splitThisStartSpace () {
+    public void splitThisStartSpace() {
 
         char[] letters =
                 chars( " This is a string" );
@@ -403,7 +403,7 @@ public class CharScannerTest {
 
 
     @Test
-    public void splitThisByTabOrSpace () {
+    public void splitThisByTabOrSpace() {
 
         char[] letters =
                 chars( "This\tis a string" );
@@ -450,7 +450,7 @@ public class CharScannerTest {
 
 
     @Test
-    public void splitThis3DoubleSpaceAfterA () {
+    public void splitThis3DoubleSpaceAfterA() {
 
         char[] letters =
                 chars( "This is a  string" );

@@ -8,12 +8,12 @@ public class User extends Subject {
 
     public static final Class<User> user = User.class;
 
-    public static User user ( String email ) {
+    public static User user( String email ) {
         return new User( email );
     }
 
 
-    public static User[] users ( User... users ) {
+    public static User[] users( User... users ) {
         return users;
     }
 
@@ -21,18 +21,18 @@ public class User extends Subject {
 
 
     //For serialization only
-    public User () {
+    public User() {
         this.email = null;
     }
 
-    private User ( final String email ) {
+    private User( final String email ) {
 
         super( "User:" + generateSubjectNameFromEmail( email ) );
 
         this.email = email;
     }
 
-    public static String generateSubjectNameFromEmail ( final String email ) {
+    public static String generateSubjectNameFromEmail( final String email ) {
 
         String name = null;
 
@@ -49,7 +49,7 @@ public class User extends Subject {
         return name;
     }
 
-    public static void main ( String... args ) {
+    public static void main( String... args ) {
 
         String email = "richardhightower@gmail.com";
         Boon.puts( email, generateSubjectNameFromEmail( email ) );
@@ -60,13 +60,13 @@ public class User extends Subject {
     }
 
 
-    public String getEmail () {
+    public String getEmail() {
         return email;
     }
 
 
     @Override
-    public String toString () {
+    public String toString() {
         return "User{" +
                 "email='" + email + '\'' +
                 '}';

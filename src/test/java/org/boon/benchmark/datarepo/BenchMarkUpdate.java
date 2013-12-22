@@ -25,12 +25,12 @@ public class BenchMarkUpdate {
     static int numCreations = 100_000;
 
     @Test
-    public void test () {
+    public void test() {
         numCreations = 100;
     }
 
 
-    public static void main ( String[] args ) throws Exception {
+    public static void main( String[] args ) throws Exception {
 
 
         final List<Employee> employees = BenchmarkHelper.createMetricTonOfEmployees( numCreations );
@@ -75,12 +75,12 @@ public class BenchMarkUpdate {
     }
 
 
-    private static MeasuredRun test ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun test( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "test indexed", 1, 100, results ) {
             Repo repo;
 
             @Override
-            protected void init () {
+            protected void init() {
                                                     /* Create a repo, and decide what to index. */
                 repo = Repos.builder().primaryKey( "id" ).searchIndex( "firstName" )
                         .lookupIndex( "firstName" ).nestedIndex( "department", "name" )
@@ -93,7 +93,7 @@ public class BenchMarkUpdate {
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 repo.updateByFilter(
                         Update.update( Update.incPercent( "salary", 10 ) ),
                         eqNestedAdvanced( "engineering", "department", "name" ) );
@@ -101,12 +101,12 @@ public class BenchMarkUpdate {
         };
     }
 
-    private static MeasuredRun test1 ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun test1( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "test linear", 1, 100, results ) {
             List<Employee> employeeList;
 
             @Override
-            protected void init () {
+            protected void init() {
 
                 employeeList = copy( employees );
 
@@ -114,7 +114,7 @@ public class BenchMarkUpdate {
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 for ( Employee employee : employeeList ) {
                     if ( employee.getDepartment().getName().equals( "engineering" ) ) {
                         int increase = 10;

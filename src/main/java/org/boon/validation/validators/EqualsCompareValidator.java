@@ -6,7 +6,7 @@ package org.boon.validation.validators;
 public class EqualsCompareValidator extends AbstractCompareValidator {
 
     @Override
-    protected boolean checkValidity ( Object object, Object compareToPropertyValue ) {
+    protected boolean checkValidity( Object object, Object compareToPropertyValue ) {
         boolean valid = object.equals( compareToPropertyValue );
         return valid;
     }

@@ -8,7 +8,7 @@ import java.util.NavigableMap;
 
 public class MapCreatorImpl implements MapCreator {
     @Override
-    public NavigableMap createNavigableMap ( Class<?> keyType ) {
+    public NavigableMap createNavigableMap( Class<?> keyType ) {
         if ( keyType == String.class ) {
             return new JavaUtilNavigableMap();
         } else {
@@ -17,7 +17,7 @@ public class MapCreatorImpl implements MapCreator {
     }
 
     @Override
-    public NavigableMap createNavigableMap ( Class<?> keyType, Comparator collator ) {
+    public NavigableMap createNavigableMap( Class<?> keyType, Comparator collator ) {
 
         if ( keyType == String.class ) {
             return new JavaUtilNavigableMap( collator );
@@ -27,7 +27,7 @@ public class MapCreatorImpl implements MapCreator {
     }
 
     @Override
-    public Map createMap ( Class<?> keyType ) {
+    public Map createMap( Class<?> keyType ) {
         return new JavaUtilMap();
     }
 }

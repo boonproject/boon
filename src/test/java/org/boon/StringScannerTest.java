@@ -18,7 +18,7 @@ public class StringScannerTest {
 
 
     @Test
-    public void testCreateFromString () {
+    public void testCreateFromString() {
 
         String[] split = StringScanner.splitByCharsNoneEmpty( TEST_STRING, '[', ',', '"', '\\', ':', ']', '/' );
 
@@ -58,7 +58,7 @@ public class StringScannerTest {
 
 
     @Test
-    public void testSimple () {
+    public void testSimple() {
 
         String[] split = StringScanner.splitByCharsNoneEmpty( "1,2,3", ',' );
 
@@ -68,7 +68,7 @@ public class StringScannerTest {
     }
 
     @Test
-    public void testSimple2 () {
+    public void testSimple2() {
 
         String[] split = StringScanner.splitByCharsNoneEmpty( "1,2,,4", ',' );
 

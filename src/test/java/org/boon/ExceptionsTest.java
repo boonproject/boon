@@ -12,7 +12,7 @@ import static org.boon.Exceptions.tryIt;
 public class ExceptionsTest {
 
 
-    public void methodThatThrowsException () throws IOException {
+    public void methodThatThrowsException() throws IOException {
 
         throw new IOException( "Bad stuff happens to good people" );
 
@@ -20,7 +20,7 @@ public class ExceptionsTest {
 
 
     @Test (expected = Exceptions.SoftenedException.class)
-    public void testException () {
+    public void testException() {
 
         try {
             methodThatThrowsException();
@@ -31,7 +31,7 @@ public class ExceptionsTest {
     }
 
     @Test (expected = Exceptions.SoftenedException.class)
-    public void die () {
+    public void die() {
 
         try {
             Exceptions.die( "Die" );
@@ -43,7 +43,7 @@ public class ExceptionsTest {
 
 
     @Test (expected = Exceptions.SoftenedException.class)
-    public void testExceptionWithMessage () {
+    public void testExceptionWithMessage() {
 
         try {
             methodThatThrowsException();
@@ -54,11 +54,11 @@ public class ExceptionsTest {
     }
 
     @Test (expected = Exceptions.SoftenedException.class)
-    public void testTryIt () {
+    public void testTryIt() {
 
         tryIt( new Exceptions.Trial() {
             @Override
-            public void tryIt () throws Exception {
+            public void tryIt() throws Exception {
                 methodThatThrowsException();
             }
         } );
@@ -66,22 +66,22 @@ public class ExceptionsTest {
     }
 
     @Test
-    public void testTryItNoOp () {
+    public void testTryItNoOp() {
 
         Exceptions.tryIt( new Exceptions.Trial() {
             @Override
-            public void tryIt () throws Exception {
+            public void tryIt() throws Exception {
             }
         } );
 
     }
 
     @Test
-    public void testTryItNoOp2WithMessage () {
+    public void testTryItNoOp2WithMessage() {
 
         tryIt( "no op", new Exceptions.Trial() {
             @Override
-            public void tryIt () throws Exception {
+            public void tryIt() throws Exception {
             }
         } );
 
@@ -89,11 +89,11 @@ public class ExceptionsTest {
 
 
     @Test (expected = Exceptions.SoftenedException.class)
-    public void testTryItWithMessage () {
+    public void testTryItWithMessage() {
 
         tryIt( "Calling method that throws exception", new Exceptions.Trial() {
             @Override
-            public void tryIt () throws Exception {
+            public void tryIt() throws Exception {
                 methodThatThrowsException();
             }
         } );
@@ -101,12 +101,12 @@ public class ExceptionsTest {
     }
 
     @Test     //mostly just checking for null checks
-    public void testSupportMethods () {
+    public void testSupportMethods() {
 
         try {
             tryIt( new Exceptions.Trial() {
                 @Override
-                public void tryIt () throws Exception {
+                public void tryIt() throws Exception {
                     methodThatThrowsException();
                 }
             } );
@@ -155,7 +155,7 @@ public class ExceptionsTest {
 
 
     @Test
-    public void testPrintWriter () {
+    public void testPrintWriter() {
 
     }
 

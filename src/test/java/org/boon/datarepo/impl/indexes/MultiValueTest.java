@@ -14,17 +14,17 @@ public class MultiValueTest {
     private MultiValue mv;
 
     @Before
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
 
     }
 
     @After
-    public void tearDown () throws Exception {
+    public void tearDown() throws Exception {
 
     }
 
     @Test
-    public void testAdd () throws Exception {
+    public void testAdd() throws Exception {
 
         MultiValue mv = MultiValue.add( null, "Rick", 3 );
         Assert.assertEquals( "Rick", mv.getValue() );
@@ -32,7 +32,7 @@ public class MultiValueTest {
     }
 
     @Test
-    public void testMany () throws Exception {
+    public void testMany() throws Exception {
 
         List<String> strings = list( "Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" );
 
@@ -53,7 +53,7 @@ public class MultiValueTest {
     }
 
     @Test
-    public void testManyThenAddTo () throws Exception {
+    public void testManyThenAddTo() throws Exception {
 
         List<String> strings = list( "Rick", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13" );
 
@@ -75,7 +75,7 @@ public class MultiValueTest {
     }
 
     @Test
-    public void testManyUseAddTo () throws Exception {
+    public void testManyUseAddTo() throws Exception {
 
         MultiValue mv = MultiValue.add( null, "Rick", 3 );
 

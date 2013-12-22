@@ -16,7 +16,7 @@ public class ListsTest {
 
 
     @Test
-    public void iterAndFriends () {
+    public void iterAndFriends() {
         List<String> list =
                 list( "apple", "oranges", "pears", "grapes", "kiwi" );
 
@@ -65,7 +65,7 @@ public class ListsTest {
     }
 
 
-    public void iterAndFriends ( List<String> list ) {
+    public void iterAndFriends( List<String> list ) {
 
         list = list( list.iterator() );
         assertEquals( 5, len( list ) );
@@ -99,7 +99,7 @@ public class ListsTest {
     }
 
     @Test
-    public void sliceTest () {
+    public void sliceTest() {
         List<String> list =
                 list( "apple", "oranges", "pears", "grapes", "kiwi" );
         List<String> list2 = slc( list, 0, 2 );
@@ -109,7 +109,7 @@ public class ListsTest {
 
 
     @Test
-    public void sliceTest2 () {
+    public void sliceTest2() {
         List<String> list =
                 list( "apple", "oranges", "pears", "grapes", "kiwi" );
         List<String> list2 = slc( list, -3, -1 );
@@ -119,7 +119,7 @@ public class ListsTest {
 
 
     @Test
-    public void sliceStartNeg () {
+    public void sliceStartNeg() {
         List<String> list =
                 list( "apple", "oranges", "pears", "grapes", "kiwi" );
 
@@ -135,7 +135,7 @@ public class ListsTest {
 
 
     @Test
-    public void sliceStartPos () {
+    public void sliceStartPos() {
         List<String> list =
                 list( "apple", "oranges", "pears", "grapes", "kiwi" );
 
@@ -152,7 +152,7 @@ public class ListsTest {
     }
 
     @Test
-    public void sliceEnd () {
+    public void sliceEnd() {
         List<String> list =
                 list( "apple", "oranges", "pears", "grapes", "kiwi" );
 
@@ -173,7 +173,7 @@ public class ListsTest {
     }
 
     @Test
-    public void tooBigIndex () {
+    public void tooBigIndex() {
         List<String> list =
                 list( "apple", "oranges", "pears" );
         idx( list, 100 );
@@ -186,7 +186,7 @@ public class ListsTest {
 
 
     @Test
-    public void tooSmallIndex () {
+    public void tooSmallIndex() {
         List<String> list =
                 list( "apple", "oranges", "pears" );
         idx( list, -100 );
@@ -198,7 +198,7 @@ public class ListsTest {
     }
 
     @Test
-    public void testMe () {
+    public void testMe() {
         List<String> list = list( ( String[] ) null );
         System.out.println( list );
 
@@ -241,7 +241,7 @@ public class ListsTest {
     }
 
     @Test
-    public void testSafe () {
+    public void testSafe() {
         CopyOnWriteArrayList<String> list = ( CopyOnWriteArrayList<String> ) safeList( "apple", "oranges", "pears" );
         assertEquals( 3, len( list ) );
         assertTrue( in( "apple", list ) );
@@ -260,7 +260,7 @@ public class ListsTest {
 
 
     @Test
-    public void testLinked () {
+    public void testLinked() {
         LinkedList<String> list = ( LinkedList<String> ) linkedList( "apple", "oranges", "pears" );
         assertEquals( 3, len( list ) );
         assertTrue( in( "apple", list ) );

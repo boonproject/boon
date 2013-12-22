@@ -13,16 +13,16 @@ public class Sys {
     private final static boolean inContainer;
 
 
-    public static void println ( String message ) {
+    public static void println( String message ) {
         System.out.println( message );
     }
 
-    public static void print ( String message ) {
+    public static void print( String message ) {
         System.out.print( message );
     }
 
 
-    public static boolean isWindows () {
+    public static boolean isWindows() {
         return isWindows;
     }
 
@@ -36,18 +36,18 @@ public class Sys {
 
     }
 
-    public static char windowsPathSeparator () {
+    public static char windowsPathSeparator() {
         return '\\';
     }
 
 
     final static AtomicReference<TimeKeeper> timer = new AtomicReference<TimeKeeper>( new TimeKeeperBasic() );
 
-    public static TimeKeeper timer () {
+    public static TimeKeeper timer() {
         return timer.get();
     }
 
-    public static long time () {
+    public static long time() {
         return timer.get().time();
     }
 
@@ -68,7 +68,7 @@ public class Sys {
         inContainer = _inContainer;
     }
 
-    private static boolean detectContainer () {
+    private static boolean detectContainer() {
 
         boolean _inContainer;
 
@@ -95,7 +95,7 @@ public class Sys {
     }
 
 
-    public static boolean inContainer () {
+    public static boolean inContainer() {
         return inContainer;
     }
 
@@ -110,7 +110,7 @@ public class Sys {
 
     /* Everything that has a cache you need to hold on to, should use this so they can
      * all be stuffed into application context. */
-    public static Object contextToHold () {
+    public static Object contextToHold() {
 
         return Reflection.contextToHold();
     }

@@ -10,14 +10,14 @@ import java.util.List;
 public class TypeHierarchyIndex extends BaseIndexWrapper {
 
     @Override
-    public boolean add ( Object o ) {
+    public boolean add( Object o ) {
         List keys = getKeys( o );
         index.addManyKeys( o, keys );
         return true;
     }
 
     @Override
-    public boolean delete ( Object o ) {
+    public boolean delete( Object o ) {
         List keys = getKeys( o );
         index.removeManyKeys( o, keys );
         return true;
@@ -25,7 +25,7 @@ public class TypeHierarchyIndex extends BaseIndexWrapper {
     }
 
     @Override
-    protected List getKeys ( Object o ) {
+    protected List getKeys( Object o ) {
         List<Object> list = new ArrayList();
         Class cls = o.getClass();
 

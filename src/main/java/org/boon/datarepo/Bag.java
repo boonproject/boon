@@ -26,17 +26,17 @@ import java.util.List;
  * @author Rick Hightower
  */
 public interface Bag<ITEM> {
-    boolean add ( ITEM item );
+    boolean add( ITEM item );
 
-    boolean delete ( ITEM item );
+    boolean delete( ITEM item );
 
-    List<ITEM> all ();
+    List<ITEM> all();
 
-    int size ();
+    int size();
 
-    Collection<ITEM> toCollection ();
+    Collection<ITEM> toCollection();
 
-    void clear ();
+    void clear();
 
 
 }

@@ -16,12 +16,12 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
     private final int limit;
 
 
-    public ConcurrentLruCache ( int limit ) {
+    public ConcurrentLruCache( int limit ) {
         this.limit = limit;
     }
 
     @Override
-    public void put ( KEY key, VALUE value ) {
+    public void put( KEY key, VALUE value ) {
         VALUE oldValue = map.put( key, value );
         if ( oldValue != null ) {
             removeThenAddKey( key );
@@ -35,13 +35,13 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
 
     @Override
-    public VALUE get ( KEY key ) {
+    public VALUE get( KEY key ) {
         removeThenAddKey( key );
         return map.get( key );
     }
 
 
-    private void addKey ( KEY key ) {
+    private void addKey( KEY key ) {
         lock.lock();
         try {
             queue.addFirst( key );
@@ -52,7 +52,7 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
     }
 
-    private KEY removeLast () {
+    private KEY removeLast() {
         lock.lock();
         try {
             final KEY removedKey = queue.removeLast();
@@ -62,7 +62,7 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
         }
     }
 
-    private void removeThenAddKey ( KEY key ) {
+    private void removeThenAddKey( KEY key ) {
         lock.lock();
         try {
             queue.removeFirstOccurrence( key );
@@ -73,7 +73,7 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
     }
 
-    private void removeFirstOccurrence ( KEY key ) {
+    private void removeFirstOccurrence( KEY key ) {
         lock.lock();
         try {
             queue.removeFirstOccurrence( key );
@@ -85,22 +85,22 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
 
     @Override
-    public VALUE getSilent ( KEY key ) {
+    public VALUE getSilent( KEY key ) {
         return map.get( key );
     }
 
     @Override
-    public void remove ( KEY key ) {
+    public void remove( KEY key ) {
         removeFirstOccurrence( key );
         map.remove( key );
     }
 
     @Override
-    public int size () {
+    public int size() {
         return map.size();
     }
 
-    public String toString () {
+    public String toString() {
         return map.toString();
     }
 }

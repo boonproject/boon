@@ -29,11 +29,11 @@ public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
 
     private List<ValidatorMetaDataReader> chain;
 
-    public void setChain ( final List<ValidatorMetaDataReader> chain ) {
+    public void setChain( final List<ValidatorMetaDataReader> chain ) {
         this.chain = chain;
     }
 
-    public List<ValidatorMetaData> readMetaData ( final Class<?> clazz, final String propertyName ) {
+    public List<ValidatorMetaData> readMetaData( final Class<?> clazz, final String propertyName ) {
         Map<String, ValidatorMetaData> overrideMap = new LinkedHashMap<String, ValidatorMetaData>();
 
 		/* Iterate through the chain of readers, read the validation data, put the validation data in a 

@@ -10,7 +10,7 @@ public class CharScanner {
             '6', '7', '8', '9' };
 
 
-    public static boolean isDigit ( char a ) {
+    public static boolean isDigit( char a ) {
         for ( int j = 0; j < DIGITS.length; j++ ) {
             if ( a == DIGITS[ j ] ) {
                 return true;
@@ -19,7 +19,7 @@ public class CharScanner {
         return false;
     }
 
-    public static boolean isDigits ( final char[] inputArray ) {
+    public static boolean isDigits( final char[] inputArray ) {
         for ( int index = 0; index < inputArray.length; index++ ) {
             char a = inputArray[ index ];
             if ( !isDigit( a ) ) {
@@ -29,8 +29,8 @@ public class CharScanner {
         return true;
     }
 
-    public static char[][] splitExact ( final char[] inputArray,
-                                        final char split, final int resultsArrayLength ) {
+    public static char[][] splitExact( final char[] inputArray,
+                                       final char split, final int resultsArrayLength ) {
         /** Holds the results. */
         char[][] results = new char[ resultsArrayLength ][];
 
@@ -70,8 +70,8 @@ public class CharScanner {
         return results;
     }
 
-    public static char[][] splitExact ( final char[] inputArray,
-                                        final int resultsArrayLength, char... delims ) {
+    public static char[][] splitExact( final char[] inputArray,
+                                       final int resultsArrayLength, char... delims ) {
         /** Holds the results. */
         char[][] results = new char[ resultsArrayLength ][];
 
@@ -121,8 +121,8 @@ public class CharScanner {
         return results;
     }
 
-    public static char[][] split ( final char[] inputArray,
-                                   final char split ) {
+    public static char[][] split( final char[] inputArray,
+                                  final char split ) {
         /** Holds the results. */
         char[][] results = new char[ 16 ][];
 
@@ -168,8 +168,8 @@ public class CharScanner {
         return results;
     }
 
-    public static char[][] splitByChars ( final char[] inputArray,
-                                          final char... delims ) {
+    public static char[][] splitByChars( final char[] inputArray,
+                                         final char... delims ) {
         /** Holds the results. */
         char[][] results = new char[ 16 ][];
 
@@ -226,8 +226,8 @@ public class CharScanner {
         return results;
     }
 
-    public static char[][] splitByCharsFromToDelims ( final char[] inputArray, int from, int to,
-                                                      final char... delims ) {
+    public static char[][] splitByCharsFromToDelims( final char[] inputArray, int from, int to,
+                                                     final char... delims ) {
         /** Holds the results. */
         char[][] results = new char[ 16 ][];
 
@@ -286,22 +286,22 @@ public class CharScanner {
         return results;
     }
 
-    public static char[][] splitByCharsNoneEmpty ( final char[] inputArray,
-                                                   final char... delims ) {
+    public static char[][] splitByCharsNoneEmpty( final char[] inputArray,
+                                                  final char... delims ) {
 
         final char[][] results = splitByChars( inputArray, delims );
         return compact( results );
     }
 
 
-    public static char[][] splitByCharsNoneEmpty ( final char[] inputArray, int from, int to,
-                                                   final char... delims ) {
+    public static char[][] splitByCharsNoneEmpty( final char[] inputArray, int from, int to,
+                                                  final char... delims ) {
 
         final char[][] results = splitByCharsFromToDelims( inputArray, from, to, delims );
         return compact( results );
     }
 
-    public static char[][] compact ( char[][] array ) {
+    public static char[][] compact( char[][] array ) {
         Objects.requireNonNull( array );
 
         int nullCount = 0;
@@ -327,7 +327,7 @@ public class CharScanner {
     }
 
 
-    private static char[][] _grow ( char[][] array ) {
+    private static char[][] _grow( char[][] array ) {
         Objects.requireNonNull( array );
 
         char[][] newArray = new char[ array.length * 2 ][];
@@ -335,7 +335,7 @@ public class CharScanner {
         return newArray;
     }
 
-    private static char[][] __shrink ( char[][] array, int size ) {
+    private static char[][] __shrink( char[][] array, int size ) {
         Objects.requireNonNull( array );
         char[][] newArray = new char[ array.length - size ][];
 
@@ -351,8 +351,8 @@ public class CharScanner {
     final static String MIN_INT_STR_NO_SIGN = String.valueOf( Integer.MIN_VALUE ).substring( 1 );
     final static String MAX_INT_STR = String.valueOf( Integer.MAX_VALUE );
 
-    public static boolean isLong ( char[] digitChars, int offset, int len,
-                                   boolean negative ) {
+    public static boolean isLong( char[] digitChars, int offset, int len,
+                                  boolean negative ) {
         String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
         int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
@@ -367,8 +367,8 @@ public class CharScanner {
         return true;
     }
 
-    public static boolean isInteger ( char[] digitChars, int offset, int len,
-                                      boolean negative ) {
+    public static boolean isInteger( char[] digitChars, int offset, int len,
+                                     boolean negative ) {
         String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
         int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
@@ -383,11 +383,11 @@ public class CharScanner {
         return true;
     }
 
-    public static int parseInt ( char[] digitChars ) {
+    public static int parseInt( char[] digitChars ) {
         return parseInt( digitChars, 0, digitChars.length );
     }
 
-    public static int parseInt ( char[] digitChars, int offset, int len ) {
+    public static int parseInt( char[] digitChars, int offset, int len ) {
         int num = digitChars[ offset ] - '0';
         int to = len + offset;
         // This looks ugly, but appears the fastest way (as per measurements)
@@ -419,7 +419,7 @@ public class CharScanner {
     }
 
 
-    public static int parseIntFromTo ( char[] digitChars, int offset, int to ) {
+    public static int parseIntFromTo( char[] digitChars, int offset, int to ) {
         int num = digitChars[ offset ] - '0';
         // This looks ugly, but appears the fastest way (as per measurements)
         if ( ++offset < to ) {
@@ -449,7 +449,7 @@ public class CharScanner {
         return num;
     }
 
-    public static int parseIntIgnoreDot ( char[] digitChars, int offset, int len ) {
+    public static int parseIntIgnoreDot( char[] digitChars, int offset, int len ) {
         int num = digitChars[ offset ] - '0';
         int to = len + offset;
         // This looks ugly, but appears the fastest way (as per measurements)
@@ -483,13 +483,13 @@ public class CharScanner {
         return num;
     }
 
-    public static long parseLong ( char[] digitChars, int offset, int len ) {
+    public static long parseLong( char[] digitChars, int offset, int len ) {
         int len1 = len - 9;
         long val = parseInt( digitChars, offset, len1 ) * L_BILLION;
         return val + ( long ) parseInt( digitChars, offset + len1, 9 );
     }
 
-    public static long parseLongIgnoreDot ( char[] digitChars, int offset, int len ) {
+    public static long parseLongIgnoreDot( char[] digitChars, int offset, int len ) {
         int len1 = len - 9;
         long val = parseIntIgnoreDot( digitChars, offset, len1 ) * L_BILLION;
         return val + ( long ) parseIntIgnoreDot( digitChars, offset + len1, 9 );
@@ -498,7 +498,7 @@ public class CharScanner {
     private final static long L_BILLION = 1000000000;
 
 
-    public static double doubleValue ( char[] buffer, int startIndex, int endIndex ) {
+    public static double doubleValue( char[] buffer, int startIndex, int endIndex ) {
 
         boolean simple = true;
         int digitsPastPoint = 0;
@@ -567,7 +567,7 @@ public class CharScanner {
     }
 
 
-    public static double simpleDouble ( char[] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex ) {
+    public static double simpleDouble( char[] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex ) {
 
         double sign;
 

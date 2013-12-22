@@ -6,7 +6,7 @@ package org.boon.json;
 public class JsonLazyChopFastParserTest extends JsonParserBaseTest {
 
 
-    public JsonParserFactory factory () {
+    public JsonParserFactory factory() {
         return new JsonParserFactory().neverPreferCharSequence().neverUseDirectBytes().useLazyFinalParse().setSizeToForceLazyFinalParse( Integer.MAX_VALUE );
     }
 

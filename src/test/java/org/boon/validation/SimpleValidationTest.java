@@ -31,7 +31,7 @@ public class SimpleValidationTest {
 
 
     @Before
-    public void setup () {
+    public void setup() {
 
         ValidationContext.create();
 
@@ -39,14 +39,14 @@ public class SimpleValidationTest {
     }
 
     @After
-    public void cleanup () {
+    public void cleanup() {
 
         ValidationContext.destroy();
 
     }
 
     @Test
-    public void testRequired () {
+    public void testRequired() {
 
         RequiredValidator required = Validators.required( "phone number required" );
 
@@ -70,7 +70,7 @@ public class SimpleValidationTest {
 
 
     @Test
-    public void testLengthShowsMustBePresentToBeValidated () {
+    public void testLengthShowsMustBePresentToBeValidated() {
 
         LengthValidator length = Validators.length( 7, 12, "phone number must be 7 to  12 characters long" );
 
@@ -93,7 +93,7 @@ public class SimpleValidationTest {
 
 
     @Test
-    public void testComposite () {
+    public void testComposite() {
 
 
         CompositeValidator validators = Validators.validators( required( "phone number required" ),
@@ -126,33 +126,33 @@ public class SimpleValidationTest {
         int age;
         String phone;
 
-        public Employee ( String name, int age, String phone ) {
+        public Employee( String name, int age, String phone ) {
             this.firstName = name;
             this.age = age;
             this.phone = phone;
         }
 
-        public String getFirstName () {
+        public String getFirstName() {
             return firstName;
         }
 
-        public void setFirstName ( String firstName ) {
+        public void setFirstName( String firstName ) {
             this.firstName = firstName;
         }
 
-        public int getAge () {
+        public int getAge() {
             return age;
         }
 
-        public void setAge ( int age ) {
+        public void setAge( int age ) {
             this.age = age;
         }
 
-        public String getPhone () {
+        public String getPhone() {
             return phone;
         }
 
-        public void setPhone ( String phone ) {
+        public void setPhone( String phone ) {
             this.phone = phone;
         }
     }
@@ -178,7 +178,7 @@ public class SimpleValidationTest {
 
 
         @Override
-        public List<ValidatorMetaData> readMetaData ( Class<?> clazz, String propertyName ) {
+        public List<ValidatorMetaData> readMetaData( Class<?> clazz, String propertyName ) {
             if ( classToRulesMap.get( clazz ).get( propertyName ) == null ) {
                 return Collections.EMPTY_LIST;
             } else {
@@ -190,7 +190,7 @@ public class SimpleValidationTest {
 
 
     @Test
-    public void testRecursive () {
+    public void testRecursive() {
 
 
         Map<String, Object> objectMap = map(
@@ -264,40 +264,40 @@ public class SimpleValidationTest {
         @Length ( max = 12, min = 5, detailMessage = "Phone number must be a phone number" )
         String phone;
 
-        public Employee2 ( String name, int age, String phone ) {
+        public Employee2( String name, int age, String phone ) {
             this.firstName = name;
             this.age = age;
             this.phone = phone;
         }
 
-        public String getFirstName () {
+        public String getFirstName() {
             return firstName;
         }
 
-        public void setFirstName ( String firstName ) {
+        public void setFirstName( String firstName ) {
             this.firstName = firstName;
         }
 
-        public int getAge () {
+        public int getAge() {
             return age;
         }
 
-        public void setAge ( int age ) {
+        public void setAge( int age ) {
             this.age = age;
         }
 
-        public String getPhone () {
+        public String getPhone() {
             return phone;
         }
 
-        public void setPhone ( String phone ) {
+        public void setPhone( String phone ) {
             this.phone = phone;
         }
     }
 
 
     @Test
-    public void testRecursiveWithAnnotations () {
+    public void testRecursiveWithAnnotations() {
 
 
         Map<String, Object> objectMap = map(

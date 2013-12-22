@@ -5,17 +5,17 @@ public class Subject {
     public final String name;
 
 
-    public Subject () {
+    public Subject() {
         name = "ROOT";
     }
 
 
-    public Subject ( String name ) {
+    public Subject( String name ) {
         this.name = name;
     }
 
     @Override
-    public boolean equals ( Object o ) {
+    public boolean equals( Object o ) {
         if ( this == o ) return true;
         if ( !( o instanceof Subject ) ) return false;
 
@@ -27,7 +27,7 @@ public class Subject {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return name != null ? name.hashCode() : 0;
     }
 }

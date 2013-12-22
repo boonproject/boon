@@ -22,14 +22,14 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     private Class<?> keyType;
 
 
-    public SearchIndexDefault ( Class<?> keyType ) {
+    public SearchIndexDefault( Class<?> keyType ) {
         super( keyType );
         this.keyType = keyType;
 
 
     }
 
-    public SearchIndexDefault ( Class<?> keyType, List<ITEM> items, Function<ITEM, KEY> keyGetter ) {
+    public SearchIndexDefault( Class<?> keyType, List<ITEM> items, Function<ITEM, KEY> keyGetter ) {
         super( null );
         super.keyGetter = keyGetter;
         super.map = SPIFactory.getMapCreatorFactory().get().createNavigableMap( keyType );
@@ -42,7 +42,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
     }
 
-    public SearchIndexDefault ( Class<?> keyType, List<ITEM> items, Function<ITEM, KEY> keyGetter, Collator collator ) {
+    public SearchIndexDefault( Class<?> keyType, List<ITEM> items, Function<ITEM, KEY> keyGetter, Collator collator ) {
         super( null );
         super.keyGetter = keyGetter;
         super.map = SPIFactory.getMapCreatorFactory().get().createNavigableMap( keyType, collator );
@@ -56,39 +56,39 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public void setComparator ( Comparator collator ) {
+    public void setComparator( Comparator collator ) {
         this.collator = collator;
     }
 
     @Override
-    public void init () {
+    public void init() {
         super.map = SPIFactory.getMapCreatorFactory().get().createNavigableMap( this.keyType, this.collator );
         this.navigableMap = ( NavigableMap<KEY, MultiValue> ) super.map;
     }
 
 
     @Override
-    public ITEM findFirst () {
+    public ITEM findFirst() {
         return ( ITEM ) this.navigableMap.firstEntry().getValue().getValue();
     }
 
     @Override
-    public ITEM findLast () {
+    public ITEM findLast() {
         return ( ITEM ) this.navigableMap.lastEntry().getValue().getValue();
     }
 
     @Override
-    public KEY findFirstKey () {
+    public KEY findFirstKey() {
         return this.navigableMap.firstEntry().getKey();
     }
 
     @Override
-    public KEY findLastKey () {
+    public KEY findLastKey() {
         return this.navigableMap.lastEntry().getKey();
     }
 
     @Override
-    public List<ITEM> findEquals ( KEY key ) {
+    public List<ITEM> findEquals( KEY key ) {
         key = getKey( key );
         MultiValue<ITEM> items = navigableMap.get( key );
         if ( items == null ) {
@@ -98,7 +98,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findStartsWith ( KEY keyFrag ) {
+    public List<ITEM> findStartsWith( KEY keyFrag ) {
 
         keyFrag = getKey( keyFrag );
         List<ITEM> results;
@@ -136,7 +136,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findEndsWith ( KEY keyFrag ) {
+    public List<ITEM> findEndsWith( KEY keyFrag ) {
         keyFrag = getKey( keyFrag );
 
         List<ITEM> results = new ArrayList<>();
@@ -157,7 +157,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findContains ( KEY keyFrag ) {
+    public List<ITEM> findContains( KEY keyFrag ) {
         keyFrag = getKey( keyFrag );
 
         List<ITEM> results = new ArrayList<>();
@@ -181,7 +181,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
     boolean init;
 
-    void initIfNeeded () {
+    void initIfNeeded() {
         if ( !init ) {
             init = true;
             ITEM item = ( ITEM ) ( ( MultiValue ) this.navigableMap.firstEntry() ).getValue();
@@ -190,7 +190,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findBetween ( KEY start, KEY end ) {
+    public List<ITEM> findBetween( KEY start, KEY end ) {
         start = getKey( start );
         end = getKey( end );
 
@@ -201,7 +201,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
     }
 
-    private List<ITEM> getResults ( SortedMap<KEY, MultiValue> keyMultiValueSortedMap ) {
+    private List<ITEM> getResults( SortedMap<KEY, MultiValue> keyMultiValueSortedMap ) {
         List<ITEM> results = null;
         if ( keyMultiValueSortedMap.size() > 0 ) {
             results = new ArrayList<>();
@@ -214,7 +214,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findGreaterThan ( KEY key ) {
+    public List<ITEM> findGreaterThan( KEY key ) {
         key = getKey( key );
 
 
@@ -223,7 +223,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findLessThan ( KEY key ) {
+    public List<ITEM> findLessThan( KEY key ) {
         key = getKey( key );
 
         SortedMap<KEY, MultiValue> keyMultiValueSortedMap = this.navigableMap.headMap( key, false );
@@ -231,7 +231,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findGreaterThanEqual ( KEY key ) {
+    public List<ITEM> findGreaterThanEqual( KEY key ) {
         key = getKey( key );
 
         SortedMap<KEY, MultiValue> keyMultiValueSortedMap = this.navigableMap.tailMap( key );
@@ -239,7 +239,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     }
 
     @Override
-    public List<ITEM> findLessThanEqual ( KEY key ) {
+    public List<ITEM> findLessThanEqual( KEY key ) {
         key = getKey( key );
 
         SortedMap<KEY, MultiValue> keyMultiValueSortedMap = this.navigableMap.headMap( key );
@@ -248,23 +248,23 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
 
     @Override
-    public ITEM min () {
+    public ITEM min() {
         return ( ITEM ) this.navigableMap.firstEntry().getValue().getValue();
     }
 
     @Override
-    public ITEM max () {
+    public ITEM max() {
         return ( ITEM ) this.navigableMap.lastEntry().getValue().getValue();
     }
 
     @Override
-    public int count ( KEY key ) {
+    public int count( KEY key ) {
         return this.navigableMap.get( key ).size();
     }
 
 
     @Override
-    public int size () {
+    public int size() {
         return this.navigableMap.size();
     }
 

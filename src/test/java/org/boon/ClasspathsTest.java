@@ -17,7 +17,7 @@ import static org.boon.Exceptions.die;
 public class ClasspathsTest {
 
     @Test
-    public void test () throws Exception {
+    public void test() throws Exception {
         final List<URL> urls = Classpaths.classpathResources( this.getClass(), "testfile.txt" );
 
         URL url = urls.get( 0 );
@@ -29,7 +29,7 @@ public class ClasspathsTest {
     }
 
     @Test
-    public void test1 () throws Exception {
+    public void test1() throws Exception {
         final List<URL> urls = Classpaths.classpathResources( this.getClass(), "org/node/file1.txt" );
 
         URL url = urls.get( 0 );
@@ -42,7 +42,7 @@ public class ClasspathsTest {
 
 
     @Test
-    public void test2 () throws Exception {
+    public void test2() throws Exception {
         final List<URL> urls = Classpaths.classpathResources( this.getClass(), "/org/node/file1.txt" );
 
         URL url = urls.get( 0 );
@@ -54,7 +54,7 @@ public class ClasspathsTest {
     }
 
     @Test
-    public void test2NoRoot () throws Exception {
+    public void test2NoRoot() throws Exception {
         final List<URL> urls = Classpaths.classpathResources( this.getClass(), "org/node/file1.txt" );
 
         URL url = urls.get( 0 );
@@ -66,7 +66,7 @@ public class ClasspathsTest {
     }
 
     @Test
-    public void testResourcesFromPath () throws Exception {
+    public void testResourcesFromPath() throws Exception {
         final List<Path> paths = Classpaths.resources( this.getClass(), "/org/node/file1.txt" );
 
         Path path = paths.get( 0 );
@@ -78,7 +78,7 @@ public class ClasspathsTest {
     }
 
     @Test   //not root
-    public void testResourcesFromPathNoRoot () throws Exception {
+    public void testResourcesFromPathNoRoot() throws Exception {
         final List<Path> paths = Classpaths.resources( this.getClass(), "org/node/file1.txt" );
 
         Path path = paths.get( 0 );
@@ -90,7 +90,7 @@ public class ClasspathsTest {
     }
 
     @Test
-    public void testDirectory () throws Exception {
+    public void testDirectory() throws Exception {
         String someResource = "/org/node/";
 
         File file = new File( "files/node-1.0-SNAPSHOT.jar" );
@@ -121,7 +121,7 @@ public class ClasspathsTest {
 
 
     @Test
-    public void testFileResources () throws Exception {
+    public void testFileResources() throws Exception {
         String someResource = "/org/node/resource.txt";
 
         File file = new File( "files/node-1.0-SNAPSHOT.jar" );

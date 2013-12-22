@@ -8,33 +8,33 @@ public class Employee {
     int age;
     String phone;
 
-    public Employee ( String name, int age, String phone ) {
+    public Employee( String name, int age, String phone ) {
         this.firstName = name;
         this.age = age;
         this.phone = phone;
     }
 
-    public String getFirstName () {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName ( String firstName ) {
+    public void setFirstName( String firstName ) {
         this.firstName = firstName;
     }
 
-    public int getAge () {
+    public int getAge() {
         return age;
     }
 
-    public void setAge ( int age ) {
+    public void setAge( int age ) {
         this.age = age;
     }
 
-    public String getPhone () {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone ( String phone ) {
+    public void setPhone( String phone ) {
         this.phone = phone;
     }
 }

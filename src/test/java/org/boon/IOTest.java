@@ -29,7 +29,7 @@ public class IOTest {
     File testFile;
 
     @Before
-    public void init () {
+    public void init() {
         //move testFile and testDir up here for all of the other tests
 
         if ( Sys.isWindows() ) {
@@ -43,7 +43,7 @@ public class IOTest {
     }
 
     @Test
-    public void testReadLinesFromFileAsBufferedReader () throws Exception {
+    public void testReadLinesFromFileAsBufferedReader() throws Exception {
 
 
         List<String> lines = IO.readLines( new BufferedReader( new FileReader( testFile ) ) );
@@ -53,7 +53,7 @@ public class IOTest {
     }
 
     @Test
-    public void testReadLinesFromFileAsInputStream () throws Exception {
+    public void testReadLinesFromFileAsInputStream() throws Exception {
 
         List<String> lines = IO.readLines( new FileInputStream( testFile ) );
 
@@ -75,7 +75,7 @@ public class IOTest {
     //}
 
     @Test
-    public void testReadLines () {
+    public void testReadLines() {
         File testDir = new File( "src/test/resources" );
         File testFile = new File( testDir, "testfile.txt" );
 
@@ -87,12 +87,12 @@ public class IOTest {
     }
 
     @Test
-    public void testReadEachLine () {
+    public void testReadEachLine() {
 
 
         IO.eachLine( "src/test/resources/testfile.txt", new IO.EachLine() {
             @Override
-            public boolean line ( String line, int index ) {
+            public boolean line( String line, int index ) {
                 System.out.println( index + " " + line );
 
                 if ( index == 0 ) {
@@ -119,14 +119,14 @@ public class IOTest {
 
 
     @Test
-    public void testReadEachLineByURI () {
+    public void testReadEachLineByURI() {
         File testDir = new File( "src/test/resources" );
         File testFile = new File( testDir, "testfile.txt" );
 
 
         IO.eachLine( testFile.toURI().toString(), new IO.EachLine() {
             @Override
-            public boolean line ( String line, int index ) {
+            public boolean line( String line, int index ) {
                 System.out.println( index + " " + line );
 
                 if ( index == 0 ) {
@@ -153,7 +153,7 @@ public class IOTest {
 
 
     @Test
-    public void testReadFromHttp () throws Exception {
+    public void testReadFromHttp() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 9666 ), 0 );
         server.createContext( "/test", new MyHandler() );
@@ -169,7 +169,7 @@ public class IOTest {
 
 
     @Test
-    public void testReadEachLineHttp () throws Exception {
+    public void testReadEachLineHttp() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 9668 ), 0 );
         server.createContext( "/test", new MyHandler() );
@@ -181,7 +181,7 @@ public class IOTest {
         IO.eachLine( "http://localhost:9668/test",
                 new IO.EachLine() {
                     @Override
-                    public boolean line ( String line, int index ) {
+                    public boolean line( String line, int index ) {
 
                         if ( index == 0 ) {
 
@@ -205,7 +205,7 @@ public class IOTest {
 
 
     @Test
-    public void testReadEachLineReader () throws Exception {
+    public void testReadEachLineReader() throws Exception {
         File testDir = new File( "src/test/resources" );
         File testFile = new File( testDir, "testfile.txt" );
 
@@ -213,7 +213,7 @@ public class IOTest {
         IO.eachLine( new FileReader( testFile ),
                 new IO.EachLine() {
                     @Override
-                    public boolean line ( String line, int index ) {
+                    public boolean line( String line, int index ) {
 
                         if ( index == 0 ) {
 
@@ -239,7 +239,7 @@ public class IOTest {
 
 
     @Test
-    public void testReadEachLineInputStream () throws Exception {
+    public void testReadEachLineInputStream() throws Exception {
         File testDir = new File( "src/test/resources" );
         File testFile = new File( testDir, "testfile.txt" );
 
@@ -247,7 +247,7 @@ public class IOTest {
         IO.eachLine( new FileInputStream( testFile ),
                 new IO.EachLine() {
                     @Override
-                    public boolean line ( String line, int index ) {
+                    public boolean line( String line, int index ) {
 
                         if ( index == 0 ) {
 
@@ -273,7 +273,7 @@ public class IOTest {
 
 
     @Test
-    public void testReadAll () {
+    public void testReadAll() {
         File testDir = new File( "src/test/resources" );
         File testFile = new File( testDir, "testfile.txt" );
 
@@ -285,7 +285,7 @@ public class IOTest {
     }
 
 
-    private void assertLines ( List<String> lines ) {
+    private void assertLines( List<String> lines ) {
 
         assertEquals(
                 4, len( lines )
@@ -303,14 +303,14 @@ public class IOTest {
     }
 
     @Test
-    public void testReadLinesFromPath () {
+    public void testReadLinesFromPath() {
         //changed "src/test/resources/testfile.txt" to testFile.toString
         List<String> lines = IO.readLines( testFile.toString() );
         assertLines( lines );
     }
 
     @Test
-    public void testReadAllFromPath () {
+    public void testReadAllFromPath() {
         String content = IO.read( testFile.toString() );
         List<String> lines = IO.readLines( new StringReader( content ) );
         assertLines( lines );
@@ -318,7 +318,7 @@ public class IOTest {
 
 
     @Test
-    public void testReadWriteLines () {
+    public void testReadWriteLines() {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -335,7 +335,7 @@ public class IOTest {
     }
 
     @Test
-    public void testReadWriteLinesCharSet () {
+    public void testReadWriteLinesCharSet() {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -352,7 +352,7 @@ public class IOTest {
     }
 
     @Test
-    public void testReadLinesURI () {
+    public void testReadLinesURI() {
 
         URI uri = testFile.toURI();
 
@@ -366,7 +366,7 @@ public class IOTest {
     }
 
     @Test
-    public void testReadAllLinesURI () {
+    public void testReadAllLinesURI() {
 
         File testDir = new File( "src/test/resources" );
         File testFile = new File( testDir, "testfile.txt" );
@@ -385,7 +385,7 @@ public class IOTest {
 
 
     static class MyHandler implements HttpHandler {
-        public void handle ( HttpExchange t ) throws IOException {
+        public void handle( HttpExchange t ) throws IOException {
 
             File testDir = new File( "src/test/resources" );
             File testFile = new File( testDir, "testfile.txt" );
@@ -399,7 +399,7 @@ public class IOTest {
 
 
     @Test
-    public void testReadAllFromHttp () throws Exception {
+    public void testReadAllFromHttp() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 9777 ), 0 );
         server.createContext( "/test", new MyHandler() );
@@ -424,17 +424,17 @@ public class IOTest {
         private List<Proxy> proxyList = Collections.EMPTY_LIST;
         private final String dataFile;
 
-        public ProxyLoader () {
+        public ProxyLoader() {
             this.dataFile = DATA_FILE;
             init();
         }
 
-        public ProxyLoader ( String dataFile ) {
+        public ProxyLoader( String dataFile ) {
             this.dataFile = DATA_FILE;
             init();
         }
 
-        private void init () {
+        private void init() {
             List<String> lines = IO.readLines( dataFile );
             proxyList = new ArrayList<>( lines.size() );
 
@@ -443,15 +443,15 @@ public class IOTest {
             }
         }
 
-        public String getDataFile () {
+        public String getDataFile() {
             return this.dataFile;
         }
 
-        public static List<Proxy> loadProxies () {
+        public static List<Proxy> loadProxies() {
             return new ProxyLoader().getProxyList();
         }
 
-        public List<Proxy> getProxyList () {
+        public List<Proxy> getProxyList() {
             return proxyList;
         }
 
@@ -461,23 +461,23 @@ public class IOTest {
         private final String address;
         private final int port;
 
-        public Proxy ( String address, int port ) {
+        public Proxy( String address, int port ) {
             this.address = address;
             this.port = port;
         }
 
-        public static Proxy createProxy ( String line ) {
+        public static Proxy createProxy( String line ) {
             String[] lineSplit = line.split( ":" );
             String address = lineSplit[ 0 ];
             int port = parseInt( lineSplit[ 1 ] );
             return new Proxy( address, port );
         }
 
-        public String getAddress () {
+        public String getAddress() {
             return address;
         }
 
-        public int getPort () {
+        public int getPort() {
             return port;
         }
     }
@@ -490,7 +490,7 @@ public class IOTest {
 
         private static final Pattern addressPattern = Pattern.compile( "^(\\d{1,3}[.]{1}){3}[0-9]{1,3}$" );
 
-        private Proxy2 ( String address, int port ) {
+        private Proxy2( String address, int port ) {
 
             /* Validate address in not null.*/
             Objects.requireNonNull( address, "address should not be null" );
@@ -510,22 +510,22 @@ public class IOTest {
             this.port = port;
         }
 
-        private static Proxy2 createProxy ( String line ) {
+        private static Proxy2 createProxy( String line ) {
             String[] lineSplit = line.split( ":" );
             String address = lineSplit[ 0 ];
             int port = parseInt( lineSplit[ 1 ] );
             return new Proxy2( address, port );
         }
 
-        public final String getAddress () {
+        public final String getAddress() {
             return address;
         }
 
-        public final int getPort () {
+        public final int getPort() {
             return port;
         }
 
-        public static List<Proxy2> loadProxies () {
+        public static List<Proxy2> loadProxies() {
             List<String> lines = IO.readLines( DATA_FILE );
             List<Proxy2> proxyList = new ArrayList<>( lines.size() );
 
@@ -538,7 +538,7 @@ public class IOTest {
     }
 
     @Test
-    public void proxyTest () {
+    public void proxyTest() {
         List<Proxy> proxyList = ProxyLoader.loadProxies();
         assertEquals(
                 5, len( proxyList )
@@ -569,7 +569,7 @@ public class IOTest {
     }
 
     @Test
-    public void proxyTest2 () {
+    public void proxyTest2() {
         List<Proxy2> proxyList = Proxy2.loadProxies();
         assertEquals(
                 5, len( proxyList )
@@ -601,7 +601,7 @@ public class IOTest {
 
 
     @Test
-    public void readClasspathResource () {
+    public void readClasspathResource() {
 
 //        I added classpath reading, listing to IO.
 //

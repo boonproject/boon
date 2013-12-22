@@ -20,7 +20,7 @@ public class SetsTest {
 
 
     @Test
-    public void simple () {
+    public void simple() {
         Set<String> set =
                 set( "apple", "oranges", "pears", "grapes", "kiwi" );
 
@@ -31,7 +31,7 @@ public class SetsTest {
 
 
     @Test
-    public void sorted () {
+    public void sorted() {
         NavigableSet<String> set =
                 sortedSet( "apple", "kiwi", "oranges", "pears", "pineapple" );
 
@@ -109,7 +109,7 @@ public class SetsTest {
 
 
     @Test
-    public void copyTest () {
+    public void copyTest() {
         Set<String> set = set( "apple", "pear", "orange" );
 
         Set<String> set2;
@@ -140,7 +140,7 @@ public class SetsTest {
     }
 
     @Test
-    public void creation () {
+    public void creation() {
 
         Set<String> set = set( "apple", "pear", "orange" );
 
@@ -236,7 +236,7 @@ public class SetsTest {
     }
 
     @Test
-    public void creationalEquals () {
+    public void creationalEquals() {
 
         assertTrue(
 
@@ -252,7 +252,7 @@ public class SetsTest {
     }
 
     @Test
-    public void enumerationTest () {
+    public void enumerationTest() {
         Set<String> set = set( "apple", "grape", "pears" );
         Set<String> set2 = set( enumeration( set ) );
         assertEquals(
@@ -263,7 +263,7 @@ public class SetsTest {
     Class<String> string = String.class;
 
 
-    private void simpleOperations ( Set<String> set ) {
+    private void simpleOperations( Set<String> set ) {
 
         add( set, "apple" );
 
@@ -299,27 +299,27 @@ public class SetsTest {
 
 
     @Test
-    public void simpleOperationsSortedSet () {
+    public void simpleOperationsSortedSet() {
 
         simpleOperations( sortedSet( string ) );
     }
 
     @Test
-    public void simpleOperationsSet () {
+    public void simpleOperationsSet() {
 
         simpleOperations( set( string ) );
 
     }
 
     @Test
-    public void simpleOperationsSafeSet () {
+    public void simpleOperationsSafeSet() {
 
         simpleOperations( safeSet( string ) );
 
     }
 
     @Test
-    public void simpleOperationsSafeSortedSet () {
+    public void simpleOperationsSafeSortedSet() {
 
         simpleOperations( safeSortedSet( string ) );
 

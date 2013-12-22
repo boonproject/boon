@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 
 public class EchoClient {
-    public static void main ( String... args ) throws IOException {
+    public static void main( String... args ) throws IOException {
 
         String host;
         int port;

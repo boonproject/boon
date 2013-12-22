@@ -13,7 +13,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
     final long time;
 
 
-    CacheEntry ( KEY key, VALUE value, int order, CacheType type, long time ) {
+    CacheEntry( KEY key, VALUE value, int order, CacheType type, long time ) {
         this.order = order;
         this.value = value;
         this.key = key;
@@ -23,7 +23,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
     }
 
     @Override
-    public final int compareTo ( CacheEntry other ) {
+    public final int compareTo( CacheEntry other ) {
         switch ( type ) {
 
             case LFU:
@@ -40,7 +40,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
     }
 
 
-    private final int compareReadCount ( CacheEntry other ) {
+    private final int compareReadCount( CacheEntry other ) {
 
         if ( readCount.get() > other.readCount.get() ) {  //this read count is greater so it has higher priority
             return 1;
@@ -53,7 +53,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         return 0;
     }
 
-    private final int compareTime ( CacheEntry other ) {
+    private final int compareTime( CacheEntry other ) {
 
         if ( time > other.time ) {  //this time stamp is  greater so it has higher priority
             return 1;
@@ -66,7 +66,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         return 0;
     }
 
-    private final int compareOrder ( CacheEntry other ) {
+    private final int compareOrder( CacheEntry other ) {
 
         if ( order > other.order ) {  //this order is lower so it has higher priority
             return 1;
@@ -79,7 +79,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         return 0;
     }
 
-    private final int compareToLFU ( CacheEntry other ) {
+    private final int compareToLFU( CacheEntry other ) {
 
         int cmp = compareReadCount( other );
         if ( cmp != 0 ) {
@@ -95,7 +95,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
     }
 
 
-    private final int compareToLRU ( CacheEntry other ) {
+    private final int compareToLRU( CacheEntry other ) {
 
         int cmp = compareTime( other );
         if ( cmp != 0 ) {
@@ -113,7 +113,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
     }
 
 
-    private final int compareToFIFO ( CacheEntry other ) {
+    private final int compareToFIFO( CacheEntry other ) {
         int cmp = compareOrder( other );
         if ( cmp != 0 ) {
             return cmp;
@@ -130,7 +130,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "CE{" +
                 "c=" + readCount +
                 ", ord=" + order +

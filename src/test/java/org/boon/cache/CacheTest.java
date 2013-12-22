@@ -15,19 +15,19 @@ public class CacheTest {
     private FastConcurrentReadLruLfuFifoCache<Integer, Integer> lruCache;
 
     @Before
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
         lruCache = new FastConcurrentReadLruLfuFifoCache<>( 10 );
 
     }
 
     @After
-    public void tearDown () throws Exception {
+    public void tearDown() throws Exception {
 
     }
 
 
     @Test
-    public void fifo () throws Exception {
+    public void fifo() throws Exception {
 
         lruCache = new FastConcurrentReadLruLfuFifoCache<>( true, 10, CacheType.FIFO );
 
@@ -64,7 +64,7 @@ public class CacheTest {
     }
 
     @Test
-    public void test () throws Exception {
+    public void test() throws Exception {
 
 
         lruCache = new FastConcurrentReadLruLfuFifoCache<>( true, 10, CacheType.LFU );

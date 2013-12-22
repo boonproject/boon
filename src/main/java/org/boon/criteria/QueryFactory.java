@@ -9,20 +9,20 @@ import java.util.List;
 
 public class QueryFactory {
 
-    public static boolean test ( Object obj, Criteria exp ) {
+    public static boolean test( Object obj, Criteria exp ) {
         return exp.test( obj );
     }
 
-    public static boolean andTest ( Object obj, Criteria... exp ) {
+    public static boolean andTest( Object obj, Criteria... exp ) {
         return CriteriaFactory.and( exp ).test( obj );
     }
 
-    public static boolean orTest ( Object obj, Criteria... exp ) {
+    public static boolean orTest( Object obj, Criteria... exp ) {
         return CriteriaFactory.or( exp ).test( obj );
     }
 
 
-    public static <T> List<T> filter ( Collection<T> items, Criteria exp ) {
+    public static <T> List<T> filter( Collection<T> items, Criteria exp ) {
         if ( items.size() == 0 ) {
             return Collections.EMPTY_LIST;
         }

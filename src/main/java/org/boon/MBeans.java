@@ -13,8 +13,8 @@ import java.util.*;
  */
 public class MBeans {
 
-    public static Map<String, Object> map ( final MBeanServer server,
-                                            final ObjectName name ) {
+    public static Map<String, Object> map( final MBeanServer server,
+                                           final ObjectName name ) {
 
 
         Objects.requireNonNull( server, "server cannot be null" );
@@ -53,7 +53,7 @@ public class MBeans {
 
     }
 
-    public static String[] getAttributeNames ( MBeanInfo info ) {
+    public static String[] getAttributeNames( MBeanInfo info ) {
         final MBeanAttributeInfo[] attributes = info.getAttributes();
         final String[] attributeNames = new String[ attributes.length ];
 
@@ -64,7 +64,7 @@ public class MBeans {
         return attributeNames;
     }
 
-    private static Object convertValue ( Object value ) {
+    private static Object convertValue( Object value ) {
 
 
             /* convert nulls */
@@ -89,7 +89,7 @@ public class MBeans {
         return value;
     }
 
-    private static Object convertFromTabularDataToMap ( Object value ) {
+    private static Object convertFromTabularDataToMap( Object value ) {
         final TabularData data = ( TabularData ) value;
 
         final Set<List<?>> keys = ( Set<List<?>> ) data.keySet();
@@ -109,7 +109,7 @@ public class MBeans {
         return value;
     }
 
-    private static Object convertFromCompositeDataToToMap ( Object value ) {
+    private static Object convertFromCompositeDataToToMap( Object value ) {
         final CompositeData data = ( CompositeData ) value;
         final Map<String, Object> map = new HashMap<String, Object>();
         final Set<String> keySet = data.getCompositeType().keySet();
@@ -122,7 +122,7 @@ public class MBeans {
         return value;
     }
 
-    private static Object convertFromArrayToList ( Object value ) {
+    private static Object convertFromArrayToList( Object value ) {
         final List<Object> list = new ArrayList<Object>();
 
         final int length = Array.getLength( value );
@@ -136,7 +136,7 @@ public class MBeans {
     }
 
 
-    public static DynamicMBean createMBean ( final Object instance, final Class<?> managedInterface ) {
+    public static DynamicMBean createMBean( final Object instance, final Class<?> managedInterface ) {
 
         Objects.requireNonNull( instance, "instance cannot be null" );
         Objects.requireNonNull( managedInterface, "managedInterface cannot be null" );
@@ -156,7 +156,7 @@ public class MBeans {
         }
     }
 
-    public static void registerMBean ( final String prefix, final String name, final Object mbean ) {
+    public static void registerMBean( final String prefix, final String name, final Object mbean ) {
 
         Objects.requireNonNull( prefix, "prefix can't be null" );
         Objects.requireNonNull( name, "name can't be null" );

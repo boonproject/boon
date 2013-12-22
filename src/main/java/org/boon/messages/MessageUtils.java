@@ -13,10 +13,10 @@ public final class MessageUtils {
     /**
      * Stops creation of a new MessageUtils object.
      */
-    private MessageUtils () {
+    private MessageUtils() {
     }
 
-    public static String createLabelNoPlural ( String fieldName, final ResourceBundle bundle ) {
+    public static String createLabelNoPlural( String fieldName, final ResourceBundle bundle ) {
         if ( fieldName.endsWith( "es" ) ) {
             fieldName = fieldName.substring( 0, fieldName.length() - 2 );
         } else if ( fieldName.endsWith( "s" ) ) {
@@ -33,8 +33,8 @@ public final class MessageUtils {
      * @param bundle    ResourceBundle
      * @return Label from the Message Source.
      */
-    public static String getLabel ( final String fieldName,
-                                    final ResourceBundle bundle ) {
+    public static String getLabel( final String fieldName,
+                                   final ResourceBundle bundle ) {
 
         String label;
 
@@ -56,8 +56,8 @@ public final class MessageUtils {
      * @param bundle    ResourceBundle
      * @return Label from the Message Source.
      */
-    public static String createLabelWithNameSpace ( final String namespace, final String fieldName,
-                                                    final ResourceBundle bundle ) {
+    public static String createLabelWithNameSpace( final String namespace, final String fieldName,
+                                                   final ResourceBundle bundle ) {
 
         String label;
         try {
@@ -94,8 +94,8 @@ public final class MessageUtils {
      * @param bundle    bundle
      * @return Tool Tip from the Message Source.
      */
-    public static String createToolTipWithNameSpace ( final String namespace, final String fieldName,
-                                                      final ResourceBundle bundle, final String toolTipType ) {
+    public static String createToolTipWithNameSpace( final String namespace, final String fieldName,
+                                                     final ResourceBundle bundle, final String toolTipType ) {
 
         String toolTip = null;
         try {
@@ -121,7 +121,7 @@ public final class MessageUtils {
      * @param fieldName fieldName
      * @return generated label name.
      */
-    public static String generateLabelValue ( final String fieldName ) {
+    public static String generateLabelValue( final String fieldName ) {
 
         final StringBuilder buffer = new StringBuilder( fieldName.length() * 2 );
 
@@ -134,7 +134,7 @@ public final class MessageUtils {
             boolean shouldContinue = true;
             char[] chars = fieldName.toCharArray();
 
-            void processFieldName () {
+            void processFieldName() {
 
                 for ( int index = 0; index < chars.length; index++ ) {
                     char cchar = chars[ index ];
@@ -169,8 +169,8 @@ public final class MessageUtils {
 
             }
 
-            private void processCharWasNumber ( StringBuilder buffer,
-                                                int index, char cchar ) {
+            private void processCharWasNumber( StringBuilder buffer,
+                                               int index, char cchar ) {
                 if ( lastCharWasSpecial ) {
                     return;
                 }
@@ -190,8 +190,8 @@ public final class MessageUtils {
                 }
             }
 
-            private char processFirstCharacterCheck ( final StringBuilder buffer,
-                                                      int index, char cchar ) {
+            private char processFirstCharacterCheck( final StringBuilder buffer,
+                                                     int index, char cchar ) {
                 /* Always capitalize the first character. */
                 if ( index == 0 ) {
                     cchar = Character.toUpperCase( cchar );
@@ -201,7 +201,7 @@ public final class MessageUtils {
                 return cchar;
             }
 
-            private char processCapitalizeCommand ( char cchar ) {
+            private char processCapitalizeCommand( char cchar ) {
                 /* Capitalize the character. */
                 if ( capNextChar ) {
                     capNextChar = false;
@@ -210,8 +210,8 @@ public final class MessageUtils {
                 return cchar;
             }
 
-            private void processSpecialChars ( final StringBuilder buffer,
-                                               char cchar ) {
+            private void processSpecialChars( final StringBuilder buffer,
+                                              char cchar ) {
                 lastCharWasSpecial = false;
                 /* If the character is '.' or '_' then append a space and mark
                  * the next iteration to capitalize.
@@ -226,8 +226,8 @@ public final class MessageUtils {
 
             }
 
-            private void processCharWasUpperCase ( final StringBuilder buffer,
-                                                   int index, char cchar ) {
+            private void processCharWasUpperCase( final StringBuilder buffer,
+                                                  int index, char cchar ) {
                 /* If the character is uppercase, append a space and keep track
                  * that the last character was uppercase for the next iteration.
 				 */

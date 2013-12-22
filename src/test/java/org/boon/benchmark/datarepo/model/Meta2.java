@@ -7,11 +7,11 @@ public class Meta2 {
     private String name2 = "bar";
 
 
-    public Meta2 ( String name ) {
+    public Meta2( String name ) {
         this.name2 = name;
     }
 
-    public Meta2 () {
+    public Meta2() {
     }
 
 

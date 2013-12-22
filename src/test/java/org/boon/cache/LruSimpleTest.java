@@ -7,7 +7,7 @@ import static org.boon.Exceptions.die;
 public class LruSimpleTest {
 
     @Test
-    public void test () {
+    public void test() {
         Cache<Integer, Integer> cache = new SimpleCache<>( 4 );
 
 

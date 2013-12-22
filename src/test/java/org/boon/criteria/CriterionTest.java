@@ -9,13 +9,13 @@ import static org.boon.Exceptions.die;
 public class CriterionTest {
 
     @Before
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
 
 
     }
 
     @Test
-    public void test () throws Exception {
+    public void test() throws Exception {
         Criteria criteria = CriteriaFactory.and( CriteriaFactory.eq( "foo", "bar" ) );
         criteria.toString();
 

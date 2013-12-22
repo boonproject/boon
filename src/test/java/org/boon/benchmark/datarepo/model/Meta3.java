@@ -8,13 +8,13 @@ public class Meta3 {
     private static long total = 5;
 
 
-    public Meta3 ( String name ) {
+    public Meta3( String name ) {
         this.name3 = name;
         num = total++;
 
     }
 
-    public Meta3 () {
+    public Meta3() {
         num = total++;
     }
 

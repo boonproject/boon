@@ -8,12 +8,12 @@ public class RepoBuilderTest {
 
 
     @Before
-    public void setup () {
+    public void setup() {
         test = new RepoDefaultTest();
 
     }
 
-    public void runAll () throws Exception {
+    public void runAll() throws Exception {
 
         test.testAdd();
         test.testGet();
@@ -29,7 +29,7 @@ public class RepoBuilderTest {
 
 
     @Test
-    public void testCreateFromBuilderNestedIndex () throws Exception {
+    public void testCreateFromBuilderNestedIndex() throws Exception {
 
         test.repo = TestHelper.createFromBuilderNestedIndex();
         runAll();
@@ -37,7 +37,7 @@ public class RepoBuilderTest {
     }
 
     @Test
-    public void testWithTransformAndCollation () throws Exception {
+    public void testWithTransformAndCollation() throws Exception {
 
         test.repo = TestHelper.createFromBuilderWithTransformAndCollation();
         runAll();
@@ -45,7 +45,7 @@ public class RepoBuilderTest {
     }
 
     @Test
-    public void testNormal () throws Exception {
+    public void testNormal() throws Exception {
 
         test.repo = TestHelper.createFromBuilder();
         runAll();
@@ -53,7 +53,7 @@ public class RepoBuilderTest {
     }
 
     @Test
-    public void testNoIndexes () throws Exception {
+    public void testNoIndexes() throws Exception {
 
         test.repo = TestHelper.createWithNoIndexes();
         runAll();
@@ -61,7 +61,7 @@ public class RepoBuilderTest {
     }
 
     @Test
-    public void testNormalLogAndClone () throws Exception {
+    public void testNormalLogAndClone() throws Exception {
 
         test.repo = TestHelper.createFromBuilderLogAndClone();
         runAll();
@@ -69,7 +69,7 @@ public class RepoBuilderTest {
     }
 
     @Test
-    public void testNoReflect () throws Exception {
+    public void testNoReflect() throws Exception {
 
         test.repo = TestHelper.createBuilderNoReflection();
         runAll();
@@ -77,7 +77,7 @@ public class RepoBuilderTest {
     }
 
     @Test
-    public void testWithProps () throws Exception {
+    public void testWithProps() throws Exception {
 
         test.repo = TestHelper.createFromBuilderUsingPropertyAccess();
         runAll();
@@ -86,7 +86,7 @@ public class RepoBuilderTest {
 
 
     @Test
-    public void testWithEvents () throws Exception {
+    public void testWithEvents() throws Exception {
 
         test.repo = TestHelper.createFromBuilderEvents();
         runAll();

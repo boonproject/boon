@@ -5,18 +5,18 @@ public class Partner extends Subject {
 
     private final long partnerId;
 
-    public Partner ( long partnerId ) {
+    public Partner( long partnerId ) {
         super( "Partner:" + partnerId );
         this.partnerId = partnerId;
 
     }
 
-    public long getPartnerId () {
+    public long getPartnerId() {
         return partnerId;
     }
 
     @Override
-    public boolean equals ( Object o ) {
+    public boolean equals( Object o ) {
         if ( this == o ) return true;
         if ( !( o instanceof Partner ) ) return false;
 
@@ -28,7 +28,7 @@ public class Partner extends Subject {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return ( int ) ( partnerId ^ ( partnerId >>> 32 ) );
     }
 }

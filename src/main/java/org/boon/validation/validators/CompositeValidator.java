@@ -26,7 +26,7 @@ public class CompositeValidator implements FieldValidator {
     private boolean stopOnFirstRule = false;
     private boolean stopOnBlank = true;
 
-    public void setValidatorList ( List<FieldValidator> list ) {
+    public void setValidatorList( List<FieldValidator> list ) {
         this.validatorList = list;
         StopOnRuleValidator stopOnRuleValidator = null;
         for ( FieldValidator validator : list ) {
@@ -53,7 +53,7 @@ public class CompositeValidator implements FieldValidator {
         }
     }
 
-    public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
+    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
 
         ValidatorMessages messages = new ValidatorMessages(); //holds error messages.
         
@@ -74,7 +74,7 @@ public class CompositeValidator implements FieldValidator {
         return messages;
     }
 
-    private void runValidationRules ( Object object, String fieldLabel, ValidatorMessages messages ) {
+    private void runValidationRules( Object object, String fieldLabel, ValidatorMessages messages ) {
         for ( FieldValidator validator : validatorList ) {
             putArgs( validator );
             ValidatorMessage message = ( ValidatorMessage ) validator.validate( object, fieldLabel );
@@ -89,7 +89,7 @@ public class CompositeValidator implements FieldValidator {
         }
     }
 
-    private ValidatorMessage validateWithRequriedIfPresent ( Object object, String fieldLabel, ValidatorMessages messages ) {
+    private ValidatorMessage validateWithRequriedIfPresent( Object object, String fieldLabel, ValidatorMessages messages ) {
         ValidatorMessage requiredMessage = null;
         if ( requiredValidator != null ) {
             putArgs( requiredValidator );
@@ -101,7 +101,7 @@ public class CompositeValidator implements FieldValidator {
         return requiredMessage;
     }
 
-    private void putArgs ( FieldValidator validator ) {
+    private void putArgs( FieldValidator validator ) {
         if ( validator instanceof BaseValidator ) {
             BaseValidator aValidator = ( BaseValidator ) validator;
             aValidator.setDetailArgs( this.detailArgs );
@@ -110,16 +110,16 @@ public class CompositeValidator implements FieldValidator {
     }
 
 
-    public void setDetailArgs ( List<String> detailArgKeys ) {
+    public void setDetailArgs( List<String> detailArgKeys ) {
         this.detailArgs = detailArgKeys;
     }
 
 
-    public void setSummaryArgs ( List<String> summaryArgKeys ) {
+    public void setSummaryArgs( List<String> summaryArgKeys ) {
         this.summaryArgs = summaryArgKeys;
     }
 
-    public void setStopOnBlank ( boolean stopOnBlank ) {
+    public void setStopOnBlank( boolean stopOnBlank ) {
         this.stopOnBlank = stopOnBlank;
     }
 

@@ -8,7 +8,7 @@ import org.boon.primitive.Chr;
 
 public class JsonStringDecoder {
 
-    public static String decode ( String string ) {
+    public static String decode( String string ) {
         if ( !string.contains( "\\" ) ) {
             return string;
         }
@@ -16,13 +16,13 @@ public class JsonStringDecoder {
         return decode( cs, 0, cs.length );
     }
 
-    public static String decode ( char[] chars ) {
+    public static String decode( char[] chars ) {
 
         return decode( chars, 0, chars.length );
     }
 
 
-    public static String decode ( char[] chars, int start, int to ) {
+    public static String decode( char[] chars, int start, int to ) {
 
         if ( !Chr.contains( chars, '\\', start, to - start ) ) {
             return new String( chars, start, to - start );
@@ -31,7 +31,7 @@ public class JsonStringDecoder {
     }
 
 
-    public static String decodeForSure ( CharSequence cs, int start, int to ) {
+    public static String decodeForSure( CharSequence cs, int start, int to ) {
         if ( cs instanceof String ) {
             return decodeForSure( ( String ) cs, start, to );
         } else {
@@ -41,16 +41,16 @@ public class JsonStringDecoder {
     }
 
 
-    public static String decodeForSure ( String string, int start, int to ) {
+    public static String decodeForSure( String string, int start, int to ) {
         char[] cs = FastStringUtils.toCharArray( string );
         return decodeForSure( cs, start, to );
     }
 
-    public static String decodeForSure ( char[] chars ) {
+    public static String decodeForSure( char[] chars ) {
         return decodeForSure( chars, 0, chars.length );
     }
 
-    public static String decodeForSure ( char[] chars, int start, int to ) {
+    public static String decodeForSure( char[] chars, int start, int to ) {
 
         CharBuf builder = CharBuf.create( to - start );
         for ( int index = start; index < to; index++ ) {
@@ -115,7 +115,7 @@ public class JsonStringDecoder {
     }
 
 
-    public static String decode ( final byte[] chars, int start, int to ) {
+    public static String decode( final byte[] chars, int start, int to ) {
 
         final byte[] cs = chars;
 

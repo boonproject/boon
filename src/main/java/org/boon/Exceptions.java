@@ -11,25 +11,25 @@ import static org.boon.Boon.sputs;
 public class Exceptions {
 
 
-    public static boolean die () {
+    public static boolean die() {
         throw new SoftenedException( "died" );
     }
 
-    public static boolean die ( String message ) {
+    public static boolean die( String message ) {
         throw new SoftenedException( message );
     }
 
 
-    public static <T> T die ( Class<T> clazz, String message ) {
+    public static <T> T die( Class<T> clazz, String message ) {
         throw new SoftenedException( message );
     }
 
-    public static void handle ( java.lang.Exception e ) {
+    public static void handle( java.lang.Exception e ) {
         throw new SoftenedException( e );
     }
 
 
-    public static <T> T handle ( Class<T> clazz, java.lang.Exception e ) {
+    public static <T> T handle( Class<T> clazz, java.lang.Exception e ) {
 
         if ( e instanceof SoftenedException ) {
             throw ( SoftenedException ) e;
@@ -37,13 +37,13 @@ public class Exceptions {
         throw new SoftenedException( e );
     }
 
-    public static <T> T handle ( Class<T> clazz, String message, java.lang.Exception e ) {
+    public static <T> T handle( Class<T> clazz, String message, java.lang.Exception e ) {
 
         throw new SoftenedException( message, e );
     }
 
 
-    public static <T> T tryIt ( Class<T> clazz, TrialWithReturn<T> tryIt ) {
+    public static <T> T tryIt( Class<T> clazz, TrialWithReturn<T> tryIt ) {
         try {
             return tryIt.tryIt();
         } catch ( java.lang.Exception ex ) {
@@ -52,7 +52,7 @@ public class Exceptions {
     }
 
 
-    public static void tryIt ( Trial tryIt ) {
+    public static void tryIt( Trial tryIt ) {
         try {
             tryIt.tryIt();
         } catch ( java.lang.Exception ex ) {
@@ -60,11 +60,11 @@ public class Exceptions {
         }
     }
 
-    public static void handle ( String message, Throwable e ) {
+    public static void handle( String message, Throwable e ) {
         throw new SoftenedException( message, e );
     }
 
-    public static void tryIt ( String message, Trial tryIt ) {
+    public static void tryIt( String message, Trial tryIt ) {
         try {
             tryIt.tryIt();
         } catch ( java.lang.Exception ex ) {
@@ -74,30 +74,30 @@ public class Exceptions {
 
 
     public static interface Trial {
-        void tryIt () throws java.lang.Exception;
+        void tryIt() throws java.lang.Exception;
     }
 
     public static interface TrialWithReturn<T> {
-        T tryIt () throws java.lang.Exception;
+        T tryIt() throws java.lang.Exception;
     }
 
     public static class SoftenedException extends RuntimeException {
 
-        public SoftenedException ( String message ) {
+        public SoftenedException( String message ) {
             super( message );
         }
 
-        public SoftenedException ( String message, Throwable cause ) {
+        public SoftenedException( String message, Throwable cause ) {
             super( message, cause );
         }
 
-        public SoftenedException ( Throwable cause ) {
+        public SoftenedException( Throwable cause ) {
             super( "Wrapped Exception", cause );
         }
 
 
         @Override
-        public void printStackTrace ( PrintStream s ) {
+        public void printStackTrace( PrintStream s ) {
 
             s.println( this.getMessage() );
             if ( getCause() != null ) {
@@ -111,23 +111,23 @@ public class Exceptions {
         }
 
         @Override
-        public String getMessage () {
+        public String getMessage() {
             return super.getMessage() + ( getCause() == null ? "" :
                     getCauseMessage() );
         }
 
-        private String getCauseMessage () {
+        private String getCauseMessage() {
             return "\n CAUSE " + getCause().getClass().getName() + " :: " +
                     getCause().getMessage();
         }
 
         @Override
-        public String getLocalizedMessage () {
+        public String getLocalizedMessage() {
             return this.getMessage();
         }
 
         @Override
-        public StackTraceElement[] getStackTrace () {
+        public StackTraceElement[] getStackTrace() {
             if ( getCause() != null ) {
                 return getCause().getStackTrace();
             } else {
@@ -137,12 +137,12 @@ public class Exceptions {
         }
 
         @Override
-        public Throwable getCause () {
+        public Throwable getCause() {
             return super.getCause();
         }
 
         @Override
-        public void printStackTrace ( PrintWriter s ) {
+        public void printStackTrace( PrintWriter s ) {
 
             s.println( this.getMessage() );
 
@@ -156,7 +156,7 @@ public class Exceptions {
         }
 
         @Override
-        public void printStackTrace () {
+        public void printStackTrace() {
 
             System.err.println( this.getMessage() );
 
@@ -171,7 +171,7 @@ public class Exceptions {
     }
 
 
-    public static String toString ( Exception ex ) {
+    public static String toString( Exception ex ) {
         CharBuf buffer = CharBuf.create( 255 );
         buffer.addLine( ex.getLocalizedMessage() );
 
@@ -187,7 +187,7 @@ public class Exceptions {
     }
 
 
-    public static String toJSON ( Exception ex ) {
+    public static String toJSON( Exception ex ) {
         ByteBuf buffer = ByteBuf.create( 255 );
         buffer.addByte( '{' );
 

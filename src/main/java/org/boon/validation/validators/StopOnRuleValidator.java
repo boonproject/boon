@@ -17,15 +17,15 @@ import org.boon.validation.ValidatorMessageHolder;
 public class StopOnRuleValidator implements FieldValidator {
     private String ruleName;
 
-    public String getRuleName () {
+    public String getRuleName() {
         return ruleName;
     }
 
-    public void setRuleName ( String ruleName ) {
+    public void setRuleName( String ruleName ) {
         this.ruleName = ruleName;
     }
 
-    public ValidatorMessageHolder validate ( Object fieldValue, String fieldLabel ) {
+    public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
         return new ValidatorMessage();
     }
 

@@ -25,7 +25,7 @@ import static org.boon.Maps.in;
 public class ZipFileSystemTest {
 
 
-    public static void main ( String... args ) throws Exception {
+    public static void main( String... args ) throws Exception {
 
 
         String someResource = args.length > 0 ? args[ 0 ] :

@@ -16,11 +16,11 @@ public class Employee {
     private long empNum;
     //private int _hashCode = -1;
 
-    public String getId () {
+    public String getId() {
         return id;
     }
 
-    public void setId ( String id ) {
+    public void setId( String id ) {
         this.id = id;
     }
 
@@ -40,12 +40,12 @@ public class Employee {
         num++;
     }
 
-    public static Employee employee ( String f, String l ) {
+    public static Employee employee( String f, String l ) {
         return employee( f, l, "" + System.nanoTime(), "05.05.50", 100_000_000, false );
 
     }
 
-    public static Employee employee ( String f, String l, String s, String d, int salary, boolean sales ) {
+    public static Employee employee( String f, String l, String s, String d, int salary, boolean sales ) {
         Employee e = null;
 
         if ( sales ) {
@@ -62,7 +62,7 @@ public class Employee {
 
     }
 
-    public static Employee employee ( String f, String l, String s, String d, int salary ) {
+    public static Employee employee( String f, String l, String s, String d, int salary ) {
         Employee e = new Employee();
         e.birthDate = Conversions.toDate( d );
         e.lastName = l;
@@ -72,7 +72,7 @@ public class Employee {
         return e;
     }
 
-    public static List<Employee> employees ( Employee... _employees ) {
+    public static List<Employee> employees( Employee... _employees ) {
         List<Employee> employees = new ArrayList<Employee>( _employees.length );
         for ( Employee emp : _employees ) {
             employees.add( emp );
@@ -81,40 +81,40 @@ public class Employee {
     }
 
 
-    public String getFirstName () {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName ( String firstName ) {
+    public void setFirstName( String firstName ) {
         this.firstName = firstName;
     }
 
-    public String getLastName () {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName ( String lastName ) {
+    public void setLastName( String lastName ) {
         this.lastName = lastName;
     }
 
-    public String getSsn () {
+    public String getSsn() {
         return id;
     }
 
-    public void setSsn ( String ssn ) {
+    public void setSsn( String ssn ) {
         this.id = ssn;
     }
 
-    public Date getBirthDate () {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate ( Date birthDate ) {
+    public void setBirthDate( Date birthDate ) {
         this.birthDate = birthDate;
     }
 
     @Override
-    public boolean equals ( Object o ) {
+    public boolean equals( Object o ) {
         if ( this == o ) return true;
         if ( o == null || getClass() != o.getClass() ) return false;
 
@@ -129,7 +129,7 @@ public class Employee {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
 //        if (_hashCode != -1) {
 //            return _hashCode;
 //        }
@@ -141,16 +141,16 @@ public class Employee {
     }
 
 
-    public int getSalary () {
+    public int getSalary() {
         return salary;
     }
 
-    public void setSalary ( int salary ) {
+    public void setSalary( int salary ) {
         this.salary = salary;
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "Employee{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -163,19 +163,19 @@ public class Employee {
                 '}';
     }
 
-    public long getEmpNum () {
+    public long getEmpNum() {
         return empNum;
     }
 
-    public void setEmpNum ( long empNum ) {
+    public void setEmpNum( long empNum ) {
         this.empNum = empNum;
     }
 
-    public Department getDepartment () {
+    public Department getDepartment() {
         return department;
     }
 
-    public void setDepartment ( Department department ) {
+    public void setDepartment( Department department ) {
         this.department = department;
     }
 }

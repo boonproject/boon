@@ -43,7 +43,7 @@ public class Collections {
      * @param <T>     The type this criteria listStream will return
      * @return generic listStream decorated with criteria features.
      */
-    public static <T> List<T> $q ( final List<T> list, Class<?>... classes ) {
+    public static <T> List<T> $q( final List<T> list, Class<?>... classes ) {
         return listQuery( list, true, true, classes );
     }
 
@@ -56,7 +56,7 @@ public class Collections {
      * @return the new decorated listStream.
      * @see Collections#plainList(java.util.List)
      */
-    public static <T> List<T> $c ( final List<T> list ) {
+    public static <T> List<T> $c( final List<T> list ) {
         return plainList( list );
     }
 
@@ -69,7 +69,7 @@ public class Collections {
      * @return the new decorated listStream.
      * @see Collections#$c(java.util.List)
      */
-    private static <T> List<T> plainList ( List<T> list ) {
+    private static <T> List<T> plainList( List<T> list ) {
         if ( list instanceof QList ) {
             return ( ( QList ) list ).list;
         } else {
@@ -86,7 +86,7 @@ public class Collections {
      * @return generic listStream decorated with criteria features.
      * @see Collections#$q(java.util.List, Class[])
      */
-    public static <T> List<T> listQuery ( final List<T> list ) {
+    public static <T> List<T> listQuery( final List<T> list ) {
         return listQuery( list, true, true );
     }
 
@@ -101,7 +101,7 @@ public class Collections {
      * @param classes   listStream of classes that we can criteria against, these can be component classes
      * @return generic listStream decorated with criteria features.
      */
-    public static <T> List<T> listQuery ( final List<T> list, boolean useField, boolean useUnSafe, Class<?>... classes ) {
+    public static <T> List<T> listQuery( final List<T> list, boolean useField, boolean useUnSafe, Class<?>... classes ) {
         if ( list == null || list.size() == 0 ) {
             return list;
         }
@@ -128,7 +128,7 @@ public class Collections {
      * @param <T> generic type
      * @return new decorated listStream
      */
-    public static <T> Set<T> $q ( final Set<T> set ) {
+    public static <T> Set<T> $q( final Set<T> set ) {
         return setQuery( set, true, true );
     }
 
@@ -139,7 +139,7 @@ public class Collections {
      * @param <T> generic type
      * @return new decorated listStream
      */
-    public static <T> Set<T> $c ( final Set<T> set ) {
+    public static <T> Set<T> $c( final Set<T> set ) {
         return plainSet( set );
     }
 
@@ -151,7 +151,7 @@ public class Collections {
      * @param <T> generic type
      * @return new decorated listStream
      */
-    private static <T> Set<T> plainSet ( Set<T> set ) {
+    private static <T> Set<T> plainSet( Set<T> set ) {
         if ( set instanceof QSet ) {
             return ( ( QSet ) set ).set;
         } else {
@@ -166,7 +166,7 @@ public class Collections {
      * @param <T> generic type
      * @return new decorated listStream
      */
-    public static <T> Set<T> setQuery ( final Set<T> set ) {
+    public static <T> Set<T> setQuery( final Set<T> set ) {
         return setQuery( set, true, true );
     }
 
@@ -179,7 +179,7 @@ public class Collections {
      * @param <T>
      * @return
      */
-    public static <T> Set<T> setQuery ( final Set<T> set, boolean useField, boolean useUnSafe ) {
+    public static <T> Set<T> setQuery( final Set<T> set, boolean useField, boolean useUnSafe ) {
         if ( set == null || set.size() == 0 ) {
             return set;
         }
@@ -201,7 +201,7 @@ public class Collections {
      * @param <T>
      * @return
      */
-    private static <T> SearchableCollectionComposer getSearchableCollectionComposer ( Collection set, boolean useField, boolean useUnSafe, Class<?>... classes ) {
+    private static <T> SearchableCollectionComposer getSearchableCollectionComposer( Collection set, boolean useField, boolean useUnSafe, Class<?>... classes ) {
         SearchableCollectionComposer query = SPIFactory.getSearchableCollectionFactory().get();
 
 
@@ -263,7 +263,7 @@ public class Collections {
      * @param <T>         the type of the listStream
      * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
-    public static <T> List<T> query ( final List<T> list, Criteria... expressions ) {
+    public static <T> List<T> query( final List<T> list, Criteria... expressions ) {
         if ( list instanceof QList ) {
             QList qlist = ( QList ) list;
             return qlist.searchCollection().query( expressions );
@@ -280,7 +280,7 @@ public class Collections {
      * @param <T>         the type of the listStream
      * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
-    public static <T> List<T> sortedQuery ( final List<T> list, String sortBy, Criteria... expressions ) {
+    public static <T> List<T> sortedQuery( final List<T> list, String sortBy, Criteria... expressions ) {
         if ( list instanceof QList ) {
             QList qlist = ( QList ) list;
             return qlist.searchCollection().sortedQuery( sortBy, expressions );
@@ -298,7 +298,7 @@ public class Collections {
      * @param <T>         the type of the listStream
      * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
-    public static <T> List<T> query ( final Set<T> set, Criteria... expressions ) {
+    public static <T> List<T> query( final Set<T> set, Criteria... expressions ) {
         if ( set instanceof QSet ) {
             QSet qset = ( QSet ) set;
             return qset.searchCollection().query( expressions );
@@ -314,7 +314,7 @@ public class Collections {
      * @param <T>         the type of the listStream
      * @return the criteria results or an empty listStream if the listStream was not a criteria-able listStream.
      */
-    public static <T> List<T> sortedQuery ( final Set<T> set, String sortBy, Criteria... expressions ) {
+    public static <T> List<T> sortedQuery( final Set<T> set, String sortBy, Criteria... expressions ) {
         if ( set instanceof QSet ) {
             QSet qset = ( QSet ) set;
             return qset.searchCollection().sortedQuery( sortBy, expressions );
@@ -329,7 +329,7 @@ public class Collections {
      * @param fields fields we are going to search for the primary key
      * @return
      */
-    private static String findPrimaryKey ( Map<String, FieldAccess> fields ) {
+    private static String findPrimaryKey( Map<String, FieldAccess> fields ) {
         return "id";
     }
 
@@ -340,12 +340,12 @@ public class Collections {
      * @param field
      * @return
      */
-    private static Function createKeyGetter ( final FieldAccess field ) {
+    private static Function createKeyGetter( final FieldAccess field ) {
 
         Objects.requireNonNull( field, "field cannot be null" );
         return new Function() {
             @Override
-            public Object apply ( Object o ) {
+            public Object apply( Object o ) {
 
                 if ( Reflection.hasField( o.getClass(), field.getName() ) ) {
                     return field.getValue( o );
@@ -367,41 +367,41 @@ public class Collections {
         final Set<T> set;
         final SearchableCollection searchCollection;
 
-        QSet ( Set<T> set, SearchableCollection searchCollection ) {
+        QSet( Set<T> set, SearchableCollection searchCollection ) {
             this.set = set;
             this.searchCollection = searchCollection;
         }
 
         @Override
-        public boolean add ( T item ) {
+        public boolean add( T item ) {
             searchCollection.add( item );
             return set.add( item );
         }
 
         @Override
-        public boolean remove ( Object item ) {
+        public boolean remove( Object item ) {
             searchCollection.delete( ( T ) item );
             return set.remove( item );
         }
 
 
         @Override
-        public Iterator<T> iterator () {
+        public Iterator<T> iterator() {
             return set.iterator();
         }
 
         @Override
-        public int size () {
+        public int size() {
             return set.size();
         }
 
         @Override
-        public SearchableCollection searchCollection () {
+        public SearchableCollection searchCollection() {
             return searchCollection;
         }
 
         @Override
-        public Collection collection () {
+        public Collection collection() {
             return set;
         }
     }
@@ -413,43 +413,43 @@ public class Collections {
         List<T> list;
         SearchableCollection query;
 
-        QList ( List<T> list, SearchableCollection query ) {
+        QList( List<T> list, SearchableCollection query ) {
             this.list = list;
             this.query = query;
         }
 
         @Override
-        public boolean add ( T item ) {
+        public boolean add( T item ) {
             query.add( item );
             return list.add( item );
         }
 
         @Override
-        public boolean remove ( Object item ) {
+        public boolean remove( Object item ) {
             query.delete( ( T ) item );
             return list.remove( item );
         }
 
 
         @Override
-        public T get ( int index ) {
+        public T get( int index ) {
             return list.get( index );
         }
 
 
         @Override
-        public int size () {
+        public int size() {
             return list.size();
         }
 
 
         @Override
-        public SearchableCollection searchCollection () {
+        public SearchableCollection searchCollection() {
             return query;
         }
 
         @Override
-        public Collection collection () {
+        public Collection collection() {
             return this.list;
         }
     }
@@ -462,8 +462,8 @@ public class Collections {
      * @param prop   the prop
      * @param fields the reflected fields
      */
-    private static void configIndexes ( SearchableCollection query, String prop,
-                                        Map<String, FieldAccess> fields ) {
+    private static void configIndexes( SearchableCollection query, String prop,
+                                       Map<String, FieldAccess> fields ) {
 
         SearchIndex searchIndex = SPIFactory.getSearchIndexFactory().apply( fields.get( prop ).getType() );
         searchIndex.init();

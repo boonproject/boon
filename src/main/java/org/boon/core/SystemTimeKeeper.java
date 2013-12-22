@@ -19,19 +19,19 @@ public class SystemTimeKeeper implements TimeKeeper {
     private static ScheduledExecutorService executorService;
 
     @Override
-    public long time () {
+    public long time() {
         return time.get();
 
     }
 
-    public static void start () {
+    public static void start() {
 
         if ( !started.get() ) {
             executorService = Executors.newSingleThreadScheduledExecutor();
 
             executorService.scheduleAtFixedRate( new Runnable() {
                 @Override
-                public void run () {
+                public void run() {
                     time.set( System.nanoTime() / 1_000_000 );
                 }
             }, 5, 5, TimeUnit.MILLISECONDS );

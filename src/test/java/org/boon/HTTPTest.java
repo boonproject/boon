@@ -29,7 +29,7 @@ public class HTTPTest {
 
 
     static class MyHandler2 implements HttpHandler {
-        public void handle ( HttpExchange t ) throws IOException {
+        public void handle( HttpExchange t ) throws IOException {
 
             String contentType = null;
             final List<String> strings = t.getRequestHeaders().get( "Content-Type" );
@@ -47,7 +47,7 @@ public class HTTPTest {
             }
         }
 
-        private void binaryResponse ( HttpExchange t ) throws IOException {
+        private void binaryResponse( HttpExchange t ) throws IOException {
 
             int boonSize = -1;
 
@@ -77,7 +77,7 @@ public class HTTPTest {
             os.close();
         }
 
-        private void testResponse ( HttpExchange t ) throws IOException {
+        private void testResponse( HttpExchange t ) throws IOException {
 
             if ( t.getRequestMethod().equals( "GET" ) ) {
 
@@ -115,7 +115,7 @@ public class HTTPTest {
 
 
     static class MyHandler implements HttpHandler {
-        public void handle ( HttpExchange t ) throws IOException {
+        public void handle( HttpExchange t ) throws IOException {
 
             InputStream requestBody = t.getRequestBody();
             String body = IO.read( requestBody );
@@ -130,7 +130,7 @@ public class HTTPTest {
 
 
     @Test
-    public void testBinary () throws Exception {
+    public void testBinary() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 7212 ), 0 );
         server.createContext( "/test", new MyHandler2() );
@@ -169,7 +169,7 @@ public class HTTPTest {
 
 
     @Test
-    public void testPostBody () throws Exception {
+    public void testPostBody() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 9290 ), 0 );
         server.createContext( "/test", new MyHandler() );
@@ -193,7 +193,7 @@ public class HTTPTest {
 
 
     @Test
-    public void testPostForm () throws Exception {
+    public void testPostForm() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 9220 ), 0 );
         server.createContext( "/test", new MyHandler() );
@@ -220,7 +220,7 @@ public class HTTPTest {
     }
 
     @Test ( expected = RuntimeException.class )
-    public void testSad () throws Exception {
+    public void testSad() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 9213 ), 0 );
         server.createContext( "/test", new MyHandler() );
@@ -247,7 +247,7 @@ public class HTTPTest {
     }
 
     @Test
-    public void testHappyFeet () throws Exception {
+    public void testHappyFeet() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 8888 ), 0 );
         server.createContext( "/test", new MyHandler() );
@@ -292,7 +292,7 @@ public class HTTPTest {
     }
 
     @Test
-    public void testHappy () throws Exception {
+    public void testHappy() throws Exception {
 
         HttpServer server = HttpServer.create( new InetSocketAddress( 9212 ), 0 );
         server.createContext( "/test", new MyHandler() );

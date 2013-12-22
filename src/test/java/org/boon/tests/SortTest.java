@@ -22,7 +22,7 @@ public class SortTest {
     List<Employee> list;
 
     @Before
-    public void setUp () throws Exception {
+    public void setUp() throws Exception {
         list = Lists.list(
                 Employee.employee( "zzz", "LastA", "120", "5.29.1970:00:00:01", 100 ),
                 Employee.employee( "zaaa", "bbb", "124", "5.29.1960:00:00:00", 200 ),
@@ -36,7 +36,7 @@ public class SortTest {
     }
 
     @Test
-    public void simpleSort () throws Exception {
+    public void simpleSort() throws Exception {
         Sort sort = new Sort( "firstName", SortType.ASCENDING );
         sort.sort( list );
         List<String> firstNames = BeanUtils.idxList( Typ.string, list, "firstName" );
@@ -49,7 +49,7 @@ public class SortTest {
     }
 
     @Test
-    public void compoundSort () throws Exception {
+    public void compoundSort() throws Exception {
         Sort sort = new Sort( "firstName", SortType.ASCENDING );
         sort.then( "lastName" );
         sort.sort( list );

@@ -50,7 +50,7 @@ public class FilterDefault implements Filter, FilterComposer {
      * @see org.boon.criteria.Criteria
      */
     @Override
-    public ResultSet filter ( Criteria... expressions ) {
+    public ResultSet filter( Criteria... expressions ) {
         try {
             Criteria.fields( this.fields );
             return mainQueryPlan( expressions );
@@ -68,7 +68,7 @@ public class FilterDefault implements Filter, FilterComposer {
      * @return
      * @author Rick Hightower
      */
-    private ResultSet mainQueryPlan ( Criteria[] expressions ) {
+    private ResultSet mainQueryPlan( Criteria[] expressions ) {
 
         ResultSetInternal results = new ResultSetImpl( this.fields );
 
@@ -89,7 +89,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
 
-    private void orPlanWithIndex ( Criterion criterion, ResultSetInternal results ) {
+    private void orPlanWithIndex( Criterion criterion, ResultSetInternal results ) {
 
 
         Operator operator = criterion.getOperator();
@@ -105,7 +105,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
     @Override
-    public void invalidate () {
+    public void invalidate() {
 
     }
 
@@ -115,7 +115,7 @@ public class FilterDefault implements Filter, FilterComposer {
      * @param group   here is the group
      * @param results here are the results
      */
-    private void doFilterGroup ( Group group, ResultSetInternal results ) {
+    private void doFilterGroup( Group group, ResultSetInternal results ) {
         /* The group was n or group so handle it that way. */
         if ( group.getGrouping() == Grouping.OR ) {
             /* nice short method name, or. */
@@ -130,8 +130,8 @@ public class FilterDefault implements Filter, FilterComposer {
         }
     }
 
-    private void or ( Criteria[] expressions,
-                      Map<String, FieldAccess> fields, ResultSetInternal results ) {
+    private void or( Criteria[] expressions,
+                     Map<String, FieldAccess> fields, ResultSetInternal results ) {
 
 
         for ( Criteria expression : expressions ) {
@@ -144,7 +144,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
 
-    private void and ( Criteria[] expressions, Map<String, FieldAccess> fields, ResultSetInternal resultSet ) {
+    private void and( Criteria[] expressions, Map<String, FieldAccess> fields, ResultSetInternal resultSet ) {
 
         Set<Criteria> expressionSet = Sets.set( expressions );
 
@@ -157,7 +157,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
 
-    private boolean applyIndexedFiltersForAnd ( Criteria[] expressions, Map<String, FieldAccess> fields, Set<Criteria> expressionSet, ResultSetInternal resultSet ) {
+    private boolean applyIndexedFiltersForAnd( Criteria[] expressions, Map<String, FieldAccess> fields, Set<Criteria> expressionSet, ResultSetInternal resultSet ) {
         Criterion criteria = null;
         boolean foundIndex = false;
 
@@ -248,7 +248,7 @@ public class FilterDefault implements Filter, FilterComposer {
 //    }
 
 
-    private void applyGroups ( Set<Criteria> expressionSet, ResultSetInternal resultSet ) {
+    private void applyGroups( Set<Criteria> expressionSet, ResultSetInternal resultSet ) {
 
         if ( expressionSet.size() == 0 ) {
             return;
@@ -264,7 +264,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
 
-    private void applyLinearSearch ( Set<Criteria> expressionSet, ResultSetInternal resultSet, boolean foundIndex ) {
+    private void applyLinearSearch( Set<Criteria> expressionSet, ResultSetInternal resultSet, boolean foundIndex ) {
 
         if ( expressionSet.size() == 0 ) {
             return;
@@ -287,11 +287,11 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
 
-    private boolean isIndexed ( String name ) {
+    private boolean isIndexed( String name ) {
         return searchIndexMap.containsKey( name );
     }
 
-    private boolean doFilterWithIndex ( Criterion criterion, Map<String, FieldAccess> fields, ResultSetInternal resultSet ) {
+    private boolean doFilterWithIndex( Criterion criterion, Map<String, FieldAccess> fields, ResultSetInternal resultSet ) {
 
 
         boolean indexed = indexedOperators.contains( criterion.getOperator() );
@@ -373,7 +373,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
     }
 
-    private List processResultsFromIndex ( SearchIndex searchIndex, List results ) {
+    private List processResultsFromIndex( SearchIndex searchIndex, List results ) {
         if ( searchIndex.isPrimaryKeyOnly() ) {
             //TODO iterate through listStream and lookup items from keys, and put those in the actual results
             return null;
@@ -384,27 +384,27 @@ public class FilterDefault implements Filter, FilterComposer {
 
 
     @Override
-    public void setSearchableCollection ( SearchableCollection searchableCollection ) {
+    public void setSearchableCollection( SearchableCollection searchableCollection ) {
         this.searchableCollection = searchableCollection;
     }
 
     @Override
-    public void setFields ( Map<String, FieldAccess> fields ) {
+    public void setFields( Map<String, FieldAccess> fields ) {
         this.fields = fields;
     }
 
     @Override
-    public void setSearchIndexMap ( Map<String, SearchIndex> searchIndexMap ) {
+    public void setSearchIndexMap( Map<String, SearchIndex> searchIndexMap ) {
         this.searchIndexMap = searchIndexMap;
     }
 
     @Override
-    public void setLookupIndexMap ( Map<String, LookupIndex> lookupIndexMap ) {
+    public void setLookupIndexMap( Map<String, LookupIndex> lookupIndexMap ) {
         this.lookupIndexMap = lookupIndexMap;
     }
 
     @Override
-    public void init () {
+    public void init() {
 
     }
 }

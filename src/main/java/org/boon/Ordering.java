@@ -18,20 +18,20 @@ public class Ordering {
     private static final Logger log = Logger.getLogger( Ordering.class.getName() );
 
 
-    public static Comparable comparable ( Object comparable ) {
+    public static Comparable comparable( Object comparable ) {
         return ( Comparable ) comparable;
     }
 
 
-    public static void sortAsc ( List list ) {
+    public static void sortAsc( List list ) {
         sortAsc( list, "this" );
     }
 
-    public static void sortDesc ( List list ) {
+    public static void sortDesc( List list ) {
         sortDesc( list, "this" );
     }
 
-    public static void sortAsc ( List list, String sortBy ) {
+    public static void sortAsc( List list, String sortBy ) {
         if ( list == null || list.size() == 0 ) {
             return;
         }
@@ -40,7 +40,7 @@ public class Ordering {
         sortAsc( list, sortBy, fields );
     }
 
-    public static void sortDesc ( List list, String sortBy ) {
+    public static void sortDesc( List list, String sortBy ) {
         if ( list == null || list.size() == 0 ) {
             return;
         }
@@ -49,15 +49,15 @@ public class Ordering {
         sortDesc( list, sortBy, fields );
     }
 
-    public static void sortAsc ( List list, String sortBy, Map<String, FieldAccess> fields ) {
+    public static void sortAsc( List list, String sortBy, Map<String, FieldAccess> fields ) {
         sort( list, sortBy, fields, true );
     }
 
-    public static void sortDesc ( List list, String sortBy, Map<String, FieldAccess> fields ) {
+    public static void sortDesc( List list, String sortBy, Map<String, FieldAccess> fields ) {
         sort( list, sortBy, fields, false );
     }
 
-    public static void sort ( List list, String sortBy, Map<String, FieldAccess> fields, boolean ascending ) {
+    public static void sort( List list, String sortBy, Map<String, FieldAccess> fields, boolean ascending ) {
         if ( list == null || list.size() == 0 ) {
             return;
         }
@@ -80,10 +80,10 @@ public class Ordering {
     }
 
 
-    public static Comparator universalComparator ( final FieldAccess field, final boolean ascending ) {
+    public static Comparator universalComparator( final FieldAccess field, final boolean ascending ) {
         return new Comparator() {
             @Override
-            public int compare ( Object o1, Object o2 ) {
+            public int compare( Object o1, Object o2 ) {
                 Object value1 = null;
                 Object value2 = null;
 
@@ -100,11 +100,11 @@ public class Ordering {
     }
 
 
-    public static Comparator universalComparator ( final String sortBy, final Map<String, FieldAccess> fields,
-                                                   final boolean ascending, final List<Comparator> comparators ) {
+    public static Comparator universalComparator( final String sortBy, final Map<String, FieldAccess> fields,
+                                                  final boolean ascending, final List<Comparator> comparators ) {
         return new Comparator() {
             @Override
-            public int compare ( Object o1, Object o2 ) {
+            public int compare( Object o1, Object o2 ) {
 
                 Object value1 = null;
                 Object value2 = null;
@@ -155,7 +155,7 @@ public class Ordering {
     }
 
 
-    public static int compare ( Object value1, Object value2 ) {
+    public static int compare( Object value1, Object value2 ) {
 
         if ( value1 == null && value2 == null ) {
             return 0;

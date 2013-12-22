@@ -14,14 +14,14 @@ public class FilterWithCache extends FilterDecoratorBase {
 
     private Cache<Group, ResultSet> cache;
 
-    public FilterWithCache ( final Filter delegate, final Supplier<Cache<Group, ResultSet>> cacheFactory ) {
+    public FilterWithCache( final Filter delegate, final Supplier<Cache<Group, ResultSet>> cacheFactory ) {
         super( delegate );
         this.cacheFactory = cacheFactory;
         this.cache = cacheFactory.get();
     }
 
     @Override
-    public ResultSet filter ( Criteria... expressions ) {
+    public ResultSet filter( Criteria... expressions ) {
         Group and = CriteriaFactory.and( expressions );
 
         ResultSet results = cache.get( and );
@@ -41,7 +41,7 @@ public class FilterWithCache extends FilterDecoratorBase {
     }
 
     @Override
-    public void invalidate () {
+    public void invalidate() {
 
         cache = this.cacheFactory.get();
         super.invalidate();

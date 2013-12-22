@@ -15,11 +15,11 @@ public class MBeansTest {
 
     public static interface HelloMBean {
 
-        public void sayHello ();
+        public void sayHello();
 
-        public int add ( int x, int y );
+        public int add( int x, int y );
 
-        public String getName ();
+        public String getName();
 
     }
 
@@ -28,22 +28,22 @@ public class MBeansTest {
 
         private String name = "value";
 
-        public void sayHello () {
+        public void sayHello() {
             System.out.println( "hello, world" );
         }
 
-        public int add ( int x, int y ) {
+        public int add( int x, int y ) {
             return x + y;
         }
 
-        public String getName () {
+        public String getName() {
             return name;
         }
     }
 
 
     @Test
-    public void test () throws Exception {
+    public void test() throws Exception {
 
 
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
@@ -62,7 +62,7 @@ public class MBeansTest {
 
 
     @Test
-    public void createTest () throws Exception {
+    public void createTest() throws Exception {
 
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 

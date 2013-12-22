@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class ByteScannerTest {
 
     @Test
-    public void autoSplitThisEndsInSpace () {
+    public void autoSplitThisEndsInSpace() {
 
         byte[] letters =
                 bytes( "This is a string " );
@@ -56,7 +56,7 @@ public class ByteScannerTest {
     }
 
     @Test
-    public void autoSplitThis () {
+    public void autoSplitThis() {
 
         byte[] letters =
                 bytes( "This is a string" );
@@ -103,7 +103,7 @@ public class ByteScannerTest {
 
 
     @Test
-    public void autoSplitThisStartSpace () {
+    public void autoSplitThisStartSpace() {
 
         byte[] letters =
                 bytes( " This is a string" );
@@ -156,7 +156,7 @@ public class ByteScannerTest {
 
 
     @Test
-    public void autoSplitThisByTabOrSpace () {
+    public void autoSplitThisByTabOrSpace() {
 
         byte[] letters =
                 bytes( "This\tis a string" );
@@ -203,7 +203,7 @@ public class ByteScannerTest {
 
 
     @Test
-    public void autoSplitThis3DoubleSpaceAfterA () {
+    public void autoSplitThis3DoubleSpaceAfterA() {
 
         byte[] letters =
                 bytes( "This is a  string" );
@@ -254,7 +254,7 @@ public class ByteScannerTest {
 
 
     @Test
-    public void splitThisEndsInSpace () {
+    public void splitThisEndsInSpace() {
 
         byte[] letters =
                 bytes( "This is a string " );
@@ -300,7 +300,7 @@ public class ByteScannerTest {
     }
 
     @Test
-    public void splitThis () {
+    public void splitThis() {
 
         byte[] letters =
                 bytes( "This is a string" );
@@ -347,7 +347,7 @@ public class ByteScannerTest {
 
 
     @Test
-    public void splitThisStartSpace () {
+    public void splitThisStartSpace() {
 
         byte[] letters =
                 bytes( " This is a string" );
@@ -400,7 +400,7 @@ public class ByteScannerTest {
 
 
     @Test
-    public void splitThisByTabOrSpace () {
+    public void splitThisByTabOrSpace() {
 
         byte[] letters =
                 bytes( "This\tis a string" );
@@ -447,7 +447,7 @@ public class ByteScannerTest {
 
 
     @Test
-    public void splitThis3DoubleSpaceAfterA () {
+    public void splitThis3DoubleSpaceAfterA() {
 
         byte[] letters =
                 bytes( "This is a  string" );

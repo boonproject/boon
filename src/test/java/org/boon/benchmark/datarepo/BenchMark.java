@@ -27,12 +27,12 @@ public class BenchMark {
     static int numCreations = 100_000;
 
     @Test
-    public void test () {
+    public void test() {
         numCreations = 100;
     }
 
 
-    public static void main ( String[] args ) throws Exception {
+    public static void main( String[] args ) throws Exception {
 
 
         final List<Employee> employees = BenchmarkHelper.createMetricTonOfEmployees( numCreations );
@@ -77,13 +77,13 @@ public class BenchMark {
     }
 
 
-    private static MeasuredRun testIndex ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun testIndex( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "index ", 1000, 1_000_000, results ) {
             Repo repo;
             Criteria exp = eq( "firstName", "Mike" );
 
             @Override
-            protected void init () {
+            protected void init() {
                                                     /* Create a repo, and decide what to index. */
                 repo = Repos.builder().primaryKey( "id" ).searchIndex( "firstName" ).lookupIndex( "firstName" )
                         .build( String.class, Employee.class );
@@ -94,7 +94,7 @@ public class BenchMark {
             }
 
             @Override
-            protected void test () {
+            protected void test() {
                 List<Employee> results = repo.query( exp );
 
                 boolean found = false;
@@ -114,20 +114,20 @@ public class BenchMark {
     }
 
 
-    private static MeasuredRun testLinear ( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
+    private static MeasuredRun testLinear( final List<Employee> employees, final Map<String, List<MeasuredRun>> results ) {
         return new MeasuredRun( "linear ", 10, 1_000, results ) {
 
             List<Employee> results;
 
             @Override
-            protected void init () {
+            protected void init() {
                 results = copy( employees );
 
 
             }
 
             @Override
-            protected void test () {
+            protected void test() {
 
                 boolean found = false;
                 for ( Employee employee : results ) {

@@ -19,17 +19,17 @@ public class SliceNotationExample {
 
 
     @Test
-    public void test () {
+    public void test() {
         SliceNotationExample.main();
     }
 
-    public static void main ( String... args ) {
+    public static void main( String... args ) {
         collectionAndBasicTypes();
         strings();
 
     }
 
-    private static void strings () {
+    private static void strings() {
 
         String letters = "abcd";
 
@@ -91,7 +91,7 @@ public class SliceNotationExample {
 
     }
 
-    private static void collectionAndBasicTypes () {
+    private static void collectionAndBasicTypes() {
         //Works with lists, arrays, sets, maps, sorted maps, etc.
         List<String> fruitList;
         String[] fruitArray;

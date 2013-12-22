@@ -12,7 +12,7 @@ public class BytTest {
 
 
     @Test
-    public void testURLEncodeBytes () {
+    public void testURLEncodeBytes() {
 
         ByteBuf buf = ByteBuf.create( 20 );
 
@@ -36,7 +36,7 @@ public class BytTest {
     }
 
     @Test
-    public void readUnsignedInt () {
+    public void readUnsignedInt() {
         //0x53, 0x2D, 0x78, 0xAA.
         //http://stackoverflow.com/questions/19874527/conversion-from-bytes-to-large-unsigned-integer-and-string
         ByteBuf buf = ByteBuf.create( 20 );
@@ -104,7 +104,7 @@ public class BytTest {
     }
 
     @Test
-    public void allocate () {
+    public void allocate() {
 
         byte[] letters =
                 arrayOfByte( 500 );
@@ -118,7 +118,7 @@ public class BytTest {
 
 
     @Test
-    public void create () {
+    public void create() {
 
         byte[] letters =
                 array( ( byte ) 0, ( byte ) 1, ( byte ) 2, ( byte ) 3 );
@@ -132,7 +132,7 @@ public class BytTest {
 
 
     @Test
-    public void index () {
+    public void index() {
 
         byte[] letters =
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd' );
@@ -164,7 +164,7 @@ public class BytTest {
     }
 
     @Test
-    public void isIn () {
+    public void isIn() {
 
         byte[] letters =
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd' );
@@ -182,7 +182,7 @@ public class BytTest {
 
 
     @Test
-    public void isInAtOffset () {
+    public void isInAtOffset() {
 
         byte[] letters = { 'a', 'b', 'c', 'd' };
 
@@ -197,7 +197,7 @@ public class BytTest {
     }
 
     @Test
-    public void isInAtRange () {
+    public void isInAtRange() {
 
         byte[] letters = { 'a', 'b', 'c', 'd' };
 
@@ -213,7 +213,7 @@ public class BytTest {
     }
 
     @Test
-    public void slice () {
+    public void slice() {
 
         byte[] letters =
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd' );
@@ -265,7 +265,7 @@ public class BytTest {
 
 
     @Test
-    public void outOfBounds () {
+    public void outOfBounds() {
 
         byte[] fruit =
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd', ( byte ) 'e' );
@@ -300,7 +300,7 @@ public class BytTest {
 
 
     @Test
-    public void growTest () {
+    public void growTest() {
         byte[] letters =
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd', ( byte ) 'e' );
 
@@ -343,7 +343,7 @@ public class BytTest {
 
 
     @Test
-    public void growFast () {
+    public void growFast() {
         byte[] letters =
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd', ( byte ) 'e' );
 
@@ -378,7 +378,7 @@ public class BytTest {
 
 
     @Test
-    public void compactTest () {
+    public void compactTest() {
         byte[] letters =
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) '\0', ( byte ) '\0',
                         ( byte ) '\0', ( byte ) '\0', ( byte ) '\0', ( byte ) 'c', ( byte ) '\0', ( byte ) 'd', ( byte ) 'e' );
@@ -396,7 +396,7 @@ public class BytTest {
 
 
     @Test
-    public void copyTest () {
+    public void copyTest() {
 
         assertArrayEquals(
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd', ( byte ) 'e' ),
@@ -408,7 +408,7 @@ public class BytTest {
     }
 
     @Test
-    public void addBasic () {
+    public void addBasic() {
 
         boolean works = true;
 
@@ -492,7 +492,7 @@ public class BytTest {
 
 
     @Test
-    public void addTest () {
+    public void addTest() {
 
         assertArrayEquals(
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd', ( byte ) 'e', ( byte ) 'f' ),
@@ -502,7 +502,7 @@ public class BytTest {
     }
 
     @Test
-    public void addTestArray () {
+    public void addTestArray() {
 
         assertArrayEquals(
                 array( ( byte ) 'a', ( byte ) 'b', ( byte ) 'c', ( byte ) 'd', ( byte ) 'e', ( byte ) 'f' ),
@@ -513,12 +513,12 @@ public class BytTest {
 
     }
 
-    void foo ( byte a ) {
+    void foo( byte a ) {
 
     }
 
     @Test
-    public void addInsertSingle () {
+    public void addInsertSingle() {
 
         byte f = 0;
 
@@ -552,7 +552,7 @@ public class BytTest {
 
 
     @Test
-    public void addInsertEdge () {
+    public void addInsertEdge() {
         assertArrayEquals(
                 array( new byte[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g' } ),
                 insert( array( new byte[]{ 'a', 'b', 'c', 'd', 'e', 'f' } ), 6, ( byte ) 'g' )
@@ -568,7 +568,7 @@ public class BytTest {
     }
 
     @Test
-    public void addInsertArray () {
+    public void addInsertArray() {
 
         assertArrayEquals(
                 array( new byte[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g' } ),
@@ -587,7 +587,7 @@ public class BytTest {
 
 
     @Test
-    public void addInsertArrayEnd () {
+    public void addInsertArrayEnd() {
 
         assertArrayEquals(
                 array( new byte[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' } ),
@@ -600,7 +600,7 @@ public class BytTest {
 
 
     @Test
-    public void addInsertArrayEnd2 () {
+    public void addInsertArrayEnd2() {
 
 
         assertArrayEquals(
@@ -613,7 +613,7 @@ public class BytTest {
 
 
     @Test
-    public void addInsertArrayEnd3 () {
+    public void addInsertArrayEnd3() {
 
 
         assertArrayEquals(

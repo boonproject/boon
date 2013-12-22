@@ -23,7 +23,7 @@ public class BeanUtils {
      * @param clazz gets the properties or fields of this class.
      * @return
      */
-    public static Map<String, FieldAccess> getPropertyFieldAccessMap ( Class<?> clazz ) {
+    public static Map<String, FieldAccess> getPropertyFieldAccessMap( Class<?> clazz ) {
         return Reflection.getPropertyFieldAccessMapFieldFirst( clazz );
     }
 
@@ -35,7 +35,7 @@ public class BeanUtils {
      * @param item
      * @return
      */
-    public static Map<String, FieldAccess> getFieldsFromObject ( Object item ) {
+    public static Map<String, FieldAccess> getFieldsFromObject( Object item ) {
         Map<String, FieldAccess> fields = null;
 
         fields = getPropertyFieldAccessMap( item.getClass() );
@@ -55,7 +55,7 @@ public class BeanUtils {
      * @param map
      * @return
      */
-    private static Map<String, FieldAccess> getFieldsFromMap ( Map<String, FieldAccess> fields, Map<String, Object> map ) {
+    private static Map<String, FieldAccess> getFieldsFromMap( Map<String, FieldAccess> fields, Map<String, Object> map ) {
 
         for ( Map.Entry<String, Object> entry : map.entrySet() ) {
             fields.put( entry.getKey(), new MapField( entry.getKey() ) );
@@ -72,7 +72,7 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static void setPropertyValue ( final Object root, final Object newValue, final String... properties ) {
+    public static void setPropertyValue( final Object root, final Object newValue, final String... properties ) {
         Objects.requireNonNull( root );
         Objects.requireNonNull( properties );
 
@@ -124,7 +124,7 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static Object getPropertyValue ( final Object root, final String... properties ) {
+    public static Object getPropertyValue( final Object root, final String... properties ) {
         Objects.requireNonNull( root );
         Objects.requireNonNull( properties );
 
@@ -167,7 +167,7 @@ public class BeanUtils {
      * @param property
      * @return
      */
-    public static Class<?> getPropertyType ( final Object root, final String property ) {
+    public static Class<?> getPropertyType( final Object root, final String property ) {
         Objects.requireNonNull( root );
         Objects.requireNonNull( property );
 
@@ -178,8 +178,8 @@ public class BeanUtils {
     }
 
 
-    @SuppressWarnings ("unchecked")
-    public static <T> T idxGeneric ( Class<T> t, Object object, final String path ) {
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T idxGeneric( Class<T> t, Object object, final String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -191,7 +191,7 @@ public class BeanUtils {
 
     }
 
-    public static <T> List<T> idxList ( Class<T> cls, Object items, String... path ) {
+    public static <T> List<T> idxList( Class<T> cls, Object items, String... path ) {
         return ( List<T> ) getPropByPath( items, path );
     }
 
@@ -203,7 +203,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static Object getPropByPath ( Object item, String... path ) {
+    public static Object getPropByPath( Object item, String... path ) {
         Object o = item;
         for ( int index = 0; index < path.length; index++ ) {
             String propName = path[ index ];
@@ -227,7 +227,7 @@ public class BeanUtils {
      * @param path   in dotted notation
      * @return
      */
-    public static Object idx ( Object object, String path ) {
+    public static Object idx( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -242,7 +242,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static Object idxRelax ( Object object, final String path ) {
+    public static Object idxRelax( Object object, final String path ) {
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
 
@@ -256,7 +256,7 @@ public class BeanUtils {
      * This is an amazing little recursive method. It walks a fanout of
      * nested collection to pull out the leaf nodes
      */
-    private static Object getCollecitonProp ( Object o, String propName, int index, String[] path ) {
+    private static Object getCollecitonProp( Object o, String propName, int index, String[] path ) {
         o = Reflection.getFieldValues( o, propName );
 
         if ( index + 1 == path.length ) {
@@ -276,7 +276,7 @@ public class BeanUtils {
      * @param property
      * @return
      */
-    public static Object getProp ( Object object, final String property ) {
+    public static Object getProp( Object object, final String property ) {
         if ( object == null ) {
             return null;
         }
@@ -308,7 +308,7 @@ public class BeanUtils {
     /**
      * Get an int property.
      */
-    public static int getPropertyInt ( final Object root, final String... properties ) {
+    public static int getPropertyInt( final Object root, final String... properties ) {
 
         Objects.requireNonNull( root );
         Objects.requireNonNull( properties );
@@ -334,7 +334,7 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    private static Object baseForGetProperty ( Object root, String[] properties ) {
+    private static Object baseForGetProperty( Object root, String[] properties ) {
         Object object = root;
 
         Map<String, FieldAccess> fields = null;
@@ -374,7 +374,7 @@ public class BeanUtils {
      * @param path   in dotted notation
      * @return
      */
-    public static int idxInt ( Object object, String path ) {
+    public static int idxInt( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -390,7 +390,7 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static byte getPropertyByte ( final Object root, final String... properties ) {
+    public static byte getPropertyByte( final Object root, final String... properties ) {
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
@@ -409,7 +409,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static byte idxByte ( Object object, String path ) {
+    public static byte idxByte( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -424,7 +424,7 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static float getPropertyFloat ( final Object root, final String... properties ) {
+    public static float getPropertyFloat( final Object root, final String... properties ) {
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
@@ -444,7 +444,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static float idxFloat ( Object object, String path ) {
+    public static float idxFloat( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -460,8 +460,8 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static short getPropertyShort ( final Object root,
-                                           final String... properties ) {
+    public static short getPropertyShort( final Object root,
+                                          final String... properties ) {
 
 
         Object object = baseForGetProperty( root, properties );
@@ -484,7 +484,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static short idxShort ( Object object, String path ) {
+    public static short idxShort( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -499,8 +499,8 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static char getPropertyChar ( final Object root,
-                                         final String... properties ) {
+    public static char getPropertyChar( final Object root,
+                                        final String... properties ) {
 
         Object object = baseForGetProperty( root, properties );
 
@@ -521,7 +521,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static char idxChar ( Object object, String path ) {
+    public static char idxChar( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -537,8 +537,8 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static double getPropertyDouble ( final Object root,
-                                             final String... properties ) {
+    public static double getPropertyDouble( final Object root,
+                                            final String... properties ) {
 
 
         Object object = baseForGetProperty( root, properties );
@@ -560,7 +560,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static double idxDouble ( Object object, String path ) {
+    public static double idxDouble( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -576,8 +576,8 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static long getPropertyLong ( final Object root,
-                                         final String... properties ) {
+    public static long getPropertyLong( final Object root,
+                                        final String... properties ) {
 
 
         Object object = baseForGetProperty( root, properties );
@@ -599,7 +599,7 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static long idxLong ( Object object, String path ) {
+    public static long idxLong( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -615,8 +615,8 @@ public class BeanUtils {
      * @param properties
      * @return
      */
-    public static boolean getPropertyBoolean ( final Object root,
-                                               final String... properties ) {
+    public static boolean getPropertyBoolean( final Object root,
+                                              final String... properties ) {
 
 
         Object object = baseForGetProperty( root, properties );
@@ -633,7 +633,7 @@ public class BeanUtils {
     }
 
 
-    public static boolean idxBoolean ( Object object, String path ) {
+    public static boolean idxBoolean( Object object, String path ) {
 
         Objects.requireNonNull( object );
         Objects.requireNonNull( path );
@@ -644,7 +644,7 @@ public class BeanUtils {
     }
 
 
-    public static <V> Map<String, V> collectionToMap ( String propertyKey, Collection<V> values ) {
+    public static <V> Map<String, V> collectionToMap( String propertyKey, Collection<V> values ) {
         LinkedHashMap<String, V> map = new LinkedHashMap<String, V>( values.size() );
         Iterator<V> iterator = values.iterator();
         for ( V v : values ) {
@@ -655,7 +655,7 @@ public class BeanUtils {
     }
 
 
-    public static void copyProperties ( Object object, Map<String, Object> properties ) {
+    public static void copyProperties( Object object, Map<String, Object> properties ) {
 
         Set<Map.Entry<String, Object>> props = properties.entrySet();
         for ( Map.Entry<String, Object> entry : props ) {

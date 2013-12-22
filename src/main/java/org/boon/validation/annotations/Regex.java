@@ -9,13 +9,13 @@ import java.lang.annotation.Target;
 @Target ( { ElementType.METHOD, ElementType.TYPE, ElementType.FIELD } )
 public @interface Regex {
 
-    String match ();
+    String match();
 
-    String detailMessage () default "";
+    String detailMessage() default "";
 
-    String summaryMessage () default "";
+    String summaryMessage() default "";
 
-    boolean negate () default false;
+    boolean negate() default false;
 
 
 }

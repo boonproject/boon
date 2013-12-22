@@ -12,7 +12,7 @@ import java.util.List;
 class MultiValue<T> {
     List<T> values = null;
 
-    public static <T> MultiValue<T> add ( MultiValue<T> org, T newItem, int bucketSize ) {
+    public static <T> MultiValue<T> add( MultiValue<T> org, T newItem, int bucketSize ) {
         if ( org == null ) {
             return new MultiValue<>( newItem, bucketSize );
         } else {
@@ -33,7 +33,7 @@ class MultiValue<T> {
         return org;
     }
 
-    public static <T> MultiValue<T> remove ( MultiValue<T> org, T removeItem ) {
+    public static <T> MultiValue<T> remove( MultiValue<T> org, T removeItem ) {
         if ( org == null ) {
             return null;
         }
@@ -45,40 +45,40 @@ class MultiValue<T> {
         return org.size() == 0 ? null : org;
     }
 
-    private MultiValue () {
+    private MultiValue() {
 
     }
 
-    private MultiValue ( T item, int bucketSize ) {
+    private MultiValue( T item, int bucketSize ) {
         values = new ArrayList( bucketSize );
         values.add( item );
 
     }
 
-    private void add ( T item ) {
+    private void add( T item ) {
 
         values.add( item );
     }
 
-    private void remove ( T item ) {
+    private void remove( T item ) {
         values.remove( item );
     }
 
-    T getValue () {
+    T getValue() {
 
         return ( values.size() > 0 ) ? values.get( 0 ) : null;
     }
 
-    final List<T> getValues () {
+    final List<T> getValues() {
         return values;
     }
 
 
-    int size () {
+    int size() {
         return values.size();
     }
 
-    void addTo ( List<T> results ) {
+    void addTo( List<T> results ) {
         results.addAll( values );
     }
 

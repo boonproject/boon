@@ -26,7 +26,7 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
 
     public boolean decodeStrings;
 
-    public ValueBase ( int startIndex, int endIndex, Object value, Type type, boolean decodeStrings ) {
+    public ValueBase( int startIndex, int endIndex, Object value, Type type, boolean decodeStrings ) {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.value = value;
@@ -34,40 +34,40 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
         this.decodeStrings = decodeStrings;
     }
 
-    public ValueBase ( Type type ) {
+    public ValueBase( Type type ) {
         this.type = type;
     }
 
-    public ValueBase ( Map<String, Object> map ) {
+    public ValueBase( Map<String, Object> map ) {
         this.value = map;
         this.type = Type.MAP;
         this.container = true;
     }
 
-    public ValueBase ( List<Object> list ) {
+    public ValueBase( List<Object> list ) {
         this.value = list;
         this.type = Type.LIST;
 
         this.container = true;
     }
 
-    public ValueBase () {
+    public ValueBase() {
     }
 
 
     @Override
-    public int intValue () {
+    public int intValue() {
         return Integer.parseInt( toString() );
     }
 
     @Override
-    public long longValue () {
+    public long longValue() {
         return Long.parseLong( toString() );
     }
 
 
     @Override
-    public boolean booleanValue () {
+    public boolean booleanValue() {
 
         switch ( type ) {
             case FALSE:
@@ -82,22 +82,22 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
 
 
     @Override
-    public String stringValue () {
+    public String stringValue() {
         return type.toString();
     }
 
     @Override
-    public String stringValueEncoded () {
+    public String stringValueEncoded() {
         return toString();
     }
 
 
-    public String toString () {
+    public String toString() {
         return type.toString();
     }
 
     @Override
-    public Object toValue () {
+    public Object toValue() {
         if ( value != null ) {
             return value;
         }
@@ -115,7 +115,7 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
     }
 
     @Override
-    public Enum toEnum ( Class<? extends Enum> cls ) {
+    public Enum toEnum( Class<? extends Enum> cls ) {
         switch ( type ) {
             case STRING:
                 return Conversions.toEnum( cls, stringValue() );
@@ -130,33 +130,33 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
     }
 
     @Override
-    public boolean isContainer () {
+    public boolean isContainer() {
         return container;
 
     }
 
     @Override
-    public void chop () {
+    public void chop() {
     }
 
     @Override
-    public int length () {
+    public int length() {
         return 0;
     }
 
     @Override
-    public char charAt ( int index ) {
+    public char charAt( int index ) {
         return '0';
     }
 
     @Override
-    public CharSequence subSequence ( int start, int end ) {
+    public CharSequence subSequence( int start, int end ) {
         return "";
     }
 
 
     @Override
-    public Date dateValue () {
+    public Date dateValue() {
 
 
         if ( type == Type.STRING ) {
@@ -172,33 +172,33 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
     }
 
 
-    public byte byteValue () {
+    public byte byteValue() {
         return Byte.parseByte( toString() );
     }
 
-    public short shortValue () {
+    public short shortValue() {
         return Short.parseShort( toString() );
     }
 
 
-    public BigDecimal bigDecimalValue () {
+    public BigDecimal bigDecimalValue() {
         return new BigDecimal( toString() );
     }
 
-    public BigInteger bigIntegerValue () {
+    public BigInteger bigIntegerValue() {
         return new BigInteger( toString() );
     }
 
 
     @Override
-    public double doubleValue () {
+    public double doubleValue() {
         return Double.parseDouble( toString() );
 
     }
 
 
     @Override
-    public float floatValue () {
+    public float floatValue() {
         return Float.parseFloat( toString() );
     }
 

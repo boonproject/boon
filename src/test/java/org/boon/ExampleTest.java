@@ -8,7 +8,7 @@ public class ExampleTest {
 
 
     @Test
-    public void runMain () {
+    public void runMain() {
         SliceNotationExample.main( null );
     }
 }

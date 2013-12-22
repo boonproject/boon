@@ -11,59 +11,59 @@ public class ClassForTest {
     char chars;
     String strings = "foo";
 
-    public String getStrings () {
+    public String getStrings() {
         return strings;
     }
 
-    public void setStrings ( String strings ) {
+    public void setStrings( String strings ) {
         this.strings = strings;
     }
 
-    public double getDoubles () {
+    public double getDoubles() {
         return doubles;
     }
 
-    public void setDoubles ( double doubles ) {
+    public void setDoubles( double doubles ) {
         this.doubles = doubles;
     }
 
-    public float getFloats () {
+    public float getFloats() {
         return floats;
     }
 
-    public void setFloats ( float floats ) {
+    public void setFloats( float floats ) {
         this.floats = floats;
     }
 
-    public long getLongs () {
+    public long getLongs() {
         return longs;
     }
 
-    public void setLongs ( long longs ) {
+    public void setLongs( long longs ) {
         this.longs = longs;
     }
 
-    public short getShorts () {
+    public short getShorts() {
         return shorts;
     }
 
-    public void setShorts ( short shorts ) {
+    public void setShorts( short shorts ) {
         this.shorts = shorts;
     }
 
-    public byte getBytes () {
+    public byte getBytes() {
         return bytes;
     }
 
-    public void setBytes ( byte bytes ) {
+    public void setBytes( byte bytes ) {
         this.bytes = bytes;
     }
 
-    public int getInts () {
+    public int getInts() {
         return ints;
     }
 
-    public void setInts ( int ints ) {
+    public void setInts( int ints ) {
         this.ints = ints;
     }
 

@@ -33,11 +33,11 @@ public class DataRepoExamples {
     public static String EMAIL = "email";
 
     @Test
-    public void test () {
+    public void test() {
         DataRepoExamples.main();
     }
 
-    public static void main ( String... args ) {
+    public static void main( String... args ) {
 
 
         boolean test = true;
@@ -154,7 +154,7 @@ public class DataRepoExamples {
 
     }
 
-    private static void runComponentClassTestForIssue () {
+    private static void runComponentClassTestForIssue() {
         //TESTS
 
         putl( "EXAMPLE: Simple Composite Object query example",

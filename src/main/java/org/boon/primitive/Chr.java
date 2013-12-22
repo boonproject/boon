@@ -19,7 +19,7 @@ public class Chr {
      * @param size size of the array you want to make
      * @return
      */
-    public static char[] arrayOfChar ( final int size ) {
+    public static char[] arrayOfChar( final int size ) {
         return new char[ size ];
     }
 
@@ -29,24 +29,24 @@ public class Chr {
      * @return
      */
     @Universal
-    public static char[] array ( final char... array ) {
+    public static char[] array( final char... array ) {
         Objects.requireNonNull( array );
         return array;
     }
 
     @Universal
-    public static char[] chars ( final String array ) {
+    public static char[] chars( final String array ) {
         return array.toCharArray();
     }
 
     @Universal
-    public static int len ( char[] array ) {
+    public static int len( char[] array ) {
         return array.length;
     }
 
 
     @Universal
-    public static char idx ( final char[] array, final int index ) {
+    public static char idx( final char[] array, final int index ) {
         final int i = calculateIndex( array, index );
 
         return array[ i ];
@@ -54,7 +54,7 @@ public class Chr {
 
 
     @Universal
-    public static void idx ( final char[] array, int index, char value ) {
+    public static void idx( final char[] array, int index, char value ) {
         final int i = calculateIndex( array, index );
 
         array[ i ] = value;
@@ -62,14 +62,14 @@ public class Chr {
 
 
     @Universal
-    public static void idx ( final char[] array, int index, char[] input ) {
+    public static void idx( final char[] array, int index, char[] input ) {
         final int i = calculateIndex( array, index );
 
         _idx( array, i, input );
     }
 
     @Universal
-    public static char[] slc ( char[] array, int startIndex, int endIndex ) {
+    public static char[] slc( char[] array, int startIndex, int endIndex ) {
         Objects.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
@@ -89,7 +89,7 @@ public class Chr {
     }
 
     @Universal
-    public static char[] slc ( char[] array, int startIndex ) {
+    public static char[] slc( char[] array, int startIndex ) {
         Objects.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
@@ -108,7 +108,7 @@ public class Chr {
     }
 
     @Universal
-    public static char[] slcEnd ( char[] array, int endIndex ) {
+    public static char[] slcEnd( char[] array, int endIndex ) {
         Objects.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
@@ -127,7 +127,7 @@ public class Chr {
     }
 
     @Universal
-    public static boolean in ( char value, char[] array ) {
+    public static boolean in( char value, char[] array ) {
         for ( char currentValue : array ) {
             if ( currentValue == value ) {
                 return true;
@@ -137,7 +137,7 @@ public class Chr {
     }
 
     @Universal
-    public static boolean in ( char value, int offset, char[] array ) {
+    public static boolean in( char value, int offset, char[] array ) {
         for ( int index = offset; index < array.length; index++ ) {
             char currentValue = array[ index ];
             if ( currentValue == value ) {
@@ -149,7 +149,7 @@ public class Chr {
 
 
     @Universal
-    public static boolean in ( char value, int offset, int end, char[] array ) {
+    public static boolean in( char value, int offset, int end, char[] array ) {
         for ( int index = offset; index < end; index++ ) {
             char currentValue = array[ index ];
             if ( currentValue == value ) {
@@ -160,7 +160,7 @@ public class Chr {
     }
 
 
-    public static char[] grow ( char[] array, final int size ) {
+    public static char[] grow( char[] array, final int size ) {
         Objects.requireNonNull( array );
 
         char[] newArray = new char[ array.length + size ];
@@ -169,7 +169,7 @@ public class Chr {
     }
 
 
-    public static char[] grow ( char[] array ) {
+    public static char[] grow( char[] array ) {
         Objects.requireNonNull( array );
 
         char[] newArray = new char[ array.length * 2 ];
@@ -177,7 +177,7 @@ public class Chr {
         return newArray;
     }
 
-    public static char[] shrink ( char[] array, int size ) {
+    public static char[] shrink( char[] array, int size ) {
         Objects.requireNonNull( array );
 
         char[] newArray = new char[ array.length - size ];
@@ -187,7 +187,7 @@ public class Chr {
     }
 
 
-    public static char[] compact ( char[] array ) {
+    public static char[] compact( char[] array ) {
         Objects.requireNonNull( array );
 
         int nullCount = 0;
@@ -212,17 +212,17 @@ public class Chr {
         return newArray;
     }
 
-    public static char[][] split ( char[] chars ) {
+    public static char[][] split( char[] chars ) {
         return CharScanner.splitByChars( chars, DEFAULT_SPLIT );
     }
 
-    public static char[][] splitLine ( char[] chars ) {
+    public static char[][] splitLine( char[] chars ) {
         return CharScanner.splitByChars( chars, NEWLINE_CHARS );
     }
 
 
     @Universal
-    public static char[] copy ( char[] array ) {
+    public static char[] copy( char[] array ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ array.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -230,7 +230,7 @@ public class Chr {
     }
 
     @Universal
-    public static char[] copy ( char[] array, int offset, int length ) {
+    public static char[] copy( char[] array, int offset, int length ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ length ];
         System.arraycopy( array, offset, newArray, 0, length );
@@ -239,7 +239,7 @@ public class Chr {
 
 
     @Universal
-    public static char[] add ( char[] array, char v ) {
+    public static char[] add( char[] array, char v ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -249,18 +249,18 @@ public class Chr {
 
 
     @Universal
-    public static char[] add ( char[] array, String str ) {
+    public static char[] add( char[] array, String str ) {
         return add( array, str.toCharArray() );
     }
 
     @Universal
-    public static char[] add ( char[] array, StringBuilder stringBuilder ) {
+    public static char[] add( char[] array, StringBuilder stringBuilder ) {
         return add( array, getCharsFromStringBuilder( stringBuilder ) );
     }
 
 
     @Universal
-    public static char[] add ( char[] array, char[] array2 ) {
+    public static char[] add( char[] array, char[] array2 ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -270,7 +270,7 @@ public class Chr {
 
 
     @Universal
-    public static char[] insert ( final char[] array, final int idx, final char v ) {
+    public static char[] insert( final char[] array, final int idx, final char v ) {
         Objects.requireNonNull( array );
 
         if ( idx >= array.length ) {
@@ -310,19 +310,19 @@ public class Chr {
 
 
     @Universal
-    public static char[] insert ( final char[] array, final int fromIndex, String values ) {
+    public static char[] insert( final char[] array, final int fromIndex, String values ) {
         return insert( array, fromIndex, values.toCharArray() );
     }
 
 
     @Universal
-    public static char[] insert ( final char[] array, final int fromIndex, StringBuilder values ) {
+    public static char[] insert( final char[] array, final int fromIndex, StringBuilder values ) {
         return insert( array, fromIndex, getCharsFromStringBuilder( values ) );
     }
 
 
     @Universal
-    public static char[] insert ( final char[] array, final int fromIndex, final char[] values ) {
+    public static char[] insert( final char[] array, final int fromIndex, final char[] values ) {
         Objects.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
@@ -369,14 +369,14 @@ public class Chr {
     /* End universal methods. */
 
 
-    private static char[] getCharsFromStringBuilder ( StringBuilder sbuf ) {
+    private static char[] getCharsFromStringBuilder( StringBuilder sbuf ) {
         int length = sbuf.length();
         char[] array2 = new char[ sbuf.length() ];
         sbuf.getChars( 0, sbuf.length(), array2, 0 );
         return array2;
     }
 
-    private static int calculateIndex ( char[] array, int originalIndex ) {
+    private static int calculateIndex( char[] array, int originalIndex ) {
         final int length = array.length;
 
         Objects.requireNonNull( array, "array cannot be null" );
@@ -414,7 +414,7 @@ public class Chr {
     //
 
 
-    public static char[] rpad ( final char[] in, final int size, char pad ) {
+    public static char[] rpad( final char[] in, final int size, char pad ) {
 
         if ( in.length >= size ) {
             return in;
@@ -436,7 +436,7 @@ public class Chr {
     }
 
 
-    public static char[] lpad ( final char[] in, final int size, char pad ) {
+    public static char[] lpad( final char[] in, final int size, char pad ) {
 
         if ( in.length >= size ) {
             return in;
@@ -460,7 +460,7 @@ public class Chr {
     }
 
 
-    public static char[] underBarCase ( char[] in ) {
+    public static char[] underBarCase( char[] in ) {
 
         if ( in == null || in.length == 0 || in.length == 1 ) {
             return in;
@@ -513,7 +513,7 @@ public class Chr {
     }
 
 
-    public static char[] camelCase ( char[] in, boolean upper ) {
+    public static char[] camelCase( char[] in, boolean upper ) {
 
         if ( in == null || in.length == 0 || in.length == 1 ) {
             return in;
@@ -554,14 +554,14 @@ public class Chr {
     }
 
 
-    public static char[][] split ( final char[] inputArray,
-                                   final char split ) {
+    public static char[][] split( final char[] inputArray,
+                                  final char split ) {
         return CharScanner.split( inputArray, split );
 
     }
 
 
-    public static boolean contains ( char[] chars, char c ) {
+    public static boolean contains( char[] chars, char c ) {
         for ( int index = 0; index < chars.length; index++ ) {
             char ch = chars[ index ];
             if ( ch == c ) {
@@ -572,7 +572,7 @@ public class Chr {
     }
 
 
-    public static boolean contains ( char[] chars, char c, int start, final int length ) {
+    public static boolean contains( char[] chars, char c, int start, final int length ) {
         final int to = length + start;
         for ( int index = start; index < to; index++ ) {
             char ch = chars[ index ];
@@ -583,7 +583,7 @@ public class Chr {
         return false;
     }
 
-    public static void _idx ( char[] buffer, int location, byte[] chars ) {
+    public static void _idx( char[] buffer, int location, byte[] chars ) {
         int index2 = 0;
         int endLocation = ( location + chars.length );
         for ( int index = location; index < endLocation; index++, index2++ ) {
@@ -592,7 +592,7 @@ public class Chr {
     }
 
 
-    public static void _idx ( final char[] array, int startIndex, char[] input ) {
+    public static void _idx( final char[] array, int startIndex, char[] input ) {
         try {
 
             System.arraycopy( input, 0, array, startIndex, input.length );
@@ -602,7 +602,7 @@ public class Chr {
         }
     }
 
-    public static void _idx ( final char[] array, int startIndex, char[] input, final int inputLength ) {
+    public static void _idx( final char[] array, int startIndex, char[] input, final int inputLength ) {
         try {
 
             System.arraycopy( input, 0, array, startIndex, inputLength );
@@ -612,7 +612,7 @@ public class Chr {
         }
     }
 
-    public static void _idx ( char[] buffer, int location, byte[] chars, int start, int end ) {
+    public static void _idx( char[] buffer, int location, byte[] chars, int start, int end ) {
 
         int index2 = start;
         int endLocation = ( location + ( end - start ) );
@@ -623,7 +623,7 @@ public class Chr {
     }
 
 
-    public static char[] trim ( char[] buffer, int start, int to ) {
+    public static char[] trim( char[] buffer, int start, int to ) {
 
 
         while ( ( start < to ) && (

@@ -8,19 +8,19 @@ import java.util.List;
 public class Tag {
     private String name = "bar";
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    public void setName ( String name ) {
+    public void setName( String name ) {
         this.name = name;
     }
 
-    public Tag ( String name ) {
+    public Tag( String name ) {
         this.name = name;
     }
 
-    public Tag () {
+    public Tag() {
     }
 
     List<Meta> metas = new ArrayList<>();
@@ -33,7 +33,7 @@ public class Tag {
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "Tag{" +
                 "name='" + name + '\'' +
                 ", metas=" + metas +

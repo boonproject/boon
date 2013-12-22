@@ -30,19 +30,19 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     private Map<String, FieldAccess> fields;
 
 
-    public ResultSetImpl ( Map<String, FieldAccess> fields ) {
+    public ResultSetImpl( Map<String, FieldAccess> fields ) {
         this.fields = fields;
         this.allResults = new ArrayList<>();
     }
 
 
-    public ResultSetImpl ( List<T> results, Map<String, FieldAccess> fields ) {
+    public ResultSetImpl( List<T> results, Map<String, FieldAccess> fields ) {
         this.fields = fields;
         this.allResults = new ArrayList<>();
         this.addResults( results );
     }
 
-    public ResultSetImpl ( List<T> results ) {
+    public ResultSetImpl( List<T> results ) {
         if ( results.size() > 0 ) {
             this.fields = BeanUtils.getPropertyFieldAccessMap( results.get( 0 ).getClass() );
         } else {
@@ -52,7 +52,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         this.addResults( results );
     }
 
-    private void prepareResults () {
+    private void prepareResults() {
         if ( results == null && allResults.size() == 1 ) {
             results = allResults.get( 0 );
         } else if ( results == null ) {
@@ -70,14 +70,14 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
 
-    public void addResults ( List<T> results ) {
+    public void addResults( List<T> results ) {
         lastList = results;
         totalSize += results.size();
         allResults.add( results );
     }
 
     @Override
-    public ResultSet expectOne () {
+    public ResultSet expectOne() {
         prepareResults();
         if ( results.size() == 0 ) {
             throw new DataRepoException( "Expected one result, no results" );
@@ -88,12 +88,12 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public <EXPECT> ResultSet<EXPECT> expectOne ( Class<EXPECT> clz ) {
+    public <EXPECT> ResultSet<EXPECT> expectOne( Class<EXPECT> clz ) {
         return ( ResultSet<EXPECT> ) this.expectOne();
     }
 
     @Override
-    public ResultSet expectMany () {
+    public ResultSet expectMany() {
         prepareResults();
 
         if ( results.size() <= 1 ) {
@@ -103,7 +103,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public ResultSet expectNone () {
+    public ResultSet expectNone() {
         prepareResults();
 
         if ( results.size() != 0 ) {
@@ -113,7 +113,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public ResultSet expectOneOrMany () {
+    public ResultSet expectOneOrMany() {
         prepareResults();
 
         if ( results.size() >= 1 ) {
@@ -123,34 +123,34 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public ResultSet removeDuplication () {
+    public ResultSet removeDuplication() {
         prepareResults();
         results = new ArrayList( asSet() );
         return this;
     }
 
     @Override
-    public ResultSet sort ( Sort sort ) {
+    public ResultSet sort( Sort sort ) {
         prepareResults();
         sort.sort( results );
         return this;
     }
 
     @Override
-    public Collection<T> filter ( Criteria criteria ) {
+    public Collection<T> filter( Criteria criteria ) {
         prepareResults();
         return QueryFactory.filter( results, criteria );
     }
 
     @Override
-    public void filterAndPrune ( Criteria criteria ) {
+    public void filterAndPrune( Criteria criteria ) {
         prepareResults();
         this.results = QueryFactory.filter( results, criteria );
     }
 
 
     @Override
-    public ResultSet<List<Map<String, Object>>> select ( Selector... selectors ) {
+    public ResultSet<List<Map<String, Object>>> select( Selector... selectors ) {
         prepareResults();
         return new ResultSetImpl(
                 Selector.performSelection(
@@ -160,7 +160,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public int[] selectInts ( Selector selector ) {
+    public int[] selectInts( Selector selector ) {
         prepareResults();
 
         int[] values = new int[ results.size() ];
@@ -176,7 +176,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public float[] selectFloats ( Selector selector ) {
+    public float[] selectFloats( Selector selector ) {
         prepareResults();
 
         float[] values = new float[ results.size() ];
@@ -192,7 +192,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public short[] selectShorts ( Selector selector ) {
+    public short[] selectShorts( Selector selector ) {
         prepareResults();
 
         short[] values = new short[ results.size() ];
@@ -208,7 +208,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public double[] selectDoubles ( Selector selector ) {
+    public double[] selectDoubles( Selector selector ) {
         prepareResults();
 
         double[] values = new double[ results.size() ];
@@ -224,7 +224,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public byte[] selectBytes ( Selector selector ) {
+    public byte[] selectBytes( Selector selector ) {
         prepareResults();
 
         byte[] values = new byte[ results.size() ];
@@ -240,7 +240,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public char[] selectChars ( Selector selector ) {
+    public char[] selectChars( Selector selector ) {
         prepareResults();
 
         char[] values = new char[ results.size() ];
@@ -256,7 +256,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public Object[] selectObjects ( Selector selector ) {
+    public Object[] selectObjects( Selector selector ) {
         prepareResults();
 
         Object[] values = new Object[ results.size() ];
@@ -272,7 +272,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public <OBJ> OBJ[] selectObjects ( Class<OBJ> cls, Selector selector ) {
+    public <OBJ> OBJ[] selectObjects( Class<OBJ> cls, Selector selector ) {
         prepareResults();
 
         Object values = Array.newInstance( cls, results.size() );
@@ -289,7 +289,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
 
     @Override
-    public <OBJ> ResultSet<OBJ> selectObjectsAsResultSet ( Class<OBJ> cls, Selector selector ) {
+    public <OBJ> ResultSet<OBJ> selectObjectsAsResultSet( Class<OBJ> cls, Selector selector ) {
         prepareResults();
 
         Object values = Array.newInstance( cls, results.size() );
@@ -307,21 +307,21 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public Collection<T> asCollection () {
+    public Collection<T> asCollection() {
         prepareResults();
 
         return results;
     }
 
     @Override
-    public String asJSONString () {
+    public String asJSONString() {
         prepareResults();
 
         throw new RuntimeException( "NOT IMPLEMENTED" );
     }
 
     @Override
-    public List<Map<String, Object>> asListOfMaps () {
+    public List<Map<String, Object>> asListOfMaps() {
         prepareResults();
 
 
@@ -334,44 +334,44 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public List<T> asList () {
+    public List<T> asList() {
         prepareResults();
 
         return results;
     }
 
     @Override
-    public Set<T> asSet () {
+    public Set<T> asSet() {
         prepareResults();
 
         return new HashSet( results );
     }
 
     @Override
-    public List<PlanStep> queryPlan () {
+    public List<PlanStep> queryPlan() {
         throw new RuntimeException( "NOT IMPLEMENTED" );
     }
 
     @Override
-    public T firstItem () {
+    public T firstItem() {
         prepareResults();
 
         return results.get( 0 );
     }
 
     @Override
-    public Map<String, Object> firstMap () {
+    public Map<String, Object> firstMap() {
         prepareResults();
         return toMap( this.firstItem() );
     }
 
     @Override
-    public String firstJSON () {
+    public String firstJSON() {
         throw new RuntimeException( "NOT IMPLEMENTED" );
     }
 
     @Override
-    public int firstInt ( Selector selector ) {
+    public int firstInt( Selector selector ) {
         prepareResults();
 
         int[] values = new int[ 1 ];
@@ -392,7 +392,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public float firstFloat ( Selector selector ) {
+    public float firstFloat( Selector selector ) {
         prepareResults();
 
         float[] values = new float[ 1 ];
@@ -411,7 +411,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public short firstShort ( Selector selector ) {
+    public short firstShort( Selector selector ) {
         prepareResults();
 
         short[] values = new short[ 1 ];
@@ -430,7 +430,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public double firstDouble ( Selector selector ) {
+    public double firstDouble( Selector selector ) {
         prepareResults();
 
         double[] values = new double[ 1 ];
@@ -449,7 +449,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public byte firstByte ( Selector selector ) {
+    public byte firstByte( Selector selector ) {
         prepareResults();
 
         byte[] values = new byte[ 1 ];
@@ -468,7 +468,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public char firstChar ( Selector selector ) {
+    public char firstChar( Selector selector ) {
         prepareResults();
 
         char[] values = new char[ 1 ];
@@ -487,7 +487,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public Object firstObject ( Selector selector ) {
+    public Object firstObject( Selector selector ) {
         prepareResults();
 
         Object[] values = new Object[ 1 ];
@@ -506,7 +506,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public <OBJ> OBJ firstObject ( Class<OBJ> cls, Selector selector ) {
+    public <OBJ> OBJ firstObject( Class<OBJ> cls, Selector selector ) {
         prepareResults();
 
         Object[] values = new Object[ 1 ];
@@ -525,14 +525,14 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public List<T> paginate ( int start, int size ) {
+    public List<T> paginate( int start, int size ) {
         prepareResults();
 
         return results.subList( start, start + size );
     }
 
     @Override
-    public List<Map<String, Object>> paginateMaps ( int start, int size ) {
+    public List<Map<String, Object>> paginateMaps( int start, int size ) {
         prepareResults();
 
         List<Map<String, Object>> mapResults = new ArrayList<>();
@@ -546,14 +546,14 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public String paginateJSON ( int start, int size ) {
+    public String paginateJSON( int start, int size ) {
         prepareResults();
 
         throw new RuntimeException( "NOT IMPLEMENTED" );
     }
 
     @Override
-    public int size () {
+    public int size() {
         if ( results != null ) {
             return this.results.size();
         } else {
@@ -562,13 +562,13 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public Iterator<T> iterator () {
+    public Iterator<T> iterator() {
         prepareResults();
         return this.results.iterator();
     }
 
     @Override
-    public void andResults () {
+    public void andResults() {
         if ( allResults.size() == 0 ) {
             return;
         }
@@ -621,7 +621,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public int lastSize () {
+    public int lastSize() {
         if ( lastList == null ) {
             return 0;
         } else {

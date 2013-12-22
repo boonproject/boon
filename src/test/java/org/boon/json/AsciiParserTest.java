@@ -8,9 +8,9 @@ import org.boon.json.implementation.JsonAsciiParser;
 public class AsciiParserTest extends JsonParserBaseTest {
 
 
-    public JsonParserFactory factory () {
+    public JsonParserFactory factory() {
         return new JsonParserFactory() {
-            public JsonParser create () {
+            public JsonParser create() {
                 return new JsonAsciiParser();
             }
         };

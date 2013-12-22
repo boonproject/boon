@@ -26,7 +26,7 @@ public class JsonFastParser extends JsonParserCharArray {
     private final boolean chop;
     private final boolean lazyChop;
 
-    public JsonFastParser () {
+    public JsonFastParser() {
         useValues = false;
         chop = false;
         lazyChop = true;
@@ -34,14 +34,14 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    public JsonFastParser ( boolean useValues ) {
+    public JsonFastParser( boolean useValues ) {
         this.useValues = useValues;
         chop = false;
         lazyChop = true;
     }
 
 
-    public JsonFastParser ( boolean useValues, boolean chop ) {
+    public JsonFastParser( boolean useValues, boolean chop ) {
         this.useValues = useValues;
         this.chop = chop;
         lazyChop = !chop;
@@ -49,7 +49,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    public JsonFastParser ( boolean useValues, boolean chop, boolean lazyChop ) {
+    public JsonFastParser( boolean useValues, boolean chop, boolean lazyChop ) {
         this.useValues = useValues;
         this.chop = chop;
         this.lazyChop = lazyChop;
@@ -57,7 +57,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    protected final Value decodeJsonObjectLazyFinalParse () {
+    protected final Value decodeJsonObjectLazyFinalParse() {
 
         if ( __currentChar == '{' )
             this.nextChar();
@@ -119,11 +119,11 @@ public class JsonFastParser extends JsonParserCharArray {
         return value;
     }
 
-    protected Value decodeValue () {
+    protected Value decodeValue() {
         return decodeValueOverlay();
     }
 
-    private Value decodeValueOverlay () {
+    private Value decodeValueOverlay() {
         skipWhiteSpace();
 
         label:
@@ -214,7 +214,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    private Value decodeNumberOverlay () {
+    private Value decodeNumberOverlay() {
 
         int startIndex = __index;
 
@@ -320,7 +320,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    private Value decodeStringOverlay () {
+    private Value decodeStringOverlay() {
 
 
         __currentChar = charArray[ __index ];
@@ -386,7 +386,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    private Value decodeJsonArrayOverlay () {
+    private Value decodeJsonArrayOverlay() {
         if ( __currentChar == '[' ) {
             this.nextChar();
         }
@@ -451,7 +451,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    protected <T> T convert ( Class<T> type, T object ) {
+    protected <T> T convert( Class<T> type, T object ) {
         if ( type == Map.class || type == List.class ) {
             return object;
         } else {
@@ -464,7 +464,7 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    protected final Object decodeFromChars ( char[] cs ) {
+    protected final Object decodeFromChars( char[] cs ) {
         return ( ( Value ) super.decodeFromChars( cs ) ).toValue();
     }
 

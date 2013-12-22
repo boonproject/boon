@@ -16,7 +16,7 @@ public class BenchmarkHelper {
     final static String getTestFirstName = "AAA";
 
 
-    public static List<Employee> createMetricTonOfEmployees ( int numEmps ) {
+    public static List<Employee> createMetricTonOfEmployees( int numEmps ) {
         List<Employee> employees = new ArrayList<>();
         List<String> firstNames = Lists.list( RandomWordUtil.generateWords( numEmps ) );
         List<String> lastNames = Lists.list( RandomWordUtil.generateWords( numEmps ) );

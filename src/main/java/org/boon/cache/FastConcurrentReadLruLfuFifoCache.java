@@ -22,7 +22,7 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
 
     private final TimeKeeper timeKeeper;
 
-    public FastConcurrentReadLruLfuFifoCache ( int evictSize ) {
+    public FastConcurrentReadLruLfuFifoCache( int evictSize ) {
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
         list = new SortableConcurrentList<>();
         this.type = CacheType.LFU;
@@ -31,7 +31,7 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
     }
 
 
-    public FastConcurrentReadLruLfuFifoCache ( int evictSize, Tradeoffs tradeoffs, CacheType type ) {
+    public FastConcurrentReadLruLfuFifoCache( int evictSize, Tradeoffs tradeoffs, CacheType type ) {
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
 
         this.type = type;
@@ -55,7 +55,7 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
      * @param evictSize
      * @param type
      */
-    FastConcurrentReadLruLfuFifoCache ( boolean test, int evictSize, CacheType type ) {
+    FastConcurrentReadLruLfuFifoCache( boolean test, int evictSize, CacheType type ) {
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
         list = new SortableConcurrentList<>();
         this.type = type;
@@ -64,14 +64,14 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
             int i;
 
             @Override
-            public long time () {
+            public long time() {
                 return System.currentTimeMillis() + i++;
             }
         };
 
     }
 
-    public VALUE get ( KEY key ) {
+    public VALUE get( KEY key ) {
         CacheEntry<KEY, VALUE> cacheEntry = map.get( key );
         if ( cacheEntry != null ) {
             cacheEntry.readCount.incrementAndGet();
@@ -82,7 +82,7 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
 
     }
 
-    public VALUE getSilent ( KEY key ) {
+    public VALUE getSilent( KEY key ) {
         CacheEntry<KEY, VALUE> cacheEntry = map.get( key );
         if ( cacheEntry != null ) {
             return cacheEntry.value;
@@ -93,14 +93,14 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
     }
 
     @Override
-    public void remove ( KEY key ) {
+    public void remove( KEY key ) {
         CacheEntry<KEY, VALUE> entry = map.remove( key );
         if ( entry != null ) {
             list.remove( entry );
         }
     }
 
-    public void put ( KEY key, VALUE value ) {
+    public void put( KEY key, VALUE value ) {
         CacheEntry<KEY, VALUE> entry = map.get( key );
 
 
@@ -115,12 +115,12 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
         evictIfNeeded();
     }
 
-    private long time () {
+    private long time() {
         return this.timeKeeper.time();
     }
 
 
-    private final int order () {
+    private final int order() {
         int order = count.incrementAndGet();
         if ( order > Integer.MAX_VALUE - 100 ) {
             count.set( 0 );
@@ -128,7 +128,7 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
         return order;
     }
 
-    private final void evictIfNeeded () {
+    private final void evictIfNeeded() {
         if ( list.size() > evictSize ) {
 
             final List<CacheEntry<KEY, VALUE>> killList = list.sortAndReturnPurgeList( 0.1f );
@@ -140,12 +140,12 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
 
     }
 
-    public String toString () {
+    public String toString() {
         return map.toString();
     }
 
 
-    public int size () {
+    public int size() {
         return this.map.size();
     }
 }

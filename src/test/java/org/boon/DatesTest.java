@@ -15,7 +15,7 @@ public class DatesTest {
 
 
     @Test
-    public void testIsoShortDate () {
+    public void testIsoShortDate() {
         String test = "1994-11-05T08:15:30Z";
 
         Date date = Dates.fromISO8601( test );
@@ -27,7 +27,7 @@ public class DatesTest {
     }
 
     @Test
-    public void testIsoLongDate () {
+    public void testIsoLongDate() {
         String test = "1994-11-05T08:11:22-05:00";
 
         Date date = Dates.fromISO8601( test );
@@ -53,7 +53,7 @@ public class DatesTest {
 
      */
     @Test
-    public void jsonJavaScriptDate () {
+    public void jsonJavaScriptDate() {
         String test = "2013-12-14T01:55:33.412Z";
 
         Date date = Dates.fromJsonDate( test );
@@ -66,7 +66,7 @@ public class DatesTest {
 
 
     @Test
-    public void testIsoLooseDate () {
+    public void testIsoLooseDate() {
         String test = "1994-11-05T08:11:22.123";
 
         Date date = Dates.fromISO8601DateLoose( test );
@@ -79,7 +79,7 @@ public class DatesTest {
     }
 
     @Test
-    public void testIsoLooserDate () {
+    public void testIsoLooserDate() {
         String test = "1994-11-05";
 
         Date date = Dates.fromISO8601DateLoose( test );
@@ -92,7 +92,7 @@ public class DatesTest {
     }
 
     @Test
-    public void testIsoLoose2Date () {
+    public void testIsoLoose2Date() {
         String test = "1994-11-05-08:11:22";
 
         Date date = Dates.fromISO8601DateLoose( test );
@@ -105,7 +105,7 @@ public class DatesTest {
     }
 
     @Test
-    public void testDates () {
+    public void testDates() {
         long now = Dates.utcNow();
         Date clockTime = new Date( Dates.lastNow() );
         long lClocktime = Dates.fromUtcTimeToTimeZone( now, TimeZone.getTimeZone( "PACIFIC" ) );
@@ -118,7 +118,7 @@ public class DatesTest {
 
 
     @Test
-    public void testBeforeAfter () {
+    public void testBeforeAfter() {
 
         puts( TimeZone.getDefault() );
 
@@ -132,7 +132,7 @@ public class DatesTest {
 
 
     @Test
-    public void testUtcDate () {
+    public void testUtcDate() {
 
         long epic = Dates.utcDate( 1970, Calendar.MAY, 29 );
         long forties = Dates.utcDate( 1940, Calendar.MAY, 29 );
@@ -143,7 +143,7 @@ public class DatesTest {
     }
 
     @Test
-    public void testDate () {
+    public void testDate() {
 
         long epic = Dates.date( 1970, Calendar.MAY, 29 );
         long forties = Dates.date( 1940, Calendar.MAY, 29 );
@@ -155,7 +155,7 @@ public class DatesTest {
 
 
     @Test
-    public void wallTimeDate () {
+    public void wallTimeDate() {
 
         long epic = Dates.wallTimeDate( 1970, Calendar.MAY, 29 );
         long forties = Dates.wallTimeDate( 1940, Calendar.MAY, 29 );
@@ -167,7 +167,7 @@ public class DatesTest {
 
 
     @Test
-    public void wallTimeLongDate () {
+    public void wallTimeLongDate() {
 
         long epic = Dates.wallTimeDate( 1970, Calendar.MAY, 29, 5, 5 );
         long forties = Dates.wallTimeDate( 1940, Calendar.MAY, 29 );
@@ -179,7 +179,7 @@ public class DatesTest {
 
 
     @Test
-    public void testTZDate () {
+    public void testTZDate() {
 
         long epic = Dates.date( TimeZone.getTimeZone( "UTC" ), 1970, Calendar.MAY, 29 );
         long forties = Dates.date( TimeZone.getTimeZone( "UTC" ), 1940, Calendar.MAY, 29 );
@@ -189,7 +189,7 @@ public class DatesTest {
     }
 
     @Test
-    public void testLongUTCDate () {
+    public void testLongUTCDate() {
 
         long epic = Dates.date( 1970, Calendar.MAY, 29, 5, 5 );
         long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
@@ -201,7 +201,7 @@ public class DatesTest {
 
 
     @Test
-    public void testLongTZDate () {
+    public void testLongTZDate() {
 
         long epic = Dates.date( TimeZone.getTimeZone( "UTC" ), 1970, Calendar.MAY, 29, 5, 5 );
         long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
@@ -214,7 +214,7 @@ public class DatesTest {
 
 
     @Test
-    public void testLongDate () {
+    public void testLongDate() {
 
         long epic = Dates.date( 1970, Calendar.MAY, 29, 5, 5 );
         long forties = Dates.date( 1940, Calendar.MAY, 29, 5, 5 );
@@ -225,7 +225,7 @@ public class DatesTest {
 
 
     @Test
-    public void testAdvance () {
+    public void testAdvance() {
 
         //years
         long epic = Dates.utcNow();
@@ -295,7 +295,7 @@ public class DatesTest {
 
     }
 
-    public void testBeforeAfter ( long epic, long forties ) {
+    public void testBeforeAfter( long epic, long forties ) {
 
 
         assertTrue(

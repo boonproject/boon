@@ -12,11 +12,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Lists {
 
 
-    public static <V> List<V> list ( Class<V> clazz ) {
+    public static <V> List<V> list( Class<V> clazz ) {
         return new ArrayList<>();
     }
 
-    public static <V> List<V> list ( Iterable<V> iterable ) {
+    public static <V> List<V> list( Iterable<V> iterable ) {
         List<V> list = new ArrayList<>();
         for ( V o : iterable ) {
             list.add( o );
@@ -25,7 +25,7 @@ public class Lists {
     }
 
 
-    public static List<?> toList ( Object item ) {
+    public static List<?> toList( Object item ) {
         if ( item == null ) {
             return new ArrayList<>();
         } else if ( item.getClass().isArray() ) {
@@ -50,11 +50,11 @@ public class Lists {
         }
     }
 
-    public static <V> List<V> list ( Collection<V> collection ) {
+    public static <V> List<V> list( Collection<V> collection ) {
         return new ArrayList<>( collection );
     }
 
-    public static <V> List<V> list ( Enumeration<V> enumeration ) {
+    public static <V> List<V> list( Enumeration<V> enumeration ) {
         List<V> list = new ArrayList<>();
         while ( enumeration.hasMoreElements() ) {
             list.add( enumeration.nextElement() );
@@ -63,16 +63,16 @@ public class Lists {
     }
 
 
-    public static <V> Enumeration<V> enumeration ( final List<V> list ) {
+    public static <V> Enumeration<V> enumeration( final List<V> list ) {
         final Iterator<V> iter = list.iterator();
         return new Enumeration<V>() {
             @Override
-            public boolean hasMoreElements () {
+            public boolean hasMoreElements() {
                 return iter.hasNext();
             }
 
             @Override
-            public V nextElement () {
+            public V nextElement() {
                 return iter.next();
             }
         };
@@ -80,7 +80,7 @@ public class Lists {
     }
 
 
-    public static <V> List<V> list ( Iterator<V> iterator ) {
+    public static <V> List<V> list( Iterator<V> iterator ) {
         List<V> list = new ArrayList<>();
         while ( iterator.hasNext() ) {
             list.add( iterator.next() );
@@ -88,7 +88,7 @@ public class Lists {
         return list;
     }
 
-    public static <V, N> List<N> list ( Function<V, N> function, final V... array ) {
+    public static <V, N> List<N> list( Function<V, N> function, final V... array ) {
         if ( array == null ) {
             return new ArrayList<>();
         }
@@ -102,7 +102,7 @@ public class Lists {
 
 
     @SafeVarargs
-    public static <V> List<V> list ( final V... array ) {
+    public static <V> List<V> list( final V... array ) {
         if ( array == null ) {
             return new ArrayList<>();
         }
@@ -112,12 +112,12 @@ public class Lists {
     }
 
     @SafeVarargs
-    public static <V> List<V> safeList ( final V... array ) {
+    public static <V> List<V> safeList( final V... array ) {
         return new CopyOnWriteArrayList<>( array );
     }
 
     @SafeVarargs
-    public static <V> List<V> linkedList ( final V... array ) {
+    public static <V> List<V> linkedList( final V... array ) {
         if ( array == null ) {
             return new ArrayList<>();
         }
@@ -127,11 +127,11 @@ public class Lists {
     }
 
 
-    public static <V> List<V> safeList ( Collection<V> collection ) {
+    public static <V> List<V> safeList( Collection<V> collection ) {
         return new CopyOnWriteArrayList<>( collection );
     }
 
-    public static <V> List<V> linkedList ( Collection<V> collection ) {
+    public static <V> List<V> linkedList( Collection<V> collection ) {
         return new LinkedList<>( collection );
     }
 
@@ -139,26 +139,26 @@ public class Lists {
      * Universal methods
      */
     @Universal
-    public static int len ( List<?> list ) {
+    public static int len( List<?> list ) {
         return list.size();
     }
 
-    public static boolean isEmpty ( List<?> list ) {
+    public static boolean isEmpty( List<?> list ) {
         return list == null || list.size() == 0;
     }
 
     @Universal
-    public static <V> boolean in ( V value, List<?> list ) {
+    public static <V> boolean in( V value, List<?> list ) {
         return list.contains( value );
     }
 
     @Universal
-    public static <V> void add ( List<V> list, V value ) {
+    public static <V> void add( List<V> list, V value ) {
         list.add( value );
     }
 
     @Universal
-    public static <T> T idx ( List<T> list, final int index ) {
+    public static <T> T idx( List<T> list, final int index ) {
         int i = calculateIndex( list, index );
         if ( i > list.size() - 1 ) {
             i = list.size() - 1;
@@ -168,32 +168,32 @@ public class Lists {
     }
 
     @Universal
-    public static <V> void idx ( List<V> list, int index, V v ) {
+    public static <V> void idx( List<V> list, int index, V v ) {
         int i = calculateIndex( list, index );
         list.set( i, v );
     }
 
     @Universal
-    public static <V> List<V> slc ( List<V> list, int startIndex, int endIndex ) {
+    public static <V> List<V> slc( List<V> list, int startIndex, int endIndex ) {
         int start = calculateIndex( list, startIndex );
         int end = calculateIndex( list, endIndex );
         return list.subList( start, end );
     }
 
     @Universal
-    public static <V> List<V> slc ( List<V> list, int startIndex ) {
+    public static <V> List<V> slc( List<V> list, int startIndex ) {
         return slc( list, startIndex, list.size() );
     }
 
 
     @Universal
-    public static <V> List<V> slcEnd ( List<V> list, int endIndex ) {
+    public static <V> List<V> slcEnd( List<V> list, int endIndex ) {
         return slc( list, 0, endIndex );
     }
 
 
     @Universal
-    public static <V> List<V> copy ( List<V> list ) {
+    public static <V> List<V> copy( List<V> list ) {
         if ( list instanceof LinkedList ) {
             return new LinkedList<>( list );
         } else if ( list instanceof CopyOnWriteArrayList ) {
@@ -204,33 +204,33 @@ public class Lists {
     }
 
     @Universal
-    public static <V> List<V> copy ( CopyOnWriteArrayList<V> list ) {
+    public static <V> List<V> copy( CopyOnWriteArrayList<V> list ) {
         Objects.requireNonNull( list, "listStream cannot be null" );
         return new CopyOnWriteArrayList<>( list );
     }
 
     @Universal
-    public static <V> List<V> copy ( ArrayList<V> list ) {
+    public static <V> List<V> copy( ArrayList<V> list ) {
         Objects.requireNonNull( list, "listStream cannot be null" );
         return new ArrayList<>( list );
     }
 
     @Universal
-    public static <V> List<V> copy ( LinkedList<V> list ) {
+    public static <V> List<V> copy( LinkedList<V> list ) {
         Objects.requireNonNull( list, "listStream cannot be null" );
         return new LinkedList<>( list );
     }
 
 
     @Universal
-    public static <V> void insert ( List<V> list, int index, V v ) {
+    public static <V> void insert( List<V> list, int index, V v ) {
         int i = calculateIndex( list, index );
         list.add( i, v );
     }
 
 
     /* End universal methods. */
-    private static <T> int calculateIndex ( List<T> list, int originalIndex ) {
+    private static <T> int calculateIndex( List<T> list, int originalIndex ) {
         final int length = list.size();
 
         Objects.requireNonNull( list, "listStream cannot be null" );
@@ -260,7 +260,7 @@ public class Lists {
     }
 
 
-    public static <T> List<T> listFromProperty ( Class<T> propertyType, String propertyPath, Collection<?> list ) {
+    public static <T> List<T> listFromProperty( Class<T> propertyType, String propertyPath, Collection<?> list ) {
         List<T> newList = new ArrayList<>( list.size() );
 
         for ( Object item : list ) {
@@ -273,7 +273,7 @@ public class Lists {
     }
 
 
-    public static List<Map<String, Object>> toListOfMaps ( List<?> list ) {
+    public static List<Map<String, Object>> toListOfMaps( List<?> list ) {
         return Reflection.toListOfMaps( list );
     }
 

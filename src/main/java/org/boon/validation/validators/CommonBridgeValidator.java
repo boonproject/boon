@@ -25,7 +25,7 @@ public class CommonBridgeValidator extends BaseValidator {
     private Object validator;
     private Method validateMethod;
 
-    public ValidatorMessageHolder validate ( Object object, String fieldLabel ) {
+    public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
         ValidatorMessage message = new ValidatorMessage();
         if ( object == null ) {
             return message;
@@ -47,7 +47,7 @@ public class CommonBridgeValidator extends BaseValidator {
         return message;
     }
 
-    private void initValidateMethodIfNeeded () throws Exception {
+    private void initValidateMethodIfNeeded() throws Exception {
         if ( validateMethod == null ) {
             validateMethod = validatorClass.getMethod( methodName, new Class[]{ String.class } );
         }
@@ -56,7 +56,7 @@ public class CommonBridgeValidator extends BaseValidator {
     /**
      * @throws Exception if something goes wrong
      */
-    private void initValidatorIfNeeded () throws Exception {
+    private void initValidatorIfNeeded() throws Exception {
         if ( validator == null ) {
             if ( factoryMethod == null ) {
                 validator = validatorClass.newInstance();
@@ -67,15 +67,15 @@ public class CommonBridgeValidator extends BaseValidator {
         }
     }
 
-    public void setMethodName ( String methodName ) {
+    public void setMethodName( String methodName ) {
         this.methodName = methodName;
     }
 
-    public void setValidatorClass ( Class<?> validatorClass ) {
+    public void setValidatorClass( Class<?> validatorClass ) {
         this.validatorClass = validatorClass;
     }
 
-    public void setFactoryMethod ( String factoryMethod ) {
+    public void setFactoryMethod( String factoryMethod ) {
         this.factoryMethod = factoryMethod;
     }
 

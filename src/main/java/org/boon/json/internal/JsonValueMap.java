@@ -13,7 +13,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     int len = 0;
 
-    public void add ( MapItemValue miv ) {
+    public void add( MapItemValue miv ) {
         if ( len == items.length ) {
             items = org.boon.Arrays.grow( items );
         }
@@ -25,42 +25,42 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
     static class FakeSet extends AbstractSet<Entry<String, Value>> {
         @Override
-        public <T> T[] toArray ( T[] a ) {
+        public <T> T[] toArray( T[] a ) {
             return ( T[] ) items;
         }
 
         Entry<String, Value>[] items;
 
-        FakeSet ( Entry<String, Value>[] items ) {
+        FakeSet( Entry<String, Value>[] items ) {
 
             this.items = items;
         }
 
         @Override
-        public Iterator<Entry<String, Value>> iterator () {
+        public Iterator<Entry<String, Value>> iterator() {
             return new Iterator<Entry<String, Value>>() {
                 int location = 0;
 
                 @Override
-                public boolean hasNext () {
+                public boolean hasNext() {
                     return location < items.length;
                 }
 
                 @Override
-                public Entry<String, Value> next () {
+                public Entry<String, Value> next() {
                     return items[ location++ ];
 
                 }
 
                 @Override
-                public void remove () {
+                public void remove() {
 
                 }
             };
         }
 
         @Override
-        public int size () {
+        public int size() {
             return items.length;
         }
 
@@ -70,7 +70,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
     private FakeSet set = new FakeSet( items );
 
     @Override
-    public Value get ( Object key ) {
+    public Value get( Object key ) {
         if ( map == null && items.length < 20 ) {
             for ( Object item : items ) {
                 MapItemValue miv = ( MapItemValue ) item;
@@ -87,14 +87,14 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
 
 
     @Override
-    public Value put ( String key, Value value ) {
+    public Value put( String key, Value value ) {
         die( "Not that kind of map" );
         return null;
     }
 
 
     @Override
-    public Set<Entry<String, Value>> entrySet () {
+    public Set<Entry<String, Value>> entrySet() {
         if ( map == null ) {
             return set;
         } else {
@@ -102,7 +102,7 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
         }
     }
 
-    private final void buildIfNeededMap () {
+    private final void buildIfNeededMap() {
         if ( map == null ) {
             map = new HashMap<>( items.length );
 
@@ -116,13 +116,13 @@ public class JsonValueMap extends AbstractMap<String, Value> implements Map<Stri
     }
 
 
-    public Collection<Value> values () {
+    public Collection<Value> values() {
         this.buildIfNeededMap();
         return map.values();
     }
 
 
-    public int size () {
+    public int size() {
         if ( map != null ) {
             return map.size();
         } else {

@@ -73,12 +73,12 @@ public class ReflectionTest {
 
 
     public static class Employee {
-        Employee ( String firstname ) {
+        Employee( String firstname ) {
             this.firstName = firstname;
 
         }
 
-        Employee () {
+        Employee() {
 
         }
 
@@ -122,7 +122,7 @@ public class ReflectionTest {
 
 
     @Test
-    public void testFromMap () throws Exception {
+    public void testFromMap() throws Exception {
 
         final Department engineering =
                 Maps.fromMap( department, Department.class );
@@ -169,7 +169,7 @@ public class ReflectionTest {
     }
 
     @Test
-    public void test () throws Exception {
+    public void test() throws Exception {
 
         Employee employee = new Employee();
 
@@ -337,7 +337,7 @@ public class ReflectionTest {
     }
 
 
-    public static void main ( String[] args ) {
+    public static void main( String[] args ) {
     }
 
 

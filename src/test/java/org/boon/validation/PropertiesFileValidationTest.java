@@ -26,18 +26,18 @@ import org.junit.Before;
 public class PropertiesFileValidationTest {
 
     @Before
-    public void setup () {
+    public void setup() {
         ValidationContext.create();
     }
 
     @After
-    public void cleanup () {
+    public void cleanup() {
         ValidationContext.destroy();
     }
 
 
     @Test
-    public void testRecursiveWithPropertyFile () {
+    public void testRecursiveWithPropertyFile() {
 
         Map<String, Object> objectMap = map(
                 "/org/boon/validator/required", ( Object ) new RequiredValidator(),

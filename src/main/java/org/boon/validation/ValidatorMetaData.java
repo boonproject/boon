@@ -16,31 +16,31 @@ public class ValidatorMetaData {
     private Map<String, Object> properties = new HashMap<>();
 
 
-    public static ValidatorMetaData validatorMeta ( String name, Map<String, Object> properties ) {
+    public static ValidatorMetaData validatorMeta( String name, Map<String, Object> properties ) {
         return new ValidatorMetaData( name, properties );
     }
 
-    public ValidatorMetaData () {
+    public ValidatorMetaData() {
     }
 
-    public ValidatorMetaData ( String name, Map<String, Object> properties ) {
+    public ValidatorMetaData( String name, Map<String, Object> properties ) {
         this.name = name;
         this.properties = properties;
     }
 
-    public void setName ( String name ) {
+    public void setName( String name ) {
         this.name = name;
     }
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    public void setProperties ( Map<String, Object> properties ) {
+    public void setProperties( Map<String, Object> properties ) {
         this.properties = properties;
     }
 
-    public Map<String, Object> getProperties () {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 }

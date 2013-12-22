@@ -9,15 +9,15 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final List<T> list;
 
-    public SortableConcurrentList ( List<T> list ) {
+    public SortableConcurrentList( List<T> list ) {
         this.list = list;
     }
 
-    public SortableConcurrentList () {
+    public SortableConcurrentList() {
         this.list = new ArrayList<>();
     }
 
-    public boolean remove ( Object o ) {
+    public boolean remove( Object o ) {
         readWriteLock.writeLock().lock();
         boolean ret;
         try {
@@ -29,7 +29,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public boolean containsAll ( Collection<?> c ) {
+    public boolean containsAll( Collection<?> c ) {
         readWriteLock.readLock().lock();
         try {
             return list.containsAll( c );
@@ -39,7 +39,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public boolean addAll ( Collection<? extends T> c ) {
+    public boolean addAll( Collection<? extends T> c ) {
         readWriteLock.writeLock().lock();
         try {
             return list.addAll( c );
@@ -49,7 +49,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public boolean addAll ( int index, Collection<? extends T> c ) {
+    public boolean addAll( int index, Collection<? extends T> c ) {
         readWriteLock.writeLock().lock();
         try {
             return list.addAll( index, c );
@@ -59,7 +59,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public boolean removeAll ( Collection<?> c ) {
+    public boolean removeAll( Collection<?> c ) {
         readWriteLock.writeLock().lock();
         try {
             return list.removeAll( c );
@@ -69,7 +69,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public boolean retainAll ( Collection<?> c ) {
+    public boolean retainAll( Collection<?> c ) {
         readWriteLock.writeLock().lock();
         try {
             return list.retainAll( c );
@@ -78,7 +78,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
         }
     }
 
-    public boolean add ( T t ) {
+    public boolean add( T t ) {
         readWriteLock.writeLock().lock();
         boolean ret;
         try {
@@ -89,7 +89,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
         return ret;
     }
 
-    public void clear () {
+    public void clear() {
         readWriteLock.writeLock().lock();
         try {
             list.clear();
@@ -99,7 +99,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
 
-    public int size () {
+    public int size() {
         readWriteLock.readLock().lock();
         try {
             return list.size();
@@ -109,7 +109,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public boolean isEmpty () {
+    public boolean isEmpty() {
         readWriteLock.readLock().lock();
         try {
             return list.isEmpty();
@@ -118,7 +118,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
         }
     }
 
-    public boolean contains ( Object o ) {
+    public boolean contains( Object o ) {
         readWriteLock.readLock().lock();
         try {
             return list.contains( o );
@@ -128,7 +128,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public Iterator<T> iterator () {
+    public Iterator<T> iterator() {
         readWriteLock.readLock().lock();
         try {
             return new ArrayList<>( list ).iterator();
@@ -138,7 +138,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public Object[] toArray () {
+    public Object[] toArray() {
 
         readWriteLock.readLock().lock();
         try {
@@ -149,7 +149,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public <T> T[] toArray ( final T[] a ) {
+    public <T> T[] toArray( final T[] a ) {
 
         readWriteLock.readLock().lock();
         try {
@@ -159,7 +159,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
         }
     }
 
-    public T get ( int index ) {
+    public T get( int index ) {
         readWriteLock.readLock().lock();
         try {
             return list.get( index );
@@ -169,7 +169,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public T set ( int index, T element ) {
+    public T set( int index, T element ) {
         readWriteLock.writeLock().lock();
         try {
             return list.set( index, element );
@@ -179,7 +179,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public void add ( int index, T element ) {
+    public void add( int index, T element ) {
         readWriteLock.writeLock().lock();
         try {
             list.add( index, element );
@@ -190,7 +190,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public T remove ( int index ) {
+    public T remove( int index ) {
         readWriteLock.writeLock().lock();
         try {
             return list.remove( index );
@@ -200,7 +200,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public int indexOf ( Object o ) {
+    public int indexOf( Object o ) {
         readWriteLock.readLock().lock();
         try {
             return list.indexOf( o );
@@ -210,7 +210,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public int lastIndexOf ( Object o ) {
+    public int lastIndexOf( Object o ) {
         readWriteLock.readLock().lock();
         try {
             return list.lastIndexOf( o );
@@ -220,7 +220,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public ListIterator<T> listIterator () {
+    public ListIterator<T> listIterator() {
         readWriteLock.readLock().lock();
         try {
             return new ArrayList( list ).listIterator();
@@ -230,7 +230,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public ListIterator<T> listIterator ( int index ) {
+    public ListIterator<T> listIterator( int index ) {
         readWriteLock.readLock().lock();
         try {
             return new ArrayList( list ).listIterator( index );
@@ -240,7 +240,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public List<T> subList ( int fromIndex, int toIndex ) {
+    public List<T> subList( int fromIndex, int toIndex ) {
         readWriteLock.readLock().lock();
         try {
             return list.subList( fromIndex, toIndex );
@@ -250,7 +250,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         readWriteLock.readLock().lock();
         try {
             return list.toString();
@@ -260,7 +260,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
 
-    public void sort () {
+    public void sort() {
         readWriteLock.writeLock().lock();
         try {
 
@@ -271,7 +271,7 @@ public class SortableConcurrentList<T extends Comparable> implements List<T> {
     }
 
 
-    public List<T> sortAndReturnPurgeList ( float removePercent ) {
+    public List<T> sortAndReturnPurgeList( float removePercent ) {
         readWriteLock.writeLock().lock();
         try {
             int size = list.size();
