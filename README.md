@@ -1,3 +1,137 @@
+Dec 22:
+java -jar target/microbenchmarks.jar ".*" -wi 2 -i 10 -f 2 -t 8
+
+
+Optimized number parsing for lax
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   180456.895     1663.941    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   179554.927     1889.281    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        20    1   160238.785     6537.182    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        20    1   158483.165     6443.420    ops/s
+```
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   180696.684      815.499    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   174979.648     3126.555    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        20    1   164817.132     2903.663    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        20    1   167799.771     3027.962    ops/s
+```
+
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   180843.734     1128.916    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   173554.706     2978.916    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        20    1   158631.125     3448.064    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        20    1   156412.933    10563.560    ops/s
+
+```
+Seems it made it slower for lax but faster for boon.
+
+By itself
+
+```
+Benchmark                                                      Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   170684.429     3376.096    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   161108.162     3246.075    ops/s
+```
+
+With more warmup (1 more)
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        10    1   177902.067     3181.219    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        10    1   173999.228     3256.031    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        10    1   164292.095     3765.761    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        10    1   159421.362     4799.286    ops/s
+```
+IDK. Inconsistent results.
+
+
+After optimizing parse numbers on just fastparser not lax parser
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   181154.149      853.376    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   173765.456     3785.255    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        20    1   163532.508     2479.094    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        20    1   163687.094     2573.242    ops/s
+```
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   180125.347     1199.084    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   176800.518     2313.143    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        20    1   163876.991     9557.374    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        20    1   164751.372     4207.011    ops/s
+```
+
+
+After optimizing skipwhitespace
+
+
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   178765.577     2229.768    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   174199.639     2819.390    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        20    1   164392.211     4795.673    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        20    1   163164.736     2556.659    ops/s
+```
+
+```
+Benchmark                                                        Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin    thrpt   8        20    1   180020.827     1676.876    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin    thrpt   8        20    1   176785.194     3263.132    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin      thrpt   8        20    1   162313.406     2656.726    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin      thrpt   8        20    1   159877.643     9686.265    ops/s
+```
+
+```
+Benchmark                                                              Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin          thrpt   8        20    1   179390.544      991.578    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin          thrpt   8        20    1   169935.569    11198.875    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin            thrpt   8        20    1   159682.546     8256.127    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin            thrpt   8        20    1   162384.147     3062.526    ops/s
+
+i.g.b.j.GatlingJacksonBenchmark.parseBytesPrecompiledRoundRobin       thrpt   8        20    1   104227.318     2174.766    ops/s
+i.g.b.j.GatlingJacksonBenchmark.parseStringPrecompiledRoundRobin      thrpt   8        20    1    80949.772     1241.775    ops/s
+i.g.b.j.GatlingJsonSmartBenchmark.parseStringPrecompiledRoundRobin    thrpt   8        20    1    78965.211     1249.766    ops/s
+i.g.b.j.JaywayJacksonBenchmark.parseBytesPrecompiledRoundRobin        thrpt   8        20    1    65212.748    13126.064    ops/s
+i.g.b.j.JaywayJacksonBenchmark.parseStringPrecompiledRoundRobin       thrpt   8        20    1    51972.546    11263.750    ops/s
+```
+
+```
+Benchmark                                                              Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin          thrpt   8        20    1   176613.569      787.934    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin          thrpt   8        20    1   172349.518     3992.700    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin            thrpt   8        20    1   160389.828     3164.086    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin            thrpt   8        20    1   164795.583     2695.261    ops/s
+
+i.g.b.j.GatlingJacksonBenchmark.parseBytesPrecompiledRoundRobin       thrpt   8        20    1   101437.358     4610.474    ops/s
+i.g.b.j.GatlingJacksonBenchmark.parseStringPrecompiledRoundRobin      thrpt   8        20    1    77044.002     3432.467    ops/s
+i.g.b.j.GatlingJsonSmartBenchmark.parseStringPrecompiledRoundRobin    thrpt   8        20    1    78429.806     2191.953    ops/s
+i.g.b.j.JaywayJacksonBenchmark.parseBytesPrecompiledRoundRobin        thrpt   8        20    1    64107.115    15146.686    ops/s
+i.g.b.j.JaywayJacksonBenchmark.parseStringPrecompiledRoundRobin       thrpt   8        20    1    51684.554    12778.574    ops/s
+```
+
+```
+Benchmark                                                              Mode Thr     Count  Sec         Mean   Mean error    Units
+i.g.b.j.GatlingBoonBenchmark.parseBytesPrecompiledRoundRobin          thrpt   8        20    1   145593.767     1725.258    ops/s
+i.g.b.j.GatlingBoonBenchmark.parseCharsPrecompiledRoundRobin          thrpt   8        20    1   144883.342     1044.217    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseBytesPrecompiledRoundRobin            thrpt   8        20    1   169421.773     1623.552    ops/s
+i.g.b.j.LazyBoonJsonPathBM.parseCharsPrecompiledRoundRobin            thrpt   8        20    1   169955.733     1787.279    ops/s
+
+i.g.b.j.GatlingJacksonBenchmark.parseBytesPrecompiledRoundRobin       thrpt   8        20    1   106658.228     2070.469    ops/s
+i.g.b.j.GatlingJacksonBenchmark.parseStringPrecompiledRoundRobin      thrpt   8        20    1    84122.743     1707.541    ops/s
+i.g.b.j.GatlingJsonSmartBenchmark.parseStringPrecompiledRoundRobin    thrpt   8        20    1    81782.459     1623.683    ops/s
+i.g.b.j.JaywayJacksonBenchmark.parseBytesPrecompiledRoundRobin        thrpt   8        20    1    67230.863    14216.193    ops/s
+i.g.b.j.JaywayJacksonBenchmark.parseStringPrecompiledRoundRobin       thrpt   8        20    1    56791.035    12197.784    ops/s
+```
+
 Dec 21:
 ```
 Benchmark                                                              Mode Thr     Count  Sec         Mean   Mean error    Units
@@ -5,6 +139,7 @@ i.g.b.j.Gatling BoonBenchmark.parseBytesPrecompiledRoundRobin          thrpt   8
 i.g.b.j.Gatling BoonBenchmark.parseCharsPrecompiledRoundRobin          thrpt   8         6    1   117296.464     5713.760    ops/s
 i.g.b.j.Lazy BoonJsonPathBM.parseBytesPrecompiledRoundRobin            thrpt   8         6    1    93338.431    12747.054    ops/s
 i.g.b.j.Lazy BoonJsonPathBM.parseCharsPrecompiledRoundRobin            thrpt   8         6    1    96480.847     3097.341    ops/s
+
 i.g.b.j.Gatling JacksonBenchmark.parseBytesPrecompiledRoundRobin       thrpt   8         6    1    83151.900     1084.591    ops/s
 i.g.b.j.Gatling JacksonBenchmark.parseStringPrecompiledRoundRobin      thrpt   8         6    1    62074.683     1025.949    ops/s
 i.g.b.j.Gatling JsonSmartBenchmark.parseStringPrecompiledRoundRobin    thrpt   8         6    1    58692.028     1583.224    ops/s

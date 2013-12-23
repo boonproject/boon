@@ -58,8 +58,10 @@ public class JsonFastParser extends JsonParserCharArray {
 
     protected final Value decodeJsonObjectLazyFinalParse() {
 
+        char [] array = charArray;
+
         if ( __currentChar == '{' )
-            this.nextChar();
+            __index++;
 
         JsonMap map = null;
         JsonValueMap valueMap = null;
@@ -73,12 +75,13 @@ public class JsonFastParser extends JsonParserCharArray {
         }
 
 
-        for (; __index < this.charArray.length; __index++ ) {
+        for (; __index < array.length; __index++ ) {
 
-            skipWhiteSpace();
+            skipWhiteSpace(  );
 
 
             if ( __currentChar == '"' ) {
+
                 Value key = decodeStringOverlay();
                 skipWhiteSpace();
 
@@ -132,17 +135,16 @@ public class JsonFastParser extends JsonParserCharArray {
             switch ( __currentChar ) {
 
                 case '\n':
-                    continue label;
+                    break;
 
                 case '\r':
-                    continue label;
+                    break;
 
                 case ' ':
-                    continue label;
+                    break;
 
                 case '\t':
-                    continue label;
-
+                    break;
 
                 case '"':
                     return decodeStringOverlay();
@@ -215,95 +217,56 @@ public class JsonFastParser extends JsonParserCharArray {
 
     private Value decodeNumberOverlay() {
 
-        int startIndex = __index;
+        char [] array = charArray;
+        char currentChar;
+        int index = __index;
+
+
+        final int startIndex = index;
 
         boolean doubleFloat = false;
 
-        int index;
-
         loop:
-        for ( index = __index; index < charArray.length; index++ ) {
-            __currentChar = charArray[ index ];
+        for ( ; index < array.length; index++ ) {
+            currentChar = array[ index ];
 
-            switch ( __currentChar ) {
+            switch ( currentChar ) {
                 case ' ':
-                    __index = index + 1;
-                    break loop;
-
                 case '\t':
-                    __index = index + 1;
-                    break loop;
-
                 case '\n':
-                    __index = index + 1;
-                    break loop;
-
                 case '\r':
-                    __index = index + 1;
-                    break loop;
-
                 case ',':
-                    break loop;
-
                 case ']':
-                    break loop;
-
                 case '}':
+                    __index = index + 1;
                     break loop;
 
                 case '1':
-                    continue loop;
-
                 case '2':
-                    continue loop;
-
                 case '3':
-                    continue loop;
-
                 case '4':
-                    continue loop;
-
                 case '5':
-                    continue loop;
-
                 case '6':
-                    continue loop;
-
                 case '7':
-                    continue loop;
-
                 case '8':
-                    continue loop;
-
                 case '9':
-                    continue loop;
-
                 case '0':
-                    continue loop;
-
                 case '-':
                     continue loop;
 
 
                 case '+':
-                    doubleFloat = true;
-                    continue loop;
-
                 case 'e':
-                    doubleFloat = true;
-                    continue loop;
-
                 case 'E':
-                    doubleFloat = true;
-                    continue loop;
-
                 case '.':
                     doubleFloat = true;
                     continue loop;
 
             }
 
-            complain( "expecting number char but got current char " + charDescription( __currentChar ) );
+            __index = index;
+            __currentChar = currentChar;
+            complain( "expecting number char but got current char " + charDescription( currentChar ) );
         }
 
         __index = index;
@@ -321,28 +284,25 @@ public class JsonFastParser extends JsonParserCharArray {
 
     private Value decodeStringOverlay() {
 
+        char [] array = charArray;
+        int index = __index;
+        char currentChar =  charArray[ index ];
 
-        __currentChar = charArray[ __index ];
-
-        if ( __index < charArray.length && __currentChar == '"' ) {
-            __index++;
+        if ( index < array.length && currentChar == '"' ) {
+            index++;
         }
 
-        final int startIndex = __index;
+        final int startIndex = index;
 
 
         boolean escape = false;
 
         boolean encoded = false;
 
-        int minusCount = 0;
-        int colonCount = 0;
-
-
-        done:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
-            switch ( __currentChar ) {
+       done:
+        for (; index < array.length; index++ ) {
+            currentChar = array[ index ];
+            switch ( currentChar ) {
 
                 case '"':
                     if ( !escape ) {
@@ -358,29 +318,18 @@ public class JsonFastParser extends JsonParserCharArray {
                     escape = true;
                     continue;
 
-                case '-':
-                    minusCount++;
-                    break;
-                case ':':
-                    colonCount++;
-                    break;
-
-
             }
             escape = false;
         }
 
-
-        boolean checkDate = !encoded && minusCount >= 2 && colonCount >= 2;
-
-
-        Value value = new ValueInCharBuf( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDate );
+        Value value = new ValueInCharBuf( chop, Type.STRING, startIndex, index, array, encoded, true );
 
 
-        if ( __index < charArray.length ) {
-            __index++;
+        if ( index < array.length ) {
+            index++;
         }
 
+        __index = index;
         return value;
     }
 
@@ -412,29 +361,23 @@ public class JsonFastParser extends JsonParserCharArray {
 
         Value value = new ValueBase( list );
 
-        int arrayIndex = 0;
 
         do {
             skipWhiteSpace ();
             Value arrayItem = decodeValueOverlay();
 
-            if ( arrayItem == null ) {
-                list.add( ValueBase.NULL ); //JSON null detected
-            } else {
-                list.add( arrayItem );
-            }
+            list.add( arrayItem );
 
-            arrayIndex++;
 
             skipWhiteSpace();
 
             char c = __currentChar;
 
             if ( c == ',' ) {
-                this.nextChar();
+                __index ++;
                 continue;
             } else if ( c == ']' ) {
-                this.nextChar();
+                __index++;
                 break;
             } else {
                 String charString = charDescription( c );
@@ -442,7 +385,7 @@ public class JsonFastParser extends JsonParserCharArray {
                 complain(
                         String.format( "expecting a ',' or a ']', " +
                                 " but got \nthe current character of  %s " +
-                                " on array index of %s \n", charString, arrayIndex )
+                                " on array size of %s \n", charString, list.size () )
                 );
 
             }

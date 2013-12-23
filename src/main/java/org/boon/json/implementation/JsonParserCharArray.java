@@ -131,13 +131,37 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return buf.toString();
     }
 
+
+//    protected final void skipWhiteSpace() {
+//
+//
+//        label:
+//        for (; __index < this.charArray.length; __index++ ) {
+//            __currentChar = charArray[ __index ];
+//            switch ( __currentChar ) {
+//                case ' ':
+//                case '\n':
+//                case '\r':
+//                case '\t':
+//                    continue label;
+//
+//                default:
+//                    break label;
+//
+//            }
+//        }
+//
+//    }
     protected final void skipWhiteSpace() {
 
+        char [] array = charArray;
+        char currentChar=__currentChar;
+        int index = __index;
 
         label:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
-            switch ( __currentChar ) {
+        for (; index < array.length; index++ ) {
+            currentChar = array[ index ];
+            switch ( currentChar ) {
                 case ' ':
                 case '\n':
                 case '\r':
@@ -149,6 +173,8 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
             }
         }
+        __index = index;
+        __currentChar = currentChar;
 
     }
 

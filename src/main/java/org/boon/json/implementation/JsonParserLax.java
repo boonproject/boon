@@ -63,6 +63,7 @@ public class JsonParserLax extends JsonParserCharArray {
     }
 
 
+
     private Value decodeJsonObjectLax() {
 
         if ( __currentChar == '{' )
@@ -327,7 +328,6 @@ public class JsonParserLax extends JsonParserCharArray {
 
                     break;
 
-                case '(':
                 case '[':
                     value = decodeJsonArrayLax();
                     break;
@@ -456,19 +456,24 @@ public class JsonParserLax extends JsonParserCharArray {
 
     }
 
-    protected Value decodeNumberLax() {
+    protected final Value decodeNumberLax() {
 
-        int startIndex = __index;
+
+        char [] array = charArray;
+        char currentChar;
+        int index = __index;
+
+
+
+        int startIndex = index;
 
         boolean doubleFloat = false;
 
-        int index;
-
         loop:
-        for ( index = __index; index < charArray.length; index++ ) {
-            __currentChar = charArray[ index ];
+        for ( ; index < array.length; index++ ) {
+            currentChar = array[ index ];
 
-            switch ( __currentChar ) {
+            switch ( currentChar ) {
                 case ' ':
                 case '\t':
                 case '\n':
@@ -476,7 +481,6 @@ public class JsonParserLax extends JsonParserCharArray {
                 case ',':
                 case ']':
                 case '}':
-                    __index = index + 1;
                     break loop;
 
                 case '1':
@@ -502,16 +506,19 @@ public class JsonParserLax extends JsonParserCharArray {
 
             }
 
-            complain( "expecting number char but got current char " + charDescription( __currentChar ) );
+            __currentChar = currentChar;
+            __index = index;
+            complain( "expecting number char but got current char " + charDescription( currentChar ) );
         }
 
-        __index = index;
 
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        ValueInCharBuf value = new ValueInCharBuf( chop, type, startIndex, __index, this.charArray );
+        ValueInCharBuf value = new ValueInCharBuf( chop, type, startIndex, index, array );
 
         skipWhiteSpace();
+
+        __index = index;
 
         return value;
 
