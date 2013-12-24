@@ -1,4 +1,4 @@
-package org.boon.json.internal;
+package org.boon.core.value;
 
 public enum Type {
 

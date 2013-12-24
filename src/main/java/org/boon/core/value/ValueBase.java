@@ -1,22 +1,25 @@
-package org.boon.json.internal;
+package org.boon.core.value;
 
 
 import org.boon.Dates;
+import org.boon.core.Value;
 import org.boon.core.reflection.Conversions;
 
 
-import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.boon.Exceptions.die;
 
-public class ValueBase extends Number implements Value, CharSequence, org.boon.core.Value {
+public class ValueBase extends Number implements CharSequence, Value {
+
+    public static final Value TRUE = new ValueBase( Type.TRUE );
+    public static final Value FALSE = new ValueBase( Type.FALSE );
+    public static final Value NULL = new ValueBase( Type.NULL );
+
     public int startIndex;
     public int endIndex;
     public Object value;
@@ -97,15 +100,16 @@ public class ValueBase extends Number implements Value, CharSequence, org.boon.c
     }
 
     @Override
-    public Object toValue() {
+    public  Object toValue() {
         if ( value != null ) {
             return value;
         }
         switch ( type ) {
             case FALSE:
-                return false;
+                return (value = false);
+
             case TRUE:
-                return true;
+                return (value = true);
             case NULL:
                 return null;
         }

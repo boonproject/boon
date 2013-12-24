@@ -1,8 +1,9 @@
 package org.boon.json.implementation;
 
 
+import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
-import org.boon.json.internal.*;
+import org.boon.core.value.*;
 
 import java.util.*;
 
@@ -69,16 +70,8 @@ public class JsonParserLax extends JsonParserCharArray {
         if ( __currentChar == '{' )
             this.nextChar();
 
-        JsonMap map = null;
-        JsonValueMap valueMap = null;
-        org.boon.json.internal.Value value;
-        if ( useValues ) {
-            valueMap = new JsonValueMap();
-            value = new ValueBase( ( Map ) valueMap );
-        } else {
-            map = new JsonMap( lazyChop );
-            value = new ValueBase( map );
-        }
+        ValueMap map =  useValues ? new ValueMapImpl () : new LazyValueMap ( lazyChop );
+        Value value  = new ValueBase ( map );
 
 
         skipWhiteSpace();
@@ -119,13 +112,7 @@ public class JsonParserLax extends JsonParserCharArray {
 
                     miv = new MapItemValue( key, item );
 
-
-                    if ( useValues ) {
-                        valueMap.add( miv );
-                    } else {
-                        map.add( miv );
-                    }
-                    //puts ( "key no quote", "#" + key + "#", value );
+                    map.add( miv );
 
                     startIndexOfKey = __index;
                     if ( __currentChar == '}' ) {
@@ -156,11 +143,7 @@ public class JsonParserLax extends JsonParserCharArray {
                     miv = new MapItemValue( key, item );
 
 
-                    if ( useValues ) {
-                        valueMap.add( miv );
-                    } else {
-                        map.add( miv );
-                    }
+                    map.add( miv );
                     startIndexOfKey = __index;
                     if ( __currentChar == '}' ) {
                         __index++;
@@ -190,11 +173,7 @@ public class JsonParserLax extends JsonParserCharArray {
                     miv = new MapItemValue( key, item );
 
 
-                    if ( useValues ) {
-                        valueMap.add( miv );
-                    } else {
-                        map.add( miv );
-                    }
+                    map.add( miv );
                     startIndexOfKey = __index;
                     if ( __currentChar == '}' ) {
                         __index++;
@@ -305,7 +284,7 @@ public class JsonParserLax extends JsonParserCharArray {
 
                 case 't':
                     if ( isTrue() ) {
-                        return decodeTrue() == true ? Value.TRUE : Value.FALSE;
+                        return decodeTrue() == true ? ValueBase.TRUE : ValueBase.FALSE;
                     } else {
                         value = decodeStringLax();
                     }
@@ -313,7 +292,7 @@ public class JsonParserLax extends JsonParserCharArray {
 
                 case 'f':
                     if ( isFalse() ) {
-                        return decodeFalse() == false ? Value.FALSE : Value.TRUE;
+                        return decodeFalse() == false ? ValueBase.FALSE : ValueBase.TRUE;
                     } else {
                         value = decodeStringLax();
                     }
@@ -321,7 +300,7 @@ public class JsonParserLax extends JsonParserCharArray {
 
                 case 'n':
                     if ( isNull() ) {
-                        return decodeNull() == null ? Value.NULL : Value.NULL;
+                        return decodeNull() == null ? ValueBase.NULL : ValueBase.NULL;
                     } else {
                         value = decodeStringLax();
                     }
@@ -758,7 +737,7 @@ public class JsonParserLax extends JsonParserCharArray {
         if ( useValues ) {
             list = new ArrayList<>();
         } else {
-            list = new JsonList( lazyChop );
+            list = new ValueList ( lazyChop );
         }
 
         Value value = new ValueBase( list );

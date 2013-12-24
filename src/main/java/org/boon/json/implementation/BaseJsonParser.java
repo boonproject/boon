@@ -1,7 +1,7 @@
 package org.boon.json.implementation;
 
 import org.boon.core.reflection.Reflection;
-import org.boon.json.internal.JsonLazyLinkedMap;
+import org.boon.core.LazyMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class BaseJsonParser {
     protected static final boolean heavyCache = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.heavyCache", "false" ) );
     protected static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "false" ) );
     protected static ConcurrentHashMap<String, String> internedKeysCache;
-    private JsonLazyLinkedMap[] levelMaps = new JsonLazyLinkedMap[ 5 ];
+    private LazyMap[] levelMaps = new LazyMap[ 5 ];
     private ArrayList[] levelLists = new ArrayList[ 5 ];
 
 
@@ -36,14 +36,14 @@ public class BaseJsonParser {
     }
 
 
-    protected JsonLazyLinkedMap createMap() {
+    protected LazyMap createMap() {
         if ( objectLevel == levelMaps.length ) {
             objectLevel++;
-            return new JsonLazyLinkedMap( 7 );
+            return new LazyMap ( 7 );
         }
-        JsonLazyLinkedMap map = levelMaps[ objectLevel ];
+        LazyMap map = levelMaps[ objectLevel ];
         if ( map == null ) {
-            map = new JsonLazyLinkedMap( 10 );
+            map = new LazyMap ( 10 );
             levelMaps[ objectLevel ] = map;
         }
         objectLevel++;
@@ -83,7 +83,7 @@ public class BaseJsonParser {
     }
 
 
-    protected Object prepareMap( final JsonLazyLinkedMap map ) {
+    protected Object prepareMap( final LazyMap map ) {
 
         if ( objectLevel < levelMaps.length ) {
             objectLevel--;

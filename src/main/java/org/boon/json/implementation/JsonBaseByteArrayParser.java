@@ -3,7 +3,7 @@ package org.boon.json.implementation;
 import org.boon.IO;
 import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
-import org.boon.json.internal.JsonLazyLinkedMap;
+import org.boon.core.LazyMap;
 import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
@@ -363,11 +363,11 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         }
 
 
-        JsonLazyLinkedMap map = null;
+        LazyMap map = null;
         if ( heavyCache ) {
             map = createMap();
         } else {
-            map = new JsonLazyLinkedMap();
+            map = new LazyMap ();
         }
 
 

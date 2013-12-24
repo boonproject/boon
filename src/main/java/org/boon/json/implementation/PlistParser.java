@@ -1,7 +1,8 @@
 package org.boon.json.implementation;
 
+import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
-import org.boon.json.internal.*;
+import org.boon.core.value.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,14 +96,14 @@ public class PlistParser  extends JsonParserCharArray {
             if ( __currentChar == '{' )
                 this.nextChar();
 
-            JsonMap map = null;
-            JsonValueMap valueMap = null;
-            org.boon.json.internal.Value value;
+            LazyValueMap map = null;
+            ValueMapImpl valueMap = null;
+            Value value;
             if ( useValues ) {
-                valueMap = new JsonValueMap();
+                valueMap = new ValueMapImpl ();
                 value = new ValueBase( ( Map ) valueMap );
             } else {
-                map = new JsonMap( lazyChop );
+                map = new LazyValueMap ( lazyChop );
                 value = new ValueBase( map );
             }
 
@@ -315,7 +316,7 @@ public class PlistParser  extends JsonParserCharArray {
 
                     case 't':
                         if ( isTrue() ) {
-                            return decodeTrue() == true ? Value.TRUE : Value.FALSE;
+                            return decodeTrue() == true ? ValueBase.TRUE : ValueBase.FALSE;
                         } else {
                             value = decodeStringLax();
                         }
@@ -323,7 +324,7 @@ public class PlistParser  extends JsonParserCharArray {
 
                     case 'f':
                         if ( isFalse() ) {
-                            return decodeFalse() == false ? Value.FALSE : Value.TRUE;
+                            return decodeFalse() == false ? ValueBase.FALSE : ValueBase.TRUE;
                         } else {
                             value = decodeStringLax();
                         }
@@ -331,7 +332,7 @@ public class PlistParser  extends JsonParserCharArray {
 
                     case 'n':
                         if ( isNull() ) {
-                            return decodeNull() == null ? Value.NULL : Value.NULL;
+                            return decodeNull() == null ? ValueBase.NULL : ValueBase.NULL;
                         } else {
                             value = decodeStringLax();
                         }
@@ -774,7 +775,7 @@ public class PlistParser  extends JsonParserCharArray {
             if ( useValues ) {
                 list = new ArrayList<>();
             } else {
-                list = new JsonList( lazyChop );
+                list = new ValueList ( lazyChop );
             }
 
             Value value = new ValueBase( list );

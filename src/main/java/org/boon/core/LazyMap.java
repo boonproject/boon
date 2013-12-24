@@ -1,26 +1,33 @@
-package org.boon.json.internal;
+package org.boon.core;
+
+import org.boon.Maps;
 
 import java.util.*;
 
 /**
- * Created by rick on 12/14/13.
+ * This maps only builds once you ask for a key for the first time.
+ * It is designed to not incur the overhead of creating a map unless needed.
  */
-public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
+public class LazyMap extends AbstractMap<String, Object> {
 
-    private LinkedHashMap<String, Object> map;
 
-    int size;
+    /* Holds the actual map that will be lazily created. */
+    private Map<String, Object> map;
+    /* The size of the map. */
+    private int size;
+    /* The keys  stored in the map. */
+    private String[] keys;
+    /* The values stored in the map. */
+    private Object[] values;
 
-    String[] keys;
-    Object[] values;
 
-    public JsonLazyLinkedMap() {
+
+    public LazyMap() {
         keys = new String[ 5 ];
         values = new Object[ 5 ];
-
     }
 
-    public JsonLazyLinkedMap( int initialSize ) {
+    public LazyMap( int initialSize ) {
         keys = new String[ initialSize ];
         values = new Object[ initialSize ];
 
@@ -181,12 +188,16 @@ public class JsonLazyLinkedMap extends AbstractMap<String, Object> {
         if ( map == null ) {
             return null;
         } else {
-            return map.clone();
+            if (map instanceof LinkedHashMap)  {
+                return ((LinkedHashMap)map).clone();
+            } else {
+                return Maps.copy (this);
+            }
         }
     }
 
-    public JsonLazyLinkedMap clearAndCopy() {
-        JsonLazyLinkedMap map = new JsonLazyLinkedMap();
+    public LazyMap clearAndCopy() {
+        LazyMap map = new LazyMap ();
         for ( int index = 0; index < size; index++ ) {
             map.put( keys[ index ], values[ index ] );
         }

@@ -1,17 +1,22 @@
-package org.boon.json.internal;
+package org.boon.core.value;
+
+import org.boon.core.Value;
 
 import java.util.Map;
 
 import static org.boon.Exceptions.die;
 
+/** This holds a mapping from value key to value value to mazimize lazyness.
+ *
+ */
 public class MapItemValue implements Map.Entry<String, Value> {
 
-    Value name;
-    Value value;
+    final Value name;
+    final Value value;
 
     private String key = null;
 
-    private static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "true" ) );
+    private static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "false" ) );
 
 
     public MapItemValue( Value name, Value value ) {
@@ -43,15 +48,4 @@ public class MapItemValue implements Map.Entry<String, Value> {
         return null;
     }
 
-    public Value name() {
-        return name;
-    }
-
-    public void name( Value name ) {
-        this.name = name;
-    }
-
-    public void value( Value value ) {
-        this.value = value;
-    }
 }

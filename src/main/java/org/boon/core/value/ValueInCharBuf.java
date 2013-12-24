@@ -1,4 +1,4 @@
-package org.boon.json.internal;
+package org.boon.core.value;
 
 import org.boon.Dates;
 import org.boon.Exceptions;
@@ -91,17 +91,11 @@ public class ValueInCharBuf extends ValueBase {
 
 
     @Override
-    public Object toValue () {
-
-        if ( value != null ) {
-            return value;
-        } else {
-            value = doToValue ();
-            return value;
-        }
+    public final Object toValue () {
+        return value != null ? value : (value = doToValue ()) ;
     }
 
-    private Object doToValue () {
+    private final Object doToValue () {
 
         switch ( type ) {
             case DOUBLE:

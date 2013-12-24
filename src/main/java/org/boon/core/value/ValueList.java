@@ -1,18 +1,20 @@
-package org.boon.json.internal;
+package org.boon.core.value;
+
+import org.boon.core.Value;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class JsonList extends AbstractList<Object> implements List<Object> {
+public class ValueList extends AbstractList<Object> implements List<Object> {
 
     List<Object> list = new ArrayList<>( 5 );
 
     private final boolean lazyChop;
 
 
-    public JsonList( boolean lazyChop ) {
+    public ValueList( boolean lazyChop ) {
         this.lazyChop = lazyChop;
     }
 
@@ -89,11 +91,11 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
 
     private void chopIfNeeded( Object object ) {
         if ( lazyChop ) {
-            if ( object instanceof JsonMap ) {
-                JsonMap m = ( JsonMap ) object;
+            if ( object instanceof LazyValueMap ) {
+                LazyValueMap m = ( LazyValueMap ) object;
                 m.chopMap();
-            } else if ( object instanceof JsonList ) {
-                JsonList list = ( JsonList ) object;
+            } else if ( object instanceof ValueList ) {
+                ValueList list = ( ValueList ) object;
                 list.chopList();
             }
         }
@@ -103,11 +105,11 @@ public class JsonList extends AbstractList<Object> implements List<Object> {
 
     void chopContainer( Value value ) {
         Object obj = value.toValue();
-        if ( obj instanceof JsonMap ) {
-            JsonMap map = ( JsonMap ) obj;
+        if ( obj instanceof LazyValueMap ) {
+            LazyValueMap map = ( LazyValueMap ) obj;
             map.chopMap();
-        } else if ( obj instanceof JsonList ) {
-            JsonList list = ( JsonList ) obj;
+        } else if ( obj instanceof ValueList ) {
+            ValueList list = ( ValueList ) obj;
             list.chopList();
         }
     }

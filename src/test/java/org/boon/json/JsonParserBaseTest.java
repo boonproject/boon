@@ -308,7 +308,7 @@ public class JsonParserBaseTest {
 
         boolean ok = true;
 
-        ok &= obj instanceof Integer || die( "Object was not an Integer" );
+        ok &= obj instanceof Integer || die( "Object was not an Integer " + obj + " " + obj.getClass () );
 
         int i = ( Integer ) obj;
 

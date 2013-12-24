@@ -1,9 +1,9 @@
 package org.boon.json.implementation;
 
+import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
+import org.boon.core.value.*;
 import org.boon.json.JsonException;
-import org.boon.json.internal.*;
-import org.boon.json.internal.Value;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,16 +63,8 @@ public class JsonFastParser extends JsonParserCharArray {
         if ( __currentChar == '{' )
             __index++;
 
-        JsonMap map = null;
-        JsonValueMap valueMap = null;
-        Value value;
-        if ( useValues ) {
-            valueMap = new JsonValueMap ();
-            value = new ValueBase ( ( Map ) valueMap );
-        } else {
-            map = new JsonMap ( lazyChop );
-            value = new ValueBase ( map );
-        }
+        ValueMap map =  useValues ? new ValueMapImpl () : new LazyValueMap ( lazyChop );
+        Value value  = new ValueBase ( map );
 
         objectLoop:
         for (; __index < array.length; __index++ ) {
@@ -96,12 +88,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
                     MapItemValue miv = new MapItemValue ( key, item );
 
-
-                    if ( useValues ) {
-                        valueMap.add ( miv );
-                    } else {
-                        map.add ( miv );
-                    }
+                    map.add ( miv );
             }
 
             switch ( __currentChar ) {
@@ -140,13 +127,13 @@ public class JsonFastParser extends JsonParserCharArray {
                 return decodeJsonObjectLazyFinalParse ();
 
             case 't':
-                return decodeTrue () == true ? Value.TRUE : Value.FALSE;
+                return decodeTrue () == true ? ValueBase.TRUE : ValueBase.FALSE;
 
             case 'f':
-                return decodeFalse () == false ? Value.FALSE : Value.TRUE;
+                return decodeFalse () == false ? ValueBase.FALSE : ValueBase.TRUE;
 
             case 'n':
-                return decodeNull () == null ? ValueBase.NULL : Value.NULL;
+                return decodeNull () == null ? ValueBase.NULL : ValueBase.NULL;
 
             case '[':
                 return decodeJsonArrayOverlay ();
@@ -389,7 +376,7 @@ public class JsonFastParser extends JsonParserCharArray {
         if ( useValues ) {
             list = new ArrayList<> ();
         } else {
-            list = new JsonList ( lazyChop );
+            list = new ValueList ( lazyChop );
         }
 
         Value value = new ValueBase ( list );

@@ -1,12 +1,10 @@
 package org.boon.json.implementation;
 
 import org.boon.IO;
-import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
-import org.boon.json.internal.JsonLazyLinkedMap;
+import org.boon.core.LazyMap;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
@@ -185,11 +183,11 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             __index++;
         }
 
-        JsonLazyLinkedMap map = null;
+        LazyMap map = null;
         if ( heavyCache ) {
             map = createMap();
         } else {
-            map = new JsonLazyLinkedMap();
+            map = new LazyMap ();
         }
 
         for (; __index < this.charArray.length; __index++ ) {
