@@ -31,7 +31,7 @@ public class JsonParserImpl implements JsonParser {
     private final JsonParser charSequenceParser;
 
 
-    private int bufSize = 256;
+    private int bufSize = 32;
 
 
     public JsonParserImpl( Charset charset,
