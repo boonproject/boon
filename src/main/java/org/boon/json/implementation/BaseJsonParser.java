@@ -3,6 +3,8 @@ package org.boon.json.implementation;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.LazyMap;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,8 @@ public class BaseJsonParser {
 
     protected static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "false" ) );
     protected static ConcurrentHashMap<String, String> internedKeysCache;
+
+    protected Charset charset  = StandardCharsets.UTF_8;
 
 
     static {
@@ -56,5 +60,7 @@ public class BaseJsonParser {
         }
     }
 
-
+    public void setCharset( Charset charset ) {
+        this.charset = charset;
+    }
 }

@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
@@ -8,9 +9,13 @@ import org.boon.primitive.CharBuf;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -47,11 +52,16 @@ public class JsonParserImpl implements JsonParser {
             this.objectParser = new JsonFastParser( true );
         }
 
+        ( (BaseJsonParser) basicParser).setCharset ( charset );
+        ( (BaseJsonParser) objectParser).setCharset ( charset );
+
         if ( preferCharSequence ) {
                 this.charSequenceParser = new JsonParserCharSequence();
+                ( (BaseJsonParser) charSequenceParser).setCharset ( charset );
         } else {
                 this.charSequenceParser = basicParser;
         }
+
 
     }
 
@@ -84,6 +94,17 @@ public class JsonParserImpl implements JsonParser {
     }
 
     @Override
+    public final <T> T parse( Class<T> type, byte[] value, Charset charset ) {
+
+        if ( type == Map.class || type == List.class ) {
+            return this.basicParser.parse( type, value, charset );
+        } else {
+            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
+            return Reflection.fromValueMap( objectMap, type );
+        }
+    }
+
+    @Override
     public final <T> T parse( Class<T> type, CharSequence value ) {
         if ( type == Map.class || type == List.class ) {
             return charSequenceParser.parse( type, value );
@@ -105,7 +126,7 @@ public class JsonParserImpl implements JsonParser {
     }
 
 
-    CharBuf charBuf;
+    private CharBuf charBuf;
 
     @Override
     public final <T> T parse( Class<T> type, Reader reader ) {
@@ -114,6 +135,24 @@ public class JsonParserImpl implements JsonParser {
         return parse( type, charBuf.readForRecycle() );
 
     }
+
+    @Override
+    public <T> T parseFile( Class<T> type, String fileName ) {
+        int bufSize = this.bufSize;
+
+        try {
+            Path filePath = IO.path ( fileName );
+            long size = Files.size ( filePath );
+            size = size > 2_000_000_000 ? bufSize : size;
+            this.bufSize = (int)size;
+            return parse ( type, Files.newBufferedReader ( IO.path ( fileName ), charset ) );
+        } catch ( IOException ex ) {
+            return Exceptions.handle (type, fileName, ex);
+        } finally {
+            this.bufSize = bufSize;
+        }
+    }
+
 
     @Override
     public final <T> T parse( Class<T> type, InputStream input ) {
@@ -130,7 +169,7 @@ public class JsonParserImpl implements JsonParser {
 
     @Override
     public final <T> T parseDirect( Class<T> type, byte[] value ) {
-        if ( value.length < 20_000 ) {
+        if ( value.length < 20_000 && charset == StandardCharsets.UTF_8 ) {
             CharBuf builder = CharBuf.createFromUTF8Bytes( value );
             return parse( type, builder.toCharArray() );
         } else {
@@ -142,6 +181,7 @@ public class JsonParserImpl implements JsonParser {
     public final <T> T parseAsStream( Class<T> type, byte[] value ) {
         return this.parse( type, new ByteArrayInputStream( value ) );
     }
+
 
 
 }

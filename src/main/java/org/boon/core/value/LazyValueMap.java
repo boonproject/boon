@@ -58,7 +58,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
      *
      * @param miv miv we are adding.
      */
-    public void add( MapItemValue miv ) {
+    public final void add( MapItemValue miv ) {
         if ( len >= items.length ) {
             items = org.boon.Arrays.grow( items );
         }
@@ -117,7 +117,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
     /** Chop this map.
      *
      */
-    void chopMap() {
+    final void chopMap() {
         /* if it has been chopped then you have to return. */
         if ( mapChopped ) {
             return;

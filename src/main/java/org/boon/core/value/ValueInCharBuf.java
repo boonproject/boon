@@ -17,9 +17,11 @@ import static org.boon.primitive.CharScanner.*;
 
 public class ValueInCharBuf extends ValueBase {
 
-    public char[] buffer;
+    private char[] buffer;
 
-    boolean checkDate;
+    private boolean checkDate;
+    private boolean chopped;
+
 
     public ValueInCharBuf ( Type type ) {
         this.type = type;
@@ -39,6 +41,7 @@ public class ValueInCharBuf extends ValueBase {
                 this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
                 this.startIndex = 0;
                 this.endIndex = this.buffer.length;
+                chopped = true;
             } else {
                 this.startIndex = startIndex;
                 this.endIndex = endIndex;
@@ -341,9 +344,12 @@ public class ValueInCharBuf extends ValueBase {
     }
 
     public final void chop () {
-        this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
-        this.startIndex = 0;
-        this.endIndex = this.buffer.length;
+        if ( !chopped ) {
+            this.chopped = true;
+            this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
+            this.startIndex = 0;
+            this.endIndex = this.buffer.length;
+        }
     }
 
 

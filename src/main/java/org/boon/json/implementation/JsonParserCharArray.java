@@ -1,5 +1,6 @@
 package org.boon.json.implementation;
 
+import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
@@ -10,10 +11,13 @@ import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
@@ -26,7 +30,6 @@ import static org.boon.primitive.CharScanner.parseLong;
  * as input. Produces an Object which can be any of the basic JSON types mapped
  * to Java.
  * <p/>
- * TODO char[] val = value;     avoid getfield opcode  for all
  */
 public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
@@ -49,10 +52,15 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
     protected final Object decodeFromBytes( byte[] bytes ) {
-        final char[] chars = FastStringUtils.toCharArrayFromBytes( bytes );
+        final char[] chars = FastStringUtils.toCharArrayFromBytes( bytes, charset );
         return decodeFromChars( chars );
     }
 
+
+    protected final Object decodeFromBytes( byte[] bytes, Charset charset ) {
+        final char[] chars = FastStringUtils.toCharArrayFromBytes( bytes, charset );
+        return decodeFromChars( chars );
+    }
 
     protected final boolean hasMore() {
         return __index + 1 < charArray.length;
@@ -668,6 +676,12 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return convert( type, object );
     }
 
+    @Override
+    public <T> T parse( Class<T> type, byte[] bytes, Charset charset ) {
+        T object = ( T ) this.decodeFromBytes( bytes, charset );
+        return convert( type, object );
+    }
+
 
     @Override
     public final <T> T parseDirect( Class<T> type, byte[] value ) {
@@ -711,7 +725,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     @Override
     public final <T> T parse( Class<T> type, InputStream input ) {
-        fileInputBuf = IO.read( input, fileInputBuf, StandardCharsets.UTF_8, 256 );
+        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
         return parse( type, fileInputBuf.readForRecycle() );
     }
 
@@ -720,6 +734,22 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
         fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
         return parse( type, fileInputBuf.readForRecycle() );
+    }
+
+
+    @Override
+    public <T> T parseFile( Class<T> type, String fileName ) {
+
+        try {
+            Path filePath = IO.path ( fileName );
+            long size = Files.size ( filePath );
+            size = size > 2_000_000_000 ? 1_000_000 : size;
+            Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
+            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
+            return parse( type, fileInputBuf.readForRecycle() );
+        } catch ( IOException ex ) {
+            return Exceptions.handle ( type, fileName, ex );
+        }
     }
 
 

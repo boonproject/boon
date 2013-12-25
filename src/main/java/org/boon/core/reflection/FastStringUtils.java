@@ -3,6 +3,7 @@ package org.boon.core.reflection;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -55,7 +56,7 @@ public class FastStringUtils {
     }
 
 
-    public static char[] toCharArrayFromBytes( final byte[] bytes ) {
+    public static char[] toCharArrayFromBytes( final byte[] bytes, Charset charset ) {
         final String string = new String( bytes, StandardCharsets.UTF_8 );
         return HAS_UNSAFE ?
                 ( char[] ) UNSAFE.getObject( string, STRING_VALUE_FIELD_OFFSET ) :

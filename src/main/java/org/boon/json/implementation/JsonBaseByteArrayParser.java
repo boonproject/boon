@@ -97,7 +97,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     protected final CharBuf builder = CharBuf.create( 20 );
 
 
-    protected Charset charSet = StandardCharsets.UTF_8;
 
 
     public JsonBaseByteArrayParser() {
@@ -161,15 +160,15 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
         try {
-            buf.addLine( new String( charArray, lastLineIndex, count, charSet ) );
+            buf.addLine( new String( charArray, lastLineIndex, count, charset ) );
         } catch ( Exception ex ) {
 
             try {
                 int index = ( __index - 10 < 0 ) ? 0 : __index - 10;
 
-                buf.addLine( new String( charArray, index, __index, charSet ) );
+                buf.addLine( new String( charArray, index, __index, charset ) );
             } catch ( Exception ex2 ) {
-                buf.addLine( new String( charArray, 0, charArray.length, charSet ) );
+                buf.addLine( new String( charArray, 0, charArray.length, charset ) );
             }
         }
         for ( int i = 0; i < ( __index - lastLineIndex - 1 ); i++ ) {
@@ -232,7 +231,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
     public <T> T parse( Class<T> type, String str ) {
-        return ( T ) this.parse( type, str.getBytes( charSet ) );
+        return this.parse( type, str.getBytes( charset ) );
     }
 
     public <T> T parse( Class<T> type, byte[] bytes ) {
@@ -753,12 +752,21 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
     public <T> T parseDirect( Class<T> type, byte[] value ) {
-        return this.parse( type, new ByteArrayInputStream( value ) );
-    }
-
-    public <T> T parseAsStream( Class<T> type, byte[] value ) {
         return this.parse( type, value );
     }
 
+    public <T> T parseAsStream( Class<T> type, byte[] value ) {
+        return this.parse( type, new ByteArrayInputStream( value ) );
+    }
 
+
+
+    public <T> T parse( Class<T> type, byte[] bytes, Charset charset ) {
+        return parse ( type, bytes );
+    }
+
+
+    public <T> T parseFile( Class<T> type, String fileName ) {
+        return parse(type, IO.input ( fileName ));
+    }
 }

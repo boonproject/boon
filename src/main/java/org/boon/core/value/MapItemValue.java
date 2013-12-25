@@ -3,6 +3,7 @@ package org.boon.core.value;
 import org.boon.core.Value;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Exceptions.die;
 
@@ -19,6 +20,18 @@ public class MapItemValue implements Map.Entry<String, Value> {
     private static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "false" ) );
 
 
+
+    protected static ConcurrentHashMap<String, String> internedKeysCache;
+
+
+
+    static {
+        if ( internKeys ) {
+            internedKeysCache = new ConcurrentHashMap<> ();
+        }
+    }
+
+
     public MapItemValue( Value name, Value value ) {
         this.name = name;
         this.value = value;
@@ -29,9 +42,19 @@ public class MapItemValue implements Map.Entry<String, Value> {
     public String getKey() {
         if ( key == null ) {
             if ( internKeys ) {
-                key = name.toString();
+
+                  key = name.toString();
+
+                  String keyPrime = internedKeysCache.get( key );
+                  if ( keyPrime == null ) {
+                        key = key.intern();
+                        internedKeysCache.put( key, key );
+                  } else {
+                        key = keyPrime;
+                  }
             } else {
-                key = name.toString().intern();
+
+                key = name.toString();
             }
         }
         return key;

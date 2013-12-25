@@ -1,5 +1,6 @@
 package org.boon.json.implementation;
 
+import org.boon.IO;
 import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
 import sun.nio.cs.Surrogate;

@@ -12,7 +12,27 @@ public class JsonParserFactory {
     private Charset charset = null;
     private boolean lax;
     private boolean plistStyle;
+    private boolean chop = false;
+    private boolean lazyChop = true;
 
+
+    public boolean isChop() {
+        return chop;
+    }
+
+    public JsonParserFactory setChop( boolean chop ) {
+        this.chop = chop;
+        return this;
+    }
+
+    public boolean isLazyChop() {
+        return lazyChop;
+    }
+
+    public JsonParserFactory setLazyChop( boolean lazyChop ) {
+        this.lazyChop = lazyChop;
+        return this;
+    }
 
     public JsonParserFactory lax() {
         lax = true;
@@ -45,34 +65,59 @@ public class JsonParserFactory {
 
 
     public JsonParser createFastParser() {
-        return new JsonFastParser( false, true );
+        BaseJsonParser jsonParser = new JsonFastParser( false, true );
+        jsonParser.setCharset ( charset );
+        return (JsonParser)jsonParser;
     }
 
 
     public JsonParser createCharSequenceParser() {
-        return new JsonParserCharSequence();
+        BaseJsonParser jsonParser = new JsonParserCharSequence(  );
+        jsonParser.setCharset ( charset );
+        return (JsonParser)jsonParser;
+
     }
 
 
     public JsonParser createUTFDirectByteParser() {
-        return new JsonUTF8Parser();
+        BaseJsonParser jsonParser = new JsonUTF8Parser(  );
+        jsonParser.setCharset ( StandardCharsets.UTF_8 );
+        return (JsonParser)jsonParser;
+
     }
 
     public JsonParser createASCIIParser() {
-        return new JsonAsciiParser();
+        BaseJsonParser jsonParser = new JsonAsciiParser (  );
+        jsonParser.setCharset ( StandardCharsets.US_ASCII );
+        return (JsonParser)jsonParser;
+
     }
 
 
     public JsonParser createLaxParser() {
-        return new JsonParserLax();
+        BaseJsonParser jsonParser = new JsonParserLax ( false, chop, lazyChop );
+        jsonParser.setCharset ( charset );
+        return (JsonParser)jsonParser;
+    }
+
+    public JsonParser createPlistParser() {
+        BaseJsonParser jsonParser = new PlistParser (false, chop, lazyChop );
+        jsonParser.setCharset ( charset );
+        return (JsonParser)jsonParser;
     }
 
     public JsonParser createLazyFinalParser() {
-        return new JsonFastParser();
+        BaseJsonParser jsonParser = new JsonFastParser ( false, chop, lazyChop );
+        jsonParser.setCharset ( charset );
+        return (JsonParser)jsonParser;
+
     }
 
     public JsonParser createJsonParserForJsonPath() {
-        return new JsonFastParser();
+
+        BaseJsonParser jsonParser = new JsonFastParser ( false, chop, lazyChop );
+        jsonParser.setCharset ( charset );
+        return (JsonParser)jsonParser;
     }
 
     public JsonParser create() {
@@ -91,7 +136,6 @@ public class JsonParserFactory {
 
 
     public JsonParserFactory plistStyle() {
-        lax = true;
         plistStyle = true;
         return this;
     }

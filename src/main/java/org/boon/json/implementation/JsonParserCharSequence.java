@@ -1,5 +1,7 @@
 package org.boon.json.implementation;
 
+import org.boon.Exceptions;
+import org.boon.IO;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
 import org.boon.core.LazyMap;
@@ -7,9 +9,12 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
@@ -573,11 +578,6 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
         return ( T ) this.decode( str );
     }
 
-    @Override
-    public <T> T parse( Class<T> type, byte[] bytes ) {
-        die( "not supported by this parser byte[] bytes" );
-        return null;
-    }
 
     @Override
     public <T> T parse( Class<T> type, CharSequence charSequence ) {
@@ -586,28 +586,31 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
 
     @Override
     public <T> T parse( Class<T> type, char[] chars ) {
-        die( "not supported by this parser char[] chars" );
-        return null;
+        return parse (type, new String(chars));
+    }
+
+
+    private CharBuf fileInputBuf;
+
+    @Override
+    public final <T> T parse( Class<T> type, Reader reader ) {
+
+        fileInputBuf = IO.read ( reader, fileInputBuf, 256 );
+        return parse( type, fileInputBuf.readForRecycle() );
+
+    }
+
+    @Override
+    public final <T> T parse( Class<T> type, InputStream input ) {
+        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
+        return parse( type, fileInputBuf.readForRecycle() );
     }
 
 
     @Override
-    public <T> T parse( Class<T> type, Reader reader ) {
-
-        die( "you are using the wrong class" );
-        return null;
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, InputStream input ) {
-        die( "you are using the wrong class" );
-        return null;
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        die( "you are using the wrong class" );
-        return null;
+    public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
+        return parse( type, fileInputBuf.readForRecycle() );
     }
 
 
@@ -624,6 +627,36 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
     @Override
     public <T> T parseAsStream( Class<T> type, byte[] value ) {
         return this.parse( type, new ByteArrayInputStream( value ) );
+    }
+
+
+    @Override
+    public final <T> T parse( Class<T> type, byte[] value ) {
+        return parse (type, new String(value, charset));
+    }
+
+    @Override
+    public <T> T parse( Class<T> type, byte[] value, Charset charset ) {
+        return parse (type, new String( value, charset ) );
+
+    }
+
+
+
+    @Override
+    public <T> T parseFile( Class<T> type, String fileName ) {
+
+        try {
+            Path filePath = IO.path ( fileName );
+            long size = Files.size ( filePath );
+            size = size > 2_000_000_000 ? 1_000_000 : size;
+            Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
+            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
+            return parse( type, fileInputBuf.readForRecycle() );
+        } catch ( IOException ex ) {
+            return Exceptions.handle ( type, fileName, ex );
+        }
+
     }
 
 

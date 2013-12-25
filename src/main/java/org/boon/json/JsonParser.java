@@ -12,6 +12,8 @@ public interface JsonParser {
 
     <T> T parse( Class<T> type, byte[] bytes );
 
+    <T> T parse( Class<T> type, byte[] bytes, Charset charset );
+
 
     <T> T parse( Class<T> type, CharSequence charSequence );
 
@@ -28,5 +30,6 @@ public interface JsonParser {
 
     <T> T parseAsStream( Class<T> type, byte[] value );
 
+    <T> T parseFile( Class<T> type,  String fileName);
 
 }
