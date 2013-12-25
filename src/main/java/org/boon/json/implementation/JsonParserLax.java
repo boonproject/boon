@@ -56,15 +56,6 @@ public class JsonParserLax extends JsonParserCharArray {
     }
 
 
-
-
-
-    protected void init() {
-        super.init();
-    }
-
-
-
     private Value decodeJsonObjectLax() {
 
         if ( __currentChar == '{' )

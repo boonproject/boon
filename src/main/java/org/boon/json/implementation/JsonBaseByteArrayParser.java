@@ -363,13 +363,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         }
 
 
-        LazyMap map = null;
-        if ( heavyCache ) {
-            map = createMap();
-        } else {
-            map = new LazyMap ();
-        }
-
+        LazyMap map =  new LazyMap ();
 
         do {
 
@@ -423,11 +417,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
             }
         } while ( this.hasMore() );
 
-        if ( heavyCache ) {
-            return prepareMap( map );
-        } else {
-            return map;
-        }
+        return map;
     }
 
 
@@ -720,12 +710,8 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         }
 
 
-        ArrayList<Object> list;
-        if ( heavyCache ) {
-            list = createList();
-        } else {
-            list = new ArrayList();
-        }
+        ArrayList<Object> list = new ArrayList();
+
 
 
         int arrayIndex = 0;
@@ -762,11 +748,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         } while ( this.hasMore() );
 
 
-        if ( heavyCache ) {
-            return prepareList( list );
-        } else {
-            return list;
-        }
+        return list;
     }
 
 

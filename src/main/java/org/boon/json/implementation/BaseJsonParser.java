@@ -13,15 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BaseJsonParser {
 
-    protected static final boolean heavyCache = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.heavyCache", "false" ) );
     protected static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "false" ) );
     protected static ConcurrentHashMap<String, String> internedKeysCache;
-    private LazyMap[] levelMaps = new LazyMap[ 5 ];
-    private ArrayList[] levelLists = new ArrayList[ 5 ];
 
-
-    private int objectLevel;
-    private int listLevel;
 
     static {
         if ( internKeys ) {
@@ -29,70 +23,6 @@ public class BaseJsonParser {
         }
     }
 
-
-    protected void init() {
-        objectLevel = 0;
-        listLevel = 0;
-    }
-
-
-    protected LazyMap createMap() {
-        if ( objectLevel == levelMaps.length ) {
-            objectLevel++;
-            return new LazyMap ( 7 );
-        }
-        LazyMap map = levelMaps[ objectLevel ];
-        if ( map == null ) {
-            map = new LazyMap ( 10 );
-            levelMaps[ objectLevel ] = map;
-        }
-        objectLevel++;
-        return map;
-    }
-
-
-    protected ArrayList createList() {
-
-        if ( listLevel == levelLists.length ) {
-            listLevel++;
-            return new ArrayList( 5 );
-        }
-        ArrayList list = levelLists[ listLevel ];
-        if ( list == null ) {
-            list = new ArrayList( 10 );
-            levelLists[ listLevel ] = list;
-        }
-        listLevel++;
-        return list;
-
-    }
-
-
-    protected final ArrayList prepareList( ArrayList old ) {
-
-
-        if ( listLevel < levelLists.length ) {
-            ArrayList list = new ArrayList( old );
-            old.clear();
-            listLevel--;
-            return list;
-        } else {
-            listLevel--;
-            return old;
-        }
-    }
-
-
-    protected Object prepareMap( final LazyMap map ) {
-
-        if ( objectLevel < levelMaps.length ) {
-            objectLevel--;
-            return map.clearAndCopy();
-        } else {
-            objectLevel--;
-            return map;
-        }
-    }
 
 
     protected String charDescription( char c ) {

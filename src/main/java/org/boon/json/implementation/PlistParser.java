@@ -86,10 +86,6 @@ public class PlistParser  extends JsonParserCharArray {
 
 
 
-        protected void init() {
-            super.init();
-        }
-
 
         private Value decodeJsonObjectLax() {
 

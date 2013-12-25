@@ -3,10 +3,7 @@ package org.boon.json;
 import org.boon.IO;
 import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
-import org.boon.json.implementation.JsonFastParser;
-import org.boon.json.implementation.JsonParserCharArray;
-import org.boon.json.implementation.JsonParserCharSequence;
-import org.boon.json.implementation.JsonParserLax;
+import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
 
 
@@ -21,69 +18,40 @@ import java.util.Map;
 public class JsonParserImpl implements JsonParser {
 
 
-    private final boolean useDirectBytes;
     private final Charset charset;
-    private final boolean lazyFinalParse;
-    private final int sizeSmallerUseLazyFinalParseAlways;
-    private final boolean preferCharSequence;
-    private final boolean lax;
 
 
     private final JsonParser objectParser;
     private final JsonParser basicParser;
     private final JsonParser charSequenceParser;
-    private final JsonParser lazyFinalParseParser;
-
-    private final boolean plist;
-
-    int bufSize = 256;
 
 
-    public JsonParserImpl( boolean useDirectBytes, Charset charset, boolean overlay, int sizeSmallerUseOverlayAlways,
+    private int bufSize = 256;
+
+
+    public JsonParserImpl( Charset charset,
                            boolean preferCharSequence, boolean lax, boolean plistStyle ) {
 
-        this.lax = lax;
-        this.plist = plistStyle;
 
-        if ( lax ) {
-            this.lazyFinalParse = false;
-            this.sizeSmallerUseLazyFinalParseAlways = 0;
-            this.preferCharSequence = false;
 
-        } else {
-            this.lazyFinalParse = overlay;
-            this.sizeSmallerUseLazyFinalParseAlways = sizeSmallerUseOverlayAlways;
-            this.preferCharSequence = preferCharSequence;
-        }
-
-        this.useDirectBytes = useDirectBytes;
         this.charset = charset;
 
         if ( lax ) {
-            //For now there is only one lax parser so force it to that if they are using lax.
-            this.basicParser = new JsonParserLax( plistStyle );
-            this.lazyFinalParseParser = this.basicParser;
-            this.objectParser = this.basicParser;
-            this.charSequenceParser = this.basicParser;
+           this.basicParser = new JsonParserLax (  );
+           this.objectParser = new JsonParserLax ( true );
+        } else if (plistStyle) {
+            this.basicParser = new PlistParser (  );
+            this.objectParser = new PlistParser ( true );
         } else {
-            this.lazyFinalParseParser = new JsonFastParser();
-
-            if ( overlay ) {
-                this.basicParser = lazyFinalParseParser;
-            } else {
-                this.basicParser = new JsonParserCharArray();
-            }
-
+            this.basicParser = new JsonFastParser();
             this.objectParser = new JsonFastParser( true );
-
-            if ( preferCharSequence ) {
-                this.charSequenceParser = new JsonParserCharSequence();
-            } else {
-                this.charSequenceParser = basicParser;
-            }
-
         }
 
+        if ( preferCharSequence ) {
+                this.charSequenceParser = new JsonParserCharSequence();
+        } else {
+                this.charSequenceParser = basicParser;
+        }
 
     }
 
@@ -91,16 +59,15 @@ public class JsonParserImpl implements JsonParser {
     public final <T> T parse( Class<T> type, String value ) {
 
         if ( type == Map.class || type == List.class ) {
-            return charSequenceParser.parse( type, value );
-        } else {
-
-            if ( !lax ) {
-                Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-                return Reflection.fromValueMap( objectMap, type );
+            Object obj = charSequenceParser.parse( type, value );
+            if (obj instanceof  Map)  {
+                return Reflection.fromMap ( ( Map<String,Object> ) obj, type );
             } else {
-                Map<String, Object> objectMap = ( Map<String, Object> ) objectParser.parse( Map.class, value );
-                return Reflection.fromMap( objectMap, type );
+                return (T) obj;
             }
+        } else {
+           Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
+           return Reflection.fromValueMap ( objectMap, type );
         }
     }
 
@@ -109,13 +76,7 @@ public class JsonParserImpl implements JsonParser {
     public final <T> T parse( Class<T> type, byte[] value ) {
 
         if ( type == Map.class || type == List.class ) {
-            if ( value.length < this.sizeSmallerUseLazyFinalParseAlways ) {
-                return lazyFinalParseParser.parse( type, value );
-            } else {
-                this.bufSize = value.length;
                 return this.basicParser.parse( type, value );
-            }
-
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
             return Reflection.fromValueMap( objectMap, type );

@@ -8,9 +8,7 @@ public class JsonCharSeqTest extends JsonParserBaseTest {
 
     public JsonParserFactory factory() {
         return new JsonParserFactory()
-                .preferCharSequence()
-                .neverUseDirectBytes()
-                .neverUseLazyFinalParse().setSizeToForceLazyFinalParse( 0 );
+                .preferCharSequence();
     }
 
 

@@ -136,12 +136,8 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
         if ( __currentChar == '{' )
             this.nextChar();
 
-        LazyMap map = null;
-        if ( heavyCache ) {
-            map = createMap();
-        } else {
-            map = new LazyMap ();
-        }
+        LazyMap map = new LazyMap ();
+
 
 
         for (; __index < this.charSequence.length(); __index++ ) {
@@ -191,11 +187,7 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
             }
         }
 
-        if ( heavyCache ) {
-            return prepareMap( map );
-        } else {
-            return map;
-        }
+        return map;
     }
 
     private void complain( String complaint ) {
@@ -540,12 +532,7 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
         }
 
 
-        ArrayList<Object> list;
-        if ( heavyCache ) {
-            list = createList();
-        } else {
-            list = new ArrayList();
-        }
+        ArrayList<Object> list  = new ArrayList();
 
 
         do {
@@ -577,11 +564,7 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
             }
         } while ( this.hasMore() );
 
-        if ( heavyCache ) {
-            return prepareList( list );
-        } else {
-            return list;
-        }
+        return list;
     }
 
 

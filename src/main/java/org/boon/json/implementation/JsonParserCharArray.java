@@ -38,7 +38,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     protected Object decodeFromChars( char[] cs ) {
         __index = 0;
         charArray = cs;
-        init();
         Object value = decodeValue();
         return value;
     }
@@ -183,12 +182,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             __index++;
         }
 
-        LazyMap map = null;
-        if ( heavyCache ) {
-            map = createMap();
-        } else {
-            map = new LazyMap ();
-        }
+        LazyMap map = new LazyMap ();
 
         for (; __index < this.charArray.length; __index++ ) {
 
@@ -238,11 +232,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         }
 
 
-        if ( heavyCache ) {
-            return prepareMap( map );
-        } else {
-            return map;
-        }
+        return map;
     }
 
 
@@ -626,12 +616,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             return Collections.EMPTY_LIST;
         }
 
-        ArrayList<Object> list;
-        if ( heavyCache ) {
-            list = createList();
-        } else {
-            list = new ArrayList();
-        }
+        ArrayList<Object> list = new ArrayList();
 
         do {
 
@@ -665,12 +650,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             }
         } while ( this.hasMore() );
 
-
-        if ( heavyCache ) {
-            return prepareList( list );
-        } else {
-            return list;
-        }
+        return list;
     }
 
 
