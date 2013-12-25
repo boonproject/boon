@@ -35,20 +35,21 @@ public class JsonParserImpl implements JsonParser {
 
 
     public JsonParserImpl( Charset charset,
-                           boolean preferCharSequence, boolean lax, boolean plistStyle ) {
+                           boolean preferCharSequence, boolean lax,
+                           boolean plistStyle, boolean chop, boolean lazyChop ) {
 
 
 
         this.charset = charset;
 
         if ( lax ) {
-           this.basicParser = new JsonParserLax (  );
+           this.basicParser = new JsonParserLax ( false, chop, lazyChop );
            this.objectParser = new JsonParserLax ( true );
         } else if (plistStyle) {
-            this.basicParser = new PlistParser (  );
+            this.basicParser = new PlistParser ( false, chop, lazyChop );
             this.objectParser = new PlistParser ( true );
         } else {
-            this.basicParser = new JsonFastParser();
+            this.basicParser = new JsonFastParser( false, chop, lazyChop );
             this.objectParser = new JsonFastParser( true );
         }
 
@@ -70,11 +71,7 @@ public class JsonParserImpl implements JsonParser {
 
         if ( type == Map.class || type == List.class ) {
             Object obj = charSequenceParser.parse( type, value );
-            if (obj instanceof  Map)  {
-                return Reflection.fromMap ( ( Map<String,Object> ) obj, type );
-            } else {
-                return (T) obj;
-            }
+            return (T) obj;
         } else {
            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
            return Reflection.fromValueMap ( objectMap, type );

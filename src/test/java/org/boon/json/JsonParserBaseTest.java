@@ -48,11 +48,11 @@ public class JsonParserBaseTest {
     }
 
     public JsonParser parser() {
-        return new JsonParserCharArray();
+        return factory ().create ();
     }
 
     public JsonParser objectParser() {
-        return new JsonParserCharArray();
+        return factory ().create ();
     }
 
 

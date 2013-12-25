@@ -79,7 +79,7 @@ public class JsonParserFactory {
     }
 
 
-    public JsonParser createUTFDirectByteParser() {
+    public JsonParser createUTF8DirectByteParser() {
         BaseJsonParser jsonParser = new JsonUTF8Parser(  );
         jsonParser.setCharset ( StandardCharsets.UTF_8 );
         return (JsonParser)jsonParser;
@@ -131,7 +131,7 @@ public class JsonParserFactory {
         }
 
         return new JsonParserImpl( charset,
-                preferCharSequence, lax, plistStyle );
+                preferCharSequence, lax, plistStyle, chop, lazyChop );
     }
 
 
