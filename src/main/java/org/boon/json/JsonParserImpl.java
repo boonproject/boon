@@ -8,10 +8,7 @@ import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,6 +26,7 @@ public class JsonParserImpl implements JsonParser {
     private final JsonParser objectParser;
     private final JsonParser basicParser;
     private final JsonParser charSequenceParser;
+    private final JsonParser byteParser;
 
 
     private int bufSize = 32;
@@ -63,6 +61,8 @@ public class JsonParserImpl implements JsonParser {
                 this.charSequenceParser = basicParser;
         }
 
+        this.byteParser = new JsonUTF8Parser ();
+
 
     }
 
@@ -83,7 +83,11 @@ public class JsonParserImpl implements JsonParser {
     public final <T> T parse( Class<T> type, byte[] value ) {
 
         if ( type == Map.class || type == List.class ) {
+            if (value.length < 1_000_000) {
                 return this.basicParser.parse( type, value );
+            } else {
+                return this.byteParser.parse ( type, value );
+            }
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
             return Reflection.fromValueMap( objectMap, type );
@@ -176,7 +180,8 @@ public class JsonParserImpl implements JsonParser {
 
     @Override
     public final <T> T parseAsStream( Class<T> type, byte[] value ) {
-        return this.parse( type, new ByteArrayInputStream( value ) );
+        charBuf = IO.read( new InputStreamReader ( new ByteArrayInputStream(value), charset ), charBuf, value.length );
+        return this.basicParser.parse ( type, charBuf.readForRecycle () );
     }
 
 
