@@ -302,7 +302,7 @@ public class JsonParserBaseTest {
     @Test
     public void testNumber() {
 
-        Object obj = jsonParser.parse( Map.class,
+        Object obj = jsonParser.parse( Integer.class,
                 "1".replace( '\'', '"' )
         );
 
@@ -320,7 +320,7 @@ public class JsonParserBaseTest {
     @Test
     public void testBoolean() {
 
-        Object obj = jsonParser.parse( Map.class,
+        Object obj = jsonParser.parse( Boolean.class,
                 "  true  ".replace( '\'', '"' )
         );
 
@@ -361,7 +361,7 @@ public class JsonParserBaseTest {
                         "   do you think it is \\'cool\\' '" ).replace( '\'', '"' );
 
 
-        Object obj = jsonParser.parse( Map.class, testString );
+        Object obj = jsonParser.parse( String.class, testString );
 
         System.out.println( "here is what I got " + obj );
 

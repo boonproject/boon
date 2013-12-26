@@ -2,8 +2,11 @@ package org.boon.json;
 
 import org.boon.Exceptions;
 import org.boon.IO;
+import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
+import org.boon.core.value.ValueMap;
+import org.boon.core.value.ValueMapImpl;
 import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
 
@@ -13,14 +16,13 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
-public class JsonParserImpl implements JsonParser {
+public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
 
-
-    private final Charset charset;
 
 
     private final JsonParser objectParser;
@@ -66,10 +68,12 @@ public class JsonParserImpl implements JsonParser {
 
     }
 
+
+
     @Override
     public final <T> T parse( Class<T> type, String value ) {
 
-        if ( type == Map.class || type == List.class ) {
+        if ( type == Map.class || type == List.class || Typ.isBasicType ( type ) ) {
             Object obj = charSequenceParser.parse( type, value );
             return (T) obj;
         } else {
@@ -146,7 +150,11 @@ public class JsonParserImpl implements JsonParser {
             long size = Files.size ( filePath );
             size = size > 2_000_000_000 ? bufSize : size;
             this.bufSize = (int)size;
-            return parse ( type, Files.newBufferedReader ( IO.path ( fileName ), charset ) );
+            if (size < 1_000_000)  {
+                return parse ( type, Files.newInputStream ( filePath ) );
+            } else {
+                return parse ( type, Files.newBufferedReader ( filePath, charset ) );
+            }
         } catch ( IOException ex ) {
             return Exceptions.handle (type, fileName, ex);
         } finally {

@@ -1,6 +1,7 @@
 package org.boon.json.implementation;
 
 import org.boon.IO;
+import org.boon.core.Typ;
 import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.core.LazyMap;
@@ -236,7 +237,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     public <T> T parse( Class<T> type, byte[] bytes ) {
 
-        if ( type == Map.class || type == List.class ) {
+        if ( type == Map.class || type == List.class || Typ.isBasicType (type) ) {
             return ( T ) this.decode( bytes );
         } else {
             Map<String, Object> objectMap = ( Map<String, Object> ) this.decode( bytes );
@@ -528,9 +529,9 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         } else {
 
             if ( isInteger( this.charArray, startIndex, __index - startIndex, minus ) ) {
-                value = parseInt( charArray, startIndex, __index - startIndex ) * sign;
+                value = ByteScanner.parseInt( charArray, startIndex, __index - startIndex ) * sign;
             } else {
-                value = parseLong( charArray, startIndex, __index - startIndex ) * sign;
+                value =  ByteScanner.parseLong( charArray, startIndex, __index - startIndex ) * sign;
             }
 
         }

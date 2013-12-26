@@ -27,7 +27,9 @@ public class Conversions {
             return int.class.cast( obj );
         }
         try {
-            if ( obj instanceof Number ) {
+            if (obj instanceof Value ) {
+                return ( ( Value ) obj ).intValue ();
+            } else if ( obj instanceof Number ) {
                 return ( ( Number ) obj ).intValue();
             } else if ( obj instanceof Boolean || obj.getClass() == Boolean.class ) {
                 boolean value = toBoolean( obj );

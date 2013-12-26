@@ -1,6 +1,7 @@
 package org.boon.json.implementation;
 
 
+import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.value.*;
@@ -772,21 +773,30 @@ public class JsonParserLax extends JsonParserCharArray {
     }
 
 
-    protected <T> T convert( Class<T> type, T object ) {
+    protected <T> T convert( Class<T> type, Object object ) {
         if ( type == Map.class || type == List.class ) {
-            return object;
+            return (T)object;
         } else {
             if ( object instanceof Map ) {
                 return Reflection.fromValueMap( ( Map<String, org.boon.core.Value> ) object, type );
-            } else {
-                return object;
+            } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
+                return (T)( (Value) object).toValue ();
+            }
+            else {
+                return (T)object;
             }
         }
     }
 
 
-    protected Object decodeFromChars( char[] cs ) {
-        return ( ( Value ) super.decodeFromChars( cs ) ).toValue();
+
+    protected final Object decodeFromChars( char[] cs ) {
+        Value value =  ( ( Value ) super.decodeFromChars ( cs ) );
+        if (value.isContainer ()) {
+            return value.toValue ();
+        } else {
+            return value;
+        }
     }
 
 

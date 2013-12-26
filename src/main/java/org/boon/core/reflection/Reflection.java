@@ -5,6 +5,7 @@ import org.boon.core.Sys;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.*;
+import org.boon.core.value.ValueMapImpl;
 import org.boon.primitive.CharBuf;
 import sun.misc.Unsafe;
 
@@ -102,6 +103,8 @@ public class Reflection {
             return context;
         }
     }
+
+
 
     private static class Context {
 
@@ -1139,6 +1142,19 @@ public class Reflection {
         } else {
             return getFieldValue( object, key );
         }
+    }
+
+
+    public static <T> List<T> convertListOfMapsToObjects ( Class<T> componentType, List<Map<String, Object>> list ) {
+        List<Object> newList = new ArrayList<> ( list.size () );
+        for (Map  map : list) {
+            if ( map instanceof ValueMapImpl ) {
+                newList.add ( Reflection.fromValueMap ( ( Map<String, Value> ) map, componentType ) );
+            } else {
+                newList.add ( Reflection.fromMap ( map, componentType ) );
+            }
+        }
+        return (List<T>) newList;
     }
 
 
