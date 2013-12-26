@@ -27,7 +27,7 @@ import static org.boon.datarepo.Collections.$q;
 import static org.boon.datarepo.Collections.sortedQuery;
 
 import static org.boon.core.reflection.Reflection.copy;
-import static org.boon.core.reflection.Conversions.toDate;
+import static org.boon.core.Conversions.toDate;
 
 
 import static org.junit.Assert.assertEquals;

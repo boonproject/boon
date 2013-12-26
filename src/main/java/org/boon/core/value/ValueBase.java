@@ -1,9 +1,9 @@
 package org.boon.core.value;
 
 
-import org.boon.Dates;
+import org.boon.core.Dates;
 import org.boon.core.Value;
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Conversions;
 
 
 import java.math.BigDecimal;

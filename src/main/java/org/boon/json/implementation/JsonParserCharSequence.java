@@ -590,43 +590,15 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
     }
 
 
-    private CharBuf fileInputBuf;
-
     @Override
-    public final <T> T parse( Class<T> type, Reader reader ) {
-
-        fileInputBuf = IO.read ( reader, fileInputBuf, 256 );
-        return parse( type, fileInputBuf.readForRecycle() );
+    public Object parse ( char[] chars ) {
+        return  this.decode( new String( chars ) );
 
     }
 
     @Override
-    public final <T> T parse( Class<T> type, InputStream input ) {
-        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
-        return parse( type, fileInputBuf.readForRecycle() );
-    }
-
-
-    @Override
-    public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
-        return parse( type, fileInputBuf.readForRecycle() );
-    }
-
-
-    @Override
-    public <T> T parseDirect( Class<T> type, byte[] value ) {
-        if ( value.length < 20_000 ) {
-            CharBuf builder = CharBuf.createFromUTF8Bytes( value );
-            return parse( type, builder.toString() );
-        } else {
-            return this.parse( type, new ByteArrayInputStream( value ) );
-        }
-    }
-
-    @Override
-    public <T> T parseAsStream( Class<T> type, byte[] value ) {
-        return this.parse( type, new ByteArrayInputStream( value ) );
+    public Object parse ( byte[] bytes, Charset charset ) {
+        return parse ( new String( bytes, charset ) );
     }
 
 
@@ -640,24 +612,4 @@ public class JsonParserCharSequence extends BaseJsonParser implements JsonParser
         return parse (type, new String( value, charset ) );
 
     }
-
-
-
-    @Override
-    public <T> T parseFile( Class<T> type, String fileName ) {
-
-        try {
-            Path filePath = IO.path ( fileName );
-            long size = Files.size ( filePath );
-            size = size > 2_000_000_000 ? 1_000_000 : size;
-            Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
-            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
-            return parse( type, fileInputBuf.readForRecycle() );
-        } catch ( IOException ex ) {
-            return Exceptions.handle ( type, fileName, ex );
-        }
-
-    }
-
-
 }

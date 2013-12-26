@@ -3,7 +3,7 @@ package org.boon.core.reflection.fields;
 import org.boon.Exceptions;
 import org.boon.core.Typ;
 import org.boon.core.Value;
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Conversions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,10 +11,9 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.logging.Logger;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
-import static org.boon.core.reflection.Conversions.*;
+import static org.boon.core.Conversions.*;
 
 public class PropertyField implements FieldAccess {
     protected final boolean isFinal;

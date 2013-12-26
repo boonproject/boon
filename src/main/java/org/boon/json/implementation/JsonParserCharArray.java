@@ -1,7 +1,5 @@
 package org.boon.json.implementation;
 
-import org.boon.Exceptions;
-import org.boon.IO;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
@@ -10,20 +8,10 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
-import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.isInteger;
-import static org.boon.primitive.CharScanner.parseInt;
-import static org.boon.primitive.CharScanner.parseLong;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
@@ -683,25 +671,11 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-    @Override
-    public final <T> T parseDirect( Class<T> type, byte[] value ) {
-        if ( value.length < 20_000 ) {
-            CharBuf builder = CharBuf.createFromUTF8Bytes( value );
-            return parse( type, builder.toCharArray() );
-        } else {
-            return this.parse( type, new ByteArrayInputStream( value ) );
-        }
-    }
-
-    @Override
-    public final <T> T parseAsStream( Class<T> type, byte[] value ) {
-        return this.parse( type, new ByteArrayInputStream( value ) );
-    }
 
 
     @Override
-    public final <T> T parse( Class<T> type, CharSequence charSequence ) {
-        return parse( type, charSequence.toString() );
+    public Object parse ( char[] chars ) {
+        return this.decodeFromChars( chars );
     }
 
     @Override
@@ -711,45 +685,9 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     }
 
-
-    private CharBuf fileInputBuf;
-
     @Override
-    public final <T> T parse( Class<T> type, Reader reader ) {
-
-        fileInputBuf = IO.read( reader, fileInputBuf, 256 );
-        return parse( type, fileInputBuf.readForRecycle() );
-
-    }
-
-
-    @Override
-    public final <T> T parse( Class<T> type, InputStream input ) {
-        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
-        return parse( type, fileInputBuf.readForRecycle() );
-    }
-
-
-    @Override
-    public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
-        return parse( type, fileInputBuf.readForRecycle() );
-    }
-
-
-    @Override
-    public <T> T parseFile( Class<T> type, String fileName ) {
-
-        try {
-            Path filePath = IO.path ( fileName );
-            long size = Files.size ( filePath );
-            size = size > 2_000_000_000 ? 1_000_000 : size;
-            Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
-            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
-            return parse( type, fileInputBuf.readForRecycle() );
-        } catch ( IOException ex ) {
-            return Exceptions.handle ( type, fileName, ex );
-        }
+    public Object parse ( byte[] bytes, Charset charset ) {
+        return this.decodeFromBytes ( bytes );
     }
 
 

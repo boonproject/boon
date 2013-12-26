@@ -2,7 +2,7 @@ package org.boon.core.reflection.fields;
 
 import org.boon.core.Typ;
 import org.boon.core.Value;
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Conversions;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -10,7 +10,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 
 import static org.boon.Exceptions.die;
-import static org.boon.core.reflection.Conversions.*;
+import static org.boon.core.Conversions.*;
 
 
 public abstract class UnsafeField implements FieldAccess {

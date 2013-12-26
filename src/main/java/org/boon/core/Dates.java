@@ -1,8 +1,8 @@
-package org.boon;
+package org.boon.core;
 
-import org.boon.core.Sys;
+import org.boon.Exceptions;
+import org.boon.Str;
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
@@ -292,7 +292,7 @@ public class Dates {
         int second = calendar.get( Calendar.SECOND );
 
         CharBuf buf = CharBuf.create( 16 );
-        buf.add( Str.zfill( day, 2 ) ).add( '_' );
+        buf.add( Str.zfill ( day, 2 ) ).add( '_' );
         buf.add( Str.zfill( month, 2 ) ).add( '_' );
         buf.add( year ).add( '_' );
         buf.add( Str.zfill( hour, 2 ) ).add( '_' );
@@ -354,7 +354,7 @@ public class Dates {
 
             return new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssXXX" ).parse( string );
         } catch ( ParseException e ) {
-            return Exceptions.handle( Date.class, "Not a valid ISO8601", e );
+            return Exceptions.handle ( Date.class, "Not a valid ISO8601", e );
         }
 
 
@@ -387,6 +387,11 @@ public class Dates {
 
     public static Date fromISO8601DateLoose( String string ) {
         return fromISO8601DateLoose( FastStringUtils.toCharArray( string ), 0, string.length() );
+
+    }
+
+    public static Date fromISO8601DateLoose( char [] chars ) {
+        return fromISO8601DateLoose( chars, 0, chars.length );
 
     }
 
@@ -562,6 +567,22 @@ public class Dates {
                 ) {
 
             if ( length >= 16 && ( charArray[ start + 16 ] == ':' ) ) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public static boolean isISO8601QuickCheck( char[] charArray ) {
+        final int length = charArray.length;
+
+        if ( length == JSON_TIME_LENGTH || length == LONG_ISO_8601_TIME_LENGTH
+                || length == SHORT_ISO_8601_TIME_LENGTH || ( length >= 16 && ( charArray[   16 ] == ':' ) )
+                ) {
+
+            if ( length >= 16 && ( charArray[  16 ] == ':' ) ) {
                 return true;
             }
         }

@@ -113,4 +113,8 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
             list.chopList();
         }
     }
+
+    public List<Object> list () {
+        return this.list;
+    }
 }

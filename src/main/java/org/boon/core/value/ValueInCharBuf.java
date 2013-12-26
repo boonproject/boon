@@ -1,6 +1,6 @@
 package org.boon.core.value;
 
-import org.boon.Dates;
+import org.boon.core.Dates;
 import org.boon.Exceptions;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;

@@ -56,6 +56,13 @@ public class FastStringUtils {
     }
 
 
+    public static char[] toCharArray( final CharSequence charSequence ) {
+        return HAS_UNSAFE ?
+                ( char[] ) UNSAFE.getObject( charSequence.toString(), STRING_VALUE_FIELD_OFFSET ) :
+                charSequence.toString().toCharArray();
+
+    }
+
     public static char[] toCharArrayFromBytes( final byte[] bytes, Charset charset ) {
         final String string = new String( bytes, StandardCharsets.UTF_8 );
         return HAS_UNSAFE ?

@@ -1,11 +1,10 @@
 package org.boon.datarepo.impl.indexes;
 
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Reflection;
 
 import java.util.List;
 
-import static org.boon.core.reflection.Conversions.toList;
+import static org.boon.core.Conversions.toList;
 
 
 /**

@@ -5,14 +5,14 @@ import org.boon.Exceptions;
 import org.boon.Str;
 import org.boon.core.Typ;
 import org.boon.core.Value;
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Conversions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.Objects;
 
-import static org.boon.core.reflection.Conversions.*;
+import static org.boon.core.Conversions.*;
 
 public class ReflectField implements FieldAccess {
     protected final Field field;

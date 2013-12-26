@@ -1,15 +1,21 @@
 package org.boon.json.implementation;
 
-import org.boon.core.Value;
-import org.boon.core.reflection.Conversions;
+import org.boon.Exceptions;
+import org.boon.IO;
+import org.boon.core.Conversions;
+import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
-import org.boon.core.LazyMap;
 import org.boon.json.JsonParser;
+import org.boon.primitive.CharBuf;
 
-import java.io.InputStream;
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +26,9 @@ public abstract class BaseJsonParser implements JsonParser {
     protected static ConcurrentHashMap<String, String> internedKeysCache;
 
     protected Charset charset  = StandardCharsets.UTF_8;
+
+
+    protected int bufSize  = 256;
 
 
     static {
@@ -121,46 +130,493 @@ public abstract class BaseJsonParser implements JsonParser {
     }
 
 
+    @Override
+    public Date parseDate ( String jsonString ) {
+        return Conversions.toDate ( parse ( jsonString ) );
+    }
+
+    @Override
+    public Date parseDate ( InputStream input ) {
+        return Conversions.toDate ( parse ( input ) );
+    }
+
+    @Override
+    public Date parseDate ( InputStream input, Charset charset ) {
+        return Conversions.toDate ( parse ( input ) );
+    }
+
+    @Override
+    public Date parseDate ( byte[] jsonBytes ) {
+        return Conversions.toDate ( parse ( jsonBytes ) );
+    }
+
+    @Override
+    public Date parseDate ( byte[] jsonBytes, Charset charset ) {
+        return Conversions.toDate ( parse ( jsonBytes, charset ) );
+    }
+
+    @Override
+    public Date parseDate ( char[] chars ) {
+        return Conversions.toDate ( parse ( chars ) );
+    }
+
+    @Override
+    public Date parseDate ( CharSequence jsonSeq ) {
+        return Conversions.toDate ( parse ( jsonSeq ) );
+    }
+
+    @Override
+    public Date parseDateFromFile ( String fileName ) {
+        return Conversions.toDate ( parseFile ( fileName ) );
+    }
+
+    @Override
+    public float[] parseFloatArray ( String jsonString ) {
+        List<Object> list = (List <Object> ) parse ( jsonString );
+        return Conversions.farray ( list );
+    }
+
+    @Override
+    public double[] parseDoubleArray ( String jsonString ) {
+        List<Object> list = (List <Object> ) parse ( jsonString );
+        return Conversions.darray ( list );
+    }
+
+    @Override
+    public long[] parseLongArray ( String jsonString ) {
+        List<Object> list = (List <Object> ) parse ( jsonString );
+        return Conversions.larray ( list );
+    }
+
+    @Override
+    public int [] parseIntArray ( String jsonString ) {
+        List<Object> list = (List <Object> ) parse ( jsonString );
+        return Conversions.iarray ( list );
+    }
+
+
+
+    @Override
+    public short parseShort ( String jsonString ) {
+        return Conversions.toShort ( parse (jsonString) );
+    }
+
+    @Override
+    public byte parseByte ( String jsonString ) {
+
+        return Conversions.toByte ( parse ( jsonString ) );
+    }
+
+    @Override
+    public char parseChar ( String jsonString ) {
+        return Conversions.toChar ( parse ( jsonString ) );
+    }
+
+    @Override
+    public char[] parseCharArray ( String jsonString ) {
+        return Conversions.carray ( parse ( jsonString ) );
+    }
+
+    @Override
+    public byte[] parseByteArray ( String jsonString ) {
+        return Conversions.barray ( parse ( jsonString ) );
+    }
+
+    @Override
+    public short[] parseShortArray ( String jsonString ) {
+        return Conversions.sarray ( parse ( jsonString ) );
+    }
+
 
 
     @Override
     public int parseInt ( String jsonString ) {
-        return Conversions.toInt ( parse ( int.class, jsonString ) );
+        return Conversions.toInt ( parse ( jsonString ) );
     }
 
     @Override
     public int parseInt ( InputStream input ) {
-        return Conversions.toInt ( parse ( int.class, input ) );
+        return Conversions.toInt ( parse (  input ) );
     }
 
     @Override
     public int parseInt ( InputStream input, Charset charset ) {
-        return Conversions.toInt ( parse ( int.class, input, charset ) );
+        return Conversions.toInt ( parse (  input, charset ) );
     }
 
     @Override
     public int parseInt ( byte[] jsonBytes ) {
-        return Conversions.toInt ( parse ( int.class, jsonBytes ) );
+        return Conversions.toInt ( parse (  jsonBytes ) );
     }
 
     @Override
     public int parseInt ( byte[] jsonBytes, Charset charset ) {
-        return Conversions.toInt ( parse ( int.class, jsonBytes, charset ) );
+        return Conversions.toInt ( parse (  jsonBytes, charset ) );
     }
 
     @Override
     public int parseInt ( char[] chars ) {
-        return Conversions.toInt ( parse ( int.class, chars ) );
+        return Conversions.toInt ( parse (  chars ) );
     }
 
     @Override
     public int parseInt ( CharSequence jsonSeq ) {
-        return Conversions.toInt ( parse ( int.class, jsonSeq ) );
+        return Conversions.toInt ( parse (  jsonSeq ) );
     }
 
     @Override
     public int parseIntFromFile ( String fileName ) {
-        return Conversions.toInt ( parseFile ( int.class, fileName ) );
+        return Conversions.toInt ( parseFile (  fileName ) );
     }
+
+
+
+
+    @Override
+    public long parseLong ( String jsonString ) {
+        return Conversions.toLong ( parse ( jsonString ) );
+    }
+
+    @Override
+    public long parseLong ( InputStream input ) {
+        return Conversions.toLong ( parse (  input ) );
+    }
+
+    @Override
+    public long parseLong ( InputStream input, Charset charset ) {
+        return Conversions.toLong ( parse (  input, charset ) );
+    }
+
+    @Override
+    public long parseLong ( byte[] jsonBytes ) {
+        return Conversions.toLong ( parse (  jsonBytes ) );
+    }
+
+    @Override
+    public long parseLong ( byte[] jsonBytes, Charset charset ) {
+        return Conversions.toLong ( parse (  jsonBytes, charset ) );
+    }
+
+    @Override
+    public long parseLong ( char[] chars ) {
+        return Conversions.toLong ( parse (  chars ) );
+    }
+
+    @Override
+    public long parseLong ( CharSequence jsonSeq ) {
+        return Conversions.toLong ( parse (  jsonSeq ) );
+    }
+
+    @Override
+    public long parseLongFromFile ( String fileName ) {
+        return Conversions.toLong ( parseFile ( fileName ) );
+    }
+
+
+    @Override
+    public double parseDouble ( String value ) {
+        return Conversions.toDouble ( parse ( value ) );
+    }
+
+    @Override
+    public double parseDouble ( InputStream value ) {
+        return Conversions.toDouble ( parse (  value ) );
+    }
+
+    @Override
+    public double parseDouble ( byte[] value ) {
+        return Conversions.toDouble ( parse (  value ) );
+    }
+
+    @Override
+    public double parseDouble ( char[] value ) {
+        return Conversions.toDouble ( parse (  value ) );
+    }
+
+    @Override
+    public double parseDouble ( CharSequence value ) {
+        return Conversions.toDouble ( parse (  value ) );
+    }
+
+    @Override
+    public double parseDouble ( byte[] value, Charset charset ) {
+        return Conversions.toDouble ( parse (  value, charset ) );
+    }
+
+    @Override
+    public double parseDouble ( InputStream value, Charset charset ) {
+        return Conversions.toDouble ( parse (  value, charset ) );
+    }
+
+    @Override
+    public double parseDoubleFromFile ( String fileName ) {
+        return Conversions.toDouble ( parseFile ( fileName ) );
+    }
+
+
+    @Override
+    public float parseFloat ( String value ) {
+        return Conversions.toFloat ( parse ( value ) );
+    }
+
+    @Override
+    public float parseFloat ( InputStream value ) {
+        return Conversions.toFloat ( parse (  value ) );
+    }
+
+    @Override
+    public float parseFloat ( byte[] value ) {
+        return Conversions.toFloat ( parse (  value ) );
+    }
+
+    @Override
+    public float parseFloat ( char[] value ) {
+        return Conversions.toFloat ( parse (  value ) );
+    }
+
+    @Override
+    public float parseFloat ( CharSequence value ) {
+        return Conversions.toFloat ( parse (  value ) );
+    }
+
+    @Override
+    public float parseFloat ( byte[] value, Charset charset ) {
+        return Conversions.toFloat ( parse (  value, charset ) );
+    }
+
+    @Override
+    public float parseFloat ( InputStream value, Charset charset ) {
+        return Conversions.toFloat ( parse (  value, charset ) );
+    }
+
+    @Override
+    public float parseFloatFromFile ( String fileName ) {
+        return Conversions.toFloat ( parseFile ( fileName ) );
+    }
+
+
+
+
+    @Override
+    public BigDecimal parseBigDecimal ( String value ) {
+        return Conversions.toBigDecimal ( parse ( value ) );
+    }
+
+    @Override
+    public BigDecimal parseBigDecimal ( InputStream value ) {
+        return Conversions.toBigDecimal ( parse ( value ) );
+    }
+
+    @Override
+    public BigDecimal parseBigDecimal ( byte[] value ) {
+        return Conversions.toBigDecimal ( parse ( value ) );
+    }
+
+    @Override
+    public BigDecimal parseBigDecimal ( char[] value ) {
+        return Conversions.toBigDecimal ( parse ( value ) );
+    }
+
+    @Override
+    public BigDecimal parseBigDecimal ( CharSequence value ) {
+        return Conversions.toBigDecimal ( parse ( value ) );
+    }
+
+    @Override
+    public BigDecimal parseBigDecimal ( byte[] value, Charset charset ) {
+        return Conversions.toBigDecimal ( parse ( value, charset ) );
+    }
+
+    @Override
+    public BigDecimal parseBigDecimal ( InputStream value, Charset charset ) {
+        return Conversions.toBigDecimal ( parse ( value, charset ) );
+    }
+
+    @Override
+    public BigDecimal parseBigDecimalFromFile ( String fileName ) {
+        return Conversions.toBigDecimal ( parseFile ( fileName ) );
+    }
+
+
+
+
+    @Override
+    public BigInteger parseBigInteger ( String value ) {
+        return Conversions.toBigInteger ( parse ( value ) );
+    }
+
+    @Override
+    public BigInteger parseBigInteger ( InputStream value ) {
+        return Conversions.toBigInteger ( parse ( value ) );
+    }
+
+    @Override
+    public BigInteger parseBigInteger ( byte[] value ) {
+        return Conversions.toBigInteger ( parse ( value ) );
+    }
+
+    @Override
+    public BigInteger parseBigInteger ( char[] value ) {
+        return Conversions.toBigInteger ( parse ( value ) );
+    }
+
+    @Override
+    public BigInteger parseBigInteger ( CharSequence value ) {
+        return Conversions.toBigInteger ( parse ( value ) );
+    }
+
+    @Override
+    public BigInteger parseBigInteger ( byte[] value, Charset charset ) {
+        return Conversions.toBigInteger ( parse ( value, charset ) );
+    }
+
+    @Override
+    public BigInteger parseBigInteger ( InputStream value, Charset charset ) {
+        return Conversions.toBigInteger ( parse ( value, charset ) );
+    }
+
+    @Override
+    public BigInteger parseBigIntegerFile ( String fileName ) {
+        return Conversions.toBigInteger ( parseFile ( fileName ) );
+    }
+
+
+
+    @Override
+    public Object parse ( byte[] bytes, Charset charset ) {
+        return parse ( new String( bytes, charset ) );
+    }
+
+    @Override
+    public Object parse ( String jsonString ) {
+        return parse ( FastStringUtils.toCharArray ( jsonString ) );
+    }
+
+    @Override
+    public Object parse ( byte[] bytes ) {
+        return parse ( bytes, charset );
+    }
+
+
+    @Override
+    public Object parse ( CharSequence charSequence ) {
+        return parse ( FastStringUtils.toCharArray ( charSequence ) );
+    }
+
+    @Override
+    public  Object parse(  Reader reader ) {
+
+        fileInputBuf = IO.read ( reader, fileInputBuf, bufSize );
+        return parse( fileInputBuf.readForRecycle() );
+
+    }
+
+    @Override
+    public Object parse ( InputStream input ) {
+        return parse ( input, charset );
+    }
+
+    @Override
+    public Object parse ( InputStream input, Charset charset ) {
+        return parse ( new InputStreamReader ( input, charset ) );
+    }
+
+    @Override
+    public Object parseDirect ( byte[] value ) {
+        if ( value.length < 20_000 ) {
+            CharBuf builder = CharBuf.createFromUTF8Bytes( value );
+            return parse(  builder.toCharArray() );
+        } else {
+            return this.parse(  new ByteArrayInputStream ( value ) );
+        }
+    }
+
+
+    @Override
+    public <T> T parseDirect( Class<T> type, byte[] value ) {
+        if ( value.length < 20_000 ) {
+            CharBuf builder = CharBuf.createFromUTF8Bytes( value );
+            return parse( type, builder.toCharArray() );
+        } else {
+            return this.parse( type, new ByteArrayInputStream ( value ) );
+        }
+    }
+
+
+
+
+    @Override
+    public  <T> T parseAsStream( Class<T> type, byte[] value ) {
+        return this.parse( type, new ByteArrayInputStream( value ) );
+    }
+
+
+    @Override
+    public  <T> T parse( Class<T> type, CharSequence charSequence ) {
+        return parse( type, charSequence.toString() );
+    }
+
+    @Override
+    public Object parseAsStream ( byte[] value ) {
+        return this.parse(  new ByteArrayInputStream( value ) );
+    }
+
+    @Override
+    public Object parseFile ( String fileName ) {
+        try {
+            Path filePath = IO.path ( fileName );
+            long size = Files.size ( filePath );
+            size = size > 2_000_000_000 ? 1_000_000 : size;
+            Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
+            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
+            return parse(  fileInputBuf.readForRecycle() );
+        } catch ( IOException ex ) {
+            return Exceptions.handle ( Object.class, fileName, ex );
+        }
+
+    }
+
+
+    private CharBuf fileInputBuf;
+
+    @Override
+    public  <T> T parse( Class<T> type, Reader reader ) {
+
+        fileInputBuf = IO.read( reader, fileInputBuf, bufSize );
+        return parse( type, fileInputBuf.readForRecycle() );
+
+    }
+
+
+    @Override
+    public  <T> T parse( Class<T> type, InputStream input ) {
+        fileInputBuf = IO.read( input, fileInputBuf, charset, bufSize );
+        return parse( type, fileInputBuf.readForRecycle() );
+    }
+
+
+    @Override
+    public  <T> T parse( Class<T> type, InputStream input, Charset charset ) {
+        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
+        return parse( type, fileInputBuf.readForRecycle() );
+    }
+
+
+    @Override
+    public <T> T parseFile( Class<T> type, String fileName ) {
+
+        try {
+            Path filePath = IO.path ( fileName );
+            long size = Files.size ( filePath );
+            size = size > 2_000_000_000 ? 1_000_000 : size;
+            Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
+            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
+            return parse( type, fileInputBuf.readForRecycle() );
+        } catch ( IOException ex ) {
+            return Exceptions.handle ( type, fileName, ex );
+        }
+    }
+
+
 
 }

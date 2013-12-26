@@ -3,7 +3,7 @@ package org.boon;
 
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Conversions;
 import org.boon.core.reflection.Reflection;
 
 import java.io.Serializable;

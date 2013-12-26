@@ -1,7 +1,7 @@
 package org.boon.datarepo.impl;
 
 import org.boon.Sets;
-import org.boon.core.reflection.Conversions;
+import org.boon.core.Conversions;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.*;
 import org.boon.datarepo.Filter;

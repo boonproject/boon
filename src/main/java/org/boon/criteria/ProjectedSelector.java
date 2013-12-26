@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.boon.Lists.list;
 import static org.boon.Str.join;
-import static org.boon.core.reflection.Conversions.*;
+import static org.boon.core.Conversions.*;
 
 public abstract class ProjectedSelector extends Selector {
 

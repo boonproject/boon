@@ -1,13 +1,14 @@
-package org.boon.core.reflection;
+package org.boon.core;
 
-import org.boon.Dates;
 import org.boon.Sets;
 import org.boon.StringScanner;
-import org.boon.core.Typ;
-import org.boon.core.Value;
+import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
@@ -22,14 +23,51 @@ public class Conversions {
     private static final Logger log = Logger.getLogger( Conversions.class.getName() );
 
 
+
+    public static BigDecimal toBigDecimal ( Object obj ) {
+        if (obj instanceof  BigDecimal) {
+            return (BigDecimal) obj;
+        }
+
+        if ( obj instanceof Value ) {
+            return ( ( Value ) obj ).bigDecimalValue ();
+        } else if ( obj instanceof String ) {
+            return new BigDecimal ( (String) obj );
+        } else if ( obj instanceof Number ) {
+            double val = (( Number ) obj ).doubleValue ();
+            return BigDecimal.valueOf ( val );
+        }
+
+        return null;
+    }
+
+
+
+    public static BigInteger toBigInteger ( Object obj ) {
+        if (obj instanceof  BigInteger) {
+            return (BigInteger) obj;
+        }
+
+        if ( obj instanceof Value ) {
+            return ( ( Value ) obj ).bigIntegerValue ();
+        } else if ( obj instanceof String ) {
+            return new BigInteger ( (String) obj );
+        } else if ( obj instanceof Number ) {
+            long val = (( Number ) obj ).longValue ();
+            return BigInteger.valueOf ( val );
+        }
+
+        return null;
+
+    }
+
+
     public static int toInt( Object obj ) {
         if ( obj.getClass() == int.class ) {
             return int.class.cast( obj );
         }
         try {
-            if (obj instanceof Value ) {
-                return ( ( Value ) obj ).intValue ();
-            } else if ( obj instanceof Number ) {
+            if ( obj instanceof Number ) {
                 return ( ( Number ) obj ).intValue();
             } else if ( obj instanceof Boolean || obj.getClass() == Boolean.class ) {
                 boolean value = toBoolean( obj );
@@ -126,7 +164,7 @@ public class Conversions {
         }
 
         try {
-            if ( obj instanceof Number ) {
+             if ( obj instanceof Number ) {
                 return ( ( Number ) obj ).longValue();
             } else if ( obj instanceof CharSequence ) {
                 try {
@@ -191,7 +229,7 @@ public class Conversions {
             } else {
                 return Sets.in( str, TRUE_SET );
             }
-        } else if ( Reflection.isArray( obj ) || obj instanceof Collection ) {
+        } else if ( Reflection.isArray ( obj ) || obj instanceof Collection ) {
             return Reflection.len( obj ) > 0;
         } else {
             return toBoolean( Conversions.toString( obj ) );
@@ -678,6 +716,26 @@ public class Conversions {
     }
 
 
+    public static Date toDate( Object object ) {
+
+        if (object instanceof Value) {
+            return ( (Value) object).dateValue ();
+        } else if (object instanceof Calendar) {
+            return ( (Calendar) object).getTime ();
+        } else if ( object instanceof Long) {
+            return new Date( (long) object);
+        } else if ( object instanceof String) {
+            String val = (String) object;
+            char [] chars = FastStringUtils.toCharArray ( val );
+            if ( Dates.isISO8601QuickCheck ( chars ) ) {
+                return Dates.fromISO8601DateLoose ( chars  );
+            } else {
+                return toDateUS ( val );
+            }
+        }
+        return null;
+    }
+
     public static Date toDate( Calendar c ) {
         return c.getTime();
 
@@ -739,23 +797,6 @@ public class Conversions {
         }
 
     }
-
-
-    public static Date toDate( Object value ) {
-        if ( value instanceof Long ) {
-            return toDate( ( Long ) value );
-        } else if ( value instanceof String ) {
-            return toDate( ( String ) value );
-        } else {
-            if ( value != null ) {
-                return toDate( value.toString() );
-            } else {
-                die( "Unable to convert set to date" );
-                return null;
-            }
-        }
-    }
-
 
     public interface Converter<TO, FROM> {
         TO convert( FROM from );

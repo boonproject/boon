@@ -1,6 +1,7 @@
 package org.boon.core.reflection;
 
 import org.boon.StringScanner;
+import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.MapField;
@@ -216,7 +217,7 @@ public class BeanUtils {
                 o = getProp( o, propName );
             }
         }
-        return Conversions.unifyList( o );
+        return Conversions.unifyList ( o );
     }
 
 

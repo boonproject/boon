@@ -1,6 +1,7 @@
 package org.boon.core.reflection;
 
 import org.boon.*;
+import org.boon.core.Conversions;
 import org.boon.core.Sys;
 import org.boon.core.Typ;
 import org.boon.core.Value;
@@ -734,7 +735,7 @@ public class Reflection {
                         newCollection.add( fromValueMap( ( Map ) oValue, componentClass ) );
                     }
                 } else {
-                    newCollection.add( Conversions.coerce( componentClass, value.toValue() ) );
+                    newCollection.add( Conversions.coerce ( componentClass, value.toValue () ) );
                 }
 
 

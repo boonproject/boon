@@ -2,11 +2,10 @@ package org.boon.json;
 
 import org.boon.Exceptions;
 import org.boon.IO;
+import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.Reflection;
-import org.boon.core.value.ValueMap;
-import org.boon.core.value.ValueMapImpl;
 import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
 
@@ -16,7 +15,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -160,6 +158,12 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
         } finally {
             this.bufSize = bufSize;
         }
+    }
+
+
+    @Override
+    public Object parse ( char[] chars ) {
+        return basicParser.parse ( chars );
     }
 
 

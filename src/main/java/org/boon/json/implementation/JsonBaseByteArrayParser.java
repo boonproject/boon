@@ -13,13 +13,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.ByteScanner.isInteger;
-import static org.boon.primitive.ByteScanner.parseInt;
-import static org.boon.primitive.ByteScanner.parseLong;
 
 /**
  * Created by rick on 12/15/13.
@@ -770,4 +767,17 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     public <T> T parseFile( Class<T> type, String fileName ) {
         return parse(type, IO.input ( fileName ));
     }
+
+
+
+    @Override
+    public Object parse ( char[] chars ) {
+        return parse ( new String (chars) );
+    }
+
+    @Override
+    public Object parse ( String string ) {
+        return string.getBytes ( charset );
+    }
+
 }

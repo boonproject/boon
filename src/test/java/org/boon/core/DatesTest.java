@@ -1,5 +1,6 @@
-package org.boon;
+package org.boon.core;
 
+import org.boon.core.Dates;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -18,7 +19,7 @@ public class DatesTest {
     public void testIsoShortDate() {
         String test = "1994-11-05T08:15:30Z";
 
-        Date date = Dates.fromISO8601( test );
+        Date date = Dates.fromISO8601 ( test );
         Date date2 = Dates.fromISO8601_( test );
 
         assertEquals( date2.toString(), date.toString() );

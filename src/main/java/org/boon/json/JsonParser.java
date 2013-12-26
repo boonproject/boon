@@ -2,7 +2,10 @@ package org.boon.json;
 
 import java.io.InputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +35,7 @@ public interface JsonParser {
     <T> T parseFile( Class<T> type,  String fileName);
 
 
+
     int  parseInt(  String jsonString );
     int  parseInt(  InputStream input );
     int  parseInt(  InputStream input, Charset charset );
@@ -40,5 +44,88 @@ public interface JsonParser {
     int  parseInt(  char[] chars );
     int  parseInt(  CharSequence jsonSeq );
     int  parseIntFromFile(  String fileName );
+
+    long  parseLong(  String jsonString );
+    long  parseLong(  InputStream input );
+    long  parseLong(  InputStream input, Charset charset );
+    long  parseLong(  byte[] jsonBytes );
+    long  parseLong(  byte[] jsonBytes, Charset charset );
+    long  parseLong(  char[] chars );
+    long  parseLong(  CharSequence jsonSeq );
+    long  parseLongFromFile(  String fileName );
+
+    double  parseDouble(  String value );
+    double  parseDouble(  InputStream value );
+    double  parseDouble(  byte[] value );
+    double  parseDouble(  char[] value );
+    double  parseDouble(  CharSequence value );
+    double  parseDouble(  byte[] value, Charset charset );
+    double  parseDouble(  InputStream value, Charset charset );
+    double  parseDoubleFromFile(  String fileName );
+
+    float  parseFloat(  String value );
+    float  parseFloat(  InputStream value );
+    float  parseFloat(  byte[] value );
+    float  parseFloat(  char[] value );
+    float  parseFloat(  CharSequence value );
+    float  parseFloat(  byte[] value, Charset charset );
+    float  parseFloat(  InputStream value, Charset charset );
+    float  parseFloatFromFile(  String fileName );
+
+
+    BigDecimal  parseBigDecimal(  String value );
+    BigDecimal  parseBigDecimal(  InputStream value );
+    BigDecimal  parseBigDecimal(  byte[] value );
+    BigDecimal  parseBigDecimal(  char[] value );
+    BigDecimal  parseBigDecimal(  CharSequence value );
+    BigDecimal  parseBigDecimal(  byte[] value, Charset charset );
+    BigDecimal  parseBigDecimal(  InputStream value, Charset charset );
+    BigDecimal  parseBigDecimalFromFile(  String fileName );
+
+
+    BigInteger  parseBigInteger(  String value );
+    BigInteger  parseBigInteger(  InputStream value );
+    BigInteger  parseBigInteger(  byte[] value );
+    BigInteger  parseBigInteger(  char[] value );
+    BigInteger  parseBigInteger(  CharSequence value );
+    BigInteger  parseBigInteger(  byte[] value, Charset charset );
+    BigInteger  parseBigInteger(  InputStream value, Charset charset );
+    BigInteger  parseBigIntegerFile(  String fileName );
+
+    Date  parseDate(  String jsonString );
+    Date  parseDate(  InputStream input );
+    Date  parseDate(  InputStream input, Charset charset );
+    Date  parseDate(  byte[] jsonBytes );
+    Date  parseDate(  byte[] jsonBytes, Charset charset );
+    Date  parseDate(  char[] chars );
+    Date  parseDate(  CharSequence jsonSeq );
+    Date  parseDateFromFile(  String fileName );
+
+
+
+    short  parseShort (  String jsonString );
+    byte   parseByte  (  String jsonString );
+    char   parseChar  (  String jsonString );
+
+    public char     [] parseCharArray   ( String jsonString );
+    public byte     [] parseByteArray   ( String jsonString );
+    public short    [] parseShortArray  ( String jsonString );
+    public int      [] parseIntArray    ( String jsonString );
+    public float    [] parseFloatArray  ( String jsonString );
+    public double   [] parseDoubleArray ( String jsonString );
+    public long     [] parseLongArray   ( String jsonString );
+
+
+    Object parse(  String jsonString );
+    Object parse(  byte[] bytes );
+    Object parse(  byte[] bytes, Charset charset );
+    Object parse(  CharSequence charSequence );
+    Object parse(  char[] chars );
+    Object parse(  Reader reader );
+    Object parse(  InputStream input );
+    Object parse(  InputStream input, Charset charset );
+    Object parseDirect(  byte[] value );
+    Object parseAsStream(  byte[] value );
+    Object parseFile(  String fileName);
 
 }

@@ -5,7 +5,7 @@ import org.boon.datarepo.spi.TypedMap;
 import java.util.Comparator;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-import static org.boon.core.reflection.Conversions.wrapAsObject;
+import static org.boon.core.Conversions.wrapAsObject;
 
 
 public class JavaUtilNavigableMap<K, V> extends ConcurrentSkipListMap<K, V> implements TypedMap<K, V> {
