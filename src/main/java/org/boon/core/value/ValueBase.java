@@ -119,7 +119,8 @@ public class ValueBase extends Number implements CharSequence, Value {
     }
 
     @Override
-    public Enum toEnum( Class<? extends Enum> cls ) {
+    public  <T extends Enum> T toEnum( Class<T> cls ) {
+
         switch ( type ) {
             case STRING:
                 return Conversions.toEnum( cls, stringValue() );

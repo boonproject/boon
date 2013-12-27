@@ -4,7 +4,7 @@ package org.boon;
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.Conversions;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.MapObjectConversion;
 
 import java.io.Serializable;
 import java.util.*;
@@ -1209,16 +1209,16 @@ public class Maps {
 
 
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
-        return Reflection.fromMap( map, clazz );
+        return MapObjectConversion.fromMap ( map, clazz );
     }
 
     public static Object fromMap( final Map<String, Object> map ) {
-        return Reflection.fromMap( map );
+        return MapObjectConversion.fromMap ( map );
     }
 
 
     public static Map<String, Object> toMap( final Object object ) {
-        return Reflection.toMap( object );
+        return MapObjectConversion.toMap ( object );
     }
 
 

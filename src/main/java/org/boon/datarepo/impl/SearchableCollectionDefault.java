@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 import static org.boon.Lists.list;
 import static org.boon.core.reflection.Reflection.isArray;
-import static org.boon.core.reflection.Reflection.toMap;
+import static org.boon.core.reflection.MapObjectConversion.toMap;
 
 public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollection<KEY, ITEM>, SearchableCollectionComposer {
 

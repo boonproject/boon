@@ -258,7 +258,7 @@ public class BeanUtils {
      * nested collection to pull out the leaf nodes
      */
     private static Object getCollecitonProp( Object o, String propName, int index, String[] path ) {
-        o = Reflection.getFieldValues( o, propName );
+        o = getFieldValues ( o, propName );
 
         if ( index + 1 == path.length ) {
             return o;
@@ -664,5 +664,39 @@ public class BeanUtils {
         }
     }
 
+
+    public static Object getFieldValues( Object object, final String key ) {
+        if ( object == null ) {
+            return null;
+        }
+        if ( Reflection.isArray( object ) || object instanceof Collection ) {
+            Iterator iter = Conversions.iterator( object );
+            List list = new ArrayList( Reflection.len( object ) );
+            while ( iter.hasNext() ) {
+                list.add( getFieldValues( iter.next(), key ) );
+            }
+            return list;
+        } else {
+            return getFieldValue ( object, key );
+        }
+    }
+
+
+
+    private static Object getFieldValue( Object object, final String key ) {
+        if ( object == null ) {
+            return null;
+        }
+
+        Class<?> cls = object.getClass();
+
+        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMapFieldFirst( cls );
+
+        if ( !fields.containsKey( key ) ) {
+            return null;
+        } else {
+            return fields.get( key ).getValue( object );
+        }
+    }
 
 }

@@ -33,7 +33,7 @@ public interface Value {
 
     Object toValue();
 
-    Enum toEnum( Class<? extends Enum> cls );
+    <T extends Enum> T toEnum( Class<T> cls );
 
     boolean isContainer(); //either a map or a collection
 

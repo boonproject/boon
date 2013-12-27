@@ -7,11 +7,11 @@ import org.boon.json.implementation.JsonFastParser;
  */
 public class JsonLazyChopFastParserTest extends JsonParserBaseTest {
 
-   public JsonParser parser() {
-       return new JsonFastParser ( false, true, true );
-   }
+    public JsonParser parser () {
+        return new JsonFastParser ( false, true, true );
+    }
 
-    public JsonParser objectParser() {
+    public JsonParser objectParser () {
         return new JsonFastParser ( true, false, false );
     }
 

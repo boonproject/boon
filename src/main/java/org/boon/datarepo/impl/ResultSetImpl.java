@@ -17,7 +17,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import static org.boon.Lists.list;
-import static org.boon.core.reflection.Reflection.toMap;
+import static org.boon.core.reflection.MapObjectConversion.toMap;
 
 public class ResultSetImpl<T> implements ResultSetInternal<T> {
 

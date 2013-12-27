@@ -45,21 +45,20 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
 
     @Override
     public Iterator<Object> iterator() {
-        convertAllIfNeeded();
         return list.iterator();
     }
 
-    boolean converted = false;
-
-    private void convertAllIfNeeded() {
-        if ( !converted ) {
-            converted = true;
-            for ( int index = 0; index < list.size(); index++ ) {
-                this.get( index );
-            }
-        }
-
-    }
+//    boolean converted = false;
+//
+//    private void convertAllIfNeeded() {
+//        if ( !converted ) {
+//            converted = true;
+//            for ( int index = 0; index < list.size(); index++ ) {
+//                this.get( index );
+//            }
+//        }
+//
+//    }
 
 
     @Override

@@ -2,7 +2,7 @@ package org.boon.json.implementation;
 
 import org.boon.core.Typ;
 import org.boon.core.Value;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.value.*;
 import org.boon.json.JsonException;
 
@@ -418,7 +418,7 @@ public class JsonFastParser extends JsonParserCharArray {
             return (T)object;
         } else {
             if ( object instanceof Map ) {
-                return Reflection.fromValueMap( ( Map<String, org.boon.core.Value> ) object, type );
+                return MapObjectConversion.fromValueMap ( ( Map<String, org.boon.core.Value> ) object, type );
             } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
                 return (T)( (Value) object).toValue ();
             }

@@ -244,7 +244,11 @@ public class ValueInCharBuf extends ValueBase {
             sign = -1;
 
         }
-        return parseLong ( buffer, startIndex, endIndex - startIndex ) * sign;
+        if ( isInteger ( buffer, startIndex, endIndex - startIndex, sign < 0 ) ){
+            return parseInt( buffer, startIndex, endIndex - startIndex ) * sign;
+        } else {
+           return parseLong( buffer, startIndex, endIndex - startIndex ) * sign;
+        }
     }
 
 

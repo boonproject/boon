@@ -2,10 +2,9 @@ package org.boon.json;
 
 import org.boon.Exceptions;
 import org.boon.IO;
-import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Value;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
 
@@ -76,7 +75,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             return (T) obj;
         } else {
            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-           return Reflection.fromValueMap ( objectMap, type );
+           return MapObjectConversion.fromValueMap ( objectMap, type );
         }
     }
 
@@ -92,7 +91,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             }
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return Reflection.fromValueMap( objectMap, type );
+            return MapObjectConversion.fromValueMap ( objectMap, type );
         }
     }
 
@@ -103,7 +102,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             return this.basicParser.parse( type, value, charset );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return Reflection.fromValueMap( objectMap, type );
+            return MapObjectConversion.fromValueMap ( objectMap, type );
         }
     }
 
@@ -113,7 +112,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             return charSequenceParser.parse( type, value );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return Reflection.fromValueMap( objectMap, type );
+            return MapObjectConversion.fromValueMap ( objectMap, type );
         }
     }
 
@@ -123,7 +122,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             return basicParser.parse( type, value );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return Reflection.fromValueMap( objectMap, type );
+            return MapObjectConversion.fromValueMap ( objectMap, type );
         }
 
     }
@@ -158,6 +157,11 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
         } finally {
             this.bufSize = bufSize;
         }
+    }
+
+    @Override
+    public Object parse ( byte[] bytes, Charset charset ) {
+        return basicParser.parse(bytes, charset);
     }
 
 

@@ -2,7 +2,7 @@ package org.boon.json.implementation;
 
 import org.boon.IO;
 import org.boon.core.Typ;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.json.JsonException;
 import org.boon.core.LazyMap;
 import org.boon.primitive.Byt;
@@ -238,10 +238,16 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
             return ( T ) this.decode( bytes );
         } else {
             Map<String, Object> objectMap = ( Map<String, Object> ) this.decode( bytes );
-            return Reflection.fromMap( objectMap, type );
+            return MapObjectConversion.fromMap ( objectMap, type );
         }
 
     }
+
+    @Override
+    public Object parse ( byte[] bytes ) {
+        return this.decode ( bytes );
+    }
+
 
 
     public <T> T parse( Class<T> type, InputStream input ) {
@@ -777,7 +783,17 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     @Override
     public Object parse ( String string ) {
-        return string.getBytes ( charset );
+        return parse ( string.getBytes ( charset ) );
     }
+
+
+    @Override
+    public Object parse ( byte[] bytes, Charset charset ) {
+
+        return parse (  bytes );
+    }
+
+
+
 
 }

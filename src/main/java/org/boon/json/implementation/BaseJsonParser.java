@@ -4,7 +4,7 @@ import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
 
@@ -63,7 +63,7 @@ public abstract class BaseJsonParser implements JsonParser {
             return (T)object;
         } else {
             if ( object instanceof Map ) {
-                return Reflection.fromMap( ( Map<String, Object> ) object, type );
+                return MapObjectConversion.fromMap ( ( Map<String, Object> ) object, type );
             } else {
                 return (T)object;
             }
@@ -82,51 +82,51 @@ public abstract class BaseJsonParser implements JsonParser {
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, String jsonString ) {
-        List<Map<String, Object>> list =  parse ( List.class, jsonString );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parse ( List.class, jsonString );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, InputStream input ) {
-        List<Map<String, Object>> list =  parse ( List.class, input );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parse ( List.class, input );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, InputStream input, Charset charset ) {
-        List<Map<String, Object>> list =  parse ( List.class, input, charset );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parse ( List.class, input, charset );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, byte[] jsonBytes ) {
-        List<Map<String, Object>> list =  parse ( List.class, jsonBytes );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parse ( List.class, jsonBytes );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, byte[] jsonBytes, Charset charset ) {
-        List<Map<String, Object>> list =  parse ( List.class, jsonBytes, charset );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parse ( List.class, jsonBytes, charset );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, char[] chars ) {
-        List<Map<String, Object>> list =  parse ( List.class, chars );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parse ( List.class, chars );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, CharSequence jsonSeq ) {
-        List<Map<String, Object>> list =  parse ( List.class, jsonSeq );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parse ( List.class, jsonSeq );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseListFromFile ( Class<T> componentType, String fileName ) {
-        List<Map<String, Object>> list =  parseFile ( List.class, fileName );
-        return Reflection.convertListOfMapsToObjects ( componentType, list );
+        List<Object> list =  parseFile ( List.class, fileName );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
     }
 
 
@@ -194,7 +194,11 @@ public abstract class BaseJsonParser implements JsonParser {
         return Conversions.iarray ( list );
     }
 
-
+    @Override
+    public <T extends Enum> T  parseEnum (  Class<T> type, String jsonString ) {
+        Object obj = parse ( jsonString );
+        return Conversions.toEnum ( type, obj );
+    }
 
     @Override
     public short parseShort ( String jsonString ) {
@@ -482,10 +486,6 @@ public abstract class BaseJsonParser implements JsonParser {
 
 
 
-    @Override
-    public Object parse ( byte[] bytes, Charset charset ) {
-        return parse ( new String( bytes, charset ) );
-    }
 
     @Override
     public Object parse ( String jsonString ) {

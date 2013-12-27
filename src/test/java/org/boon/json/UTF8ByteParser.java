@@ -8,10 +8,10 @@ import org.boon.json.implementation.JsonUTF8Parser;
 public class UTF8ByteParser extends JsonParserBaseTest {
 
 
-    public JsonParserFactory factory() {
-        return new JsonParserFactory() {
-            public JsonParser create() {
-                return new JsonUTF8Parser();
+    public JsonParserFactory factory () {
+        return new JsonParserFactory () {
+            public JsonParser create () {
+                return new JsonUTF8Parser ();
             }
         };
 

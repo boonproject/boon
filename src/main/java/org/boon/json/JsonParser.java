@@ -106,6 +106,7 @@ public interface JsonParser {
     short  parseShort (  String jsonString );
     byte   parseByte  (  String jsonString );
     char   parseChar  (  String jsonString );
+    <T extends Enum> T  parseEnum (  Class<T> type, String jsonString );
 
     public char     [] parseCharArray   ( String jsonString );
     public byte     [] parseByteArray   ( String jsonString );

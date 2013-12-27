@@ -2,19 +2,15 @@ package org.boon.json;
 
 import org.boon.IO;
 import org.boon.Lists;
-import org.boon.json.implementation.JsonParserCharArray;
-import org.boon.json.implementation.JsonParserLax;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.boon.Boon.putl;
 import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.idx;
@@ -28,221 +24,233 @@ public class JsonParserBaseTest {
     JsonParser jsonParser;
 
 
-    protected void inspectMap( Map<String, Object> map ) {
-        final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
-        putl( "map", map, "size", map.size(), "keys", map.keySet(), "values", map.values() );
+    protected void inspectMap ( Map<String, Object> map ) {
+        final Set<Map.Entry<String, Object>> entrySet = map.entrySet ();
+        putl ( "map", map, "size", map.size (), "keys", map.keySet (), "values", map.values () );
 
-        for ( String key : map.keySet() ) {
-            puts( "key", "#" + key + "#" );
+        for ( String key : map.keySet () ) {
+            puts ( "key", "#" + key + "#" );
         }
 
-        for ( Object value : map.values() ) {
-            puts( "value", "#" + value + "#" );
+        for ( Object value : map.values () ) {
+            puts ( "value", "#" + value + "#" );
         }
 
     }
 
 
-    public JsonParserFactory factory() {
-        return new JsonParserFactory();
+    public JsonParserFactory factory () {
+        return new JsonParserFactory ();
     }
 
-    public JsonParser parser() {
+    public JsonParser parser () {
         return factory ().create ();
     }
 
-    public JsonParser objectParser() {
+    public JsonParser objectParser () {
         return factory ().create ();
     }
 
 
     @Before
-    public void setup() {
+    public void setup () {
 
-        jsonParser = parser();
+        jsonParser = parser ();
 
     }
 
 
     @Test
-    public void testParserSimpleMapWithNumber() {
+    public void testParserSimpleMapWithNumber () {
 
-        Object obj = jsonParser.parse( Map.class,
-                " { 'foo': 1 }  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                " { 'foo': 1 }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Map || die( "Object was not a map" );
+        ok &= obj instanceof Map || die ( "Object was not a map" );
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
         inspectMap ( map );
 
-        System.out.println( obj );
+        System.out.println ( obj );
 
-        puts (idx( map, "foo" ).getClass ());
+        puts ( idx ( map, "foo" ).getClass () );
 
-        ok &= idx( map, "foo" ).equals( 1 ) || die( "I did not find 1 " + idx( map, "foo" ) );
+        ok &= idx ( map, "foo" ).equals ( 1 ) || die ( "I did not find 1 " + idx ( map, "foo" ) );
     }
 
 
     @Test
-    public void objectSerialization() {
+    public void objectSerialization () {
 
 
-        String fileContents = IO.read( "files/AllTypes.json" );
+        String fileContents = IO.read ( "files/AllTypes.json" );
 
-        AllTypes types = objectParser().parse( AllTypes.class, fileContents );
+        AllTypes types = objectParser ().parse ( AllTypes.class, fileContents );
 
-        puts( types );
-        validateAllTypes( types );
+        puts ( types );
+        validateAllTypes ( types );
 
-        validateAllTypes( types.getAllType() );
+        validateAllTypes ( types.getAllType () );
 
         boolean ok = true;
-        ok |= types.getAllTypes().size() == 3 || die( "" + types.getAllTypes().size() );
+        ok |= types.getAllTypes ().size () == 3 || die ( "" + types.getAllTypes ().size () );
 
-        for ( AllTypes allType : types.getAllTypes() ) {
-            validateAllTypes( allType );
+        for ( AllTypes allType : types.getAllTypes () ) {
+            validateAllTypes ( allType );
         }
 
 
     }
 
     @Test
-    public void testFiles() {
+    public void objectSerializationList () {
 
 
-        final List<String> list = IO.listByExt( "files", ".json" );
+        String fileContents = IO.read ( "files/arrayOfAllType.json" );
+
+        List<AllTypes> types = objectParser ().parseList ( AllTypes.class, fileContents );
+
+        puts (types);
+
+    }
+
+    @Test
+    public void testFiles () {
+
+
+        final List<String> list = IO.listByExt ( "files", ".json" );
 
         for ( String file : list ) {
 
 
-            puts( "testing", file );
+            puts ( "testing", file );
 
-            final Map<String, Object> map = jsonParser.parse( Map.class, IO.read( file ) );
+            jsonParser.parse ( IO.read ( file ) );
 
         }
 
 
     }
 
-    private void validateAllTypes( AllTypes types ) {
+    private void validateAllTypes ( AllTypes types ) {
         boolean ok = true;
-        ok |= types.getMyInt() == 1 || die( "" + types.getMyInt() );
+        ok |= types.getMyInt () == 1 || die ( "" + types.getMyInt () );
 
-        ok |= types.getMyFloat() == 1.1f || die( "" + types.getMyFloat() );
+        ok |= types.getMyFloat () == 1.1f || die ( "" + types.getMyFloat () );
 
-        ok |= types.getMyDouble() == 1.2 || die( "" + types.getMyDouble() );
+        ok |= types.getMyDouble () == 1.2 || die ( "" + types.getMyDouble () );
 
-        ok |= types.isMyBoolean() == true || die( "" + types.isMyBoolean() );
+        ok |= types.isMyBoolean () == true || die ( "" + types.isMyBoolean () );
 
-        ok |= types.getMyShort() == 2 || die( "" + types.getMyShort() );
+        ok |= types.getMyShort () == 2 || die ( "" + types.getMyShort () );
 
-        ok |= types.getMyByte() == 3 || die( "" + types.getMyByte() );
+        ok |= types.getMyByte () == 3 || die ( "" + types.getMyByte () );
 
-        ok |= types.getString().equals( "test" ) || die( "" + types.getString() );
+        ok |= types.getString ().equals ( "test" ) || die ( "" + types.getString () );
     }
 
 
     @Test
-    public void testParseFalse() {
+    public void testParseFalse () {
 
-        Object obj = jsonParser.parse( Map.class,
-                " { 'foo': false }  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                " { 'foo': false }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Map || die( "Object was not a map" );
+        ok &= obj instanceof Map || die ( "Object was not a map" );
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
-        System.out.println( obj );
+        System.out.println ( obj );
 
-        ok &= idx( map, "foo" ).equals( false ) || die( "I did not find  false" );
+        ok &= idx ( map, "foo" ).equals ( false ) || die ( "I did not find  false" );
     }
 
     @Test
-    public void testParseNull() {
+    public void testParseNull () {
 
-        Object obj = jsonParser.parse( Map.class,
-                " { 'foo': null }  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                " { 'foo': null }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Map || die( "Object was not a map" );
+        ok &= obj instanceof Map || die ( "Object was not a map" );
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
-        System.out.println( obj );
+        System.out.println ( obj );
 
-        ok &= idx( map, "foo" ) == ( null ) || die( "I did not find null" );
+        ok &= idx ( map, "foo" ) == ( null ) || die ( "I did not find null" );
     }
 
     @Test
-    public void testParserSimpleMapWithBoolean() {
+    public void testParserSimpleMapWithBoolean () {
 
-        Object obj = jsonParser.parse( Map.class,
-                " { 'foo': true }  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                " { 'foo': true }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Map || die( "Object was not a map" );
+        ok &= obj instanceof Map || die ( "Object was not a map" );
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
-        System.out.println( obj );
+        System.out.println ( obj );
 
-        ok &= idx( map, "foo" ).equals( true ) || die( "I did not find true" );
+        ok &= idx ( map, "foo" ).equals ( true ) || die ( "I did not find true" );
     }
 
 
     @Test
-    public void testParserSimpleMapWithList() {
+    public void testParserSimpleMapWithList () {
 
-        Object obj = jsonParser.parse( Map.class,
-                " { 'foo': [0,1,2] }  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Map || die( "Object was not a map" );
+        ok &= obj instanceof Map || die ( "Object was not a map" );
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
-        System.out.println( obj );
+        System.out.println ( obj );
 
-        ok &= idx( map, "foo" ).equals( list( 0, 1, 2 ) ) || die( "I did not find (0,1,2)" );
+        ok &= idx ( map, "foo" ).equals ( list ( 0, 1, 2 ) ) || die ( "I did not find (0,1,2)" );
     }
 
     @Test
-    public void testParserSimpleMapWithString() {
+    public void testParserSimpleMapWithString () {
 
-        Object obj = jsonParser.parse( Map.class,
-                " { 'foo': 'str ' }  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                " { 'foo': 'str ' }  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        System.out.println( "%%%%%%" + obj );
+        System.out.println ( "%%%%%%" + obj );
 
-        ok &= obj instanceof Map || die( "Object was not a map" );
+        ok &= obj instanceof Map || die ( "Object was not a map" );
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
-        System.out.println( obj );
+        System.out.println ( obj );
 
-        final Object foo = idx( map, "foo" );
-        ok &= foo.equals( "str " ) || die( "I did not find 'str'" + foo );
+        final Object foo = idx ( map, "foo" );
+        ok &= foo.equals ( "str " ) || die ( "I did not find 'str'" + foo );
     }
 
 
     @Test
-    public void testLists() {
+    public void testLists () {
         String[][] testLists = {
                 { "emptyList", "[]" },                  //0
                 { "emptyList", " [ ]" },                  //1  fails
@@ -258,238 +266,307 @@ public class JsonParserBaseTest {
         List<?>[] lists = {
                 Collections.EMPTY_LIST,    //0
                 Collections.EMPTY_LIST,    //1
-                Lists.list( 0, 1, 2, 3, "99" ),  //2
-                Lists.list( 0, 1, "bar", "foo", "baz" ),//3
-                Lists.list( 0, 1, "bar", "foo", map( "baz", 1 ) ),//4
-                Lists.list( 0, 1,
+                Lists.list ( 0, 1, 2, 3, "99" ),  //2
+                Lists.list ( 0, 1, "bar", "foo", "baz" ),//3
+                Lists.list ( 0, 1, "bar", "foo", map ( "baz", 1 ) ),//4
+                Lists.list ( 0, 1,
                         "bar",
                         "foo",
-                        map( "baz", 1,
-                                "lst", list( 1, 2, 3 )
+                        map ( "baz", 1,
+                                "lst", list ( 1, 2, 3 )
                         )
                 ),//5
-                Lists.list( map( "bar", map( "zed", 1 ) ), 1, "bar", "foo", map( "baz", 1, "lst", list( 1, 2, 3 ) ) ),//6
-                Lists.list( 0, 1, 2, 3, 99 )
+                Lists.list ( map ( "bar", map ( "zed", 1 ) ), 1, "bar", "foo", map ( "baz", 1, "lst", list ( 1, 2, 3 ) ) ),//6
+                Lists.list ( 0, 1, 2, 3, 99 )
         };
 
         for ( int index = 0; index < testLists.length; index++ ) {
             String name = testLists[ index ][ 0 ];
             String json = testLists[ index ][ 1 ];
 
-            helper( name, json, lists[ index ] );
+            helper ( name, json, lists[ index ] );
         }
     }
 
 
-    public void helper( String name, String json, Object compareTo ) {
+    public void helper ( String name, String json, Object compareTo ) {
 
-        System.out.printf( "%s, %s, %s", name, json, compareTo );
+        System.out.printf ( "%s, %s, %s", name, json, compareTo );
 
-        Object obj = jsonParser.parse( Map.class,
-                json.replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                json.replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
 
-        System.out.printf( "\nNAME=%s \n \t parsed obj=%s\n \t json=%s\n \t compareTo=%s\n", name, obj, json, compareTo );
-        ok &= compareTo.equals( obj ) || die( name + " :: List has items " + json );
+        System.out.printf ( "\nNAME=%s \n \t parsed obj=%s\n \t json=%s\n \t compareTo=%s\n", name, obj, json, compareTo );
+        ok &= compareTo.equals ( obj ) || die ( name + " :: List has items " + json );
 
 
     }
 
 
     @Test
-    public void testNumber() {
+    public void testNumber () {
 
-        Object obj = jsonParser.parse( Integer.class,
-                "1".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Integer.class,
+                "1".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Integer || die( "Object was not an Integer " + obj + " " + obj.getClass () );
+        ok &= obj instanceof Integer || die ( "Object was not an Integer " + obj + " " + obj.getClass () );
 
         int i = ( Integer ) obj;
 
-        ok &= i == 1 || die( "I did see i equal to 1" );
+        ok &= i == 1 || die ( "I did see i equal to 1" );
 
-        System.out.println( obj.getClass() );
+        System.out.println ( obj.getClass () );
     }
 
     @Test
-    public void testBoolean() {
+    public void testBoolean () {
 
-        Object obj = jsonParser.parse( Boolean.class,
-                "  true  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Boolean.class,
+                "  true  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Boolean || die( "Object was not a Boolean" );
+        ok &= obj instanceof Boolean || die ( "Object was not a Boolean" );
 
         boolean value = ( Boolean ) obj;
 
-        ok &= value == true || die( "I did see value equal to true" );
+        ok &= value == true || die ( "I did see value equal to true" );
 
-        System.out.println( obj.getClass() );
+        System.out.println ( obj.getClass () );
     }
 
     @Test ( expected = JsonException.class )
-    public void testBooleanParseError() {
+    public void testBooleanParseError () {
 
-        Object obj = jsonParser.parse( Map.class,
-                "  tbone  ".replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                "  tbone  ".replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        ok &= obj instanceof Boolean || die( "Object was not a Boolean" );
+        ok &= obj instanceof Boolean || die ( "Object was not a Boolean" );
 
         boolean value = ( Boolean ) obj;
 
-        ok &= value == true || die( "I did see value equal to true" );
+        ok &= value == true || die ( "I did see value equal to true" );
 
-        System.out.println( obj.getClass() );
+        System.out.println ( obj.getClass () );
     }
 
     @Test
-    public void testString() {
+    public void testString () {
 
         String testString =
                 ( "  'this is all sort of text, " +
-                        "   do you think it is \\'cool\\' '" ).replace( '\'', '"' );
+                        "   do you think it is \\'cool\\' '" ).replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse( String.class, testString );
+        Object obj = jsonParser.parse ( String.class, testString );
 
-        System.out.println( "here is what I got " + obj );
+        System.out.println ( "here is what I got " + obj );
 
         boolean ok = true;
 
-        ok &= obj instanceof String || die( "Object was not a String" );
+        ok &= obj instanceof String || die ( "Object was not a String" );
 
         String value = ( String ) obj;
 
-        assertEquals( "this is all sort of text,    do you think it is \"cool\" ", obj );
+        assertEquals ( "this is all sort of text,    do you think it is \"cool\" ", obj );
 
-        System.out.println( obj.getClass() );
+        System.out.println ( obj.getClass () );
     }
 
 
     @Test
-    public void testStringInsideOfList() {
+    public void testStringInsideOfList () {
 
         String testString = (
                 "  [ 'this is all sort of text, " +
-                        "   do you think it is \\'cool\\' '] " ).replace( '\'', '"' );
+                        "   do you think it is \\'cool\\' '] " ).replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse( Map.class, testString );
+        Object obj = jsonParser.parse ( Map.class, testString );
 
 
-        System.out.println( "here is what I got " + obj );
+        System.out.println ( "here is what I got " + obj );
 
         boolean ok = true;
 
-        ok &= obj instanceof List || die( "Object was not a List" );
+        ok &= obj instanceof List || die ( "Object was not a List" );
 
         List<String> value = ( List<String> ) obj;
 
 
-        assertEquals( "this is all sort of text,    do you think it is \"cool\" ",
-                Lists.idx( value, 0 ) );
+        assertEquals ( "this is all sort of text,    do you think it is \"cool\" ",
+                Lists.idx ( value, 0 ) );
 
-        System.out.println( obj.getClass() );
+        System.out.println ( obj.getClass () );
     }
 
     @Test
-    public void testStringInsideOfList2() {
+    public void testStringInsideOfList2 () {
 
         String testString =
-                "[ 'abc','def' ]".replace( '\'', '"' );
+                "[ 'abc','def' ]".replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse( Map.class, testString );
-        System.out.println( "here is what I got " + obj );
+        Object obj = jsonParser.parse ( Map.class, testString );
+        System.out.println ( "here is what I got " + obj );
 
         boolean ok = true;
 
-        ok &= obj instanceof List || die( "Object was not a List" );
+        ok &= obj instanceof List || die ( "Object was not a List" );
 
         List<String> value = ( List<String> ) obj;
 
 
-        assertEquals( "abc",
-                Lists.idx( value, 0 ) );
+        assertEquals ( "abc",
+                Lists.idx ( value, 0 ) );
 
-        System.out.println( obj.getClass() );
+        System.out.println ( obj.getClass () );
     }
 
     @Test
-    public void textInMiddleOfArray() {
+    public void textInMiddleOfArray () {
 
         try {
-            Object obj = jsonParser.parse( Map.class,
-                    lines( "[A, 0]"
-                    ).replace( '\'', '"' ).getBytes( StandardCharsets.UTF_8 )
+            Object obj = jsonParser.parse ( Map.class,
+                    lines ( "[A, 0]"
+                    ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
             );
 
         } catch ( Exception ex ) {
             //success
             return;
         }
-        die( "The above should cause an exception" );
+        die ( "The above should cause an exception" );
 
     }
 
     @Test
-    public void oddlySpaced2() {
+    public void oddlySpaced2 () {
 
-        Object obj = jsonParser.parse( Map.class,
-                lines( "[   2   ,    1, 0]"
-                ).replace( '\'', '"' )
+        Object obj = jsonParser.parse ( Map.class,
+                lines ( "[   2   ,    1, 0]"
+                ).replace ( '\'', '"' )
         );
 
         boolean ok = true;
 
-        System.out.println( obj );
+        System.out.println ( obj );
+
+    }
+
+
+    @Test
+    public void parseArray () {
+
+        String testString = "[0, 2, 4, 8, 16]";
+        int [] compareArray = {0, 2, 4, 8, 16};
+        long [] compareLongArray = {0L, 2L, 4L, 8L, 16L};
+        byte [] compareByteArray = {0, 2, 4, 8, 16};
+        short [] compareShortArray = {0, 2, 4, 8, 16};
+        float [] compareFloatArray = {0, 2, 4, 8, 16};
+        double [] compareDoubleArray = {0, 2, 4, 8, 16};
+
+        final int[] array = jsonParser.parseIntArray ( testString );
+
+        boolean ok = Arrays.equals (compareArray, array) || die( sputs(array));
+
+
+        final long[] larray = jsonParser.parseLongArray ( testString );
+
+        ok = Arrays.equals (compareLongArray, larray) || die( sputs(larray));
+
+
+        final byte[] barray = jsonParser.parseByteArray ( testString );
+        ok |= Arrays.equals (compareByteArray, barray) || die( sputs(barray));
+
+        final short[] sarray = jsonParser.parseShortArray ( testString );
+        ok |= Arrays.equals (compareShortArray, sarray) || die( sputs(sarray));
+
+        final float[] farray = jsonParser.parseFloatArray ( testString );
+        ok |= Arrays.equals (compareFloatArray, farray) || die( sputs(farray));
+
+        final double[] darray = jsonParser.parseDoubleArray ( testString );
+        ok |= Arrays.equals (compareDoubleArray, darray) || die( sputs(darray));
+
+        puts ("parseArray", ok);
 
     }
 
     @Test
-    public void complex() {
+    public void parseNumber () {
+        int i = jsonParser.parseInt ( "123" );
+        boolean ok = i == 123 || die ( "" + i );
+
+        i = jsonParser.parseInt ( "123".getBytes ( StandardCharsets.UTF_8 ) );
+        ok = i == 123 || die ( "" + i );
+
+        i = jsonParser.parseByte ( "123" );
+        ok = i == 123 || die ( "" + i );
 
 
-        Object obj = jsonParser.parse( Map.class,
-                lines(
+
+        i = jsonParser.parseShort ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+
+        i = (int)jsonParser.parseDouble ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+
+        i = (int)jsonParser.parseFloat ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+        i = (int)jsonParser.parseLong ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+        puts ( ok );
+    }
+
+
+    @Test
+    public void complex () {
+
+
+        Object obj = jsonParser.parse ( Map.class,
+                lines (
 
                         "{    'num' : 1   , ",
                         "     'bar' : { 'foo': 1  },  ",
                         "     'nums': [0  ,1,2,3,4,5,'abc'] } "
-                ).replace( '\'', '"' ).getBytes( StandardCharsets.UTF_8 )
+                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
         );
 
         boolean ok = true;
 
-        System.out.println( obj );
+        System.out.println ( obj );
         //die();
     }
 
     @Test
-    public void bug2() {
+    public void bug2 () {
 
 
-        Object obj = jsonParser.parse( Map.class,
-                lines(
+        Object obj = jsonParser.parse ( Map.class,
+                lines (
 
                         "    [ {'bar': {'zed': 1}} , 1]\n "
-                ).replace( '\'', '"' ).getBytes( StandardCharsets.UTF_8 )
+                ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
         );
 
         boolean ok = true;
 
-        System.out.println( obj );
+        System.out.println ( obj );
         //die();
     }
 
@@ -497,77 +574,77 @@ public class JsonParserBaseTest {
 
 
     @Test
-    public void complianceFromJsonSmartForPI() {
+    public void complianceFromJsonSmartForPI () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"PI\":3.141E-10} "
                 )
         );
 
 
-        boolean ok = map.get( "PI" ).equals( 3.141E-10 ) || die( "" + map.get( "PI" ) );
+        boolean ok = map.get ( "PI" ).equals ( 3.141E-10 ) || die ( "" + map.get ( "PI" ) );
     }
 
 
     @Test
-    public void complianceForLowerCaseNumber() {
+    public void complianceForLowerCaseNumber () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"v\":\"\\u00c1\\u00e1\"}"
                 )
         );
 
-        puts( map );
-        boolean ok = map.get( "v" ).equals( "Áá" ) || die( "map " + map.get( "v" ) );
+        puts ( map );
+        boolean ok = map.get ( "v" ).equals ( "Áá" ) || die ( "map " + map.get ( "v" ) );
     }
 
     @Test
-    public void complianceForUpperCaseNumber() {
+    public void complianceForUpperCaseNumber () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"v\":\"\\u00C1\\u00E1\"}"
                 )
         );
 
 
-        puts( map );
-        boolean ok = map.get( "v" ).equals( "Áá" ) || die( "map " + map.get( "v" ) );
+        puts ( map );
+        boolean ok = map.get ( "v" ).equals ( "Áá" ) || die ( "map " + map.get ( "v" ) );
     }
 
 
     @Test
-    public void doublePrecisionFloatingPoint() {
+    public void doublePrecisionFloatingPoint () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"v\":1.7976931348623157E308}"
                 )
         );
 
 
-        boolean ok = map.get( "v" ).equals( 1.7976931348623157E308 ) || die( "map " + map.get( "v" ) );
+        boolean ok = map.get ( "v" ).equals ( 1.7976931348623157E308 ) || die ( "map " + map.get ( "v" ) );
     }
 
     //
 
 
     @Test ( expected = JsonException.class )
-    public void doubleQuoteInsideOfSingleQuote() {
+    public void doubleQuoteInsideOfSingleQuote () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"v\":'ab\"c'}"
                 )
@@ -576,10 +653,10 @@ public class JsonParserBaseTest {
     }
 
     @Test ( expected = JsonException.class )
-    public void supportSimpleQuoteInNonProtectedStringValue() {
+    public void supportSimpleQuoteInNonProtectedStringValue () {
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"v\":It's'Work}"
                 )
@@ -587,9 +664,9 @@ public class JsonParserBaseTest {
     }
 
     @Test ( expected = JsonException.class )
-    public void supportNonProtectedStrings() {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+    public void supportNonProtectedStrings () {
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ a:1234}"
                 )
@@ -598,9 +675,9 @@ public class JsonParserBaseTest {
     }
 
     @Test ( expected = JsonException.class )
-    public void crapInAnArray() {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+    public void crapInAnArray () {
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "[ a,bc]"
                 )
@@ -610,9 +687,9 @@ public class JsonParserBaseTest {
 
 
     @Test ( expected = JsonException.class )
-    public void randomStringAsValuesWithSpaces() {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+    public void randomStringAsValuesWithSpaces () {
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"v\":s1 s2}"
                 )
@@ -622,9 +699,9 @@ public class JsonParserBaseTest {
 
 
     @Test ( expected = JsonException.class )
-    public void randomStringAsValuesWithSpaceAndMoreSpaces() {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+    public void randomStringAsValuesWithSpaceAndMoreSpaces () {
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"v\":s1 s2 }"
                 )
@@ -634,21 +711,21 @@ public class JsonParserBaseTest {
 
 
     @Test ()
-    public void garbageAtEndOfString() {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+    public void garbageAtEndOfString () {
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ \"a\":\"foo.bar\"}#toto"
                 )
         );
-        puts( map );
+        puts ( map );
     }
 
 
     @Test ( expected = JsonException.class )
-    public void singleQuotes() {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse( Map.class,
-                lines(
+    public void singleQuotes () {
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
 
                         "{ 'value':'string'}"
                 )

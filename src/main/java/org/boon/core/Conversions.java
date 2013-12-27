@@ -1,8 +1,10 @@
 package org.boon.core;
 
+import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharBuf;
 
@@ -198,9 +200,9 @@ public class Conversions {
                 return toInt( obj );
             }
         } catch ( Exception ex ) {
-            log.warning( String.format(
+            Exceptions.handle(  String.format (
                     "unable to convert to long and there was an exception %s",
-                    ex.getMessage() ) );
+                    ex.getMessage () ), ex );
 
         }
 
@@ -345,41 +347,39 @@ public class Conversions {
             return toCollection( clz, value );
         } else if ( clz != null && clz.getPackage() != null && !clz.getPackage().getName().startsWith( "java" )
                 && Typ.isMap( value.getClass() ) && Typ.doesMapHaveKeyTypeString( value ) ) {
-            return ( T ) Reflection.fromMap( ( Map<String, Object> ) value );
+            return ( T ) MapObjectConversion.fromMap ( ( Map<String, Object> ) value );
         } else if ( clz.isEnum() ) {
-            return toEnum( clz, value );
+            return (T) toEnum( (Class<? extends Enum>)clz, value );
 
         } else {
             return ( T ) value;
         }
     }
 
-    public static <T> T toEnum( Class<? extends Enum> cls, String value ) {
-        return ( T ) Enum.valueOf( cls, value );
+    public static <T extends Enum> T toEnum( Class<T> cls, String value ) {
+        return  (T) Enum.valueOf( cls, value );
 
     }
 
 
-    public static <T> T toEnum( Class<? extends Enum> cls, int value ) {
-        Class<? extends Enum> clsEnum = ( Class<? extends Enum> ) cls;
+    public static <T extends Enum> T toEnum( Class<T> cls, int value ) {
 
-        Enum[] enumConstants = clsEnum.getEnumConstants();
-        for ( Enum e : enumConstants ) {
+        T[] enumConstants = cls.getEnumConstants();
+        for ( T e : enumConstants ) {
             if ( e.ordinal() == value ) {
-                return ( T ) e;
+                return e;
             }
         }
-
-        die( "Can't convert ordinal value " + value + " into enum of type " + clsEnum );
-        return ( T ) null;
-
-
+        die( "Can't convert ordinal value " + value + " into enum of type " + cls );
+        return null;
     }
 
 
-    public static <T> T toEnum( Class<?> cls, Object value ) {
+    public static <T extends Enum> T toEnum( Class<T> cls, Object value ) {
 
-        if ( value instanceof CharSequence ) {
+        if ( value instanceof Value ) {
+            return (T) ( (Value) value).toEnum ( cls );
+        } else if ( value instanceof CharSequence ) {
             return toEnum( cls, value.toString() );
         } else if ( value instanceof Number || value.getClass().isPrimitive() ) {
 
@@ -387,7 +387,7 @@ public class Conversions {
             return toEnum( cls, i );
         } else {
             die( "Can't convert  value " + value + " into enum of type " + cls );
-            return ( T ) null;
+            return null;
         }
     }
 
@@ -630,7 +630,7 @@ public class Conversions {
 
 
     public static Map<String, Object> toMap( Object value ) {
-        return Reflection.toMap( value );
+        return MapObjectConversion.toMap ( value );
     }
 
 

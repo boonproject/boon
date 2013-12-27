@@ -185,7 +185,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
     @Override
     public Set<Entry<String, Object>> entrySet() {
         if ( map == null ) {
-            return new FakeSet( items );
+            return new FakeSet( items, len );
         } else {
             return map.entrySet();
         }
@@ -232,6 +232,8 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
     /** Simulates the interface of a Set but does not guarantee uniqueness of entries. */
     private static class FakeSet extends AbstractSet<Entry<String, Object>> {
+        private final int size;
+
         @Override
         public <T> T[] toArray( T[] a ) {
             return ( T[] ) items;
@@ -239,9 +241,10 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
         Entry<String, Value>[] items;
 
-        FakeSet( Entry<String, Value>[] items ) {
+        FakeSet( Entry<String, Value>[] items, int size ) {
 
             this.items = items;
+            this.size = size;
         }
 
         @Override
@@ -251,7 +254,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
                 @Override
                 public boolean hasNext() {
-                    return location < items.length;
+                    return location < size;
                 }
 
                 @Override
@@ -269,7 +272,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
         @Override
         public int size() {
-            return items.length;
+            return size;
         }
     }
 }
