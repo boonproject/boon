@@ -397,10 +397,49 @@ public class Dates {
 
 
     final static int SHORT_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30Z".length();
-    // 01234567890123456789012
     final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length();
-    // 01234567890123456789012
     final static int JSON_TIME_LENGTH = "2013-12-14T01:55:33.412Z".length();
+
+
+    /**
+     *
+     * @param date the timestamp
+     * @return json style format.
+     */
+    public static String jsonDate( Date date ) {
+        CharBuf buf = CharBuf.create( JSON_TIME_LENGTH );
+        jsonDateChars ( date, buf );
+        return buf.toString();
+    }
+
+
+
+    public static void jsonDateChars( Date date, CharBuf buf ) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis( date.getTime () );
+        calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
+
+        int day = calendar.get( Calendar.DAY_OF_MONTH );
+        int month = calendar.get( Calendar.MONTH ) +1;
+        int year = calendar.get( Calendar.YEAR );
+        int hour = calendar.get( Calendar.HOUR_OF_DAY );
+        int minute = calendar.get( Calendar.MINUTE );
+        int second = calendar.get( Calendar.SECOND );
+        int mili = calendar.get( Calendar.MILLISECOND );
+
+        buf.add( '"' );
+        buf.add( year ).add( '-' );
+        buf.add( Str.zfill( month, 2 ) ).add( '-' );
+        buf.add( Str.zfill ( day, 2 ) ).add('T');
+
+        buf.add( Str.zfill( hour, 2 ) ).add( ':' );
+        buf.add( Str.zfill( minute, 2 ) ).add( ':' );
+        buf.add( Str.zfill( second, 2 ) ).add( "." );
+        buf.add( Str.zfill( mili, 3 ) ).add( "Z" );
+
+        buf.add( '"' );
+
+    }
 
     public static Date fromISO8601DateLoose( char[] buffer, int startIndex, int endIndex ) {
 

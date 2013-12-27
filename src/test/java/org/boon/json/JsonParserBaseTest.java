@@ -2,9 +2,12 @@ package org.boon.json;
 
 import org.boon.IO;
 import org.boon.Lists;
+import org.boon.core.reflection.Reflection;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -60,6 +63,31 @@ public class JsonParserBaseTest {
     }
 
 
+
+    @Test
+    public void roundTrip() {
+        AllTypes foo = new AllTypes ();
+        foo.setDate ( new Date() );
+        foo.setBar ( FooEnum.BAR );
+        foo.setFoo ( FooEnum.FOO );
+        foo.setString ( "Hi Mom" );
+        AllTypes foo2 = Reflection.copy ( foo );
+        foo.setAllType ( foo2 );
+        foo2.setString ( "Hi Dad" );
+        foo.setAllTypes ( Lists.list(Reflection.copy ( foo2 ), Reflection.copy(foo2)) );
+
+        final JsonSerializer serializer = new JsonSerializerFactory ().create ();
+        String json = serializer.serialize ( foo ).toString ();
+
+
+        puts (json);
+        AllTypes testMe = jsonParser.parse( AllTypes.class, json);
+
+        boolean ok = testMe.equals ( foo ) || die();
+
+    }
+
+
     @Test
     public void testParserSimpleMapWithNumber () {
 
@@ -91,6 +119,8 @@ public class JsonParserBaseTest {
 
         AllTypes types = objectParser ().parse ( AllTypes.class, fileContents );
 
+
+
         puts ( types );
         validateAllTypes ( types );
 
@@ -103,6 +133,16 @@ public class JsonParserBaseTest {
             validateAllTypes ( allType );
         }
 
+
+        //        puts ("################", types.getBigDecimal (), types.getDate (), types.getBigInteger ());
+
+        ok |= types.getBigDecimal ().equals ( new BigDecimal ( "99" ) ) || die();
+
+        ok |= types.getBigInteger ().equals ( new BigInteger ( "101" ) ) || die();
+
+        ok |= types.getDate().toString().startsWith ( "Fri Dec 1" ) || die();
+        ok |= types.getFoo ().toString().equals ( "FOO" ) || die();
+        ok |= types.getBar ().toString().equals ( "BAR" ) || die();
 
     }
 

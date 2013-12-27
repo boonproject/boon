@@ -8,6 +8,11 @@
     "string" : "test",
     "string2" : "test \"I love bacon \", do you?",
     "myByte" : 3 ,
+    "date" : "2013-12-14T01:55:33.412Z",
+    "bigDecimal" : "99",
+    "bigInteger" : "101",
+    "foo" : "FOO",
+    "bar" : 1,
 
     "allType" : {
         "myInt" : 1,

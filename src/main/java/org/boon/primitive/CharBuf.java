@@ -188,7 +188,7 @@ public class CharBuf extends Writer {
     }
 
 
-    public void add( char ch ) {
+    public CharBuf add( char ch ) {
         if ( 1 + location < capacity ) {
             Chr.idx( buffer, location, ch );
         } else {
@@ -197,6 +197,7 @@ public class CharBuf extends Writer {
             capacity = buffer.length;
         }
         location += 1;
+        return this;
     }
 
     public String toString() {

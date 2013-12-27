@@ -20,7 +20,6 @@ import static org.boon.Exceptions.die;
 
 
 public class Conversions {
-    static Class<Conversions> types = Conversions.class;
 
     private static final Logger log = Logger.getLogger( Conversions.class.getName() );
 
@@ -322,12 +321,22 @@ public class Conversions {
             Integer i = toInt( value );
             return ( T ) i;
         } else if ( clz == Typ.longWrapper || clz == Typ.lng ) {
-            Long l = toLong( value );
+            Long l = toLong ( value );
             return ( T ) l;
         } else if ( clz == Typ.doubleWrapper || clz == Typ.dbl ) {
             Double i = toDouble( value );
             return ( T ) i;
-        } else if ( clz == Typ.floatWrapper || clz == Typ.flt ) {
+        } else if ( clz == Typ.date ) {
+           return (T) toDate(value);
+        } else if ( clz == Typ.bigInteger ) {
+            return (T) toBigInteger (value);
+        } else if ( clz == Typ.bigDecimal ) {
+            return (T) toBigDecimal (value);
+        }
+        else if ( clz == Typ.calendar ) {
+            return (T) toCalendar ( toDate(value) );
+        }
+        else if ( clz == Typ.floatWrapper || clz == Typ.flt ) {
             Float i = toFloat( value );
             return ( T ) i;
         } else if ( clz == Typ.stringArray ) {
@@ -342,7 +351,7 @@ public class Conversions {
             }
             return ( T ) toMap( value );
         } else if ( clz.isArray() ) {
-            return ( T ) toPrimitiveArrayIfPossible( clz, value );
+            return toPrimitiveArrayIfPossible( clz, value );
         } else if ( Typ.isCollection( clz ) ) {
             return toCollection( clz, value );
         } else if ( clz != null && clz.getPackage() != null && !clz.getPackage().getName().startsWith( "java" )
@@ -734,6 +743,14 @@ public class Conversions {
             }
         }
         return null;
+    }
+
+    public static Calendar toCalendar( Date date ) {
+
+        final Calendar calendar = Calendar.getInstance ();
+        calendar.setTime ( date );
+        return calendar;
+
     }
 
     public static Date toDate( Calendar c ) {

@@ -187,7 +187,8 @@ public class ValueBase extends Number implements CharSequence, Value {
 
 
     public BigDecimal bigDecimalValue() {
-        return new BigDecimal( toString() );
+        String str = toString();
+        return new BigDecimal( str );
     }
 
     public BigInteger bigIntegerValue() {

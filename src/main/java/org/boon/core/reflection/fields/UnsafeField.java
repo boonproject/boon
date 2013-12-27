@@ -147,6 +147,11 @@ public abstract class UnsafeField implements FieldAccess {
             return;
         }
 
+        if ( value == null ) {
+           this.setObject ( obj, null );
+            return;
+        }
+
         if ( type == Typ.string ) {
             setObject( obj, Conversions.coerce( type, value ) );
         } else if ( type == Typ.intgr ) {
@@ -187,7 +192,7 @@ public abstract class UnsafeField implements FieldAccess {
         } else if ( type == Typ.dbl ) {
             setDouble( obj, value.doubleValue() );
         } else if ( type == Typ.lng ) {
-            setDouble( obj, value.longValue() );
+            setLong( obj, value.longValue() );
         } else if ( type == Typ.bt ) {
             setByte( obj, value.byteValue() );
         } else if ( type == Typ.bln ) {
@@ -214,6 +219,8 @@ public abstract class UnsafeField implements FieldAccess {
             setObject( obj, value.bigIntegerValue() );
         } else if ( type == Typ.date ) {
             setObject( obj, value.dateValue() );
+        } else if ( type.getSuperclass () == Enum.class ) {
+            setObject( obj, value.toEnum ( (Class<? extends Enum>) type ) );
         } else {
             setObject( obj, coerce( type, value ) );
         }
