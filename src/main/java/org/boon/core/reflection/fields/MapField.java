@@ -1,5 +1,6 @@
 package org.boon.core.reflection.fields;
 
+import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.Conversions;
 
@@ -222,9 +223,10 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public String typeName () {
-        return null;
+    public Type typeEnum () {
+        return Type.OBJECT;
     }
+
 
     @Override
     public boolean isPrimitive () {

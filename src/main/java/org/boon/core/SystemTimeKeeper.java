@@ -26,7 +26,7 @@ public class SystemTimeKeeper implements TimeKeeper {
 
     public static void start() {
 
-        if ( !started.get() ) {
+        if ( !started.getAndSet (true) ) {
             executorService = Executors.newSingleThreadScheduledExecutor();
 
             executorService.scheduleAtFixedRate( new Runnable() {
@@ -35,7 +35,13 @@ public class SystemTimeKeeper implements TimeKeeper {
                     time.set( System.nanoTime() / 1_000_000 );
                 }
             }, 5, 5, TimeUnit.MILLISECONDS );
-            started.set( true );
         }
+
+        Sys.timer.set ( new SystemTimeKeeper () );
     }
+
+    public static void shutDown() {
+        executorService.shutdown ();
+    }
+
 }

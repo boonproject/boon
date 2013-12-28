@@ -1,5 +1,6 @@
 package org.boon.core.reflection.fields;
 
+import org.boon.core.Type;
 import org.boon.core.Value;
 
 import java.lang.reflect.Field;
@@ -48,7 +49,7 @@ public interface FieldAccess {
     void setObject( Object obj, Object value );
 
 
-    String typeName();
+    Type typeEnum();
 
 
     boolean isPrimitive();

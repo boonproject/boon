@@ -2,6 +2,7 @@ package org.boon.core.value;
 
 
 import org.boon.core.Dates;
+import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.Conversions;
 
@@ -142,6 +143,11 @@ public class ValueBase extends Number implements CharSequence, Value {
 
     @Override
     public void chop() {
+    }
+
+    @Override
+    public char charValue () {
+        return 0;
     }
 
     @Override

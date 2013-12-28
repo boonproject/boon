@@ -146,7 +146,7 @@ public abstract class UnsafeField extends BaseField {
 
     @Override
     public Object getObject( Object obj ) {
-        die( String.format( "Can't call this method on this type %s", this.type ) );
+        die( String.format( "Can't call this method on this type %s for field %s", this.type, this.name ) );
         return 0;
     }
 

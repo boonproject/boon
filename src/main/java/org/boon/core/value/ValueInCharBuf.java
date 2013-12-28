@@ -2,6 +2,7 @@ package org.boon.core.value;
 
 import org.boon.core.Dates;
 import org.boon.Exceptions;
+import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
 import org.boon.json.implementation.JsonStringDecoder;
@@ -357,4 +358,10 @@ public class ValueInCharBuf extends ValueBase {
     }
 
 
+
+
+    @Override
+    public char charValue () {
+        return buffer[startIndex];
+    }
 }

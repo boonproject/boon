@@ -7,6 +7,7 @@ import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
 import org.boon.core.Dates;
 import org.boon.core.Function;
+import org.boon.core.Type;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.FastStringUtils;
@@ -17,6 +18,7 @@ import org.boon.json.JsonSerializer;
 import org.boon.json.ObjectSerializationData;
 import org.boon.primitive.CharBuf;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -179,56 +181,217 @@ public class JsonSerializerImpl implements JsonSerializer {
     }
 
 
-    public static void main (String... args) {
-        puts (int.class);
-    }
-
 
 
     private final void serializeFieldObject (Object parent, FieldAccess fieldAccess, CharBuf builder) throws Exception {
 
-        if (fieldAccess.isPrimitive ()) {
-            final String typeName = fieldAccess.typeName (); 
-            final char fc = typeName .charAt ( 0 );
-
-            switch ( fc ) {
-                case 'i':
+            switch ( fieldAccess.typeEnum () ) {
+                case INT:
                     builder.addInt ( fieldAccess.getInt ( parent ) );
                     return;
-                case 'b':
-                    switch ( typeName ) {
-                        case "boolean":
-                            builder.addBoolean ( fieldAccess.getBoolean ( parent ) );
-                            return;
-
-                        case "byte":
-                            builder.addByte ( fieldAccess.getByte ( parent ) );
-                            return;
-                    }
-                case 'l':
+                case BOOLEAN:
+                    builder.addBoolean ( fieldAccess.getBoolean ( parent ) );
+                    return;
+                case BYTE:
+                     builder.addByte ( fieldAccess.getByte ( parent ) );
+                     return;
+                case LONG:
                     builder.addLong ( fieldAccess.getLong ( parent ) );
                     return;
-                case 'd':
+                case DOUBLE:
                     builder.addDouble ( fieldAccess.getDouble ( parent ) );
                     return;
-                case 'f':
+                case FLOAT:
                     builder.addFloat ( fieldAccess.getFloat ( parent ) );
                     return;
-                case 's':
+                case SHORT:
                     builder.addShort ( fieldAccess.getShort ( parent ) );
                     return;
-                case 'c':
+                case CHAR:
                     builder.addChar ( fieldAccess.getChar ( parent ) );
                     return;
+                case BIG_DECIMAL:
+                    builder.addBigDecimal ( ( BigDecimal ) fieldAccess.getObject ( parent ) );
+                    return;
+                case BIG_INT:
+                    builder.addBigInteger ( ( BigInteger ) fieldAccess.getObject ( parent ) );
+                    return;
+                case DATE:
+                    serializeDate ( ( Date ) fieldAccess.getObject ( parent ), builder );
+                    return;
+                case STRING:
+                    serializeString ( ( String ) fieldAccess.getObject ( parent ), builder );
+                    return;
+                case CHAR_SEQUENCE:
+                    serializeString ( fieldAccess.getObject ( parent ).toString (), builder );
+                    return;
+                case INTEGER_WRAPPER:
+                    builder.addInt ( ( Integer ) fieldAccess.getObject ( parent ) );
+                    return;
+                case LONG_WRAPPER:
+                    builder.addLong ( ( Long ) fieldAccess.getObject ( parent ) );
+                    return;
+                case FLOAT_WRAPPER:
+                    builder.addFloat ( ( Float ) fieldAccess.getObject ( parent ) );
+                    return;
+                case DOUBLE_WRAPPER:
+                    builder.addDouble ( ( Double ) fieldAccess.getObject ( parent ) );
+                    return;
+                case SHORT_WRAPPER:
+                    builder.addShort ( ( Short ) fieldAccess.getObject ( parent ) );
+                    return;
+                case BYTE_WRAPPER:
+                    builder.addByte ( ( Byte ) fieldAccess.getObject ( parent ) );
+                    return;
+                case CHAR_WRAPPER:
+                    builder.addChar ( ( Character ) fieldAccess.getObject ( parent ) );
+                    return;
+                case ENUM:
+                    builder.addQuoted ( fieldAccess.getObject ( parent ).toString () );
+                    return;
+                case COLLECTION:
+                case LIST:
+                case SET:
+                    this.serializeCollection ( (Collection) fieldAccess.getObject ( parent ), builder );
+                    return;
+                case MAP:
+                    this.serializeMap ( (Map) fieldAccess.getObject ( parent ), builder );
+                    return;
+                case ARRAY:
+                    this.serializeArray ( ( Object[] ) fieldAccess.getObject ( parent ), builder );
+                    return;
 
+                default:
+                    serializeInstance ( fieldAccess.getObject ( parent ), builder );
             }
-        } else {
-            serializeObject ( fieldAccess.getObject ( parent ), builder );
-        }
+    }
 
+    private void serializeDate ( Date date, CharBuf builder ) {
+        if (jsonFormatForDates) {
+            Dates.jsonDateChars ( date, builder );
+        } else {
+            builder.addLong(date.getTime ());
+        }
     }
 
     private final void serializeObject( Object obj, CharBuf builder ) throws Exception {
+
+
+        Type type = Type.getInstanceType (obj);
+
+        switch ( type ) {
+
+            case NULL:
+                builder.addNull ();
+                return;
+            case INT:
+                builder.addInt ( int.class.cast ( obj ) );
+                return;
+            case BOOLEAN:
+                builder.addBoolean ( boolean.class.cast ( obj ) );
+                return;
+            case BYTE:
+                builder.addByte ( byte.class.cast ( obj ) );
+                return;
+            case LONG:
+                builder.addLong ( long.class.cast ( obj ) );
+                return;
+            case DOUBLE:
+                builder.addDouble ( double.class.cast ( obj ) );
+                return;
+            case FLOAT:
+                builder.addFloat ( float.class.cast ( obj ) );
+                return;
+            case SHORT:
+                builder.addShort ( short.class.cast ( obj ) );
+                return;
+            case CHAR:
+                builder.addChar ( char.class.cast ( obj ) );
+                return;
+            case BIG_DECIMAL:
+                builder.addBigDecimal ( ( BigDecimal ) obj );
+                return;
+            case BIG_INT:
+                builder.addBigInteger ( ( BigInteger ) obj );
+                return;
+            case DATE:
+                serializeDate ( ( Date ) obj, builder );
+                return;
+            case STRING:
+                serializeString ( ( String ) obj, builder );
+                return;
+            case CHAR_SEQUENCE:
+                serializeString ( obj.toString(), builder );
+                return;
+            case BOOLEAN_WRAPPER:
+                builder.addBoolean ( ( Boolean ) obj );
+                return;
+            case INTEGER_WRAPPER:
+                builder.addInt ( (Integer) obj);
+                return;
+            case LONG_WRAPPER:
+                builder.addLong ( (Long) obj);
+                return;
+            case FLOAT_WRAPPER:
+                builder.addFloat ( (Float) obj);
+                return;
+            case DOUBLE_WRAPPER:
+                builder.addDouble ( (Double) obj);
+                return;
+            case SHORT_WRAPPER:
+                builder.addShort ( (Short) obj);
+                return;
+            case BYTE_WRAPPER:
+                builder.addByte ( (Byte) obj);
+                return;
+            case CHAR_WRAPPER:
+                builder.addChar ( (Character) obj);
+                return;
+            case ENUM:
+                builder.addQuoted ( obj.toString () );
+
+            case COLLECTION:
+            case LIST:
+            case SET:
+                this.serializeCollection ( (Collection) obj, builder );
+                return;
+            case MAP:
+                this.serializeMap ( (Map) obj, builder );
+                return;
+            case ARRAY:
+                this.serializeArray ( ( Object[] ) obj, builder );
+                return;
+
+            default:
+                serializeInstance ( obj, builder );
+        }
+
+
+    }
+
+    Cache<Object, char[]> cache = new SimpleCache<Object, char[]> (20, CacheType.LRU);
+
+    private final void serializeInstance ( Object obj, CharBuf builder ) throws Exception {
+
+
+
+        char [] chars = cache.get ( obj );
+        if ( chars == null ) {
+            CharBuf buffer = CharBuf.create ( 256 );
+            if (outputType)  {
+                doSerializeInstanceWithType ( obj, buffer );
+            } else {
+                doSerializeInstance ( obj, buffer );
+            }
+            chars = FastStringUtils.toCharArray (buffer.toString ());
+            cache.put ( obj, chars );
+        }
+
+        builder.addChars ( chars );
+
+    }
+
+    private final void doSerializeInstance ( Object obj, CharBuf builder ) throws Exception {
 
         if ( customObjectSerializers != null ) {
             Class<?> parentType = obj.getClass ();
@@ -240,80 +403,6 @@ public class JsonSerializerImpl implements JsonSerializer {
         }
 
 
-        if ( obj == null ) {
-            builder.addNull ();
-        } else if ( obj instanceof String ) {
-            serializeString ( ( String ) obj, builder );
-        }  else if ( obj instanceof Number  ) {
-            serializeNumber ( ( Number ) obj );
-        } else if (obj instanceof  Boolean){
-            builder.addObject ( obj );
-        } else if ( obj instanceof Collection ) {
-            Collection<?> collection = ( Collection<?> ) obj;
-            serializeCollection ( collection, builder );
-        } else if ( obj.getClass().isArray() ) {
-            serializeArray ( ( Object[] ) obj, builder );
-        } else if ( obj instanceof Date ) {
-            Date date = (Date) obj;
-            if (jsonFormatForDates) {
-                Dates.jsonDateChars( ( Date ) obj, builder );
-            } else {
-                builder.addLong(date.getTime ());
-            }
-        } else if ( obj instanceof Map ) {
-            serializeMap ( ( Map ) obj, builder );
-        } else if ( obj instanceof CharSequence ) {
-            serializeString( obj.toString (), builder );
-        } else if ( obj instanceof Enum ) {
-            builder.addQuoted ( obj.toString () );
-        } else if (outputType ){
-            serializeInstanceWithType ( obj, builder );
-        } else {
-            serializeInstance ( obj, builder );
-        }
-    }
-
-
-    private void serializeNumber ( Number number ) {
-        if (number instanceof Integer) {
-            builder.addInt( ( Integer ) number );
-        } else if (number instanceof Long) {
-            builder.addLong( ( Long ) number );
-        } else if (number instanceof Double) {
-            builder.addDouble( ( Double ) number );
-        } else if (number instanceof Float) {
-            builder.addFloat( ( Float ) number );
-        } else if (number instanceof Short) {
-            builder.addShort( ( short ) number );
-        } else if (number instanceof Byte) {
-            builder.addByte( ( byte ) number );
-        } else if (number instanceof BigDecimal ) {
-            builder.addBigDecimal( (BigDecimal) number );
-        } else if (number instanceof BigInteger ) {
-            builder.addBigInteger( ( BigInteger ) number );
-        } else {
-            builder.addObject( number );
-        }
-
-    }
-
-    Cache<Object, char[]> cache = new SimpleCache<Object, char[]> (20, CacheType.LRU);
-
-    private final void serializeInstance ( Object obj, CharBuf builder ) throws Exception {
-
-        char [] chars = cache.get ( obj );
-        if ( chars == null ) {
-            CharBuf buffer = CharBuf.create ( 256 );
-            doSerializeInstance ( obj, buffer );
-            chars = FastStringUtils.toCharArray (buffer.toString ());
-            cache.put ( obj, chars );
-        }
-
-        builder.addChars ( chars );
-
-    }
-
-    private final void doSerializeInstance ( Object obj, CharBuf builder ) throws Exception {
         builder.addChar( '{' );
 
         final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
@@ -353,7 +442,17 @@ public class JsonSerializerImpl implements JsonSerializer {
 
 
 
-    private final void serializeInstanceWithType ( Object obj, CharBuf builder ) throws Exception {
+    private final void doSerializeInstanceWithType ( Object obj, CharBuf builder ) throws Exception {
+
+        if ( customObjectSerializers != null ) {
+            Class<?> parentType = obj.getClass ();
+            final Function<ObjectSerializationData, Boolean> function = customObjectSerializers.get ( parentType );
+            if ( function != null ) {
+                function.apply ( new ObjectSerializationData ( obj, parentType, builder ) );
+                return;
+            }
+        }
+
         builder.addString( "{\"class\":" );
         builder.addQuoted ( obj.getClass ().getName () );
         final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
@@ -498,21 +597,53 @@ public class JsonSerializerImpl implements JsonSerializer {
             while ( listIterator.hasNext () ) {
                 FieldAccess fieldAccess = listIterator.next ();
 
+
+                final Type typeEnum = fieldAccess.typeEnum ();
+
+                if ( fieldAccess.isPrimitive() ) {
+                    continue;
+                }
+
                 if (useAnnotations && alwaysInclude ( fieldAccess )) {
                     continue;
                 }
 
+
                 Object value = fieldAccess.getValue ( obj );
 
-
-                if ( value instanceof Collection ||
-                        value instanceof CharSequence ||
-                        value instanceof Map ||
-                        Reflection.isArray ( obj ) ) {
-                    if (  Reflection.len ( value ) == 0 ) {
-                        listIterator.remove (  );
-                    }
+                if ( value == null ) {
+                    listIterator.remove();
+                    continue;
                 }
+
+
+                switch ( typeEnum ) {
+                    case LIST:
+                    case MAP:
+                    case COLLECTION:
+                    case SET:
+                        Collection collection = (Collection) value;
+                        if (collection.size () == 0) {
+                           listIterator.remove();
+                        }
+                        continue;
+
+                    case STRING:
+                    case CHAR_SEQUENCE:
+                        CharSequence seq = (CharSequence) value;
+                        if (seq.length () == 0) {
+                            listIterator.remove();
+                        }
+                        continue;
+
+                    case ARRAY:
+                        if ( Array.getLength( obj ) == 0 ) {
+                            listIterator.remove();
+                        }
+                        continue;
+
+                }
+
             }
 
     }
@@ -559,9 +690,6 @@ public class JsonSerializerImpl implements JsonSerializer {
     private void excludeDefaultIfNeeded ( Object parent, List<FieldAccess> fields ) {
 
             ListIterator<FieldAccess> listIterator = fields.listIterator ();
-            String typeName;
-
-            char fc;
 
             while ( listIterator.hasNext () ) {
                 FieldAccess fieldAccess = listIterator.next ();
@@ -574,60 +702,52 @@ public class JsonSerializerImpl implements JsonSerializer {
                     continue;
                 }
 
-                 typeName = fieldAccess.typeName ();
-                 fc = typeName.charAt ( 0 );
 
-
-
-                switch ( fc ) {
-                    case 'i':
+                switch ( fieldAccess.typeEnum() ) {
+                    case INT:
                         int i = fieldAccess.getInt ( parent ) ;
                         if (i == 0) {
                             listIterator.remove ();
                         }
                         break;
-                    case 'b':
-                        switch ( typeName ) {
-                            case "boolean":
-                                if (!fieldAccess.getBoolean ( parent )) {
+                    case BOOLEAN:
+                        if (!fieldAccess.getBoolean ( parent )) {
                                     listIterator.remove ();
-                                }
-                                break;
-                            case "byte":
-                                byte b = fieldAccess.getByte ( parent ) ;
-                                if ( b == 0 ) {
-                                    listIterator.remove ();
-                                }
-                                break;
                         }
                         break;
 
-                    case 'l':
+                    case BYTE:
+                        byte b = fieldAccess.getByte ( parent ) ;
+                        if ( b == 0 ) {
+                           listIterator.remove ();
+                        }
+                        break;
+                    case LONG:
                         long l = fieldAccess.getLong ( parent ) ;
 
                         if ( l == 0L ) {
                             listIterator.remove ();
                         }
                         break;
-                    case 'd':
+                    case DOUBLE:
                         double d = fieldAccess.getDouble ( parent ) ;
                         if ( d == 0d ) {
                             listIterator.remove ();
                         }
                         break;
-                    case 'f':
+                    case FLOAT:
                         float f = fieldAccess.getFloat ( parent ) ;
                         if ( f == 0f ) {
                             listIterator.remove ();
                         }
                         break;
-                    case 's':
+                    case SHORT:
                         short s = fieldAccess.getShort ( parent ) ;
                         if ( s == 0 ) {
                             listIterator.remove ();
                         }
                         break;
-                    case 'c':
+                    case CHAR:
                         char c = fieldAccess.getChar ( parent ) ;
                         if ( c == 0 ) {
                             listIterator.remove ();

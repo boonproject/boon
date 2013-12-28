@@ -102,12 +102,6 @@ public class Sys {
     }
 
 
-    static {
-        if ( !inContainer ) {
-            SystemTimeKeeper.start();
-            timer.set( new SystemTimeKeeper() );
-        }
-    }
 
 
     /* Everything that has a cache you need to hold on to, should use this so they can

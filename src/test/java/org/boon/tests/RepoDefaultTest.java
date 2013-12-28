@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.*;
+import static org.boon.Boon.puts;
 import static org.boon.criteria.ProjectedSelector.max;
 import static org.boon.criteria.Selector.*;
 import static org.boon.criteria.Update.set;
@@ -164,12 +165,13 @@ public class RepoDefaultTest {
 
     @Test
     public void testEasyFilter() throws Exception {
-        Employee emp = employee( "Diana", "Hightower", "2178599912", "08.15.82", 100_000 );
+        Employee emp = employee( "DianaSkywalker", "Hightower", "2178599912", "08.15.82", 100_000 );
         repo.add( emp );
-        List<Employee> employees = repo.query( CriteriaFactory.eq( "firstName", "Diana" ) );
+        List<Employee> employees = repo.query( CriteriaFactory.eq( "firstName", "DianaSkywalker" ) );
         assertNotNull( employees );
+
         assertEquals( 1, employees.size() );
-        assertEquals( "Diana", employees.get( 0 ).getFirstName() );
+        assertEquals( "DianaSkywalker", employees.get( 0 ).getFirstName() );
     }
 
     @Test

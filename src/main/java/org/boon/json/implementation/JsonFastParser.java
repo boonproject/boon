@@ -1,6 +1,7 @@
 package org.boon.json.implementation;
 
 import org.boon.core.Typ;
+import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.value.*;

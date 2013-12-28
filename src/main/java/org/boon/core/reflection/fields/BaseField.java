@@ -4,6 +4,7 @@ import org.boon.Exceptions;
 import org.boon.Str;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
+import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
@@ -12,6 +13,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -22,7 +25,7 @@ import static org.boon.core.Conversions.toFloat;
 
 public abstract class BaseField implements FieldAccess {
 
-    protected final boolean isPrimitive;
+    public final boolean isPrimitive;
     protected final boolean isFinal;
     protected final boolean isStatic;
     protected final boolean isVolatile;
@@ -33,7 +36,7 @@ public abstract class BaseField implements FieldAccess {
     protected final ParameterizedType parameterizedType;
     protected final Class<?> componentClass;
     protected final String typeName;
-
+    public final Type typeEnum;
     private  Map<String,  Map<String, Object>> annotationMap = new ConcurrentHashMap<> (  );
 
 
@@ -101,12 +104,19 @@ public abstract class BaseField implements FieldAccess {
 
                 initAnnotationData ( setter.getDeclaringClass () );
             }
+
+            if (name.startsWith ( "$" )) {
+               this.typeEnum = Type.SYSTEM;
+            } else {
+                this.typeEnum = Type.getType(type);
+            }
         } catch ( Exception ex ) {
             Exceptions.handle ( "name " + name + " setter " + setter + " getter " + getter, ex );
             throw new RuntimeException ( "die" );
         }
 
     }
+
 
     protected BaseField ( Field field ) {
         name = field.getName().intern ();
@@ -149,6 +159,12 @@ public abstract class BaseField implements FieldAccess {
 
 
 
+
+        if (name.startsWith ( "$" )) {
+            this.typeEnum = Type.SYSTEM;
+        } else {
+            this.typeEnum = Type.getType(type);
+        }
         initAnnotationData ( field.getDeclaringClass () );
 
 
@@ -158,82 +174,108 @@ public abstract class BaseField implements FieldAccess {
 
     @Override
     public Object getValue ( Object obj ) {
-        if ( type == Typ.intgr ) {
-            int i = this.getInt ( obj );
-            return Integer.valueOf ( i );
-        } else if ( type == Typ.lng ) {
-            long l = this.getLong ( obj );
-            return Long.valueOf ( l );
-        } else if ( type == Typ.bln ) {
-            boolean bool = this.getBoolean ( obj );
-            return Boolean.valueOf ( bool );
-        } else if ( type == Typ.bt ) {
-            byte b = this.getByte ( obj );
-            return Byte.valueOf ( b );
-        } else if ( type == Typ.shrt ) {
-            short s = this.getShort ( obj );
-            return Short.valueOf ( s );
-        } else if ( type == Typ.chr ) {
-            char c = this.getChar ( obj );
-            return Character.valueOf ( c );
-        } else if ( type == Typ.dbl ) {
-            double d = this.getDouble ( obj );
-            return Double.valueOf ( d );
-        } else if ( type == Typ.flt ) {
-            float f = this.getFloat ( obj );
-            return Float.valueOf ( f );
-        } else {
-            return this.getObject ( obj );
+
+        switch ( typeEnum ) {
+            case INT:
+                return this.getInt ( obj );
+            case LONG:
+                return this.getLong ( obj );
+            case BOOLEAN:
+                return this.getBoolean ( obj );
+            case BYTE:
+                return this.getByte ( obj );
+            case SHORT:
+                return this.getShort ( obj );
+            case CHAR:
+                return this.getChar ( obj );
+            case DOUBLE:
+                return this.getDouble ( obj );
+            case FLOAT:
+                return this.getFloat ( obj );
+            default:
+                return this.getObject ( obj );
+
         }
     }
 
 
     @Override
     public void setValue ( Object obj, Object value ) {
-        if ( value != null && value.getClass () == this.type ) {
-            this.setObject ( obj, value );
-            return;
-        }
 
-        if ( value == null ) {
-            this.setObject ( obj, null );
-            return;
-        }
+        switch ( typeEnum ) {
+            case INT:
+                 this.setInt ( obj, toInt ( value ) );
+                 return;
+            case LONG:
+                 this.setLong ( obj, toLong ( value ) );
+                 return;
+            case BOOLEAN:
+                 this.setBoolean ( obj, toBoolean ( value ) );
+                 return;
+            case BYTE:
+                 this.setByte ( obj, toByte ( value ) );
+                 return;
+            case SHORT:
+                 this.setShort ( obj, toShort ( value ) );
+                 return;
+            case CHAR:
+                 this.setChar ( obj, toChar ( value ) );
+                 return;
+            case DOUBLE:
+                 this.setDouble ( obj, toDouble ( value ) );
+                 return;
+            case FLOAT:
+                 this.setFloat ( obj, toFloat ( value ) );
+                 return;
+            case DATE:
+                this.setObject ( obj, toDate ( value ) );
+                return;
+            case STRING:
+                if (value instanceof String)  {
+                    this.setObject ( obj, value );
+                } else {
+                    this.setObject ( obj, Conversions.toString (value) );
+                }
+                return;
+            case ENUM:
+                if ( value.getClass () == this.type ) {
+                    this.setObject ( obj, value );
+                } else {
+                    this.setObject ( obj, toEnum ( (Class<? extends Enum>) type, value ) );
+                }
+                return;
+            case BIG_DECIMAL:
+                if ( value instanceof BigDecimal )  {
+                    this.setObject ( obj, value );
+                } else {
+                    this.setObject ( obj, toBigDecimal ( value ) );
+                }
+                return;
+            case BIG_INT:
+                if ( value instanceof BigInteger )  {
+                    this.setObject ( obj, value );
+                } else {
+                    this.setObject ( obj, toBigInteger ( value ) );
+                }
+                return;
+            case COLLECTION:
+            case LIST:
+            case SET:
+                 this.setObject ( obj, Conversions.toCollection ( type, value ) );
+                 return;
+            default:
+                if ( value != null ) {
+                    if ( value.getClass () == this.type ) {
+                        this.setObject ( obj, value );
+                    } else if ( Typ.implementsInterface ( value.getClass (), type ) ) {
+                        this.setObject ( obj, value );
+                    } else {
+                        setObject ( obj, Conversions.coerce ( type, value ) );
+                    }
+                } else {
+                    this.setObject ( obj, null );
+                }
 
-        if (type.isInterface ()) {
-            if (Typ.implementsInterface ( value.getClass (), type )) {
-               if (Typ.isCollection ( type )) {
-                   this.setObject ( obj, Conversions.toCollection ( type, value ) );
-                   return;
-               }
-            }
-        }
-
-        if ( type == Typ.string ) {
-            setObject ( obj, Conversions.coerce ( type, value ) );
-        } else if ( type == Typ.intgr ) {
-            setInt ( obj, toInt ( value ) );
-        } else if ( type == Typ.bln ) {
-            setBoolean ( obj, toBoolean ( value ) );
-        } else if ( type == Typ.lng ) {
-            setLong ( obj, toLong ( value ) );
-        } else if ( type == Typ.bt ) {
-            setByte ( obj, toByte ( value ) );
-
-        } else if ( type == Typ.shrt ) {
-            setShort ( obj, toShort ( value ) );
-
-        } else if ( type == Typ.chr ) {
-            setChar ( obj, toChar ( value ) );
-
-        } else if ( type == Typ.dbl ) {
-            setDouble ( obj, toDouble ( value ) );
-
-        } else if ( type == Typ.flt ) {
-            setFloat ( obj, toFloat ( value ) );
-
-        } else {
-            setObject ( obj, Conversions.coerce ( type, value ) );
         }
 
     }
@@ -241,47 +283,75 @@ public abstract class BaseField implements FieldAccess {
 
     public void setFromValue ( Object obj, Value value ) {
 
-        if ( type == Typ.string ) {
-            setObject ( obj, value.stringValue () );
-        } else if ( type == Typ.intgr ) {
-            setInt ( obj, value.intValue () );
-        } else if ( type == Typ.flt ) {
-            setFloat ( obj, value.floatValue () );
-        } else if ( type == Typ.dbl ) {
-            setDouble ( obj, value.doubleValue () );
-        } else if ( type == Typ.lng ) {
-            setLong ( obj, value.longValue () );
-        } else if ( type == Typ.bt ) {
-            setByte ( obj, value.byteValue () );
-        } else if ( type == Typ.bln ) {
-            setBoolean ( obj, value.booleanValue () );
-        } else if ( type == Typ.shrt ) {
-            setShort ( obj, value.shortValue () );
-        } else if ( type == Typ.integer ) {
-            setObject ( obj, value.intValue () );
-        } else if ( type == Typ.floatWrapper ) {
-            setObject ( obj, value.floatValue () );
-        } else if ( type == Typ.doubleWrapper ) {
-            setObject ( obj, value.doubleValue () );
-        } else if ( type == Typ.longWrapper ) {
-            setObject ( obj, value.longValue () );
-        } else if ( type == Typ.byteWrapper ) {
-            setObject ( obj, value.byteValue () );
-        } else if ( type == Typ.bool ) {
-            setObject ( obj, value.booleanValue () );
-        } else if ( type == Typ.shortWrapper ) {
-            setObject ( obj, value.shortValue () );
-        } else if ( type == Typ.bigDecimal ) {
-            setObject ( obj, value.bigDecimalValue () );
-        } else if ( type == Typ.bigInteger ) {
-            setObject ( obj, value.bigIntegerValue () );
-        } else if ( type == Typ.date ) {
-            setObject ( obj, value.dateValue () );
-        } else if ( type.getSuperclass () == Enum.class ) {
-            setObject ( obj, value.toEnum ( ( Class<? extends Enum> ) type ) );
-        } else {
-            setObject ( obj, coerce ( type, value ) );
+        switch ( typeEnum ) {
+            case INT:
+                this.setInt ( obj, value.intValue()  );
+                return;
+            case LONG:
+                this.setLong ( obj, value.longValue () );
+                return;
+            case BOOLEAN:
+                this.setBoolean ( obj, value.booleanValue () );
+                return;
+            case BYTE:
+                this.setByte ( obj, value.byteValue () );
+                return;
+            case SHORT:
+                this.setShort ( obj, value.shortValue () );
+                return;
+            case CHAR:
+                this.setChar ( obj, value.charValue () );
+                return;
+            case DOUBLE:
+                this.setDouble ( obj, value.doubleValue () );
+                return;
+            case FLOAT:
+                this.setFloat ( obj, value.floatValue () );
+                return;
+            case INTEGER_WRAPPER:
+                this.setObject ( obj, value.intValue () );
+                return;
+            case LONG_WRAPPER:
+                this.setObject ( obj, value.longValue () );
+                return;
+            case BOOLEAN_WRAPPER:
+                this.setObject ( obj, value.booleanValue () );
+                return;
+            case BYTE_WRAPPER:
+                this.setObject ( obj, value.byteValue () );
+                return;
+            case SHORT_WRAPPER:
+                this.setObject ( obj, value.shortValue () );
+                return;
+            case CHAR_WRAPPER:
+                this.setObject ( obj, value.charValue () );
+                return;
+            case DOUBLE_WRAPPER:
+                this.setObject ( obj, value.doubleValue () );
+                return;
+            case FLOAT_WRAPPER:
+                this.setObject ( obj, value.floatValue () );
+                return;
+            case STRING:
+            case CHAR_SEQUENCE:
+                this.setObject ( obj, value.stringValue() );
+                return;
+            case BIG_DECIMAL:
+                this.setObject ( obj, value.bigDecimalValue () );
+                return;
+            case BIG_INT:
+                this.setObject ( obj, value.bigIntegerValue () );
+                return;
+            case DATE:
+                this.setObject ( obj, value.dateValue () );
+                return;
+            case ENUM:
+                this.setObject ( obj, value.toEnum (  ( Class<? extends Enum> )type ) );
+                return;
+            default:
+                setObject ( obj, coerce ( type, value ) );
         }
+
     }
 
 
@@ -329,9 +399,11 @@ public abstract class BaseField implements FieldAccess {
 
 
 
+
+
     @Override
-    public final String typeName () {
-        return typeName;
+    public final Type typeEnum () {
+        return this.typeEnum;
     }
 
 

@@ -318,6 +318,14 @@ public class Conversions {
     @SuppressWarnings ( "unchecked" )
     public static <T> T coerce( Class<T> clz, Object value ) {
 
+        if ( value == null ) {
+            return null;
+        }
+
+        if (clz == value.getClass ()) {
+            return (T)value;
+        }
+
         if ( clz == Typ.string || clz == Typ.chars ) {
             return ( T ) value.toString();
         } else if ( clz == Typ.integer || clz == Typ.intgr ) {
@@ -327,17 +335,17 @@ public class Conversions {
             Long l = toLong ( value );
             return ( T ) l;
         } else if ( clz == Typ.doubleWrapper || clz == Typ.dbl ) {
-            Double i = toDouble( value );
+            Double i = toDouble ( value );
             return ( T ) i;
         } else if ( clz == Typ.date ) {
            return (T) toDate(value);
         } else if ( clz == Typ.bigInteger ) {
             return (T) toBigInteger (value);
         } else if ( clz == Typ.bigDecimal ) {
-            return (T) toBigDecimal (value);
+            return (T) toBigDecimal ( value );
         }
         else if ( clz == Typ.calendar ) {
-            return (T) toCalendar ( toDate(value) );
+            return (T) toCalendar ( toDate ( value ) );
         }
         else if ( clz == Typ.floatWrapper || clz == Typ.flt ) {
             Float i = toFloat( value );
@@ -346,7 +354,7 @@ public class Conversions {
             die( "Need to fix this" );
             return null;
         } else if ( clz == Typ.bool || clz == Typ.bln ) {
-            Boolean b = toBoolean( value );
+            Boolean b = toBoolean ( value );
             return ( T ) b;
         } else if ( Typ.isMap( clz ) ) {
             if ( value instanceof Map ) {
@@ -355,16 +363,16 @@ public class Conversions {
             return ( T ) toMap( value );
         } else if ( clz.isArray() ) {
             return toPrimitiveArrayIfPossible( clz, value );
-        } else if ( Typ.isCollection( clz ) ) {
+        } else if ( Typ.isCollection ( clz ) ) {
             return toCollection( clz, value );
         } else if ( clz != null && clz.getPackage() != null && !clz.getPackage().getName().startsWith( "java" )
                 && Typ.isMap( value.getClass() ) && Typ.doesMapHaveKeyTypeString( value ) ) {
             return ( T ) MapObjectConversion.fromMap ( ( Map<String, Object> ) value );
-        } else if ( clz.isEnum() ) {
+        } else if ( clz.isEnum () ) {
             return (T) toEnum( (Class<? extends Enum>)clz, value );
 
         } else {
-            return ( T ) value;
+            return null;
         }
     }
 
