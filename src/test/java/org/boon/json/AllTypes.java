@@ -1,13 +1,22 @@
 package org.boon.json;
 
+import org.boon.json.annotations.JsonIgnore;
+import org.boon.json.annotations.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@JsonIgnoreProperties ("ignoreMe2")
 public class AllTypes {
 
+
+
+    String ignoreMe3;
+
+    String ignoreMe2;
 
     int myInt;
     boolean myBoolean;
@@ -25,6 +34,15 @@ public class AllTypes {
 
     FooEnum foo;
     FooEnum bar;
+
+    @JsonIgnore
+    String ingnoreMe;
+
+
+    long someDate = new Date (  ).getTime ();
+
+
+    FooBasket fooBasket = new FooBasket ();
 
     AllTypes allType;
 
@@ -179,7 +197,6 @@ public class AllTypes {
         if ( myLong != allTypes1.myLong ) return false;
         if ( myShort != allTypes1.myShort ) return false;
         if ( allType != null ? !allType.equals ( allTypes1.allType ) : allTypes1.allType != null ) return false;
-        if ( allTypes != null ? !allTypes.equals ( allTypes1.allTypes ) : allTypes1.allTypes != null ) return false;
         if ( bar != allTypes1.bar ) return false;
         if ( bigDecimal != null ? !bigDecimal.equals ( allTypes1.bigDecimal ) : allTypes1.bigDecimal != null )
             return false;
@@ -190,6 +207,13 @@ public class AllTypes {
         if ( string != null ? !string.equals ( allTypes1.string ) : allTypes1.string != null ) return false;
         if ( string2 != null ? !string2.equals ( allTypes1.string2 ) : allTypes1.string2 != null ) return false;
 
+        if (allTypes == null && allTypes1.allTypes.size () == 0) {
+            return true;
+        } else {
+
+            if ( allTypes != null ? !allTypes.equals ( allTypes1.allTypes ) : allTypes1.allTypes != null ) return false;
+
+        }
         return true;
     }
 

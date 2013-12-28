@@ -121,6 +121,34 @@ public class ReflectionTest {
             );
 
 
+
+    @Test
+    public void testFromMapOfListOfMapsCauseIamHardcoreLikeThat() throws Exception {
+        final Department manufacturing =
+                Maps.fromMap( department3, Department.class );
+
+
+        boolean ok = true;
+        ok &= manufacturing.name.equals( "manufacturing" ) || die();
+
+        ok &= manufacturing.employees.size() == 4 || die();
+
+        ok &= manufacturing.employees.get( 0 ).firstName.equals( "Rick" ) || die();
+
+
+
+        //Add this for Sellwyn
+        final Map<String, Object> objectMap = Maps.toMap( manufacturing );
+
+        ok &= objectMap.get( "name" ).equals( "manufacturing" ) || die();
+        ok &= Reflection.len( objectMap.get( "employees" ) ) == 4 || die();
+
+        final Map<String, Object> oMapEmployee = ( Map<String, Object> )
+                Reflection.idx( objectMap.get( "employees" ), 0 );
+        ok &= oMapEmployee.get( "firstName" ).equals( "Rick" ) || die();
+
+
+    }
     @Test
     public void testFromMap() throws Exception {
 
@@ -144,26 +172,6 @@ public class ReflectionTest {
         ok &= hr.employees.size() == 3 || die();
 
 
-        final Department manufacturing =
-                Maps.fromMap( department3, Department.class );
-
-
-        ok &= manufacturing.name.equals( "manufacturing" ) || die();
-
-        ok &= manufacturing.employees.size() == 4 || die();
-
-        ok &= manufacturing.employees.get( 0 ).firstName.equals( "Rick" ) || die();
-
-
-        //Add this for Sellwyn
-        final Map<String, Object> objectMap = Maps.toMap( manufacturing );
-
-        ok &= objectMap.get( "name" ).equals( "manufacturing" ) || die();
-        ok &= Reflection.len( objectMap.get( "employees" ) ) == 4 || die();
-
-        final Map<String, Object> oMapEmployee = ( Map<String, Object> )
-                Reflection.idx( objectMap.get( "employees" ), 0 );
-        ok &= oMapEmployee.get( "firstName" ).equals( "Rick" ) || die();
 
 
     }

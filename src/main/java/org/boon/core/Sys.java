@@ -1,6 +1,8 @@
 package org.boon.core;
 
 
+import org.boon.Lists;
+import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.timer.TimeKeeper;
 import org.boon.core.timer.TimeKeeperBasic;
@@ -112,7 +114,7 @@ public class Sys {
      * all be stuffed into application context. */
     public static Object contextToHold() {
 
-        return Reflection.contextToHold();
+        return Lists.list ( Reflection.contextToHold (), Annotations.contextToHold () );
     }
 
 

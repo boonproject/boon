@@ -2,6 +2,9 @@ package org.boon.json;
 
 import org.boon.IO;
 import org.boon.Lists;
+import org.boon.core.Conversions;
+import org.boon.core.Dates;
+import org.boon.core.Function;
 import org.boon.core.reflection.Reflection;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +70,10 @@ public class JsonParserBaseTest {
     @Test
     public void roundTrip() {
         AllTypes foo = new AllTypes ();
+        foo.ingnoreMe = "THIS WILL NOT PASS";
+        foo.ignoreMe2 = "THIS WILL NOT PASS EITHER";
+        foo.ignoreMe3 = "THIS WILL NOT PASS TOO";
+
         foo.setDate ( new Date() );
         foo.setBar ( FooEnum.BAR );
         foo.setFoo ( FooEnum.FOO );
@@ -76,14 +83,63 @@ public class JsonParserBaseTest {
         foo2.setString ( "Hi Dad" );
         foo.setAllTypes ( Lists.list(Reflection.copy ( foo2 ), Reflection.copy(foo2)) );
 
-        final JsonSerializer serializer = new JsonSerializerFactory ().create ();
+        final JsonSerializer serializer = new JsonSerializerFactory ().addFilter ( new Function<FieldSerializationData, Boolean> () {
+            @Override
+            public Boolean apply ( FieldSerializationData fieldSerializationData ) {
+                if (fieldSerializationData.fieldName.equals (  "ignoreMe3" ) ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } ).addPropertySerializer ( new Function<FieldSerializationData, Boolean> () {
+            @Override
+            public Boolean apply ( FieldSerializationData fieldSerializationData ) {
+
+                if ( fieldSerializationData.type.equals ( long.class ) &&
+                        fieldSerializationData.fieldName.endsWith ( "Date" ) ) {
+
+                    Date date = Conversions.toDate ( fieldSerializationData.value );
+
+                    final String jsonDateString = Dates.jsonDate ( date );
+
+                    fieldSerializationData.output.add ( jsonDateString);
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+        } ).addTypeSerializer ( FooBasket.class, new Function<ObjectSerializationData, Boolean> () {
+            @Override
+            public Boolean apply ( ObjectSerializationData objectSerializationData ) {
+                objectSerializationData.output.add("[\"wiki\",\"wiki\",\"wiki\"]");
+                return true;
+            }
+        } )
+                .create ();
         String json = serializer.serialize ( foo ).toString ();
+
+        boolean ok = json.contains  ("[\"wiki\",\"wiki\",\"wiki\"]" ) || die();
 
 
         puts (json);
         AllTypes testMe = jsonParser.parse( AllTypes.class, json);
 
-        boolean ok = testMe.equals ( foo ) || die();
+         ok |= testMe.equals ( foo ) || die();
+
+
+
+
+        ok |= testMe.ingnoreMe == null || die();
+
+        puts (testMe.ignoreMe2);
+        ok |= testMe.ignoreMe2 == null || die();
+
+        puts (testMe.ignoreMe3);
+        ok |= testMe.ignoreMe3 == null || die();
+
+        ok |= testMe.someDate > 0 || die();
 
     }
 
@@ -127,11 +183,6 @@ public class JsonParserBaseTest {
         validateAllTypes ( types.getAllType () );
 
         boolean ok = true;
-        ok |= types.getAllTypes ().size () == 3 || die ( "" + types.getAllTypes ().size () );
-
-        for ( AllTypes allType : types.getAllTypes () ) {
-            validateAllTypes ( allType );
-        }
 
 
         //        puts ("################", types.getBigDecimal (), types.getDate (), types.getBigInteger ());
@@ -143,6 +194,12 @@ public class JsonParserBaseTest {
         ok |= types.getDate().toString().startsWith ( "Fri Dec 1" ) || die();
         ok |= types.getFoo ().toString().equals ( "FOO" ) || die();
         ok |= types.getBar ().toString().equals ( "BAR" ) || die();
+
+        ok |= types.getAllTypes ().size () == 3 || die ( "" + types.getAllTypes ().size () );
+
+        for ( AllTypes allType : types.getAllTypes () ) {
+            validateAllTypes ( allType );
+        }
 
     }
 

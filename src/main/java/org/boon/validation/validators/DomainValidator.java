@@ -1,10 +1,9 @@
 package org.boon.validation.validators;
 
-import org.boon.AnnotationData;
-import org.boon.Annotations;
+import org.boon.core.reflection.AnnotationData;
+import org.boon.core.reflection.Annotations;
 import org.boon.Maps;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.validation.ValidationContext;
 import org.boon.validation.ValidatorMessage;
 import org.boon.validation.ValidatorMessageHolder;

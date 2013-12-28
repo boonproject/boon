@@ -1,7 +1,7 @@
 package org.boon.validation.readers;
 
-import org.boon.AnnotationData;
-import org.boon.Annotations;
+import org.boon.core.reflection.AnnotationData;
+import org.boon.core.reflection.Annotations;
 import org.boon.validation.ValidatorMetaData;
 import org.boon.validation.ValidatorMetaDataReader;
 

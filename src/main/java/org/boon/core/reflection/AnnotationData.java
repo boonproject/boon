@@ -1,4 +1,4 @@
-package org.boon;
+package org.boon.core.reflection;
 
 
 import java.lang.annotation.Annotation;
@@ -18,10 +18,6 @@ import java.util.Set;
  * @author Rick Hightower
  */
 public class AnnotationData {
-    /**
-     * The actual Java annotation.
-     */
-    private Annotation annotation;
 
     /**
      * The name of the classname of the annotation.
@@ -50,14 +46,13 @@ public class AnnotationData {
 
     public AnnotationData( Annotation annotation, Set<String> allowedAnnotations ) {
 
-        this.annotationSimpleName = annotation.annotationType().getSimpleName();
-        this.annotationClassName = annotation.annotationType().getName();
-        this.annotationPackageName = annotationClassName.substring( 0, annotationClassName.length()
-                - annotationSimpleName.length() - 1 );
-        this.annotation = annotation;
+        this.annotationSimpleName = annotation.annotationType().getSimpleName ();
+        this.annotationClassName = annotation.annotationType().getName ();
+        this.annotationPackageName = annotationClassName.substring ( 0, annotationClassName.length ()
+                - annotationSimpleName.length () - 1 );
         this.allowedAnnotations = allowedAnnotations;
         this.name = unCapitalize( annotationSimpleName );
-        values = doGetValues();
+        this.values = doGetValues(annotation);
     }
 
 
@@ -79,6 +74,7 @@ public class AnnotationData {
      * Checks to see if the package name is in the set.
      */
     public boolean isAllowed() {
+        if (allowedAnnotations ==null || allowedAnnotations.size ()==0) return true;
         return allowedAnnotations.contains( annotationPackageName );
     }
 
@@ -99,7 +95,7 @@ public class AnnotationData {
      *
      * @return
      */
-    Map<String, Object> doGetValues() {
+    Map<String, Object> doGetValues(Annotation annotation) {
         /* Holds the value map. */
         Map<String, Object> values = new HashMap<String, Object>();
         /* Get the declared methods from the actual annotation. */
@@ -115,7 +111,11 @@ public class AnnotationData {
             if ( method.getParameterTypes().length == 0 ) {
                 try {
                     /* Get the value. */
-                    Object value = method.invoke( annotation, noargs );
+                    Object value = method.invoke( annotation, noargs ); 
+                    if (value instanceof Enum) {
+                        Enum enumVal = (Enum)value;
+                        value = enumVal.name ();
+                    }
                     values.put( method.getName(), value );
                 } catch ( Exception ex ) {
                     throw new RuntimeException( ex );
@@ -132,4 +132,15 @@ public class AnnotationData {
     public String toString() {
         return name;
     }
+
+
+    public String getFullClassName () {
+        return annotationClassName;
+    }
+
+
+    public String getSimpleClassName () {
+        return annotationSimpleName;
+    }
+
 }

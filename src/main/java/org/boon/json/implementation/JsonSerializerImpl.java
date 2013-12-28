@@ -1,13 +1,18 @@
 package org.boon.json.implementation;
 
 import org.boon.Exceptions;
+import org.boon.Sets;
 import org.boon.core.Dates;
+import org.boon.core.Function;
+import org.boon.core.reflection.AnnotationData;
+import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.json.FieldSerializationData;
 import org.boon.json.JsonSerializer;
+import org.boon.json.ObjectSerializationData;
 import org.boon.primitive.CharBuf;
 
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,27 +21,61 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class JsonSerializerImpl implements JsonSerializer {
 
+    private static final String[] EMPTY_PROPERTIES = new String[0];
     private final boolean outputType;
     private final boolean useProperties;
     private final boolean useFields;
     private final boolean includeNulls;
+    private final boolean useAnnotations;
+    private final boolean includeEmpty;
+    private final boolean handleSimpleBackReference;
+    private final boolean handleComplexBackReference;
+    private final List<Function<FieldSerializationData, Boolean>> filterProperties;
+    private final List<Function<FieldSerializationData, Boolean>> customPropertySerializers;
+    private final Map <Class, Function<ObjectSerializationData, Boolean>> customObjectSerializers;
+    private final Map <Class,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
 
-    private Map<Class,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
+    private IdentityHashMap idMap;
 
-
-    public JsonSerializerImpl () {
+    public JsonSerializerImpl ( )  {
         this.outputType = false;
         this.useProperties = true;
         this.useFields = true;
-        includeNulls = false;
+        this.includeNulls = false;
+        this.useAnnotations = true;
+        this.includeEmpty = false;
+        this.handleSimpleBackReference = true;
+        this.handleComplexBackReference = false;
+        this.customObjectSerializers = null;
+        this.filterProperties = null;
+        this.customPropertySerializers = null;
+
+
     }
 
     public JsonSerializerImpl ( final boolean outputType, final boolean useProperties,
-                                final boolean useFields, final boolean includeNulls ) {
+                                final boolean useFields, final boolean includeNulls,
+                                final boolean useAnnotations, final boolean includeEmpty,
+                                final boolean handleSimpleBackReference,
+                                final boolean handleComplexBackReference,
+                                final List<Function<FieldSerializationData, Boolean>> filterProperties,
+                                final List<Function<FieldSerializationData, Boolean>> customSerializer,
+                                final Map <Class, Function<ObjectSerializationData, Boolean>> customObjectSerializers ) {
         this.outputType = outputType;
         this.useFields = useFields;
         this.useProperties = useProperties;
         this.includeNulls = includeNulls;
+        this.useAnnotations = useAnnotations;
+        this.includeEmpty = includeEmpty;
+        this.handleSimpleBackReference = handleSimpleBackReference;
+        this.handleComplexBackReference = handleComplexBackReference;
+
+        this.filterProperties = filterProperties;
+        this.customPropertySerializers = customSerializer;
+        this.customObjectSerializers =  customObjectSerializers;
+        if (handleComplexBackReference) {
+            idMap = new IdentityHashMap (  );
+        }
     }
 
     private final void serializeString( String str, CharBuf builder ) {
@@ -115,6 +154,16 @@ public class JsonSerializerImpl implements JsonSerializer {
 
     private final void serializeObject( Object obj, CharBuf builder ) throws Exception {
 
+        if ( customObjectSerializers != null ) {
+            Class<?> parentType = obj.getClass ();
+            final Function<ObjectSerializationData, Boolean> function = customObjectSerializers.get ( parentType );
+            if ( function != null ) {
+                function.apply ( new ObjectSerializationData ( obj, parentType, builder ) );
+                return;
+            }
+        }
+
+
         if ( obj == null ) {
             builder.add ( "null" );
         } else if ( obj instanceof Number || obj instanceof Boolean ) {
@@ -158,25 +207,26 @@ public class JsonSerializerImpl implements JsonSerializer {
             builder.addChar( ',' );
         }
 
-        if (!includeNulls) {
-            List<FieldAccess> nonNullValues = new LinkedList<> ( values  );
-            for ( FieldAccess fieldAccess : values ) {
-                Object value = fieldAccess.getValue( obj );
-                if (value == null) {
-                    nonNullValues.remove ( fieldAccess );
-                    length--;
-                }
-            }
-            values = nonNullValues;
-        }
+        values = filterFields ( obj, values );
 
+
+        length = values.size ();
         for ( FieldAccess fieldAccess : values ) {
+
+            Object value = fieldAccess.getValue( obj );
 
             builder.addChar( '\"' );
             builder.add( fieldAccess.getName() );
             builder.addChar( '\"' );
             builder.addChar( ':' );
-            serializeObject( fieldAccess.getValue( obj ), builder );
+
+
+
+            if ( this.customPropertySerializers != null ) {
+                applyCustomSerializers ( obj, builder, fieldAccess, value );
+            }  else {
+                serializeObject( value, builder );
+            }
 
             if ( index + 1 != length ) {
                     builder.addChar( ',' );
@@ -188,8 +238,183 @@ public class JsonSerializerImpl implements JsonSerializer {
         builder.addChar( '}' );
     }
 
+    private void applyCustomSerializers ( Object obj, CharBuf builder, FieldAccess fieldAccess, Object value ) throws Exception {
+        boolean handled = false;
+        for (Function<FieldSerializationData, Boolean> function : this.customPropertySerializers ) {
+            FieldSerializationData data = new FieldSerializationData (
+                    fieldAccess.getName (), fieldAccess.getType (), obj.getClass (), fieldAccess.getValue ( obj ), builder, obj  );
+            handled = function.apply( data );
+            if ( handled ) {
+                break;
+            }
+
+        }
+
+        if (!handled ) {
+            serializeObject( value, builder );
+        }
+    }
+
+    private Collection<FieldAccess> filterFields ( Object obj, Collection<FieldAccess> values ) {
+
+        if ( this.filterProperties !=  null ) {
+
+
+            List<FieldAccess> customFilter = new LinkedList<> ( values  );
+            for ( FieldAccess fieldAccess : values ) {
+
+                FieldSerializationData data = new FieldSerializationData (
+                        fieldAccess.getName (), fieldAccess.getType (), obj.getClass (), fieldAccess.getValue ( obj ), null, obj  );
+                for (Function<FieldSerializationData, Boolean> func : filterProperties) {
+                    boolean exclude = func.apply ( data );
+                    if ( exclude ) {
+                        customFilter.remove ( fieldAccess );
+                    }
+                }
+            }
+            values = customFilter;
+        }
+
+        if (!includeNulls) {
+
+
+            List<FieldAccess> nonNullValues = new LinkedList<> ( values  );
+            for ( FieldAccess fieldAccess : values ) {
+
+                boolean forceKeep = false;
+                if (useAnnotations) {
+                    final Map<String, Object> jsonInclude = fieldAccess.getAnnotationData( "JsonInclude" );
+                    if ( jsonInclude != null ) {
+                        String value = (String) jsonInclude.get ( "value" );
+                        if (value.equals ( "ALWAYS" )) {
+                            forceKeep = true;
+                        }
+                    }
+                }
+                Object value = fieldAccess.getValue( obj );
+                if ( value == null && !forceKeep) {
+                    nonNullValues.remove ( fieldAccess );
+                }
+            }
+            values = nonNullValues;
+        }
+
+        if ( !includeEmpty ) {
+            List<FieldAccess> nonEmptyValues = new LinkedList<> ( values );
+            for ( FieldAccess fieldAccess : values ) {
+
+                boolean forceKeep = false;
+                if ( useAnnotations ) {
+                    final Map<String, Object> jsonInclude = fieldAccess.getAnnotationData ( "JsonInclude" );
+                    if ( jsonInclude != null ) {
+                        String value = ( String ) jsonInclude.get ( "value" );
+                        if ( value.equals ( "ALWAYS" ) || value.equals ( "NON_NULL" )) {
+                            forceKeep = true;
+                        }
+                    }
+                }
+
+                Object value = fieldAccess.getValue ( obj );
+
+
+                if ( value instanceof Collection ||
+                        value instanceof CharSequence ||
+                        value instanceof Map ||
+                        Reflection.isArray ( obj ) ) {
+                    if (  !forceKeep && Reflection.len ( value ) == 0 ) {
+                        nonEmptyValues.remove ( fieldAccess );
+                    }
+                }
+            }
+
+            values = nonEmptyValues;
+        }
+        if ( useAnnotations ) {
+
+            Set<String> propertiesToIgnore  = getProperitesToIgnoreAsSet(obj);
+
+
+            List<FieldAccess> nonIgnoredValues = new LinkedList<> ( values  );
+            for ( FieldAccess fieldAccess : values ) {
+
+                if ( Sets.in ( fieldAccess.getName(), propertiesToIgnore ) ) {
+                    nonIgnoredValues.remove ( fieldAccess );
+                } else if (fieldAccess.hasAnnotation ( "JsonIgnore" )) {
+                    final Map<String, Object> jsonIgnore = fieldAccess.getAnnotationData ( "JsonIgnore" );
+                    boolean ignore = (Boolean) jsonIgnore.get ( "value" );
+                    if (ignore) {
+                        nonIgnoredValues.remove ( fieldAccess );
+                    }
+                }
+            }
+            values = nonIgnoredValues;
+        }
+
+        if ( handleSimpleBackReference || handleComplexBackReference ) {
+
+
+
+            List<FieldAccess> nonBackReferenceValues = new LinkedList<> ( values  );
+            for ( FieldAccess fieldAccess : values ) {
+
+                Object value = fieldAccess.getValue( obj );
+
+                /* handle simple back reference. */
+                if (handleSimpleBackReference &&  value == obj ) {
+                    nonBackReferenceValues.remove ( fieldAccess );
+                    continue;
+                }
+
+                if ( handleComplexBackReference ) {
+                    if ( idMap.containsKey ( value ) ) {
+                        nonBackReferenceValues.remove ( fieldAccess );
+                    } else {
+                        idMap.put ( value, value );
+                    }
+                }
+
+            }
+            values = nonBackReferenceValues;
+        }
+        return values;
+    }
+
+
+    private String[] getProperitesToIgnore ( Object obj ) {
+
+        final Map<String, AnnotationData> classAnnotations =
+                Annotations.getAnnotationDataForClassAsMap( obj.getClass () );
+
+        final AnnotationData jsonIgnoreProperties = classAnnotations.get( "JsonIgnoreProperties" );
+
+        if (jsonIgnoreProperties == null) {
+            return EMPTY_PROPERTIES;
+        } else {
+            return (String[])jsonIgnoreProperties.getValues().get( "value" );
+        }
+    }
+
+
+
+
+    Map <Class, Set<String>> properitesToIgnoreMap;
+
+    private Set<String> getProperitesToIgnoreAsSet ( Object obj ) {
+        if (properitesToIgnoreMap==null){
+            properitesToIgnoreMap = new ConcurrentHashMap<>();
+        }
+
+        Set<String> set = properitesToIgnoreMap.get ( obj.getClass () );
+        if ( set == null ) {
+             final String[] properitesToIgnore = getProperitesToIgnore ( obj );
+             set = Sets.set ( properitesToIgnore );
+            properitesToIgnoreMap.put(obj.getClass (), set);
+        }
+        return set;
+    }
+
     private final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
-        Map<String, FieldAccess> map = fieldMap.get ( aClass );
+        Map<String, FieldAccess> map = fieldMap.get( aClass );
         if (map == null) {
             map = doGetFields ( aClass );
             fieldMap.put ( aClass, map );

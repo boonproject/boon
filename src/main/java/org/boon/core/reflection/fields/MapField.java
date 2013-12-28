@@ -5,6 +5,7 @@ import org.boon.core.Conversions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
 import java.util.Map;
 
 import static org.boon.Exceptions.die;
@@ -235,6 +236,16 @@ public class MapField implements FieldAccess {
     @Override
     public Class<?> getComponentClass() {
         return null;
+    }
+
+    @Override
+    public boolean hasAnnotation ( String annotationName ) {
+        return false;
+    }
+
+    @Override
+    public Map<String, Object> getAnnotationData ( String annotationName ) {
+        return Collections.EMPTY_MAP;
     }
 
     @Override

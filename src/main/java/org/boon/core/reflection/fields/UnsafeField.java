@@ -1,19 +1,31 @@
 package org.boon.core.reflection.fields;
 
 import org.boon.core.Typ;
-import org.boon.core.Value;
-import org.boon.core.Conversions;
 import sun.misc.Unsafe;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-
 import static org.boon.Exceptions.die;
-import static org.boon.core.Conversions.*;
 
 
-public abstract class UnsafeField implements FieldAccess {
+public abstract class UnsafeField extends BaseField {
+
+    protected long offset;
+    protected final Object base;
+
+    private final Field field;
+
+
+    protected UnsafeField ( Field field  )  {
+        super(field);
+        if ( isStatic ) {
+            base = unsafe.staticFieldBase( field );
+            offset = unsafe.staticFieldOffset( field );
+        } else {
+            offset = unsafe.objectFieldOffset( field );
+            base = null;
+        }
+        this.field = field;
+    }
 
 
     private static Unsafe getUnsafe() {
@@ -26,18 +38,7 @@ public abstract class UnsafeField implements FieldAccess {
         }
     }
 
-    static final Unsafe unsafe = getUnsafe();
-    protected final Field field;
-    protected long offset;
-    protected final boolean isFinal;
-    protected final Object base;
-    protected final boolean isStatic;
-    protected final boolean isVolatile;
-    protected final boolean qualified;
-    protected final boolean readOnly;
-    protected final Class<?> type;
-    protected final String name;
-
+    protected static final Unsafe unsafe = getUnsafe();
 
     public static UnsafeField createUnsafeField( Field field ) {
         Class<?> type = field.getType();
@@ -86,145 +87,6 @@ public abstract class UnsafeField implements FieldAccess {
         }
     }
 
-
-    protected UnsafeField( Field f ) {
-        name = f.getName();
-        field = f;
-
-        isFinal = Modifier.isFinal( field.getModifiers() );
-        isStatic = Modifier.isStatic( field.getModifiers() );
-
-        if ( isStatic ) {
-            base = unsafe.staticFieldBase( field );
-            offset = unsafe.staticFieldOffset( field );
-        } else {
-            offset = unsafe.objectFieldOffset( field );
-            base = null;
-        }
-        isVolatile = Modifier.isVolatile( field.getModifiers() );
-        qualified = isFinal || isVolatile;
-        readOnly = isFinal || isStatic;
-        type = f.getType();
-    }
-
-
-    @Override
-    public Object getValue( Object obj ) {
-        if ( type == Typ.intgr ) {
-            int i = this.getInt( obj );
-            return Integer.valueOf( i );
-        } else if ( type == Typ.lng ) {
-            long l = this.getLong( obj );
-            return Long.valueOf( l );
-        } else if ( type == Typ.bln ) {
-            boolean bool = this.getBoolean( obj );
-            return Boolean.valueOf( bool );
-        } else if ( type == Typ.bt ) {
-            byte b = this.getByte( obj );
-            return Byte.valueOf( b );
-        } else if ( type == Typ.shrt ) {
-            short s = this.getShort( obj );
-            return Short.valueOf( s );
-        } else if ( type == Typ.chr ) {
-            char c = this.getChar( obj );
-            return Character.valueOf( c );
-        } else if ( type == Typ.dbl ) {
-            double d = this.getDouble( obj );
-            return Double.valueOf( d );
-        } else if ( type == Typ.flt ) {
-            float f = this.getFloat( obj );
-            return Float.valueOf( f );
-        } else {
-            return this.getObject( obj );
-        }
-    }
-
-
-    @Override
-    public void setValue( Object obj, Object value ) {
-        if ( value != null && value.getClass() == this.type ) {
-            this.setObject( obj, value );
-            return;
-        }
-
-        if ( value == null ) {
-           this.setObject ( obj, null );
-            return;
-        }
-
-        if ( type == Typ.string ) {
-            setObject( obj, Conversions.coerce( type, value ) );
-        } else if ( type == Typ.intgr ) {
-            setInt( obj, toInt( value ) );
-        } else if ( type == Typ.bln ) {
-            setBoolean( obj, toBoolean( value ) );
-        } else if ( type == Typ.lng ) {
-            setLong( obj, toLong( value ) );
-        } else if ( type == Typ.bt ) {
-            setByte( obj, toByte( value ) );
-
-        } else if ( type == Typ.shrt ) {
-            setShort( obj, toShort( value ) );
-
-        } else if ( type == Typ.chr ) {
-            setChar( obj, toChar( value ) );
-
-        } else if ( type == Typ.dbl ) {
-            setDouble( obj, toDouble( value ) );
-
-        } else if ( type == Typ.flt ) {
-            setFloat( obj, toFloat( value ) );
-
-        } else {
-            setObject( obj, Conversions.coerce( type, value ) );
-        }
-
-    }
-
-    public void setFromValue( Object obj, Value value ) {
-
-        if ( type == Typ.string ) {
-            setObject( obj, value.stringValue() );
-        } else if ( type == Typ.intgr ) {
-            setInt( obj, value.intValue() );
-        } else if ( type == Typ.flt ) {
-            setFloat( obj, value.floatValue() );
-        } else if ( type == Typ.dbl ) {
-            setDouble( obj, value.doubleValue() );
-        } else if ( type == Typ.lng ) {
-            setLong( obj, value.longValue() );
-        } else if ( type == Typ.bt ) {
-            setByte( obj, value.byteValue() );
-        } else if ( type == Typ.bln ) {
-            setBoolean( obj, value.booleanValue() );
-        } else if ( type == Typ.shrt ) {
-            setShort( obj, value.shortValue() );
-        } else if ( type == Typ.integer ) {
-            setObject( obj, value.intValue() );
-        } else if ( type == Typ.floatWrapper ) {
-            setObject( obj, value.floatValue() );
-        } else if ( type == Typ.doubleWrapper ) {
-            setObject( obj, value.doubleValue() );
-        } else if ( type == Typ.longWrapper ) {
-            setObject( obj, value.longValue() );
-        } else if ( type == Typ.byteWrapper ) {
-            setObject( obj, value.byteValue() );
-        } else if ( type == Typ.bool ) {
-            setObject( obj, value.booleanValue() );
-        } else if ( type == Typ.shortWrapper ) {
-            setObject( obj, value.shortValue() );
-        } else if ( type == Typ.bigDecimal ) {
-            setObject( obj, value.bigDecimalValue() );
-        } else if ( type == Typ.bigInteger ) {
-            setObject( obj, value.bigIntegerValue() );
-        } else if ( type == Typ.date ) {
-            setObject( obj, value.dateValue() );
-        } else if ( type.getSuperclass () == Enum.class ) {
-            setObject( obj, value.toEnum ( (Class<? extends Enum>) type ) );
-        } else {
-            setObject( obj, coerce( type, value ) );
-        }
-    }
 
 
     @Override
@@ -344,44 +206,6 @@ public abstract class UnsafeField implements FieldAccess {
     }
 
 
-    public ParameterizedType getParameterizedType() {
-
-
-        ParameterizedType type = null;
-
-        if ( field != null ) {
-            Object obj = field.getGenericType();
-
-            if ( obj instanceof ParameterizedType ) {
-
-                type = ( ParameterizedType ) obj;
-            }
-
-        }
-
-        return type;
-
-    }
-
-
-    private Class<?> componentClass;
-
-    public Class<?> getComponentClass() {
-        if ( componentClass == null ) {
-            componentClass = doGetComponentClass();
-        }
-        return componentClass;
-    }
-
-
-    private Class<?> doGetComponentClass() {
-        final ParameterizedType parameterizedType = this.getParameterizedType();
-        if ( parameterizedType == null ) {
-            return null;
-        } else {
-            return ( Class<?> ) ( parameterizedType.getActualTypeArguments()[ 0 ] );
-        }
-    }
 
     @Override
     public boolean isStatic() {
@@ -485,11 +309,11 @@ public abstract class UnsafeField implements FieldAccess {
 
     @Override
     public String toString() {
-        return "UnsafeField [field=" + field + ", offset=" + offset
+        return "UnsafeField [name=" + name + ", field=" + field + ", offset=" + offset
                 + ", isFinal=" + isFinal + ", base=" + base + ", isStatic="
                 + isStatic + ", isVolatile=" + isVolatile + ", qualified="
                 + qualified + ", readOnly=" + readOnly + ", type=" + type
-                + ", name=" + name + "]";
+                + "]";
     }
 
 

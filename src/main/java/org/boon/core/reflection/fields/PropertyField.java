@@ -1,28 +1,15 @@
 package org.boon.core.reflection.fields;
 
 import org.boon.Exceptions;
-import org.boon.core.Typ;
-import org.boon.core.Value;
-import org.boon.core.Conversions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static org.boon.Boon.sputs;
-import static org.boon.Exceptions.die;
-import static org.boon.core.Conversions.*;
 
-public class PropertyField implements FieldAccess {
-    protected final boolean isFinal;
-    protected final boolean isStatic;
-    protected final boolean isVolatile = false;
-    protected final boolean qualified = false;
-    protected final boolean readOnly;
-    private final Class<?> type;
-    private final String name;
+public class PropertyField extends BaseField {
     private final Method getter;
     private final Method setter;
     private final Logger log = Logger.getLogger( PropertyField.class.getName() );
@@ -30,28 +17,10 @@ public class PropertyField implements FieldAccess {
 
     public PropertyField( String name, Method setter, Method getter ) {
 
-
-        try {
+        super (  name,  getter,  setter);
             this.setter = setter;
             this.getter = getter;
 
-            if ( getter != null ) {
-                isStatic = Modifier.isStatic( getter.getModifiers() );
-                isFinal = Modifier.isFinal( getter.getModifiers() );
-                type = getter.getReturnType();
-            } else {
-                isStatic = Modifier.isStatic( setter.getModifiers() );
-                isFinal = Modifier.isFinal( setter.getModifiers() );
-                type = setter.getParameterTypes()[ 0 ];
-            }
-
-
-            readOnly = setter == null;
-            this.name = name;
-        } catch ( Exception ex ) {
-            Exceptions.handle( "name " + name + " setter " + setter + " getter " + getter, ex );
-            throw new RuntimeException( "die" );
-        }
     }
 
     @Override
@@ -148,34 +117,6 @@ public class PropertyField implements FieldAccess {
     }
 
 
-    public ParameterizedType getParameterizedType() {
-
-
-        return null;
-
-    }
-
-
-    private Class<?> componentClass;
-
-    public Class<?> getComponentClass() {
-        if ( componentClass == null ) {
-            componentClass = doGetComponentClass();
-        }
-        return componentClass;
-    }
-
-
-    private Class<?> doGetComponentClass() {
-        final ParameterizedType parameterizedType = this.getParameterizedType();
-        if ( parameterizedType == null ) {
-            return null;
-        } else {
-            return ( Class<?> ) ( parameterizedType.getActualTypeArguments()[ 0 ] );
-        }
-    }
-
-
     @Override
     public boolean isFinal() {
         return isFinal;
@@ -214,85 +155,6 @@ public class PropertyField implements FieldAccess {
         return name;
     }
 
-    @Override
-    public void setValue( Object obj, Object value ) {
-        if ( value != null && value.getClass() == this.type ) {
-            this.setObject( obj, value );
-            return;
-        }
-
-        if ( value instanceof Value ) {
-            setFromValue( obj, ( Value ) value );
-        } else if ( type == Typ.string ) {
-            setObject( obj, coerce( type, value ) );
-        } else if ( type == Typ.intgr ) {
-            setInt( obj, toInt( value ) );
-        } else if ( type == Typ.lng ) {
-            setLong( obj, toLong( value ) );
-        } else if ( type == Typ.bt ) {
-            setByte( obj, toByte( value ) );
-
-        } else if ( type == Typ.shrt ) {
-            setShort( obj, toShort( value ) );
-
-        } else if ( type == Typ.chr ) {
-            setChar( obj, toChar( value ) );
-
-        } else if ( type == Typ.dbl ) {
-            setDouble( obj, toDouble( value ) );
-
-        } else if ( type == Typ.flt ) {
-            setFloat( obj, toFloat( value ) );
-
-        } else {
-            setObject( obj, Conversions.coerce( type, value ) );
-        }
-    }
-
-
-    public final void setFromValue( Object obj, Value value ) {
-
-        if ( type == Typ.string ) {
-            setObject( obj, value.stringValue() );
-        } else if ( type == Typ.intgr ) {
-            setInt( obj, value.intValue() );
-        } else if ( type == Typ.flt ) {
-            setFloat( obj, value.floatValue() );
-        } else if ( type == Typ.dbl ) {
-            setDouble( obj, value.doubleValue() );
-        } else if ( type == Typ.lng ) {
-            setDouble( obj, value.longValue() );
-        } else if ( type == Typ.bt ) {
-            setByte( obj, value.byteValue() );
-        } else if ( type == Typ.bln ) {
-            setBoolean( obj, value.booleanValue() );
-        } else if ( type == Typ.shrt ) {
-            setObject( obj, value.shortValue() );
-        } else if ( type == Typ.integer ) {
-            setObject( obj, value.intValue() );
-        } else if ( type == Typ.floatWrapper ) {
-            setObject( obj, value.floatValue() );
-        } else if ( type == Typ.doubleWrapper ) {
-            setObject( obj, value.doubleValue() );
-        } else if ( type == Typ.longWrapper ) {
-            setObject( obj, value.longValue() );
-        } else if ( type == Typ.byteWrapper ) {
-            setObject( obj, value.byteValue() );
-        } else if ( type == Typ.bool ) {
-            setObject( obj, value.booleanValue() );
-        } else if ( type == Typ.shortWrapper ) {
-            setObject( obj, value.shortValue() );
-        } else if ( type == Typ.bigDecimal ) {
-            setObject( obj, value.bigDecimalValue() );
-        } else if ( type == Typ.bigInteger ) {
-            setObject( obj, value.bigIntegerValue() );
-        } else if ( type == Typ.date ) {
-            setObject( obj, value.dateValue() );
-        } else {
-            setValue( obj, coerce( type, value ) );
-        }
-
-    }
 
 
     @Override

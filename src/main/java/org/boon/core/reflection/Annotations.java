@@ -1,28 +1,182 @@
-package org.boon;
+package org.boon.core.reflection;
+
+import org.boon.Exceptions;
+import org.boon.core.Sys;
+import org.boon.core.reflection.fields.FieldAccess;
+import sun.misc.Unsafe;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.sputs;
 
 public class Annotations {
 
+    private final static Context _context;
+    private static WeakReference<Context> weakContext = new WeakReference<>( null );
+
+
+
+
+    private static class Context {
+
+        private Map<
+                Class<?>,
+                Map <String, List<AnnotationData>
+                        >> annotationDataCacheProperty = new ConcurrentHashMap<> (  );
+
+
+
+        private Map<
+                Class<?>,
+                Map <String, List<AnnotationData>
+                        >> annotationDataCacheField = new ConcurrentHashMap<> (  );
+
+
+        private Map<Class<?>, List<AnnotationData>> annotationDataCacheClass
+                = new ConcurrentHashMap<>(  );
+
+
+        private Map<
+                Class<?>,
+                Map<String, AnnotationData>
+                > annotationDataCacheClassAsMap
+                = new ConcurrentHashMap<>(  );
+
+
+    }
+
+    static {
+
+        boolean noStatics = Boolean.getBoolean( "org.boon.noStatics" );
+        if ( noStatics || Sys.inContainer () ) {
+
+            _context = null;
+            weakContext = new WeakReference<>( new Context() );
+
+        } else {
+            _context = new Context();
+        }
+    }
+
+
+
+    /* Manages weak references. */
+    private static Context context() {
+
+        if ( _context != null ) {
+            return _context;
+        } else {
+            Context context = weakContext.get();
+            if ( context == null ) {
+                context = new Context();
+                weakContext = new WeakReference<>( context );
+            }
+            return context;
+        }
+    }
+
     public static List<AnnotationData> getAnnotationDataForProperty( Class<?> clazz, String propertyName, boolean useReadMethod, Set<String> allowedPackages ) {
-        return extractValidationAnnotationData( extractAllAnnotationsForProperty( clazz, propertyName, useReadMethod ), allowedPackages );
+
+        final Map<Class<?>, Map<String, List<AnnotationData>>> cacheProperty = context ().annotationDataCacheProperty;
+
+        Map<String, List<AnnotationData>> classMap = cacheProperty.get(clazz);
+
+        if (classMap == null) {
+            classMap = new ConcurrentHashMap<> (  );
+            cacheProperty.put ( clazz, classMap );
+        }
+
+        List<AnnotationData> annotationDataList = classMap.get ( propertyName );
+        if (annotationDataList == null ) {
+
+            annotationDataList = extractValidationAnnotationData ( extractAllAnnotationsForProperty ( clazz, propertyName, useReadMethod ), allowedPackages );
+            if (annotationDataList == null) {
+                annotationDataList = Collections.EMPTY_LIST;
+            }
+            classMap.put (propertyName,  annotationDataList );
+
+        }
+
+        return annotationDataList;
+
     }
 
     public static List<AnnotationData> getAnnotationDataForField( Class<?> clazz, String propertyName, Set<String> allowedPackages ) {
-        return extractValidationAnnotationData( findFieldAnnotations( clazz, propertyName ), allowedPackages );
+
+        final Map<Class<?>, Map<String, List<AnnotationData>>> cacheProperty = context ().annotationDataCacheField;
+
+        Map<String, List<AnnotationData>> classMap = cacheProperty.get(clazz);
+
+        if (classMap == null) {
+            classMap = new ConcurrentHashMap<> (  );
+            cacheProperty.put ( clazz, classMap );
+        }
+
+        List<AnnotationData> annotationDataList = classMap.get ( propertyName );
+        if (annotationDataList == null ) {
+
+            annotationDataList = extractValidationAnnotationData( findFieldAnnotations( clazz, propertyName ), allowedPackages );
+
+            if (annotationDataList == null) {
+                annotationDataList = Collections.EMPTY_LIST;
+            }
+            classMap.put (propertyName,  annotationDataList );
+
+        }
+
+        return annotationDataList;
+
+    }
+
+    public static List<AnnotationData> getAnnotationDataForClass( Class<?> clazz  ) {
+        return getAnnotationDataForClass ( clazz, Collections.EMPTY_SET );
+
+    }
+
+    public static Map<String, AnnotationData> getAnnotationDataForClassAsMap( Class<?> clazz  ) {
+
+        final Map<Class<?>, Map<String, AnnotationData>> cache = context ().annotationDataCacheClassAsMap;
+
+         Map<String, AnnotationData> map = cache.get ( clazz );
+
+        if (map ==  null) {
+            final List<AnnotationData> list = getAnnotationDataForClass ( clazz );
+
+            if (list.size () == 0) {
+                map = Collections.EMPTY_MAP;
+            } else {
+                map = new ConcurrentHashMap<> ( list.size () );
+
+                for (AnnotationData data : list) {
+                    map.put ( data.getFullClassName (), data );
+                    map.put ( data.getSimpleClassName (), data);
+                    map.put ( data.getName (), data);
+                }
+            }
+            cache.put ( clazz, map );
+        }
+        return map;
     }
 
     public static List<AnnotationData> getAnnotationDataForClass( Class<?> clazz, Set<String> allowedPackages ) {
-        return extractValidationAnnotationData( findClassAnnotations( clazz ), allowedPackages );
+
+        final Map<Class<?>,  List<AnnotationData>> cache = context ().annotationDataCacheClass;
+
+        List<AnnotationData> annotationDataList = cache.get ( clazz );
+        if (annotationDataList ==  null) {
+            annotationDataList =  extractValidationAnnotationData( findClassAnnotations( clazz ), allowedPackages );
+            cache.put ( clazz, annotationDataList );
+        }
+        return annotationDataList;
     }
 
     private static Annotation[] findClassAnnotations( Class<?> clazz ) {
@@ -95,8 +249,8 @@ public class Annotations {
             }
             return annotations;
         } catch ( Exception ex ) {
-            return Exceptions.handle( Annotation[].class,
-                    sputs(
+            return Exceptions.handle ( Annotation[].class,
+                    sputs (
                             "Unable to extract annotations for property",
                             propertyName, " of class ", clazz,
                             "  useRead ", useRead ), ex );
@@ -263,5 +417,10 @@ public class Annotations {
         return field;
     }
 
+
+
+    public static Object contextToHold() {
+        return context();
+    }
 
 }

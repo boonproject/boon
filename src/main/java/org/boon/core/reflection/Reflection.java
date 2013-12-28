@@ -25,8 +25,41 @@ public class Reflection {
 
     private static boolean _useUnsafe;
 
+    static {
+        try {
+            Class.forName( "sun.misc.Unsafe" );
+            _useUnsafe = true;
+        } catch ( ClassNotFoundException e ) {
+            e.printStackTrace();
+            _useUnsafe = false;
+        }
+
+        _useUnsafe = _useUnsafe && !Boolean.getBoolean( "org.boon.noUnsafe" );
+    }
+
+    private static final boolean useUnsafe = _useUnsafe;
+
+
+
     private final static Context _context;
     private static WeakReference<Context> weakContext = new WeakReference<>( null );
+
+
+    static {
+
+        boolean noStatics = Boolean.getBoolean( "org.boon.noStatics" );
+        if ( noStatics || Sys.inContainer() ) {
+
+            _context = null;
+            weakContext = new WeakReference<>( new Context() );
+
+        } else {
+            ;
+            _context = new Context();
+        }
+    }
+
+
 
 
     public static Unsafe getUnsafe() {
@@ -44,35 +77,6 @@ public class Reflection {
         }
     }
 
-
-    static {
-        try {
-            Class.forName( "sun.misc.Unsafe" );
-            _useUnsafe = true;
-        } catch ( ClassNotFoundException e ) {
-            e.printStackTrace();
-            _useUnsafe = false;
-        }
-
-        _useUnsafe = _useUnsafe && !Boolean.getBoolean( "org.boon.noUnsafe" );
-    }
-
-    private static final boolean useUnsafe = _useUnsafe;
-
-
-    static {
-
-        boolean noStatics = Boolean.getBoolean( "org.boon.noStatics" );
-        if ( noStatics || Sys.inContainer() ) {
-
-            _context = null;
-            weakContext = new WeakReference<>( new Context() );
-
-        } else {
-            ;
-            _context = new Context();
-        }
-    }
 
 
     private static void setSortableField( Class<?> clazz, String fieldName ) {
@@ -805,6 +809,8 @@ public class Reflection {
             Exceptions.handle( msg, notExpected );
         }
     }
+
+
 
 
 }

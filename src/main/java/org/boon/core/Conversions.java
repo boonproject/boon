@@ -195,7 +195,10 @@ public class Conversions {
 
                     }
                 }
-            } else {
+            } else if (obj instanceof  Date) {
+                 return ( (Date) obj).getTime ();
+             }
+             else {
                 return toInt( obj );
             }
         } catch ( Exception ex ) {
