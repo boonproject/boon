@@ -2,6 +2,7 @@ package org.boon.core;
 
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Path;
@@ -149,5 +150,9 @@ public class Typ {
         } else {
             return null;
         }
+    }
+
+    public static <T> boolean isAbstract ( Class<T> clazz ) {
+        return Modifier.isAbstract ( clazz.getModifiers () );
     }
 }

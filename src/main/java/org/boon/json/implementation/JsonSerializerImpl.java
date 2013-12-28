@@ -16,9 +16,6 @@ import org.boon.primitive.CharBuf;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by rick on 12/18/13.
- */
 public class JsonSerializerImpl implements JsonSerializer {
 
     private static final String[] EMPTY_PROPERTIES = new String[0];

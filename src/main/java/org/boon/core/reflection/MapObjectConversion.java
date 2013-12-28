@@ -10,7 +10,6 @@ import org.boon.core.value.ValueMapImpl;
 
 import java.util.*;
 
-import static org.boon.Str.idx;
 
 /**
  * Created by rick on 12/26/13.
@@ -18,8 +17,8 @@ import static org.boon.Str.idx;
 public class MapObjectConversion {
     @SuppressWarnings ( "unchecked" )
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
+            return fromMap( map, Reflection.newInstance ( clazz ) );
 
-        return fromMap( map, Reflection.newInstance ( clazz ) );
     }
 
     @SuppressWarnings ( "unchecked" )
@@ -70,7 +69,13 @@ public class MapObjectConversion {
             /* See if it is a map<string, object>, and if it is then process it. */
             //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
             else if ( value instanceof Map ) {
-                value = fromMap( ( Map<String, Object> ) value, field.getType() );
+                Class <?> clazz = field.getType();
+                if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
+                    value = fromMap( ( Map<String, Object> ) value, field.getType() );
+
+                } else {
+                    value = fromMap( ( Map<String, Object> ) value );
+                }
                 field.setObject( newInstance, value );
             } else if ( value instanceof Collection ) {
                 /*It is a collection so process it that way. */
