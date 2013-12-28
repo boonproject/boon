@@ -2,6 +2,9 @@ package org.boon.json.implementation;
 
 import org.boon.Exceptions;
 import org.boon.Sets;
+import org.boon.cache.Cache;
+import org.boon.cache.CacheType;
+import org.boon.cache.SimpleCache;
 import org.boon.core.Dates;
 import org.boon.core.Function;
 import org.boon.core.reflection.AnnotationData;
@@ -294,7 +297,23 @@ public class JsonSerializerImpl implements JsonSerializer {
 
     }
 
+    Cache<Object, char[]> cache = new SimpleCache<Object, char[]> (20, CacheType.LRU);
+
     private final void serializeInstance ( Object obj, CharBuf builder ) throws Exception {
+
+        char [] chars = cache.get ( obj );
+        if ( chars == null ) {
+            CharBuf buffer = CharBuf.create ( 256 );
+            doSerializeInstance ( obj, buffer );
+            chars = FastStringUtils.toCharArray (buffer.toString ());
+            cache.put ( obj, chars );
+        }
+
+        builder.addChars ( chars );
+
+    }
+
+    private final void doSerializeInstance ( Object obj, CharBuf builder ) throws Exception {
         builder.addChar( '{' );
 
         final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
