@@ -206,7 +206,7 @@ public class FilterDefault implements Filter, FilterComposer {
 //    private List applyGroupsWithIndexesForAnd(List items, Set<Query> expressionSet) {
 //
 //        List<HashSet> listOfSets = new ArrayList();
-//        listOfSets.add(new HashSet(items));
+//        listOfSets.addObject(new HashSet(items));
 //
 //        List<Query> expressionsWeEvaluated = new ArrayList<>();
 //
@@ -236,8 +236,8 @@ public class FilterDefault implements Filter, FilterComposer {
 //                 */
 //                List listStream = doFilterGroup((Group) expression);
 //                if (listStream.size() > 0) {
-//                    listOfSets.add(new HashSet(listStream));
-//                    expressionsWeEvaluated.add(expression);
+//                    listOfSets.addObject(new HashSet(listStream));
+//                    expressionsWeEvaluated.addObject(expression);
 //                }
 //            }
 //        }

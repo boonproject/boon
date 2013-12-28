@@ -221,6 +221,16 @@ public class MapField implements FieldAccess {
         die( "Object must be a map" );
     }
 
+    @Override
+    public String typeName () {
+        return null;
+    }
+
+    @Override
+    public boolean isPrimitive () {
+        return false;
+    }
+
 
     @Override
     public Field getField() {

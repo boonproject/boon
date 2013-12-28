@@ -325,7 +325,7 @@ public class BytBufTest {
     public void doubleTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
-        //add the double
+        //addObject the double
         buf.add( 10.0000000000001 );
 
         byte[] bytes = buf.readAndReset();
@@ -340,7 +340,7 @@ public class BytBufTest {
     public void floatTest() {
         ByteBuf buf = ByteBuf.createExact( 8 );
 
-        //add the float
+        //addObject the float
         buf.add( 10.001f );
 
         byte[] bytes = buf.readAndReset();

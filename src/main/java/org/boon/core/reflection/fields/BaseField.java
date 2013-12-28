@@ -22,6 +22,7 @@ import static org.boon.core.Conversions.toFloat;
 
 public abstract class BaseField implements FieldAccess {
 
+    protected final boolean isPrimitive;
     protected final boolean isFinal;
     protected final boolean isStatic;
     protected final boolean isVolatile;
@@ -31,6 +32,7 @@ public abstract class BaseField implements FieldAccess {
     protected final String name;
     protected final ParameterizedType parameterizedType;
     protected final Class<?> componentClass;
+    protected final String typeName;
 
     private  Map<String,  Map<String, Object>> annotationMap = new ConcurrentHashMap<> (  );
 
@@ -53,7 +55,7 @@ public abstract class BaseField implements FieldAccess {
         try {
 
             readOnly = setter == null;
-            this.name = name;
+            this.name = name.intern();
             isVolatile = false;
             qualified = false;
 
@@ -62,6 +64,8 @@ public abstract class BaseField implements FieldAccess {
                 isStatic = Modifier.isStatic ( getter.getModifiers () );
                 isFinal = Modifier.isFinal ( getter.getModifiers () );
                 type = getter.getReturnType ();
+                isPrimitive = type.isPrimitive ();
+                typeName = type.getName().intern ();
                 Object obj = getter.getGenericReturnType ();
 
                 if ( obj instanceof ParameterizedType ) {
@@ -90,6 +94,8 @@ public abstract class BaseField implements FieldAccess {
                 isStatic = Modifier.isStatic ( setter.getModifiers () );
                 isFinal = Modifier.isFinal ( setter.getModifiers () );
                 type = setter.getParameterTypes ()[ 0 ];
+                isPrimitive = type.isPrimitive ();
+                typeName = type.getName ().intern ();
                 parameterizedType = null;
                 componentClass = null;
 
@@ -103,7 +109,7 @@ public abstract class BaseField implements FieldAccess {
     }
 
     protected BaseField ( Field field ) {
-        name = field.getName ();
+        name = field.getName().intern ();
 
         isFinal = Modifier.isFinal ( field.getModifiers () );
         isStatic = Modifier.isStatic ( field.getModifiers () );
@@ -112,7 +118,8 @@ public abstract class BaseField implements FieldAccess {
         qualified = isFinal || isVolatile;
         readOnly = isFinal || isStatic;
         type = field.getType ();
-
+        typeName = type.getName().intern ();
+        isPrimitive = type.isPrimitive ();
 
         if ( field != null ) {
             Object obj = field.getGenericType ();
@@ -312,6 +319,19 @@ public abstract class BaseField implements FieldAccess {
     public Map<String, Object> getAnnotationData ( String annotationName ) {
 
         return this.annotationMap.get ( annotationName );
+    }
+
+
+    public boolean isPrimitive() {
+        return  isPrimitive;
+    }
+
+
+
+
+    @Override
+    public final String typeName () {
+        return typeName;
     }
 
 

@@ -78,7 +78,7 @@ public interface Output {
 
     void writeMediumDoubleArray( double[] values );
 
-    //TODO add unsigned int, unsigned byte, unsigned short array
+    //TODO addObject unsigned int, unsigned byte, unsigned short array
 
 
 }

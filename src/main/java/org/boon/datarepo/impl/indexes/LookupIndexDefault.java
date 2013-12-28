@@ -56,7 +56,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     public boolean add( ITEM item ) {
 
         if ( log.isLoggable( Level.FINE ) ) {
-            log.fine( String.format( "add item = %s", item ) );
+            log.fine( String.format( "addObject item = %s", item ) );
         }
 
         KEY key = keyGetter.apply( item );

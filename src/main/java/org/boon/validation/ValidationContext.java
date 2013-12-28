@@ -195,7 +195,7 @@ public class ValidationContext {
     public String createMessage( String message, String subject, Object[] actualArgs ) {
         List argumentList = new ArrayList( Arrays.asList( actualArgs ) );
 
-    	/* If the subject is found add it as the first
+    	/* If the subject is found addObject it as the first
          * argument to the argument list. */
         if ( subject != null ) {
             argumentList.add( 0, this.getMessage( subject ) );

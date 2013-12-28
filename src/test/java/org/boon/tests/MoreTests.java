@@ -626,7 +626,7 @@ public class MoreTests {
         assertEquals( 1, results.size() );
 
 
-        // Add returns true or false based on whether it was able to add
+        // Add returns true or false based on whether it was able to addObject
         // the object to the repo.
         Employee e2 = repo.get( id );
         assertEquals( false, repo.add( e2 ) );
@@ -664,7 +664,7 @@ public class MoreTests {
         assertEquals( 1, results.size() );
 
 
-        // Add returns true or false based on whether it was able to add
+        // Add returns true or false based on whether it was able to addObject
         // the object to the repo.
         Employee e2 = repo.get( id );
         assertEquals( false, repo.add( e2 ) );

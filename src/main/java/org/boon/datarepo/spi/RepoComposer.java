@@ -4,7 +4,7 @@ import org.boon.datarepo.ObjectEditor;
 import org.boon.datarepo.SearchableCollection;
 
 /**
- * Used by RepoBuilder to add indexes to Repo.
+ * Used by RepoBuilder to addObject indexes to Repo.
  */
 public interface RepoComposer<KEY, ITEM> {
 

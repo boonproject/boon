@@ -48,6 +48,11 @@ public interface FieldAccess {
     void setObject( Object obj, Object value );
 
 
+    String typeName();
+
+
+    boolean isPrimitive();
+
     boolean isFinal();
     boolean isStatic();
     boolean isVolatile();

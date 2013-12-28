@@ -202,7 +202,6 @@ public class AllTypes {
             return false;
         if ( bigInteger != null ? !bigInteger.equals ( allTypes1.bigInteger ) : allTypes1.bigInteger != null )
             return false;
-        if ( date != null ? !date.equals ( allTypes1.date ) : allTypes1.date != null ) return false;
         if ( foo != allTypes1.foo ) return false;
         if ( string != null ? !string.equals ( allTypes1.string ) : allTypes1.string != null ) return false;
         if ( string2 != null ? !string2.equals ( allTypes1.string2 ) : allTypes1.string2 != null ) return false;
@@ -214,6 +213,20 @@ public class AllTypes {
             if ( allTypes != null ? !allTypes.equals ( allTypes1.allTypes ) : allTypes1.allTypes != null ) return false;
 
         }
+
+        if ( date != null  && allTypes1.date!=null) {
+
+            long delta = Math.abs ( date.getTime () - allTypes1.date.getTime ());
+
+            if ( delta < 1000) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+
         return true;
     }
 

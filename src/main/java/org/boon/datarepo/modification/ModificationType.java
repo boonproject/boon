@@ -6,10 +6,10 @@ public enum ModificationType {
     AFTER_INCREMENT,  //update a single property
 
     BEFORE_UPDATE,  //update a single property
-    BEFORE_MODIFY,  //modify an entire object, remove and re-add it
+    BEFORE_MODIFY,  //modify an entire object, remove and re-addObject it
     BEFORE_ADD,      //Add a new object
     AFTER_UPDATE,  //update a single property
-    AFTER_MODIFY,  //modify an entire object, remove and re-add it
+    AFTER_MODIFY,  //modify an entire object, remove and re-addObject it
     AFTER_ADD,      //Add a new object
 
     BEFORE_MODIFY_BY_VALUE_SETTERS,

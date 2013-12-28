@@ -104,7 +104,7 @@ public class Byt {
         try {
             return str.getBytes( "UTF-8" );
         } catch ( UnsupportedEncodingException ex ) {
-            Exceptions.handle( String.format( "Unable to add \"%s\" ", str ), ex );
+            Exceptions.handle( String.format( "Unable to addObject \"%s\" ", str ), ex );
             return null;
         }
     }

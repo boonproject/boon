@@ -61,7 +61,7 @@ public class BytTest {
 
         ok |= val == 2860002643L || die();
 
-        //add unsigned int to the byte buffer.
+        //addObject unsigned int to the byte buffer.
         buf.addUnsignedInt( 2860002643L );
 
         //read the byte array of the buffer

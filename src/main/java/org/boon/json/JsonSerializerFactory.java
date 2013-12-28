@@ -20,12 +20,16 @@ public class JsonSerializerFactory {
 
     private  boolean includeEmpty;
 
+    private  boolean jsonFormatForDates;
+
     private boolean  handleSimpleBackReference = true;
-    private boolean  handleComplexBackReference = false;
+    private boolean  handleComplexBackReference;
+
+    private boolean  includeDefault=false;
 
     private List<Function<FieldSerializationData, Boolean>> filterProperties = null;
-    private  List<Function<FieldSerializationData, Boolean>> customSerializers = null;
-    private Map<Class, Function<ObjectSerializationData, Boolean>> customObjectSerializers = null;
+    private List<Function<FieldSerializationData, Boolean>> customSerializers = null;
+    private Map<Class<?>, Function<ObjectSerializationData, Boolean>> customObjectSerializers = null;
 
 
 
@@ -165,10 +169,41 @@ public class JsonSerializerFactory {
     }
 
 
+    public boolean isJsonFormatForDates () {
+        return jsonFormatForDates;
+    }
+
+    public JsonSerializerFactory setJsonFormatForDates ( boolean jsonFormatForDates ) {
+        this.jsonFormatForDates = jsonFormatForDates;
+        return this;
+    }
+
+
+    public JsonSerializerFactory useJsonFormatForDates (  ) {
+        this.jsonFormatForDates = true;
+        return this;
+    }
+
+
+    public boolean isIncludeDefault () {
+        return includeDefault;
+    }
+
+    public JsonSerializerFactory setIncludeDefault ( boolean includeDefault ) {
+        this.includeDefault = includeDefault;
+        return this;
+    }
+
+
+    public JsonSerializerFactory includeDefaultValues (  ) {
+        this.includeDefault = true;
+        return this;
+    }
+
     public JsonSerializer create() {
         return new JsonSerializerImpl (outputType, useProperties, useFields,
                 includeNulls, useAnnotations, includeEmpty,
-                handleSimpleBackReference, handleComplexBackReference,
+                handleSimpleBackReference, handleComplexBackReference, jsonFormatForDates, includeDefault,
                 filterProperties, customSerializers, customObjectSerializers);
     }
 }

@@ -6,6 +6,7 @@ import org.boon.core.Dates;
 import org.boon.core.Function;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
+import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.FieldSerializationData;
@@ -13,24 +14,34 @@ import org.boon.json.JsonSerializer;
 import org.boon.json.ObjectSerializationData;
 import org.boon.primitive.CharBuf;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.boon.Boon.puts;
 
 public class JsonSerializerImpl implements JsonSerializer {
 
     private static final String[] EMPTY_PROPERTIES = new String[0];
     private final boolean outputType;
     private final boolean useProperties;
+    private final boolean jsonFormatForDates;
     private final boolean useFields;
     private final boolean includeNulls;
+    private final boolean includeDefault;
     private final boolean useAnnotations;
     private final boolean includeEmpty;
     private final boolean handleSimpleBackReference;
     private final boolean handleComplexBackReference;
     private final List<Function<FieldSerializationData, Boolean>> filterProperties;
     private final List<Function<FieldSerializationData, Boolean>> customPropertySerializers;
-    private final Map <Class, Function<ObjectSerializationData, Boolean>> customObjectSerializers;
-    private final Map <Class,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
+    private final Map <Class<?>, Function<ObjectSerializationData, Boolean>> customObjectSerializers;
+    private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
+
+
+    private CharBuf builder = CharBuf.create( 4000 );
 
     private IdentityHashMap idMap;
 
@@ -46,6 +57,8 @@ public class JsonSerializerImpl implements JsonSerializer {
         this.customObjectSerializers = null;
         this.filterProperties = null;
         this.customPropertySerializers = null;
+        this.jsonFormatForDates = false;
+        this.includeDefault = false;
 
 
     }
@@ -55,9 +68,11 @@ public class JsonSerializerImpl implements JsonSerializer {
                                 final boolean useAnnotations, final boolean includeEmpty,
                                 final boolean handleSimpleBackReference,
                                 final boolean handleComplexBackReference,
+                                final boolean jsonFormatForDates,
+                                final boolean includeDefault,
                                 final List<Function<FieldSerializationData, Boolean>> filterProperties,
                                 final List<Function<FieldSerializationData, Boolean>> customSerializer,
-                                final Map <Class, Function<ObjectSerializationData, Boolean>> customObjectSerializers ) {
+                                final Map <Class<?>, Function<ObjectSerializationData, Boolean>> customObjectSerializers ) {
         this.outputType = outputType;
         this.useFields = useFields;
         this.useProperties = useProperties;
@@ -70,83 +85,144 @@ public class JsonSerializerImpl implements JsonSerializer {
         this.filterProperties = filterProperties;
         this.customPropertySerializers = customSerializer;
         this.customObjectSerializers =  customObjectSerializers;
+        this.jsonFormatForDates = jsonFormatForDates;
+        this.includeDefault = includeDefault;
         if (handleComplexBackReference) {
             idMap = new IdentityHashMap (  );
         }
     }
 
-    private final void serializeString( String str, CharBuf builder ) {
-        builder.addChar( '\"' );
-        char[] charArray = str.toCharArray();
 
+    private final void serializeString( String str, CharBuf builder ) {
+
+
+
+
+        char[] charArray = FastStringUtils.toCharArray ( str );
+
+        boolean foundControlChar = false;
+
+        loop:
         for ( int index = 0; index < charArray.length; index++ ) {
             char c = charArray[ index ];
-
             switch ( c ) {
-                case '\"':
-                    builder.addChar( '\\' ).addChar( '\"' );
-                    break;
-                case '\\':
-                    builder.addChar( '\\' ).addChar( '\\' );
-                    break;
-                case '/':
-                    builder.addChar( '\\' ).addChar( '/' );
-                    break;
-                case '\b':
-                    builder.addChar( '\\' ).addChar( 'b' );
-                    break;
-                case '\f':
-                    builder.addChar( '\\' ).addChar( 'f' );
-                    break;
-                case '\n':
-                    builder.addChar( '\\' ).addChar( 'n' );
-                    break;
-                case '\r':
-                    builder.addChar( '\\' ).addChar( 'r' );
-                    break;
-                case '\t':
-                    builder.addChar( '\\' ).addChar( 't' );
-                    break;
+            case '\"':
+            case '\\':
+            case '/':
+            case '\b':
+            case '\f':
+            case '\n':
+            case '\r':
+            case '\t':
+                foundControlChar = true;
+                break loop;
+            }
 
-                default:
-                /* Encode unicode character. */
-                    // if (!asciiEncoder.canEncode(c)){ //This works to but worried
-                    // it might be too slow http://en.wikipedia.org/wiki/ASCII
-                    if ( c > 0x7F ) { // See if it is out of range of ASCII
-                        // I don't like this for performance, I am going to roll my
-                        // own.
-                        // builder.append(String.format("\\u%4H", c).replace(' ',
-                        // '0'));
-                        String hexString = Integer.toHexString( c ).toUpperCase();
-                        builder.addChar( '\\' ).addChar( 'u' );
+        }
 
-                        if ( hexString.length() >= 4 ) {
-                            builder.add( hexString );
-                        } else {
-                            int howMany0 = 4 - hexString.length();
-                            for ( int i = 0; i < howMany0; i++ ) {
-                                builder.addChar( '0' );
-                            }
-                            builder.add( hexString );
-                        }
-                    } else {
-                        builder.addChar( c );
-                    }
+        if (foundControlChar) {
+            builder.add ( '"' );
+            for ( int index = 0; index < charArray.length; index++ ) {
+                char c = charArray[ index ];
+
+                switch ( c ) {
+                    case '\"':
+                        builder.addChar( '\\' ).addChar( '\"' );
+                        break;
+                    case '\\':
+                        builder.addChar( '\\' ).addChar( '\\' );
+                        break;
+                    case '/':
+                        builder.addChar( '\\' ).addChar( '/' );
+                        break;
+                    case '\b':
+                        builder.addChar( '\\' ).addChar( 'b' );
+                        break;
+                    case '\f':
+                        builder.addChar( '\\' ).addChar( 'f' );
+                        break;
+                    case '\n':
+                        builder.addChar( '\\' ).addChar( 'n' );
+                        break;
+                    case '\r':
+                        builder.addChar( '\\' ).addChar( 'r' );
+                        break;
+                    case '\t':
+                        builder.addChar( '\\' ).addChar( 't' );
+                        break;
+
+                    default:
+                            builder.addChar( c );
+                }
 
             }
+            builder.addChar( '"' );
+
+        } else {
+             builder.addQuoted ( charArray );
         }
-        builder.addChar( '\"' );
     }
 
-    public CharBuf serialize( Object obj ) {
-        CharBuf builder = CharBuf.create( 64 );
 
+    public CharBuf serialize( Object obj ) {
+
+        builder.readForRecycle ();
         try {
             serializeObject( obj, builder );
         } catch ( Exception ex ) {
             return Exceptions.handle( CharBuf.class, "unable to serializeObject", ex );
         }
         return builder;
+    }
+
+
+    public static void main (String... args) {
+        puts (int.class);
+    }
+
+
+
+    private final void serializeFieldObject (Object parent, FieldAccess fieldAccess, CharBuf builder) throws Exception {
+
+        if (fieldAccess.isPrimitive ()) {
+            final String typeName = fieldAccess.typeName (); 
+            final char fc = typeName .charAt ( 0 );
+
+            switch ( fc ) {
+                case 'i':
+                    builder.addInt ( fieldAccess.getInt ( parent ) );
+                    return;
+                case 'b':
+                    switch ( typeName ) {
+                        case "boolean":
+                            builder.addBoolean ( fieldAccess.getBoolean ( parent ) );
+                            return;
+
+                        case "byte":
+                            builder.addByte ( fieldAccess.getByte ( parent ) );
+                            return;
+                    }
+                case 'l':
+                    builder.addLong ( fieldAccess.getLong ( parent ) );
+                    return;
+                case 'd':
+                    builder.addDouble ( fieldAccess.getDouble ( parent ) );
+                    return;
+                case 'f':
+                    builder.addFloat ( fieldAccess.getFloat ( parent ) );
+                    return;
+                case 's':
+                    builder.addShort ( fieldAccess.getShort ( parent ) );
+                    return;
+                case 'c':
+                    builder.addChar ( fieldAccess.getChar ( parent ) );
+                    return;
+
+            }
+        } else {
+            serializeObject ( fieldAccess.getObject ( parent ), builder );
+        }
+
     }
 
     private final void serializeObject( Object obj, CharBuf builder ) throws Exception {
@@ -162,45 +238,112 @@ public class JsonSerializerImpl implements JsonSerializer {
 
 
         if ( obj == null ) {
-            builder.add ( "null" );
-        } else if ( obj instanceof Number || obj instanceof Boolean ) {
-            builder.add ( obj.toString () );
+            builder.addNull ();
         } else if ( obj instanceof String ) {
             serializeString ( ( String ) obj, builder );
+        }  else if ( obj instanceof Number  ) {
+            serializeNumber ( ( Number ) obj );
+        } else if (obj instanceof  Boolean){
+            builder.addObject ( obj );
         } else if ( obj instanceof Collection ) {
             Collection<?> collection = ( Collection<?> ) obj;
             serializeCollection ( collection, builder );
         } else if ( obj.getClass().isArray() ) {
             serializeArray ( ( Object[] ) obj, builder );
         } else if ( obj instanceof Date ) {
-            Dates.jsonDateChars ( ( Date ) obj, builder );
+            Date date = (Date) obj;
+            if (jsonFormatForDates) {
+                Dates.jsonDateChars( ( Date ) obj, builder );
+            } else {
+                builder.addLong(date.getTime ());
+            }
         } else if ( obj instanceof Map ) {
-            serializeMap( ( Map ) obj, builder );
+            serializeMap ( ( Map ) obj, builder );
         } else if ( obj instanceof CharSequence ) {
             serializeString( obj.toString (), builder );
         } else if ( obj instanceof Enum ) {
-            serializeString( obj.toString (), builder );
+            builder.addQuoted ( obj.toString () );
+        } else if (outputType ){
+            serializeInstanceWithType ( obj, builder );
         } else {
             serializeInstance ( obj, builder );
         }
     }
 
-    private final void serializeInstance ( Object obj, CharBuf builder ) throws Exception {
-        builder.addChar( '{' );
-        if ( outputType ) {
-            builder.add( "\"class\":\"" );
-            builder.add( obj.getClass().getName() );
-            builder.addChar( '"' );
+
+    private void serializeNumber ( Number number ) {
+        if (number instanceof Integer) {
+            builder.addInt( ( Integer ) number );
+        } else if (number instanceof Long) {
+            builder.addLong( ( Long ) number );
+        } else if (number instanceof Double) {
+            builder.addDouble( ( Double ) number );
+        } else if (number instanceof Float) {
+            builder.addFloat( ( Float ) number );
+        } else if (number instanceof Short) {
+            builder.addShort( ( short ) number );
+        } else if (number instanceof Byte) {
+            builder.addByte( ( byte ) number );
+        } else if (number instanceof BigDecimal ) {
+            builder.addBigDecimal( (BigDecimal) number );
+        } else if (number instanceof BigInteger ) {
+            builder.addBigInteger( ( BigInteger ) number );
+        } else {
+            builder.addObject( number );
         }
 
+    }
 
+    private final void serializeInstance ( Object obj, CharBuf builder ) throws Exception {
+        builder.addChar( '{' );
+
+        final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
+
+        int index = 0;
+        Collection<FieldAccess> values = fieldAccessors.values();
+
+
+        values = filterFields ( obj, values );
+
+
+
+        if ( this.customPropertySerializers != null ) {
+            for ( FieldAccess fieldAccess : values ) {
+                builder.addQuoted ( fieldAccess.getName () );
+                builder.addChar( ':' );
+                Object value = fieldAccess.getValue( obj );
+                applyCustomSerializers ( obj, builder, fieldAccess, value );
+                builder.addChar( ',' );
+                index++;
+            }
+        } else {
+            for ( FieldAccess fieldAccess : values ) {
+                builder.addQuoted ( FastStringUtils.toCharArray ( fieldAccess.getName () ) );
+                builder.addChar ( ':' );
+                serializeFieldObject ( obj, fieldAccess, builder );
+                builder.addChar ( ',' );
+                index++;
+            }
+        }
+        if ( index > 0 ) {
+           builder.removeLastChar();
+        }
+        builder.addChar( '}' );
+    }
+
+
+
+
+    private final void serializeInstanceWithType ( Object obj, CharBuf builder ) throws Exception {
+        builder.addString( "{\"class\":" );
+        builder.addQuoted ( obj.getClass ().getName () );
         final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
 
         int index = 0;
         Collection<FieldAccess> values = fieldAccessors.values();
         int length = values.size();
 
-        if ( outputType && length > 0 ) {
+        if ( length > 0 ) {
             builder.addChar( ',' );
         }
 
@@ -208,33 +351,32 @@ public class JsonSerializerImpl implements JsonSerializer {
 
 
         length = values.size ();
-        for ( FieldAccess fieldAccess : values ) {
-
-            Object value = fieldAccess.getValue( obj );
-
-            builder.addChar( '\"' );
-            builder.add( fieldAccess.getName() );
-            builder.addChar( '\"' );
-            builder.addChar( ':' );
-
-
-
-            if ( this.customPropertySerializers != null ) {
+        if ( this.customPropertySerializers != null ) {
+            for ( FieldAccess fieldAccess : values ) {
+                builder.addQuoted ( fieldAccess.getName () );
+                builder.addChar( ':' );
+                Object value = fieldAccess.getValue( obj );
                 applyCustomSerializers ( obj, builder, fieldAccess, value );
-            }  else {
-                serializeObject( value, builder );
-            }
-
-            if ( index + 1 != length ) {
+                index++;
+                if ( index < length ) {
                     builder.addChar( ',' );
+                }
             }
-            index++;
+        } else {
+            for ( FieldAccess fieldAccess : values ) {
+                builder.addQuoted ( fieldAccess.getName () );
+                builder.addChar( ':' );
+                serializeFieldObject ( obj, fieldAccess, builder );
+                index++;
+                if ( index < length ) {
+                    builder.addChar( ',' );
+                }
+            }
         }
 
-
         builder.addChar( '}' );
-    }
-
+    } 
+    
     private void applyCustomSerializers ( Object obj, CharBuf builder, FieldAccess fieldAccess, Object value ) throws Exception {
         boolean handled = false;
         for (Function<FieldSerializationData, Boolean> function : this.customPropertySerializers ) {
@@ -248,67 +390,97 @@ public class JsonSerializerImpl implements JsonSerializer {
         }
 
         if (!handled ) {
-            serializeObject( value, builder );
+            serializeFieldObject ( obj,  fieldAccess, builder );
         }
     }
 
-    private Collection<FieldAccess> filterFields ( Object obj, Collection<FieldAccess> values ) {
+    private Collection<FieldAccess> filterFields ( Object obj, Collection<FieldAccess> v ) {
 
-        if ( this.filterProperties !=  null ) {
+        List <FieldAccess> fields = new LinkedList<> ( v );
 
-
-            List<FieldAccess> customFilter = new LinkedList<> ( values  );
-            for ( FieldAccess fieldAccess : values ) {
-
-                FieldSerializationData data = new FieldSerializationData (
-                        fieldAccess.getName (), fieldAccess.getType (), obj.getClass (), fieldAccess.getValue ( obj ), null, obj  );
-                for (Function<FieldSerializationData, Boolean> func : filterProperties) {
-                    boolean exclude = func.apply ( data );
-                    if ( exclude ) {
-                        customFilter.remove ( fieldAccess );
-                    }
-                }
-            }
-            values = customFilter;
+        if (this.filterProperties !=  null) {
+            filterByCustomPropertyFiltersIfNeeded ( obj, fields );
         }
 
         if (!includeNulls) {
-
-
-            List<FieldAccess> nonNullValues = new LinkedList<> ( values  );
-            for ( FieldAccess fieldAccess : values ) {
-
-                boolean forceKeep = false;
-                if (useAnnotations) {
-                    final Map<String, Object> jsonInclude = fieldAccess.getAnnotationData( "JsonInclude" );
-                    if ( jsonInclude != null ) {
-                        String value = (String) jsonInclude.get ( "value" );
-                        if (value.equals ( "ALWAYS" )) {
-                            forceKeep = true;
-                        }
-                    }
-                }
-                Object value = fieldAccess.getValue( obj );
-                if ( value == null && !forceKeep) {
-                    nonNullValues.remove ( fieldAccess );
-                }
-            }
-            values = nonNullValues;
+            excludeNullsIfNeeded ( obj, fields );
         }
 
         if ( !includeEmpty ) {
-            List<FieldAccess> nonEmptyValues = new LinkedList<> ( values );
-            for ( FieldAccess fieldAccess : values ) {
+            excludeEmptyIfNeeded ( obj, fields );
+        }
 
-                boolean forceKeep = false;
-                if ( useAnnotations ) {
-                    final Map<String, Object> jsonInclude = fieldAccess.getAnnotationData ( "JsonInclude" );
-                    if ( jsonInclude != null ) {
-                        String value = ( String ) jsonInclude.get ( "value" );
-                        if ( value.equals ( "ALWAYS" ) || value.equals ( "NON_NULL" )) {
-                            forceKeep = true;
-                        }
+        if ( useAnnotations ) {
+            filterWithAnnotationsIfNeeded ( obj, fields );
+        }
+
+        if (!includeDefault) {
+            excludeDefaultIfNeeded (obj, fields);
+        }
+
+        if ( handleSimpleBackReference || handleComplexBackReference ) {
+            filterForBackReferencesIfNeeded ( obj, fields );
+        }
+
+        return fields;
+    }
+
+    private void filterForBackReferencesIfNeeded ( Object obj, List<FieldAccess> fields ) {
+
+            ListIterator<FieldAccess> listIterator = fields.listIterator ();
+
+            while ( listIterator.hasNext () ) {
+                FieldAccess fieldAccess = listIterator.next ();
+
+                Object value = fieldAccess.getValue( obj );
+
+                /* handle simple back reference. */
+                if (handleSimpleBackReference &&  value == obj ) {
+                    listIterator.remove (  );
+                    continue;
+                }
+
+                if ( handleComplexBackReference ) {
+                    if ( idMap.containsKey ( value ) ) {
+                        listIterator.remove (  );
+                    } else {
+                        idMap.put ( value, value );
                     }
+                }
+
+            }
+    }
+
+    private void filterWithAnnotationsIfNeeded ( Object obj, List<FieldAccess> fields ) {
+
+            Set<String> propertiesToIgnore  = getProperitesToIgnoreAsSet(obj);
+
+
+            ListIterator<FieldAccess> listIterator = fields.listIterator ();
+
+            while ( listIterator.hasNext () ) {
+                FieldAccess fieldAccess = listIterator.next ();
+
+                if ( Sets.in ( fieldAccess.getName (), propertiesToIgnore ) ) {
+                    listIterator.remove (  );
+                } else if (fieldAccess.hasAnnotation ( "JsonIgnore" )) {
+                    final Map<String, Object> jsonIgnore = fieldAccess.getAnnotationData ( "JsonIgnore" );
+                    boolean ignore = (Boolean) jsonIgnore.get ( "value" );
+                    if (ignore) {
+                        listIterator.remove (  );
+                    }
+                }
+            }
+    }
+
+    private void excludeEmptyIfNeeded ( Object obj, List<FieldAccess> fields ) {
+            ListIterator<FieldAccess> listIterator = fields.listIterator ();
+
+            while ( listIterator.hasNext () ) {
+                FieldAccess fieldAccess = listIterator.next ();
+
+                if (useAnnotations && alwaysInclude ( fieldAccess )) {
+                    continue;
                 }
 
                 Object value = fieldAccess.getValue ( obj );
@@ -318,62 +490,153 @@ public class JsonSerializerImpl implements JsonSerializer {
                         value instanceof CharSequence ||
                         value instanceof Map ||
                         Reflection.isArray ( obj ) ) {
-                    if (  !forceKeep && Reflection.len ( value ) == 0 ) {
-                        nonEmptyValues.remove ( fieldAccess );
+                    if (  Reflection.len ( value ) == 0 ) {
+                        listIterator.remove (  );
                     }
                 }
             }
 
-            values = nonEmptyValues;
-        }
+    }
+
+
+
+
+    private boolean alwaysInclude ( FieldAccess fieldAccess ) {
+        boolean forceKeep = false;
         if ( useAnnotations ) {
-
-            Set<String> propertiesToIgnore  = getProperitesToIgnoreAsSet(obj);
-
-
-            List<FieldAccess> nonIgnoredValues = new LinkedList<> ( values  );
-            for ( FieldAccess fieldAccess : values ) {
-
-                if ( Sets.in ( fieldAccess.getName(), propertiesToIgnore ) ) {
-                    nonIgnoredValues.remove ( fieldAccess );
-                } else if (fieldAccess.hasAnnotation ( "JsonIgnore" )) {
-                    final Map<String, Object> jsonIgnore = fieldAccess.getAnnotationData ( "JsonIgnore" );
-                    boolean ignore = (Boolean) jsonIgnore.get ( "value" );
-                    if (ignore) {
-                        nonIgnoredValues.remove ( fieldAccess );
-                    }
+            final Map<String, Object> jsonInclude = fieldAccess.getAnnotationData ( "JsonInclude" );
+            if ( jsonInclude != null ) {
+                String value = ( String ) jsonInclude.get ( "value" );
+                if ( value.equals ( "ALWAYS" ) ) {
+                    forceKeep = true;
                 }
             }
-            values = nonIgnoredValues;
         }
+        return forceKeep;
+    }
+    private void excludeNullsIfNeeded ( Object obj, List<FieldAccess> fields ) {
 
-        if ( handleSimpleBackReference || handleComplexBackReference ) {
+            ListIterator<FieldAccess> listIterator = fields.listIterator ();
 
+            while ( listIterator.hasNext () ) {
+                FieldAccess fieldAccess = listIterator.next ();
 
-
-            List<FieldAccess> nonBackReferenceValues = new LinkedList<> ( values  );
-            for ( FieldAccess fieldAccess : values ) {
-
-                Object value = fieldAccess.getValue( obj );
-
-                /* handle simple back reference. */
-                if (handleSimpleBackReference &&  value == obj ) {
-                    nonBackReferenceValues.remove ( fieldAccess );
+                if (fieldAccess.isPrimitive ()) {
                     continue;
                 }
 
-                if ( handleComplexBackReference ) {
-                    if ( idMap.containsKey ( value ) ) {
-                        nonBackReferenceValues.remove ( fieldAccess );
-                    } else {
-                        idMap.put ( value, value );
-                    }
+                if (useAnnotations && alwaysInclude ( fieldAccess )) {
+                    continue;
                 }
 
+                Object value = fieldAccess.getObject ( obj );
+                if ( value == null ) {
+                    listIterator.remove (  );
+                }
             }
-            values = nonBackReferenceValues;
+
+    }
+
+    private void excludeDefaultIfNeeded ( Object parent, List<FieldAccess> fields ) {
+
+            ListIterator<FieldAccess> listIterator = fields.listIterator ();
+            String typeName;
+
+            char fc;
+
+            while ( listIterator.hasNext () ) {
+                FieldAccess fieldAccess = listIterator.next ();
+
+                if ( !fieldAccess.isPrimitive () ) {
+                    continue;
+                }
+
+                if (useAnnotations && alwaysInclude ( fieldAccess )) {
+                    continue;
+                }
+
+                 typeName = fieldAccess.typeName ();
+                 fc = typeName.charAt ( 0 );
+
+
+
+                switch ( fc ) {
+                    case 'i':
+                        int i = fieldAccess.getInt ( parent ) ;
+                        if (i == 0) {
+                            listIterator.remove ();
+                        }
+                        break;
+                    case 'b':
+                        switch ( typeName ) {
+                            case "boolean":
+                                if (!fieldAccess.getBoolean ( parent )) {
+                                    listIterator.remove ();
+                                }
+                                break;
+                            case "byte":
+                                byte b = fieldAccess.getByte ( parent ) ;
+                                if ( b == 0 ) {
+                                    listIterator.remove ();
+                                }
+                                break;
+                        }
+                        break;
+
+                    case 'l':
+                        long l = fieldAccess.getLong ( parent ) ;
+
+                        if ( l == 0L ) {
+                            listIterator.remove ();
+                        }
+                        break;
+                    case 'd':
+                        double d = fieldAccess.getDouble ( parent ) ;
+                        if ( d == 0d ) {
+                            listIterator.remove ();
+                        }
+                        break;
+                    case 'f':
+                        float f = fieldAccess.getFloat ( parent ) ;
+                        if ( f == 0f ) {
+                            listIterator.remove ();
+                        }
+                        break;
+                    case 's':
+                        short s = fieldAccess.getShort ( parent ) ;
+                        if ( s == 0 ) {
+                            listIterator.remove ();
+                        }
+                        break;
+                    case 'c':
+                        char c = fieldAccess.getChar ( parent ) ;
+                        if ( c == 0 ) {
+                            listIterator.remove ();
+                        }
+                        break;
+
+                }
+            }
+
+    }
+
+    private void filterByCustomPropertyFiltersIfNeeded ( Object obj, List<FieldAccess> fields ) {
+        if ( this.filterProperties.size () > 0) {
+
+            ListIterator<FieldAccess> listIterator = fields.listIterator ();
+
+            while ( listIterator.hasNext () ) {
+                FieldAccess fieldAccess = listIterator.next ();
+                FieldSerializationData data = new FieldSerializationData (
+                        fieldAccess.getName (), fieldAccess.getType (), obj.getClass (), fieldAccess.getValue ( obj ), null, obj  );
+                for (Function<FieldSerializationData, Boolean> func : filterProperties) {
+                    boolean exclude = func.apply ( data );
+                    if ( exclude ) {
+                        listIterator.remove ();
+                    }
+                }
+            }
         }
-        return values;
     }
 
 
@@ -434,9 +697,7 @@ public class JsonSerializerImpl implements JsonSerializer {
     private final void serializeMap( Map<Object, Object> map, CharBuf builder ) throws Exception {
         final Set<Map.Entry<Object, Object>> entrySet = map.entrySet();
         for ( Map.Entry<Object, Object> entry : entrySet ) {
-            builder.addChar( '\"' );
-            builder.add( entry.getKey().toString() );
-            builder.addChar( '\"' );
+            builder.addQuoted ( entry.getKey ().toString () );
             builder.addChar( ':' );
             serializeObject( entry.getValue(), builder );
         }
@@ -451,7 +712,7 @@ public class JsonSerializerImpl implements JsonSerializer {
             serializeObject( o, builder );
 
             if ( index != length - 1 ) {
-                builder.append( ',' );
+                builder.addChar( ',' );
             }
 
             index++;

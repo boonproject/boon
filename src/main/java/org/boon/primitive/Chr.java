@@ -161,8 +161,6 @@ public class Chr {
 
 
     public static char[] grow( char[] array, final int size ) {
-        Objects.requireNonNull( array );
-
         char[] newArray = new char[ array.length + size ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
@@ -170,16 +168,12 @@ public class Chr {
 
 
     public static char[] grow( char[] array ) {
-        Objects.requireNonNull( array );
-
         char[] newArray = new char[ array.length * 2 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
     public static char[] shrink( char[] array, int size ) {
-        Objects.requireNonNull( array );
-
         char[] newArray = new char[ array.length - size ];
 
         System.arraycopy( array, 0, newArray, 0, array.length - size );

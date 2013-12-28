@@ -43,7 +43,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
     public boolean add( ITEM item ) {
 
         if ( log.isLoggable( Level.FINE ) ) {
-            log.fine( String.format( "add item = %s", item ) );
+            log.fine( String.format( "addObject item = %s", item ) );
         }
 
         KEY key = keyGetter.apply( item );
@@ -51,7 +51,7 @@ public class UniqueLookupIndex<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
             return false;
         }
 
-        /* You can not add the same key twice. */
+        /* You can not addObject the same key twice. */
         if ( this.map.containsKey( key ) ) {
             return false;
         }

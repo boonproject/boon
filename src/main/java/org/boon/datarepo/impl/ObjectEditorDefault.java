@@ -31,7 +31,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
     public void put( ITEM item ) {
         if ( !this.add( item ) ) {
-            throw new DataRepoException( "Unable to add item " + item );
+            throw new DataRepoException( "Unable to addObject item " + item );
         }
     }
 

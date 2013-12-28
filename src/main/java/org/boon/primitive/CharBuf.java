@@ -1,11 +1,16 @@
 package org.boon.primitive;
 
 
+import org.boon.cache.Cache;
+import org.boon.cache.CacheType;
+import org.boon.cache.SimpleCache;
 import org.boon.core.reflection.FastStringUtils;
 import sun.nio.cs.Surrogate;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -87,17 +92,180 @@ public class CharBuf extends Writer {
         buffer = new char[ capacity ];
     }
 
-    public CharBuf add( String str ) {
+    public final CharBuf add( String str ) {
         add( FastStringUtils.toCharArray( str ) );
         return this;
     }
 
 
-    public CharBuf add( int i ) {
-        add( "" + i );
+    public final CharBuf addString( String str ) {
+        add( FastStringUtils.toCharArray( str ) );
         return this;
     }
 
+    public final CharBuf addObject ( Object object ) {
+        String str = object.toString();
+        addString ( str );
+        return this;
+    }
+
+    public final CharBuf add( int i ) {
+
+        add ( Integer.toString ( i ));
+        return this;
+    }
+
+
+    private Cache <Integer, char[]> icache;
+
+    public final CharBuf addInt( int i ) {
+        switch (i) {
+            case 0:
+                addChar('0');
+                return this;
+            case 1:
+                addChar('1');
+                return this;
+            case -1:
+                addChar('-');
+                addChar('1');
+                return this;
+        }
+
+        addInt( Integer.valueOf( i ) );
+        return this;
+    }
+    public final CharBuf addInt( Integer key ) {
+
+
+        if (icache == null) {
+            icache = new SimpleCache<> ( 20, CacheType.LRU );
+        }
+        char [] chars = icache.get ( key );
+
+        if ( chars ==  null ) {
+            String str = Integer.toString ( key );
+            chars = FastStringUtils.toCharArray ( str );
+            icache.put ( key, chars );
+        }
+
+        addChars ( chars );
+        return this;
+    }
+
+
+    final char [] trueChars = "true".toCharArray ();
+    final char [] falseChars = "false".toCharArray ();
+
+    public final CharBuf add( boolean b ) {
+        addChars ( b ? trueChars : falseChars );
+        return this;
+    }
+
+
+    public final CharBuf addBoolean( boolean b ) {
+
+        add ( Boolean.toString ( b ));
+        return this;
+    }
+
+    public final  CharBuf add( byte i ) {
+
+        add ( Byte.toString ( i ));
+        return this;
+    }
+
+    public final CharBuf addByte( byte i ) {
+
+        addInt ( i );
+        return this;
+    }
+
+
+    public final CharBuf add( short i ) {
+
+        add ( Short.toString ( i ));
+        return this;
+    }
+
+
+    public final CharBuf addShort( short i ) {
+
+        addInt ( i );
+        return this;
+    }
+
+    public final CharBuf add( long l ) {
+        add ( Long.toString ( l ));
+        return this;
+    }
+
+
+
+    public final  CharBuf add( double d ) {
+        add ( Double.toString ( d ) );
+        return this;
+    }
+
+
+    private Cache <Double, char[]> dcache;
+
+
+
+    public final  CharBuf addDouble( double d ) {
+        addDouble( Double.valueOf( d ) );
+        return this;
+    }
+
+    public final  CharBuf addDouble( Double key ) {
+
+        if (dcache == null) {
+            dcache = new SimpleCache<> ( 20, CacheType.LRU );
+        }
+        char [] chars = dcache.get ( key );
+
+        if ( chars ==  null ) {
+            String str = Double.toString ( key );
+            chars = FastStringUtils.toCharArray ( str );
+            dcache.put ( key, chars );
+        }
+
+        add ( chars );
+        return this;
+    }
+
+
+    public final  CharBuf add( float d ) {
+        add ( Float.toString ( d ));
+        return this;
+    }
+
+
+    private Cache <Float, char[]> fcache;
+
+    public final  CharBuf addFloat( float d ) {
+        addFloat( Float.valueOf( d ) );
+        return this;
+    }
+
+
+    public final  CharBuf addFloat( Float key ) {
+
+        if (fcache == null) {
+            fcache = new SimpleCache<> ( 20, CacheType.LRU );
+        }
+        char [] chars = fcache.get ( key );
+
+        if ( chars ==  null ) {
+            String str = Float.toString ( key );
+            chars = FastStringUtils.toCharArray ( str );
+            fcache.put ( key, chars );
+        }
+
+        add ( chars );
+
+        return this;
+    }
 
     public final CharBuf addChar( byte i ) {
         add( ( char ) i );
@@ -117,8 +285,24 @@ public class CharBuf extends Writer {
     }
 
 
-    public CharBuf addChar( char c ) {
-        add( c );
+    public final CharBuf addChar( final char ch ) {
+
+        int _location = location;
+        char [] _buffer = buffer;
+        int _capacity = capacity;
+
+        if ( 1 + _location > _capacity ) {
+            _buffer = Chr.grow( _buffer );
+        }
+
+        _buffer [_location] = ch;
+        _capacity = _buffer.length;
+        _location ++;
+
+
+        location = _location;
+        buffer = _buffer;
+        capacity = _capacity;
         return this;
     }
 
@@ -136,14 +320,59 @@ public class CharBuf extends Writer {
     }
 
     public CharBuf add( char[] chars ) {
-        if ( chars.length + location < capacity ) {
-            Chr._idx( buffer, location, chars );
-        } else {
+        if ( chars.length + location > capacity ) {
             buffer = Chr.grow( buffer, buffer.length * 2 + chars.length );
-            Chr._idx( buffer, location, chars );
             capacity = buffer.length;
         }
+
+        Chr._idx( buffer, location, chars );
         location += chars.length;
+        return this;
+    }
+
+
+
+    public final CharBuf addChars( char[] chars ) {
+        if ( chars.length + location > capacity ) {
+            buffer = Chr.grow( buffer, buffer.length * 2 + chars.length );
+            capacity = buffer.length;
+        }
+
+        System.arraycopy ( chars, 0, buffer, location, chars.length );
+        location += chars.length;
+        return this;
+    }
+
+
+    public final CharBuf addQuoted( char[] chars ) {
+
+        int _location = location;
+        char [] _buffer = buffer;
+        int _capacity = capacity;
+
+        int sizeNeeded = chars.length + 2 + _location;
+        if (  sizeNeeded > _capacity ) {
+            _buffer = Chr.grow( _buffer, sizeNeeded * 2  );
+            _capacity = _buffer.length;
+        }
+        _buffer [_location] = '"';
+        _location++;
+
+        System.arraycopy( chars, 0, _buffer, _location, chars.length );
+
+        _location += (chars.length);
+        _buffer [_location] = '"';
+        _location++;
+
+        location = _location;
+        buffer = _buffer;
+        capacity = _capacity;
+        return this;
+    }
+
+    public final CharBuf addQuoted( String str ) {
+        final char[] chars = FastStringUtils.toCharArray ( str );
+        addQuoted ( chars );
         return this;
     }
 
@@ -188,12 +417,12 @@ public class CharBuf extends Writer {
     }
 
 
-    public CharBuf add( char ch ) {
+    public final CharBuf add( char ch ) {
         if ( 1 + location < capacity ) {
-            Chr.idx( buffer, location, ch );
+           buffer [location] = ch;
         } else {
             buffer = Chr.grow( buffer );
-            Chr.idx( buffer, location, ch );
+            buffer [location] = ch;
             capacity = buffer.length;
         }
         location += 1;
@@ -563,4 +792,84 @@ public class CharBuf extends Writer {
     }
 
 
+    final static char [] nullChars = "null".toCharArray ();
+    public final void addNull () {
+        this.add ( nullChars );
+    }
+
+    public void removeLastChar () {
+        location--;
+    }
+
+
+    private Cache <BigDecimal, char[]> bigDCache;
+    public CharBuf addBigDecimal( BigDecimal key ) {
+        if (bigDCache == null) {
+            bigDCache = new SimpleCache<> ( 20, CacheType.LRU );
+        }
+        char [] chars = bigDCache.get ( key );
+
+        if ( chars ==  null ) {
+            String str = key.toString();
+            chars = FastStringUtils.toCharArray ( str );
+            bigDCache.put ( key, chars );
+        }
+
+        add ( chars );
+
+        return this;
+
+
+    }
+
+    private Cache <BigInteger, char[]> bigICache;
+
+    public CharBuf addBigInteger( BigInteger key ) {
+        if (bigICache == null) {
+            bigICache = new SimpleCache<> ( 20, CacheType.LRU );
+        }
+        char [] chars = bigICache.get ( key );
+
+        if ( chars ==  null ) {
+            String str = key.toString();
+            chars = FastStringUtils.toCharArray ( str );
+            bigICache.put ( key, chars );
+        }
+
+        add ( chars );
+
+        return this;
+
+    }
+
+
+    private Cache <Long, char[]> lcache;
+
+
+
+    public final  CharBuf addLong( long l ) {
+
+        addLong(Long.valueOf( l ));
+        return this;
+    }
+
+    public final  CharBuf addLong( Long key ) {
+
+        if (lcache == null) {
+            lcache = new SimpleCache<> ( 20, CacheType.LRU );
+        }
+        char [] chars = lcache.get ( key );
+
+        if ( chars ==  null ) {
+            String str = Long.toString ( key );
+            chars = FastStringUtils.toCharArray ( str );
+            lcache.put ( key, chars );
+        }
+
+        add ( chars );
+
+        return this;
+    }
+
 }
+

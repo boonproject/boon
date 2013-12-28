@@ -441,6 +441,31 @@ public class Dates {
 
     }
 
+    public static void fastJsonDateChars( Date date, CharBuf buf ) {
+
+        int day = date.getDate ();
+        int month = date.getMonth () +1;
+        int year = date.getYear () + 1900;
+        int hour = date.getHours ();
+        int minute = date.getMinutes ();
+        int second = date.getSeconds ();
+        int offset = date.getTimezoneOffset ();
+        int mili = 1;
+
+        buf.add( '"' );
+        buf.add( year ).add( '-' );
+        buf.add( Str.zfill( month, 2 ) ).add( '-' );
+        buf.add( Str.zfill ( day, 2 ) ).add('T');
+
+        buf.add( Str.zfill( hour, 2 ) ).add( ':' );
+        buf.add( Str.zfill( minute, 2 ) ).add( ':' );
+        buf.add( Str.zfill( second, 2 ) ).add( "." );
+        buf.add( Str.zfill( mili, 3 ) ).add( "Z" );
+
+        buf.add( '"' );
+
+    }
+
     public static Date fromISO8601DateLoose( char[] buffer, int startIndex, int endIndex ) {
 
         if ( Dates.isISO8601QuickCheck( buffer, startIndex, endIndex ) ) {

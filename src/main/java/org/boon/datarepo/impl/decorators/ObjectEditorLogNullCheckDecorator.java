@@ -63,7 +63,7 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
     @Override
     public boolean add( ITEM item ) {
         Objects.requireNonNull( item, "item cannot be null" );
-        log( "add (item=%s)", item );
+        log( "addObject (item=%s)", item );
         return super.add( item );
     }
 

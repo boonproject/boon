@@ -191,7 +191,7 @@ public class JsonParserBaseTest {
 
         ok |= types.getBigInteger ().equals ( new BigInteger ( "101" ) ) || die();
 
-        ok |= types.getDate().toString().startsWith ( "Fri Dec 1" ) || die();
+        ok |= types.getDate().toString().startsWith ( "Fri Dec 1" ) || die("" + types.getDate());
         ok |= types.getFoo ().toString().equals ( "FOO" ) || die();
         ok |= types.getBar ().toString().equals ( "BAR" ) || die();
 

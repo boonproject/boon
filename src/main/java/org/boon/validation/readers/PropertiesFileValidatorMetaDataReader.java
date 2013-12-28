@@ -115,7 +115,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
                 /*
                  * This can happen and is not an error. It just means there is
                  * no validation for this guy. Maybe we should log this.
-                 * Note self... add logging capability to this project!.
+                 * Note self... addObject logging capability to this project!.
                  */
             }
             /*
@@ -181,7 +181,7 @@ public class PropertiesFileValidatorMetaDataReader implements ValidatorMetaDataR
                 /* If the string has more than one part, then there must
                  * be arguments as in: ["min=10", "max=100"]
                  * 
-                 * Parse the arguments and add them to the list as well.
+                 * Parse the arguments and addObject them to the list as well.
                  */
                 if ( parts.length > 1 ) {
 

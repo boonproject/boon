@@ -111,7 +111,7 @@ public class SliceNotationExample {
         letters = Chr.array( 'a', 'b', 'c' );
         bytes = array( new byte[]{ 0x1, 0x2, 0x3, 0x4 } );
 
-        //You add up name / value pairs as a pseudo literal for map
+        //You addObject up name / value pairs as a pseudo literal for map
         favoritesMap = Maps.sortedMap(
                 2, "pineapple",
                 1, "oranges",
@@ -119,7 +119,7 @@ public class SliceNotationExample {
         );
 
 
-        // You add up name / value pairs as a pseudo literal for map
+        // You addObject up name / value pairs as a pseudo literal for map
         // map, sortedMap, safeMap (thread safe concurrent), and sortedSafeMap are
         // supported.
         map = Maps.map(

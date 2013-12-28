@@ -33,7 +33,7 @@ package org.boon;
  * letters     =  array( 'a', 'b', 'c');
  * bytes       =  array( new byte[]{0x1, 0x2, 0x3, 0x4});
  *
- * //You add up name / value pairs as a pseudo literal for map
+ * //You addObject up name / value pairs as a pseudo literal for map
  * favoritesMap = sortedMap(
  * 2, "pineapple",
  * 1, "oranges",
@@ -41,7 +41,7 @@ package org.boon;
  * );
  *
  *
- * // You add up name / value pairs as a pseudo literal for map
+ * // You addObject up name / value pairs as a pseudo literal for map
  * // map, sortedMap, safeMap (thread safe concurrent), and sortedSafeMap are
  * // supported.
  * map =    map (
@@ -284,7 +284,7 @@ public interface UniversalOperations<ITEM, INDEX> {
     /**
      * Adds something to a collection, map or array
      * <p/>
-     * For maps you add an entry
+     * For maps you addObject an entry
      * <p/>
      * <p/>
      * Implemented by:

@@ -37,7 +37,7 @@ public class ChainValidatorMetaDataReader implements ValidatorMetaDataReader {
         Map<String, ValidatorMetaData> overrideMap = new LinkedHashMap<String, ValidatorMetaData>();
 
 		/* Iterate through the chain of readers, read the validation data, put the validation data in a 
-         * linked hash map based on the name of the validation data. As you add another rule with the same name
+         * linked hash map based on the name of the validation data. As you addObject another rule with the same name
 		 * it overrides the last. Thus, the last reader in the chain has precedence.
 		 */
         for ( ValidatorMetaDataReader reader : chain ) {
