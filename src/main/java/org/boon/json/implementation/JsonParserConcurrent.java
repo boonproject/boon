@@ -2,6 +2,7 @@ package org.boon.json.implementation;
 
 
 import org.boon.Exceptions;
+import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
 import org.boon.json.JsonParserFactory;
 
@@ -18,10 +19,10 @@ import static org.boon.Boon.puts;
 public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
 
     private Worker [] workers;
-    private Future [] future;
+    private Future [] futures;
 
-    private BlockingQueue<Action> workQueue = new LinkedBlockingQueue <>(100);
-    private BlockingQueue<Action> actionQueue = new LinkedBlockingQueue <>(100);
+    private TransferQueue<Action> workQueue = new LinkedTransferQueue<>();
+    private TransferQueue<Action> actionQueue = new LinkedTransferQueue <>();
 
     private final ExecutorService pool;
 
@@ -48,7 +49,113 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
                 case OBJECT:
                     workOnObject(action);
                     return;
+                case LIST:
+                    workOnList ( action );
+                    return;
+                case TYPED_OBJECT:
+                    workOnTypedObject ( action );
+                    return;
+
             }
+        }
+
+        private void workOnTypedObject ( Action action ) {
+
+            Object object = null;
+            Class<?> componentType = action.finalType;
+
+
+            try {
+                switch ( action.medium ) {
+                    case CHARS:
+                        object = parser.parse ( componentType, ( char[] ) action.payload );
+                        break;
+                    case STRING:
+                        object = parser.parse ( componentType,  ( String ) action.payload );
+                        break;
+                    case INPUT_STREAM:
+                        if ( action.charSet == null ) {
+                            object = parser.parse ( componentType,  ( InputStream ) action.payload );
+                        } else {
+                            object = parser.parse ( componentType,  ( InputStream ) action.payload, action.charSet );
+                        }
+                        break;
+                    case BYTES:
+                        if ( action.charSet == null ) {
+                            object = parser.parse ( componentType,  ( byte[] ) action.payload );
+                        } else {
+                            object = parser.parse ( componentType,  ( byte[] ) action.payload, action.charSet );
+                        }
+                        break;
+                    case READER:
+                        object = parser.parse ( componentType,  ( Reader ) action.payload );
+                        break;
+
+                }
+
+                if (action.returnQueue.hasWaitingConsumer ()) {
+                    action.returnQueue.transfer ( object );
+                } else {
+                    action.returnQueue.put ( object );
+                }
+            } catch ( Exception ex ) {
+
+                try {
+                    action.returnQueue.put ( ex );
+                } catch ( InterruptedException e ) {
+                    Thread.interrupted ();
+                }
+            }
+
+        }
+        private void workOnList ( Action action ) {
+
+            Class<?> componentType = action.finalType;
+            Object object = null;
+            try {
+                switch ( action.medium ) {
+                    case CHARS:
+                        object = parser.parseList ( componentType, ( char[] ) action.payload );
+                        break;
+                    case STRING:
+                        object = parser.parseList ( componentType, ( String ) action.payload );
+                        break;
+                    case INPUT_STREAM:
+                        if ( action.charSet == null ) {
+                            object = parser.parseList ( componentType, ( InputStream) action.payload );
+                        } else {
+                            object = parser.parseList ( componentType, ( InputStream ) action.payload, action.charSet );
+                        }
+                        break;
+                    case BYTES:
+                        if ( action.charSet == null ) {
+                            object = parser.parseList ( componentType, ( byte[]) action.payload  );
+
+                        } else {
+                            object = parser.parseList ( componentType, ( byte[] ) action.payload, action.charSet );
+                        }
+                        break;
+                    case READER:
+                        object = parser.parseList ( componentType, ( Reader ) action.payload );
+                        break;
+
+                }
+
+
+                if (action.returnQueue.hasWaitingConsumer ()) {
+                    action.returnQueue.transfer ( object );
+                } else {
+                    action.returnQueue.put ( object );
+                }
+            } catch ( Exception ex ) {
+
+                try {
+                    action.returnQueue.put ( ex );
+                } catch ( InterruptedException e ) {
+                    Thread.interrupted ();
+                }
+            }
+
         }
 
         private void workOnObject ( Action action ) {
@@ -56,52 +163,56 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
             Object object = null;
 
             try {
-               switch ( action.medium ) {
+                switch ( action.medium ) {
                     case CHARS:
-                        object = parser.parse ( (char[])action.payload );
+                        object = parser.parse ( ( char[] ) action.payload );
                         break;
-                   case STRING:
-                       object = parser.parse ( (String)action.payload );
-                       break;
-                   case INPUT_STREAM:
-                       if (action.charSet == null) {
-                        object = parser.parse ( (InputStream)action.payload );
-                       } else {
-                           object = parser.parse ( (InputStream)action.payload, action.charSet );
-                       }
-                       break;
-                   case BYTES:
-                       if (action.charSet == null) {
-                           object = parser.parse ( (byte[])action.payload );
-                       } else {
-                           object = parser.parse ( (byte[])action.payload, action.charSet );
-                       }
-                       break;
-                   case READER:
-                       object = parser.parse ( (Reader)action.payload );
-                       break;
+                    case STRING:
+                        object = parser.parse ( ( String ) action.payload );
+                        break;
+                    case INPUT_STREAM:
+                        if ( action.charSet == null ) {
+                            object = parser.parse ( ( InputStream ) action.payload );
+                        } else {
+                            object = parser.parse ( ( InputStream ) action.payload, action.charSet );
+                        }
+                        break;
+                    case BYTES:
+                        if ( action.charSet == null ) {
+                            object = parser.parse ( ( byte[] ) action.payload );
+                        } else {
+                            object = parser.parse ( ( byte[] ) action.payload, action.charSet );
+                        }
+                        break;
+                    case READER:
+                        object = parser.parse ( ( Reader ) action.payload );
+                        break;
 
-               }
+                }
 
-                action.returnQueue.put ( object );
-               } catch ( Exception ex ) {
+                if (action.returnQueue.hasWaitingConsumer ()) {
+                    action.returnQueue.transfer ( object );
+                } else {
+                    action.returnQueue.put ( object );
+                }
+            } catch ( Exception ex ) {
 
                 try {
                     action.returnQueue.put ( ex );
                 } catch ( InterruptedException e ) {
-                    Thread.interrupted();
+                    Thread.interrupted ();
                 }
             }
 
-            }
-
         }
+
+    }
 
     public JsonParserConcurrent (JsonParserFactory factory) {
         int cores = Runtime.getRuntime().availableProcessors();
         workers = new Worker[cores];
         pool = Executors.newFixedThreadPool ( cores );
-        future = new Future[cores];
+        futures = new Future[cores];
 
         for (int index = 0; index < cores; index++) {
             final Worker worker = new Worker();
@@ -113,9 +224,32 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
                     worker.run ();
                 }
             } );
+            workers[index] = worker;
+            futures [index] = future;
         }
     }
 
+    public JsonParserConcurrent () {
+        JsonParserFactory factory = new JsonParserFactory ();
+        int cores = Runtime.getRuntime().availableProcessors();
+        workers = new Worker[cores];
+        pool = Executors.newFixedThreadPool ( cores );
+        futures = new Future[cores];
+
+        for (int index = 0; index < cores; index++) {
+            final Worker worker = new Worker();
+            worker.parser = factory.createFastParser ();
+            worker.parent = this;
+            final Future<?> future = pool.submit ( new Runnable () {
+                @Override
+                public void run () {
+                    worker.run ();
+                }
+            } );
+            workers[index] = worker;
+            futures [index] = future;
+        }
+    }
 
     private static class Action {
         ActionType type;
@@ -124,7 +258,7 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
         Charset charSet;
         Class<?> finalType;
 
-        BlockingQueue<Object> returnQueue = new LinkedBlockingQueue<>(1);
+        TransferQueue<Object> returnQueue = new LinkedTransferQueue<> ();
     }
 
     static enum ActionType {
@@ -173,12 +307,18 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
             Thread.interrupted();
         }
           
-        action.returnQueue.clear ();
-        action.charSet = null;
-        action.finalType = null;
-        this.actionQueue.offer( action );
+        if ( object != null ) {
+            action.returnQueue.clear ();
+            action.charSet = null;
+            action.finalType = null;
+            this.actionQueue.offer( action );
+
+        }
 
         if (object instanceof  Exception) {
+            if (object instanceof JsonException ) {
+                throw ((RuntimeException) object);
+            }
             return Exceptions.handle (clazz, (Exception) object);
         } else {
             return (T) object;
@@ -189,11 +329,15 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
 
     private void addJob ( Action action ) {
         try {
-            this.workQueue.put ( action );
+
+            if (this.workQueue.hasWaitingConsumer ()) {
+                this.workQueue.transfer ( action );
+            } else {
+                this.workQueue.put ( action );
+            }
         } catch ( InterruptedException e ) {
             Thread.interrupted();
         }
-
     }
 
     private Action createAction () {
@@ -477,7 +621,7 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
         action.charSet = charset;
         addJob(action);
         return getResult ( type, action );
-}
+    }
     
 
 
@@ -496,13 +640,19 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
     @Override
     public void close () {
         this.workQueue.clear ();
-        for (int index = 0; index < workers.length; index++) {
-            workers[index].run.set ( false );
+
+        try {
+            for (int index = 0; index < workers.length; index++) {
+                workers[index].run.set ( false );
+            }
+            for (int index = 0; index < futures.length; index++) {
+                futures[index].cancel ( true );
+            }
+        } catch (Exception ex) {
+                ex.printStackTrace ();
+        } finally {
+            this.pool.shutdown ();
         }
-        for (int index = 0; index < future.length; index++) {
-            future[index].cancel ( true );
-        }
-        this.pool.shutdown ();
 
     }
 }

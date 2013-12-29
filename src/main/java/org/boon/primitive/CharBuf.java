@@ -370,6 +370,35 @@ public class CharBuf extends Writer {
         return this;
     }
 
+
+    public final CharBuf addJsonFieldName( char[] chars ) {
+
+        int _location = location;
+        char [] _buffer = buffer;
+        int _capacity = capacity;
+
+        int sizeNeeded = chars.length + 2 + _location;
+        if (  sizeNeeded > _capacity ) {
+            _buffer = Chr.grow( _buffer, sizeNeeded * 2  );
+            _capacity = _buffer.length;
+        }
+        _buffer [_location] = '"';
+        _location++;
+
+        System.arraycopy( chars, 0, _buffer, _location, chars.length );
+
+        _location += (chars.length);
+        _buffer [_location] = '"';
+        _location++;
+        _buffer [_location] = ':';
+        _location++;
+
+        location = _location;
+        buffer = _buffer;
+        capacity = _capacity;
+        return this;
+    }
+
     public final CharBuf addQuoted( String str ) {
         final char[] chars = FastStringUtils.toCharArray ( str );
         addQuoted ( chars );

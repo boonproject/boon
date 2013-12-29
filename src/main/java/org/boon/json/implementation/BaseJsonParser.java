@@ -87,6 +87,13 @@ public abstract class BaseJsonParser implements JsonParser {
     }
 
 
+
+    @Override
+    public <T> List<T> parseList ( Class<T> componentType, Reader reader ) {
+        List<Object> list =  parse ( List.class, reader );
+        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+    }
+
     @Override
     public <T> List<T> parseList ( Class<T> componentType, InputStream input ) {
         List<Object> list =  parse ( List.class, input );
@@ -660,6 +667,7 @@ public abstract class BaseJsonParser implements JsonParser {
     public Map<String, Object> parseMapFromFile ( String file ) {
         return (Map<String, Object>) parseFile(file);
     }
+
 
 
 

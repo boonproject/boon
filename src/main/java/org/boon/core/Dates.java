@@ -398,7 +398,7 @@ public class Dates {
 
     final static int SHORT_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30Z".length();
     final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length();
-    final static int JSON_TIME_LENGTH = "2013-12-14T01:55:33.412Z".length();
+    public final static int JSON_TIME_LENGTH = "2013-12-14T01:55:33.412Z".length();
 
 
     /**
@@ -413,8 +413,23 @@ public class Dates {
     }
 
 
+    private final static boolean  isGMT;
+    static {
+        if (TimeZone.getDefault () == TimeZone.getTimeZone ( "GMT" )) {
+            isGMT = true;
+        } else {
+            isGMT = false;
+        }
+
+    }
+
 
     public static void jsonDateChars( Date date, CharBuf buf ) {
+        if (isGMT) {
+            /* For the Unix admins of the world who avoid it all and just GMT it. */
+            fastJsonDateChars ( date, buf );
+            return;
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis( date.getTime () );
         calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );

@@ -24,6 +24,7 @@ public interface JsonParser {
 
     <T> List<T>  parseList(  Class<T> componentType, String jsonString );
     <T> List<T>  parseList(  Class<T> componentType, InputStream input );
+    <T> List<T>  parseList(  Class<T> componentType, Reader reader );
     <T> List<T>  parseList(  Class<T> componentType, InputStream input, Charset charset );
     <T> List<T>  parseList(  Class<T> componentType, byte[] jsonBytes );
     <T> List<T>  parseList(  Class<T> componentType, byte[] jsonBytes, Charset charset );

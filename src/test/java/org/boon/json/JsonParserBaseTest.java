@@ -6,6 +6,7 @@ import org.boon.core.Conversions;
 import org.boon.core.Dates;
 import org.boon.core.Function;
 import org.boon.core.reflection.Reflection;
+import org.boon.json.implementation.JsonSimpleSerializerImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,7 +84,9 @@ public class JsonParserBaseTest {
         foo2.setString ( "Hi Dad" );
         foo.setAllTypes ( Lists.list(Reflection.copy ( foo2 ), Reflection.copy(foo2)) );
 
-        final JsonSerializer serializer = new JsonSerializerFactory ().addFilter ( new Function<FieldSerializationData, Boolean> () {
+        final JsonSerializer serializer = new JsonSerializerFactory ()
+                .useAnnotations ()
+                .addFilter ( new Function<FieldSerializationData, Boolean> () {
             @Override
             public Boolean apply ( FieldSerializationData fieldSerializationData ) {
                 if (fieldSerializationData.fieldName.equals (  "ignoreMe3" ) ) {
@@ -143,6 +146,38 @@ public class JsonParserBaseTest {
 
     }
 
+
+
+
+    @Test
+    public void roundTrip2() {
+        AllTypes foo = new AllTypes ();
+        foo.ingnoreMe = "THIS WILL NOT PASS";
+        foo.ignoreMe2 = "THIS WILL NOT PASS EITHER";
+        foo.ignoreMe3 = "THIS WILL NOT PASS TOO";
+
+        foo.setDate ( new Date() );
+        foo.setBar ( FooEnum.BAR );
+        foo.setFoo ( FooEnum.FOO );
+        foo.setString ( "Hi Mom" );
+        AllTypes foo2 = Reflection.copy ( foo );
+        foo.setAllType ( foo2 );
+        foo2.setString ( "Hi Dad" );
+        foo.setAllTypes ( Lists.list(Reflection.copy ( foo2 ), Reflection.copy(foo2)) );
+
+        final JsonSerializer serializer = new JsonSerializerFactory ().create ();
+
+        String json = serializer.serialize ( foo ).toString ();
+
+        boolean ok = true;
+
+        puts (json);
+        AllTypes testMe = jsonParser.parse( AllTypes.class, json);
+
+        ok |= testMe.equals ( foo ) || die();
+
+
+    }
 
     @Test
     public void testParserSimpleMapWithNumber () {
