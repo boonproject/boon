@@ -77,7 +77,7 @@ public abstract class BaseJsonParser implements JsonParser {
 
     @Override
     public Map<String, Object> parseMap ( String jsonString ) {
-        return parse ( Map.class, jsonString );
+        return (Map<String, Object>) parse ( jsonString );
     }
 
     @Override
@@ -618,5 +618,54 @@ public abstract class BaseJsonParser implements JsonParser {
     }
 
 
+
+
+
+    @Override
+    public Map<String, Object> parseMap ( char[] value ) {
+        return (Map<String, Object>) parse(value);
+    }
+
+    @Override
+    public Map<String, Object> parseMap ( byte[] value ) {
+        return (Map<String, Object>) parse(value);
+    }
+
+    @Override
+    public Map<String, Object> parseMap ( byte[] value, Charset charset ) {
+        return (Map<String, Object>) parse(value, charset);
+    }
+
+    @Override
+    public Map<String, Object> parseMap ( InputStream value, Charset charset ) {
+        return (Map<String, Object>) parse(value, charset);
+    }
+
+    @Override
+    public Map<String, Object> parseMap ( CharSequence value ) {
+        return (Map<String, Object>) parse(value);
+    }
+
+    @Override
+    public Map<String, Object> parseMap ( InputStream value ) {
+        return (Map<String, Object>) parse(value);
+    }
+
+    @Override
+    public Map<String, Object> parseMap ( Reader value ) {
+        return (Map<String, Object>) parse(value);
+    }
+
+    @Override
+    public Map<String, Object> parseMapFromFile ( String file ) {
+        return (Map<String, Object>) parseFile(file);
+    }
+
+
+
+    @Override
+    public void close () {
+
+    }
 
 }

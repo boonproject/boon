@@ -12,7 +12,16 @@ import java.util.Map;
 public interface JsonParser {
 
 
-    Map<String, Object> parseMap( String jsonString );
+    Map<String, Object> parseMap( String value );
+    Map<String, Object> parseMap( char [] value );
+    Map<String, Object> parseMap( byte[] value );
+    Map<String, Object> parseMap( byte[] value, Charset charset );
+    Map<String, Object> parseMap( InputStream value, Charset charset );
+    Map<String, Object> parseMap( CharSequence value );
+    Map<String, Object> parseMap( InputStream value );
+    Map<String, Object> parseMap( Reader value );
+    Map<String, Object> parseMapFromFile(  String file );
+
     <T> List<T>  parseList(  Class<T> componentType, String jsonString );
     <T> List<T>  parseList(  Class<T> componentType, InputStream input );
     <T> List<T>  parseList(  Class<T> componentType, InputStream input, Charset charset );
@@ -128,5 +137,8 @@ public interface JsonParser {
     Object parseDirect(  byte[] value );
     Object parseAsStream(  byte[] value );
     Object parseFile(  String fileName);
+
+
+    void close();
 
 }
