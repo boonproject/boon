@@ -27,24 +27,22 @@ public enum Type {
         }
 
         if ( className.startsWith ( "java" )) {
-
-              if ( clazz.isInterface () ) {
-
-                  if ( Typ.isCharSequence ( clazz ) ) {
+              if ( Typ.isCharSequence ( clazz ) ) {
                       type = CHAR_SEQUENCE;
-                  } else if (Typ.isCollection ( clazz )) {
+               } else if (Typ.isCollection ( clazz )) {
                      if (Typ.isList ( clazz )) {
                          type = LIST;
                      } else if (Typ.isSet ( clazz )) {
                          type = SET;
+                     } else {
+                         type = COLLECTION;
                      }
-                  } else if (Typ.isMap ( clazz )) {
+               } else if (Typ.isMap ( clazz )) {
                       type = MAP;
-                  }
-                  else {
-                    type = INTERFACE;
-                  }
-             }
+               }
+               else {
+                    type = SYSTEM;
+               }
         } else if ( clazz.isInterface () ) {
             type = INTERFACE;
         } else if (clazz.isEnum()) {
@@ -108,6 +106,7 @@ public enum Type {
 
                 case "java.util.Map":
                 case "java.util.HashMap":
+                case "java.util.LinkedHashMap":
                 case "java.util.TreeMap":
                     return Type.MAP;
 

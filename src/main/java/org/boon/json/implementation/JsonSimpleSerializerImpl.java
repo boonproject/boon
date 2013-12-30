@@ -376,12 +376,19 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
             case ARRAY:
                 this.serializeArray ( ( Object[] ) obj, builder );
                 return;
-
-            default:
+            case INSTANCE:
                 serializeInstance ( obj, builder );
+                return;
+            default:
+                serializeUnknown ( obj, builder );
+
         }
 
 
+    }
+
+    private void serializeUnknown ( Object obj, CharBuf builder ) {
+        builder.addQuoted ( obj.toString () );
     }
 
 
