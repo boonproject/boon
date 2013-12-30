@@ -84,7 +84,7 @@ public class Chr {
         }
 
         char[] newArray = new char[ newLength ];
-        System.arraycopy( array, start, newArray, 0, newLength );
+        Chr.arraycopy( array, start, newArray, 0, newLength );
         return newArray;
     }
 
@@ -103,7 +103,7 @@ public class Chr {
         }
 
         char[] newArray = new char[ newLength ];
-        System.arraycopy( array, start, newArray, 0, newLength );
+        arraycopy ( array, start, newArray, 0, newLength );
         return newArray;
     }
 
@@ -122,7 +122,7 @@ public class Chr {
         }
 
         char[] newArray = new char[ newLength ];
-        System.arraycopy( array, 0, newArray, 0, newLength );
+        arraycopy ( array, 0, newArray, 0, newLength );
         return newArray;
     }
 
@@ -162,21 +162,21 @@ public class Chr {
 
     public static char[] grow( char[] array, final int size ) {
         char[] newArray = new char[ array.length + size ];
-        System.arraycopy( array, 0, newArray, 0, array.length );
+        arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
 
     public static char[] grow( char[] array ) {
         char[] newArray = new char[ array.length * 2 ];
-        System.arraycopy( array, 0, newArray, 0, array.length );
+        arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
     public static char[] shrink( char[] array, int size ) {
         char[] newArray = new char[ array.length - size ];
 
-        System.arraycopy( array, 0, newArray, 0, array.length - size );
+        arraycopy ( array, 0, newArray, 0, array.length - size );
         return newArray;
     }
 
@@ -219,7 +219,7 @@ public class Chr {
     public static char[] copy( char[] array ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ array.length ];
-        System.arraycopy( array, 0, newArray, 0, array.length );
+        arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }
 
@@ -227,7 +227,7 @@ public class Chr {
     public static char[] copy( char[] array, int offset, int length ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ length ];
-        System.arraycopy( array, offset, newArray, 0, length );
+        arraycopy ( array, offset, newArray, 0, length );
         return newArray;
     }
 
@@ -236,7 +236,7 @@ public class Chr {
     public static char[] add( char[] array, char v ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ array.length + 1 ];
-        System.arraycopy( array, 0, newArray, 0, array.length );
+        arraycopy ( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
         return newArray;
     }
@@ -257,8 +257,8 @@ public class Chr {
     public static char[] add( char[] array, char[] array2 ) {
         Objects.requireNonNull( array );
         char[] newArray = new char[ array.length + array2.length ];
-        System.arraycopy( array, 0, newArray, 0, array.length );
-        System.arraycopy( array2, 0, newArray, array.length, array2.length );
+        arraycopy ( array, 0, newArray, 0, array.length );
+        arraycopy ( array2, 0, newArray, array.length, array2.length );
         return newArray;
     }
 
@@ -279,7 +279,7 @@ public class Chr {
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
-            System.arraycopy( array, 0, newArray, 0, index );
+            arraycopy ( array, 0, newArray, 0, index );
         }
 
 
@@ -289,12 +289,12 @@ public class Chr {
         if ( lastIndex ) {
             /* Copy the area after the insert. Make sure we don't write over the end. */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy( array, index, newArray, index + 1, remainingIndex );
+            arraycopy ( array, index, newArray, index + 1, remainingIndex );
 
         } else {
             /* Copy the area after the insert.  */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy( array, index, newArray, index + 1, remainingIndex );
+            arraycopy ( array, index, newArray, index + 1, remainingIndex );
 
         }
 
@@ -331,7 +331,7 @@ public class Chr {
         if ( index != 0 ) {
             /* Copy up to the length in the array before the index. */
             /*                 src     sbegin  dst       dbegin   length of copy */
-            System.arraycopy( array, 0, newArray, 0, index );
+            arraycopy ( array, 0, newArray, 0, index );
         }
 
 
@@ -343,12 +343,12 @@ public class Chr {
         if ( lastIndex ) {
             /* Copy the area after the insert. Make sure we don't write over the end. */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy( array, index, newArray, index + values.length, remainingIndex );
+            arraycopy ( array, index, newArray, index + values.length, remainingIndex );
 
         } else {
             /* Copy the area after the insert.  */
             /*                 src  sbegin   dst       dbegin     length of copy */
-            System.arraycopy( array, index, newArray, index + values.length, remainingIndex );
+            arraycopy ( array, index, newArray, index + values.length, remainingIndex );
 
         }
 
@@ -589,17 +589,23 @@ public class Chr {
     public static void _idx( final char[] array, int startIndex, char[] input ) {
         try {
 
-            System.arraycopy( input, 0, array, startIndex, input.length );
+            arraycopy ( input, 0, array, startIndex, input.length );
         } catch ( Exception ex ) {
             Exceptions.handle( String.format( "array size %d, startIndex %d, input length %d",
                     array.length, startIndex, input.length ), ex );
         }
     }
 
+
+    private static void arraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
+         System.arraycopy( src, srcPos, dest, destPos,length );
+    } 
+
+
     public static void _idx( final char[] array, int startIndex, char[] input, final int inputLength ) {
         try {
 
-            System.arraycopy( input, 0, array, startIndex, inputLength );
+            arraycopy ( input, 0, array, startIndex, inputLength );
         } catch ( Exception ex ) {
             Exceptions.handle( String.format( "array size %d, startIndex %d, input length %d",
                     array.length, startIndex, input.length ), ex );

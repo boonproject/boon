@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
 import static org.boon.primitive.CharScanner.parseLong;
@@ -339,7 +340,7 @@ public class CharBuf extends Writer implements CharSequence {
             capacity = buffer.length;
         }
 
-        System.arraycopy ( chars, 0, buffer, location, chars.length );
+        arraycopy ( chars, 0, buffer, location, chars.length );
         location += chars.length;
         return this;
     }
@@ -359,7 +360,7 @@ public class CharBuf extends Writer implements CharSequence {
         _buffer [_location] = '"';
         _location++;
 
-        System.arraycopy( chars, 0, _buffer, _location, chars.length );
+        arraycopy( chars, 0, _buffer, _location, chars.length );
 
         _location += (chars.length);
         _buffer [_location] = '"';
@@ -379,35 +380,65 @@ public class CharBuf extends Writer implements CharSequence {
 
     }
 
-    public final CharBuf addJsonEscapedString( char[] charArray ) {
-        boolean foundControlChar = false;
 
-        loop:
-        for ( int index = 0; index < charArray.length; index++ ) {
-            char c = charArray[ index ];
-            switch ( c ) {
-                case '\"':
-                case '\\':
-                case '/':
-                case '\b':
-                case '\f':
-                case '\n':
-                case '\r':
-                case '\t':
-                    foundControlChar = true;
-                    break loop;
+    public static void main (String... args) {
+        puts ((int) '\b', "bell");
+        puts ((int) '\t', "tab");
+        puts ((int) '\n', "newline");
+        puts ((int) '\f', "feed");
+        puts ((int) '\r', "return");
+
+        puts ((int) '"', "quote");
+        puts ((int) '/', "fslash");
+        puts ((int) '\\', "slash");
+
+
+
+        puts ((int) ' ', "space");
+        puts ((int) 'z', "z");
+
+    }
+
+    private  static boolean isControl(int c) {
+        if ( c < 30 ) {
+            return true;
+        } else if (c == 34 ){
+            return true;
+        } else if (c == 47) {
+            return true;
+        }else if (c == 47) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean hasControlChar (final char[] charArray) {
+
+        int index = 0;
+        char c;
+        while ( true ) {
+            c = charArray[ index ];
+            if (isControl ( c )) {
+                return true;
             }
-
+            if ( ++index >= charArray.length) return false;
         }
 
-        if ( !foundControlChar) {
-            this.addQuoted ( charArray );
-            return this;
+    }
+
+    public final CharBuf addJsonEscapedString( final char[] charArray ) {
+        if (charArray.length == 0 ) return this;
+        if ( hasControlChar ( charArray )) {
+            return doAddJsonEscapedString(charArray);
+        } else {
+            return this.addQuoted ( charArray );
         }
+    }
+
+    private final CharBuf doAddJsonEscapedString( char[] charArray ) {
 
         char [] _buffer = buffer;
-        int _location = location;
-
+        int _location =  this.location;
         int  ensureThisMuch = charArray.length * 2;
 
         int sizeNeeded =  (ensureThisMuch) + _location;
@@ -424,8 +455,12 @@ public class CharBuf extends Writer implements CharSequence {
         _buffer[_location] = '"';
         _location ++;
 
-        for ( int index = 0; index < charArray.length; index++ ) {
+        int index = 0;
+        while ( true ) {
                 char c = charArray[ index ];
+                if ( ++index >= charArray.length) break;
+
+                if (isControl ( c )) {
 
                 switch ( c ) {
                     case '\"':
@@ -478,10 +513,12 @@ public class CharBuf extends Writer implements CharSequence {
                         _buffer[_location] =  't';
                         _location ++;
                         break;
+                }
+                }else {
 
-                    default:
                         _buffer[_location] = c;
                         _location ++;
+
                 }
 
         }
@@ -494,6 +531,10 @@ public class CharBuf extends Writer implements CharSequence {
 
         return this;
     }
+
+
+
+
 
     public final CharBuf addJsonFieldName( char[] chars ) {
 
@@ -509,7 +550,7 @@ public class CharBuf extends Writer implements CharSequence {
         _buffer [_location] = '"';
         _location++;
 
-        System.arraycopy( chars, 0, _buffer, _location, chars.length );
+        arraycopy( chars, 0, _buffer, _location, chars.length );
 
         _location += (chars.length);
         _buffer [_location] = '"';
@@ -555,17 +596,32 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
-    public CharBuf add( byte[] chars, int start, int end ) {
+    private final static void sysstemarraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
+         System.arraycopy( src, srcPos, dest, destPos, length );
 
-        int charsLength = start - end;
-        if ( charsLength + location < capacity ) {
-            Chr._idx( buffer, location, chars, start, end );
-        } else {
-            buffer = Chr.grow( buffer, buffer.length * 2 + charsLength );
-            Chr._idx( buffer, location, chars, start, end );
-            capacity = buffer.length;
+    }
+    private final static void directArraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
+        int destIndex = destPos;
+        for (int index = srcPos; index < srcPos + length; index++, destIndex++ ) {
+            dest [destIndex] = src[index];
         }
-        location += ( end - start );
+    }
+
+    private final static void arraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
+
+          sysstemarraycopy( src, srcPos, dest, destPos, length );
+
+    }
+
+
+    public CharBuf add( byte[] bytes, int start, int end ) {
+        int charsLength =  end - start ;
+        if ( charsLength + location > capacity ) {
+            buffer = Chr.grow( buffer, buffer.length * 2 + charsLength );
+        }
+        Chr._idx( buffer, location, bytes, start, end );
+        capacity = buffer.length;
+        location += charsLength;
         return this;
     }
 
