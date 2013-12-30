@@ -123,6 +123,9 @@ public class JsonSerializeTest {
         String sMedium = serializer.serialize ( MEDIUM_DATA ).toString ();
         puts (sMedium);
 
+        String str = serializer.serialize ( COMPLEX_DATA  ).toString ();
+        puts (str);
+
     }
 
 

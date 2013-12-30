@@ -392,7 +392,6 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
     }
 
 
-    //private static final char [] EMPTY_MAP_CHARS = {'{', '}'};
 
     private final void serializeInstance ( Object obj, CharBuf builder ) throws Exception {
 
@@ -430,44 +429,67 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
             return Reflection.getPropertyFieldAccessors ( aClass );
     }
 
+
+    private static final char [] EMPTY_MAP_CHARS = {'{', '}'};
+
     private final void serializeMap( Map<Object, Object> map, CharBuf builder ) throws Exception {
+
+
+        if ( map.size () == 0 ) {
+            builder.addChars ( EMPTY_MAP_CHARS );
+            return;
+        }
+
+
+        builder.addChar( '{' );
+
         final Set<Map.Entry<Object, Object>> entrySet = map.entrySet();
         for ( Map.Entry<Object, Object> entry : entrySet ) {
-            serializeFieldName (entry.getKey ().toString (), builder);
+            serializeFieldName ( entry.getKey ().toString (), builder );
             serializeObject( entry.getValue(), builder );
+            builder.addChar ( ',' );
         }
+        builder.removeLastChar ();
+        builder.addChar( '}' );
+
     }
 
     private void serializeFieldName ( String name, CharBuf builder ) {
         builder.addJsonFieldName ( FastStringUtils.toCharArray ( name ) );
     }
 
-    private final void serializeCollection( Collection<?> collection, CharBuf builder ) throws Exception {
-        builder.addChar( '[' );
 
-        final int length = collection.size ();
-        int index = 0;
+    private static final char [] EMPTY_LIST_CHARS = {'[', ']'};
+
+    private final void serializeCollection( Collection<?> collection, CharBuf builder ) throws Exception {
+
+        if ( collection.size () == 0 ) {
+             builder.addChars ( EMPTY_LIST_CHARS );
+             return;
+        }
+
+        builder.addChar( '[' );
         for ( Object o : collection ) {
             serializeObject( o, builder );
-
-            if ( index != length - 1 ) {
-                builder.addChar( ',' );
-            }
-
-            index++;
+            builder.addChar ( ',' );
         }
+        builder.removeLastChar ();
         builder.addChar( ']' );
 
     }
 
     private final void serializeArray( Object[] array, CharBuf builder ) throws Exception {
+        if ( array.length == 0 ) {
+            builder.addChars ( EMPTY_LIST_CHARS );
+            return;
+        }
+
         builder.addChar( '[' );
         for ( int index = 0; index < array.length; index++ ) {
             serializeObject( array[ index ], builder );
-            if ( index != array.length - 1 ) {
-                builder.append( ',' );
-            }
+            builder.addChar ( ',' );
         }
+        builder.removeLastChar ();
         builder.addChar( ']' );
     }
 
