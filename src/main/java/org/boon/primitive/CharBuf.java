@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
@@ -399,26 +396,30 @@ public class CharBuf extends Writer implements CharSequence {
 
     }
 
-    private  static boolean isControl(int c) {
+    private  static boolean isJSONControl ( int c ) {
+        /* Anything less than space is a control character. */
         if ( c < 30 ) {
             return true;
+        /* 34 is double quote. */
         } else if (c == 34 ){
             return true;
+        /* 47 is back slash. */
         } else if (c == 47) {
             return true;
+        /* 92 is forward slash. */
         }else if (c == 92) {
             return true;
         }
         return false;
     }
 
-    private static boolean hasControlChar (final char[] charArray) {
+    private static boolean hasAnyJSONControlChars ( final char[] charArray ) {
 
         int index = 0;
         char c;
         while ( true ) {
             c = charArray[ index ];
-            if (isControl ( c )) {
+            if ( isJSONControl ( c )) {
                 return true;
             }
             if ( ++index >= charArray.length) return false;
@@ -428,7 +429,7 @@ public class CharBuf extends Writer implements CharSequence {
 
     public final CharBuf addJsonEscapedString( final char[] charArray ) {
         if (charArray.length == 0 ) return this;
-        if ( hasControlChar ( charArray )) {
+        if ( hasAnyJSONControlChars ( charArray )) {
             return doAddJsonEscapedString(charArray);
         } else {
             return this.addQuoted ( charArray );
@@ -460,7 +461,7 @@ public class CharBuf extends Writer implements CharSequence {
                 char c = charArray[ index ];
                 if ( ++index >= charArray.length) break;
 
-                if (isControl ( c )) {
+                if ( isJSONControl ( c )) {
 
                 switch ( c ) {
                     case '\"':
