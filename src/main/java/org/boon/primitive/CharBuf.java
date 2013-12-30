@@ -19,7 +19,7 @@ import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
 import static org.boon.primitive.CharScanner.parseLong;
 
-public class CharBuf extends Writer {
+public class CharBuf extends Writer implements CharSequence {
     protected int capacity = 16;
     protected int location = 0;
 
@@ -456,6 +456,21 @@ public class CharBuf extends Writer {
         }
         location += 1;
         return this;
+    }
+
+    @Override
+    public int length () {
+        return len();
+    }
+
+    @Override
+    public char charAt ( int index ) {
+        return buffer [ index ];
+    }
+
+    @Override
+    public CharSequence subSequence ( int start, int end ) {
+        return new String (buffer, start, end - start);
     }
 
     public String toString() {
