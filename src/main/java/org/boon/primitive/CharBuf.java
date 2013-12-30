@@ -406,7 +406,7 @@ public class CharBuf extends Writer implements CharSequence {
             return true;
         } else if (c == 47) {
             return true;
-        }else if (c == 47) {
+        }else if (c == 92) {
             return true;
         }
         return false;
