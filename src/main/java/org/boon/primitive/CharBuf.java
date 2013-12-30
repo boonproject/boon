@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
@@ -370,6 +371,129 @@ public class CharBuf extends Writer implements CharSequence {
         return this;
     }
 
+
+
+    public final CharBuf addJsonEscapedString( String jsonString ) {
+        char[] charArray = FastStringUtils.toCharArray ( jsonString );
+        return addJsonEscapedString ( charArray );
+
+    }
+
+    public final CharBuf addJsonEscapedString( char[] charArray ) {
+        boolean foundControlChar = false;
+
+        loop:
+        for ( int index = 0; index < charArray.length; index++ ) {
+            char c = charArray[ index ];
+            switch ( c ) {
+                case '\"':
+                case '\\':
+                case '/':
+                case '\b':
+                case '\f':
+                case '\n':
+                case '\r':
+                case '\t':
+                    foundControlChar = true;
+                    break loop;
+            }
+
+        }
+
+        if ( !foundControlChar) {
+            this.addQuoted ( charArray );
+            return this;
+        }
+
+        char [] _buffer = buffer;
+        int _location = location;
+
+        int  ensureThisMuch = charArray.length * 2;
+
+        int sizeNeeded =  (ensureThisMuch) + _location;
+        if ( sizeNeeded  > capacity ) {
+
+            int growBy =   ( _buffer.length * 2 ) <  sizeNeeded  ? sizeNeeded : (_buffer.length*2);
+            _buffer = Chr.grow( buffer, growBy);
+            capacity = _buffer.length;
+        }
+
+
+
+
+        _buffer[_location] = '"';
+        _location ++;
+
+        for ( int index = 0; index < charArray.length; index++ ) {
+                char c = charArray[ index ];
+
+                switch ( c ) {
+                    case '\"':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  '"';
+                        _location ++;
+                        break;
+                    case '\\':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  '\\';
+                        _location ++;
+                        break;
+                    case '/':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  '/';
+                        _location ++;
+                        break;
+
+                    case '\b':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'b';
+                        _location ++;
+                        break;
+                    case '\f':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'f';
+                        _location ++;
+                        break;
+                    case '\n':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'n';
+                        _location ++;
+                        break;
+                    case '\r':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'r';
+                        _location ++;
+                        break;
+
+                    case '\t':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  't';
+                        _location ++;
+                        break;
+
+                    default:
+                        _buffer[_location] = c;
+                        _location ++;
+                }
+
+        }
+        _buffer[_location] = '"';
+        _location ++;
+
+
+        buffer = _buffer;
+        location = _location;
+
+        return this;
+    }
 
     public final CharBuf addJsonFieldName( char[] chars ) {
 
@@ -914,6 +1038,73 @@ public class CharBuf extends Writer implements CharSequence {
 
         return this;
     }
+
+
+
+    /**
+     * Turn a single bytes into two hex character representation.
+     *
+     * @param decoded the byte to serializeObject.
+     */
+    public  CharSequence addHex( final int decoded  ) {
+
+
+
+        int _location = location;
+        char [] _buffer = buffer;
+        int _capacity = capacity;
+
+        if ( 2 + _location > _capacity ) {
+            _buffer = Chr.grow( _buffer );
+            _capacity = _buffer.length;
+        }
+
+        _buffer [_location] = (char) encodeNibbleToHexAsciiCharByte( ( decoded >> 4 ) & 0x0F );
+        _location ++;
+
+
+        _buffer [_location] = (char) encodeNibbleToHexAsciiCharByte( decoded & 0x0F );;
+        _location ++;
+
+        location = _location;
+        buffer = _buffer;
+        capacity = _capacity;
+        return this;
+    }
+
+    /**
+     * Turns a single nibble into an ascii HEX digit.
+     *
+     * @param nibble the nibble to serializeObject.
+     * @return the encoded nibble (1/2 byte).
+     */
+    protected static int encodeNibbleToHexAsciiCharByte( final int nibble ) {
+
+        switch ( nibble ) {
+            case 0x00:
+            case 0x01:
+            case 0x02:
+            case 0x03:
+            case 0x04:
+            case 0x05:
+            case 0x06:
+            case 0x07:
+            case 0x08:
+            case 0x09:
+                return nibble + 0x30; // 0x30('0') - 0x39('9')
+            case 0x0A:
+            case 0x0B:
+            case 0x0C:
+            case 0x0D:
+            case 0x0E:
+            case 0x0F:
+                return nibble + 0x57; // 0x41('a') - 0x46('f')
+            default:
+                die( "illegal nibble: " + nibble );
+                return -1;
+        }
+    }
+
 
 }
 

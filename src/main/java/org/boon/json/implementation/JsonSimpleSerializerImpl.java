@@ -29,73 +29,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
 
     private final void serializeString( String str, CharBuf builder ) {
+          builder.addJsonEscapedString ( str );
 
-
-
-
-        char[] charArray = FastStringUtils.toCharArray ( str );
-
-        boolean foundControlChar = false;
-
-        loop:
-        for ( int index = 0; index < charArray.length; index++ ) {
-            char c = charArray[ index ];
-            switch ( c ) {
-                case '\"':
-                case '\\':
-                case '/':
-                case '\b':
-                case '\f':
-                case '\n':
-                case '\r':
-                case '\t':
-                    foundControlChar = true;
-                    break loop;
-            }
-
-        }
-
-        if (foundControlChar) {
-            builder.add ( '"' );
-            for ( int index = 0; index < charArray.length; index++ ) {
-                char c = charArray[ index ];
-
-                switch ( c ) {
-                    case '\"':
-                        builder.addChar( '\\' ).addChar( '\"' );
-                        break;
-                    case '\\':
-                        builder.addChar( '\\' ).addChar( '\\' );
-                        break;
-                    case '/':
-                        builder.addChar( '\\' ).addChar( '/' );
-                        break;
-                    case '\b':
-                        builder.addChar( '\\' ).addChar( 'b' );
-                        break;
-                    case '\f':
-                        builder.addChar( '\\' ).addChar( 'f' );
-                        break;
-                    case '\n':
-                        builder.addChar( '\\' ).addChar( 'n' );
-                        break;
-                    case '\r':
-                        builder.addChar( '\\' ).addChar( 'r' );
-                        break;
-                    case '\t':
-                        builder.addChar( '\\' ).addChar( 't' );
-                        break;
-
-                    default:
-                        builder.addChar( c );
-                }
-
-            }
-            builder.addChar( '"' );
-
-        } else {
-            builder.addQuoted ( charArray );
-        }
     }
 
 
@@ -364,6 +299,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
                 return;
             case ENUM:
                 builder.addQuoted ( obj.toString () );
+                return;
 
             case COLLECTION:
             case LIST:
