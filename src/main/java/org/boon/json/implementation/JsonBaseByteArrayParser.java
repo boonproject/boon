@@ -8,6 +8,7 @@ import org.boon.core.LazyMap;
 import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.CharScanner;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -156,30 +157,26 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         return buf.toString();
     }
 
-    protected final void skipWhiteSpace() {
 
 
-        label:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
-            switch ( __currentChar ) {
-                case NEW_LINE:
-                    continue label;
-                case RETURN:
-                    continue label;
 
-                case SPACE:
-                    continue label;
-                case TAB:
-                    continue label;
-                default:
-                    break label;
+    private static int  skipWhiteSpaceFastBytes( byte [] array, int index ) {
+        int c;
+        for (; index< array.length; index++ ) {
+            c = array [index];
+            if ( c > 32 ) {
 
+                return index;
             }
         }
-
+        return index-1;
     }
 
+
+    protected final void skipWhiteSpace() {
+        __index = skipWhiteSpaceFastBytes ( this.charArray, __index );
+        this.__currentChar = this.charArray[__index];
+    }
 
     protected String charDescription( int c ) {
         String charString;
@@ -281,7 +278,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
                     break;
 
                 case DOUBLE_QUOTE:
-                    value = decodeString();
+                    value = decodeString ();
                     break done;
 
 
@@ -315,8 +312,11 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
                 case ALPHA_8:
                 case ALPHA_9:
                 case ALPHA_0:
+                    value = decodeNumber(false);
+                    break done;
+
                 case MINUS:
-                    value = decodeNumber();
+                    value = decodeNumber(true);
                     break done;
 
                 default:
@@ -403,7 +403,78 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    protected final Object decodeNumber() {
+
+    private final Object decodeNumber(boolean minus) {
+
+        byte[] array = charArray;
+
+        final int startIndex = __index;
+        int index =  __index;
+        int currentChar;
+        boolean doubleFloat = false;
+        boolean simple = true;
+        int digitsPastPoint = 0;
+        int sign = 1;
+
+
+
+
+        if ( minus ) {
+            minus = true;
+            sign = -1;
+            nextChar ();
+        }
+
+
+        while (true) {
+            currentChar = array[index];
+
+            if ( doubleFloat ) {
+                digitsPastPoint++;
+            }
+            if ( isNumberDigit ( currentChar )) {
+                //noop
+            } else if ( currentChar <= 32 ) { //white
+                break;
+            } else if ( isDelimiter ( currentChar ) ) {
+                break;
+            } else if ( isDecimalChar (currentChar) ) {
+                doubleFloat = true;
+                if (currentChar != '.') {
+                    simple = false;
+                }
+            }
+            index++;
+            if (index   >= array.length) break;
+        }
+
+        __index = index;
+        __currentChar = currentChar;
+
+        return getNumberFromSpan ( startIndex, doubleFloat, simple, digitsPastPoint, minus, sign );
+    }
+
+
+
+    private final Object getNumberFromSpan ( int startIndex, boolean doubleFloat, boolean simple, int digitsPastPoint, boolean minus, int sign ) {
+        Object value;
+        if ( doubleFloat ) {
+            value = ByteScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
+        } else {
+
+            if ( ByteScanner.isInteger ( this.charArray, startIndex, __index - startIndex, minus ) ) {
+                value = ByteScanner.parseInt( charArray, startIndex, __index - startIndex ) * sign;
+            } else {
+                value =  ByteScanner.parseLong( charArray, startIndex, __index - startIndex ) * sign;
+            }
+
+        }
+
+        return value;
+    }
+
+
+    protected final Object decodeNumberOld() {
 
         int startIndex = __index;
 
@@ -578,7 +649,57 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    protected final String decodeString() {
+
+    private String decodeString() {
+
+        byte[] array = charArray;
+        int index = __index;
+        int currentChar = charArray[index];
+
+        if ( index < array.length && currentChar == DOUBLE_QUOTE ) {
+            index++;
+        }
+
+        final int startIndex = index;
+
+
+        boolean escape = false;
+
+        boolean hasEscaped = false;
+
+
+        while ( true ) {
+            currentChar = array[index];
+            if ( isDoubleQuote ( currentChar )) {
+                if (!escape) {
+                    break;
+                }
+            }  if ( isEscape (currentChar) ) {
+                hasEscaped = true;
+                escape = true;
+            } else {
+                escape = false;
+            }
+            index++;
+            if (index >= array.length) break;
+        }
+
+
+        String value = null;
+        if ( hasEscaped ) {
+            value = JsonStringDecoder.decodeForSure( array, startIndex, index );
+        } else {
+            value = new String( array, startIndex, ( index - startIndex ) );
+        }
+
+        if ( index < charArray.length ) {
+            index++;
+        }
+        __index = index;
+        return value;
+    } 
+    
+    protected final String decodeStringOld() {
 
 
         if ( __index < charArray.length && __currentChar == DOUBLE_QUOTE ) {

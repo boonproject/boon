@@ -25,7 +25,6 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
     private final JsonParser objectParser;
     private final JsonParser basicParser;
     private final JsonParser charSequenceParser;
-    private final JsonParser byteParser;
 
 
     private int bufSize = 32;
@@ -60,7 +59,6 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
                 this.charSequenceParser = basicParser;
         }
 
-        this.byteParser = new JsonUTF8Parser ();
 
 
     }
@@ -84,10 +82,10 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
     public final <T> T parse( Class<T> type, byte[] value ) {
 
         if ( type == Map.class || type == List.class ) {
-            if (value.length < 1_000_000) {
+            if (value.length < 100_000) {
                 return this.basicParser.parse( type, value );
             } else {
-                return this.byteParser.parse ( type, value );
+                return this.basicParser.parseAsStream ( type, value );
             }
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );

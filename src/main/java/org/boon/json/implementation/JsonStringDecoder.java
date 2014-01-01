@@ -1,12 +1,35 @@
 package org.boon.json.implementation;
 
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.json.JsonException;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
 public class JsonStringDecoder {
+
+
+
+    protected static final int DOUBLE_QUOTE = '"';
+
+    protected static final int ESCAPE = '\\';
+
+
+    protected static final int LETTER_N = 'n';
+
+
+    protected static final int LETTER_U = 'u';
+
+
+    protected static final int LETTER_T = 't';
+
+    protected static final int LETTER_R = 'r';
+
+    protected static final int LETTER_B = 'b';
+
+    protected static final int LETTER_F = 'f';
+
+    protected static final int FORWARD_SLASH = '/';
+
 
     public static String decode( String string ) {
         if ( !string.contains( "\\" ) ) {
@@ -114,61 +137,67 @@ public class JsonStringDecoder {
 
     }
 
+    public static String decodeForSure( byte[] bytes, int start, int to ) {
 
-    public static String decode( final byte[] chars, int start, int to ) {
 
-        final byte[] cs = chars;
-
-        if ( cs[ start ] == '"' ) {
+        if ( bytes[ start ] == '"' ) {
             start++;
         }
 
         CharBuf builder = CharBuf.create( to - start );
         for ( int index = start; index < to; index++ ) {
-            byte c = cs[ index ];
+            int c = bytes[ index ];
             if ( c == '\\' ) {
-                if ( index < cs.length ) {
+                if ( index < bytes.length ) {
                     index++;
-                    c = cs[ index ];
+                    c = bytes[ index ];
                     switch ( c ) {
 
-                        case 'n':
+                        case LETTER_N:
                             builder.addChar( '\n' );
                             break;
 
-                        case '/':
+                        case FORWARD_SLASH:
                             builder.addChar( '/' );
                             break;
 
-                        case '"':
+                        case DOUBLE_QUOTE:
                             builder.addChar( '"' );
                             break;
 
-                        case 'f':
+                        case LETTER_F:
                             builder.addChar( '\f' );
                             break;
 
-                        case 't':
+                        case LETTER_T:
                             builder.addChar( '\t' );
                             break;
 
-                        case '\\':
+                        case ESCAPE:
                             builder.addChar( '\\' );
                             break;
 
-                        case 'b':
+                        case LETTER_B:
                             builder.addChar( '\b' );
                             break;
 
-                        case 'r':
+                        case LETTER_R:
                             builder.addChar( '\r' );
                             break;
 
-                        case 'u':
+                        case LETTER_U:
 
-                            if ( index + 4 < cs.length ) {
-                                String hex = new String( cs, index + 1, index + 5 );
-                                char unicode = ( char ) Integer.parseInt( hex, 16 );
+                            if ( index + 4 < bytes.length ) {
+
+                                CharBuf hex = CharBuf.create( 4 );
+                                hex.addChar( bytes[ index + 1 ] );
+
+                                hex.addChar( bytes[ index + 2 ] );
+
+                                hex.addChar( bytes[ index + 3 ] );
+
+                                hex.addChar( bytes[ index + 4 ] );
+                                char unicode = ( char ) Integer.parseInt( hex.toString(), 16 );
                                 builder.add( unicode );
                                 index += 4;
                             }

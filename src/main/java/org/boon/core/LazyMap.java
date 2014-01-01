@@ -175,11 +175,8 @@ public class LazyMap extends AbstractMap<String, Object> {
     @Override
     public String toString() {
 
-        if ( map == null ) {
-            return "{}";
-        } else {
-            return map.toString();
-        }
+       buildIfNeeded();
+       return map.toString();
     }
 
     @Override

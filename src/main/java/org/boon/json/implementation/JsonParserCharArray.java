@@ -130,32 +130,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-//    protected final void skipWhiteSpace() {
-//
-//
-//        label:
-//        for (; __index < this.charArray.length; __index++ ) {
-//            __currentChar = charArray[ __index ];
-//            switch ( __currentChar ) {
-//                case ' ':
-//                case '\n':
-//                case '\r':
-//                case '\t':
-//                    continue label;
-//
-//                default:
-//                    break label;
-//
-//            }
-//        }
-//
-//    }
-
-//    private static boolean isNotWhite (int c) {
-//        return c > 32;
-//    }
-
-
 
     private static int  skipWhiteSpaceFast( char [] array, int index ) {
         char c;
@@ -174,32 +148,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         __index = skipWhiteSpaceFast ( this.charArray, __index );
         this.__currentChar = this.charArray[__index];
     }
-
-//    protected final void skipWhiteSpace() {
-//
-//        char[] array       = charArray;
-//        char   currentChar = __currentChar;
-//        int    index       = __index;
-//
-//        label:
-//        for (; index < array.length; index++ ) {
-//            currentChar = array[ index ];
-//            switch ( currentChar ) {
-//                case ' ':
-//                case '\n':
-//                case '\r':
-//                case '\t':
-//                    continue label;
-//
-//                default:
-//                    break label;
-//
-//            }
-//        }
-//        __index = index;
-//        __currentChar = currentChar;
-//
-//    }
 
     protected final Object decodeJsonObject() {
 
@@ -238,6 +186,8 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                 }
                 __index++;
 
+                skipWhiteSpace();
+
                 Object value = decodeValueInternal();
 
                 skipWhiteSpace();
@@ -268,13 +218,12 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
     protected Object decodeValue() {
+        skipWhiteSpace ();
         return decodeValueInternal();
     }
 
     private final Object decodeValueInternal() {
         Object value = null;
-
-        skipWhiteSpace();
 
         switch ( __currentChar ) {
 
@@ -299,52 +248,27 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                 value = decodeJsonArray();
                 break;
 
+
+
+
             case '{':
                 value = decodeJsonObject();
                 break;
 
-            case '1':
-                value = decodeNumber();
-                break;
-
-            case '2':
-                value = decodeNumber();
-                break;
-
-            case '3':
-                value = decodeNumber();
-                break;
-
-            case '4':
-                value = decodeNumber();
-                break;
-
-            case '5':
-                value = decodeNumber();
-                break;
-
-            case '6':
-                value = decodeNumber();
-                break;
-
-            case '7':
-                value = decodeNumber();
-                break;
-
-            case '8':
-                value = decodeNumber();
-                break;
-
-            case '9':
-                value = decodeNumber();
-                break;
-
             case '0':
-                value = decodeNumber();
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                value = decodeNumber(false);
                 break;
-
             case '-':
-                value = decodeNumber();
+                value = decodeNumber(true);
                 break;
 
             default:
@@ -359,7 +283,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
 
-    private final Object decodeNumber() {
+    private final Object decodeNumber(boolean minus) {
 
         char[] array = charArray;
 
@@ -369,15 +293,15 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         boolean doubleFloat = false;
         boolean simple = true;
         int digitsPastPoint = 0;
-        boolean minus = false;
         int sign = 1;
 
 
 
-        if ( __currentChar == '-' ) {
-            index++;
+
+        if ( minus ) {
             minus = true;
             sign = -1;
+            nextChar ();
         }
 
 

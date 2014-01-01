@@ -261,7 +261,10 @@ public class JsonParserBaseTest {
 
             puts ( "testing", file );
 
-            jsonParser.parse ( IO.read ( file ) );
+            Object object =  jsonParser.parse ( IO.read ( file ) );
+            //puts ( "FILE _________\n\n\n", file, object.getClass (), object);
+
+
 
         }
         puts ("done");
