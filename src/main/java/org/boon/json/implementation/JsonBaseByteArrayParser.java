@@ -41,17 +41,14 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     protected static final int TAB = '\t';
     protected static final int BELL = '\b';
     protected static final int FORM_FEED = '\f';
-    protected static final int COMMA = ',';
 
     protected static final int COLON = ':';
 
     protected static final int OPEN_CURLY = '{';
 
-    protected static final int CLOSED_CURLY = '}';
 
     protected static final int OPEN_BRACKET = '[';
 
-    protected static final int CLOSED_BRACKET = ']';
 
 
     protected static final int DOUBLE_QUOTE = '"';
@@ -67,8 +64,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     protected static final int LETTER_R = 'r';
 
-    protected static final int LETTER_E = 'e';
-    protected static final int LETTER_BIG_E = 'E';
 
     protected static final int LETTER_F = 'f';
 
@@ -87,10 +82,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     protected static final int ALPHA_7 = '7';
     protected static final int ALPHA_8 = '8';
     protected static final int ALPHA_9 = '9';
-    protected static final int MINUS = '-';
-    protected static final int PLUS = '+';
-
-    protected static final int DECIMAL_POINT = '.';
 
     protected final CharBuf builder = CharBuf.create( 20 );
 

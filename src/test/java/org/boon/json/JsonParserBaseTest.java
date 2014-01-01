@@ -264,7 +264,7 @@ public class JsonParserBaseTest {
             jsonParser.parse ( IO.read ( file ) );
 
         }
-
+        puts ("done");
 
     }
 
@@ -863,6 +863,23 @@ public class JsonParserBaseTest {
                 )
         );
 
+    }
+
+
+
+    @Test
+    public void simpleFloat () {
+
+
+        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+                lines (
+
+                        "{ \"v\":1.1}"
+                )
+        );
+
+
+        boolean ok = map.get ( "v" ).equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
     }
 
 

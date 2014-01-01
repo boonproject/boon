@@ -122,6 +122,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         switch ( __currentChar ) {
 
+
             case '"':
                 return decodeStringOverlay ();
 
@@ -165,141 +166,44 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    private static final boolean isNumberDigit (char c)  {
-        switch ( c ) {
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '0':
-                case '-':
-                return true;
-            default:
-                return false;
-        }
-
-    }
-
-    private static final int  first8Nums(int index, char [] array) {
-        if ( index + 8 < array.length && isNumberDigit ( array[index] ) ) {
-            if ( isNumberDigit ( array[++index] ) ) {
-                if ( isNumberDigit ( array[++index] ) ) {
-                    if ( isNumberDigit ( array[++index] ) ) {
-                        if ( isNumberDigit ( array[++index] ) ) {
-                            if ( isNumberDigit ( array[++index] ) ) {
-                                if ( isNumberDigit ( array[++index] ) ) {
-                                    ++index ;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-       return index;
-    }
 
     private final Value decodeNumberOverlay() {
 
         char[] array = charArray;
-        int index = __index;
+
+        final int startIndex = __index;
+        int index =  __index;
         char currentChar;
-        final int startIndex = index;
         boolean doubleFloat = false;
-        index = first8Nums ( index, array );
 
 
-        loop:
-        for (; index < array.length; index++ ) {
+        while (true) {
             currentChar = array[index];
-
-            switch ( currentChar ) {
-                case ' ':
-                case '\t':
-                case '\n':
-                case '\r':
-                case ',':
-                case ']':
-                case '}':
-                    __index = index + 1;
-                    break loop;
-
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '0':
-                case '-':
-                    continue loop;
-
-
-                case '+':
-                case 'e':
-                case 'E':
-                case '.':
-                    doubleFloat = true;
-                    continue loop;
-
+            if ( isNumberDigit ( currentChar )) {
+                //noop
+            } else if ( currentChar <= 32 ) { //white
+                break;
+            } else if ( isDelimiter ( currentChar ) ) {
+                break;
+            } else if ( isDecimalChar (currentChar) ) {
+                 doubleFloat = true;
             }
-
-            __index = index;
-            __currentChar = currentChar;
-            complain ( "expecting number char but got current char " + charDescription ( currentChar ) );
+            index++;
+            if (index   >= array.length) break;
         }
 
         __index = index;
+        __currentChar = currentChar;
 
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
         ValueInCharBuf value = new ValueInCharBuf ( chop, type, startIndex, __index, this.charArray );
-
-        skipWhiteSpace ();
 
         return value;
 
     }
 
 
-    private static final boolean isCharOk (char c) {
-        switch ( c ) {
-            case '"':
-            case '\\':
-                return false;
-            default:
-                return true;
-        }
-    }
-
-    private static final int first8 (int index, char [] array) {
-        if ( index + 8 < array.length && isCharOk ( array[index] ) ) {
-            if (isCharOk ( array[++index] ))  {
-                if (isCharOk ( array[++index] ))  {
-                    if (isCharOk ( array[++index] ))  {
-                        if (isCharOk ( array[++index] ))  {
-                            if (isCharOk ( array[++index] ))  {
-                                if (isCharOk ( array[++index] ))  {
-                                    if (isCharOk ( array[++index] ))  {
-                                        index++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return index;
-    }
 
     private Value decodeStringOverlay() {
 
@@ -312,8 +216,6 @@ public class JsonFastParser extends JsonParserCharArray {
         }
 
         final int startIndex = index;
-
-        //index = first8 ( index, array );
 
 
         boolean escape = false;

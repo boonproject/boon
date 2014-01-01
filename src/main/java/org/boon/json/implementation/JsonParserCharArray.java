@@ -1,6 +1,9 @@
 package org.boon.json.implementation;
 
+import org.boon.core.Type;
+import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.value.ValueInCharBuf;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
 import org.boon.core.LazyMap;
@@ -9,9 +12,11 @@ import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
 import java.nio.charset.Charset;
+import java.sql.Array;
 import java.util.*;
 
 import static org.boon.primitive.CharScanner.isInteger;
+import static org.boon.primitive.CharScanner.parseInt;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
@@ -145,31 +150,56 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 //        }
 //
 //    }
-    protected final void skipWhiteSpace() {
 
-        char [] array = charArray;
-        char currentChar=__currentChar;
-        int index = __index;
+//    private static boolean isNotWhite (int c) {
+//        return c > 32;
+//    }
 
-        label:
-        for (; index < array.length; index++ ) {
-            currentChar = array[ index ];
-            switch ( currentChar ) {
-                case ' ':
-                case '\n':
-                case '\r':
-                case '\t':
-                    continue label;
 
-                default:
-                    break label;
 
+    private static int  skipWhiteSpaceFast( char [] array, int index ) {
+        char c;
+        for (; index< array.length; index++ ) {
+            c = array [index];
+            if ( c > 32 ) {
+
+                return index;
             }
         }
-        __index = index;
-        __currentChar = currentChar;
-
+        return index-1;
     }
+
+
+    protected final void skipWhiteSpace() {
+        __index = skipWhiteSpaceFast ( this.charArray, __index );
+        this.__currentChar = this.charArray[__index];
+    }
+
+//    protected final void skipWhiteSpace() {
+//
+//        char[] array       = charArray;
+//        char   currentChar = __currentChar;
+//        int    index       = __index;
+//
+//        label:
+//        for (; index < array.length; index++ ) {
+//            currentChar = array[ index ];
+//            switch ( currentChar ) {
+//                case ' ':
+//                case '\n':
+//                case '\r':
+//                case '\t':
+//                    continue label;
+//
+//                default:
+//                    break label;
+//
+//            }
+//        }
+//        __index = index;
+//        __currentChar = currentChar;
+//
+//    }
 
     protected final Object decodeJsonObject() {
 
@@ -247,23 +277,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         skipWhiteSpace();
 
         switch ( __currentChar ) {
-            case '\n':
-                break;
-
-            case '\r':
-                break;
-
-            case ' ':
-                break;
-
-            case '\t':
-                break;
-
-            case '\b':
-                break;
-
-            case '\f':
-                break;
 
             case '"':
                 value = decodeString();
@@ -344,7 +357,76 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-    protected final Object decodeNumber() {
+
+
+    private final Object decodeNumber() {
+
+        char[] array = charArray;
+
+        final int startIndex = __index;
+        int index =  __index;
+        char currentChar;
+        boolean doubleFloat = false;
+        boolean simple = true;
+        int digitsPastPoint = 0;
+        boolean minus = false;
+        int sign = 1;
+
+
+
+        if ( __currentChar == '-' ) {
+            index++;
+            minus = true;
+            sign = -1;
+        }
+
+
+        while (true) {
+            currentChar = array[index];
+
+            if ( doubleFloat ) {
+                digitsPastPoint++;
+            }
+            if ( isNumberDigit ( currentChar )) {
+                //noop
+            } else if ( currentChar <= 32 ) { //white
+                break;
+            } else if ( isDelimiter ( currentChar ) ) {
+                break;
+            } else if ( isDecimalChar (currentChar) ) {
+                doubleFloat = true;
+                if (currentChar != '.') {
+                    simple = false;
+                }
+            }
+            index++;
+            if (index   >= array.length) break;
+        }
+
+        __index = index;
+        __currentChar = currentChar;
+
+        return getNumberFromSpan ( startIndex, doubleFloat, simple, digitsPastPoint, minus, sign );
+    }
+
+    private final Object getNumberFromSpan ( int startIndex, boolean doubleFloat, boolean simple, int digitsPastPoint, boolean minus, int sign ) {
+        Object value;
+        if ( doubleFloat ) {
+            value = CharScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
+        } else {
+
+            if ( isInteger( this.charArray, startIndex, __index - startIndex, minus ) ) {
+                value = CharScanner.parseInt( charArray, startIndex, __index - startIndex ) * sign;
+            } else {
+                value =  CharScanner.parseLong( charArray, startIndex, __index - startIndex ) * sign;
+            }
+
+        }
+
+        return value;
+    }
+
+    protected final Object decodeNumberOld() {
 
 
         boolean doubleFloat = false;

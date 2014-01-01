@@ -22,6 +22,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class BaseJsonParser implements JsonParser {
 
+    protected static final int COMMA = ',';
+    protected static final int CLOSED_CURLY = '}';
+    protected static final int CLOSED_BRACKET = ']';
+
+    protected static final int LETTER_E = 'e';
+    protected static final int LETTER_BIG_E = 'E';
+
+    protected static final int MINUS = '-';
+    protected static final int PLUS = '+';
+
+    protected static final int DECIMAL_POINT = '.';
+
+
+
+
+
     protected static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "false" ) );
     protected static ConcurrentHashMap<String, String> internedKeysCache;
 
@@ -666,6 +682,50 @@ public abstract class BaseJsonParser implements JsonParser {
     @Override
     public Map<String, Object> parseMapFromFile ( String file ) {
         return (Map<String, Object>) parseFile(file);
+    }
+
+
+
+    protected static boolean isDecimalChar ( int currentChar ) {
+        switch ( currentChar ) {
+            case MINUS:
+            case PLUS:
+            case LETTER_E:
+            case LETTER_BIG_E:
+            case DECIMAL_POINT:
+                return true;
+        }
+        return false;
+
+    }
+
+    protected static boolean isDelimiter ( int c ) {
+
+        return c == COMMA || c == CLOSED_CURLY || c == CLOSED_BRACKET;
+    }
+
+
+
+    protected static final boolean isNumberDigit (int c)  {
+
+        switch ( c ) {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                return true;
+            case '-':
+                return true;
+            default:
+                return false;
+        }
+
     }
 
 
