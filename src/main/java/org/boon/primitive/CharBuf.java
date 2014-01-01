@@ -5,6 +5,7 @@ import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.json.JsonException;
 import sun.nio.cs.Surrogate;
 
 import java.io.IOException;
@@ -677,6 +678,11 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
+    public void recycle() {
+        this.location = 0;
+    }
+
+
     private static double powersOf10[] = {
             1.0,
             10.0,
@@ -1163,5 +1169,81 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
+    public final CharBuf decodeJsonString ( char[] chars, int start, int to ) {
+        int len = to - start;
+
+        char [] buffer = this.buffer;
+        int location = this.location;
+
+        if (len > capacity) {
+            buffer =  Chr.grow ( buffer, buffer.length * 2 + len );
+            capacity = buffer.length;
+        }
+
+        for ( int index = start; index < to; index++ ) {
+            char c = chars[ index ];
+            if ( c == '\\' ) {
+                if ( index < to ) {
+                    index++;
+                    c = chars[ index ];
+                    switch ( c ) {
+
+                        case 'n':
+                            buffer[location++]='\n';
+                            break;
+
+                        case '/':
+                            buffer[location++]='/';
+                            break;
+
+                        case '"':
+                            buffer[location++]='"';
+                            break;
+
+                        case 'f':
+                            buffer[location++]='\f';
+                            break;
+
+                        case 't':
+                            buffer[location++]='\t';
+                            break;
+
+                        case '\\':
+                            buffer[location++]='\\';
+                            break;
+
+                        case 'b':
+                            buffer[location++]='\b';
+                            break;
+
+                        case 'r':
+                            buffer[location++]='\r';
+                            break;
+
+                        case 'u':
+
+                            if ( index + 4 < to ) {
+                                String hex = new String( chars, index + 1, 4 );
+                                char unicode = ( char ) Integer.parseInt( hex, 16 );
+                                buffer[location++]=unicode;
+                                index += 4;
+                            }
+                            break;
+                        default:
+                            throw new JsonException ( "Unable to decode string" );
+                    }
+                }
+            } else {
+                buffer[location++]=c;
+            }
+        }
+
+
+        this.buffer = buffer;
+        this.location = location;
+
+        return this;
+
+    }
 }
 

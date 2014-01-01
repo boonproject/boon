@@ -116,9 +116,9 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
     private Value decodeValueOverlay() {
-        skipWhiteSpace ();
 
-        __currentChar = charArray[__index];
+
+        skipWhiteSpace ();
 
         switch ( __currentChar ) {
 
@@ -164,6 +164,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
 
         }
+
     }
 
 
@@ -226,25 +227,12 @@ public class JsonFastParser extends JsonParserCharArray {
         final int startIndex = index;
 
 
-        boolean escape = false;
+        boolean encoded = hasEscapeChar ( array, index, indexHolder );
+        index = indexHolder[0];
 
-        boolean encoded = false;
 
-
-        while ( true ) {
-            currentChar = array[index];
-            if ( isDoubleQuote ( currentChar )) {
-                if (!escape) {
-                    break;
-                }
-            }  if ( isEscape (currentChar) ) {
-                encoded = true;
-                escape = true;
-            } else {
-                escape = false;
-            }
-            index++;
-            if (index >= array.length) break;
+        if (encoded)  {
+                index = findEndQuote ( array, index );
         }
 
         Value value = new ValueInCharBuf ( chop, Type.STRING, startIndex, index, array, encoded, true );

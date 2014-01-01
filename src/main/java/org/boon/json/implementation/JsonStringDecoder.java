@@ -76,63 +76,7 @@ public class JsonStringDecoder {
     public static String decodeForSure( char[] chars, int start, int to ) {
 
         CharBuf builder = CharBuf.create( to - start );
-        for ( int index = start; index < to; index++ ) {
-            char c = chars[ index ];
-            if ( c == '\\' ) {
-                if ( index < to ) {
-                    index++;
-                    c = chars[ index ];
-                    switch ( c ) {
-
-                        case 'n':
-                            builder.add( '\n' );
-                            break;
-
-                        case '/':
-                            builder.add( '/' );
-                            break;
-
-                        case '"':
-                            builder.add( '"' );
-                            break;
-
-                        case 'f':
-                            builder.add( '\f' );
-                            break;
-
-                        case 't':
-                            builder.add( '\t' );
-                            break;
-
-                        case '\\':
-                            builder.add( '\\' );
-                            break;
-
-                        case 'b':
-                            builder.add( '\b' );
-                            break;
-
-                        case 'r':
-                            builder.add( '\r' );
-                            break;
-
-                        case 'u':
-
-                            if ( index + 4 < to ) {
-                                String hex = new String( chars, index + 1, 4 );
-                                char unicode = ( char ) Integer.parseInt( hex, 16 );
-                                builder.add( unicode );
-                                index += 4;
-                            }
-                            break;
-                        default:
-                            throw new JsonException( "Unable to decode string" );
-                    }
-                }
-            } else {
-                builder.add( c );
-            }
-        }
+        builder.decodeJsonString(chars, start, to);
         return builder.toString();
 
     }

@@ -744,4 +744,92 @@ public abstract class BaseJsonParser implements JsonParser {
 
     }
 
+
+
+
+    protected static boolean hasEscapeChar (char []array, int index, int[] indexHolder) {
+        char currentChar;
+        for ( ; index < array.length; index++ ) {
+            currentChar = array[index];
+            if ( isDoubleQuote ( currentChar )) {
+                indexHolder[0] = index;
+                return false;
+            } else if ( isEscape (currentChar) ) {
+                indexHolder[0] = index;
+                return  true;
+            }
+
+        }
+
+        indexHolder[0] = index;
+        return false;
+    }
+
+    int[] indexHolder = new int[1];
+
+
+
+    protected static int findEndQuote (final char[] array,  int index) {
+        char currentChar;
+        boolean escape = false;
+
+        for ( ; index < array.length; index++ ) {
+            currentChar = array[index];
+            if ( isDoubleQuote (currentChar )) {
+                if (!escape) {
+                    break;
+                }
+            }
+            if ( isEscape (currentChar) ) {
+                escape = true;
+            } else {
+                escape = false;
+            }
+        }
+        return index;
+    }
+
+
+
+//    private String decodeString2() {
+//
+//        char __currentChar = this.__currentChar;
+//        char [] charArray = this.charArray;
+//        int __index = this.__index;
+//        int [] indexHolder = this.indexHolder;
+//
+//        if (__currentChar == '"') {
+//            __index ++;
+//        }
+//
+//
+//        final int startIndex = __index;
+//
+//        boolean hasEscaped = hasEscapeChar (charArray, __index, indexHolder );
+//
+//        __index = indexHolder [0];
+//
+//
+//        String value;
+//        if ( hasEscaped ) {
+//            __index = findEndQuote ( charArray, __index );
+//            value =   JsonStringDecoder.decodeForSure( charArray, startIndex, __index );
+//        } else {
+//            value = new String( charArray, startIndex, ( __index - startIndex ) );
+//        }
+//
+//
+//
+//        if ( __index  < charArray.length ) {
+//            __index++;
+//            __currentChar = charArray[ __index ];
+//        }
+//
+//
+//
+//
+//        return value;
+//    }
+
+
 }

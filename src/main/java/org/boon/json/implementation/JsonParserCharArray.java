@@ -218,12 +218,12 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
     protected Object decodeValue() {
-        skipWhiteSpace ();
         return decodeValueInternal();
     }
 
     private final Object decodeValueInternal() {
         Object value = null;
+        skipWhiteSpace ();
 
         switch ( __currentChar ) {
 
@@ -408,6 +408,8 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
 
+    private CharBuf builder = CharBuf.create( 20 );
+
     private String decodeString() {
 
         char[] array = charArray;
@@ -421,31 +423,16 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         final int startIndex = index;
 
 
-        boolean escape = false;
+        boolean encoded = hasEscapeChar ( array, index, indexHolder );
+        index = indexHolder[0];
 
-        boolean hasEscaped = false;
-
-
-        while ( true ) {
-            currentChar = array[index];
-            if ( isDoubleQuote ( currentChar )) {
-                if (!escape) {
-                    break;
-                }
-            }  if ( isEscape (currentChar) ) {
-                hasEscaped = true;
-                escape = true;
-            } else {
-                escape = false;
-            }
-            index++;
-            if (index >= array.length) break;
-        }
 
 
         String value = null;
-        if ( hasEscaped ) {
-            value = JsonStringDecoder.decodeForSure( array, startIndex, index );
+        if ( encoded ) {
+            index = findEndQuote ( array,  index);
+            value = builder.decodeJsonString ( array, startIndex, index ).toString ();
+            builder.recycle ();
         } else {
             value = new String( array, startIndex, ( index - startIndex ) );
         }
