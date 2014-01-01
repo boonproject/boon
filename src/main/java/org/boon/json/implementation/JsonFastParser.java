@@ -152,9 +152,10 @@ public class JsonFastParser extends JsonParserCharArray {
             case '8':
             case '9':
             case '0':
-            case '-':
                 return decodeNumberOverlay ();
 
+            case '-':
+                return decodeNumberOverlayMinus ();
 
             default:
 
@@ -166,8 +167,8 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
+    private final Value decodeNumberOverlayMinus( ) {
 
-    private final Value decodeNumberOverlay() {
 
         char[] array = charArray;
 
@@ -177,10 +178,45 @@ public class JsonFastParser extends JsonParserCharArray {
         boolean doubleFloat = false;
 
 
-        if ( __currentChar == '-' ) {
+        index++;
+
+
+
+        while (true) {
+            currentChar = array[index];
+            if ( isNumberDigit ( currentChar )) {
+                //noop
+            } else if ( currentChar <= 32 ) { //white
+                break;
+            } else if ( isDelimiter ( currentChar ) ) {
+                break;
+            } else if ( isDecimalChar (currentChar) ) {
+                doubleFloat = true;
+            }
             index++;
+            if (index   >= array.length) break;
         }
 
+        __index = index;
+        __currentChar = currentChar;
+
+        Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
+
+        ValueInCharBuf value = new ValueInCharBuf ( chop, type, startIndex, __index, this.charArray );
+
+        return value;
+
+
+    }
+
+    private final Value decodeNumberOverlay() {
+
+        char[] array = charArray;
+
+        final int startIndex = __index;
+        int index =  __index;
+        char currentChar;
+        boolean doubleFloat = false;
 
 
         while (true) {
