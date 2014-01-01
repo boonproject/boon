@@ -35,6 +35,24 @@ public abstract class BaseJsonParser implements JsonParser {
     protected static final int DECIMAL_POINT = '.';
 
 
+    protected static final int ALPHA_0 = '0';
+    protected static final int ALPHA_1 = '1';
+    protected static final int ALPHA_2 = '2';
+    protected static final int ALPHA_3 = '3';
+    protected static final int ALPHA_4 = '4';
+    protected static final int ALPHA_5 = '5';
+    protected static final int ALPHA_6 = '6';
+    protected static final int ALPHA_7 = '7';
+    protected static final int ALPHA_8 = '8';
+    protected static final int ALPHA_9 = '9';
+
+
+    protected static final int DOUBLE_QUOTE = '"';
+
+    protected static final int ESCAPE = '\\';
+
+
+
 
 
 
@@ -707,29 +725,19 @@ public abstract class BaseJsonParser implements JsonParser {
 
 
     protected static final boolean isNumberDigit (int c)  {
-
-        switch ( c ) {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                return true;
-            case '-':
-                return true;
-            default:
-                return false;
-        }
-
+         return c >= ALPHA_0 && c <= ALPHA_9;
     }
 
 
 
+    protected static final boolean isDoubleQuote ( int c ) {
+            return c == DOUBLE_QUOTE;
+    }
+
+
+    protected static final boolean isEscape ( int c ) {
+        return c == ESCAPE;
+    }
 
     @Override
     public void close () {

@@ -426,149 +426,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return value;
     }
 
-    protected final Object decodeNumberOld() {
-
-
-        boolean doubleFloat = false;
-
-        boolean minus = false;
-
-        boolean simple = true;
-
-        int sign = 1;
-
-        int index;
-
-        int digitsPastPoint = 0;
-
-
-        __currentChar = charArray[ __index ];
-
-        if ( __currentChar == '-' ) {
-            minus = true;
-            __index++;
-            sign = -1;
-        }
-
-        int startIndex = __index;
-
-
-        loop:
-        for ( index = __index; index < charArray.length; index++ ) {
-            __currentChar = charArray[ index ];
-
-            if ( doubleFloat ) {
-                digitsPastPoint++;
-            }
-
-
-            switch ( __currentChar ) {
-                case ' ':
-                    __index = index + 1;
-                    break loop;
-
-                case '\t':
-                    __index = index + 1;
-                    break loop;
-
-                case '\n':
-                    __index = index + 1;
-                    break loop;
-
-                case '\r':
-                    __index = index + 1;
-                    break loop;
-
-                case ',':
-                    break loop;
-
-                case ']':
-                    break loop;
-
-                case '}':
-                    break loop;
-
-                case '1':
-                    continue loop;
-
-                case '2':
-                    continue loop;
-
-                case '3':
-                    continue loop;
-
-                case '4':
-                    continue loop;
-
-                case '5':
-                    continue loop;
-
-                case '6':
-                    continue loop;
-
-                case '7':
-                    continue loop;
-
-                case '8':
-                    continue loop;
-
-                case '9':
-                    continue loop;
-
-                case '0':
-                    continue loop;
-
-                case '-':
-                    continue loop;
-
-
-                case '+':
-
-                    simple = false;
-                    doubleFloat = true;
-                    continue loop;
-
-                case 'e':
-                    simple = false;
-                    doubleFloat = true;
-                    continue loop;
-
-                case 'E':
-
-                    simple = false;
-                    doubleFloat = true;
-                    continue loop;
-
-                case '.':
-                    doubleFloat = true;
-                    continue loop;
-
-            }
-
-            complain( "expecting number char but got current char " + charDescription( __currentChar ) );
-        }
-
-        __index = index;
-
-
-        Object value;
-        if ( doubleFloat ) {
-            value = CharScanner.simpleDouble( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
-        } else {
-
-            if ( isInteger( this.charArray, startIndex, __index - startIndex, minus ) ) {
-                value = CharScanner.parseInt( charArray, startIndex, __index - startIndex ) * sign;
-            } else {
-                value =  CharScanner.parseLong( charArray, startIndex, __index - startIndex ) * sign;
-            }
-
-        }
-
-        skipWhiteSpace();
-
-        return value;
-
-    }
 
 
     protected static final char[] NULL = Chr.chars( "null" );
@@ -626,7 +483,57 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
-    protected final String decodeString() {
+
+    private String decodeString() {
+
+        char[] array = charArray;
+        int index = __index;
+        char currentChar = charArray[index];
+
+        if ( index < array.length && currentChar == '"' ) {
+            index++;
+        }
+
+        final int startIndex = index;
+
+
+        boolean escape = false;
+
+        boolean hasEscaped = false;
+
+
+        while ( true ) {
+            currentChar = array[index];
+            if ( isDoubleQuote ( currentChar )) {
+                if (!escape) {
+                    break;
+                }
+            }  if ( isEscape (currentChar) ) {
+                hasEscaped = true;
+                escape = true;
+            } else {
+                escape = false;
+            }
+            index++;
+            if (index >= array.length) break;
+        }
+
+
+        String value = null;
+        if ( hasEscaped ) {
+            value = JsonStringDecoder.decodeForSure( array, startIndex, index );
+        } else {
+            value = new String( array, startIndex, ( index - startIndex ) );
+        }
+
+        if ( index < charArray.length ) {
+            index++;
+        }
+        __index = index;
+        return value;
+    }
+
+    protected final String decodeStringOld() {
 
         __currentChar = charArray[ __index ];
 

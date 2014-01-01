@@ -177,6 +177,12 @@ public class JsonFastParser extends JsonParserCharArray {
         boolean doubleFloat = false;
 
 
+        if ( __currentChar == '-' ) {
+            index++;
+        }
+
+
+
         while (true) {
             currentChar = array[index];
             if ( isNumberDigit ( currentChar )) {
@@ -205,6 +211,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
 
 
+
     private Value decodeStringOverlay() {
 
         char[] array = charArray;
@@ -222,27 +229,21 @@ public class JsonFastParser extends JsonParserCharArray {
 
         boolean encoded = false;
 
-        done:
-        for (; index < array.length; index++ ) {
+
+        while ( true ) {
             currentChar = array[index];
-            switch ( currentChar ) {
-
-                case '"':
-                    if ( !escape ) {
-                        break done;
-                    } else {
-                        escape = false;
-                        continue;
-                    }
-
-
-                case '\\':
-                    encoded = true;
-                    escape = true;
-                    continue;
-
+            if ( isDoubleQuote ( currentChar )) {
+                if (!escape) {
+                    break;
+                }
+            }  if ( isEscape (currentChar) ) {
+                encoded = true;
+                escape = true;
+            } else {
+                escape = false;
             }
-            escape = false;
+            index++;
+            if (index >= array.length) break;
         }
 
         Value value = new ValueInCharBuf ( chop, Type.STRING, startIndex, index, array, encoded, true );
@@ -255,6 +256,8 @@ public class JsonFastParser extends JsonParserCharArray {
         __index = index;
         return value;
     }
+
+
 
     private Value decodeJsonArrayOverlay() {
 
