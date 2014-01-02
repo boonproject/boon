@@ -1,7 +1,7 @@
 package org.boon.json;
 
 import org.boon.core.Function;
-import org.boon.json.implementation.JsonSerializerImpl;
+import org.boon.json.implementation.JsonSerializerImplOld;
 import org.boon.json.implementation.JsonSimpleSerializerImpl;
 
 import java.util.*;
@@ -39,7 +39,7 @@ public class JsonSerializerFactory {
                 && customSerializers == null && customObjectSerializers == null) {
             return new JsonSimpleSerializerImpl ();
         } else {
-            return new JsonSerializerImpl (outputType, useProperties, useFields,
+            return new JsonSerializerImplOld (outputType, useProperties, useFields,
                 includeNulls, useAnnotations, includeEmpty,
                 handleSimpleBackReference, handleComplexBackReference, jsonFormatForDates, includeDefault,
                 cacheInstances,

@@ -12,7 +12,6 @@ import static org.boon.Boon.sputs;
 public class PropertyField extends BaseField {
     private final Method getter;
     private final Method setter;
-    private final Logger log = Logger.getLogger( PropertyField.class.getName() );
 
 
     public PropertyField( String name, Method setter, Method getter ) {
@@ -24,141 +23,97 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public Object getValue( Object obj ) {
+    public Object getObject( Object obj ) {
         try {
             return getter.invoke( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle( Object.class, sputs( "unable to call getValue for property ", this.name,
+            return Exceptions.handle( Object.class, sputs( "unable to call getObject for property ", this.name,
                     "for class ", this.type ), e );
         }
     }
 
-    public boolean getBoolean( Object obj ) {
+    public final boolean getBoolean( Object obj ) {
         try {
-            return ( Boolean ) this.getValue( obj );
+            return ( Boolean ) this.getObject ( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle( boolean.class, sputs( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( boolean.class, sputs( "unable to call getObject for property", this.name ), e );
         }
 
     }
 
     @Override
-    public int getInt( Object obj ) {
+    public final int getInt( Object obj ) {
         try {
-            return ( Integer ) this.getValue( obj );
+            return ( Integer ) this.getObject ( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle( int.class, sputs( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( int.class, sputs( "unable to call getObject for property", this.name ), e );
         }
     }
 
     @Override
-    public short getShort( Object obj ) {
+    public final short getShort( Object obj ) {
         try {
-            return ( Short ) this.getValue( obj );
+            return ( Short ) this.getObject ( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle( short.class, sputs( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( short.class, sputs( "unable to call getObject for property", this.name ), e );
         }
     }
 
     @Override
-    public char getChar( Object obj ) {
+    public final char getChar( Object obj ) {
         try {
-            return ( Character ) this.getValue( obj );
+            return ( Character ) this.getObject ( obj );
         } catch ( Exception e ) {
-            return Exceptions.handle( char.class, sputs( "unable to call getValue for property", this.name ), e );
+            return Exceptions.handle( char.class, sputs( "unable to call getObject for property", this.name ), e );
         }
     }
 
     @Override
-    public long getLong( Object obj ) {
+    public final long getLong( Object obj ) {
         try {
-            return ( Long ) this.getValue( obj );
-        } catch ( Exception e ) {
-            throw new RuntimeException( e );
-        }
-    }
-
-    @Override
-    public double getDouble( Object obj ) {
-        try {
-            return ( Double ) this.getValue( obj );
-        } catch ( Exception e ) {
-            throw new RuntimeException( e );
-        }
-
-    }
-
-    @Override
-    public float getFloat( Object obj ) {
-        try {
-            return ( Float ) this.getValue( obj );
+            return ( Long ) this.getObject ( obj );
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
     }
 
     @Override
-    public byte getByte( Object obj ) {
+    public final double getDouble( Object obj ) {
         try {
-            return ( Byte ) this.getValue( obj );
+            return ( Double ) this.getObject ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException( e );
+        }
+
+    }
+
+    @Override
+    public final float getFloat( Object obj ) {
+        try {
+            return ( Float ) this.getObject ( obj );
         } catch ( Exception e ) {
             throw new RuntimeException( e );
         }
     }
 
     @Override
-    public Object getObject( Object obj ) {
-        return getValue( obj );
+    public final byte getByte( Object obj ) {
+        try {
+            return ( Byte ) this.getObject ( obj );
+        } catch ( Exception e ) {
+            throw new RuntimeException( e );
+        }
     }
 
+
     @Override
-    public Field getField() {
+    public final Field getField() {
         return null;
     }
 
 
     @Override
-    public boolean isFinal() {
-        return isFinal;
-    }
-
-
-    @Override
-    public boolean isStatic() {
-        return isStatic;
-    }
-
-    @Override
-    public boolean isVolatile() {
-        return isVolatile;
-    }
-
-
-    @Override
-    public boolean isQualified() {
-        return qualified;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-
-    @Override
-    public Class<?> getType() {
-        return type;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-
-
-    @Override
-    public void setBoolean( Object obj, boolean value ) {
+    public final void setBoolean( Object obj, boolean value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -168,7 +123,7 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setInt( Object obj, int value ) {
+    public final void setInt( Object obj, int value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -178,7 +133,7 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setShort( Object obj, short value ) {
+    public final void setShort( Object obj, short value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -188,7 +143,7 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setChar( Object obj, char value ) {
+    public final void setChar( Object obj, char value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -198,7 +153,7 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setLong( Object obj, long value ) {
+    public final void setLong( Object obj, long value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -208,7 +163,7 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setDouble( Object obj, double value ) {
+    public final void setDouble( Object obj, double value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -218,7 +173,7 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setFloat( Object obj, float value ) {
+    public final void setFloat( Object obj, float value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -228,7 +183,7 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setByte( Object obj, byte value ) {
+    public final void setByte( Object obj, byte value ) {
         try {
             this.setObject( obj, value );
         } catch ( Exception e ) {
@@ -239,17 +194,13 @@ public class PropertyField extends BaseField {
     }
 
     @Override
-    public void setObject( Object obj, Object value ) {
-        if ( readOnly ) {
-            log.warning( String.format( "You tried to modify property %s of %s for instance %s with set %s",
-                    name, obj.getClass().getSimpleName(), obj, value ) );
-            return;
-        }
+    public final void setObject( Object obj, Object value ) {
         try {
             setter.invoke( obj, value );
         } catch ( Exception e ) {
-            Exceptions.handle( String.format( "You tried to modify property %s of %s for instance %s with set %s using %s",
-                    name, obj.getClass().getSimpleName(), obj, value, setter.getName() ), e );
+            Exceptions.handle( String.format( "You tried to modify property %s of %s for instance %s " +
+                    "with set %s using %s, and this property read only status is %s",
+                    name, obj.getClass().getSimpleName(), obj, value, setter.getName(), isReadOnly () ), e );
 
         }
 

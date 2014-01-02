@@ -14,12 +14,11 @@ public class ReflectField extends BaseField {
         this.field = field;
     }
 
-    @Override
-    public Object getValue( Object obj ) {
-        try {
-            Objects.requireNonNull( field );
-            Objects.requireNonNull( obj );
 
+
+    @Override
+    public Object getObject( Object obj ) {
+        try {
             return field.get( obj );
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -110,10 +109,6 @@ public class ReflectField extends BaseField {
         }
     }
 
-    @Override
-    public Object getObject( Object obj ) {
-        return getValue( obj );
-    }
 
     public boolean getStaticBoolean() {
         return getBoolean( null );
@@ -151,48 +146,10 @@ public class ReflectField extends BaseField {
     }
 
     @Override
-    public Field getField() {
+    public final Field getField() {
         return field;
     }
 
-
-    @Override
-    public boolean isFinal() {
-        return isFinal;
-    }
-
-
-    @Override
-    public boolean isStatic() {
-        return isStatic;
-    }
-
-    @Override
-    public boolean isVolatile() {
-        return isVolatile;
-    }
-
-
-    @Override
-    public boolean isQualified() {
-        return qualified;
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-
-    @Override
-    public Class<?> getType() {
-        return type;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
 
 
     @Override

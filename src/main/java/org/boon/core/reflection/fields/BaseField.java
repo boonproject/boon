@@ -15,6 +15,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -25,13 +26,18 @@ import static org.boon.core.Conversions.toFloat;
 
 public abstract class BaseField implements FieldAccess {
 
-    public final boolean isPrimitive;
-    protected final boolean isFinal;
-    protected final boolean isStatic;
-    protected final boolean isVolatile;
-    protected final boolean qualified;
-    protected final boolean readOnly;
+    private static final int PRIMITIVE = 0;
+    private static final int FINAL = 1;
+    private static final int STATIC = 2;
+    private static final int VOLATILE =  3;
+    private static final int QUALIFIED = 4;
+    private static final int READ_ONLY = 5;
+    private static final int INCLUDE = 6;
+    private static final int IGNORE = 7;
+
+    protected final BitSet bits = new BitSet (  );
     protected final Class<?> type;
+    protected final Class<?> parentType;
     protected final String name;
     protected final ParameterizedType parameterizedType;
     protected final Class<?> componentClass;
@@ -51,23 +57,61 @@ public abstract class BaseField implements FieldAccess {
             annotationMap.put ( data.getFullClassName (), data.getValues () );
         }
 
+
+        if (hasAnnotation ( "JsonIgnore" )) {
+            final Map<String, Object> jsonIgnore = getAnnotationData ( "JsonIgnore" );
+            boolean ignore = (Boolean) jsonIgnore.get ( "value" );
+            bits.set( IGNORE, ignore);
+        }
+
+        if (hasAnnotation ( "JsonInclude" ))  {
+            final Map<String, Object> jsonIgnore = getAnnotationData ( "JsonInclude" );
+            String include = (String) jsonIgnore.get ( "value" );
+            if ( include.equals ( "ALWAYS" ) ) {
+                bits.set( INCLUDE );
+            }
+        }
+
+        if (parentType!=null) {
+            final Map<String, AnnotationData> classAnnotations =
+                Annotations.getAnnotationDataForClassAsMap( parentType );
+
+            final AnnotationData jsonIgnoreProperties = classAnnotations.get( "JsonIgnoreProperties" );
+
+            if (jsonIgnoreProperties!=null) {
+                String[] props = (String [])jsonIgnoreProperties.getValues().get( "value" );
+                if (props!=null) {
+                   for (String prop : props) {
+                       if (prop.equals ( name ) ) {
+                           bits.set( IGNORE, true);
+                           break;
+                       }
+                   }
+                }
+            }
+
+        }
+
     }
 
     protected BaseField ( String name, Method getter, Method setter ) {
 
         try {
 
-            readOnly = setter == null;
+            bits.set(READ_ONLY,  setter == null);
             this.name = name.intern();
-            isVolatile = false;
-            qualified = false;
+
+            bits.set( VOLATILE,  false);
+            bits.set( QUALIFIED, false);
 
 
             if ( getter != null ) {
-                isStatic = Modifier.isStatic ( getter.getModifiers () );
-                isFinal = Modifier.isFinal ( getter.getModifiers () );
+                bits.set(STATIC,  Modifier.isStatic ( getter.getModifiers () ));
+                bits.set(FINAL, Modifier.isFinal ( getter.getModifiers () ));
+
                 type = getter.getReturnType ();
-                isPrimitive = type.isPrimitive ();
+                parentType = getter.getDeclaringClass();
+                bits.set( PRIMITIVE, type.isPrimitive ());
                 typeName = type.getName().intern ();
                 Object obj = getter.getGenericReturnType ();
 
@@ -94,13 +138,15 @@ public abstract class BaseField implements FieldAccess {
                 initAnnotationData ( getter.getDeclaringClass () );
 
             } else {
-                isStatic = Modifier.isStatic ( setter.getModifiers () );
-                isFinal = Modifier.isFinal ( setter.getModifiers () );
+                bits.set(STATIC,  Modifier.isStatic ( setter.getModifiers () ));
+                bits.set(FINAL, Modifier.isFinal ( setter.getModifiers () ));
                 type = setter.getParameterTypes ()[ 0 ];
-                isPrimitive = type.isPrimitive ();
+                bits.set( PRIMITIVE, type.isPrimitive ());
                 typeName = type.getName ().intern ();
                 parameterizedType = null;
                 componentClass = null;
+                parentType = setter.getDeclaringClass();
+
 
                 initAnnotationData ( setter.getDeclaringClass () );
             }
@@ -121,15 +167,18 @@ public abstract class BaseField implements FieldAccess {
     protected BaseField ( Field field ) {
         name = field.getName().intern ();
 
-        isFinal = Modifier.isFinal ( field.getModifiers () );
-        isStatic = Modifier.isStatic ( field.getModifiers () );
+        bits.set(STATIC,  Modifier.isStatic ( field.getModifiers () ));
+        bits.set(FINAL, Modifier.isFinal ( field.getModifiers () ));
+        bits.set(VOLATILE, Modifier.isVolatile ( field.getModifiers () ));
+        bits.set( QUALIFIED, bits.get(FINAL) || bits.get(VOLATILE));
+        bits.set(READ_ONLY, bits.get(FINAL) );
+        parentType = field.getDeclaringClass();
 
-        isVolatile = Modifier.isVolatile ( field.getModifiers () );
-        qualified = isFinal || isVolatile;
-        readOnly = isFinal || isStatic;
+
         type = field.getType ();
         typeName = type.getName().intern ();
-        isPrimitive = type.isPrimitive ();
+
+        bits.set(PRIMITIVE, type.isPrimitive ());
 
         if ( field != null ) {
             Object obj = field.getGenericType ();
@@ -173,7 +222,7 @@ public abstract class BaseField implements FieldAccess {
 
 
     @Override
-    public Object getValue ( Object obj ) {
+    public final Object getValue ( Object obj ) {
 
         switch ( typeEnum ) {
             case INT:
@@ -200,7 +249,7 @@ public abstract class BaseField implements FieldAccess {
 
 
     @Override
-    public void setValue ( Object obj, Object value ) {
+    public final void setValue ( Object obj, Object value ) {
 
         switch ( typeEnum ) {
             case INT:
@@ -281,7 +330,7 @@ public abstract class BaseField implements FieldAccess {
     }
 
 
-    public void setFromValue ( Object obj, Value value ) {
+    public final void setFromValue ( Object obj, Value value ) {
 
         switch ( typeEnum ) {
             case INT:
@@ -355,14 +404,14 @@ public abstract class BaseField implements FieldAccess {
     }
 
 
-    public ParameterizedType getParameterizedType () {
+    public final ParameterizedType getParameterizedType () {
 
         return parameterizedType;
 
     }
 
 
-    public Class<?> getComponentClass () {
+    public final Class<?> getComponentClass () {
         return componentClass;
     }
 
@@ -381,19 +430,19 @@ public abstract class BaseField implements FieldAccess {
 
 
     @Override
-    public boolean hasAnnotation ( String annotationName ) {
+    public final boolean hasAnnotation ( String annotationName ) {
         return this.annotationMap.containsKey ( annotationName );
     }
 
     @Override
-    public Map<String, Object> getAnnotationData ( String annotationName ) {
+    public final Map<String, Object> getAnnotationData ( String annotationName ) {
 
         return this.annotationMap.get ( annotationName );
     }
 
 
-    public boolean isPrimitive() {
-        return  isPrimitive;
+    public final boolean isPrimitive() {
+        return  bits.get ( PRIMITIVE );
     }
 
 
@@ -404,6 +453,70 @@ public abstract class BaseField implements FieldAccess {
     @Override
     public final Type typeEnum () {
         return this.typeEnum;
+    }
+
+
+
+    @Override
+    public final boolean isFinal() {
+        return bits.get(FINAL);
+    }
+
+
+    @Override
+    public final boolean isStatic() {
+
+
+        return bits.get(STATIC);
+    }
+
+    @Override
+    public final boolean isVolatile() {
+        return bits.get(VOLATILE);
+    }
+
+
+    @Override
+    public final boolean isQualified() {
+        return bits.get( QUALIFIED );
+    }
+
+    @Override
+    public final boolean isReadOnly() {
+        return bits.get(READ_ONLY);
+    }
+
+
+
+    @Override
+    public final Class<?> getType() {
+        return type;
+    }
+
+    @Override
+    public final String getName() {
+        return name;
+    }
+
+
+    @Override
+    public String toString() {
+        return "BaseField [name=" + name
+               + ", type=" + type
+                + "]";
+    }
+
+
+
+
+    @Override
+    public final  boolean include () {
+        return bits.get( INCLUDE );
+    }
+
+    @Override
+    public final boolean ignore () {
+        return bits.get( IGNORE );
     }
 
 

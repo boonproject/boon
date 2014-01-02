@@ -63,6 +63,10 @@ public interface FieldAccess {
     Field getField();
 
 
+
+    boolean include();
+    boolean ignore();
+
     ParameterizedType getParameterizedType();
     Class<?> getComponentClass();
     boolean hasAnnotation(String annotationName) ;

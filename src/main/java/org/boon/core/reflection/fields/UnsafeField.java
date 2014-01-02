@@ -17,7 +17,7 @@ public abstract class UnsafeField extends BaseField {
 
     protected UnsafeField ( Field field  )  {
         super(field);
-        if ( isStatic ) {
+        if ( super.isStatic() ) {
             base = unsafe.staticFieldBase( field );
             offset = unsafe.staticFieldOffset( field );
         } else {
@@ -196,51 +196,12 @@ public abstract class UnsafeField extends BaseField {
     }
 
 
-    @Override
-    public boolean isFinal() {
-        return isFinal;
-    }
 
     public Object getBase() {
         return base;
     }
 
 
-
-    @Override
-    public boolean isStatic() {
-        return isStatic;
-    }
-
-
-    @Override
-    public boolean isVolatile() {
-        return isVolatile;
-    }
-
-
-    @Override
-    public boolean isQualified() {
-        return qualified;
-    }
-
-
-    @Override
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-
-    @Override
-    public Class<?> getType() {
-        return type;
-    }
-
-
-    @Override
-    public String getName() {
-        return name;
-    }
 
 
     @Override
@@ -307,14 +268,6 @@ public abstract class UnsafeField extends BaseField {
     }
 
 
-    @Override
-    public String toString() {
-        return "UnsafeField [name=" + name + ", field=" + field + ", offset=" + offset
-                + ", isFinal=" + isFinal + ", base=" + base + ", isStatic="
-                + isStatic + ", isVolatile=" + isVolatile + ", qualified="
-                + qualified + ", readOnly=" + readOnly + ", type=" + type
-                + "]";
-    }
 
 
     private static final class IntUnsafeField extends UnsafeField {

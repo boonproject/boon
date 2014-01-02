@@ -2,8 +2,7 @@ package org.boon.json;
 
 import org.boon.Lists;
 import org.boon.core.reflection.Reflection;
-import org.boon.json.implementation.JsonSerializerImpl;
-import org.boon.json.implementation.JsonStringDecoder;
+import org.boon.json.implementation.JsonSerializerImplOld;
 import org.junit.Test;
 
 import java.net.URL;
@@ -34,7 +33,7 @@ public class JsonSerializeTest {
     public void test () {
 
         Employee rick = new Employee ();
-        String sRick = new JsonSerializerImpl ()
+        String sRick = new JsonSerializerImplOld ()
                 .serialize ( rick ).toString ();
         boolean ok = sRick.equals ( "{\"name\":\"Rick\"}" ) || die ( sRick );
     }

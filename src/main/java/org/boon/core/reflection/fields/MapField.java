@@ -13,23 +13,19 @@ import static org.boon.Exceptions.die;
 
 public class MapField implements FieldAccess {
 
-    private String name;
+    private final String name;
 
-    public MapField() {
-
-    }
-
-    public MapField( String name ) {
+    public  MapField( String name ) {
         this.name = name;
     }
 
     @Override
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
     @Override
-    public Object getValue( Object obj ) {
+    public final Object getValue( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return map.get( name );
@@ -38,7 +34,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setValue( Object obj, Object value ) {
+    public final void setValue( Object obj, Object value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -47,12 +43,12 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setFromValue( Object obj, Value value ) {
+    public final void setFromValue( Object obj, Value value ) {
         setValue( obj, value.toValue() );
     }
 
     @Override
-    public boolean getBoolean( Object obj ) {
+    public final boolean getBoolean( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toBoolean( map.get( name ) );
@@ -61,7 +57,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setBoolean( Object obj, boolean value ) {
+    public final void setBoolean( Object obj, boolean value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -70,7 +66,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public int getInt( Object obj ) {
+    public final int getInt( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toInt( map.get( name ) );
@@ -80,7 +76,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setInt( Object obj, int value ) {
+    public final void setInt( Object obj, int value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -89,7 +85,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public short getShort( Object obj ) {
+    public final short getShort( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toShort( map.get( name ) );
@@ -99,7 +95,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setShort( Object obj, short value ) {
+    public final void setShort( Object obj, short value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -108,7 +104,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public char getChar( Object obj ) {
+    public final char getChar( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toChar( map.get( name ) );
@@ -118,7 +114,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setChar( Object obj, char value ) {
+    public final void setChar( Object obj, char value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -127,7 +123,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public long getLong( Object obj ) {
+    public final long getLong( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toLong( map.get( name ) );
@@ -137,7 +133,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setLong( Object obj, long value ) {
+    public final void setLong( Object obj, long value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -146,7 +142,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public double getDouble( Object obj ) {
+    public final double getDouble( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toDouble( map.get( name ) );
@@ -156,7 +152,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setDouble( Object obj, double value ) {
+    public final void setDouble( Object obj, double value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -165,7 +161,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public float getFloat( Object obj ) {
+    public final float getFloat( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toFloat( map.get( name ) );
@@ -175,7 +171,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setFloat( Object obj, float value ) {
+    public final void setFloat( Object obj, float value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -184,7 +180,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public byte getByte( Object obj ) {
+    public final byte getByte( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return Conversions.toByte( map.get( name ) );
@@ -194,7 +190,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setByte( Object obj, byte value ) {
+    public final void setByte( Object obj, byte value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -204,7 +200,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public Object getObject( Object obj ) {
+    public final Object getObject( Object obj ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             return map.get( name );
@@ -214,7 +210,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public void setObject( Object obj, Object value ) {
+    public final void setObject( Object obj, Object value ) {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
@@ -223,70 +219,80 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public Type typeEnum () {
+    public final Type typeEnum () {
         return Type.OBJECT;
     }
 
 
     @Override
-    public boolean isPrimitive () {
+    public final boolean isPrimitive () {
         return false;
     }
 
 
     @Override
-    public Field getField() {
+    public final Field getField() {
         return die( Field.class, "Unsupported operation" );
 
     }
 
     @Override
-    public ParameterizedType getParameterizedType() {
-        return null;
-    }
-
-    @Override
-    public Class<?> getComponentClass() {
-        return null;
-    }
-
-    @Override
-    public boolean hasAnnotation ( String annotationName ) {
+    public final boolean include () {
         return false;
     }
 
     @Override
-    public Map<String, Object> getAnnotationData ( String annotationName ) {
+    public final boolean ignore () {
+        return false;
+    }
+
+    @Override
+    public final ParameterizedType getParameterizedType() {
+        return null;
+    }
+
+    @Override
+    public final Class<?> getComponentClass() {
+        return null;
+    }
+
+    @Override
+    public final boolean hasAnnotation ( String annotationName ) {
+        return false;
+    }
+
+    @Override
+    public final Map<String, Object> getAnnotationData ( String annotationName ) {
         return Collections.EMPTY_MAP;
     }
 
     @Override
-    public boolean isFinal() {
+    public final boolean isFinal() {
         return false;
     }
 
     @Override
-    public boolean isStatic() {
+    public final boolean isStatic() {
         return false;
     }
 
     @Override
-    public boolean isVolatile() {
+    public final boolean isVolatile() {
         return false;
     }
 
     @Override
-    public boolean isQualified() {
+    public final boolean isQualified() {
         return false;
     }
 
     @Override
-    public boolean isReadOnly() {
+    public final boolean isReadOnly() {
         return false;
     }
 
     @Override
-    public Class<?> getType() {
+    public final Class<?> getType() {
         return Object.class;
     }
 }

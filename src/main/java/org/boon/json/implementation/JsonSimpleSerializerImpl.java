@@ -28,7 +28,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
     private CharBuf builder = CharBuf.create( 4000 );
 
 
-    private final void serializeString( String str, CharBuf builder ) {
+    public final void serializeString( String str, CharBuf builder ) {
           builder.addJsonEscapedString ( str );
 
     }
@@ -46,7 +46,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
     }
 
 
-    private final boolean serializeField ( Object parent, FieldAccess fieldAccess, CharBuf builder ) throws Exception {
+    public final boolean serializeField ( Object parent, FieldAccess fieldAccess, CharBuf builder ) {
 
         final String fieldName = fieldAccess.getName ();
         final Type typeEnum = fieldAccess.typeEnum ();
@@ -220,12 +220,12 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
 
 
-    private final void serializeDate ( Date date, CharBuf builder ) {
+    public final void serializeDate ( Date date, CharBuf builder ) {
         builder.addLong(date.getTime ());
     }
 
 
-    private final void serializeObject( Object obj, CharBuf builder ) throws Exception {
+    public final void serializeObject( Object obj, CharBuf builder )  {
 
 
         Type type = Type.getInstanceType (obj);
@@ -323,13 +323,13 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
     }
 
-    private void serializeUnknown ( Object obj, CharBuf builder ) {
+    public void serializeUnknown ( Object obj, CharBuf builder ) {
         builder.addQuoted ( obj.toString () );
     }
 
 
 
-    private final void serializeInstance ( Object obj, CharBuf builder ) throws Exception {
+    public final void serializeInstance ( Object obj, CharBuf builder )  {
 
         final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
         final Collection<FieldAccess> values = fieldAccessors.values ();
@@ -352,7 +352,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
     }
 
-    private final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
+    public final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
         Map<String, FieldAccess> map = fieldMap.get( aClass );
         if (map == null) {
             map = doGetFields ( aClass );
@@ -368,7 +368,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
     private static final char [] EMPTY_MAP_CHARS = {'{', '}'};
 
-    private final void serializeMap( Map<Object, Object> map, CharBuf builder ) throws Exception {
+    public final void serializeMap( Map<String, Object> map, CharBuf builder )  {
 
 
         if ( map.size () == 0 ) {
@@ -379,14 +379,19 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
         builder.addChar( '{' );
 
-        final Set<Map.Entry<Object, Object>> entrySet = map.entrySet();
-        for ( Map.Entry<Object, Object> entry : entrySet ) {
+        final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+        for ( Map.Entry<String, Object> entry : entrySet ) {
             serializeFieldName ( entry.getKey ().toString (), builder );
             serializeObject( entry.getValue(), builder );
             builder.addChar ( ',' );
         }
         builder.removeLastChar ();
         builder.addChar( '}' );
+
+    }
+
+    @Override
+    public void serializeArray ( Object array, CharBuf builder ) {
 
     }
 
@@ -397,7 +402,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
     private static final char [] EMPTY_LIST_CHARS = {'[', ']'};
 
-    private final void serializeCollection( Collection<?> collection, CharBuf builder ) throws Exception {
+    public final void serializeCollection( Collection<?> collection, CharBuf builder )  {
 
         if ( collection.size () == 0 ) {
              builder.addChars ( EMPTY_LIST_CHARS );
@@ -414,7 +419,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
 
     }
 
-    private final void serializeArray( Object[] array, CharBuf builder ) throws Exception {
+    public final void serializeArray( Object[] array, CharBuf builder )  {
         if ( array.length == 0 ) {
             builder.addChars ( EMPTY_LIST_CHARS );
             return;
