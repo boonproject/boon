@@ -1,8 +1,8 @@
-package org.boon.json.implementation.serializers.impl;
+package org.boon.json.serializers.impl;
 
 import org.boon.core.Type;
-import org.boon.json.JsonSerializer;
-import org.boon.json.implementation.serializers.ObjectSerializer;
+import org.boon.json.serializers.JsonSerializerInternal;
+import org.boon.json.serializers.ObjectSerializer;
 import org.boon.primitive.CharBuf;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class BasicObjectSerializerImpl implements ObjectSerializer {
     @Override
-    public final void serializeObject (JsonSerializer jsonSerializer, Object obj, CharBuf builder )  {
+    public final void serializeObject (JsonSerializerInternal jsonSerializer, Object obj, CharBuf builder )  {
 
         Type type = Type.getInstanceType (obj);
 

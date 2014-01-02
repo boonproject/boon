@@ -1,4 +1,4 @@
-package org.boon.json.implementation.serializers;
+package org.boon.json.serializers;
 
 import org.boon.json.JsonSerializer;
 import org.boon.primitive.CharBuf;
@@ -8,6 +8,6 @@ import org.boon.primitive.CharBuf;
  */
 public interface ArraySerializer {
 
-    void serializeArray(JsonSerializer serializer,  Object instance, CharBuf builder ) ;
+    void serializeArray(JsonSerializerInternal serializer,  Object instance, CharBuf builder ) ;
 
 }

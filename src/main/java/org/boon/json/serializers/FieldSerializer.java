@@ -1,4 +1,4 @@
-package org.boon.json.implementation.serializers;
+package org.boon.json.serializers;
 
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.JsonSerializer;
@@ -9,6 +9,6 @@ import org.boon.primitive.CharBuf;
  */
 public interface FieldSerializer {
 
-    boolean serializeField(JsonSerializer serializer,  Object parent, FieldAccess fieldAccess, CharBuf builder );
+    boolean serializeField(JsonSerializerInternal serializer,  Object parent, FieldAccess fieldAccess, CharBuf builder );
 
 }

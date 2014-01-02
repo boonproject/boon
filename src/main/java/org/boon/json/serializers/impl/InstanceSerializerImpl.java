@@ -1,8 +1,8 @@
-package org.boon.json.implementation.serializers.impl;
+package org.boon.json.serializers.impl;
 
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.json.JsonSerializer;
-import org.boon.json.implementation.serializers.InstanceSerializer;
+import org.boon.json.serializers.InstanceSerializer;
+import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class InstanceSerializerImpl implements InstanceSerializer{
     @Override
-    public void serializeInstance ( JsonSerializer serializer, Object instance, CharBuf builder ) {
+    public final void serializeInstance ( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
         final Map<String, FieldAccess> fieldAccessors =   serializer.getFields(instance.getClass ());
         final Collection<FieldAccess> values = fieldAccessors.values ();
 

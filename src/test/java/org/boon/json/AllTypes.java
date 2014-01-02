@@ -196,13 +196,10 @@ public class AllTypes {
         if ( myInt != allTypes1.myInt ) return false;
         if ( myLong != allTypes1.myLong ) return false;
         if ( myShort != allTypes1.myShort ) return false;
-        if ( allType != null ? !allType.equals ( allTypes1.allType ) : allTypes1.allType != null ) return false;
-        if ( bar != allTypes1.bar ) return false;
         if ( bigDecimal != null ? !bigDecimal.equals ( allTypes1.bigDecimal ) : allTypes1.bigDecimal != null )
             return false;
         if ( bigInteger != null ? !bigInteger.equals ( allTypes1.bigInteger ) : allTypes1.bigInteger != null )
             return false;
-        if ( foo != allTypes1.foo ) return false;
         if ( string != null ? !string.equals ( allTypes1.string ) : allTypes1.string != null ) return false;
         if ( string2 != null ? !string2.equals ( allTypes1.string2 ) : allTypes1.string2 != null ) return false;
 
@@ -225,6 +222,10 @@ public class AllTypes {
             }
 
         }
+
+       if ( allType != null ? !allType.equals ( allTypes1.allType ) : allTypes1.allType != null ) return false;
+        if ( bar != allTypes1.bar ) return false;
+        if ( foo != allTypes1.foo ) return false;
 
 
         return true;

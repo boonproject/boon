@@ -1,4 +1,4 @@
-package org.boon.json.implementation;
+package org.boon.json.serializers.impl;
 
 
 import org.boon.Exceptions;
@@ -6,13 +6,15 @@ import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.json.JsonSerializer;
+import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
-
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -20,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * It excludes default values, i.e., int v by default is 0.
  * It excludes nulls and empties as well.
  */
-public class JsonSimpleSerializerImpl implements JsonSerializer {
+public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
 
 
@@ -228,7 +230,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializer {
     public final void serializeObject( Object obj, CharBuf builder )  {
 
 
-        Type type = Type.getInstanceType (obj);
+        Type type = Type.getInstanceType(obj);
 
         switch ( type ) {
 

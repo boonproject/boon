@@ -17,7 +17,7 @@ public enum Type {
              }
     }
 
-    public  static Type getType ( Class<?> clazz ) {
+    public static Type getType ( Class<?> clazz ) {
 
         final String className = clazz.getName();
         Type type =  getType( className );

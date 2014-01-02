@@ -1,8 +1,8 @@
-package org.boon.json.implementation.serializers.impl;
+package org.boon.json.serializers.impl;
 
-import org.boon.json.JsonSerializer;
-import org.boon.json.implementation.serializers.ArraySerializer;
-import org.boon.json.implementation.serializers.CollectionSerializer;
+import org.boon.json.serializers.ArraySerializer;
+import org.boon.json.serializers.CollectionSerializer;
+import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
 
 import java.util.Collection;
@@ -16,7 +16,7 @@ public class CollectionSerializerImpl implements CollectionSerializer, ArraySeri
 
 
     @Override
-    public final void serializeCollection ( JsonSerializer serializer, Collection<?> collection, CharBuf builder ) {
+    public final void serializeCollection ( JsonSerializerInternal serializer, Collection<?> collection, CharBuf builder ) {
         if ( collection.size () == 0 ) {
             builder.addChars ( EMPTY_LIST_CHARS );
             return;
@@ -33,7 +33,7 @@ public class CollectionSerializerImpl implements CollectionSerializer, ArraySeri
     }
 
     @Override
-    public void serializeArray ( JsonSerializer serializer, Object objArray, CharBuf builder )  {
+    public void serializeArray ( JsonSerializerInternal serializer, Object objArray, CharBuf builder )  {
         Object [] array = (Object[])objArray;
         if ( array.length == 0 ) {
             builder.addChars ( EMPTY_LIST_CHARS );

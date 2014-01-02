@@ -1,8 +1,8 @@
-package org.boon.json.implementation.serializers.impl;
+package org.boon.json.serializers.impl;
 
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.json.JsonSerializer;
-import org.boon.json.implementation.serializers.MapSerializer;
+import org.boon.json.serializers.JsonSerializerInternal;
+import org.boon.json.serializers.MapSerializer;
 import org.boon.primitive.CharBuf;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public class MapSerializerImpl implements MapSerializer {
     }
 
     @Override
-    public final void serializeMap ( JsonSerializer serializer, Map<String, Object> map, CharBuf builder ) {
+    public final void serializeMap ( JsonSerializerInternal serializer, Map<String, Object> map, CharBuf builder ) {
 
         if ( map.size () == 0 ) {
             builder.addChars ( EMPTY_MAP_CHARS );

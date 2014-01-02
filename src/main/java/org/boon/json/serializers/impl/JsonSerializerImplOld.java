@@ -1,4 +1,4 @@
-package org.boon.json.implementation;
+package org.boon.json.serializers.impl;
 
 import org.boon.Exceptions;
 import org.boon.Sets;
@@ -13,19 +13,17 @@ import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.json.FieldSerializationData;
-import org.boon.json.JsonSerializer;
 import org.boon.json.ObjectSerializationData;
+import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class JsonSerializerImplOld implements JsonSerializer {
+public class JsonSerializerImplOld implements JsonSerializerInternal {
 
     private static final String[] EMPTY_PROPERTIES = new String[0];
     private final boolean outputType;
@@ -40,8 +38,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
     private final boolean handleComplexBackReference;
     private final boolean useInstanceCache;
 
-    private final List<Function<FieldSerializationData, Boolean>> filterProperties;
-    private final List<Function<FieldSerializationData, Boolean>> customPropertySerializers;
     private final Map <Class<?>, Function<ObjectSerializationData, Boolean>> customObjectSerializers;
     private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
 
@@ -60,8 +56,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
         this.handleSimpleBackReference = true;
         this.handleComplexBackReference = false;
         this.customObjectSerializers = null;
-        this.filterProperties = null;
-        this.customPropertySerializers = null;
         this.jsonFormatForDates = false;
         this.includeDefault = false;
         this.useInstanceCache = true;
@@ -77,8 +71,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
                                    final boolean jsonFormatForDates,
                                    final boolean includeDefault,
                                    final boolean useInstanceCache,
-                                   final List<Function<FieldSerializationData, Boolean>> filterProperties,
-                                   final List<Function<FieldSerializationData, Boolean>> customSerializer,
                                    final Map<Class<?>, Function<ObjectSerializationData, Boolean>> customObjectSerializers ) {
         this.outputType = outputType;
         this.useFields = useFields;
@@ -90,8 +82,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
         this.handleComplexBackReference = handleComplexBackReference;
         this.useInstanceCache = useInstanceCache;
 
-        this.filterProperties = filterProperties;
-        this.customPropertySerializers = customSerializer;
         this.customObjectSerializers =  customObjectSerializers;
         this.jsonFormatForDates = jsonFormatForDates;
         this.includeDefault = includeDefault;
@@ -573,18 +563,10 @@ public class JsonSerializerImplOld implements JsonSerializer {
 
 
 
-        if ( this.customPropertySerializers != null ) {
-            for ( FieldAccess fieldAccess : values ) {
-                serializeNameValueCustomSerializers ( obj, builder, fieldAccess );
-                builder.addChar( ',' );
-                index++;
-            }
-        } else {
             for ( FieldAccess fieldAccess : values ) {
                 serializeNameValue ( obj, builder, fieldAccess );
                 index++;
             }
-        }
         if ( index > 0 ) {
             builder.removeLastChar();
         }
@@ -597,7 +579,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
         builder.addQuoted ( fieldAccess.getName () );
         builder.addChar( ':' );
         Object value = fieldAccess.getValue( obj );
-        applyCustomSerializers ( obj, builder, fieldAccess, value );
     }
 
 
@@ -610,7 +591,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
         builder.addQuoted ( fieldAccess.getName () );
         builder.addChar( ':' );
         Object value = fieldAccess.getValue( obj );
-        applyCustomSerializers ( obj, builder, fieldAccess, value );
     }
 
     private final void doSerializeInstanceNoNulls ( Object obj, CharBuf builder )  {
@@ -637,18 +617,10 @@ public class JsonSerializerImplOld implements JsonSerializer {
 
 
 
-        if ( this.customPropertySerializers != null ) {
-            for ( FieldAccess fieldAccess : values ) {
-                serializeNameValueCustomSerializersNoNull ( obj, builder, fieldAccess );
-                builder.addChar( ',' );
-                index++;
-            }
-        } else {
             for ( FieldAccess fieldAccess : values ) {
                 serializeNameValueNoNulls ( obj, builder, fieldAccess );
                 index++;
             }
-        }
         if ( index > 0 ) {
             builder.removeLastChar();
         }
@@ -709,15 +681,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
 
 
         length = values.size ();
-        if ( this.customPropertySerializers != null ) {
-            for ( FieldAccess fieldAccess : values ) {
-                serializeNameValueCustomSerializers ( obj, builder, fieldAccess );
-                index++;
-                if ( index < length ) {
-                    builder.addChar( ',' );
-                }
-            }
-        } else {
             for ( FieldAccess fieldAccess : values ) {
                 builder.addQuoted ( fieldAccess.getName () );
                 builder.addChar( ':' );
@@ -727,35 +690,14 @@ public class JsonSerializerImplOld implements JsonSerializer {
                     builder.addChar( ',' );
                 }
             }
-        }
 
         builder.addChar( '}' );
     } 
     
-    private void applyCustomSerializers ( Object obj, CharBuf builder, FieldAccess fieldAccess, Object value )  {
-        boolean handled = false;
-        for (Function<FieldSerializationData, Boolean> function : this.customPropertySerializers ) {
-            FieldSerializationData data = new FieldSerializationData (
-                    fieldAccess.getName (), fieldAccess.getType (), obj.getClass (), fieldAccess.getValue ( obj ), builder, obj  );
-            handled = function.apply( data );
-            if ( handled ) {
-                break;
-            }
-
-        }
-
-        if (!handled ) {
-            serializeFieldObject ( obj,  fieldAccess, builder );
-        }
-    }
 
     private Collection<FieldAccess> filterFields ( Object obj, Collection<FieldAccess> v ) {
 
         List <FieldAccess> fields = new LinkedList<> ( v );
-
-        if (this.filterProperties !=  null) {
-            filterByCustomPropertyFiltersIfNeeded ( obj, fields );
-        }
 
         if ( !includeEmpty ) {
             excludeEmptyIfNeeded ( obj, fields );
@@ -970,24 +912,6 @@ public class JsonSerializerImplOld implements JsonSerializer {
 
     }
 
-    private void filterByCustomPropertyFiltersIfNeeded ( Object obj, List<FieldAccess> fields ) {
-        if ( this.filterProperties.size () > 0) {
-
-            ListIterator<FieldAccess> listIterator = fields.listIterator ();
-
-            while ( listIterator.hasNext () ) {
-                FieldAccess fieldAccess = listIterator.next ();
-                FieldSerializationData data = new FieldSerializationData (
-                        fieldAccess.getName (), fieldAccess.getType (), obj.getClass (), fieldAccess.getValue ( obj ), null, obj  );
-                for (Function<FieldSerializationData, Boolean> func : filterProperties) {
-                    boolean exclude = func.apply ( data );
-                    if ( exclude ) {
-                        listIterator.remove ();
-                    }
-                }
-            }
-        }
-    }
 
 
     private String[] getProperitesToIgnore ( Object obj ) {

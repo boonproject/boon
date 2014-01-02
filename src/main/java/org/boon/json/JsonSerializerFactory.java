@@ -1,8 +1,7 @@
 package org.boon.json;
 
-import org.boon.core.Function;
-import org.boon.json.implementation.JsonSerializerImplOld;
-import org.boon.json.implementation.JsonSimpleSerializerImpl;
+import org.boon.json.serializers.*;
+import org.boon.json.serializers.impl.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,65 +12,110 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class JsonSerializerFactory {
 
-    private  boolean outputType = false;
-    private  boolean useProperties = false;
-    private  boolean useFields = true;
-    private  boolean includeNulls = false;
-    private  boolean useAnnotations = false;
-    private  boolean includeEmpty = false;
-    private  boolean jsonFormatForDates = false;
-    private boolean  handleSimpleBackReference = true;
-    private boolean  handleComplexBackReference = false;
-    private boolean  includeDefault = false;
-    private  boolean cacheInstances = true;
+    private boolean outputType = false;
+    private boolean useProperties = false;
+    private boolean useFields = true;
+    private boolean includeNulls = false;
+    private boolean useAnnotations = false;
+    private boolean includeEmpty = false;
+    private boolean jsonFormatForDates = false;
+    private boolean handleSimpleBackReference = true;
+    private boolean handleComplexBackReference = false;
+    private boolean includeDefault = false;
+    private boolean cacheInstances = true;
 
-    private List<Function<FieldSerializationData, Boolean>> filterProperties = null;
-    private List<Function<FieldSerializationData, Boolean>> customSerializers = null;
-    private Map<Class<?>, Function<ObjectSerializationData, Boolean>> customObjectSerializers = null;
+    private List<FieldFilter> filterProperties = null;
+    private List<CustomFieldSerializer> customFieldSerializers = null;
+    private Map<Class, CustomObjectSerializer> customObjectSerializers = null;
 
 
+    public JsonSerializer create () {
 
-    public JsonSerializer create() {
-
-        if (!outputType && !includeEmpty && !includeNulls && !useAnnotations &&
+        if ( !outputType && !includeEmpty && !includeNulls && !useAnnotations &&
                 !jsonFormatForDates && handleSimpleBackReference &&
                 !handleComplexBackReference && !includeDefault && filterProperties == null
-                && customSerializers == null && customObjectSerializers == null) {
+                && customFieldSerializers == null && customObjectSerializers == null ) {
             return new JsonSimpleSerializerImpl ();
         } else {
-            return new JsonSerializerImplOld (outputType, useProperties, useFields,
-                includeNulls, useAnnotations, includeEmpty,
-                handleSimpleBackReference, handleComplexBackReference, jsonFormatForDates, includeDefault,
-                cacheInstances,
-                filterProperties, customSerializers, customObjectSerializers);
+
+            InstanceSerializer instanceSerializer;
+            CollectionSerializer collectionSerializer;
+            ArraySerializer arraySerializer;
+            UnknownSerializer unknownSerializer;
+            DateSerializer dateSerializer;
+            FieldsAccessor fieldsAccessor;
+
+            ObjectSerializer objectSerializer;
+            StringSerializer stringSerializer;
+            MapSerializer mapSerializer;
+            FieldSerializer fieldSerializer;
+
+
+            instanceSerializer = new InstanceSerializerImpl ();
+            objectSerializer = new BasicObjectSerializerImpl ();
+            stringSerializer = new StringSerializerImpl ();
+            mapSerializer = new MapSerializerImpl ();
+
+            if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference || !includeDefault ) {
+                fieldSerializer = new FieldSerializerUseAnnotationsImpl (
+                        includeNulls,
+                        includeDefault, useAnnotations,
+                        includeEmpty, handleSimpleBackReference,
+                        handleComplexBackReference,
+                        customObjectSerializers,
+                        filterProperties,
+                        null,
+                        customFieldSerializers );
+            } else {
+                fieldSerializer = new FieldSerializerImpl ();
+            }
+            collectionSerializer = new CollectionSerializerImpl ();
+            arraySerializer = ( ArraySerializer ) collectionSerializer;
+            unknownSerializer = new UnknownSerializerImpl ();
+            dateSerializer = new DateSerializerImpl ();
+            fieldsAccessor = new FieldAccessorsImplFieldThenProp ();
+
+            return new JsonSerializerImpl (
+
+                    objectSerializer,
+                    stringSerializer,
+                    mapSerializer,
+                    fieldSerializer,
+                    instanceSerializer,
+                    collectionSerializer,
+                    arraySerializer,
+                    unknownSerializer,
+                    dateSerializer,
+                    fieldsAccessor
+
+            );
         }
 
-     }
-
-
-
-    public JsonSerializerFactory addFilter(Function<FieldSerializationData, Boolean> filter) {
-           if ( filterProperties == null ) {
-               filterProperties = new CopyOnWriteArrayList<> (  );
-           }
-           filterProperties.add ( filter );
-           return this;
     }
 
-    public JsonSerializerFactory addPropertySerializer(Function<FieldSerializationData, Boolean> serializer) {
-        if ( customSerializers == null ) {
-            customSerializers = new CopyOnWriteArrayList<> (  );
+
+    public JsonSerializerFactory addFilter ( FieldFilter filter ) {
+        if ( filterProperties == null ) {
+            filterProperties = new CopyOnWriteArrayList<> ();
         }
-        customSerializers.add ( serializer );
+        filterProperties.add ( filter );
         return this;
     }
 
-    public JsonSerializerFactory addTypeSerializer(Class<?> type, Function<ObjectSerializationData, Boolean> serializer) {
+    public JsonSerializerFactory addPropertySerializer ( CustomFieldSerializer serializer ) {
+        if ( customFieldSerializers == null ) {
+            customFieldSerializers = new CopyOnWriteArrayList<> ();
+        }
+        customFieldSerializers.add ( serializer );
+        return this;
+    }
+
+    public JsonSerializerFactory addTypeSerializer ( Class<?> type, CustomObjectSerializer serializer ) {
 
         if ( customObjectSerializers == null ) {
-            customObjectSerializers = new ConcurrentHashMap<> (  );
+            customObjectSerializers = new ConcurrentHashMap<> ();
         }
-        customObjectSerializers.put(type, serializer);
+        customObjectSerializers.put ( type, serializer );
         return this;
     }
 
@@ -93,7 +137,7 @@ public class JsonSerializerFactory {
         return this;
     }
 
-    public JsonSerializerFactory useProperties (  ) {
+    public JsonSerializerFactory useProperties () {
         this.useProperties = true;
         return this;
     }
@@ -109,7 +153,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory useFields (  ) {
+    public JsonSerializerFactory useFields () {
         this.useFields = true;
         return this;
     }
@@ -124,7 +168,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory includeNulls (  ) {
+    public JsonSerializerFactory includeNulls () {
         this.includeNulls = true;
         return this;
     }
@@ -139,7 +183,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory useAnnotations (  ) {
+    public JsonSerializerFactory useAnnotations () {
         this.useAnnotations = true;
         return this;
     }
@@ -155,7 +199,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory includeEmpty (  ) {
+    public JsonSerializerFactory includeEmpty () {
         this.includeEmpty = true;
         return this;
     }
@@ -179,7 +223,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory handleComplexBackReference ( ) {
+    public JsonSerializerFactory handleComplexBackReference () {
         this.handleComplexBackReference = true;
         return this;
     }
@@ -195,7 +239,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory useJsonFormatForDates (  ) {
+    public JsonSerializerFactory useJsonFormatForDates () {
         this.jsonFormatForDates = true;
         return this;
     }
@@ -211,7 +255,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory includeDefaultValues (  ) {
+    public JsonSerializerFactory includeDefaultValues () {
         this.includeDefault = true;
         return this;
     }
@@ -227,7 +271,7 @@ public class JsonSerializerFactory {
     }
 
 
-    public JsonSerializerFactory usedCacheInstances ( ) {
+    public JsonSerializerFactory usedCacheInstances () {
         this.cacheInstances = true;
         return this;
     }
