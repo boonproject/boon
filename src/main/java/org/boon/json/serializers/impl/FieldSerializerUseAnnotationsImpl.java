@@ -200,6 +200,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
             if (customObjectSerializer!=null) {
                 serializeFieldName ( fieldName, builder );
                 customObjectSerializer.serializeObject ( serializer, value, builder );
+                return true;
             }
         }
 

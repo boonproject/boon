@@ -537,6 +537,9 @@ public class CharBuf extends Writer implements CharSequence {
 
 
 
+    public final CharBuf addJsonFieldName( String str ) {
+        return addJsonFieldName ( FastStringUtils.toCharArray ( str ) );
+    }
 
     public final CharBuf addJsonFieldName( char[] chars ) {
 

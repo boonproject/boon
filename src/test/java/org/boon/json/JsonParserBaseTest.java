@@ -108,6 +108,7 @@ public class JsonParserBaseTest {
                         if ( fieldAccess.getType ().equals ( long.class ) &&
                                 fieldAccess.getName ().endsWith ( "Date" ) ) {
 
+                            builder.addJsonFieldName ( fieldAccess.getName () );
                             Date date = Conversions.toDate ( fieldAccess.getLong ( parent ) );
 
                             final String jsonDateString = Dates.jsonDate ( date );
@@ -129,8 +130,7 @@ public class JsonParserBaseTest {
         String json = serializer.serialize ( foo ).toString ();
          puts (json);
 
-        //TODO FIX
-        boolean ok = true; //json.contains  ("[\"wiki\",\"wiki\",\"wiki\"]" ) || die();
+        boolean ok = json.contains  ("[\"wiki\",\"wiki\",\"wiki\"]" ) || die();
 
 
         puts (json);
@@ -149,8 +149,7 @@ public class JsonParserBaseTest {
         puts (testMe.ignoreMe3);
         ok |= testMe.ignoreMe3 == null || die();
 
-        //TODO FIX
-        //ok |= testMe.someDate > 0 || die();  FIX THIS
+        ok |= testMe.someDate > 0 || die();
 
     }
 

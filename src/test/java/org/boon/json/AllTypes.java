@@ -13,6 +13,15 @@ import java.util.List;
 public class AllTypes {
 
 
+    public FooBasket getFooBasket () {
+        return fooBasket;
+    }
+
+    public void setFooBasket ( FooBasket fooBasket ) {
+        this.fooBasket = fooBasket;
+    }
+
+    FooBasket fooBasket = new FooBasket ();
 
     String ignoreMe3;
 
@@ -42,7 +51,6 @@ public class AllTypes {
     long someDate = new Date (  ).getTime ();
 
 
-    FooBasket fooBasket = new FooBasket ();
 
     AllTypes allType;
 

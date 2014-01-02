@@ -26,7 +26,7 @@ public class FieldAccessorsImplFieldThenProp implements FieldsAccessor {
     }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-        return Reflection.getPropertyFieldAccessors ( aClass );
+        return Reflection.getPropertyFieldAccessMapFieldFirst ( aClass );
     }
 
 
