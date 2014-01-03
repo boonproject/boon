@@ -44,7 +44,7 @@ public class JsonSerializeTest {
         //TODO FIX
 
         Employee rick = new Employee ();
-        String sRick = new JsonSerializerFactory ().useFields ().setOutputType ( true ).create ()
+        String sRick = new JsonSerializerFactory ().useFieldsFirst().setOutputType ( true ).create ()
                 .serialize ( rick ).toString ();
         //boolean ok = sRick.equals ( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\"}" ) || die ( sRick );
     }
@@ -454,5 +454,10 @@ public class JsonSerializeTest {
     }
 
 
+
+    @Test public void serializeIntArray() {
+        JsonSerializer serializer = new JsonSerializerFactory().create();
+        serializer.serialize ( new int [] {0,1,2,3,4,5} );
+    }
 
 }

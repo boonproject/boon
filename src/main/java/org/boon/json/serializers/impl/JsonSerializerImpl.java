@@ -40,7 +40,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         arraySerializer = (ArraySerializer) collectionSerializer;
         unknownSerializer = new UnknownSerializerImpl ();
         dateSerializer = new DateSerializerImpl ();
-        fieldsAccessor = new FieldAccessorsImplFieldThenProp();
+        fieldsAccessor = new FieldsAccessorFieldThenProp ();
 
     }
 
@@ -61,7 +61,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
 
 
         if (fieldsAccessor == null) {
-            this.fieldsAccessor = new FieldAccessorsImplFieldThenProp();
+            this.fieldsAccessor = new FieldsAccessorFieldThenProp ();
         } else {
             this.fieldsAccessor = fieldsAccessor;
         }

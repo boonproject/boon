@@ -12,7 +12,7 @@ public class SalesEmployee extends Employee implements Comparable<SalesEmployee>
     }
 
 
-    public float getCommissionRate() {
+    public int getCommissionRate() {
         return commissionRate;
     }
 

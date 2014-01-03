@@ -7,10 +7,7 @@ import org.boon.json.serializers.FieldsAccessor;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by rick on 1/1/14.
- */
-public class FieldAccessorsImplFieldThenProp implements FieldsAccessor {
+public class FieldsAccessorFieldThenProp implements FieldsAccessor {
 
     private final Map <Class<?>, Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
 

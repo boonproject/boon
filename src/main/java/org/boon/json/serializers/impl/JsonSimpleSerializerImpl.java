@@ -9,6 +9,7 @@ import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -23,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * It excludes nulls and empties as well.
  */
 public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
-    private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
+    private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<>( );
 
 
 
@@ -312,7 +313,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                 this.serializeMap ( (Map) obj, builder );
                 return;
             case ARRAY:
-                this.serializeArray ( ( Object[] ) obj, builder );
+                this.serializeArray (  obj, builder );
                 return;
             case INSTANCE:
                 serializeInstance ( obj, builder );
@@ -395,6 +396,20 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     @Override
     public void serializeArray ( Object array, CharBuf builder ) {
 
+        if ( Array.getLength (array) == 0 ) {
+            builder.addChars ( EMPTY_LIST_CHARS );
+            return;
+        }
+
+        builder.addChar( '[' );
+        final int length = Array.getLength( array );
+        for ( int index = 0; index < length; index++ ) {
+            serializeObject( Array.get( array, index ), builder );
+            builder.addChar ( ',' );
+        }
+        builder.removeLastChar ();
+        builder.addChar( ']' );
+
     }
 
     private void serializeFieldName ( String name, CharBuf builder ) {
@@ -421,20 +436,6 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     }
 
-    public final void serializeArray( Object[] array, CharBuf builder )  {
-        if ( array.length == 0 ) {
-            builder.addChars ( EMPTY_LIST_CHARS );
-            return;
-        }
-
-        builder.addChar( '[' );
-        for ( int index = 0; index < array.length; index++ ) {
-            serializeObject( array[ index ], builder );
-            builder.addChar ( ',' );
-        }
-        builder.removeLastChar ();
-        builder.addChar( ']' );
-    }
 
 }
 

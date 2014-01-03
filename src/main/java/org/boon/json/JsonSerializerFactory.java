@@ -13,8 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class JsonSerializerFactory {
 
     private boolean outputType = false;
-    private boolean useProperties = false;
-    private boolean useFields = true;
+    private boolean useFieldsFirst = true;
     private boolean includeNulls = false;
     private boolean useAnnotations = false;
     private boolean includeEmpty = false;
@@ -73,7 +72,13 @@ public class JsonSerializerFactory {
             arraySerializer = ( ArraySerializer ) collectionSerializer;
             unknownSerializer = new UnknownSerializerImpl ();
             dateSerializer = new DateSerializerImpl ();
-            fieldsAccessor = new FieldAccessorsImplFieldThenProp ();
+
+            if (useFieldsFirst) {
+                fieldsAccessor = new FieldsAccessorFieldThenProp();
+
+            } else {
+                fieldsAccessor = new FieldsAccessorsPropertyThenField();
+            }
 
             return new JsonSerializerImpl (
 
@@ -128,33 +133,33 @@ public class JsonSerializerFactory {
         return this;
     }
 
-    public boolean isUseProperties () {
-        return useProperties;
+    public boolean isUsePropertiesFirst () {
+        return !useFieldsFirst;
     }
 
-    public JsonSerializerFactory setUseProperties ( boolean useProperties ) {
-        this.useProperties = useProperties;
+    public JsonSerializerFactory setUsePropertiesFirst ( boolean usePropertiesFirst ) {
+        this.useFieldsFirst = usePropertiesFirst;
         return this;
     }
 
-    public JsonSerializerFactory useProperties () {
-        this.useProperties = true;
+    public JsonSerializerFactory usePropertiesFirst () {
+        this.useFieldsFirst = false;
         return this;
     }
 
-    public boolean isUseFields () {
-        return useFields;
+    public boolean isUseFieldsFirst () {
+        return useFieldsFirst;
 
     }
 
-    public JsonSerializerFactory setUseFields ( boolean useFields ) {
-        this.useFields = useFields;
+    public JsonSerializerFactory setUseFieldsFirst ( boolean useFieldsFirst ) {
+        this.useFieldsFirst = useFieldsFirst;
         return this;
     }
 
 
-    public JsonSerializerFactory useFields () {
-        this.useFields = true;
+    public JsonSerializerFactory useFieldsFirst () {
+        this.useFieldsFirst = true;
         return this;
     }
 

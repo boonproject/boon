@@ -4,34 +4,90 @@ import org.boon.Exceptions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.logging.Logger;
 
 import static org.boon.Boon.sputs;
 
 public class PropertyField extends BaseField {
-    private final Method getter;
-    private final Method setter;
+    final Method getter;
+    final Method setter;
 
 
     public PropertyField( String name, Method setter, Method getter ) {
 
         super (  name,  getter,  setter);
-            this.setter = setter;
-            this.getter = getter;
 
+        this.getter = getter;
+        this.setter = setter;
+
+
+//        MethodHandles.Lookup lookup = MethodHandles.lookup();
+//        MethodType methodType
+//                = MethodType.methodType ( this.type );
+//        MethodHandle methodHandle = null;
+//        CallSite callSiteMethod;
+//
+//        if ( parentType != null && getter != null ) {
+//            try {
+//                methodHandle = lookup.findVirtual ( this.parentType, getter.getName (), methodType );
+//            } catch ( NoSuchMethodException e ) {
+//               Exceptions.handle ( e );
+//            } catch ( IllegalAccessException e ) {
+//                Exceptions.handle ( e );
+//            }
+//            callSiteMethod = new ConstantCallSite(methodHandle);
+//            this.getter = callSiteMethod.dynamicInvoker();
+//
+//        }  else {
+//            this.getter = null;
+//        }
+//
+//
+//        if ( parentType != null && setter != null ) {
+//
+//            methodType
+//                    = MethodType.methodType ( void.class, this.getType() );
+//
+//
+//            try {
+//                methodHandle = lookup.findVirtual ( this.parentType, setter.getName(), methodType );
+//            } catch ( NoSuchMethodException e ) {
+//                Exceptions.handle ( e );
+//            } catch ( IllegalAccessException e ) {
+//                Exceptions.handle ( e );
+//            }
+//
+//            callSiteMethod = new ConstantCallSite(methodHandle);
+//            this.setter = callSiteMethod.dynamicInvoker ();
+//        } else {
+//            this.setter = null;
+//        }
     }
 
     @Override
     public Object getObject( Object obj ) {
         try {
-            return getter.invoke( obj );
-        } catch ( Exception e ) {
+            return getter.invoke ( obj );
+        } catch ( Throwable e ) {
             return Exceptions.handle( Object.class, sputs( "unable to call getObject for property ", this.name,
                     "for class ", this.type ), e );
         }
     }
 
+
+
+
+    @Override
+    public final void setObject( Object obj, Object value ) {
+        try {
+            setter.invoke ( obj, value );
+        } catch ( Throwable e ) {
+            Exceptions.handle( String.format( "You tried to modify property %s of %s for instance %s " +
+                    "with set %s using %s, and this property read only status is %s",
+                    name, obj.getClass().getSimpleName(), obj, value, getName (), isReadOnly () ), e );
+
+        }
+
+    }
     public final boolean getBoolean( Object obj ) {
         try {
             return ( Boolean ) this.getObject ( obj );
@@ -185,22 +241,9 @@ public class PropertyField extends BaseField {
     @Override
     public final void setByte( Object obj, byte value ) {
         try {
-            this.setObject( obj, value );
+            this.setObject ( obj, value );
         } catch ( Exception e ) {
             throw new RuntimeException( e );
-
-        }
-
-    }
-
-    @Override
-    public final void setObject( Object obj, Object value ) {
-        try {
-            setter.invoke( obj, value );
-        } catch ( Exception e ) {
-            Exceptions.handle( String.format( "You tried to modify property %s of %s for instance %s " +
-                    "with set %s using %s, and this property read only status is %s",
-                    name, obj.getClass().getSimpleName(), obj, value, setter.getName(), isReadOnly () ), e );
 
         }
 

@@ -5,11 +5,9 @@ import org.boon.json.serializers.CollectionSerializer;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 
-/**
- * Created by rick on 1/1/14.
- */
 public class CollectionSerializerImpl implements CollectionSerializer, ArraySerializer {
 
     private static final char [] EMPTY_LIST_CHARS = {'[', ']'};
@@ -33,16 +31,16 @@ public class CollectionSerializerImpl implements CollectionSerializer, ArraySeri
     }
 
     @Override
-    public void serializeArray ( JsonSerializerInternal serializer, Object objArray, CharBuf builder )  {
-        Object [] array = (Object[])objArray;
-        if ( array.length == 0 ) {
+    public void serializeArray ( JsonSerializerInternal serializer, Object array, CharBuf builder )  {
+        if ( Array.getLength ( array ) == 0 ) {
             builder.addChars ( EMPTY_LIST_CHARS );
             return;
         }
 
         builder.addChar( '[' );
-        for ( int index = 0; index < array.length; index++ ) {
-            serializer.serializeObject ( array[ index ], builder );
+        final int length = Array.getLength ( array );
+        for ( int index = 0; index < length; index++ ) {
+            serializer.serializeObject ( Array.get ( array, index ), builder );
             builder.addChar ( ',' );
         }
         builder.removeLastChar ();

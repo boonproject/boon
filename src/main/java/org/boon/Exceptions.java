@@ -37,7 +37,7 @@ public class Exceptions {
         throw new SoftenedException( e );
     }
 
-    public static <T> T handle( Class<T> clazz, String message, java.lang.Exception e ) {
+    public static <T> T handle( Class<T> clazz, String message, Throwable e ) {
 
         throw new SoftenedException( message, e );
     }
