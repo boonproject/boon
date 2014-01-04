@@ -23,6 +23,25 @@
     },
     "blockNames": {},
     "events": {
+
+        "996345": {
+            "description": " 報 | 場 | 塀 | 塁 | 塔 | 塚 | 奥",
+            "id": 138586345,
+            "logo": "/images/UE0AAAAACEKo6QAAAAZDSVRN",
+            "name": "丁 | 七 | 九 | 了 | 二 | 人 | 入 | 八 | 刀 | 力 | 十 | 又 | 乃",
+            "subTopicIds": [
+                337184268,
+                337184283,
+                337184275
+            ],
+            "subjectCode": null,
+            "subtitle": null,
+            "topicIds": [
+                324846099,
+                107888604,
+                324846100
+            ]
+        },
         "138586341": {
             "description": null,
             "id": 138586341,
