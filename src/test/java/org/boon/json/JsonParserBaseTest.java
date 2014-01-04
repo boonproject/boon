@@ -300,7 +300,7 @@ public class JsonParserBaseTest {
             puts ( "testing", file );
 
             Object object =  jsonParser.parse ( IO.read ( file ) );
-            //puts ( "FILE _________\n\n\n", file, object.getClass (), object);
+            puts ( "FILE _________\n\n\n", file, object.getClass (), object);
 
 
 

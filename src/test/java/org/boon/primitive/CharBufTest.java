@@ -76,6 +76,26 @@ public class CharBufTest {
         boolean ok = str.equals( buf.toString() ) || die( buf.toString() );
     }
 
+
+    @Test
+    public void testUnicode() {
+
+        StringBuilder builder = new StringBuilder( 64_000 );
+
+        for (char cc = 32; cc < (char)1_114_112 ; cc++) {
+
+            if (Character.isLetter( cc )) {
+                builder.append(cc);
+            }
+        }
+
+        String str = builder.toString();
+        byte[] bytes = str.getBytes( StandardCharsets.UTF_8 );
+        CharBuf buf = CharBuf.createFromUTF8Bytes( bytes );
+        boolean ok = str.equals( buf.toString() ) || die( buf.toString() );
+
+    }
+
     @Test
     public void testMe() {
         CharBuf buf = new CharBuf();

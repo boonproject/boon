@@ -648,58 +648,8 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
 
-    private String decodeString() {
+    protected abstract String decodeString();
 
-        byte[] array = charArray;
-        int index = __index;
-        int currentChar = charArray[index];
-
-        if ( index < array.length && currentChar == DOUBLE_QUOTE ) {
-            index++;
-        }
-
-        final int startIndex = index;
-
-
-        boolean escape = false;
-
-        boolean hasEscaped = false;
-
-
-        while ( true ) {
-            currentChar = array[index];
-            if ( isDoubleQuote ( currentChar )) {
-                if (!escape) {
-                    break;
-                }
-            }  if ( isEscape (currentChar) ) {
-                hasEscaped = true;
-                escape = true;
-            } else {
-                escape = false;
-            }
-            index++;
-            if (index >= array.length) break;
-        }
-
-
-        String value;
-        if ( hasEscaped ) {
-            value = JsonStringDecoder.decodeForSure( array, startIndex, index );
-        } else {
-            value = new String( array, startIndex, ( index - startIndex ) );
-        }
-
-        if ( index < charArray.length ) {
-            index++;
-        }
-        __index = index;
-        return value;
-    } 
-    
-
-
-    abstract protected void addChar();
 
     protected final String decodeKeyName() {
         return decodeString();

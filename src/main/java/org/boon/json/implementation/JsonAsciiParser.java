@@ -17,14 +17,14 @@ import java.util.Map;
 public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonParser {
 
 
-    public JsonAsciiParser(  ) {
+    public JsonAsciiParser() {
         super( FieldAccessMode.create( FieldAccessMode.FIELD ) );
         this.charset = StandardCharsets.US_ASCII;
 
     }
 
     public JsonAsciiParser( FieldAccessMode mode ) {
-        super( FieldAccessMode.create(mode) );
+        super( FieldAccessMode.create( mode ) );
         this.charset = StandardCharsets.US_ASCII;
 
     }
@@ -35,8 +35,57 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
 
     }
 
-    protected final void addChar() {
-        builder.addChar( __currentChar );
+
+
+    protected final String decodeString() {
+
+        byte[] array = charArray;
+        int index = __index;
+        int currentChar = charArray[ index ];
+
+        if ( index < array.length && currentChar == DOUBLE_QUOTE ) {
+            index++;
+        }
+
+        final int startIndex = index;
+
+
+        boolean escape = false;
+
+        boolean hasEscaped = false;
+
+
+        while ( true ) {
+            currentChar = array[ index ];
+            if ( isDoubleQuote( currentChar ) ) {
+                if ( !escape ) {
+                    break;
+                }
+            }
+            if ( isEscape( currentChar ) ) {
+                hasEscaped = true;
+                escape = true;
+            } else {
+                escape = false;
+            }
+            index++;
+            if ( index >= array.length ) break;
+        }
+
+
+        String value;
+        if ( hasEscaped ) {
+            value = JsonStringDecoder.decodeForSure( array, startIndex, index );
+        } else {
+            value = new String( array, startIndex, ( index - startIndex ), StandardCharsets.US_ASCII );
+        }
+
+        if ( index < charArray.length ) {
+            index++;
+        }
+        __index = index;
+        return value;
     }
+
 
 }
