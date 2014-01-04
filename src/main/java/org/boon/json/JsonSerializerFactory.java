@@ -29,7 +29,7 @@ public class JsonSerializerFactory {
     private Map<Class, CustomObjectSerializer> customObjectSerializers = null;
 
 
-    public JsonSerializer create () {
+    public JsonSerializer create() {
 
         if ( !outputType && !includeEmpty && !includeNulls && !useAnnotations &&
                 !jsonFormatForDates && handleSimpleBackReference &&
@@ -52,8 +52,13 @@ public class JsonSerializerFactory {
 
 
             instanceSerializer = new InstanceSerializerImpl ();
-            objectSerializer = new BasicObjectSerializerImpl ();
-            stringSerializer = new StringSerializerImpl ();
+
+            if ( !outputType )  {
+                objectSerializer = new BasicObjectSerializerImpl();
+            } else {
+                objectSerializer = new ObjectSerializationWithTypeInfo();
+            }
+                stringSerializer = new StringSerializerImpl ();
             mapSerializer = new MapSerializerImpl ();
 
             if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference || !includeDefault ) {
