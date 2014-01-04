@@ -3,6 +3,9 @@ package org.boon.json.implementation;
 import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.reflection.fields.FieldAccessMode;
+import org.boon.core.reflection.fields.FieldFieldsAccessor;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueInCharBuf;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
@@ -29,6 +32,20 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     protected char[] charArray;
     protected int __index;
     protected char __currentChar;
+
+
+
+    public JsonParserCharArray(  ) {
+        super( FieldAccessMode.create(FieldAccessMode.FIELD) );
+    }
+
+    public JsonParserCharArray( FieldAccessMode mode ) {
+        super( FieldAccessMode.create(mode) );
+    }
+
+    public JsonParserCharArray( FieldsAccessor fieldsAccessor ) {
+        super( fieldsAccessor );
+    }
 
 
     protected Object decodeFromChars( char[] cs ) {
@@ -444,58 +461,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return value;
     }
 
-    protected final String decodeStringOld() {
-
-        __currentChar = charArray[ __index ];
-
-        if ( __index < charArray.length && __currentChar == '"' ) {
-            __index++;
-
-        }
-
-
-        final int startIndex = __index;
-
-
-        boolean escape = false;
-        boolean hasEscaped = false;
-
-        done:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
-            switch ( __currentChar ) {
-
-                case '"':
-                    if ( !escape ) {
-                        break done;
-                    } else {
-                        escape = false;
-                        continue;
-                    }
-
-
-                case '\\':
-                    hasEscaped = true;
-                    escape = true;
-                    continue;
-
-            }
-            escape = false;
-        }
-
-        String value = null;
-        if ( hasEscaped ) {
-            value = JsonStringDecoder.decodeForSure( charArray, startIndex, __index );
-        } else {
-            value = new String( charArray, startIndex, ( __index - startIndex ) );
-        }
-
-        if ( __index < charArray.length ) {
-            __index++;
-        }
-
-        return value;
-    }
 
     protected final List decodeJsonArray() {
         if ( __currentChar == '[' ) {

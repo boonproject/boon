@@ -15,7 +15,7 @@ public class ObjectSerializationWithTypeInfo implements ObjectSerializer {
 
 
     @Override
-    public void serializeObject ( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
+    public final void serializeObject ( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
         builder.addString( "{\"class\":" );
         builder.addQuoted ( instance.getClass ().getName () );
         final Map<String, FieldAccess> fieldAccessors = serializer.getFields ( instance.getClass () );

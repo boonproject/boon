@@ -2,6 +2,8 @@ package org.boon.json.implementation;
 
 
 import org.boon.Exceptions;
+import org.boon.core.reflection.fields.FieldAccessMode;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
 import org.boon.json.JsonParserFactory;
@@ -208,7 +210,10 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
 
     }
 
-    public JsonParserConcurrent (JsonParserFactory factory) {
+
+    public JsonParserConcurrent ( JsonParserFactory factory) {
+        super( FieldAccessMode.create( factory.getFieldAccessType() ) );
+
         int cores = Runtime.getRuntime().availableProcessors();
         workers = new Worker[cores];
         pool = Executors.newFixedThreadPool ( cores );
@@ -229,8 +234,9 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
         }
     }
 
-    public JsonParserConcurrent () {
-        JsonParserFactory factory = new JsonParserFactory ();
+    public JsonParserConcurrent (  ) {
+        super( FieldAccessMode.create(FieldAccessMode.FIELD) );
+        JsonParserFactory factory = new JsonParserFactory();
         int cores = Runtime.getRuntime().availableProcessors();
         workers = new Worker[cores];
         pool = Executors.newFixedThreadPool ( cores );
@@ -275,15 +281,6 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
         READER,
         FILE_NAME
     }
-
-
-    public static void main (String... args)  {
-        JsonParserFactory factory = new JsonParserFactory ();
-        JsonParserConcurrent jsonParserConcurrent = new JsonParserConcurrent ( factory );
-        final Map<String, Object> map = jsonParserConcurrent.parseMap ( "{\"hello\": \"hello world\" }" );
-        puts(map.get ( "hello" ));
-    }
-
 
 
     @Override

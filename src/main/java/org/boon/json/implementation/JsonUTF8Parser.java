@@ -1,5 +1,7 @@
 package org.boon.json.implementation;
 
+import org.boon.core.reflection.fields.FieldAccessMode;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
 import sun.nio.cs.Surrogate;
@@ -9,6 +11,20 @@ import static org.boon.Exceptions.die;
 
 public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParser {
 
+
+
+
+    public JsonUTF8Parser(  ) {
+        super( FieldAccessMode.create( FieldAccessMode.FIELD ) );
+    }
+
+    public JsonUTF8Parser( FieldAccessMode mode ) {
+        super( FieldAccessMode.create(mode) );
+    }
+
+    public JsonUTF8Parser( FieldsAccessor fieldsAccessor ) {
+        super( fieldsAccessor );
+    }
 
     //  [C2..DF] [80..BF]
     private static boolean isMalformed2( int b1, int b2 ) {

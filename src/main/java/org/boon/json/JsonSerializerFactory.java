@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.fields.*;
 import org.boon.json.serializers.*;
 import org.boon.json.serializers.impl.*;
 
@@ -14,7 +15,7 @@ public class JsonSerializerFactory {
 
     private boolean outputType = false;
 
-    private SerializationAccess fieldAccessType = SerializationAccess.FIELD;
+    private FieldAccessMode fieldAccessType = FieldAccessMode.FIELD;
     private boolean includeNulls = false;
     private boolean useAnnotations = false;
     private boolean includeEmpty = false;
@@ -58,7 +59,9 @@ public class JsonSerializerFactory {
             } else {
                 objectSerializer = new ObjectSerializationWithTypeInfo();
             }
-                stringSerializer = new StringSerializerImpl ();
+
+
+            stringSerializer = new StringSerializerImpl ();
             mapSerializer = new MapSerializerImpl ();
 
             if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference || !includeDefault ) {
@@ -77,7 +80,13 @@ public class JsonSerializerFactory {
             collectionSerializer = new CollectionSerializerImpl ();
             arraySerializer = ( ArraySerializer ) collectionSerializer;
             unknownSerializer = new UnknownSerializerImpl ();
-            dateSerializer = new DateSerializerImpl ();
+
+            if (jsonFormatForDates) {
+                dateSerializer = new JsonDateSerializer();
+            } else {
+                dateSerializer = new DateSerializerImpl();
+            }
+
 
 
             switch ( fieldAccessType )  {
@@ -150,36 +159,36 @@ public class JsonSerializerFactory {
     }
 
     public boolean isUsePropertiesFirst () {
-        return fieldAccessType == SerializationAccess.PROPERTY_THEN_FIELD;
+        return fieldAccessType == FieldAccessMode.PROPERTY_THEN_FIELD;
     }
 
 
     public JsonSerializerFactory usePropertiesFirst () {
-        fieldAccessType = SerializationAccess.PROPERTY_THEN_FIELD;
+        fieldAccessType = FieldAccessMode.PROPERTY_THEN_FIELD;
         return this;
     }
 
     public boolean isUseFieldsFirst () {
-        return this.fieldAccessType == SerializationAccess.FIELD_THEN_PROPERTY;
+        return this.fieldAccessType == FieldAccessMode.FIELD_THEN_PROPERTY;
 
     }
 
 
     public JsonSerializerFactory useFieldsFirst () {
-        this.fieldAccessType  = SerializationAccess.FIELD_THEN_PROPERTY;
+        this.fieldAccessType  = FieldAccessMode.FIELD_THEN_PROPERTY;
         return this;
     }
 
 
     public JsonSerializerFactory useFieldsOnly () {
-        this.fieldAccessType  = SerializationAccess.FIELD;
+        this.fieldAccessType  = FieldAccessMode.FIELD;
         return this;
     }
 
 
 
     public JsonSerializerFactory usePropertyOnly () {
-        this.fieldAccessType  = SerializationAccess.PROPERTY;
+        this.fieldAccessType  = FieldAccessMode.PROPERTY;
         return this;
     }
 

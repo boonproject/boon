@@ -2,6 +2,8 @@ package org.boon.json.serializers.impl;
 
 import org.boon.Exceptions;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.core.reflection.fields.FieldsAccessor;
+import org.boon.core.reflection.fields.FieldsAccessorFieldThenProp;
 import org.boon.json.serializers.*;
 import org.boon.primitive.CharBuf;
 
@@ -40,7 +42,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         arraySerializer = (ArraySerializer) collectionSerializer;
         unknownSerializer = new UnknownSerializerImpl ();
         dateSerializer = new DateSerializerImpl ();
-        fieldsAccessor = new FieldsAccessorFieldThenProp ();
+        fieldsAccessor = new FieldsAccessorFieldThenProp();
 
     }
 

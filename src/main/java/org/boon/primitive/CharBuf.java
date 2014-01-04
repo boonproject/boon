@@ -293,10 +293,11 @@ public class CharBuf extends Writer implements CharSequence {
 
         if ( 1 + _location > _capacity ) {
             _buffer = Chr.grow( _buffer );
+            _capacity = _buffer.length;
+
         }
 
         _buffer [_location] = ch;
-        _capacity = _buffer.length;
         _location ++;
 
 
@@ -912,24 +913,36 @@ public class CharBuf extends Writer implements CharSequence {
 
     public void addAsUTF( byte[] value ) {
 
+
+
         if ( this.buffer == null ) {
-            this.buffer = new char[ value.length ];
+            this.buffer = new char[ value.length * 2 ];
+            capacity = buffer.length;
         } else if ( this.buffer.length < value.length ) {
             buffer = Chr.grow( buffer, value.length - buffer.length );
+            capacity = buffer.length;
         }
 
+        char [] buffer = this.buffer;
+        int location = this.location;
 
         for ( int index = 0; index < value.length; index++ ) {
-            int __currentChar = value[ index ];
+            int c = value[ index ];
 
 
-            if ( __currentChar >= 0 ) {
-                this.addChar( __currentChar );
+            if ( c >= 0 ) {
+                buffer [location] = (char)c;
+                location ++;
             } else {
-                utf8MultiByte( __currentChar, index, value );
+                this.location = location;
+                index = utf8MultiByte( c, index, value );
+                location = this.location;
             }
 
         }
+
+        this.location = location;
+
 
 
     }
@@ -958,7 +971,12 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
-    private final void utf8MultiByte( final int b1, int __index, byte[] bytes ) {
+    private final int utf8MultiByte( final int b1, int __index, byte[] bytes ) {
+
+
+        int _location = location;
+        char [] _buffer = buffer;
+        int _capacity = capacity;
 
         boolean ok = true;
 
@@ -970,9 +988,14 @@ public class CharBuf extends Writer implements CharSequence {
             b2 = bytes[ __index ];
 
             if ( isMalformed2( b1, b2 ) ) {
-                addChar( '#' );
+
+                _buffer [_location] =  '#' ;
+                _location ++;
+
             } else {
-                addChar( ( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 );
+                _buffer [_location] =  (char) (( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 )  ;
+                _location ++;
+
             }
         } else if ( ( b1 >> 4 ) == -2 ) {
             int b2;
@@ -986,9 +1009,11 @@ public class CharBuf extends Writer implements CharSequence {
             b3 = bytes[ __index ];
 
             if ( isMalformed3( b1, b2, b3 ) ) {
-                addChar( '#' );
+                _buffer [_location] =  '#' ;
+                _location ++;
             } else {
-                addChar( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 );
+                _buffer [_location] = (char) ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 ) ;
+                _location ++;
             }
         } else if ( ( b1 >> 3 ) == -2 ) {
             int b2;
@@ -1023,6 +1048,12 @@ public class CharBuf extends Writer implements CharSequence {
             }
         }
 
+
+
+        location = _location;
+        buffer = _buffer;
+        capacity = _capacity;
+        return __index;
     }
 
 
@@ -1238,6 +1269,114 @@ public class CharBuf extends Writer implements CharSequence {
                 }
             } else {
                 buffer[location++]=c;
+            }
+        }
+
+
+        this.buffer = buffer;
+        this.location = location;
+
+        return this;
+
+    }
+
+
+
+
+    protected static final int DOUBLE_QUOTE = '"';
+
+    protected static final int ESCAPE = '\\';
+
+
+    protected static final int LETTER_N = 'n';
+
+
+    protected static final int LETTER_U = 'u';
+
+
+    protected static final int LETTER_T = 't';
+
+    protected static final int LETTER_R = 'r';
+
+    protected static final int LETTER_B = 'b';
+
+    protected static final int LETTER_F = 'f';
+
+    protected static final int FORWARD_SLASH = '/';
+
+
+    public final CharBuf decodeJsonString ( byte[] bytes, int start, int to ) {
+        int len = to - start;
+
+        char [] buffer = this.buffer;
+        int location = this.location;
+
+        if (len > capacity) {
+            buffer =  Chr.grow ( buffer, buffer.length * 2 + len );
+            capacity = buffer.length;
+        }
+
+        for ( int index = start; index < to; index++ ) {
+            int c = bytes[ index ];
+            if ( c == '\\' ) {
+                if ( index < to ) {
+                    index++;
+                    c = bytes[ index ];
+                    switch ( c ) {
+
+                        case LETTER_N:
+                            buffer[location++]='\n';
+                            break;
+
+                        case FORWARD_SLASH:
+                            buffer[location++]='/';
+                            break;
+
+                        case DOUBLE_QUOTE:
+                            buffer[location++]='"';
+                            break;
+
+                        case LETTER_F:
+                            buffer[location++]='\f';
+                            break;
+
+                        case LETTER_T:
+                            buffer[location++]='\t';
+                            break;
+
+                        case ESCAPE:
+                            buffer[location++]='\\';
+                            break;
+
+                        case LETTER_B:
+                            buffer[location++]='\b';
+                            break;
+
+                        case LETTER_R:
+                            buffer[location++]='\r';
+                            break;
+
+                        case LETTER_U:
+
+                            if ( index + 4 < to ) {
+                                String hex = new String( bytes, index + 1, 4 );
+                                char unicode = ( char ) Integer.parseInt( hex, 16 );
+                                buffer[location++]=unicode;
+                                index += 4;
+                            }
+                            break;
+                        default:
+                            throw new JsonException ( "Unable to decode string" );
+                    }
+                }
+            } else {
+
+
+                if ( c >= 0 ) {
+                    buffer[location++]=(char)c;
+                } else {
+                    index = utf8MultiByte( c, index, bytes );
+                }
             }
         }
 

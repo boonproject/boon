@@ -5,6 +5,7 @@ import org.boon.IO;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
 
@@ -51,10 +52,13 @@ public abstract class BaseJsonParser implements JsonParser {
 
     protected static final int ESCAPE = '\\';
 
+    protected final FieldsAccessor fieldsAccessor;
 
 
+    public BaseJsonParser (FieldsAccessor fieldsAccessor) {
+        this.fieldsAccessor = fieldsAccessor;
 
-
+    }
 
     protected static final boolean internKeys = Boolean.parseBoolean( System.getProperty( "org.boon.json.implementation.internKeys", "false" ) );
     protected static ConcurrentHashMap<String, String> internedKeysCache;
@@ -117,7 +121,7 @@ public abstract class BaseJsonParser implements JsonParser {
     @Override
     public <T> List<T> parseList ( Class<T> componentType, String jsonString ) {
         List<Object> list =  parse ( List.class, jsonString );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
 
@@ -125,49 +129,49 @@ public abstract class BaseJsonParser implements JsonParser {
     @Override
     public <T> List<T> parseList ( Class<T> componentType, Reader reader ) {
         List<Object> list =  parse ( List.class, reader );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, InputStream input ) {
         List<Object> list =  parse ( List.class, input );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, InputStream input, Charset charset ) {
         List<Object> list =  parse ( List.class, input, charset );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, byte[] jsonBytes ) {
         List<Object> list =  parse ( List.class, jsonBytes );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, byte[] jsonBytes, Charset charset ) {
         List<Object> list =  parse ( List.class, jsonBytes, charset );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, char[] chars ) {
         List<Object> list =  parse ( List.class, chars );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, CharSequence jsonSeq ) {
         List<Object> list =  parse ( List.class, jsonSeq );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
     @Override
     public <T>  List<T> parseListFromFile ( Class<T> componentType, String fileName ) {
         List<Object> list =  parseFile ( List.class, fileName );
-        return MapObjectConversion.convertListOfMapsToObjects ( componentType, list );
+        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
     }
 
 
@@ -789,47 +793,6 @@ public abstract class BaseJsonParser implements JsonParser {
         return index;
     }
 
-
-
-//    private String decodeString2() {
-//
-//        char __currentChar = this.__currentChar;
-//        char [] charArray = this.charArray;
-//        int __index = this.__index;
-//        int [] indexHolder = this.indexHolder;
-//
-//        if (__currentChar == '"') {
-//            __index ++;
-//        }
-//
-//
-//        final int startIndex = __index;
-//
-//        boolean hasEscaped = hasEscapeChar (charArray, __index, indexHolder );
-//
-//        __index = indexHolder [0];
-//
-//
-//        String value;
-//        if ( hasEscaped ) {
-//            __index = findEndQuote ( charArray, __index );
-//            value =   JsonStringDecoder.decodeForSure( charArray, startIndex, __index );
-//        } else {
-//            value = new String( charArray, startIndex, ( __index - startIndex ) );
-//        }
-//
-//
-//
-//        if ( __index  < charArray.length ) {
-//            __index++;
-//            __currentChar = charArray[ __index ];
-//        }
-//
-//
-//
-//
-//        return value;
-//    }
 
 
 }

@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.json.implementation.JsonFastParser;
 
 /**
@@ -8,11 +9,11 @@ import org.boon.json.implementation.JsonFastParser;
 public class JsonLazyChopFastParserTest extends JsonParserBaseTest {
 
     public JsonParser parser () {
-        return new JsonFastParser ( false, true, true );
+        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), false, true, true );
     }
 
     public JsonParser objectParser () {
-        return new JsonFastParser ( true, false, false );
+        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), true, false, false );
     }
 
 }

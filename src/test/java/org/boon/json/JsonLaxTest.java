@@ -1,6 +1,7 @@
 package org.boon.json;
 
 import org.boon.Lists;
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.json.implementation.JsonParserLax;
 import org.junit.Test;
 
@@ -25,12 +26,12 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
     public JsonParser parser () {
-        return new JsonParserLax ( false, true, true );
+        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD ), false, true, true );
 
     }
 
     public JsonParser objectParser () {
-        return new JsonParserLax ( true, false, false );
+        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD ), true, false, false );
 
     }
 

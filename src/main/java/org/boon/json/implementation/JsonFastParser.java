@@ -4,9 +4,12 @@ import org.boon.core.Typ;
 import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.fields.FieldAccessMode;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
 import org.boon.json.JsonException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +30,17 @@ public class JsonFastParser extends JsonParserCharArray {
     private final boolean chop;
     private final boolean lazyChop;
 
-    public JsonFastParser() {
+    public JsonFastParser(  ) {
+        this( FieldAccessMode.create( FieldAccessMode.FIELD ) );
+    }
+
+    public JsonFastParser( FieldAccessMode mode ) {
+        this( FieldAccessMode.create(mode) );
+    }
+
+
+    public JsonFastParser(FieldsAccessor fieldsAccessor) {
+        super( fieldsAccessor );
         useValues = false;
         chop = false;
         lazyChop = true;
@@ -35,14 +48,18 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    public JsonFastParser( boolean useValues ) {
+    public JsonFastParser( FieldsAccessor fieldsAccessor, boolean useValues ) {
+        super( fieldsAccessor );
+
         this.useValues = useValues;
         chop = false;
         lazyChop = true;
     }
 
 
-    public JsonFastParser( boolean useValues, boolean chop ) {
+    public JsonFastParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop ) {
+        super( fieldsAccessor );
+
         this.useValues = useValues;
         this.chop = chop;
         lazyChop = !chop;
@@ -50,11 +67,11 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    public JsonFastParser( boolean useValues, boolean chop, boolean lazyChop ) {
+    public JsonFastParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop ) {
+        super( fieldsAccessor );
         this.useValues = useValues;
         this.chop = chop;
         this.lazyChop = lazyChop;
-
     }
 
 
@@ -308,12 +325,12 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    protected <T> T convert( Class<T> type, Object object ) {
+    protected final <T> T convert( Class<T> type, Object object ) {
         if ( type == Map.class || type == List.class ) {
             return (T)object;
         } else {
             if ( object instanceof Map ) {
-                return MapObjectConversion.fromValueMap ( ( Map<String, org.boon.core.Value> ) object, type );
+                return MapObjectConversion.fromValueMap( fieldsAccessor,  ( Map<String, org.boon.core.Value> ) object, type );
             } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
                 return (T)( (Value) object).toValue ();
             }

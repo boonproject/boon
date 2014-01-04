@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.json.implementation.JsonParserLax;
 import org.boon.json.implementation.PlistParser;
 import org.junit.Before;
@@ -38,12 +39,12 @@ public class PlistTest {
 
 
     public JsonParser parser () {
-        return new PlistParser ( false, true, true );
+        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), false, true, true );
 
     }
 
     public JsonParser objectParser () {
-        return new JsonParserLax ( true, false, false );
+        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), true, false, false );
 
     }
 

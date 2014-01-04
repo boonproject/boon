@@ -1,8 +1,8 @@
-package org.boon.json.serializers.impl;
+package org.boon.core.reflection.fields;
 
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.json.serializers.FieldsAccessor;
+import org.boon.core.reflection.fields.FieldsAccessor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

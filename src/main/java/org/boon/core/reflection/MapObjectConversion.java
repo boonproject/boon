@@ -6,6 +6,8 @@ import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.core.reflection.fields.FieldFieldsAccessor;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueMapImpl;
 
 import java.util.*;
@@ -35,7 +37,8 @@ public class MapObjectConversion {
         Objects.requireNonNull ( newInstance );
 
 
-        Map<String, FieldAccess> fields = Reflection.getAllAccessorFields ( newInstance.getClass () );
+        FieldsAccessor fieldsAccessor = new FieldFieldsAccessor();
+        Map<String, FieldAccess> fields = fieldsAccessor.getFields( newInstance.getClass() );
         Set<Map.Entry<String, Object>> entrySet = map.entrySet();
 
         /* Iterate through the fields. */
@@ -79,7 +82,7 @@ public class MapObjectConversion {
                 field.setObject( newInstance, value );
             } else if ( value instanceof Collection ) {
                 /*It is a collection so process it that way. */
-                processCollectionFromMap( newInstance, field, ( Collection ) value );
+                processCollectionFromMapUsingFields( fieldsAccessor, newInstance, field, ( Collection ) value );
             } else if ( value instanceof Map[] ) {
                 /* It is an array of maps so, we need to process it as such. */
                 processArrayOfMaps( newInstance, field, value );
@@ -93,15 +96,20 @@ public class MapObjectConversion {
     }
 
     @SuppressWarnings ( "unchecked" )
-    public static <T> T fromValueMap( Map<String, Value> map, Class<T> clazz ) {
-        return fromValueMap( map, Reflection.newInstance ( clazz ) );
+    public static <T> T fromValueMap(
+            final FieldsAccessor fieldsAccessor,
+            final Map<String, Value> map,
+            final Class<T> clazz ) {
+        return fromValueMap( fieldsAccessor, map, Reflection.newInstance( clazz ) );
     }
 
     @SuppressWarnings ( "unchecked" )
-    public static <T> T fromValueMap( Map<String, Value> map, T newInstance ) {
+    public static <T> T fromValueMap( final FieldsAccessor fieldsAccessor,
+                                      final Map<String, Value> map,
+                                      final T newInstance ) {
 
 
-        Map<String, FieldAccess> fields = Reflection.getAllAccessorFields ( newInstance.getClass (), true );
+        Map<String, FieldAccess> fields = fieldsAccessor.getFields( newInstance.getClass() );
         Map.Entry<String, Value>[] entries = map.entrySet().toArray( null );
         int size = map.size();
 
@@ -123,10 +131,10 @@ public class MapObjectConversion {
 
                 objValue = value.toValue();
                 if ( objValue instanceof Map ) {
-                    objValue = fromValueMap( ( Map<String, Value> ) objValue, field.getType() );
+                    objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
                     field.setObject( newInstance, objValue );
                 } else if ( objValue instanceof Collection ) {
-                    handleCollectionOfValues( newInstance, field,
+                    handleCollectionOfValues(fieldsAccessor, newInstance, field,
                             ( Collection<Value> ) objValue );
                 }
 
@@ -139,7 +147,8 @@ public class MapObjectConversion {
         return newInstance;
     }
 
-    private static void processCollectionFromMap( final Object newInstance,
+    private static void processCollectionFromMapUsingFields(
+                    final FieldsAccessor fieldsAccessor, final Object newInstance,
                                                   final FieldAccess field,
                                                   final Collection<?> collection ) {
 
@@ -151,7 +160,7 @@ public class MapObjectConversion {
             handleCollectionOfMaps( newInstance, field,
                     ( Collection<Map<String, Object>> ) collection );
         } else if ( Typ.isValue( componentType ) ) {
-            handleCollectionOfValues( newInstance, field,
+            handleCollectionOfValues( fieldsAccessor, newInstance, field,
                     ( Collection<Value> ) collection );
 
         } else {
@@ -210,7 +219,7 @@ public class MapObjectConversion {
     }
 
     @SuppressWarnings ( "unchecked" )
-    private static void handleCollectionOfValues( Object newInstance,
+    private static void handleCollectionOfValues( FieldsAccessor fieldsAccessor, Object newInstance,
                                                   FieldAccess field, Collection<Value> collectionOfValues ) {
 
         Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfValues.size () );
@@ -226,7 +235,7 @@ public class MapObjectConversion {
                 if ( value.isContainer() ) {
                     Object oValue = value.toValue();
                     if ( oValue instanceof Map ) {
-                        newCollection.add( fromValueMap( ( Map ) oValue, componentClass ) );
+                        newCollection.add( fromValueMap( fieldsAccessor, ( Map ) oValue, componentClass ) );
                     }
                 } else {
                     newCollection.add( Conversions.coerce ( componentClass, value.toValue () ) );
@@ -319,12 +328,12 @@ public class MapObjectConversion {
         return map;
     }
 
-    public static <T> List<T> convertListOfMapsToObjects ( Class<T> componentType, List<Object> list ) {
+    public static <T> List<T> convertListOfMapsToObjects( FieldsAccessor fieldsAccessor, Class<T> componentType, List<Object> list ) {
         List<Object> newList = new ArrayList<> ( list.size () );
         for (Object obj : list) {
             Map map = obj instanceof Map ? (Map)obj  : (Map)( (Value) obj).toValue();
             if ( map instanceof ValueMapImpl ) {
-                newList.add ( fromValueMap ( ( Map<String, Value> ) map, componentType ) );
+                newList.add ( fromValueMap(fieldsAccessor, ( Map<String, Value> ) map, componentType ) );
             } else {
                 newList.add ( fromMap ( map, componentType ) );
             }

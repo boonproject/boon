@@ -9,26 +9,6 @@ public class JsonStringDecoder {
 
 
 
-    protected static final int DOUBLE_QUOTE = '"';
-
-    protected static final int ESCAPE = '\\';
-
-
-    protected static final int LETTER_N = 'n';
-
-
-    protected static final int LETTER_U = 'u';
-
-
-    protected static final int LETTER_T = 't';
-
-    protected static final int LETTER_R = 'r';
-
-    protected static final int LETTER_B = 'b';
-
-    protected static final int LETTER_F = 'f';
-
-    protected static final int FORWARD_SLASH = '/';
 
 
     public static String decode( String string ) {
@@ -82,79 +62,8 @@ public class JsonStringDecoder {
     }
 
     public static String decodeForSure( byte[] bytes, int start, int to ) {
-
-
-        if ( bytes[ start ] == '"' ) {
-            start++;
-        }
-
         CharBuf builder = CharBuf.create( to - start );
-        for ( int index = start; index < to; index++ ) {
-            int c = bytes[ index ];
-            if ( c == '\\' ) {
-                if ( index < bytes.length ) {
-                    index++;
-                    c = bytes[ index ];
-                    switch ( c ) {
-
-                        case LETTER_N:
-                            builder.addChar( '\n' );
-                            break;
-
-                        case FORWARD_SLASH:
-                            builder.addChar( '/' );
-                            break;
-
-                        case DOUBLE_QUOTE:
-                            builder.addChar( '"' );
-                            break;
-
-                        case LETTER_F:
-                            builder.addChar( '\f' );
-                            break;
-
-                        case LETTER_T:
-                            builder.addChar( '\t' );
-                            break;
-
-                        case ESCAPE:
-                            builder.addChar( '\\' );
-                            break;
-
-                        case LETTER_B:
-                            builder.addChar( '\b' );
-                            break;
-
-                        case LETTER_R:
-                            builder.addChar( '\r' );
-                            break;
-
-                        case LETTER_U:
-
-                            if ( index + 4 < bytes.length ) {
-
-                                CharBuf hex = CharBuf.create( 4 );
-                                hex.addChar( bytes[ index + 1 ] );
-
-                                hex.addChar( bytes[ index + 2 ] );
-
-                                hex.addChar( bytes[ index + 3 ] );
-
-                                hex.addChar( bytes[ index + 4 ] );
-                                char unicode = ( char ) Integer.parseInt( hex.toString(), 16 );
-                                builder.add( unicode );
-                                index += 4;
-                            }
-                            break;
-                        default:
-                            throw new JsonException( "Unable to decode string" );
-                    }
-                }
-            } else {
-                builder.addChar( c );
-            }
-        }
+        builder.decodeJsonString(bytes, start, to);
         return builder.toString();
-
     }
 }

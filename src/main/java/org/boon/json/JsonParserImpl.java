@@ -5,6 +5,7 @@ import org.boon.IO;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
 
@@ -24,40 +25,34 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
 
     private final JsonParser objectParser;
     private final JsonParser basicParser;
-    private final JsonParser charSequenceParser;
 
 
     private int bufSize = 32;
 
 
-    public JsonParserImpl( Charset charset,
-                           boolean preferCharSequence, boolean lax,
+    public JsonParserImpl( final FieldsAccessor fields,
+                           Charset charset,
+                           boolean lax,
                            boolean plistStyle, boolean chop, boolean lazyChop ) {
 
 
-
+        super(fields);
         this.charset = charset;
 
         if ( lax ) {
-           this.basicParser = new JsonParserLax ( false, chop, lazyChop );
-           this.objectParser = new JsonParserLax ( true );
+           this.basicParser = new JsonParserLax ( fields, false, chop, lazyChop );
+           this.objectParser = new JsonParserLax ( fields, true );
         } else if (plistStyle) {
-            this.basicParser = new PlistParser ( false, chop, lazyChop );
-            this.objectParser = new PlistParser ( true );
+            this.basicParser = new PlistParser ( fields, false, chop, lazyChop );
+            this.objectParser = new PlistParser ( fields, true );
         } else {
-            this.basicParser = new JsonFastParser( false, chop, lazyChop );
-            this.objectParser = new JsonFastParser( true );
+            this.basicParser = new JsonFastParser( fields, false, chop, lazyChop );
+            this.objectParser = new JsonFastParser( fields, true );
         }
 
         ( (BaseJsonParser) basicParser).setCharset ( charset );
         ( (BaseJsonParser) objectParser).setCharset ( charset );
 
-        if ( preferCharSequence ) {
-                this.charSequenceParser = new JsonParserCharSequence();
-                ( (BaseJsonParser) charSequenceParser).setCharset ( charset );
-        } else {
-                this.charSequenceParser = basicParser;
-        }
 
 
 
@@ -69,11 +64,11 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
     public final <T> T parse( Class<T> type, String value ) {
 
         if ( type == Map.class || type == List.class || Typ.isBasicType ( type ) ) {
-            Object obj = charSequenceParser.parse( type, value );
+            Object obj = basicParser.parse( type, value );
             return (T) obj;
         } else {
            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-           return MapObjectConversion.fromValueMap ( objectMap, type );
+           return MapObjectConversion.fromValueMap (fieldsAccessor, objectMap, type );
         }
     }
 
@@ -89,7 +84,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             }
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap ( objectMap, type );
+            return MapObjectConversion.fromValueMap (fieldsAccessor, objectMap, type );
         }
     }
 
@@ -100,17 +95,17 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             return this.basicParser.parse( type, value, charset );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap ( objectMap, type );
+            return MapObjectConversion.fromValueMap (fieldsAccessor, objectMap, type );
         }
     }
 
     @Override
     public final <T> T parse( Class<T> type, CharSequence value ) {
         if ( type == Map.class || type == List.class ) {
-            return charSequenceParser.parse( type, value );
+            return basicParser.parse( type, value );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap ( objectMap, type );
+            return MapObjectConversion.fromValueMap ( fieldsAccessor, objectMap, type );
         }
     }
 
@@ -120,7 +115,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
             return basicParser.parse( type, value );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap ( objectMap, type );
+            return MapObjectConversion.fromValueMap ( fieldsAccessor, objectMap, type );
         }
 
     }

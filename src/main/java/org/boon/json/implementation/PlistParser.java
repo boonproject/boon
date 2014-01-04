@@ -4,6 +4,7 @@ import org.boon.core.Typ;
 import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
 
 import java.util.ArrayList;
@@ -36,7 +37,10 @@ public class PlistParser  extends JsonParserCharArray {
         private final boolean lazyChop;
 
 
-        public PlistParser() {
+        public PlistParser(FieldsAccessor fieldsAccessor) {
+
+            super(fieldsAccessor);
+
             useValues = false;
             chop = false;
             lazyChop = true;
@@ -49,7 +53,8 @@ public class PlistParser  extends JsonParserCharArray {
         }
 
 
-        public PlistParser( boolean useValues ) {
+        public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues ) {
+            super(fieldsAccessor);
             this.useValues = useValues;
             chop = false;
             lazyChop = true;
@@ -62,7 +67,8 @@ public class PlistParser  extends JsonParserCharArray {
         }
 
 
-        public PlistParser( boolean useValues, boolean chop ) {
+        public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop ) {
+            super(fieldsAccessor);
             this.useValues = useValues;
             this.chop = chop;
             lazyChop = !chop;
@@ -74,7 +80,8 @@ public class PlistParser  extends JsonParserCharArray {
         }
 
 
-        public PlistParser( boolean useValues, boolean chop, boolean lazyChop ) {
+        public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop ) {
+            super(fieldsAccessor);
             this.useValues = useValues;
             this.chop = chop;
             this.lazyChop = lazyChop;
@@ -825,7 +832,7 @@ public class PlistParser  extends JsonParserCharArray {
             return (T)object;
         } else {
             if ( object instanceof Map ) {
-                return MapObjectConversion.fromValueMap ( ( Map<String, org.boon.core.Value> ) object, type );
+                return MapObjectConversion.fromValueMap ( fieldsAccessor, ( Map<String, org.boon.core.Value> ) object, type );
             } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
                 return (T)( (Value) object).toValue ();
             }

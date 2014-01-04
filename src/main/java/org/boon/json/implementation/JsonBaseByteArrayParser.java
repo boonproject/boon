@@ -3,6 +3,7 @@ package org.boon.json.implementation;
 import org.boon.IO;
 import org.boon.core.Typ;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonException;
 import org.boon.core.LazyMap;
 import org.boon.primitive.Byt;
@@ -74,11 +75,8 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     protected final CharBuf builder = CharBuf.create( 20 );
 
-
-
-
-    public JsonBaseByteArrayParser() {
-
+    public JsonBaseByteArrayParser( FieldsAccessor fieldsAccessor ) {
+        super( fieldsAccessor );
     }
 
 
@@ -685,7 +683,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         }
 
 
-        String value = null;
+        String value;
         if ( hasEscaped ) {
             value = JsonStringDecoder.decodeForSure( array, startIndex, index );
         } else {
@@ -699,97 +697,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         return value;
     } 
     
-    protected final String decodeStringOld() {
-
-
-        if ( __index < charArray.length && __currentChar == DOUBLE_QUOTE ) {
-            __index++;
-        }
-
-
-        loop:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
-            switch ( __currentChar ) {
-
-                case DOUBLE_QUOTE:
-                    break loop;
-
-                case '\\':
-                    if ( __index < charArray.length ) {
-                        __index++;
-                    }
-                    __currentChar = charArray[ __index ];
-
-                    switch ( __currentChar ) {
-
-                        case LETTER_N:
-                            builder.addChar( '\n' );
-                            continue loop;
-
-                        case FORWARD_SLASH:
-                            builder.addChar( '/' );
-                            continue loop;
-
-                        case DOUBLE_QUOTE:
-                            builder.addChar( '"' );
-                            continue loop;
-
-                        case LETTER_F:
-                            builder.addChar( '\f' );
-                            continue loop;
-
-                        case LETTER_T:
-                            builder.addChar( '\t' );
-                            continue loop;
-
-                        case ESCAPE:
-                            builder.addChar( '\\' );
-                            continue loop;
-
-                        case LETTER_B:
-                            builder.addChar( '\b' );
-                            continue loop;
-
-                        case LETTER_R:
-                            builder.addChar( '\r' );
-                            continue loop;
-
-                        case LETTER_U:
-
-                            if ( __index + 4 < charArray.length ) {
-
-                                CharBuf hex = CharBuf.create( 4 );
-                                hex.addChar( charArray[ __index + 1 ] );
-
-                                hex.addChar( charArray[ __index + 2 ] );
-
-                                hex.addChar( charArray[ __index + 3 ] );
-
-                                hex.addChar( charArray[ __index + 4 ] );
-                                char unicode = ( char ) Integer.parseInt( hex.toString(), 16 );
-                                builder.add( unicode );
-                                __index += 4;
-                            }
-                            continue loop;
-                    }
-                default:
-                    addChar();
-
-
-            }
-        }
-
-
-        if ( __index < charArray.length ) {
-            __index++;
-        }
-
-        String str = builder.toString();
-
-        builder.readForRecycle();
-        return str;
-    }
 
 
     abstract protected void addChar();

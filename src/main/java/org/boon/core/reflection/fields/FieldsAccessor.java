@@ -1,6 +1,5 @@
-package org.boon.json.serializers;
+package org.boon.core.reflection.fields;
 
-import org.boon.core.reflection.fields.FieldAccess;
 
 import java.util.Map;
 

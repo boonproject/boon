@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.core.reflection.fields.*;
 import org.boon.json.implementation.*;
 
 import java.nio.charset.Charset;
@@ -14,6 +15,12 @@ public class JsonParserFactory {
     private boolean plistStyle;
     private boolean chop = false;
     private boolean lazyChop = true;
+    private FieldAccessMode fieldAccessType = FieldAccessMode.FIELD;
+
+
+    public FieldAccessMode getFieldAccessType() {
+        return fieldAccessType;
+    }
 
 
     public boolean isChop() {
@@ -65,29 +72,23 @@ public class JsonParserFactory {
 
 
     public JsonParser createFastParser() {
-        BaseJsonParser jsonParser = new JsonFastParser( false, true );
+        BaseJsonParser jsonParser = new JsonFastParser(  FieldAccessMode.create( fieldAccessType ), false, true );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
 
 
-    public JsonParser createCharSequenceParser() {
-        BaseJsonParser jsonParser = new JsonParserCharSequence(  );
-        jsonParser.setCharset ( charset );
-        return (JsonParser)jsonParser;
-
-    }
 
 
     public JsonParser createUTF8DirectByteParser() {
-        BaseJsonParser jsonParser = new JsonUTF8Parser(  );
+        BaseJsonParser jsonParser = new JsonUTF8Parser( FieldAccessMode.create( fieldAccessType ) );
         jsonParser.setCharset ( StandardCharsets.UTF_8 );
         return (JsonParser)jsonParser;
 
     }
 
     public JsonParser createASCIIParser() {
-        BaseJsonParser jsonParser = new JsonAsciiParser (  );
+        BaseJsonParser jsonParser = new JsonAsciiParser ( FieldAccessMode.create( fieldAccessType ) );
         jsonParser.setCharset ( StandardCharsets.US_ASCII );
         return (JsonParser)jsonParser;
 
@@ -95,19 +96,19 @@ public class JsonParserFactory {
 
 
     public JsonParser createLaxParser() {
-        BaseJsonParser jsonParser = new JsonParserLax ( false, chop, lazyChop );
+        BaseJsonParser jsonParser = new JsonParserLax ( FieldAccessMode.create( fieldAccessType ),  false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
 
     public JsonParser createPlistParser() {
-        BaseJsonParser jsonParser = new PlistParser (false, chop, lazyChop );
+        BaseJsonParser jsonParser = new PlistParser ( FieldAccessMode.create( fieldAccessType ), false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
 
     public JsonParser createLazyFinalParser() {
-        BaseJsonParser jsonParser = new JsonFastParser ( false, chop, lazyChop );
+        BaseJsonParser jsonParser = new JsonFastParser ( FieldAccessMode.create( fieldAccessType ),  false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
 
@@ -115,12 +116,13 @@ public class JsonParserFactory {
 
     public JsonParser createJsonParserForJsonPath() {
 
-        BaseJsonParser jsonParser = new JsonFastParser ( false, chop, lazyChop );
+        BaseJsonParser jsonParser = new JsonFastParser (  FieldAccessMode.create( fieldAccessType ), false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
 
     public JsonParser create() {
+
 
 
 
@@ -130,8 +132,8 @@ public class JsonParserFactory {
             charset = StandardCharsets.UTF_8;
         }
 
-        return new JsonParserImpl( charset,
-                preferCharSequence, lax, plistStyle, chop, lazyChop );
+        return new JsonParserImpl( FieldAccessMode.create( fieldAccessType ), charset,
+                 lax, plistStyle, chop, lazyChop );
     }
 
 

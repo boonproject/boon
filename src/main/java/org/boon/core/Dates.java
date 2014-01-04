@@ -423,16 +423,20 @@ public class Dates {
 
     }
 
-
     public static void jsonDateChars( Date date, CharBuf buf ) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
+
+        jsonDateChars( calendar, date, buf );
+    }
+    public static void jsonDateChars( Calendar calendar, Date date, CharBuf buf ) {
         if (isGMT) {
             /* For the Unix admins of the world who avoid it all and just GMT it. */
             fastJsonDateChars ( date, buf );
             return;
         }
-        Calendar calendar = Calendar.getInstance();
+
         calendar.setTimeInMillis( date.getTime () );
-        calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
 
         int day = calendar.get( Calendar.DAY_OF_MONTH );
         int month = calendar.get( Calendar.MONTH ) +1;
