@@ -13,7 +13,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class JsonSerializerFactory {
 
     private boolean outputType = false;
-    private boolean useFieldsFirst = true;
+
+    private SerializationAccess fieldAccessType = SerializationAccess.FIELD;
     private boolean includeNulls = false;
     private boolean useAnnotations = false;
     private boolean includeEmpty = false;
@@ -73,15 +74,26 @@ public class JsonSerializerFactory {
             unknownSerializer = new UnknownSerializerImpl ();
             dateSerializer = new DateSerializerImpl ();
 
-            if (useFieldsFirst) {
-                fieldsAccessor = new FieldsAccessorFieldThenProp();
 
-            } else {
-                fieldsAccessor = new FieldsAccessorsPropertyThenField();
+            switch ( fieldAccessType )  {
+                case FIELD:
+                    fieldsAccessor = new FieldFieldsAccessor();
+                    break;
+                case PROPERTY:
+                    fieldsAccessor = new PropertyFieldAccesstor();
+                    break;
+                case FIELD_THEN_PROPERTY:
+                    fieldsAccessor = new FieldsAccessorFieldThenProp();
+                    break;
+                case PROPERTY_THEN_FIELD:
+                    fieldsAccessor = new FieldsAccessorsPropertyThenField();
+                    break;
+                default:
+                    fieldsAccessor = new FieldFieldsAccessor();
+
             }
 
             return new JsonSerializerImpl (
-
                     objectSerializer,
                     stringSerializer,
                     mapSerializer,
@@ -92,7 +104,6 @@ public class JsonSerializerFactory {
                     unknownSerializer,
                     dateSerializer,
                     fieldsAccessor
-
             );
         }
 
@@ -134,32 +145,36 @@ public class JsonSerializerFactory {
     }
 
     public boolean isUsePropertiesFirst () {
-        return !useFieldsFirst;
+        return fieldAccessType == SerializationAccess.PROPERTY_THEN_FIELD;
     }
 
-    public JsonSerializerFactory setUsePropertiesFirst ( boolean usePropertiesFirst ) {
-        this.useFieldsFirst = usePropertiesFirst;
-        return this;
-    }
 
     public JsonSerializerFactory usePropertiesFirst () {
-        this.useFieldsFirst = false;
+        fieldAccessType = SerializationAccess.PROPERTY_THEN_FIELD;
         return this;
     }
 
     public boolean isUseFieldsFirst () {
-        return useFieldsFirst;
+        return this.fieldAccessType == SerializationAccess.FIELD_THEN_PROPERTY;
 
-    }
-
-    public JsonSerializerFactory setUseFieldsFirst ( boolean useFieldsFirst ) {
-        this.useFieldsFirst = useFieldsFirst;
-        return this;
     }
 
 
     public JsonSerializerFactory useFieldsFirst () {
-        this.useFieldsFirst = true;
+        this.fieldAccessType  = SerializationAccess.FIELD_THEN_PROPERTY;
+        return this;
+    }
+
+
+    public JsonSerializerFactory useFieldsOnly () {
+        this.fieldAccessType  = SerializationAccess.FIELD;
+        return this;
+    }
+
+
+
+    public JsonSerializerFactory usePropertyOnly () {
+        this.fieldAccessType  = SerializationAccess.PROPERTY;
         return this;
     }
 
