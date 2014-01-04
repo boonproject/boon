@@ -17,7 +17,7 @@ public class FastStringUtils {
     public static final long STRING_VALUE_FIELD_OFFSET;
     public static final boolean ENABLED;
 
-    private static final boolean WRITE_TO_FINAL_FIELDS = Boolean.parseBoolean( System.getProperty( "org.boon.dont.write.to.final.fields", "false" ) );
+    private static final boolean WRITE_TO_FINAL_FIELDS = Boolean.parseBoolean( System.getProperty( "org.boon.write.to.final.fields", "false" ) );
     private static final boolean DISABLE = Boolean.parseBoolean( System.getProperty( "org.boon.faststringutils", "false" ) );
 
     static {
