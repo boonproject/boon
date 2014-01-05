@@ -66,4 +66,10 @@ public class JsonStringDecoder {
         builder.decodeJsonString(bytes, start, to);
         return builder.toString();
     }
+
+    public static String decodeForSureAscii( byte[] bytes, int start, int to ) {
+        CharBuf builder = CharBuf.create( to - start );
+        builder.decodeJsonStringAscii(bytes, start, to);
+        return builder.toString();
+    }
 }

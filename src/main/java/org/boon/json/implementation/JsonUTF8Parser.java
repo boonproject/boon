@@ -91,7 +91,9 @@ public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParse
 
         String value;
         if ( hasEscaped ) {
-            value = JsonStringDecoder.decodeForSure( array, startIndex, index );
+
+            value = builder.decodeJsonString(array, startIndex, index).toStringAndRecycle();
+
         } else {
             value = new String( array, startIndex, ( index - startIndex ), StandardCharsets.UTF_8 );
         }

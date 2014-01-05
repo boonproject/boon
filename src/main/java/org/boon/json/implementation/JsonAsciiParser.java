@@ -3,6 +3,7 @@ package org.boon.json.implementation;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonParser;
+import org.boon.primitive.CharBuf;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -34,6 +35,9 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
         this.charset = StandardCharsets.US_ASCII;
 
     }
+
+
+
 
 
 
@@ -75,7 +79,10 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
 
         String value;
         if ( hasEscaped ) {
-            value = JsonStringDecoder.decodeForSure( array, startIndex, index );
+
+
+            value = builder.decodeJsonStringAscii(array, startIndex, index).toStringAndRecycle();
+
         } else {
             value = new String( array, startIndex, ( index - startIndex ), StandardCharsets.US_ASCII );
         }

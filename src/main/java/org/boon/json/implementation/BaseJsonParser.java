@@ -566,25 +566,18 @@ public abstract class BaseJsonParser implements JsonParser {
         return parse ( new InputStreamReader ( input, charset ) );
     }
 
+    private final CharBuf builder = CharBuf.create( 20 );
     @Override
     public Object parseDirect ( byte[] value ) {
-        if ( value.length < 20_000 ) {
-            CharBuf builder = CharBuf.createFromUTF8Bytes( value );
-            return parse(  builder.toCharArray() );
-        } else {
-            return this.parse(  new ByteArrayInputStream ( value ) );
-        }
+          builder.addAsUTF( value );
+          return parse(  builder.readForRecycle() );
     }
 
 
     @Override
     public <T> T parseDirect( Class<T> type, byte[] value ) {
-        if ( value.length < 20_000 ) {
-            CharBuf builder = CharBuf.createFromUTF8Bytes( value );
-            return parse( type, builder.toCharArray() );
-        } else {
-            return this.parse( type, new ByteArrayInputStream ( value ) );
-        }
+          builder.addAsUTF( value );
+          return parse( type, builder.readForRecycle() );
     }
 
 

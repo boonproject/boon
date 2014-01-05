@@ -663,6 +663,14 @@ public class CharBuf extends Writer implements CharSequence {
         return new String( buffer, 0, location );
     }
 
+
+    public String toStringAndRecycle() {
+
+        String str = new String( buffer, 0, location );
+        location = 0;
+        return str;
+    }
+
     public int len() {
         return location;
     }
@@ -971,66 +979,65 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
-    private final int utf8MultiByte( final int b1, int __index, byte[] bytes ) {
+    private final int utf8MultiByte( final int c, int index, byte[] bytes ) {
 
 
-        int _location = location;
-        char [] _buffer = buffer;
-        int _capacity = capacity;
+        int location = this.location;
+        char [] buffer = this.buffer;
 
-        boolean ok = true;
+        //boolean ok = true;
 
-        if ( ( b1 >> 5 ) == -2 ) {
+        if ( ( c >> 5 ) == -2 ) {
             int b2;
 
-            ok = __index + 1 < bytes.length || die( "unable to parse 2 byte utf 8 - b2" );
-            __index++;
-            b2 = bytes[ __index ];
+            //ok = index + 1 < bytes.length || die( "unable to parse 2 byte utf 8 - b2" );
+            index++;
+            b2 = bytes[ index ];
 
-            if ( isMalformed2( b1, b2 ) ) {
+            if ( isMalformed2( c, b2 ) ) {
 
-                _buffer [_location] =  '#' ;
-                _location ++;
+                buffer [location] =  '#' ;
+                location ++;
 
             } else {
-                _buffer [_location] =  (char) (( ( b1 << 6 ) ^ b2 ) ^ 0x0f80 )  ;
-                _location ++;
+                buffer [location] =  (char) (( ( c << 6 ) ^ b2 ) ^ 0x0f80 )  ;
+                location ++;
 
             }
-        } else if ( ( b1 >> 4 ) == -2 ) {
+        } else if ( ( c >> 4 ) == -2 ) {
             int b2;
             int b3;
 
-            ok = __index + 1 < bytes.length || die( "unable to parse 3 byte utf 8 - b2" );
-            __index++;
-            b2 = bytes[ __index ];
-            ok = __index + 1 < bytes.length || die( "unable to parse 3 byte utf 8 - b3" );
-            __index++;
-            b3 = bytes[ __index ];
+            //ok = index + 1 < bytes.length || die( "unable to parse 3 byte utf 8 - b2" );
+            index++;
+            b2 = bytes[ index ];
+            //ok = index + 1 < bytes.length || die( "unable to parse 3 byte utf 8 - b3" );
+            index++;
+            b3 = bytes[ index ];
 
-            if ( isMalformed3( b1, b2, b3 ) ) {
-                _buffer [_location] =  '#' ;
-                _location ++;
+            if ( isMalformed3( c, b2, b3 ) ) {
+                buffer [location] =  '#' ;
+                location ++;
             } else {
-                _buffer [_location] = (char) ( ( ( b1 << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 ) ;
-                _location ++;
+                buffer [location] = (char) ( ( ( c << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 ) ;
+                location ++;
             }
-        } else if ( ( b1 >> 3 ) == -2 ) {
+        } else if ( ( c >> 3 ) == -2 ) {
             int b2;
             int b3;
             int b4;
 
-            ok = __index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b2" );
-            __index++;
-            b2 = bytes[ __index ];
-            ok = __index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b3" );
-            __index++;
-            b3 = bytes[ __index ];
-            ok = __index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b4" );
-            __index++;
-            b4 = bytes[ __index ];
+            //ok = index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b2" );
+            index++;
+            b2 = bytes[ index ];
+            //ok = index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b3" );
+            index++;
+            b3 = bytes[ index ];
+            //ok = index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b4" );
+            index++;
+            b4 = bytes[ index ];
 
-            int uc = ( ( b1 & 0x07 ) << 18 ) |
+            int uc = ( ( c & 0x07 ) << 18 ) |
                     ( ( b2 & 0x3f ) << 12 ) |
                     ( ( b3 & 0x3f ) << 6 ) |
                     ( b4 & 0x3f );
@@ -1050,10 +1057,9 @@ public class CharBuf extends Writer implements CharSequence {
 
 
 
-        location = _location;
-        buffer = _buffer;
-        capacity = _capacity;
-        return __index;
+        this.location = location;
+        this.buffer = buffer;
+        return index;
     }
 
 
@@ -1318,7 +1324,75 @@ public class CharBuf extends Writer implements CharSequence {
 
         for ( int index = start; index < to; index++ ) {
             int c = bytes[ index ];
-            if ( c == '\\' ) {
+            if ( c >= 0 ) {
+                if (c == ESCAPE && index < to)  {
+                    c = bytes[ ++index ];
+                    switch ( c ) {
+                        case LETTER_N:
+                            buffer[location++]='\n';
+                            break;
+                        case FORWARD_SLASH:
+                            buffer[location++]='/';
+                            break;
+                        case DOUBLE_QUOTE:
+                            buffer[location++]='"';
+                            break;
+                        case LETTER_F:
+                            buffer[location++]='\f';
+                            break;
+                        case LETTER_T:
+                            buffer[location++]='\t';
+                            break;
+                        case ESCAPE:
+                            buffer[location++]='\\';
+                            break;
+                        case LETTER_B:
+                            buffer[location++]='\b';
+                            break;
+                        case LETTER_R:
+                            buffer[location++]='\r';
+                            break;
+                        case LETTER_U:
+                            if ( index + 4 < to ) {
+                                String hex = new String( bytes, index + 1, 4 );
+                                char unicode = ( char ) Integer.parseInt( hex, 16 );
+                                buffer[location++]=unicode;
+                                index += 4;
+                            }
+                            break;
+                        default:
+                            throw new JsonException ( "Unable to decode string" );
+                    }
+
+                } else  {
+                    buffer[location++]=(char)c;
+                }
+            } else {
+                index = utf8MultiByte( c, index, bytes );
+            }
+        }
+
+        this.buffer = buffer;
+        this.location = location;
+
+        return this;
+
+    }
+
+    public final CharBuf decodeJsonStringAscii ( byte[] bytes, int start, int to ) {
+        int len = to - start;
+
+        char [] buffer = this.buffer;
+        int location = this.location;
+
+        if (len > capacity) {
+            buffer =  Chr.grow ( buffer, buffer.length * 2 + len );
+            capacity = buffer.length;
+        }
+
+        for ( int index = start; index < to; index++ ) {
+            int c = bytes[ index ];
+            if ( c == ESCAPE ) {
                 if ( index < to ) {
                     index++;
                     c = bytes[ index ];
@@ -1372,14 +1446,9 @@ public class CharBuf extends Writer implements CharSequence {
             } else {
 
 
-                if ( c >= 0 ) {
                     buffer[location++]=(char)c;
-                } else {
-                    index = utf8MultiByte( c, index, bytes );
-                }
             }
         }
-
 
         this.buffer = buffer;
         this.location = location;
