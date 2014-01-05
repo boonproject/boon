@@ -63,7 +63,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
     @Override
     public final <T> T parse( Class<T> type, String value ) {
 
-        if ( type == Map.class || type == List.class || Typ.isBasicType ( type ) ) {
+        if ( type == Object.class || type == Map.class || type == List.class || Typ.isBasicType ( type ) ) {
             Object obj = basicParser.parse( type, value );
             return (T) obj;
         } else {
@@ -76,7 +76,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
     @Override
     public final <T> T parse( Class<T> type, byte[] value ) {
 
-        if ( type == Map.class || type == List.class ) {
+        if ( type==Object.class || type == Map.class || type == List.class ) {
             if (value.length < 100_000) {
                 return this.basicParser.parse( type, value );
             } else {
@@ -91,7 +91,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
     @Override
     public final <T> T parse( Class<T> type, byte[] value, Charset charset ) {
 
-        if ( type == Map.class || type == List.class ) {
+        if ( type==Object.class || type == Map.class || type == List.class ) {
             return this.basicParser.parse( type, value, charset );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
@@ -101,7 +101,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
 
     @Override
     public final <T> T parse( Class<T> type, CharSequence value ) {
-        if ( type == Map.class || type == List.class ) {
+        if ( type==Object.class ||  type == Map.class || type == List.class ) {
             return basicParser.parse( type, value );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
@@ -111,7 +111,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
 
     @Override
     public final <T> T parse( Class<T> type, char[] value ) {
-        if ( type == Map.class || type == List.class ) {
+        if (  type==Object.class || type == Map.class || type == List.class ) {
             return basicParser.parse( type, value );
         } else {
             Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );

@@ -222,11 +222,10 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
     }
 
     public String toString() {
-        if ( map == null ) {
-            return "{}";
-        }  else {
-            return map.toString();
-        }
+
+        if (map == null) buildMap();
+        return map.toString();
+
     }
 
 

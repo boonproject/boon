@@ -326,7 +326,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
 
     protected final <T> T convert( Class<T> type, Object object ) {
-        if ( type == Map.class || type == List.class ) {
+        if ( type==Object.class || type == Map.class || type == List.class ) {
             return (T)object;
         } else {
             if ( object instanceof Map ) {

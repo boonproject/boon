@@ -365,7 +365,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-            return Reflection.getPropertyFieldAccessors ( aClass );
+            return Reflection.getPropertyFieldAccessMapFieldFirst ( aClass );
     }
 
 

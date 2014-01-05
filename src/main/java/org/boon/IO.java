@@ -870,6 +870,15 @@ public class IO {
 
     }
 
+    public static void writeNoClose( OutputStream out, String content ) {
+
+        try {
+            out.write( content.getBytes( DEFAULT_CHARSET ) );
+        } catch ( Exception ex ) {
+            Exceptions.handle( ex );
+        }
+
+    }
 
     public static String readFromClasspath( Class<?> clazz, String location ) {
         List<Path> resources = Classpaths.resources( clazz, location );
