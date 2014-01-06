@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Sys {
 
-    private final static boolean isWindows;
+    private final static boolean isWindows = System.getProperty ( "os.name" ).contains ( "Windows" );
     private final static boolean inContainer;
     private final static boolean is1_7OorLater;
     private final static int buildNumber;
@@ -65,24 +65,9 @@ public class Sys {
         buildNumber = b;
         version = v;
 
-        if ( version.compareTo ( new BigDecimal ( "1.7" )) >=0 ) {
-            is1_7OorLater = true;
-        } else {
-            is1_7OorLater = false;
-        }
-
-        if (version.compareTo ( new BigDecimal ( "1.7" ))==0 ){
-              is1_7 = true;
-        } else {
-            is1_7 = false;
-        }
-
-
-        if (version.compareTo ( new BigDecimal ( "1.8" ))==0 ){
-            is1_8 = true;
-        } else {
-            is1_8 = false;
-        }
+        is1_7OorLater = version.compareTo ( new BigDecimal ( "1.7" )) >=0;
+        is1_7 = version.compareTo ( new BigDecimal ( "1.7" ))==0;
+        is1_8 = version.compareTo ( new BigDecimal ( "1.8" ))==0;
     }
 
 
@@ -112,15 +97,6 @@ public class Sys {
 
     public static int buildNumber () {
         return buildNumber;
-    }
-
-    static {
-        if ( System.getProperty ( "os.name" ).contains ( "Windows" ) ) {
-            isWindows = true;
-        } else {
-            isWindows = false;
-        }
-
     }
 
     public static char windowsPathSeparator () {
