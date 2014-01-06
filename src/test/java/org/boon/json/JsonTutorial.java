@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.IO;
 import org.boon.Lists;
 import org.boon.core.Dates;
 import org.boon.core.reflection.BeanUtils;
@@ -431,6 +432,67 @@ public class JsonTutorial {
 
     }
 
+
+
+    public static void part9() throws Exception {
+
+        puts ("\n\n\n", "\npart9");
+
+
+        JsonParserFactory jsonParserFactory = new JsonParserFactory()
+                .useFieldsFirst().useFieldsOnly().usePropertiesFirst().usePropertyOnly() //one of these
+                .plistStyle() //allow parsing of ASCII PList style files
+                .lax() //allow loose parsing of JSON like JSON Smart
+                .strict() //opposite of lax
+                .setCharset( StandardCharsets.UTF_8 ) //Set the standard charset, defaults to UTF_8
+                .setChop( true ) //chops up buffer overlay buffer (more discussion of this later)
+                .setLazyChop( true ) //similar to chop but only does it after map.get
+                ;
+
+        JsonSerializerFactory jsonSerializerFactory = new JsonSerializerFactory()
+                .useFieldsFirst().useFieldsOnly().usePropertiesFirst().usePropertyOnly() //one of these
+                //.addPropertySerializer(  )  customize property output
+                //.addTypeSerializer(  )      customize type output
+                .useJsonFormatForDates() //use json dates
+                //.addFilter(  )   add a property filter to exclude properties
+                .includeEmpty().includeNulls().includeDefaultValues() //override defaults
+                .handleComplexBackReference() //uses identity map to track complex back reference and avoid them
+                .setHandleSimpleBackReference( true ) //looks for simple back reference for parent
+                .setCacheInstances( true ) //turns on caching for immutable objects
+                ;
+
+
+
+        final User diana = BeanUtils.copy( user );
+        final User rick = BeanUtils.copy( user );
+        diana.getName().setFirst( "Diana" );
+        diana.setGender( User.Gender.FEMALE );
+        rick.getName().setFirst( "Rick" );
+        diana.setBirthDate( Dates.getUSDate( 8, 21, 1984 ) );
+        List<User> users = Lists.list( diana, rick );
+
+        //You can use parser and serializer directly.
+        final JsonParser jsonParser = jsonParserFactory.create();
+        final JsonSerializer jsonSerializer = jsonSerializerFactory.create();
+
+        File file = File.createTempFile( "userList", ".json" );
+        String jsonString = jsonSerializer.serialize( users ).toString();
+        IO.write( IO.path( file.toString()), jsonString);
+        List<User> users2 = jsonParser.parseListFromFile( User.class, file.toString() );
+  
+        //Or you can pass them to the ObjectMapper interface you know and love, just pass the factories to it.
+        ObjectMapper mapper = ObjectMapperFactory.create(jsonParserFactory, jsonSerializerFactory);
+
+
+        mapper.writeValue( file, users  );
+        List<User> userList = mapper.readValue( file, List.class, User.class  );
+        puts (userList);
+        puts ( mapper.writeValueAsString( userList ) );
+
+
+    }
+
+
     public static void main( String... args ) throws Exception {
 
         part1();
@@ -441,6 +503,7 @@ public class JsonTutorial {
         part6();
         part7();
         part8();
+        part9();
 
 
     }

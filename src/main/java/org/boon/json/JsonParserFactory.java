@@ -47,6 +47,7 @@ public class JsonParserFactory {
     }
 
     public JsonParserFactory strict() {
+        plistStyle = false;
         lax = false;
         return this;
     }
