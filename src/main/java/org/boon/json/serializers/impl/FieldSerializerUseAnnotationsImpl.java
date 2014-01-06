@@ -22,6 +22,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
     private final boolean includeEmpty;
     private final boolean handleSimpleBackReference;
     private final boolean handleComplexBackReference;
+    private final String view;
     private IdentityHashMap idMap;
     private Map<Class, CustomObjectSerializer> overrideMap;
     private Map<String, CustomFieldSerializer> customFieldSerializerMap;
@@ -39,13 +40,15 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                                                Map<Class, CustomObjectSerializer> overrideMap,
                                                List<FieldFilter> filterProperties,
                                                Map<String, CustomFieldSerializer> customFieldSerializerMap,
-                                               List<CustomFieldSerializer> customFieldSerializers) {
+                                               List<CustomFieldSerializer> customFieldSerializers,
+                                               String view) {
         this.includeNulls = includeNulls;
         this.includeDefault = includeDefault;
         this.useAnnotations = useAnnotations;
         this.includeEmpty = includeEmpty;
         this.handleSimpleBackReference = handleSimpleBackReference;
         this.handleComplexBackReference = handleComplexBackReference;
+        this.view = view;
 
         if (handleComplexBackReference) {
             idMap = new IdentityHashMap (  );
@@ -70,7 +73,14 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
         if ( useAnnotations && fieldAccess.ignore() )  {
             return false;
         }
+
+        if ( useAnnotations && view != null && !fieldAccess.isViewActive(view)  )  {
+            return false;
+        }
+
+
         final boolean include = (useAnnotations && fieldAccess.include());
+
 
         if (filterProperties != null ) {
             for (FieldFilter filter: filterProperties)  {

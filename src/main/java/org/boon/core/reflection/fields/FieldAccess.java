@@ -71,5 +71,7 @@ public interface FieldAccess {
     Class<?> getComponentClass();
     boolean hasAnnotation(String annotationName) ;
     Map<String, Object> getAnnotationData(String annotationName) ;
+    boolean isViewActive (String activeView);
+
 
 }

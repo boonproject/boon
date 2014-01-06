@@ -24,6 +24,7 @@ public class JsonSerializerFactory {
     private boolean handleComplexBackReference = false;
     private boolean includeDefault = false;
     private boolean cacheInstances = true;
+    private String view;
 
     private List<FieldFilter> filterProperties = null;
     private List<CustomFieldSerializer> customFieldSerializers = null;
@@ -65,7 +66,8 @@ public class JsonSerializerFactory {
             stringSerializer = new StringSerializerImpl ();
             mapSerializer = new MapSerializerImpl ();
 
-            if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference || !includeDefault ) {
+            if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference
+                    || !includeDefault || view!=null) {
                 fieldSerializer = new FieldSerializerUseAnnotationsImpl (
                         includeNulls,
                         includeDefault, useAnnotations,
@@ -74,7 +76,8 @@ public class JsonSerializerFactory {
                         customObjectSerializers,
                         filterProperties,
                         null,
-                        customFieldSerializers );
+                        customFieldSerializers,
+                        view);
             } else {
                 fieldSerializer = new FieldSerializerImpl ();
             }
@@ -311,4 +314,12 @@ public class JsonSerializerFactory {
         return this;
     }
 
+    public String getView() {
+        return view;
+    }
+
+    public JsonSerializerFactory setView( String view ) {
+        this.view = view;
+        return this;
+    }
 }

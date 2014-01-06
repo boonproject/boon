@@ -267,6 +267,11 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+    public boolean isViewActive( String activeView ) {
+        return true;
+    }
+
+    @Override
     public final boolean isFinal() {
         return false;
     }

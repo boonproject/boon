@@ -15,10 +15,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.core.Conversions.*;
@@ -44,6 +41,8 @@ public abstract class BaseField implements FieldAccess {
     protected final String typeName;
     public final Type typeEnum;
     private  Map<String,  Map<String, Object>> annotationMap = new ConcurrentHashMap<> (  );
+    private  HashSet<String> includedViews;
+    private  HashSet<String> ignoreWithViews;
 
 
 
@@ -55,6 +54,29 @@ public abstract class BaseField implements FieldAccess {
         for (AnnotationData data : annotationDataForFieldAndProperty) {
             annotationMap.put ( data.getSimpleClassName (), data.getValues () );
             annotationMap.put ( data.getFullClassName (), data.getValues () );
+        }
+
+
+        if (hasAnnotation ( "JsonViews" )) {
+            final Map<String, Object> jsonViews = getAnnotationData ( "JsonViews" );
+            final String[] includeWithViews = (String[]) jsonViews.get ( "includeWithViews" );
+            final String[] ignoreWithViews = (String[]) jsonViews.get ( "ignoreWithViews" );
+
+
+            if (includeWithViews!=null) {
+                this.includedViews = new HashSet<>(  );
+                for (String view : includeWithViews) {
+                    this.includedViews.add( view );
+                }
+            }
+
+
+            if (ignoreWithViews!=null) {
+                this.ignoreWithViews = new HashSet<>(  );
+                for (String view : ignoreWithViews) {
+                    this.ignoreWithViews.add( view );
+                }
+            }
         }
 
 
@@ -508,6 +530,28 @@ public abstract class BaseField implements FieldAccess {
 
 
 
+
+    public final boolean isViewActive (String activeView) {
+
+        if (this.includedViews == null && this.ignoreWithViews == null) {
+            return true;
+        }
+        if (this.includedViews!=null) {
+            if (this.includedViews.contains( activeView )) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (this.ignoreWithViews!=null) {
+            if (this.ignoreWithViews.contains( activeView )) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return true;
+    }
 
     @Override
     public final  boolean include () {

@@ -7,6 +7,7 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.json.annotations.JsonIgnore;
 import org.boon.json.annotations.JsonInclude;
+import org.boon.json.annotations.JsonViews;
 import org.junit.Test;
 
 import java.io.File;
@@ -43,6 +44,11 @@ public class JsonTutorial {
 
 
     public static class User {
+
+
+        @JsonViews( ignoreWithViews = {"public"},
+                includeWithViews = {"internal"})
+        private String empId = "555-55-5555";
 
         @JsonIgnore
         private String ssn = "555-55-5555";
@@ -425,7 +431,7 @@ public class JsonTutorial {
 
         Map <String, Object> map  = mapper.parser().parseMap( jsonMap );
 
-        ok |= ( map.get("race") == true  && map.get("name").equals( "bob" ) )  || die(map.toString());
+        ok |= ( map.get("race") == Boolean.TRUE  && map.get("name").equals( "bob" ) )  || die(map.toString());
 
         puts("ok?", ok);
 
@@ -493,6 +499,40 @@ public class JsonTutorial {
     }
 
 
+
+    public static void part10() throws Exception {
+
+
+        final User rick = BeanUtils.copy( user );
+        rick.getName().setFirst( "Rick" );
+
+        boolean ok = true;
+
+
+        JsonSerializer serializer = new JsonSerializerFactory().useAnnotations().setView( "public" ).create();
+        String str = serializer.serialize( rick ).toString();
+
+        puts (str);
+        ok |= !str.contains( "\"empId\":" ) || die(str);
+
+
+        serializer = new JsonSerializerFactory().useAnnotations().setView( "internal" ).create();
+        str = serializer.serialize( rick ).toString();
+        ok |= str.contains( "\"empId\":" ) || die(str);
+
+        puts (str);
+
+
+        serializer = new JsonSerializerFactory().useAnnotations().create();
+        str = serializer.serialize( rick ).toString();
+        ok |= str.contains( "\"empId\":" ) || die(str);
+
+        puts (str);
+
+
+    }
+
+
     public static void main( String... args ) throws Exception {
 
         part1();
@@ -504,6 +544,7 @@ public class JsonTutorial {
         part7();
         part8();
         part9();
+        part10();
 
 
     }
