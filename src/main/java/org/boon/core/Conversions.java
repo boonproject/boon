@@ -738,7 +738,9 @@ public class Conversions {
 
     public static Date toDate( Object object ) {
 
-        if (object instanceof Value) {
+        if (object instanceof Date) {
+            return (Date) object;
+        } else if (object instanceof Value) {
             return ( (Value) object).dateValue ();
         } else if (object instanceof Calendar) {
             return ( (Calendar) object).getTime ();

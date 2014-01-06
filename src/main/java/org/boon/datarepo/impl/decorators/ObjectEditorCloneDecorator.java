@@ -2,7 +2,7 @@ package org.boon.datarepo.impl.decorators;
 
 import org.boon.datarepo.ObjectEditor;
 
-import static org.boon.core.reflection.Reflection.copy;
+import static org.boon.core.reflection.BeanUtils.copy;
 
 
 public class ObjectEditorCloneDecorator<KEY, ITEM> extends ObjectEditorDecoratorBase<KEY, ITEM> {

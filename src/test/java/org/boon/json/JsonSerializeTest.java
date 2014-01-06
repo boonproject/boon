@@ -1,7 +1,7 @@
 package org.boon.json;
 
 import org.boon.Lists;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.json.serializers.impl.JsonSerializerImplOld;
 import org.junit.Test;
 
@@ -72,10 +72,10 @@ public class JsonSerializeTest {
         foo.setBar( FooEnum.BAR );
         foo.setFoo( FooEnum.FOO );
         foo.setString( "Hi Mom" );
-        AllTypes foo2 = Reflection.copy( foo );
+        AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType( foo2 );
         foo2.setString( "Hi Dad" );
-        foo.setAllTypes( Lists.list( Reflection.copy( foo2 ), Reflection.copy( foo2 ) ) );
+        foo.setAllTypes( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
 
 
         String sFoo = serializer.serialize( foo ).toString();
@@ -106,10 +106,10 @@ public class JsonSerializeTest {
         foo.setBar( FooEnum.BAR );
         foo.setFoo( FooEnum.FOO );
         foo.setString( "Hi Mom" );
-        AllTypes foo2 = Reflection.copy( foo );
+        AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType( foo2 );
         foo2.setString( "Hi Dad" );
-        foo.setAllTypes( Lists.list( Reflection.copy( foo2 ), Reflection.copy( foo2 ) ) );
+        foo.setAllTypes( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
 
 
         String sFoo = serializer.serialize( foo ).toString();

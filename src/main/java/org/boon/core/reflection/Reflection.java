@@ -696,38 +696,6 @@ public class Reflection {
         return list;
     }
 
-    public static <T> T copy( T item ) {
-        if ( item instanceof Cloneable ) {
-            try {
-                Method method = item.getClass().getMethod( "clone", ( Class[] ) null );
-                method.setAccessible( true );
-                return ( T ) method.invoke( item, ( Object[] ) null );
-            } catch ( NoSuchMethodException | InvocationTargetException | IllegalAccessException ex ) {
-                return fieldByFieldCopy( item );
-            }
-        } else {
-            return fieldByFieldCopy( item );
-        }
-    }
-
-
-    private static <T> T fieldByFieldCopy( T item ) {
-        Map<String, FieldAccess> fields = getAllAccessorFields( item.getClass() );
-        T clone = null;
-        try {
-            clone = ( T ) item.getClass().newInstance();
-        } catch ( Exception e ) {
-            handle( e );
-        }
-        for ( FieldAccess field : fields.values() ) {
-            if ( field.isStatic() || field.isFinal() || field.isReadOnly() ) {
-                continue;
-            }
-            field.setValue( clone, field.getValue( item ) );
-        }
-        return clone;
-    }
-
 
     public static Iterator iterator( final Object o ) {
         if ( o instanceof Collection ) {

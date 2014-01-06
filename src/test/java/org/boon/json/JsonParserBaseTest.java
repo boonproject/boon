@@ -4,7 +4,7 @@ import org.boon.IO;
 import org.boon.Lists;
 import org.boon.core.Conversions;
 import org.boon.core.Dates;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.serializers.CustomFieldSerializer;
 import org.boon.json.serializers.FieldFilter;
@@ -84,10 +84,10 @@ public class JsonParserBaseTest {
         foo.setBar ( FooEnum.BAR );
         foo.setFoo ( FooEnum.FOO );
         foo.setString ( "Hi Mom" );
-        AllTypes foo2 = Reflection.copy ( foo );
+        AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType ( foo2 );
         foo2.setString ( "Hi Dad" );
-        foo.setAllTypes ( Lists.list(Reflection.copy ( foo2 ), Reflection.copy(foo2)) );
+        foo.setAllTypes ( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 )) );
 
         final JsonSerializer serializer = new JsonSerializerFactory ()
                 .useAnnotations ()
@@ -167,10 +167,10 @@ public class JsonParserBaseTest {
         foo.setBar ( FooEnum.BAR );
         foo.setFoo ( FooEnum.FOO );
         foo.setString ( "Hi Mom" );
-        AllTypes foo2 = Reflection.copy ( foo );
+        AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType ( foo2 );
         foo2.setString ( "Hi Dad" );
-        foo.setAllTypes ( Lists.list(Reflection.copy ( foo2 ), Reflection.copy(foo2)) );
+        foo.setAllTypes ( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 )) );
 
         final JsonSerializer serializer = new JsonSerializerFactory ().create ();
 
@@ -198,10 +198,10 @@ public class JsonParserBaseTest {
         foo.setBar ( FooEnum.BAR );
         foo.setFoo ( FooEnum.FOO );
         foo.setString ( "Hi Mom" );
-        AllTypes foo2 = Reflection.copy ( foo );
+        AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType ( foo2 );
         foo2.setString ( "Hi Dad" );
-        foo.setAllTypes ( Lists.list(Reflection.copy ( foo2 ), Reflection.copy(foo2)) );
+        foo.setAllTypes ( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 )) );
 
         final JsonSerializer serializer = new JsonSerializerImpl (  );
 
@@ -258,7 +258,7 @@ public class JsonParserBaseTest {
         boolean ok = true;
 
 
-        //        puts ("################", types.getBigDecimal (), types.getDate (), types.getBigInteger ());
+        //        puts ("################", types.getBigDecimal (), types.getBirthDate (), types.getBigInteger ());
 
         ok |= types.getBigDecimal ().equals ( new BigDecimal ( "99" ) ) || die();
 

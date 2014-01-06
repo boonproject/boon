@@ -87,7 +87,11 @@ public class ValueBase extends Number implements CharSequence, Value {
 
     @Override
     public String stringValue() {
-        return type.toString();
+        if (type == Type.NULL)  {
+            return null;
+        } else {
+            return type.toString();
+        }
     }
 
     @Override

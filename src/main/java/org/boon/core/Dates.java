@@ -438,6 +438,7 @@ public class Dates {
 
         calendar.setTimeInMillis( date.getTime () );
 
+
         int day = calendar.get( Calendar.DAY_OF_MONTH );
         int month = calendar.get( Calendar.MONTH ) +1;
         int year = calendar.get( Calendar.YEAR );
@@ -645,16 +646,19 @@ public class Dates {
     public static boolean isISO8601QuickCheck( char[] charArray, int start, int to ) {
         final int length = to - start;
 
-        if ( length == JSON_TIME_LENGTH || length == LONG_ISO_8601_TIME_LENGTH
-                || length == SHORT_ISO_8601_TIME_LENGTH || ( length >= 16 && ( charArray[ start + 16 ] == ':' ) )
-                ) {
+        try {
 
-            if ( length >= 16 && ( charArray[ start + 16 ] == ':' ) ) {
-                return true;
+            if ( length == JSON_TIME_LENGTH || length == LONG_ISO_8601_TIME_LENGTH
+                    || length == SHORT_ISO_8601_TIME_LENGTH || ( length >= 17 && ( charArray[ start + 16 ] == ':' ) )
+                    ) {
+                    return true;
             }
-        }
 
-        return false;
+            return false;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
 
     }
 

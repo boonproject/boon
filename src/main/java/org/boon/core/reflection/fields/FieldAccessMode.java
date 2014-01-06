@@ -8,6 +8,10 @@ public enum FieldAccessMode {
     PROPERTY_THEN_FIELD;
 
 
+    public FieldsAccessor create () {
+        return FieldAccessMode.create (this);
+    }
+
     public static FieldsAccessor create(FieldAccessMode fieldAccessType) {
         FieldsAccessor fieldsAccessor = null;
 

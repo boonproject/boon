@@ -4,6 +4,7 @@ import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
 import org.boon.core.Dates;
+import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.serializers.DateSerializer;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
@@ -18,20 +19,19 @@ import java.util.TimeZone;
 public class JsonDateSerializer implements DateSerializer {
 
     private final Calendar calendar = Calendar.getInstance( TimeZone.getTimeZone( "GMT" ) );
-    private final Cache<Object, char[]> dateCache = new SimpleCache<>(200, CacheType.LRU);
+    private final Cache<Object, String> dateCache = new SimpleCache<>(200, CacheType.LRU);
 
 
     @Override
     public final void serializeDate( JsonSerializerInternal jsonSerializer, Date date, CharBuf builder ) {
-        char [] chars = dateCache.get ( date );
-        if ( chars == null) {
+        String string = dateCache.get ( date );
+        if ( string == null) {
             CharBuf buf =  CharBuf.create ( Dates.JSON_TIME_LENGTH );
             Dates.jsonDateChars ( calendar, date, buf );
-            chars = buf.toCharArray ();
-            dateCache.put ( date, chars );
+            string = buf.toString();
+            dateCache.put ( date, string );
 
         }
-        builder.addChars ( chars );
-
+        builder.addChars ( FastStringUtils.toCharArray( string ) );
     }
 }

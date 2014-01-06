@@ -398,7 +398,7 @@ public abstract class BaseField implements FieldAccess {
                 this.setObject ( obj, value.toEnum (  ( Class<? extends Enum> )type ) );
                 return;
             default:
-                setObject ( obj, coerce ( type, value ) );
+                setObject ( obj, coerce ( type, value.toValue() ) );
         }
 
     }

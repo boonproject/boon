@@ -15,4 +15,37 @@ public class ObjectMapperFactory {
         return new ObjectMapperImpl(parserFactory, serializerFactory);
     }
 
+    public static ObjectMapper createUseProperties (boolean useJsonDates) {
+        JsonParserFactory jpf = new JsonParserFactory();
+        jpf.usePropertiesFirst();
+        JsonSerializerFactory jsf = new JsonSerializerFactory();
+
+        jsf.usePropertiesFirst();
+
+        if (useJsonDates) {
+            jsf.useJsonFormatForDates();
+        }
+        return new ObjectMapperImpl(jpf, jsf);
+    }
+
+    public static ObjectMapper createUseAnnotations (boolean useJsonDates) {
+        JsonParserFactory jpf = new JsonParserFactory();
+        JsonSerializerFactory jsf = new JsonSerializerFactory();
+
+        jsf.useAnnotations();
+
+        if (useJsonDates) {
+            jsf.useJsonFormatForDates();
+        }
+        return new ObjectMapperImpl(jpf, jsf);
+    }
+
+
+    public static ObjectMapper createUseJSONDates () {
+        JsonParserFactory jpf = new JsonParserFactory();
+        JsonSerializerFactory jsf = new JsonSerializerFactory();
+        jsf.useJsonFormatForDates();
+        return new ObjectMapperImpl(jpf, jsf);
+    }
+
 }

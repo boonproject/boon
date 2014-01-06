@@ -1456,5 +1456,12 @@ public class CharBuf extends Writer implements CharSequence {
         return this;
 
     }
+
+    public void ensure( int i ) {
+        if ( i + location > capacity ) {
+            buffer = Chr.grow( buffer, i * 2 );
+            capacity = buffer.length;
+        }
+    }
 }
 

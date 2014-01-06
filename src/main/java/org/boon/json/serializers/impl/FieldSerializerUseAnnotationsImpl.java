@@ -177,7 +177,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
         }
 
 
-        if (includeNulls &&  value == null ) {
+        if ((includeNulls || fieldAccess.include()) &&  value == null ) {
             serializeFieldName ( fieldName, builder );
             builder.addNull ();
             return true;

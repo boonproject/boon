@@ -35,7 +35,8 @@ public class JsonSerializerFactory {
         if ( !outputType && !includeEmpty && !includeNulls && !useAnnotations &&
                 !jsonFormatForDates && handleSimpleBackReference &&
                 !handleComplexBackReference && !includeDefault && filterProperties == null
-                && customFieldSerializers == null && customObjectSerializers == null ) {
+                && customFieldSerializers == null && customObjectSerializers == null &&
+                fieldAccessType == FieldAccessMode.FIELD) {
             return new JsonSimpleSerializerImpl ();
         } else {
 

@@ -321,6 +321,7 @@ public class Annotations {
 
     private static Annotation[] findFieldAnnotations( Class<?> clazz, String propertyName ) {
         Field field = getField( clazz, propertyName );
+
         if ( field == null ) {
             return new Annotation[]{ };
         }
@@ -368,6 +369,8 @@ public class Annotations {
                 }
                 clazz = field.getType();
             }
+
+            field.setAccessible( true );
             return field;
         }
     }
@@ -391,6 +394,8 @@ public class Annotations {
                 }
             }
         }
+
+        if (field!=null)field.setAccessible( true );
         return field;
     }
 

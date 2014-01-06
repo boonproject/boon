@@ -6,6 +6,7 @@ import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldFieldsAccessor;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueMapImpl;
@@ -34,9 +35,6 @@ public class MapObjectConversion {
     public static <T> T fromMap( Map<String, Object> map, T newInstance ) {
 
 
-        Objects.requireNonNull ( newInstance );
-
-
         FieldsAccessor fieldsAccessor = new FieldFieldsAccessor();
         Map<String, FieldAccess> fields = fieldsAccessor.getFields( newInstance.getClass() );
         Set<Map.Entry<String, Object>> entrySet = map.entrySet();
@@ -49,9 +47,6 @@ public class MapObjectConversion {
             FieldAccess field = fields.get( entry.getKey() );
             Object value = entry.getValue();
 
-            if ( field == null ) {
-                continue;
-            }
 
             if ( value instanceof Value ) {
                 if ( ( ( Value ) value ).isContainer() ) {
@@ -62,8 +57,9 @@ public class MapObjectConversion {
                 }
             }
 
-
-            if ( Typ.isBasicType ( value ) ) {
+            if (value.getClass() == field.getType()) {
+                  field.setObject( newInstance, value );
+            } else if ( Typ.isBasicType ( value ) ) {
 
                 field.setValue( newInstance, value );
             } else if ( value instanceof Value ) {
@@ -95,6 +91,8 @@ public class MapObjectConversion {
         return newInstance;
     }
 
+
+
     @SuppressWarnings ( "unchecked" )
     public static <T> T fromValueMap(
             final FieldsAccessor fieldsAccessor,
@@ -122,9 +120,6 @@ public class MapObjectConversion {
             Value value = entry.getValue();
 
 
-            if ( field == null ) {
-                continue;
-            }
 
             if ( value.isContainer() ) {
                 Object objValue;

@@ -18,7 +18,7 @@ import static org.boon.Boon.puts;
 import static org.boon.criteria.CriteriaFactory.eqNestedAdvanced;
 
 
-import static org.boon.core.reflection.Reflection.copy;
+import static org.boon.core.reflection.BeanUtils.copy;
 
 public class BenchMarkUpdate {
 

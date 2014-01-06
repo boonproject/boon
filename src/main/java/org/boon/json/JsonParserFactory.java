@@ -137,6 +137,41 @@ public class JsonParserFactory {
     }
 
 
+    public boolean isUsePropertiesFirst () {
+        return fieldAccessType == FieldAccessMode.PROPERTY_THEN_FIELD;
+    }
+
+
+    public JsonParserFactory usePropertiesFirst () {
+        fieldAccessType = FieldAccessMode.PROPERTY_THEN_FIELD;
+        return this;
+    }
+
+    public boolean isUseFieldsFirst () {
+        return this.fieldAccessType == FieldAccessMode.FIELD_THEN_PROPERTY;
+
+    }
+
+
+    public JsonParserFactory useFieldsFirst () {
+        this.fieldAccessType  = FieldAccessMode.FIELD_THEN_PROPERTY;
+        return this;
+    }
+
+
+    public JsonParserFactory useFieldsOnly () {
+        this.fieldAccessType  = FieldAccessMode.FIELD;
+        return this;
+    }
+
+
+
+    public JsonParserFactory usePropertyOnly () {
+        this.fieldAccessType  = FieldAccessMode.PROPERTY;
+        return this;
+    }
+
+
     public JsonParserFactory plistStyle() {
         plistStyle = true;
         return this;

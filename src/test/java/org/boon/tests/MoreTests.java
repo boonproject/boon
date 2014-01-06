@@ -26,7 +26,7 @@ import static org.boon.criteria.CriteriaFactory.*;
 import static org.boon.datarepo.Collections.$q;
 import static org.boon.datarepo.Collections.sortedQuery;
 
-import static org.boon.core.reflection.Reflection.copy;
+import static org.boon.core.reflection.BeanUtils.copy;
 import static org.boon.core.Conversions.toDate;
 
 

@@ -150,6 +150,23 @@ public class HTTP {
         return postBodyTextWithContentType( url, "application/json", jsonString );
     }
 
+
+    public static String getJSON(
+            final String url,
+            final Map<String, ?> headers
+            ) {
+
+        return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet( url, headers, "application/json", null );
+                return extractResponseString( connection );
+            }
+        } );
+
+    }
+
     public static String postXML(
             final String url,
             final String jsonString ) {

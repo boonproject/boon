@@ -1,11 +1,15 @@
 package org.boon.core.reflection;
 
+import org.boon.Exceptions;
 import org.boon.StringScanner;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
+import org.boon.core.Type;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.MapField;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import static org.boon.Boon.sputs;
@@ -699,6 +703,62 @@ public class BeanUtils {
         }
     }
 
+
+    public static <T> T copy( T item ) {
+        if ( item instanceof Cloneable ) {
+            try {
+                Method method = item.getClass().getMethod( "clone", ( Class[] ) null );
+                method.setAccessible( true );
+                return ( T ) method.invoke( item, ( Object[] ) null );
+            } catch ( NoSuchMethodException | InvocationTargetException | IllegalAccessException ex ) {
+                return fieldByFieldCopy( item );
+            }
+        } else {
+            return fieldByFieldCopy( item );
+        }
+    }
+
+    private static <T> T fieldByFieldCopy( T item ) {
+
+        final Class<T> aClass = (Class<T>) item.getClass();
+        Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( item.getClass() );
+
+        T clone = Reflection.newInstance( aClass );
+
+        for ( FieldAccess field : fields.values() ) {
+            try {
+            if ( field.isStatic() ) {
+                continue;
+            }
+            if (!field.isPrimitive() && !Typ.isBasicType( field.getType() ))  {
+
+
+
+                Object value = field.getObject( item );
+                if (value == null) {
+                    field.setObject(clone, null);
+                } else {
+                    field.setObject( clone, copy( value ) );
+                }
+            } else if (field.isPrimitive()) {
+                field.setValue( clone, field.getValue( item ) );
+
+            } else {
+                Object value = field.getObject( item );
+
+                if (value == null) {
+                    field.setObject(clone, null);
+                } else {
+                    field.setObject( clone,  value  );
+                }
+
+            }
+            }catch (Exception ex) {
+                return (T) Exceptions.handle(Object.class, ""+field,  ex );
+            }
+        }
+        return clone;
+    }
 
 
 }
