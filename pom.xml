@@ -8,7 +8,8 @@
     <artifactId>boon</artifactId>
     <version>0.5-SNAPSHOT</version>
     <name>boon</name>
-    <description>Simple opinionated Java for the novice to expert level Java Programmer. Low Ceremony. High Productivity. A real boon to Java to developers!</description>\
+    <description>Simple opinionated Java for the novice to expert level Java Programmer. 
+                 Low Ceremony. High Productivity. A real boon to Java to developers!</description>
     <url>http://richardhightower.github.io/site/Boon</url>
 
     <licenses>
