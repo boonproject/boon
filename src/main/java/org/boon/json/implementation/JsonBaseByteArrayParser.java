@@ -30,13 +30,11 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     protected int __currentChar;
 
 
-    protected static final int LETTER_B = 'b';
     protected static final int NEW_LINE = '\n';
 
     protected static final int RETURN = '\r';
 
     protected static final int SPACE = ' ';
-    protected static final int FORWARD_SLASH = '/';
 
 
     protected static final int TAB = '\t';
@@ -238,19 +236,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    public <T> T parse( Class<T> type, Reader reader ) {
-
-        die( "you are using the wrong class" );
-        return null;
-    }
-
-
-    public <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        die( "you are using the wrong class" );
-        return null;
-    }
-
-
     protected void complain( String complaint ) {
         throw new JsonException( exceptionDetails( complaint ) );
     }
@@ -351,7 +336,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
             if ( __currentChar == DOUBLE_QUOTE ) {
-                String key = decodeKeyName();
+                String key = decodeString();
 
                 if ( internKeys ) {
                     String keyPrime = internedKeysCache.get( key );
@@ -472,127 +457,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
 
-    protected final Object decodeNumberOld() {
-
-        int startIndex = __index;
-
-        boolean doubleFloat = false;
-
-        int index;
-        int count = 0;
-        int countDecimalPoint = 0;
-        int eCount = 0;
-        int plusCount = 0;
-
-
-        boolean minus = false;
-
-        boolean simple = true;
-
-        int sign = 1;
-
-
-        int digitsPastPoint = 0;
-
-        __currentChar = charArray[ __index ];
-
-        if ( __currentChar == MINUS ) {
-            minus = true;
-            __index++;
-        }
-
-
-        loop:
-        for ( index = __index; index < charArray.length; index++, count++ ) {
-            __currentChar = charArray[ index ];
-
-            if ( doubleFloat ) {
-                digitsPastPoint++;
-            }
-
-
-            switch ( __currentChar ) {
-                case SPACE:
-                case TAB:
-                case NEW_LINE:
-                case RETURN:
-                case COMMA:
-                case CLOSED_BRACKET:
-                case CLOSED_CURLY:
-                    break loop;
-
-                case ALPHA_1:
-                case ALPHA_2:
-                case ALPHA_3:
-                case ALPHA_4:
-                case ALPHA_5:
-                case ALPHA_6:
-                case ALPHA_7:
-                case ALPHA_8:
-                case ALPHA_9:
-                case ALPHA_0:
-                case MINUS:
-                    continue loop;
-
-
-                case DECIMAL_POINT:
-                    doubleFloat = true;
-                    countDecimalPoint++;
-
-                    if ( countDecimalPoint > 1 ) {
-                        throw new JsonException( exceptionDetails( "number has more than one decimal point" ) );
-                    }
-                    continue loop;
-
-                case LETTER_E:
-                case LETTER_BIG_E:
-                    simple = false;
-                    doubleFloat = true;
-                    eCount++;
-                    if ( eCount > 1 ) {
-                        throw new JsonException( exceptionDetails( "number has more than one exp definition" ) );
-                    }
-                    continue loop;
-
-                case PLUS:
-                    simple = false;
-                    doubleFloat = true;
-                    plusCount++;
-                    if ( plusCount > 1 ) {
-                        throw new JsonException( exceptionDetails( "number has more than one plus sign" ) );
-                    }
-                    if ( eCount == 0 ) {
-                        throw new JsonException( exceptionDetails( "plus sign must come after exp" ) );
-
-                    }
-                    continue loop;
-
-            }
-
-            complain( "expecting number char but got current char " + charDescription( __currentChar ) );
-        }
-
-        __index = index;
-
-        Object value;
-        if ( doubleFloat ) {
-            value = ByteScanner.simpleDouble( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
-        } else {
-
-            if ( isInteger( this.charArray, startIndex, __index - startIndex, minus ) ) {
-                value = ByteScanner.parseInt( charArray, startIndex, __index - startIndex ) * sign;
-            } else {
-                value =  ByteScanner.parseLong( charArray, startIndex, __index - startIndex ) * sign;
-            }
-
-        }
-
-
-        return value;
-
-    }
-
-
     protected final static byte[] NULL = Byt.bytes( "null" );
 
     protected final Object decodeNull() {
@@ -650,11 +514,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
     protected abstract String decodeString();
 
-
-    protected final String decodeKeyName() {
-        return decodeString();
-
-    }
 
     protected final List decodeJsonArray() {
         if ( __currentChar == OPEN_BRACKET ) {
