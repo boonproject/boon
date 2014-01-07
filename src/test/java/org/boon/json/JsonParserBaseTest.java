@@ -12,6 +12,7 @@ import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.json.serializers.impl.AbstractCustomObjectSerializer;
 import org.boon.json.serializers.impl.JsonSerializerImpl;
 import org.boon.primitive.CharBuf;
+import org.boon.utils.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -264,7 +265,8 @@ public class JsonParserBaseTest {
 
         ok |= types.getBigInteger ().equals ( new BigInteger ( "101" ) ) || die();
 
-        ok |= types.getDate().toString().startsWith ( "Fri Dec 1" ) || die("" + types.getDate());
+        String gmtString = DateUtils.getGMTString(types.getDate());
+        ok |= gmtString.equals("14/12/13 01:55") || die("" + gmtString);
         ok |= types.getFoo ().toString().equals ( "FOO" ) || die();
         ok |= types.getBar ().toString().equals ( "BAR" ) || die();
 
