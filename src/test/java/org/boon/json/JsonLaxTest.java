@@ -3,9 +3,11 @@ package org.boon.json;
 import org.boon.Lists;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.json.implementation.JsonParserLax;
+import org.boon.utils.DateUtils;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -193,7 +195,8 @@ public class JsonLaxTest extends JsonParserBaseTest {
         puts ( map );
 
 
-        ok &= idx ( map, "date" ).toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die ( "I did not find:" + idx ( map, "date" ) + "#" );
+        String dateGMTString = DateUtils.getGMTString((Date) idx ( map, "date" ));
+        ok &= dateGMTString.equals ( "05/11/94 08:15" ) || die ( "I did not find:" + dateGMTString + "#" );
 
         ok &= idx ( map, "foo" ).equals ( "hi mom hi dad how are you?" ) || die ( "I did not find:" + idx ( map, "foo" ) + "#" );
         ok &= idx ( map, "thanks" ).equals ( "I am good thanks for asking" ) || die ( "I did not find:" + idx ( map, "foo" ) + "#" );

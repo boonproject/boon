@@ -3,6 +3,7 @@ package org.boon.json;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.json.implementation.JsonParserLax;
 import org.boon.json.implementation.PlistParser;
+import org.boon.utils.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -86,7 +87,8 @@ public class PlistTest {
 
         Map<String, Object> applications = ( Map<String, Object> ) map.get ( "Applications" );
 
-        ok = idx ( map, "date" ).toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die ( "I did not find:" + idx ( map, "date" ) + "#" );
+        String dateGMTString = DateUtils.getGMTString((Date) idx ( map, "date" ));
+        ok &= dateGMTString.equals ( "05/11/94 08:15" ) || die ( "I did not find:" + dateGMTString + "#" );
 
 
         inspectMap ( map );
@@ -139,7 +141,8 @@ public class PlistTest {
 
         Date d = ( Date ) a.get ( "d" );
 
-        ok = d.toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die ( "" + d );
+        String dateGMTString = DateUtils.getGMTString(d);
+        ok &= dateGMTString.equals ( "05/11/94 08:15" ) || die ( "I did not find:" + dateGMTString + "#" );
 
 
         Map<String, Object> b = ( Map<String, Object> ) a.get ( "b" );
@@ -195,8 +198,8 @@ public class PlistTest {
         ok = c == 31 || die ();
 
         Date d = ( Date ) a.get ( "d" );
-
-        ok = d.toString ().equals ( "Sat Nov 05 00:15:30 PST 1994" ) || die ( "" + d );
+        String dateGMTString = DateUtils.getGMTString(d);
+        ok &= dateGMTString.equals ( "05/11/94 08:15" ) || die ( "I did not find:" + dateGMTString + "#" );
 
 
         Map<String, Object> b = ( Map<String, Object> ) a.get ( "b" );
