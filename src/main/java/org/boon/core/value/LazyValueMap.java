@@ -117,7 +117,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
     /** Chop this map.
      *
      */
-    final void chopMap() {
+    public final void chopMap() {
         /* if it has been chopped then you have to return. */
         if ( mapChopped ) {
             return;
