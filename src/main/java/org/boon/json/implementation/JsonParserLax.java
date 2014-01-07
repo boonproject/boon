@@ -326,50 +326,21 @@ public class JsonParserLax extends JsonParserCharArray {
                     value = decodeJsonObjectLax();
                     break;
 
+
                 case '1':
-                    value = decodeNumberLax();
-                    break;
-
                 case '2':
-                    value = decodeNumberLax();
-                    break;
-
                 case '3':
-                    value = decodeNumberLax();
-                    break;
-
                 case '4':
-                    value = decodeNumberLax();
-                    break;
-
                 case '5':
-                    value = decodeNumberLax();
-                    break;
-
                 case '6':
-                    value = decodeNumberLax();
-                    break;
-
                 case '7':
-                    value = decodeNumberLax();
-                    break;
-
                 case '8':
-                    value = decodeNumberLax();
-                    break;
-
                 case '9':
-                    value = decodeNumberLax();
-                    break;
-
                 case '0':
-                    value = decodeNumberLax();
-                    break;
+                    return decodeNumberLax (false);
 
                 case '-':
-                    value = decodeNumberLax();
-                    break;
-
+                    return decodeNumberLax (true);
 
                 default:
                     value = decodeStringLax();
@@ -446,73 +417,45 @@ public class JsonParserLax extends JsonParserCharArray {
 
     }
 
-    protected final Value decodeNumberLax() {
+    protected final Value decodeNumberLax(boolean minus) {
 
 
-        char [] array = charArray;
+        char[] array = charArray;
+
+        final int startIndex = __index;
+        int index =  __index;
         char currentChar;
-        int index = __index;
-
-
-
-        int startIndex = index;
-
         boolean doubleFloat = false;
 
-        loop:
-        for ( ; index < array.length; index++ ) {
-            currentChar = array[ index ];
-
-            switch ( currentChar ) {
-                case ' ':
-                case '\t':
-                case '\n':
-                case '\r':
-                case ',':
-                case ']':
-                case '}':
-                    break loop;
-
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '0':
-                case '-':
-                    continue loop;
-
-
-                case '+':
-                case 'e':
-                case 'E':
-                case '.':
-                    doubleFloat = true;
-                    continue loop;
-
-            }
-
-            __currentChar = currentChar;
-            __index = index;
-            complain( "expecting number char but got current char " + charDescription( currentChar ) );
+        if (minus && index + 1 < array.length) {
+            index++;
         }
 
 
-        Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        ValueInCharBuf value = new ValueInCharBuf( chop, type, startIndex, index, array );
-
-        skipWhiteSpace();
+        while (true) {
+            currentChar = array[index];
+            if ( isNumberDigit ( currentChar )) {
+                //noop
+            } else if ( currentChar <= 32 ) { //white
+                break;
+            } else if ( isDelimiter ( currentChar ) ) {
+                break;
+            } else if ( isDecimalChar (currentChar) ) {
+                doubleFloat = true;
+            }
+            index++;
+            if (index   >= array.length) break;
+        }
 
         __index = index;
+        __currentChar = currentChar;
+
+        Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
+
+        ValueInCharBuf value = new ValueInCharBuf ( chop, type, startIndex, __index, this.charArray );
 
         return value;
-
-
     }
 
 
@@ -560,52 +503,26 @@ public class JsonParserLax extends JsonParserCharArray {
         return false;
     }
 
+
     private Value decodeStringLax() {
-
-        __currentChar = charArray[ __index ];
-
-
+        int index = __index;
+        char currentChar = charArray[ __index ];
         final int startIndex = __index;
-
-
         boolean encoded = false;
+        char [] charArray = this.charArray;
 
-        int minusCount = 0;
-        int colonCount = 0;
+        for (; index < charArray.length; index++ ) {
+            currentChar = charArray[ index ];
 
-        done:
-        for (; __index < this.charArray.length; __index++ ) {
-            __currentChar = charArray[ __index ];
-            switch ( __currentChar ) {
+            if (isDelimiter( currentChar )) break;
+            else if (currentChar == '\\') break;
 
-
-                case ']':
-                case '}':
-                case ',':
-                    break done;
-
-                case '\\':
-                    encoded = true;
-                    continue;
-
-
-                case '-':
-                    minusCount++;
-                    break;
-                case ':':
-                    colonCount++;
-                    break;
-
-            }
         }
 
 
-        boolean checkDate = !encoded && minusCount >= 2 && colonCount >= 2;
+        Value value = this.extractLaxString( startIndex, index, encoded, true );
 
-
-        Value value = this.extractLaxString( startIndex, __index, encoded, checkDate );
-
-
+        __index = index;
         return value;
 
     }

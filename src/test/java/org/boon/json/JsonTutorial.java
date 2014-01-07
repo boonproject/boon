@@ -447,7 +447,6 @@ public class JsonTutorial {
 
         JsonParserFactory jsonParserFactory = new JsonParserFactory()
                 .useFieldsFirst().useFieldsOnly().usePropertiesFirst().usePropertyOnly() //one of these
-                .plistStyle() //allow parsing of ASCII PList style files
                 .lax() //allow loose parsing of JSON like JSON Smart
                 .strict() //opposite of lax
                 .setCharset( StandardCharsets.UTF_8 ) //Set the standard charset, defaults to UTF_8

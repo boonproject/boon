@@ -33,7 +33,7 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
     public JsonParserImpl( final FieldsAccessor fields,
                            Charset charset,
                            boolean lax,
-                           boolean plistStyle, boolean chop, boolean lazyChop ) {
+                            boolean chop, boolean lazyChop ) {
 
 
         super(fields);
@@ -42,9 +42,6 @@ public class JsonParserImpl extends BaseJsonParser implements JsonParser  {
         if ( lax ) {
            this.basicParser = new JsonParserLax ( fields, false, chop, lazyChop );
            this.objectParser = new JsonParserLax ( fields, true );
-        } else if (plistStyle) {
-            this.basicParser = new PlistParser ( fields, false, chop, lazyChop );
-            this.objectParser = new PlistParser ( fields, true );
         } else {
             this.basicParser = new JsonFastParser( fields, false, chop, lazyChop );
             this.objectParser = new JsonFastParser( fields, true );

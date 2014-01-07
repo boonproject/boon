@@ -1,12 +1,8 @@
 package org.boon.json.implementation;
 
-import org.boon.core.Type;
-import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.core.reflection.fields.FieldFieldsAccessor;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.value.ValueInCharBuf;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParser;
 import org.boon.core.LazyMap;
@@ -15,11 +11,9 @@ import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
 import java.nio.charset.Charset;
-import java.sql.Array;
 import java.util.*;
 
 import static org.boon.primitive.CharScanner.isInteger;
-import static org.boon.primitive.CharScanner.parseInt;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array

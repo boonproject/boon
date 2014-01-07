@@ -192,7 +192,7 @@ public class PlistTest {
         Map<String, Object> a = ( Map<String, Object> ) map.get ( "a" );
 
         int c = ( int ) a.get ( "c" );
-        ok = c == 31 || die ();
+        ok = c == 31 || die (""+c);
 
         Date d = ( Date ) a.get ( "d" );
 

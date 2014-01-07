@@ -9,10 +9,8 @@ import java.nio.charset.StandardCharsets;
 public class JsonParserFactory {
 
 
-    private boolean preferCharSequence = false;
     private Charset charset = null;
     private boolean lax;
-    private boolean plistStyle;
     private boolean chop = false;
     private boolean lazyChop = true;
     private FieldAccessMode fieldAccessType = FieldAccessMode.FIELD;
@@ -47,7 +45,6 @@ public class JsonParserFactory {
     }
 
     public JsonParserFactory strict() {
-        plistStyle = false;
         lax = false;
         return this;
     }
@@ -59,16 +56,8 @@ public class JsonParserFactory {
     }
 
 
-    public JsonParserFactory preferCharSequence() {
-        this.preferCharSequence = true;
-        return this;
-    }
 
 
-    public JsonParserFactory neverPreferCharSequence() {
-        this.preferCharSequence = false;
-        return this;
-    }
 
 
 
@@ -103,6 +92,10 @@ public class JsonParserFactory {
     }
 
     public JsonParser createPlistParser() {
+
+        if (charset==null) {
+           charset= StandardCharsets.US_ASCII;
+        }
         BaseJsonParser jsonParser = new PlistParser ( FieldAccessMode.create( fieldAccessType ), false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
@@ -126,15 +119,12 @@ public class JsonParserFactory {
 
 
 
-
-        if ( ( charset == null ) && lax && plistStyle ) {
-            charset = StandardCharsets.US_ASCII;
-        } else if ( charset == null ) {
+        if ( charset == null ) {
             charset = StandardCharsets.UTF_8;
         }
 
         return new JsonParserImpl( FieldAccessMode.create( fieldAccessType ), charset,
-                 lax, plistStyle, chop, lazyChop );
+                 lax,  chop, lazyChop );
     }
 
 
@@ -173,8 +163,4 @@ public class JsonParserFactory {
     }
 
 
-    public JsonParserFactory plistStyle() {
-        plistStyle = true;
-        return this;
-    }
 }

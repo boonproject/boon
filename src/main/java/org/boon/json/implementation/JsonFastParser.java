@@ -269,7 +269,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         char [] array = charArray;
         if ( __currentChar == '[' ) {
-            this.nextChar ();
+            __index++;
         }
 
         skipWhiteSpace ();
@@ -279,7 +279,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
-            this.nextChar ();
+            __index++;
             return EMPTY_LIST;
         }
 
