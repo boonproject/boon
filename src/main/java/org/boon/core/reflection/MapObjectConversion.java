@@ -98,7 +98,19 @@ public class MapObjectConversion {
             final FieldsAccessor fieldsAccessor,
             final Map<String, Value> map,
             final Class<T> clazz ) {
+
         return fromValueMap( fieldsAccessor, map, Reflection.newInstance( clazz ) );
+    }
+
+
+
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T fromValueMap(
+            final FieldsAccessor fieldsAccessor,
+            final Map<String, Value> map) {
+        String className = map.get( "class" ).toString();
+        Object newInstance = Reflection.newInstance ( className );
+        return fromValueMap( fieldsAccessor, map, (T)newInstance );
     }
 
     @SuppressWarnings ( "unchecked" )
@@ -126,7 +138,17 @@ public class MapObjectConversion {
 
                 objValue = value.toValue();
                 if ( objValue instanceof Map ) {
-                    objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
+
+
+
+                    Class <?> clazz = field.getType();
+                    if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
+                        objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
+
+                    } else {
+
+                        objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
+                    }
                     field.setObject( newInstance, objValue );
                 } else if ( objValue instanceof Collection ) {
                     handleCollectionOfValues(fieldsAccessor, newInstance, field,
