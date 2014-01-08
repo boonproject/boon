@@ -77,9 +77,7 @@ public class ValueInCharBuf extends ValueBase {
             this.decodeStrings = encoded;
 
         } catch ( Exception ex ) {
-            puts ("################",  "exception", ex, "start", startIndex, "end", endIndex );
             Exceptions.handle ( ex );
-
         }
 
     }

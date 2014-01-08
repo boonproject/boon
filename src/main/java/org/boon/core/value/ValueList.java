@@ -12,6 +12,8 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
     List<Object> list = new ArrayList<>( 5 );
 
     private final boolean lazyChop;
+    boolean converted = false;
+
 
 
     public ValueList( boolean lazyChop ) {
@@ -44,21 +46,22 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
     }
 
     @Override
+
     public Iterator<Object> iterator() {
+        convertAllIfNeeded();
         return list.iterator();
     }
 
-//    boolean converted = false;
-//
-//    private void convertAllIfNeeded() {
-//        if ( !converted ) {
-//            converted = true;
-//            for ( int index = 0; index < list.size(); index++ ) {
-//                this.get( index );
-//            }
-//        }
-//
-//    }
+
+    private void convertAllIfNeeded() {
+        if ( !converted ) {
+            converted = true;
+            for ( int index = 0; index < list.size(); index++ ) {
+                this.get( index );
+            }
+        }
+
+    }
 
 
     @Override

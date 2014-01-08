@@ -190,6 +190,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
             map.put( miv.getKey(), miv.getValue().toValue() );
         }
 
+        len = 0;
         items = null;
     }
 

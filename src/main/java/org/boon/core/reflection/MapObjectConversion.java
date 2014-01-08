@@ -10,6 +10,7 @@ import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldFieldsAccessor;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.LazyValueMap;
+import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
 
@@ -211,6 +212,70 @@ public class MapObjectConversion {
         return newInstance;
     }
 
+
+
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T fromValueMap( final FieldsAccessor fieldsAccessor,
+                                      final ValueMapImpl  map,
+                                      final T newInstance ) {
+
+
+
+
+        Map<String, FieldAccess> fields = fieldsAccessor.getFields( newInstance.getClass() );
+        Map.Entry<String, Value>[] entries;
+        int size;
+
+        if (!map.hydrated()) {
+            size = map.len();
+            entries = map.items();
+        } else {
+            size = map.size();
+            entries = ( Map.Entry<String, Value>[] ) map.entrySet ().toArray( new Map.Entry[size] );
+        }
+
+        /* guard. */
+        if ( size==0 || entries == null) {
+            return newInstance;
+        }
+
+
+        for ( int index = 0; index < size; index++ ) {
+            Map.Entry<String, Value> entry = entries[ index ];
+
+            String key = entry.getKey();
+            FieldAccess field = fields.get( key );
+            Value value  = entry.getValue();
+
+
+
+                if ( value.isContainer() ) {
+                    Object objValue;
+
+                    objValue = value.toValue();
+                    if ( objValue instanceof Map ) {
+
+                        Class <?> clazz = field.getType();
+                        if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
+                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
+
+                        } else {
+
+                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
+                        }
+                        field.setObject( newInstance, objValue );
+                    } else if ( objValue instanceof Collection ) {
+                        handleCollectionOfValues(fieldsAccessor, newInstance, field,
+                                ( Collection<Value> ) objValue );
+                    }
+
+                } else {
+                    field.setFromValue( newInstance, value );
+                }
+        }
+
+        return newInstance;
+    }
     private static void processCollectionFromMapUsingFields(
                     final FieldsAccessor fieldsAccessor, final Object newInstance,
                                                   final FieldAccess field,
@@ -284,7 +349,13 @@ public class MapObjectConversion {
 
     @SuppressWarnings ( "unchecked" )
     private static void handleCollectionOfValues( FieldsAccessor fieldsAccessor, Object newInstance,
-                                                  FieldAccess field, Collection<Value> collectionOfValues ) {
+                                                  FieldAccess field, Collection<Value> acollectionOfValues ) {
+
+        Collection collectionOfValues = acollectionOfValues;
+
+        if (collectionOfValues instanceof ValueList) {
+            collectionOfValues = ((ValueList)collectionOfValues).list();
+        }
 
         Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfValues.size () );
 
@@ -294,7 +365,7 @@ public class MapObjectConversion {
         if ( componentClass != null ) {
 
 
-            for ( Value value : collectionOfValues ) {
+            for ( Value value : (List<Value>) collectionOfValues ) {
 
                 if ( value.isContainer() ) {
                     Object oValue = value.toValue();
