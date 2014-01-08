@@ -35,11 +35,65 @@ public class Dates {
         return utcNow;
     }
 
+
+    public static Calendar utcCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone( UTC_TIME_ZONE );
+        return  calendar;
+    }
+
+    public static int durationInHours(long to, long from) {
+        long duration = Math.abs ( to - from );
+
+        return  (int) (duration / HOUR);
+
+    }
+
+
+    public static int durationInMinutes(long to, long from) {
+        long duration = Math.abs ( to - from );
+
+        return  (int) (duration / MINUTE);
+
+    }
+
+
+    public static long durationInSeconds(long to, long from) {
+        long duration = Math.abs ( to - from );
+
+        return  (int) (duration / SECOND);
+
+    }
+
+
+    public static long durationInMilis(long to, long from) {
+        long duration = Math.abs ( to - from );
+
+        return  (int) (duration / MILLI_SECOND);
+
+    }
+
+
+    public static long utcNowFast(Calendar utcCalendar) {
+        long now = Sys.time();
+        long utcNow = utcCalendar.getTime().getTime();
+        lastNow = now;
+        return utcNow;
+    }
+
     public static long utc( long time ) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis( time );
         calendar.setTimeZone( UTC_TIME_ZONE );
         long utcNow = calendar.getTime().getTime();
+        lastNow = time;
+        return utcNow;
+    }
+
+
+
+    public static long utcFast( long time, Calendar utcCalendar ) {
+        long utcNow = utcCalendar.getTime().getTime();
         lastNow = time;
         return utcNow;
     }
@@ -70,6 +124,24 @@ public class Dates {
         return isThis > afterThis;
     }
 
+    public static long hourDuration (int count ) {
+        return count * HOUR;
+    }
+
+
+    public static long minuteDuration (int count ) {
+        return count * MINUTE;
+    }
+
+
+    public static long secondDuration (int count ) {
+        return count * SECOND;
+    }
+
+
+    public static long dayDuration (int count ) {
+        return count * DAY;
+    }
 
     public static long secondsFrom( long time, int seconds ) {
         return time + ( seconds * SECOND );

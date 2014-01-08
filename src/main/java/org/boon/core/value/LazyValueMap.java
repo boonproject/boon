@@ -76,17 +76,6 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
     @Override
     public final Object get( Object key ) {
 
-//        /* If the length is under 5 and we are asking for the key, then just look for the key. Don't build the map. */
-//        if ( map == null && items.length < 5 ) {
-//            for ( Object item : items ) {
-//                MapItemValue miv = ( MapItemValue ) item;
-//                if ( key.equals ( miv.name.toValue () ) ) {
-//                    object = miv.value.toValue ();
-//                }
-//            }
-//        } else {
-//        }
-
         Object object=null;
 
         /* if the map is null, then we create it. */
@@ -185,10 +174,9 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
     @Override
     public Set<Entry<String, Object>> entrySet() {
         if ( map == null ) {
-            return new FakeSet( items, len );
-        } else {
-            return map.entrySet();
+            buildMap();
         }
+        return map.entrySet();
     }
 
     private final void buildMap() {
@@ -213,12 +201,8 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
 
     public int size() {
-
-        if ( map == null ) {
-            return len;
-        } else {
-            return map.size();
-        }
+       if (map == null) buildMap();
+       return map.size();
     }
 
     public String toString() {
@@ -228,50 +212,18 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
     }
 
-
-    /** Simulates the interface of a Set but does not guarantee uniqueness of entries. */
-    private static class FakeSet extends AbstractSet<Entry<String, Object>> {
-        private final int size;
-
-        @Override
-        public <T> T[] toArray( T[] a ) {
-            return ( T[] ) items;
-        }
-
-        Entry<String, Value>[] items;
-
-        FakeSet( Entry<String, Value>[] items, int size ) {
-
-            this.items = items;
-            this.size = size;
-        }
-
-        @Override
-        public Iterator<Entry<String, Object>> iterator() {
-            return new Iterator<Entry<String, Object>>() {
-                int location = 0;
-
-                @Override
-                public boolean hasNext() {
-                    return location < size;
-                }
-
-                @Override
-                public Entry<String, Object> next() {
-                    Object o = items[ location++ ];
-                    return ( Entry<String, Object> ) o;
-                }
-
-                @Override
-                public void remove() {
-
-                }
-            };
-        }
-
-        @Override
-        public int size() {
-            return size;
-        }
+    public int len() {
+        return len;
     }
+
+
+    public boolean hydrated() {
+        return map!=null;
+    }
+
+
+    public Entry<String, Value>[] items() {
+        return items;
+    }
+
 }

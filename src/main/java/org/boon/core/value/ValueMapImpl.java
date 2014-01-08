@@ -37,6 +37,21 @@ public class ValueMapImpl extends AbstractMap<String, Value> implements ValueMap
         len++;
     }
 
+    @Override
+    public int len() {
+        return len;
+    }
+
+    @Override
+    public boolean hydrated() {
+        return map!=null;
+    }
+
+    @Override
+    public Entry<String, Value>[] items() {
+        return  items;
+    }
+
 
     /**
      * Get the items for the key.
@@ -71,13 +86,8 @@ public class ValueMapImpl extends AbstractMap<String, Value> implements ValueMap
     /** If the map has not been built yet, then we just return a fake entry set. */
     @Override
     public Set<Entry<String, Value>> entrySet() {
-
-
-        if ( map == null ) {
-            return new FakeSet ( items );
-        } else {
-            return map.entrySet();
-        }
+        buildIfNeededMap();
+        return map.entrySet();
     }
 
     /** Build the map if requested to, it does this lazily. */
@@ -107,58 +117,8 @@ public class ValueMapImpl extends AbstractMap<String, Value> implements ValueMap
      * @return size
      */
     public int size() {
-        if ( map != null ) {
-            return map.size();
-        } else {
-            return len;
-        }
-    }
-
-
-    /** This simulates the Set interface so we can use this construct where we would use a map.
-     *  It is a fake set because it does not guarantee the uniqueness of its entries.
-     * */
-    private static class FakeSet extends AbstractSet<Entry<String, Value>> {
-        Entry<String, Value>[] items;
-
-        @Override
-        public <T> T[] toArray( T[] a ) {
-            return ( T[] ) items;
-        }
-
-
-        FakeSet( Entry<String, Value>[] items ) {
-
-            this.items = items;
-        }
-
-        @Override
-        public Iterator<Entry<String, Value>> iterator() {
-            return new Iterator<Entry<String, Value>>() {
-                int location = 0;
-
-                @Override
-                public boolean hasNext() {
-                    return location < items.length;
-                }
-
-                @Override
-                public Entry<String, Value> next() {
-                    return items[ location++ ];
-
-                }
-
-                @Override
-                public void remove() {
-
-                }
-            };
-        }
-
-        @Override
-        public int size() {
-            return items.length;
-        }
+        this.buildIfNeededMap();
+        return map.size();
     }
 
 }
