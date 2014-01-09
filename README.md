@@ -1,3 +1,14 @@
+License
+=======
+*Apache 2* 
+
+
+Philosophy
+==========
+Use it as you wish.  Give me some credit if you fork it or copy major portions of it. 
+Use the lib or copy it into your code, tweak it. 
+Blog about. Use it. Give me feedback. I am doing this for the street cred and to learn.
+
 
 For the next 15 minutes, before Cowboy coder wakes up and tunes Jackson, Boon has the fastest JSON parser.
 Boo yah!
