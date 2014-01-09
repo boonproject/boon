@@ -28,6 +28,7 @@ public class LazyValueMapTest {
     int dateCount;
     int nullCount;
     int listCount;
+    int booleanCount;
 
     @Before
     public void setUp() throws Exception {
@@ -43,6 +44,7 @@ public class LazyValueMapTest {
         dateCount = 0;
         nullCount = 0;
         listCount = 0;
+        booleanCount = 0;
     }
 
     @After
@@ -54,17 +56,22 @@ public class LazyValueMapTest {
     @Test
     public void test() {
 
-        Path bigJsonFile = IO.path ( "./files/citm2.json" );
-        puts ( bigJsonFile, Files.exists ( bigJsonFile ) );
+        List<String> files  = IO.listByFileExtension ( "./files/", "json" );
 
-        JsonParser parser = new JsonFastParser ();
+        for ( String file : files) {
+            puts ( file );
 
-        Map<String, Object> map = parser.parseFile ( Map.class, bigJsonFile.toString () );
+            JsonParser parser = new JsonFastParser ();
 
-        walkMap ( map );
+            Object object  = parser.parseFile ( Object.class, file.toString () );
+
+
+            walkObject( object );
+
+        }
 
         puts ( "leaf", leafCount, "map", mapCount, "collection", collectionCount );
-        puts ( "integer", integerCount, "long", longCount, "double", doubleCount );
+        puts ( "integer", integerCount, "long", longCount, "double", doubleCount, "boolean", booleanCount );
         puts ( "string", stringCount, "date", dateCount, "null", nullCount );
 
     }
@@ -73,14 +80,21 @@ public class LazyValueMapTest {
     @Test
     public void testGetWalk() {
 
-        Path bigJsonFile = IO.path ( "./files/citm2.json" );
-        puts ( bigJsonFile, Files.exists ( bigJsonFile ) );
 
-        JsonParser parser = new JsonFastParser ();
 
-        Map<String, Object> map = parser.parseFile ( Map.class, bigJsonFile.toString () );
+        List<String> files  = IO.listByFileExtension ( "./files/", "json" );
 
-        walkGetMap ( map );
+        for ( String file : files) {
+            puts ( file );
+
+            JsonParser parser = new JsonFastParser ();
+
+            Object object  = parser.parseFile ( Object.class, file.toString () );
+
+
+            walkGetObject( object );
+
+        }
 
         puts ( "leaf", leafCount, "map", mapCount, "list", listCount );
         puts ( "integer", integerCount, "long", longCount, "double", doubleCount );
@@ -125,6 +139,8 @@ public class LazyValueMapTest {
             integerCount++;
         } else if ( object instanceof Double ) {
             doubleCount++;
+        } else if ( object instanceof Boolean ) {
+            booleanCount++;
         } else if ( object instanceof String ) {
             stringCount++;
         } else if ( object instanceof Date ) {
@@ -148,7 +164,9 @@ public class LazyValueMapTest {
             longCount++;
         } else if ( object instanceof Integer ) {
             integerCount++;
-        } else if ( object instanceof Double ) {
+        } else if ( object instanceof Boolean ) {
+            booleanCount++;
+        }  else if ( object instanceof Double ) {
             doubleCount++;
         } else if ( object instanceof String ) {
             stringCount++;
