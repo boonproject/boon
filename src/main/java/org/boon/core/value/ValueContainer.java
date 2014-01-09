@@ -1,10 +1,8 @@
 package org.boon.core.value;
 
 
-import org.boon.core.Dates;
 import org.boon.core.Type;
 import org.boon.core.Value;
-import org.boon.core.Conversions;
 
 
 import java.math.BigDecimal;
@@ -15,14 +13,12 @@ import java.util.Map;
 
 import static org.boon.Exceptions.die;
 
-public class ValueBase extends Number implements CharSequence, Value {
+public class ValueContainer implements CharSequence, Value {
 
-    public static final Value TRUE = new ValueBase( Type.TRUE );
-    public static final Value FALSE = new ValueBase( Type.FALSE );
-    public static final Value NULL = new ValueBase( Type.NULL );
+    public static final Value TRUE = new ValueContainer ( Type.TRUE );
+    public static final Value FALSE = new ValueContainer ( Type.FALSE );
+    public static final Value NULL = new ValueContainer ( Type.NULL );
 
-    public int startIndex;
-    public int endIndex;
     public Object value;
 
     public Type type;
@@ -30,43 +26,36 @@ public class ValueBase extends Number implements CharSequence, Value {
 
     public boolean decodeStrings;
 
-    public ValueBase( int startIndex, int endIndex, Object value, Type type, boolean decodeStrings ) {
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
+    public ValueContainer(  Object value, Type type, boolean decodeStrings ) {
         this.value = value;
         this.type = type;
         this.decodeStrings = decodeStrings;
     }
 
-    public ValueBase( Type type ) {
+    public ValueContainer( Type type ) {
         this.type = type;
     }
 
-    public ValueBase( Map<String, Object> map ) {
+    public ValueContainer( Map<String, Object> map ) {
         this.value = map;
         this.type = Type.MAP;
         this.container = true;
     }
 
-    public ValueBase( List<Object> list ) {
+    public ValueContainer( List<Object> list ) {
         this.value = list;
         this.type = Type.LIST;
-
         this.container = true;
     }
 
-    public ValueBase() {
-    }
-
-
     @Override
     public int intValue() {
-        return Integer.parseInt( toString() );
+        return die(int.class, "intValue not supported");
     }
 
     @Override
     public long longValue() {
-        return Long.parseLong( toString() );
+        return die(long.class, "intValue not supported");
     }
 
 
@@ -125,24 +114,12 @@ public class ValueBase extends Number implements CharSequence, Value {
 
     @Override
     public  <T extends Enum> T toEnum( Class<T> cls ) {
-
-        switch ( type ) {
-            case STRING:
-                return Conversions.toEnum( cls, stringValue() );
-            case INTEGER:
-                return Conversions.toEnum( cls, intValue() );
-            case NULL:
-                return null;
-        }
-        die( "toEnum " + cls + " value was " + stringValue() );
-        return null;
-
+        return (T) value;
     }
 
     @Override
     public boolean isContainer() {
         return container;
-
     }
 
     @Override
@@ -172,50 +149,37 @@ public class ValueBase extends Number implements CharSequence, Value {
 
     @Override
     public Date dateValue() {
-
-
-        if ( type == Type.STRING ) {
-
-            String string = stringValue();
-
-            return Dates.fromISO8601( string );
-        } else {
-
-            return new Date( Dates.utc( longValue() ) );
-        }
-
+        return null;
     }
 
 
     public byte byteValue() {
-        return Byte.parseByte( toString() );
+           return 0;
     }
 
     public short shortValue() {
-        return Short.parseShort( toString() );
+        return 0;
     }
 
 
     public BigDecimal bigDecimalValue() {
-        String str = toString();
-        return new BigDecimal( str );
+        return null;
     }
 
     public BigInteger bigIntegerValue() {
-        return new BigInteger( toString() );
+        return null;
     }
 
 
     @Override
     public double doubleValue() {
-        return Double.parseDouble( toString() );
-
+        return 0;
     }
 
 
     @Override
     public float floatValue() {
-        return Float.parseFloat( toString() );
+        return 0;
     }
 
 

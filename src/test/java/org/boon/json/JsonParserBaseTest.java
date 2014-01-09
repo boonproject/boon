@@ -399,7 +399,7 @@ public class JsonParserBaseTest {
 
         System.out.println ( obj );
 
-        ok &= idx ( map, "foo" ).equals ( list ( 0, 1, 2 ) ) || die ( "I did not find (0,1,2)" );
+        ok &= idx ( map, "foo" ).equals ( list ( 0, 1, 2 ) ) || die ( "I did not find (0,1,2) " + map.get("foo") );
     }
 
     @Test

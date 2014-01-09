@@ -25,8 +25,8 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
 
         Object obj = list.get( index );
 
-        if ( obj instanceof ValueBase ) {
-            obj = convert( ( ValueBase ) obj );
+        if ( obj instanceof Value ) {
+            obj = convert( ( Value ) obj );
             list.set( index, obj );
         }
 
@@ -36,7 +36,7 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
     }
 
 
-    private Object convert( ValueBase value ) {
+    private Object convert( Value value ) {
         return value.toValue();
     }
 

@@ -22,7 +22,7 @@ public class PlistParser extends JsonParserCharArray {
 
 
 
-    private static ValueBase EMPTY_LIST = new ValueBase( Collections.EMPTY_LIST );
+    private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.EMPTY_LIST );
 
 
     private final boolean useValues;
@@ -75,7 +75,7 @@ public class PlistParser extends JsonParserCharArray {
             this.nextChar();
 
         ValueMap map = useValues ? new ValueMapImpl() : new LazyValueMap( lazyChop );
-        Value value = new ValueBase( map );
+        Value value = new ValueContainer ( map );
 
 
         skipWhiteSpace();
@@ -212,7 +212,7 @@ public class PlistParser extends JsonParserCharArray {
                     break endIndexLookup;
             }
         }
-        return new ValueInCharBuf( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
+        return new CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
     }
 
 
@@ -244,7 +244,7 @@ public class PlistParser extends JsonParserCharArray {
 
                 case 't':
                     if ( isTrue() ) {
-                        return decodeTrue() == true ? ValueBase.TRUE : ValueBase.FALSE;
+                        return decodeTrue() == true ? ValueContainer.TRUE : ValueContainer.FALSE;
                     } else {
                         value = decodeStringLax();
                     }
@@ -252,7 +252,7 @@ public class PlistParser extends JsonParserCharArray {
 
                 case 'f':
                     if ( isFalse() ) {
-                        return decodeFalse() == false ? ValueBase.FALSE : ValueBase.TRUE;
+                        return decodeFalse() == false ? ValueContainer.FALSE : ValueContainer.TRUE;
                     } else {
                         value = decodeStringLax();
                     }
@@ -260,7 +260,7 @@ public class PlistParser extends JsonParserCharArray {
 
                 case 'n':
                     if ( isNull() ) {
-                        return decodeNull() == null ? ValueBase.NULL : ValueBase.NULL;
+                        return decodeNull() == null ? ValueContainer.NULL : ValueContainer.NULL;
                     } else {
                         value = decodeStringLax();
                     }
@@ -410,7 +410,7 @@ public class PlistParser extends JsonParserCharArray {
 
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        ValueInCharBuf value = new ValueInCharBuf( chop, type, startIndex, __index, this.charArray );
+        NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
 
         return value;
 
@@ -506,7 +506,7 @@ public class PlistParser extends JsonParserCharArray {
             index = findEndQuote ( array, index );
         }
 
-        Value value = new ValueInCharBuf ( chop, Type.STRING, startIndex, index, array, encoded, true );
+        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, true );
 
 
         if ( index < array.length ) {
@@ -541,7 +541,7 @@ public class PlistParser extends JsonParserCharArray {
             list = new ValueList( lazyChop );
         }
 
-        Value value = new ValueBase( list );
+        Value value = new ValueContainer ( list );
 
 
         skipWhiteSpace();

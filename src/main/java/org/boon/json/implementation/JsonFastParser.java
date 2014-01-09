@@ -9,7 +9,6 @@ import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
 import org.boon.json.JsonException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.Map;
 public class JsonFastParser extends JsonParserCharArray {
 
 
-    private static ValueBase EMPTY_LIST = new ValueBase ( Collections.EMPTY_LIST );
+    private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.EMPTY_LIST );
 
 
     private final boolean useValues;
@@ -83,7 +82,7 @@ public class JsonFastParser extends JsonParserCharArray {
             __index++;
 
         ValueMap map =  useValues ? new ValueMapImpl () : new LazyValueMap ( lazyChop );
-        Value value  = new ValueBase ( map );
+        Value value  = new ValueContainer ( map );
 
         objectLoop:
         for (; __index < array.length; __index++ ) {
@@ -147,13 +146,13 @@ public class JsonFastParser extends JsonParserCharArray {
                 return decodeJsonObjectLazyFinalParse ();
 
             case 't':
-                return decodeTrue () == true ? ValueBase.TRUE : ValueBase.FALSE;
+                return decodeTrue () == true ? ValueContainer.TRUE : ValueContainer.FALSE;
 
             case 'f':
-                return decodeFalse () == false ? ValueBase.FALSE : ValueBase.TRUE;
+                return decodeFalse () == false ? ValueContainer.FALSE : ValueContainer.TRUE;
 
             case 'n':
-                return decodeNull () == null ? ValueBase.NULL : ValueBase.NULL;
+                return decodeNull () == null ? ValueContainer.NULL : ValueContainer.NULL;
 
             case '[':
                 return decodeJsonArrayOverlay ();
@@ -221,7 +220,7 @@ public class JsonFastParser extends JsonParserCharArray {
 
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
-        ValueInCharBuf value = new ValueInCharBuf ( chop, type, startIndex, __index, this.charArray );
+        NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
 
         return value;
 
@@ -252,7 +251,7 @@ public class JsonFastParser extends JsonParserCharArray {
                 index = findEndQuote ( array, index );
         }
 
-        Value value = new ValueInCharBuf ( chop, Type.STRING, startIndex, index, array, encoded, true );
+        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, true );
 
 
         if ( index < array.length ) {
@@ -292,7 +291,7 @@ public class JsonFastParser extends JsonParserCharArray {
             list = new ValueList ( lazyChop );
         }
 
-        Value value = new ValueBase ( list );
+        Value value = new ValueContainer ( list );
 
 
         Value item;

@@ -14,7 +14,7 @@ import static org.boon.Exceptions.die;
  * This is because the Value construct is a type of index overlay that merely tracks where the token is located in the buffer,
  * and what if any thing we noted about it (like can be converted to a decimal number, etc.).
  *
- * To mitigate memory leaks this class along with ValueInCharBuf implement two constructs, namely,
+ * To mitigate memory leaks this class along with CharSequenceValue implement two constructs, namely,
  * chop,  and lazyChop.
  *
  * A chop is when we convert backing buffer of a Value object into a smaller buffer.
