@@ -64,6 +64,10 @@ public class Conversions {
 
 
     public static int toInt( Object obj ) {
+        return toInt( obj, Integer.MIN_VALUE );
+    }
+
+    public static int toInt( Object obj, int defaultValue ) {
         if ( obj.getClass() == int.class ) {
             return int.class.cast( obj );
         }
@@ -108,33 +112,46 @@ public class Conversions {
                     ex1.getMessage() ) );
 
         }
-        die( String.format( "Unable to convert %s to a int", obj.getClass() ) );
-        return -666; // die throws an exception
+        return defaultValue; // die throws an exception
 
     }
 
+
+
     public static byte toByte( Object obj ) {
+        return toByte ( obj, Byte.MIN_VALUE );
+    }
+
+    public static byte toByte( Object obj, byte defaultByte ) {
         if ( obj.getClass() == byte.class ) {
             return byte.class.cast( obj );
         } else if ( obj instanceof Number ) {
             return ( ( Number ) obj ).byteValue();
         } else {
-            return ( byte ) toInt( obj );
+            return ( byte ) toInt( obj, defaultByte );
         }
     }
 
-    public static short toShort( Object obj ) {
+    public static short toShort( Object obj  ) {
+        return toShort ( obj, Short.MIN_VALUE );
+    }
+
+    public static short toShort( Object obj, final short shortDefault ) {
 
         if ( obj.getClass() == short.class ) {
             return short.class.cast( obj );
         } else if ( obj instanceof Number ) {
             return ( ( Number ) obj ).shortValue();
         } else {
-            return ( short ) toInt( obj );
+            return ( short ) toInt( obj, shortDefault );
         }
     }
 
     public static char toChar( Object obj ) {
+           return toChar ( obj, (char) 0 );
+    }
+
+    public static char toChar( Object obj, final char defaultChar ) {
         if ( obj.getClass() == char.class ) {
             return char.class.cast( obj );
         } else if ( obj instanceof Character ) {
@@ -153,12 +170,16 @@ public class Conversions {
             if ( str.length() > 0 ) {
                 return str.charAt( 0 );
             } else {
-                return '0';
+                return defaultChar;
             }
         }
     }
 
     public static long toLong( Object obj ) {
+        return toLong ( obj, Long.MIN_VALUE );
+    }
+
+    public static long toLong( Object obj, final long longDefault ) {
 
         if ( obj.getClass() == long.class ) {
             return long.class.cast( obj );
@@ -202,14 +223,13 @@ public class Conversions {
                 return toInt( obj );
             }
         } catch ( Exception ex ) {
-            Exceptions.handle(  String.format (
+            log.warning (  String.format (
                     "unable to convert to long and there was an exception %s",
-                    ex.getMessage () ), ex );
+                    ex.getMessage () ) );
 
         }
 
-        die( String.format( "Unable to convert %s to a long", obj.getClass() ) );
-        return -666; // die throws an exception
+        return longDefault; // die throws an exception
 
     }
 
