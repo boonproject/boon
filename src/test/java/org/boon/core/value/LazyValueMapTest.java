@@ -10,10 +10,7 @@ import org.junit.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
@@ -30,10 +27,22 @@ public class LazyValueMapTest {
     int stringCount;
     int dateCount;
     int nullCount;
+    int listCount;
 
     @Before
     public void setUp() throws Exception {
 
+
+        leafCount = 0;
+        mapCount = 0;
+        collectionCount = 0;
+        integerCount = 0;
+        longCount = 0;
+        doubleCount = 0;
+        stringCount = 0;
+        dateCount = 0;
+        nullCount = 0;
+        listCount = 0;
     }
 
     @After
@@ -48,57 +57,124 @@ public class LazyValueMapTest {
         Path bigJsonFile = IO.path ( "./files/citm2.json" );
         puts ( bigJsonFile, Files.exists ( bigJsonFile ) );
 
-        JsonParser parser = new JsonFastParser (  );
+        JsonParser parser = new JsonFastParser ();
 
-        Map<String, Object> map = parser.parseFile( Map.class, bigJsonFile.toString () );
+        Map<String, Object> map = parser.parseFile ( Map.class, bigJsonFile.toString () );
 
-        walkMap(map);
+        walkMap ( map );
 
-        puts("leaf", leafCount, "map", mapCount, "collection", collectionCount);
-        puts("integer", integerCount, "long", longCount, "double", doubleCount );
-        puts("string", stringCount, "date", dateCount, "null", nullCount);
+        puts ( "leaf", leafCount, "map", mapCount, "collection", collectionCount );
+        puts ( "integer", integerCount, "long", longCount, "double", doubleCount );
+        puts ( "string", stringCount, "date", dateCount, "null", nullCount );
+
+    }
+
+
+    @Test
+    public void testGetWalk() {
+
+        Path bigJsonFile = IO.path ( "./files/citm2.json" );
+        puts ( bigJsonFile, Files.exists ( bigJsonFile ) );
+
+        JsonParser parser = new JsonFastParser ();
+
+        Map<String, Object> map = parser.parseFile ( Map.class, bigJsonFile.toString () );
+
+        walkGetMap ( map );
+
+        puts ( "leaf", leafCount, "map", mapCount, "list", listCount );
+        puts ( "integer", integerCount, "long", longCount, "double", doubleCount );
+        puts ( "string", stringCount, "date", dateCount, "null", nullCount );
 
     }
 
     private void walkMap( Map map ) {
         mapCount++;
-        Set<Map.Entry<String,Object>> entries = map.entrySet ();
+        Set<Map.Entry<String, Object>> entries = map.entrySet ();
 
-        for ( Map.Entry<String, Object> entry :  entries ) {
+        for ( Map.Entry<String, Object> entry : entries ) {
             Object object = entry.getValue ();
-            walkObject( object );
+            walkObject ( object );
         }
 
     }
 
+
+    private void walkGetMap( Map map ) {
+        mapCount++;
+        Set<Map.Entry<String, Object>> entries = map.entrySet ();
+
+        for ( Map.Entry<String, Object> entry : entries ) {
+            walkGetObject ( map.get ( entry.getKey () ) );
+        }
+
+        map.size ();
+
+    }
     private void walkObject( Object object ) {
         leafCount++;
-        if (object instanceof Value ) {
-            die ("Found a value");
-        } else if (object instanceof  Map ) {
-            walkMap ( (Map) object );
+        if ( object instanceof Value ) {
+            die ( "Found a value" );
+        } else if ( object instanceof Map ) {
+            walkMap ( ( Map ) object );
         } else if ( object instanceof Collection ) {
-            walkCollection ( (Collection) object );
-        } else if (object instanceof Long) {
+            walkCollection ( ( Collection ) object );
+        } else if ( object instanceof Long ) {
             longCount++;
-        } else if (object instanceof Integer) {
+        } else if ( object instanceof Integer ) {
             integerCount++;
-        } else if (object instanceof Double ){
+        } else if ( object instanceof Double ) {
             doubleCount++;
-        } else if (object instanceof String ) {
+        } else if ( object instanceof String ) {
             stringCount++;
-        } else if (object instanceof Date ) {
+        } else if ( object instanceof Date ) {
             dateCount++;
         } else if ( object == null ) {
             nullCount++;
         } else {
-            die ( sputs ( object, object.getClass().getName ()) );
+            die ( sputs ( object, object.getClass ().getName () ) );
         }
+    }
+
+    private void walkGetObject( Object object ) {
+        leafCount++;
+        if ( object instanceof Value ) {
+            die ( "Found a value" );
+        } else if ( object instanceof Map ) {
+            walkGetMap ( ( Map ) object );
+        } else if ( object instanceof List ) {
+            walkGetList ( ( List ) object );
+        } else if ( object instanceof Long ) {
+            longCount++;
+        } else if ( object instanceof Integer ) {
+            integerCount++;
+        } else if ( object instanceof Double ) {
+            doubleCount++;
+        } else if ( object instanceof String ) {
+            stringCount++;
+        } else if ( object instanceof Date ) {
+            dateCount++;
+        } else if ( object == null ) {
+            nullCount++;
+        } else {
+            die ( sputs ( object, object.getClass ().getName () ) );
+        }
+    }
+
+
+
+    private void walkGetList( List c ) {
+        listCount++;
+        for ( int index = 0; index < c.size (); index++ ) {
+            walkGetObject ( c.get ( index ) );
+        }
+
+        c.size();
     }
 
     private void walkCollection( Collection c ) {
         collectionCount++;
-        for (Object o : c) {
+        for ( Object o : c ) {
             walkObject ( o );
         }
     }

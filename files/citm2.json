@@ -19,7 +19,8 @@
         "342752287": "Zone physique secrète"
     },
     "audienceSubCategoryNames": {
-        "337100890": "Abonné"
+        "337100890": "Abonné",
+         "someDouble": 9.9
     },
     "blockNames": {},
     "events": {
