@@ -8,6 +8,7 @@ import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
+import org.omg.CORBA.TRANSIENT;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -220,8 +221,10 @@ public abstract class BaseField implements FieldAccess {
         bits.set(STATIC,  Modifier.isStatic ( field.getModifiers () ));
         bits.set(FINAL, Modifier.isFinal ( field.getModifiers () ));
         bits.set(VOLATILE, Modifier.isVolatile ( field.getModifiers () ));
-        bits.set( QUALIFIED, bits.get(FINAL) || bits.get(VOLATILE));
+        bits.set(QUALIFIED, bits.get(FINAL) || bits.get(VOLATILE));
         bits.set(READ_ONLY, bits.get(FINAL) );
+        bits.set(IGNORE, Modifier.isTransient ( field.getModifiers () ));
+
         parentType = field.getDeclaringClass();
 
 
@@ -596,7 +599,7 @@ public abstract class BaseField implements FieldAccess {
 
     @Override
     public final boolean ignore () {
-        return bits.get( IGNORE );
+        return  bits.get( IGNORE );
     }
 
 

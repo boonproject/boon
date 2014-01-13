@@ -585,22 +585,6 @@ public class PlistParser extends JsonParserCharArray {
 
 
 
-
-    protected <T> T convert( Class<T> type, Object object ) {
-        if ( type == Map.class || type == List.class ) {
-            return ( T ) object;
-        } else {
-            if ( object instanceof Map ) {
-                return MapObjectConversion.fromValueMap( fieldsAccessor, ( Map<String, org.boon.core.Value> ) object, type );
-            } else if ( object instanceof Value && Typ.isBasicType( type ) ) {
-                return ( T ) ( ( Value ) object ).toValue();
-            } else {
-                return ( T ) object;
-            }
-        }
-    }
-
-
     protected Object decodeFromChars( char[] cs ) {
         return ( ( Value ) super.decodeFromChars( cs ) ).toValue();
     }

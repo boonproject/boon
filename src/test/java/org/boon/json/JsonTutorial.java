@@ -21,10 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
@@ -643,7 +640,62 @@ public class JsonTutorial {
         part10WorkingWithViews ();
         part11Subtypes();
 
+        part12Gson();
 
+
+    }
+
+    static class BagOfPrimitives {
+        private int value1 = 1;
+        private String value2 = "abc";
+        private transient int value3 = 3;
+        BagOfPrimitives() {
+            // no-args constructor
+        }
+    }
+
+    private static void part12Gson() {
+
+        ObjectMapper gson = ObjectMapperFactory.createUseAnnotations ( true );
+
+
+        puts ( gson.toJson ( 1 ) );
+        puts ( gson.toJson ( "abcd" ) );
+        puts ( gson.toJson ( new Long ( 10 ) ) );
+        int[] values = { 1 };
+        puts ( gson.toJson ( values ) );
+
+
+        int ione = gson.fromJson("1", int.class);
+        Integer oneI = gson.fromJson("1", Integer.class);
+        Boolean wrapper = gson.fromJson("false", Boolean.class);
+        String str = gson.fromJson("\"abc\"", String.class);
+        String anotherStr = (String)gson.fromJson("[\"abc\"]", List.class).get ( 0 );
+
+
+
+        BagOfPrimitives obj = new BagOfPrimitives();
+        String json = gson.toJson(obj);
+        puts (json);
+
+
+
+        int[] ints = {1, 2, 3, 4, 5};
+        String[] strings = {"abc", "def", "ghi"};
+
+        puts ( gson.toJson ( ints ) ); //     ==> prints [1,2,3,4,5]
+        puts ( gson.toJson ( strings ) ); // ==> prints ["abc", "def", "ghi"]
+
+
+        Collection<Integer> ints2 = Lists.list(1,2,3,4,5);
+
+        puts ( gson.toJson(ints) ) ;// ==> json is [1,2,3,4,5]
+
+        puts ( gson.parser ().parseList ( Integer.class, "[1,2,3,4,5]" ));
+
+
+        //Serializing and Deserializing Generic Types TODO missing from GSON manual
+        //Left off here https://sites.google.com/site/gson/gson-user-guide#TOC-Serializing-and-Deserializing-Generic-Types
     }
 
     private static void part11Subtypes() {

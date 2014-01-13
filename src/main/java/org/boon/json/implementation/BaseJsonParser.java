@@ -3,9 +3,12 @@ package org.boon.json.implementation;
 import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.core.Conversions;
+import org.boon.core.Typ;
+import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.fields.FieldsAccessor;
+import org.boon.core.value.ValueMapImpl;
 import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
 
@@ -96,17 +99,26 @@ public abstract class BaseJsonParser implements JsonParser {
     }
 
 
-    protected  <T> T convert( Class<T> type, Object object ) {
-        if (  type == Map.class || type == List.class ) {
+
+    protected final  <T> T convert( Class<T> type, Object object ) {
+        if ( type == Map.class || type == List.class ) {
             return (T)object;
         } else {
-            if ( object instanceof Map ) {
-                return MapObjectConversion.fromMap ( ( Map<String, Object> ) object, type );
-            } else {
+            if ( object instanceof ValueMapImpl ) {
+                return MapObjectConversion.fromValueMap( fieldsAccessor, ( Map<String, Value> ) object, type );
+            } else if ( object instanceof Map ) {
+                return MapObjectConversion.fromMap ( fieldsAccessor, ( Map<String, Object> ) object, type );
+            } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
+                return (T)( (Value) object).toValue ();
+            } else if (object instanceof List) {
+                return (T)MapObjectConversion.convertListOfMapsToObjects(this.fieldsAccessor, type, (List<Object>)object);
+            }
+            else {
                 return (T)object;
             }
         }
     }
+
 
     public void setCharset( Charset charset ) {
         this.charset = charset;

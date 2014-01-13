@@ -494,11 +494,21 @@ public class MapObjectConversion {
     public static <T> List<T> convertListOfMapsToObjects( FieldsAccessor fieldsAccessor, Class<T> componentType, List<Object> list ) {
         List<Object> newList = new ArrayList<> ( list.size () );
         for (Object obj : list) {
-            Map map = obj instanceof Map ? (Map)obj  : (Map)( (Value) obj).toValue();
-            if ( map instanceof ValueMapImpl ) {
-                newList.add ( fromValueMap(fieldsAccessor, ( Map<String, Value> ) map, componentType ) );
+
+            if (obj instanceof  Value) {
+                obj = ( (Value) obj).toValue();
+            }
+
+            if (obj instanceof Map ) {
+
+                Map map = (Map)obj;
+                if ( map instanceof ValueMapImpl ) {
+                    newList.add ( fromValueMap(fieldsAccessor, ( Map<String, Value> ) map, componentType ) );
+                } else {
+                    newList.add ( fromMap ( fieldsAccessor, map, componentType ) );
+                }
             } else {
-                newList.add ( fromMap ( fieldsAccessor, map, componentType ) );
+                newList.add ( Conversions.coerce ( componentType, obj ) );
             }
         }
         return (List<T>) newList;
