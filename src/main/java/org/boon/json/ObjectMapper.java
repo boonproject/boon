@@ -201,6 +201,8 @@ public interface ObjectMapper {
     public String writeValueAsString(Object value);
 
 
+
+
     /**
      * Method that can be used to serialize any Java value as
      * a char[]. Functionally equivalent to calling
@@ -229,6 +231,17 @@ public interface ObjectMapper {
     public JsonParser parser();
 
     public JsonSerializer serializer();
+
+
+
+    public String toJson(Object value);
+    public void toJson(Object value, Appendable appendable);
+    public <T> T fromJson(String json, Class<T> clazz);
+    public <T> T fromJson(byte[] bytes, Class<T> clazz);
+    public <T> T fromJson(char[] chars, Class<T> clazz);
+    public <T> T fromJson(Reader reader, Class<T> clazz);
+    public <T> T fromJson(InputStream reader, Class<T> clazz);
+
 
 
 }

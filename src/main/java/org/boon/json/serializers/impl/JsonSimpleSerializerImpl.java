@@ -212,6 +212,18 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
                 }
                 return false;
+
+            case INTERFACE:
+            case ABSTRACT:
+                serializeFieldName ( fieldName, builder );
+                serializeSubtypeInstance ( value, builder );
+                return true;
+
+            case INSTANCE:
+                serializeFieldName ( fieldName, builder );
+                serializeInstance ( value, builder );
+                return true;
+
             default:
                 serializeFieldName ( fieldName, builder );
                 serializeInstance ( value, builder );
@@ -310,11 +322,16 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                 this.serializeCollection ( (Collection) obj, builder );
                 return;
             case MAP:
-                this.serializeMap ( (Map) obj, builder );
+                this.serializeMap ( ( Map ) obj, builder );
                 return;
             case ARRAY:
-                this.serializeArray (  obj, builder );
+                this.serializeArray ( obj, builder );
                 return;
+            case ABSTRACT:
+            case INTERFACE:
+                serializeSubtypeInstance ( obj, builder );
+                return;
+
             case INSTANCE:
                 serializeInstance ( obj, builder );
                 return;
@@ -325,6 +342,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
     }
+
 
     public void serializeUnknown ( Object obj, CharBuf builder ) {
         builder.addQuoted ( obj.toString () );
@@ -355,14 +373,18 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     }
 
-    public final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
-        Map<String, FieldAccess> map = fieldMap.get( aClass );
-        if (map == null) {
-            map = doGetFields ( aClass );
-            fieldMap.put ( aClass, map );
+
+
+
+        public Map<String, FieldAccess> getFields( Class<? extends Object> aClass ) {
+            Map<String, FieldAccess> map = fieldMap.get( aClass );
+            if (map == null) {
+                map = doGetFields ( aClass );
+                fieldMap.put ( aClass, map );
+            }
+            return map;
+
         }
-        return map;
-    }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
             return Reflection.getPropertyFieldAccessMapFieldFirst ( aClass );
@@ -436,6 +458,38 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     }
 
+
+
+
+
+    @Override
+    public void serializeSubtypeInstance( Object instance, CharBuf builder ) {
+
+        final Map<String, FieldAccess> fieldAccessors = getFields(instance.getClass ());
+        final Collection<FieldAccess> values = fieldAccessors.values ();
+
+        builder.addString( "{\"class\":" );
+        builder.addQuoted ( instance.getClass ().getName () );
+
+        int index = 0;
+        int length = values.size();
+
+        if ( length > 0 ) {
+            builder.addChar( ',' );
+
+            for ( FieldAccess fieldAccess : values ) {
+                if (serializeField ( instance, fieldAccess, builder ) ) {
+                    builder.addChar ( ',' );
+                    index++;
+                }
+            }
+            if ( index > 0 ) {
+                builder.removeLastChar();
+            }
+            builder.addChar( '}' );
+
+        }
+    }
 
 }
 

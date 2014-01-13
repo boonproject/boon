@@ -14,6 +14,7 @@ public class JsonParserFactory {
     private boolean chop = false;
     private boolean lazyChop = true;
     private FieldAccessMode fieldAccessType = FieldAccessMode.FIELD;
+    private boolean useAnnotations;
 
 
     public FieldAccessMode getFieldAccessType() {
@@ -62,7 +63,7 @@ public class JsonParserFactory {
 
 
     public JsonParser createFastParser() {
-        BaseJsonParser jsonParser = new JsonFastParser(  FieldAccessMode.create( fieldAccessType ), false, true );
+        BaseJsonParser jsonParser = new JsonFastParser(  FieldAccessMode.create( fieldAccessType, useAnnotations ), false, true );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
@@ -71,14 +72,14 @@ public class JsonParserFactory {
 
 
     public JsonParser createUTF8DirectByteParser() {
-        BaseJsonParser jsonParser = new JsonUTF8Parser( FieldAccessMode.create( fieldAccessType ) );
+        BaseJsonParser jsonParser = new JsonUTF8Parser( FieldAccessMode.create( fieldAccessType, useAnnotations ) );
         jsonParser.setCharset ( StandardCharsets.UTF_8 );
         return (JsonParser)jsonParser;
 
     }
 
     public JsonParser createASCIIParser() {
-        BaseJsonParser jsonParser = new JsonAsciiParser ( FieldAccessMode.create( fieldAccessType ) );
+        BaseJsonParser jsonParser = new JsonAsciiParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ) );
         jsonParser.setCharset ( StandardCharsets.US_ASCII );
         return (JsonParser)jsonParser;
 
@@ -86,7 +87,8 @@ public class JsonParserFactory {
 
 
     public JsonParser createLaxParser() {
-        BaseJsonParser jsonParser = new JsonParserLax ( FieldAccessMode.create( fieldAccessType ),  false, chop, lazyChop );
+        BaseJsonParser jsonParser = new JsonParserLax ( FieldAccessMode.create( fieldAccessType, useAnnotations ),
+                false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
@@ -96,13 +98,13 @@ public class JsonParserFactory {
         if (charset==null) {
            charset= StandardCharsets.US_ASCII;
         }
-        BaseJsonParser jsonParser = new PlistParser ( FieldAccessMode.create( fieldAccessType ), false, chop, lazyChop );
+        BaseJsonParser jsonParser = new PlistParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ), false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
 
     public JsonParser createLazyFinalParser() {
-        BaseJsonParser jsonParser = new JsonFastParser ( FieldAccessMode.create( fieldAccessType ),  false, chop, lazyChop );
+        BaseJsonParser jsonParser = new JsonFastParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ),  false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
 
@@ -110,7 +112,7 @@ public class JsonParserFactory {
 
     public JsonParser createJsonParserForJsonPath() {
 
-        BaseJsonParser jsonParser = new JsonFastParser (  FieldAccessMode.create( fieldAccessType ), false, chop, lazyChop );
+        BaseJsonParser jsonParser = new JsonFastParser (  FieldAccessMode.create( fieldAccessType, useAnnotations ), false, chop, lazyChop );
         jsonParser.setCharset ( charset );
         return (JsonParser)jsonParser;
     }
@@ -123,7 +125,7 @@ public class JsonParserFactory {
             charset = StandardCharsets.UTF_8;
         }
 
-        return new JsonParserImpl( FieldAccessMode.create( fieldAccessType ), charset,
+        return new JsonParserImpl( FieldAccessMode.create( fieldAccessType, useAnnotations ), charset,
                  lax,  chop, lazyChop );
     }
 
@@ -163,4 +165,19 @@ public class JsonParserFactory {
     }
 
 
+
+    public JsonParserFactory useAnnotations () {
+        this.useAnnotations  = true;
+        return this;
+    }
+
+    public boolean isUseAnnotations() {
+        return useAnnotations;
+    }
+
+    public JsonParserFactory setUseAnnotations( boolean useAnnotations ) {
+        this.useAnnotations = useAnnotations;
+        return this;
+
+    }
 }

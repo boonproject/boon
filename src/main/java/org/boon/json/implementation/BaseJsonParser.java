@@ -97,7 +97,7 @@ public abstract class BaseJsonParser implements JsonParser {
 
 
     protected  <T> T convert( Class<T> type, Object object ) {
-        if ( type == Object.class || type == Map.class || type == List.class ) {
+        if (  type == Map.class || type == List.class ) {
             return (T)object;
         } else {
             if ( object instanceof Map ) {

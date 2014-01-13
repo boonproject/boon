@@ -2,7 +2,9 @@ package org.boon.json;
 
 import org.boon.Lists;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.json.serializers.impl.JsonSerializerImplOld;
+import org.boon.json.serializers.impl.JsonSerializerImpl;
+import org.boon.json.serializers.impl.JsonSimpleSerializerImpl;
+import org.boon.json.test.AllTypes;
 import org.junit.Test;
 
 import java.net.URL;
@@ -33,8 +35,7 @@ public class JsonSerializeTest {
     public void test() {
 
         Employee rick = new Employee();
-        String sRick = new JsonSerializerImplOld()
-                .serialize( rick ).toString();
+        String sRick = new JsonSimpleSerializerImpl().serialize( rick ).toString();
         boolean ok = sRick.equals( "{\"name\":\"Rick\"}" ) || die( sRick );
     }
 

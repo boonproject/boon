@@ -20,6 +20,11 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+    public String getAlias() {
+        return name;
+    }
+
+    @Override
     public final String getName() {
         return name;
     }

@@ -8,8 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 import static org.boon.Boon.puts;
@@ -63,10 +61,10 @@ public class LazyValueMapTest {
 
             JsonParser parser = new JsonFastParser ();
 
-            Object object  = parser.parseFile ( Object.class, file.toString () );
+            Object object  = parser.parseFile ( Map.class, file.toString () );
 
 
-            walkObject( object );
+            walkObject( object, null, null );
 
         }
 
@@ -89,10 +87,10 @@ public class LazyValueMapTest {
 
             JsonParser parser = new JsonFastParser ();
 
-            Object object  = parser.parseFile ( Object.class, file.toString () );
+            Object object  = parser.parseFile ( Map.class, file.toString () );
 
 
-            walkGetObject( object );
+            walkGetObject( object, null, null );
 
         }
 
@@ -108,7 +106,7 @@ public class LazyValueMapTest {
 
         for ( Map.Entry<String, Object> entry : entries ) {
             Object object = entry.getValue ();
-            walkObject ( object );
+            walkObject ( object, map, null );
         }
 
     }
@@ -119,13 +117,14 @@ public class LazyValueMapTest {
         Set<Map.Entry<String, Object>> entries = map.entrySet ();
 
         for ( Map.Entry<String, Object> entry : entries ) {
-            walkGetObject ( map.get ( entry.getKey () ) );
+            puts (entry.getKey ());
+            walkGetObject ( map.get ( entry.getKey () ), map, null );
         }
 
         map.size ();
 
     }
-    private void walkObject( Object object ) {
+    private void walkObject( Object object, Map map, Object c ) {
         leafCount++;
         if ( object instanceof Value ) {
             die ( "Found a value" );
@@ -148,11 +147,11 @@ public class LazyValueMapTest {
         } else if ( object == null ) {
             nullCount++;
         } else {
-            die ( sputs ( object, object.getClass ().getName () ) );
+            die ( sputs ( object, object.getClass ().getName (), map, c ) );
         }
     }
 
-    private void walkGetObject( Object object ) {
+    private void walkGetObject( Object object, Map map, List list ) {
         leafCount++;
         if ( object instanceof Value ) {
             die ( "Found a value" );
@@ -175,7 +174,7 @@ public class LazyValueMapTest {
         } else if ( object == null ) {
             nullCount++;
         } else {
-            die ( sputs ( object, object.getClass ().getName () ) );
+            die ( sputs ( object, object.getClass ().getName (), map, list ) );
         }
     }
 
@@ -184,7 +183,7 @@ public class LazyValueMapTest {
     private void walkGetList( List c ) {
         listCount++;
         for ( int index = 0; index < c.size (); index++ ) {
-            walkGetObject ( c.get ( index ) );
+            walkGetObject ( c.get ( index ), null, c );
         }
 
         c.size();
@@ -193,7 +192,7 @@ public class LazyValueMapTest {
     private void walkCollection( Collection c ) {
         collectionCount++;
         for ( Object o : c ) {
-            walkObject ( o );
+            walkObject ( o, null, c );
         }
     }
 }

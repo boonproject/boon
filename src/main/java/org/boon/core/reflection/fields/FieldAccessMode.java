@@ -8,28 +8,28 @@ public enum FieldAccessMode {
     PROPERTY_THEN_FIELD;
 
 
-    public FieldsAccessor create () {
-        return FieldAccessMode.create (this);
+    public FieldsAccessor create ( boolean useAlias ) {
+        return FieldAccessMode.create (this,  useAlias);
     }
 
-    public static FieldsAccessor create(FieldAccessMode fieldAccessType) {
+    public static FieldsAccessor create(FieldAccessMode fieldAccessType, boolean useAlias) {
         FieldsAccessor fieldsAccessor = null;
 
         switch ( fieldAccessType )  {
             case FIELD:
-                fieldsAccessor = new FieldFieldsAccessor();
+                fieldsAccessor = new FieldFieldsAccessor( useAlias );
                 break;
             case PROPERTY:
-                fieldsAccessor = new PropertyFieldAccesstor();
+                fieldsAccessor = new PropertyFieldAccessor ( useAlias );
                 break;
             case FIELD_THEN_PROPERTY:
-                fieldsAccessor = new FieldsAccessorFieldThenProp();
+                fieldsAccessor = new FieldsAccessorFieldThenProp( useAlias );
                 break;
             case PROPERTY_THEN_FIELD:
-                fieldsAccessor = new FieldsAccessorsPropertyThenField();
+                fieldsAccessor = new FieldsAccessorsPropertyThenField( useAlias  );
                 break;
             default:
-                fieldsAccessor = new FieldFieldsAccessor();
+                fieldsAccessor = new FieldFieldsAccessor( useAlias );
 
         }
 

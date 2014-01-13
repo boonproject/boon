@@ -40,12 +40,12 @@ public class PlistTest {
 
 
     public JsonParser parser () {
-        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), false, true, true );
+        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), false, true, true );
 
     }
 
     public JsonParser objectParser () {
-        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), true, false, false );
+        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), true, false, false );
 
     }
 

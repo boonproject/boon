@@ -28,12 +28,12 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
 
     public JsonParser parser () {
-        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD ), false, true, true );
+        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), false, true, true );
 
     }
 
     public JsonParser objectParser () {
-        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD ), true, false, false );
+        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), true, false, false );
 
     }
 

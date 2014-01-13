@@ -5,9 +5,13 @@ import org.boon.Lists;
 import org.boon.core.Dates;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.json.annotations.Expose;
 import org.boon.json.annotations.JsonIgnore;
 import org.boon.json.annotations.JsonInclude;
 import org.boon.json.annotations.JsonViews;
+import org.boon.json.test.AllTypes;
+import org.boon.json.test.Dog;
+import org.boon.json.test.Person;
 import org.junit.Test;
 
 import java.io.File;
@@ -50,7 +54,8 @@ public class JsonTutorial {
                 includeWithViews = {"internal"})
         private String empId = "555-55-5555";
 
-        @JsonIgnore
+        //@JsonIgnore
+        @Expose(serialize = false)
         private String ssn = "555-55-5555";
 
         @JsonInclude
@@ -90,6 +95,27 @@ public class JsonTutorial {
                         "first='" + first + '\'' +
                         ", last='" + last + '\'' +
                         '}';
+            }
+
+
+            @Override
+            public boolean equals( Object o ) {
+                if ( this == o ) return true;
+                if ( o == null || getClass () != o.getClass () ) return false;
+
+                Name name = ( Name ) o;
+
+                if ( first != null ? !first.equals ( name.first ) : name.first != null ) return false;
+                if ( last != null ? !last.equals ( name.last ) : name.last != null ) return false;
+
+                return true;
+            }
+
+            @Override
+            public int hashCode() {
+                int result = first != null ? first.hashCode () : 0;
+                result = 31 * result + ( last != null ? last.hashCode () : 0 );
+                return result;
             }
         }
 
@@ -139,6 +165,37 @@ public class JsonTutorial {
                     ", birthDate=" + birthDate +
                     '}';
         }
+
+
+        @Override
+        public boolean equals( Object o ) {
+            if ( this == o ) return true;
+            if ( o == null || getClass () != o.getClass () ) return false;
+
+            User user = ( User ) o;
+
+            if ( verified != user.verified ) return false;
+            if ( birthDate != null ? !birthDate.equals ( user.birthDate ) : user.birthDate != null ) return false;
+            if ( empId != null ? !empId.equals ( user.empId ) : user.empId != null ) return false;
+            if ( gender != user.gender ) return false;
+            if ( name != null ? !name.equals ( user.name ) : user.name != null ) return false;
+            if ( ssn != null ? !ssn.equals ( user.ssn ) : user.ssn != null ) return false;
+            if ( status != null ? !status.equals ( user.status ) : user.status != null ) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = empId != null ? empId.hashCode () : 0;
+            result = 31 * result + ( ssn != null ? ssn.hashCode () : 0 );
+            result = 31 * result + ( status != null ? status.hashCode () : 0 );
+            result = 31 * result + ( gender != null ? gender.hashCode () : 0 );
+            result = 31 * result + ( name != null ? name.hashCode () : 0 );
+            result = 31 * result + ( verified ? 1 : 0 );
+            result = 31 * result + ( birthDate != null ? birthDate.hashCode () : 0 );
+            return result;
+        }
     }
 
 
@@ -151,7 +208,7 @@ public class JsonTutorial {
         user.setBirthDate( Dates.getUSDate( 5, 25, 1980 ) );
     }
 
-    public static void part1() throws Exception {
+    public static void part1ReadAndWriteMyBeanToAFile() throws Exception {
 
 
         MyBean myBean = new MyBean();
@@ -161,11 +218,16 @@ public class JsonTutorial {
 
         puts( "json string", mapper.writeValueAsString( myBean ) );
 
+        String str = mapper.writeValueAsString ( myBean );
+        boolean ok = str.contains ( "{\"name\":\"Rick\"" ) || die( str );
+
         mapper.writeValue( dst, myBean ); // where 'dst' can be File, OutputStream or Writer
 
 
         File src = dst;
         MyBean value = mapper.readValue( src, MyBean.class ); // 'src' can be File, InputStream, Reader, String
+
+        ok |= value.name.contains ( "Rick" );
 
         puts( "mybean", value );
 
@@ -186,7 +248,11 @@ public class JsonTutorial {
 
         final List<MyBean> list = Lists.list( myBean1, myBean2 );
 
-        puts( "json string", mapper.writeValueAsString( list ) );
+        str = mapper.writeValueAsString ( list );
+
+        puts ( "json string", mapper.writeValueAsString ( list ) );
+
+        ok |= str.contains ( "[{\"name\":\"Diana\"},{\"name\":\"Rick\"}]" ) || die (str);
 
         mapper.writeValue( dst, list );
 
@@ -199,7 +265,7 @@ public class JsonTutorial {
 
     }
 
-    public static void part2() throws Exception {
+    public static void part2WorkingWithInputStreamsReaders() throws Exception {
 
         ObjectMapper mapper = ObjectMapperFactory.create();
 
@@ -230,10 +296,12 @@ public class JsonTutorial {
 
         puts( "userFromReader", userFromReader );
 
-
+        boolean ok = userFromReader.toString ().equals ( "User{gender=MALE, name=Name{first='Richard', " +
+                "last='Hightower'}, verified=true, birthDate=Sun May 25 17:00:00 PDT 1980}"  ) ||
+                die (userFromReader.toString ());
     }
 
-    public static void part3() throws Exception {
+    public static void part3WorkingWithDates () throws Exception {
         part3_1();
         part3_2();
     }
@@ -246,6 +314,8 @@ public class JsonTutorial {
         User user2 = mapper.readValue( mapper.writeValueAsString( user ), User.class );
 
         puts( user2 );
+
+        boolean ok = user.equals ( user2 ) || die (user.toString ());
     }
 
 
@@ -257,12 +327,13 @@ public class JsonTutorial {
         User user2 = mapper.readValue( mapper.writeValueAsString( user ), User.class );
 
         puts( user2 );
+        boolean ok = user.equals ( user2 ) || die (user.toString ());
 
     }
 
-    public static void part5() throws Exception {
+    public static void part5WorkingWithLists() throws Exception {
 
-        puts ("\n\n\n", "\npart5");
+        puts ("\n\n\n", "\npart5 WorkingWithLists");
 
         ObjectMapper mapper = ObjectMapperFactory.createUseJSONDates();
 
@@ -289,9 +360,13 @@ public class JsonTutorial {
         puts ( mapper.writeValueAsString( userList ) );
 
 
+        boolean ok = users.toString().equals ( userList.toString () ) || die (userList.toString ());
+
+
+
     }
 
-    public static void part4() throws Exception {
+    public static void part4IntoAMapFirst() throws Exception {
 
         ObjectMapper mapper = ObjectMapperFactory.createUseJSONDates();
 
@@ -332,12 +407,15 @@ public class JsonTutorial {
 
         puts ( userFromMap );
 
+        boolean ok = user.equals ( userFromMap ) || die (userFromMap.toString ());
+
+
     }
 
 
-    public static void part6() throws Exception {
+    public static void part6WorkingWithLists() throws Exception {
 
-        puts ("\n\n\n", "\npart6");
+        puts ("\n\n\n", "\npart6WorkingWithLists");
 
         ObjectMapper mapper = ObjectMapperFactory.createUseJSONDates();
 
@@ -365,11 +443,15 @@ public class JsonTutorial {
         puts ( mapper.writeValueAsString( userList ) );
 
 
+        boolean ok = userList.toString().equals ( users.toString() ) || die ( userList.toString() );
+
+
+
     }
 
-    public static void part7() throws Exception {
+    public static void part7WorkingWithListFromFile() throws Exception {
 
-        puts ("\n\n\n", "\npart7");
+        puts ("\n\n\n", "\npart7WorkingWithListFromFile");
 
         ObjectMapper mapper = ObjectMapperFactory.createUseAnnotations( true );
 
@@ -378,8 +460,11 @@ public class JsonTutorial {
         final User diana = BeanUtils.copy( user );
         final User rick = BeanUtils.copy( user );
         diana.getName().setFirst( "Diana" );
-        diana.setGender( User.Gender.FEMALE );
-        rick.getName().setFirst( "Rick" );
+        diana.setGender ( User.Gender.FEMALE );
+        rick.getName().setFirst ( "Rick" );
+        rick.ssn="IAMSET";
+        diana.ssn="dianaSSN";
+
         diana.setBirthDate( Dates.getUSDate( 8, 21, 1984 ) );
 
         File file = File.createTempFile( "userList", ".json" );
@@ -403,12 +488,16 @@ public class JsonTutorial {
         puts ("usersFromFileAsJSON", mapper.writeValueAsString( userList ) );
 
 
+        boolean ok = userList.toString().equals ( users.toString() ) || die ( userList.toString() );
+
+
+
     }
 
 
-    public static void part8 () throws Exception {
+    public static void part8WorkingWithPrimitives() throws Exception {
 
-        puts ("\n\n\n\npart8");
+        puts ("\n\n\n\npart8WorkingWithPrimitives");
 
         ObjectMapper mapper = ObjectMapperFactory.create();
 
@@ -440,9 +529,9 @@ public class JsonTutorial {
 
 
 
-    public static void part9() throws Exception {
+    public static void part9Options() throws Exception {
 
-        puts ("\n\n\n", "\npart9");
+        puts ("\n\n\n", "\npart9Options");
 
 
         JsonParserFactory jsonParserFactory = new JsonParserFactory()
@@ -474,7 +563,7 @@ public class JsonTutorial {
         diana.setGender( User.Gender.FEMALE );
         rick.getName().setFirst( "Rick" );
         diana.setBirthDate( Dates.getUSDate( 8, 21, 1984 ) );
-        List<User> users = Lists.list( diana, rick );
+        List<User> users = Lists.list(  rick, diana );
 
         //You can use parser and serializer directly.
         final JsonParser jsonParser = jsonParserFactory.create();
@@ -482,6 +571,9 @@ public class JsonTutorial {
 
         File file = File.createTempFile( "userList", ".json" );
         String jsonString = jsonSerializer.serialize( users ).toString();
+
+        puts( "JSON STRING", jsonString );
+
         IO.write( IO.path( file.toString()), jsonString);
         List<User> users2 = jsonParser.parseListFromFile( User.class, file.toString() );
   
@@ -494,12 +586,17 @@ public class JsonTutorial {
         puts (userList);
         puts ( mapper.writeValueAsString( userList ) );
 
+        puts (userList);
+        puts (users);
+        boolean ok = userList.toString().equals ( users.toString() ) || die ( userList.toString() );
+
+
 
     }
 
 
 
-    public static void part10() throws Exception {
+    public static void part10WorkingWithViews() throws Exception {
 
 
         final User rick = BeanUtils.copy( user );
@@ -534,17 +631,58 @@ public class JsonTutorial {
 
     public static void main( String... args ) throws Exception {
 
-        part1();
-        part2();
-        part3();
-        part4();
-        part5();
-        part6();
-        part7();
-        part8();
-        part9();
-        part10();
+        part1ReadAndWriteMyBeanToAFile ();
+        part2WorkingWithInputStreamsReaders ();
+        part3WorkingWithDates ();
+        part4IntoAMapFirst ();
+        part5WorkingWithLists ();
+        part6WorkingWithLists ();
+        part7WorkingWithListFromFile();
+        part8WorkingWithPrimitives ();
+        part9Options ();
+        part10WorkingWithViews ();
+        part11Subtypes();
 
+
+    }
+
+    private static void part11Subtypes() {
+        Person person = new Person();
+        person.name = "Rick";
+        person.city = "Tucson";
+        person.pet = new Dog ();
+        person.pet2 = new Dog ();
+        person.pet.name = "Mooney";
+        person.pet2.name ( "Annabel" );
+
+        ((Dog)person.pet).barks = true;
+
+        ObjectMapper mapper = ObjectMapperFactory.createUseAnnotations( true );
+
+
+
+        puts ( mapper.toJson ( person ) );
+
+        Map <String, Object> map = ( Map<String, Object> ) mapper.fromJson ( mapper.toJson ( person ), Map.class );
+
+        Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet" );
+        Map <String, Object> pet2Map = ( Map<String, Object> ) map.get ( "pet" );
+
+        String className = (String)petMap.get("class");
+
+        boolean ok = className.endsWith ( ".Dog" )  || die(className);
+
+        className = (String)pet2Map.get("class");
+
+        ok = className.endsWith ( ".Dog" )  || die(className);
+
+        Person person2 = mapper.fromJson ( mapper.toJson ( person ), Person.class );
+
+        Dog dog = (Dog)person2.pet;
+        ok = dog.name.equals ( "Mooney" )  || die( dog.name );
+
+        dog = (Dog)person2.pet2;
+        ok = dog.name.equals ( "Annabel" )  || die( dog.name );
 
     }
 

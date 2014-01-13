@@ -11,6 +11,9 @@ import org.boon.json.serializers.FieldFilter;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.json.serializers.impl.AbstractCustomObjectSerializer;
 import org.boon.json.serializers.impl.JsonSerializerImpl;
+import org.boon.json.test.AllTypes;
+import org.boon.json.test.Dog;
+import org.boon.json.test.FooBasket;
 import org.boon.primitive.CharBuf;
 import org.boon.utils.DateUtils;
 import org.junit.Before;
@@ -70,10 +73,96 @@ public class JsonParserBaseTest {
 
         jsonParser = parser ();
 
+
+
     }
 
 
 
+    @Test
+    public void subclass() {
+        AllTypes foo = new AllTypes ();
+        foo.pet = new Dog ();
+        foo.pet.name = "Mooney";
+        ((Dog)foo.pet).barks = true;
+
+        final JsonSerializer serializer = new JsonSerializerFactory ().useAnnotations().create ();
+
+        puts ( serializer.serialize ( foo ).toString () );
+
+        Map <String, Object> map = ( Map<String, Object> ) jsonParser.parse ( serializer.serialize ( foo ).toString () );
+
+        Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet" );
+
+        String className = (String)petMap.get("class");
+
+        boolean ok = className.endsWith ( ".Dog" )  || die(className);
+
+        AllTypes foo2 = jsonParser.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
+
+        Dog dog = (Dog)foo2.pet;
+        ok = dog.name.equals ( "Mooney" )  || die( dog.name );
+
+
+    }
+
+
+
+    @Test
+    public void interfaceTest() {
+        AllTypes foo = new AllTypes ();
+        foo.pet2 = new Dog();
+        foo.pet2.name("Mooney");
+        ((Dog)foo.pet2).barks = true;
+
+        final JsonSerializer serializer = new JsonSerializerFactory ().useAnnotations().create ();
+
+        puts ( serializer.serialize ( foo ).toString () );
+
+        Map <String, Object> map = ( Map<String, Object> ) jsonParser.parse ( serializer.serialize ( foo ).toString () );
+
+        Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet2" );
+
+        String className = (String)petMap.get("class");
+
+        boolean ok = className.endsWith ( ".Dog" )  || die(className);
+
+        AllTypes foo2 = jsonParser.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
+
+        Dog dog = (Dog)foo2.pet2;
+        ok = dog.name.equals ( "Mooney" )  || die( dog.name );
+
+
+    }
+
+
+
+    @Test
+    public void interfaceTestSimple() {
+        AllTypes foo = new AllTypes ();
+        foo.pet2 = new Dog();
+        foo.pet2.name("Mooney");
+        ((Dog)foo.pet2).barks = true;
+
+        final JsonSerializer serializer = new JsonSerializerFactory ().create ();
+
+        puts ( serializer.serialize ( foo ).toString () );
+
+        Map <String, Object> map = ( Map<String, Object> ) jsonParser.parse ( serializer.serialize ( foo ).toString () );
+
+        Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet2" );
+
+        String className = (String)petMap.get("class");
+
+        boolean ok = className.endsWith ( ".Dog" )  || die(className);
+
+        AllTypes foo2 = jsonParser.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
+
+        Dog dog = (Dog)foo2.pet2;
+        ok = dog.name.equals ( "Mooney" )  || die( dog.name );
+
+
+    }
     @Test
     public void roundTrip() {
         AllTypes foo = new AllTypes ();

@@ -187,9 +187,22 @@ public class FieldSerializerImpl implements FieldSerializer {
                     return true;
                 }
                 return false;
+
+
+
+            case INTERFACE:
+            case ABSTRACT:
+                serializeFieldName ( fieldName, builder );
+                serializer.serializeSubtypeInstance ( value, builder );
+                return true;
+
             case INSTANCE:
                 serializeFieldName ( fieldName, builder );
-                serializer.serializeInstance ( value, builder );
+                if ( fieldAccess.getType () == value.getClass () ) {
+                    serializer.serializeInstance ( value, builder );
+                } else {
+                    serializer.serializeSubtypeInstance ( value, builder );
+                }
                 return true;
             default:
                 serializeFieldName ( fieldName, builder );

@@ -230,4 +230,43 @@ public class ObjectMapperImpl implements ObjectMapper {
     public JsonSerializer serializer() {
         return serializerFactory.create();
     }
+
+    @Override
+    public String toJson( Object value ) {
+        return this.writeValueAsString ( value );
+    }
+
+    @Override
+    public void toJson( Object value, Appendable appendable ) {
+        try {
+            appendable.append ( this.writeValueAsString ( value )  );
+        } catch ( IOException e ) {
+            Exceptions.handle ( e );
+        }
+    }
+
+    @Override
+    public <T> T fromJson( String json, Class<T> clazz ) {
+            return readValue ( json, clazz );
+    }
+
+    @Override
+    public <T> T fromJson( byte[] bytes, Class<T> clazz ) {
+        return readValue ( bytes, clazz );
+    }
+
+    @Override
+    public <T> T fromJson( char[] chars, Class<T> clazz ) {
+        return readValue ( chars, clazz );
+    }
+
+    @Override
+    public <T> T fromJson( Reader reader, Class<T> clazz ) {
+        return readValue ( reader, clazz );
+    }
+
+    @Override
+    public <T> T fromJson( InputStream inputStream, Class<T> clazz ) {
+        return readValue ( inputStream, clazz );
+    }
 }

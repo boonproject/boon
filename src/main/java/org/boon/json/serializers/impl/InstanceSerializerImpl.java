@@ -34,4 +34,38 @@ public class InstanceSerializerImpl implements InstanceSerializer{
         builder.addChar( '}' );
 
     }
+
+    @Override
+    public void serializeSubtypeInstance( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
+        builder.addString( "{\"class\":" );
+        builder.addQuoted ( instance.getClass ().getName () );
+        final Map<String, FieldAccess> fieldAccessors = serializer.getFields ( instance.getClass () );
+
+        int index = 0;
+        Collection<FieldAccess> values = fieldAccessors.values();
+        int length = values.size();
+
+        if ( length > 0 ) {
+            builder.addChar( ',' );
+
+
+            for ( FieldAccess fieldAccess : values ) {
+                boolean sent = serializer.serializeField ( instance, fieldAccess, builder );
+                if (sent) {
+                    index++;
+                    builder.addChar( ',' );
+                }
+            }
+
+
+            if ( index > 0 ) {
+                builder.removeLastChar();
+            }
+
+            builder.addChar( '}' );
+
+
+        }
+
+    }
 }

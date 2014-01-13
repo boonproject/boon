@@ -30,11 +30,11 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
     public JsonParserCharArray(  ) {
-        super( FieldAccessMode.create(FieldAccessMode.FIELD) );
+        super( FieldAccessMode.create(FieldAccessMode.FIELD, true ) );
     }
 
-    public JsonParserCharArray( FieldAccessMode mode ) {
-        super( FieldAccessMode.create(mode) );
+    public JsonParserCharArray( FieldAccessMode mode, boolean useAnnotations ) {
+        super( FieldAccessMode.create(mode, useAnnotations) );
     }
 
     public JsonParserCharArray( FieldsAccessor fieldsAccessor ) {

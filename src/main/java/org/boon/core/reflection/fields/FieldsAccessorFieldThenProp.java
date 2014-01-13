@@ -4,6 +4,7 @@ import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldsAccessor;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +12,13 @@ public class FieldsAccessorFieldThenProp implements FieldsAccessor {
 
     private final Map <Class<?>, Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
 
+
+    private final boolean useAlias;
+
+
+    public FieldsAccessorFieldThenProp (boolean useAlias) {
+        this.useAlias = useAlias;
+    }
 
 
     public final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
@@ -23,7 +31,20 @@ public class FieldsAccessorFieldThenProp implements FieldsAccessor {
     }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-        return Reflection.getPropertyFieldAccessMapFieldFirst ( aClass );
+        Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapFieldFirst ( aClass );
+
+
+        if ( useAlias ) {
+            Map<String, FieldAccess> fieldAccessMap2 = new LinkedHashMap<> ( fieldAccessMap.size () );
+
+            for (FieldAccess fa : fieldAccessMap.values ()) {
+                fieldAccessMap2.put ( fa.getAlias (), fa );
+            }
+            return fieldAccessMap2;
+        } else {
+            return fieldAccessMap;
+        }
+
     }
 
 

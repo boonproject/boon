@@ -42,7 +42,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         arraySerializer = (ArraySerializer) collectionSerializer;
         unknownSerializer = new UnknownSerializerImpl ();
         dateSerializer = new DateSerializerImpl ();
-        fieldsAccessor = new FieldsAccessorFieldThenProp();
+        fieldsAccessor = new FieldsAccessorFieldThenProp(true);
 
     }
 
@@ -63,7 +63,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
 
 
         if (fieldsAccessor == null) {
-            this.fieldsAccessor = new FieldsAccessorFieldThenProp ();
+            this.fieldsAccessor = new FieldsAccessorFieldThenProp (true);
         } else {
             this.fieldsAccessor = fieldsAccessor;
         }
@@ -196,6 +196,11 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
     public final void serializeInstance ( Object obj, CharBuf builder )  {
            this.instanceSerializer.serializeInstance ( this, obj, builder );
 
+    }
+
+    @Override
+    public void serializeSubtypeInstance( Object obj, CharBuf builder ) {
+        this.instanceSerializer.serializeSubtypeInstance ( this, obj, builder );
     }
 
     public final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {

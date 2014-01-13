@@ -17,11 +17,11 @@ public class JsonUTF8Parser extends JsonBaseByteArrayParser implements JsonParse
 
 
     public JsonUTF8Parser(  ) {
-        super( FieldAccessMode.create( FieldAccessMode.FIELD ) );
+        super( FieldAccessMode.create( FieldAccessMode.FIELD, true ) );
     }
 
     public JsonUTF8Parser( FieldAccessMode mode ) {
-        super( FieldAccessMode.create(mode) );
+        super( FieldAccessMode.create(mode, true) );
     }
 
     public JsonUTF8Parser( FieldsAccessor fieldsAccessor ) {

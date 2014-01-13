@@ -9,11 +9,11 @@ import org.boon.json.implementation.JsonFastParser;
 public class JsonLazyChopFastParserTest extends JsonParserBaseTest {
 
     public JsonParser parser () {
-        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), false, true, true );
+        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), false, true, true );
     }
 
     public JsonParser objectParser () {
-        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD ), true, false, false );
+        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), true, false, false );
     }
 
 }

@@ -28,11 +28,11 @@ public class JsonParserLax extends JsonParserCharArray {
 
 
     public JsonParserLax(  ) {
-        this( FieldAccessMode.create( FieldAccessMode.FIELD ) );
+        this( FieldAccessMode.create( FieldAccessMode.FIELD, true ) );
     }
 
     public JsonParserLax( FieldAccessMode mode ) {
-        this( FieldAccessMode.create(mode) );
+        this( FieldAccessMode.create(mode, true) );
     }
 
 
@@ -709,12 +709,14 @@ public class JsonParserLax extends JsonParserCharArray {
     }
 
 
-    protected <T> T convert( Class<T> type, Object object ) {
+    protected final  <T> T convert( Class<T> type, Object object ) {
         if ( type == Map.class || type == List.class ) {
             return (T)object;
         } else {
-            if ( object instanceof Map ) {
-                return MapObjectConversion.fromValueMap ( fieldsAccessor, ( Map<String, org.boon.core.Value> ) object, type );
+            if ( object instanceof ValueMapImpl ) {
+                return MapObjectConversion.fromValueMap( fieldsAccessor, ( Map<String, Value> ) object, type );
+            } else if ( object instanceof Map ) {
+                return MapObjectConversion.fromMap ( fieldsAccessor, ( Map<String, Object> ) object, type );
             } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
                 return (T)( (Value) object).toValue ();
             }

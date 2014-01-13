@@ -212,7 +212,7 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
 
 
     public JsonParserConcurrent ( JsonParserFactory factory) {
-        super( FieldAccessMode.create( factory.getFieldAccessType() ) );
+        super( FieldAccessMode.create( factory.getFieldAccessType(), true ) );
 
         int cores = Runtime.getRuntime().availableProcessors();
         workers = new Worker[cores];
@@ -235,7 +235,7 @@ public class JsonParserConcurrent extends BaseJsonParser implements JsonParser {
     }
 
     public JsonParserConcurrent (  ) {
-        super( FieldAccessMode.create(FieldAccessMode.FIELD) );
+        super( FieldAccessMode.create(FieldAccessMode.FIELD, true) );
         JsonParserFactory factory = new JsonParserFactory();
         int cores = Runtime.getRuntime().availableProcessors();
         workers = new Worker[cores];

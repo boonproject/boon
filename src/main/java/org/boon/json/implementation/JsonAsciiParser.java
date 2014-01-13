@@ -19,13 +19,13 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
 
 
     public JsonAsciiParser() {
-        super( FieldAccessMode.create( FieldAccessMode.FIELD ) );
+        super( FieldAccessMode.create( FieldAccessMode.FIELD, true ) );
         this.charset = StandardCharsets.US_ASCII;
 
     }
 
     public JsonAsciiParser( FieldAccessMode mode ) {
-        super( FieldAccessMode.create( mode ) );
+        super( FieldAccessMode.create( mode, true ) );
         this.charset = StandardCharsets.US_ASCII;
 
     }

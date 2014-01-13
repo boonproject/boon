@@ -1,5 +1,6 @@
-package org.boon.json;
+package org.boon.json.test;
 
+import org.boon.json.FooEnum;
 import org.boon.json.annotations.JsonIgnore;
 import org.boon.json.annotations.JsonIgnoreProperties;
 
@@ -13,6 +14,11 @@ import java.util.List;
 public class AllTypes {
 
 
+    public Animal pet2;
+
+    public Pet pet;
+
+
     public FooBasket getFooBasket () {
         return fooBasket;
     }
@@ -23,9 +29,9 @@ public class AllTypes {
 
     FooBasket fooBasket = new FooBasket ();
 
-    String ignoreMe3;
+    public String ignoreMe3;
 
-    String ignoreMe2;
+    public String ignoreMe2;
 
     int myInt;
     boolean myBoolean;
@@ -45,10 +51,11 @@ public class AllTypes {
     FooEnum bar;
 
     @JsonIgnore
-    String ingnoreMe;
+    public String ingnoreMe;
 
 
-    long someDate = new Date (  ).getTime ();
+
+    public long someDate = new Date (  ).getTime ();
 
 
 

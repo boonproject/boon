@@ -30,11 +30,11 @@ public class JsonFastParser extends JsonParserCharArray {
     private final boolean lazyChop;
 
     public JsonFastParser(  ) {
-        this( FieldAccessMode.create( FieldAccessMode.FIELD ) );
+        this( FieldAccessMode.create( FieldAccessMode.FIELD, true ) );
     }
 
-    public JsonFastParser( FieldAccessMode mode ) {
-        this( FieldAccessMode.create(mode) );
+    public JsonFastParser( FieldAccessMode mode, boolean useAnnotations ) {
+        this( FieldAccessMode.create(mode, useAnnotations) );
     }
 
 
@@ -324,12 +324,14 @@ public class JsonFastParser extends JsonParserCharArray {
     }
 
 
-    protected final <T> T convert( Class<T> type, Object object ) {
-        if ( type==Object.class || type == Map.class || type == List.class ) {
+    protected final  <T> T convert( Class<T> type, Object object ) {
+        if ( type == Map.class || type == List.class ) {
             return (T)object;
         } else {
-            if ( object instanceof Map ) {
-                return MapObjectConversion.fromValueMap( fieldsAccessor,  ( Map<String, org.boon.core.Value> ) object, type );
+            if ( object instanceof ValueMapImpl ) {
+                return MapObjectConversion.fromValueMap( fieldsAccessor, ( Map<String, Value> ) object, type );
+            } else if ( object instanceof Map ) {
+                return MapObjectConversion.fromMap ( fieldsAccessor, ( Map<String, Object> ) object, type );
             } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
                 return (T)( (Value) object).toValue ();
             }

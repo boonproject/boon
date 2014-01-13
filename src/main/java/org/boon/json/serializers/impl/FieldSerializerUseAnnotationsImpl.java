@@ -1,6 +1,5 @@
 package org.boon.json.serializers.impl;
 
-import org.boon.cache.Cache;
 import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -68,7 +67,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
     @Override
     public final boolean serializeField ( JsonSerializerInternal serializer, Object parent, FieldAccess fieldAccess, CharBuf builder ) {
 
-        final String fieldName = fieldAccess.getName();
+        final String fieldName = fieldAccess.getAlias();
         final Type typeEnum = fieldAccess.typeEnum();
         if ( useAnnotations && fieldAccess.ignore() )  {
             return false;
@@ -194,15 +193,6 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
         }
 
 
-        if (handleSimpleBackReference && value == parent ) {
-            return false;
-        } else if (handleComplexBackReference) {
-            if ( idMap.containsKey ( value ) ) {
-                return false;
-            } else {
-                idMap.put ( value, value );
-            }
-        }
 
 
         if ( overrideMap!=null ) {
@@ -303,10 +293,41 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                     return true;
                 }
                 return false;
-            case INSTANCE:
+
+            case INTERFACE:
+            case ABSTRACT:
+                if (handleSimpleBackReference && value == parent ) {
+                    return false;
+                } else if (handleComplexBackReference) {
+                    if ( idMap.containsKey ( value ) ) {
+                        return false;
+                    } else {
+                        idMap.put ( value, value );
+                    }
+                }
+
                 serializeFieldName ( fieldName, builder );
-                serializer.serializeInstance ( value, builder );
+                serializer.serializeSubtypeInstance ( value, builder );
                 return true;
+            case INSTANCE:
+                if (handleSimpleBackReference && value == parent ) {
+                    return false;
+                } else if (handleComplexBackReference) {
+                    if ( idMap.containsKey ( value ) ) {
+                        return false;
+                    } else {
+                        idMap.put ( value, value );
+                    }
+                }
+
+                serializeFieldName ( fieldName, builder );
+                if ( fieldAccess.getType () == value.getClass () ) {
+                    serializer.serializeInstance ( value, builder );
+                } else {
+                    serializer.serializeSubtypeInstance ( value, builder );
+                }
+                return true;
+
             default:
                 serializeFieldName ( fieldName, builder );
                 serializer.serializeUnknown ( value, builder );

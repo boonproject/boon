@@ -29,9 +29,11 @@ public class ObjectSerializationWithTypeInfo implements ObjectSerializer {
            
 
         for ( FieldAccess fieldAccess : values ) {
-            serializer.serializeField ( instance, fieldAccess, builder );
-            index++;
-            builder.addChar( ',' );
+            boolean sent = serializer.serializeField ( instance, fieldAccess, builder );
+            if (sent) {
+                index++;
+                builder.addChar( ',' );
+            }
         }
 
 

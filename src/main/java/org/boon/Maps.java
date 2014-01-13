@@ -1209,7 +1209,7 @@ public class Maps {
 
 
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
-        return MapObjectConversion.fromMap ( map, clazz );
+        return MapObjectConversion.fromMap( map, clazz );
     }
 
     public static Object fromMap( final Map<String, Object> map ) {

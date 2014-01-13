@@ -95,19 +95,19 @@ public class JsonSerializerFactory {
 
             switch ( fieldAccessType )  {
                 case FIELD:
-                    fieldsAccessor = new FieldFieldsAccessor();
+                    fieldsAccessor = new FieldFieldsAccessor( useAnnotations );
                     break;
                 case PROPERTY:
-                    fieldsAccessor = new PropertyFieldAccesstor();
+                    fieldsAccessor = new PropertyFieldAccessor ( useAnnotations );
                     break;
                 case FIELD_THEN_PROPERTY:
-                    fieldsAccessor = new FieldsAccessorFieldThenProp();
+                    fieldsAccessor = new FieldsAccessorFieldThenProp( useAnnotations );
                     break;
                 case PROPERTY_THEN_FIELD:
-                    fieldsAccessor = new FieldsAccessorsPropertyThenField();
+                    fieldsAccessor = new FieldsAccessorsPropertyThenField( useAnnotations );
                     break;
                 default:
-                    fieldsAccessor = new FieldFieldsAccessor();
+                    fieldsAccessor = new FieldFieldsAccessor( useAnnotations );
 
             }
 
@@ -159,6 +159,13 @@ public class JsonSerializerFactory {
 
     public JsonSerializerFactory setOutputType ( boolean outputType ) {
         this.outputType = outputType;
+        return this;
+    }
+
+
+
+    public JsonSerializerFactory outputType (  ) {
+        this.outputType = true;
         return this;
     }
 

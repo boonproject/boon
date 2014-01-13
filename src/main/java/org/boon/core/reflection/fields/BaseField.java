@@ -43,10 +43,10 @@ public abstract class BaseField implements FieldAccess {
     private  Map<String,  Map<String, Object>> annotationMap = new ConcurrentHashMap<> (  );
     private  HashSet<String> includedViews;
     private  HashSet<String> ignoreWithViews;
+    private final String alias;
 
 
-
-    private void initAnnotationData(Class clazz ) {
+    private String initAnnotationData(Class clazz ) {
 
         final Collection<AnnotationData> annotationDataForFieldAndProperty =
                 Annotations.getAnnotationDataForFieldAndProperty ( clazz, name, Collections.EMPTY_SET );
@@ -94,6 +94,26 @@ public abstract class BaseField implements FieldAccess {
             }
         }
 
+        if (hasAnnotation ( "Expose" ))  {
+            final Map<String, Object> jsonIgnore = getAnnotationData ( "Expose" );
+            boolean serialize = (boolean) jsonIgnore.get ( "serialize" );
+            bits.set( INCLUDE, serialize );
+            bits.set( IGNORE, !serialize);
+        }
+
+        String alias = null;
+
+        if (hasAnnotation ( "SerializedName" ))  {
+            final Map<String, Object> aliasD = getAnnotationData ( "SerializedName" );
+            alias = (String) aliasD.get ( "value" );
+        }
+
+        if (alias==null && hasAnnotation ( "JsonProperty" )) {
+            final Map<String, Object> aliasD = getAnnotationData ( "JsonProperty" );
+            alias = (String) aliasD.get ( "value" );
+        }
+
+
         if (parentType!=null) {
             final Map<String, AnnotationData> classAnnotations =
                 Annotations.getAnnotationDataForClassAsMap( parentType );
@@ -114,6 +134,8 @@ public abstract class BaseField implements FieldAccess {
 
         }
 
+        return alias;
+
     }
 
     protected BaseField ( String name, Method getter, Method setter ) {
@@ -126,6 +148,7 @@ public abstract class BaseField implements FieldAccess {
             bits.set( VOLATILE,  false);
             bits.set( QUALIFIED, false);
 
+            String alias;
 
             if ( getter != null ) {
                 bits.set(STATIC,  Modifier.isStatic ( getter.getModifiers () ));
@@ -157,7 +180,7 @@ public abstract class BaseField implements FieldAccess {
                 }
 
 
-                initAnnotationData ( getter.getDeclaringClass () );
+                alias = initAnnotationData ( getter.getDeclaringClass () );
 
             } else {
                 bits.set(STATIC,  Modifier.isStatic ( setter.getModifiers () ));
@@ -170,7 +193,7 @@ public abstract class BaseField implements FieldAccess {
                 parentType = setter.getDeclaringClass();
 
 
-                initAnnotationData ( setter.getDeclaringClass () );
+                alias = initAnnotationData ( setter.getDeclaringClass () );
             }
 
             if (name.startsWith ( "$" )) {
@@ -178,10 +201,15 @@ public abstract class BaseField implements FieldAccess {
             } else {
                 this.typeEnum = Type.getType(type);
             }
+
+            this.alias = alias != null ? alias : name;
+
         } catch ( Exception ex ) {
             Exceptions.handle ( "name " + name + " setter " + setter + " getter " + getter, ex );
             throw new RuntimeException ( "die" );
         }
+
+
 
     }
 
@@ -236,7 +264,9 @@ public abstract class BaseField implements FieldAccess {
         } else {
             this.typeEnum = Type.getType(type);
         }
-        initAnnotationData ( field.getDeclaringClass () );
+        String alias = initAnnotationData ( field.getDeclaringClass () );
+
+        this.alias = alias != null ? alias : name;
 
 
 
@@ -520,6 +550,12 @@ public abstract class BaseField implements FieldAccess {
         return name;
     }
 
+
+
+    @Override
+    public final String getAlias() {
+        return alias;
+    }
 
     @Override
     public String toString() {

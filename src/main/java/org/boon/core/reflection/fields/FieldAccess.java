@@ -9,6 +9,8 @@ import java.util.Map;
 
 
 public interface FieldAccess {
+    String getAlias();
+
     String getName();
     Object getValue( Object obj );
 

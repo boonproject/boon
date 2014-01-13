@@ -1,5 +1,6 @@
 package org.boon.core.reflection;
 
+import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.Maps;
 import org.boon.core.Conversions;
@@ -9,12 +10,13 @@ import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldFieldsAccessor;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.value.LazyValueMap;
 import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
 
 import java.util.*;
+
+import static org.boon.Boon.sputs;
 
 
 /**
@@ -27,21 +29,29 @@ public class MapObjectConversion {
 
     }
 
-    @SuppressWarnings ( "unchecked" )
+
+    public static <T> T fromMap( FieldsAccessor fieldFieldsAccessor, Map<String, Object> map, Class<T> clazz ) {
+        return fromMap( fieldFieldsAccessor, map, Reflection.newInstance ( clazz ) );
+
+    }
     public static Object fromMap( Map<String, Object> map ) {
-        String className = ( String ) map.get( "class" );
-        Object newInstance = Reflection.newInstance ( className );
-        return fromMap( map, newInstance );
+        return fromMap ( FieldAccessMode.FIELD.create (false), map );
     }
 
     @SuppressWarnings ( "unchecked" )
+    public static Object fromMap( FieldsAccessor fieldFieldsAccessor, Map<String, Object> map ) {
+        String className = ( String ) map.get( "class" );
+        Object newInstance = Reflection.newInstance ( className );
+        return fromMap( fieldFieldsAccessor, map, newInstance );
+    }
+
     public static <T> T fromMap( Map<String, Object> map, T newInstance ) {
+           return  fromMap ( FieldAccessMode.FIELD.create(false), map, newInstance );
+    }
 
-        if (map instanceof ValueMap) {
-            return (T) fromValueMap ( FieldAccessMode.FIELD.create (), (ValueMap) (Map) map, newInstance );
-        }
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T fromMap( FieldsAccessor fieldsAccessor, Map<String, Object> map, T newInstance ) {
 
-        FieldsAccessor fieldsAccessor = new FieldFieldsAccessor();
         Map<String, FieldAccess> fields = fieldsAccessor.getFields( newInstance.getClass() );
         Set<Map.Entry<String, Object>> entrySet = map.entrySet();
 
@@ -51,6 +61,10 @@ public class MapObjectConversion {
 
 
             FieldAccess field = fields.get( entry.getKey() );
+
+            if ( field == null ) {
+                continue;
+            }
             Object value = entry.getValue();
 
 
@@ -61,6 +75,11 @@ public class MapObjectConversion {
                     field.setFromValue( newInstance, ( Value ) value );
                     continue;
                 }
+            }
+
+            if (value == null) {
+                field.setObject ( newInstance, null );
+                continue;
             }
 
             if (value.getClass() == field.getType()) {
@@ -76,10 +95,10 @@ public class MapObjectConversion {
             else if ( value instanceof Map ) {
                 Class <?> clazz = field.getType();
                 if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
-                    value = fromMap( ( Map<String, Object> ) value, field.getType() );
+                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, field.getType() );
 
                 } else {
-                    value = fromMap( ( Map<String, Object> ) value );
+                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value );
                 }
                 field.setObject( newInstance, value );
             } else if ( value instanceof Collection ) {
@@ -87,7 +106,7 @@ public class MapObjectConversion {
                 processCollectionFromMapUsingFields( fieldsAccessor, newInstance, field, ( Collection ) value );
             } else if ( value instanceof Map[] ) {
                 /* It is an array of maps so, we need to process it as such. */
-                processArrayOfMaps( newInstance, field, value );
+                processArrayOfMaps( fieldsAccessor, newInstance, field, value );
             } else {
                 field.setValue( newInstance, value );
             }
@@ -114,9 +133,14 @@ public class MapObjectConversion {
     public static <T> T fromValueMap(
             final FieldsAccessor fieldsAccessor,
             final Map<String, Value> map) {
-        String className = map.get( "class" ).toString();
-        Object newInstance = Reflection.newInstance ( className );
+
+        try {
+            String className = map.get( "class" ).toString();
+            Object newInstance = Reflection.newInstance ( className );
         return fromValueMap( fieldsAccessor, map, (T)newInstance );
+        } catch (Exception ex) {
+            return (T) Exceptions.handle (Object.class, sputs("fromValueMap", "map", map, "fieldAccessor", fieldsAccessor), ex);
+        }
     }
 
     @SuppressWarnings ( "unchecked" )
@@ -152,6 +176,10 @@ public class MapObjectConversion {
             String key = entry.getKey();
             FieldAccess field = fields.get( key );
             Object ovalue = entry.getValue();
+
+            if ( field == null) {
+                continue;
+            }
 
 
             if (ovalue instanceof Value) {
@@ -286,7 +314,7 @@ public class MapObjectConversion {
          * recursive processing to do.
          */
         if ( Typ.isMap( componentType ) ) {
-            handleCollectionOfMaps( newInstance, field,
+            handleCollectionOfMaps( fieldsAccessor, newInstance, field,
                     ( Collection<Map<String, Object>> ) collection );
         } else if ( Typ.isValue( componentType ) ) {
             handleCollectionOfValues( fieldsAccessor, newInstance, field,
@@ -316,16 +344,16 @@ public class MapObjectConversion {
 
     }
 
-    private static void processArrayOfMaps( Object newInstance, FieldAccess field, Object value ) {
+    private static void processArrayOfMaps(final FieldsAccessor fieldsAccessor, Object newInstance, FieldAccess field, Object value ) {
         Map<String, Object>[] maps = ( Map<String, Object>[] ) value;
         List<Map<String, Object>> list = Lists.list ( maps );
-        handleCollectionOfMaps( newInstance, field,
+        handleCollectionOfMaps( fieldsAccessor, newInstance, field,
                 list );
 
     }
 
     @SuppressWarnings ( "unchecked" )
-    private static void handleCollectionOfMaps( Object newInstance,
+    private static void handleCollectionOfMaps( final FieldsAccessor fieldsAccessor, Object newInstance,
                                                 FieldAccess field, Collection<Map<String, Object>> collectionOfMaps ) {
 
         Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfMaps.size () );
@@ -470,7 +498,7 @@ public class MapObjectConversion {
             if ( map instanceof ValueMapImpl ) {
                 newList.add ( fromValueMap(fieldsAccessor, ( Map<String, Value> ) map, componentType ) );
             } else {
-                newList.add ( fromMap ( map, componentType ) );
+                newList.add ( fromMap ( fieldsAccessor, map, componentType ) );
             }
         }
         return (List<T>) newList;
