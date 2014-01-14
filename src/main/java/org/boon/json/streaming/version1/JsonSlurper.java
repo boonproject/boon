@@ -25,9 +25,13 @@ import org.boon.IO;
 import org.boon.HTTP; //Boon versions of the above
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -117,21 +121,12 @@ public class JsonSlurper {
     }
 
     /** Slight changes to remove groovy dependencies .*/
-    private Object parseFile(File file, String charset) {
-        Reader reader = null;
-        try {
-//            if (charset == null || charset.length() == 0) {
-//                reader = ResourceGroovyMethods.newReader(file);
-//            } else {
-//                reader = ResourceGroovyMethods.newReader(file, charset);
-//            }
-            return parse(new StringReader ( IO.read (file) ));
-        } catch(Exception ioe) {
+    private Object parseFile(File file, String scharset) {
+        Charset charset = scharset==null || scharset.length ()==0 ? StandardCharsets.UTF_8 : Charset.forName ( scharset );
+        try (Reader reader = Files.newBufferedReader( IO.path ( file.toString () ), charset )) {
+            return parse(reader);
+        } catch(IOException ioe) {
             throw new JsonException("Unable to process file: " + file.getPath(), ioe);
-        } finally {
-            if (reader != null) {
-//                DefaultGroovyMethodsSupport.closeWithWarning(reader);
-            }
         }
     }
 
