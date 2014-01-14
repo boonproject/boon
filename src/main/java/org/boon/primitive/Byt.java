@@ -5,6 +5,7 @@ import org.boon.Exceptions;
 import org.boon.Universal;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class Byt {
@@ -744,4 +745,7 @@ public class Byt {
 
     }
 
+    public static String utfString( byte[] jsonBytes ) {
+        return new String (jsonBytes, StandardCharsets.UTF_8);
+    }
 }

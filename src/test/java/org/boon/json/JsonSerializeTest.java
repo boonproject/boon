@@ -2,7 +2,6 @@ package org.boon.json;
 
 import org.boon.Lists;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.json.serializers.impl.JsonSerializerImpl;
 import org.boon.json.serializers.impl.JsonSimpleSerializerImpl;
 import org.boon.json.test.AllTypes;
 import org.junit.Test;
@@ -65,7 +64,7 @@ public class JsonSerializeTest {
         puts( sRick );
 
         AllTypes foo = new AllTypes();
-        foo.ingnoreMe = "THIS WILL NOT PASS";
+        foo.ignoreMe = "THIS WILL NOT PASS";
         foo.ignoreMe2 = "THIS WILL NOT PASS EITHER";
         foo.ignoreMe3 = "THIS WILL NOT PASS TOO";
 
@@ -99,7 +98,7 @@ public class JsonSerializeTest {
         puts( sRick );
 
         AllTypes foo = new AllTypes();
-        foo.ingnoreMe = "THIS WILL NOT PASS";
+        foo.ignoreMe = "THIS WILL NOT PASS";
         foo.ignoreMe2 = "THIS WILL NOT PASS EITHER";
         foo.ignoreMe3 = "THIS WILL NOT PASS TOO";
 

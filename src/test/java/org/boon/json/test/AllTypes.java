@@ -51,7 +51,7 @@ public class AllTypes {
     FooEnum bar;
 
     @JsonIgnore
-    public String ingnoreMe;
+    public String ignoreMe;
 
 
 

@@ -166,7 +166,7 @@ public class JsonParserBaseTest {
     @Test
     public void roundTrip() {
         AllTypes foo = new AllTypes ();
-        foo.ingnoreMe = "THIS WILL NOT PASS";
+        foo.ignoreMe = "THIS WILL NOT PASS";
         foo.ignoreMe2 = "THIS WILL NOT PASS EITHER";
         foo.ignoreMe3 = "THIS WILL NOT PASS TOO";
 
@@ -231,7 +231,7 @@ public class JsonParserBaseTest {
 
 
 
-        ok |= testMe.ingnoreMe == null || die();
+        ok |= testMe.ignoreMe == null || die();
 
         puts (testMe.ignoreMe2);
         ok |= testMe.ignoreMe2 == null || die();
@@ -249,7 +249,7 @@ public class JsonParserBaseTest {
     @Test
     public void roundTrip2() {
         AllTypes foo = new AllTypes ();
-        foo.ingnoreMe = "THIS WILL NOT PASS";
+        foo.ignoreMe = "THIS WILL NOT PASS";
         foo.ignoreMe2 = "THIS WILL NOT PASS EITHER";
         foo.ignoreMe3 = "THIS WILL NOT PASS TOO";
 
@@ -280,7 +280,7 @@ public class JsonParserBaseTest {
     @Test
     public void roundTrip3() {
         AllTypes foo = new AllTypes ();
-        foo.ingnoreMe = "THIS WILL NOT PASS";
+        foo.ignoreMe = "THIS WILL NOT PASS";
         foo.ignoreMe2 = "THIS WILL NOT PASS EITHER";
         foo.ignoreMe3 = "THIS WILL NOT PASS TOO";
 
@@ -557,7 +557,7 @@ public class JsonParserBaseTest {
 
         System.out.printf ( "%s, %s, %s", name, json, compareTo );
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParser.parse (
                 json.replace ( '\'', '"' )
         );
 
@@ -657,7 +657,7 @@ public class JsonParserBaseTest {
                         "   do you think it is \\'cool\\' '] " ).replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse ( Map.class, testString );
+        Object obj = jsonParser.parse ( testString );
 
 
         System.out.println ( "here is what I got " + obj );
@@ -682,7 +682,7 @@ public class JsonParserBaseTest {
                 "[ 'abc','def' ]".replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse ( Map.class, testString );
+        Object obj = jsonParser.parse ( testString );
         System.out.println ( "here is what I got " + obj );
 
         boolean ok = true;
@@ -718,7 +718,7 @@ public class JsonParserBaseTest {
     @Test
     public void oddlySpaced2 () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParser.parse (
                 lines ( "[   2   ,    1, 0]"
                 ).replace ( '\'', '"' )
         );
@@ -821,7 +821,7 @@ public class JsonParserBaseTest {
     public void bug2 () {
 
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParser.parse (
                 lines (
 
                         "    [ {'bar': {'zed': 1}} , 1]\n "
@@ -848,8 +848,11 @@ public class JsonParserBaseTest {
                 )
         );
 
-
-        boolean ok = map.get ( "PI" ).equals ( 3.141E-10 ) || die ( "" + map.get ( "PI" ) );
+        Object o = map.get("PI");
+        if (o instanceof BigDecimal) {
+            o = ((BigDecimal) o).doubleValue();
+        }
+        boolean ok = o.equals ( 3.141E-10 ) || die ( "map " + map.get ( "PI" ) );
     }
 
 
@@ -897,7 +900,12 @@ public class JsonParserBaseTest {
         );
 
 
-        boolean ok = map.get ( "v" ).equals ( 1.7976931348623157E308 ) || die ( "map " + map.get ( "v" ) );
+        Object o = map.get ( "v" );
+
+        if (o instanceof BigDecimal) {
+            o = ((BigDecimal) o).doubleValue();
+        }
+        boolean ok = o.equals ( 1.7976931348623157E308 ) || die ( "map " + map.get ( "v" ) );
     }
 
     //
@@ -1011,7 +1019,13 @@ public class JsonParserBaseTest {
         );
 
 
-        boolean ok = map.get ( "v" ).equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
+        Object o = map.get ( "v" );
+
+        if (o instanceof BigDecimal) {
+            o = ((BigDecimal) o).doubleValue();
+        }
+
+        boolean ok = o.equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
     }
 
 

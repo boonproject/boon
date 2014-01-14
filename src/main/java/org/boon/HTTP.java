@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
@@ -161,6 +162,23 @@ public class HTTP {
             public String tryIt() throws Exception {
                 URLConnection connection;
                 connection = doGet( url, headers, "application/json", null );
+                return extractResponseString( connection );
+            }
+        } );
+
+    }
+
+
+    public static String getJSONWithParams(
+            final String url,
+            final Map<String, ?> headers, final Map<String, ?> params
+    ) {
+
+        return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
+            @Override
+            public String tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet( url, headers, "application/json", null, params );
                 return extractResponseString( connection );
             }
         } );
@@ -433,10 +451,34 @@ public class HTTP {
                                         String contentType, String charset ) throws IOException {
         URLConnection connection;/* Handle output. */
         connection = new URL( url ).openConnection();
+
+        manageContentTypeHeaders ( contentType, charset, connection );
+
+        manageHeaders( headers, connection );
+
+        return connection;
+    }
+
+    private static URLConnection doGet( String url, Map<String, ?> headers,
+                                        String contentType, String charset, Map<String, ?> params ) throws IOException {
+
+        if (charset==null) {
+            charset = StandardCharsets.UTF_8.name ();
+        }
+        URLConnection connection;/* Handle output. */
+        connection = new URL( url ).openConnection();
+
         manageContentTypeHeaders( contentType, charset, connection );
 
         manageHeaders( headers, connection );
 
+        final Set<String> keys = params.keySet();
+
+        for ( String key : keys ) {
+
+            Object value = params.get( key );
+            connection.addRequestProperty ( URLEncoder.encode (key, charset), URLEncoder.encode ( value.toString(), charset) );
+        }
         return connection;
     }
 
