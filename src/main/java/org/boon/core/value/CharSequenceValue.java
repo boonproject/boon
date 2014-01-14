@@ -15,77 +15,43 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Date;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
 
 public class CharSequenceValue implements Value, CharSequence {
 
+    private final Type type;
+    private final boolean checkDate;
+    private final boolean decodeStrings;
+
     private char[] buffer;
-    private boolean checkDate;
     private boolean chopped;
     private int startIndex;
     private int endIndex;
-    private Type type;
-    private boolean decodeStrings;
     private Object value;
-
-
-
-    public CharSequenceValue() {
-
-    }
-
-    public CharSequenceValue( boolean chop, Type type, int startIndex, int endIndex, char[] buffer ) {
-        this.type = type;
-
-
-        try {
-            if ( chop ) {
-
-                this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
-                this.startIndex = 0;
-                this.endIndex = this.buffer.length;
-                chopped = true;
-            } else {
-                this.startIndex = startIndex;
-                this.endIndex = endIndex;
-                this.buffer = buffer;
-            }
-        } catch ( Exception ex ) {
-            puts ( "exception", ex, "start", startIndex, "end", endIndex );
-            Exceptions.handle ( ex );
-
-        }
-    }
-
 
     public CharSequenceValue( boolean chop, Type type, int startIndex, int endIndex, char[] buffer,
                               boolean encoded, boolean checkDate ) {
         this.type = type;
         this.checkDate = checkDate;
-
-        try {
-            if ( chop ) {
-
-
+        this.decodeStrings = encoded;
+        
+        if ( chop ) {
+            try {
                 this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
-                this.startIndex = 0;
-                this.endIndex = this.buffer.length;
-            } else {
-                this.startIndex = startIndex;
-                this.endIndex = endIndex;
-                this.buffer = buffer;
+            } catch ( Exception ex ) {
+                Exceptions.handle ( ex );
             }
+            this.startIndex = 0;
+            this.endIndex = this.buffer.length;
+            this.chopped = true;
 
-            this.decodeStrings = encoded;
-
-        } catch ( Exception ex ) {
-            Exceptions.handle ( ex );
+        } else {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.buffer = buffer;
         }
-
     }
-
 
     public String toString () {
         if ( startIndex == 0 && endIndex == buffer.length ) {
@@ -94,7 +60,6 @@ public class CharSequenceValue implements Value, CharSequence {
             return new String ( buffer, startIndex, ( endIndex - startIndex ) );
         }
     }
-
 
     @Override
     public final Object toValue () {
@@ -207,13 +172,8 @@ public class CharSequenceValue implements Value, CharSequence {
 
     @Override
     public final CharSequence subSequence ( int start, int end ) {
-
-        CharSequenceValue b = new CharSequenceValue ();
-        b.startIndex = start;
-        b.endIndex = end;
-        return b;
+        return new CharSequenceValue (false, type, start, end, buffer, decodeStrings, checkDate);
     }
-
 
     public BigDecimal bigDecimalValue () {
         return new BigDecimal ( buffer, startIndex, endIndex - startIndex );
@@ -236,7 +196,6 @@ public class CharSequenceValue implements Value, CharSequence {
     public String stringValueEncoded () {
         return JsonStringDecoder.decode ( buffer, startIndex, endIndex );
     }
-
 
     @Override
     public Date dateValue () {
@@ -262,9 +221,7 @@ public class CharSequenceValue implements Value, CharSequence {
 
             return new Date ( Dates.utc ( longValue () ) );
         }
-
     }
-
 
     @Override
     public int intValue () {
@@ -292,7 +249,6 @@ public class CharSequenceValue implements Value, CharSequence {
         }
     }
 
-
     public byte byteValue () {
         return ( byte ) intValue ();
     }
@@ -300,7 +256,6 @@ public class CharSequenceValue implements Value, CharSequence {
     public short shortValue () {
         return ( short ) intValue ();
     }
-
 
     private static float fpowersOf10[] = {
             1.0f,
@@ -318,7 +273,6 @@ public class CharSequenceValue implements Value, CharSequence {
     @Override
     public double doubleValue () {
         return CharScanner.doubleValue ( this.buffer, startIndex, endIndex );
-
     }
 
     @Override
@@ -341,7 +295,6 @@ public class CharSequenceValue implements Value, CharSequence {
         } else {
             sign = 1.0f;
         }
-
 
         int length = endIndex - startIndex;
         if ( length > 10 ) {
@@ -385,12 +338,9 @@ public class CharSequenceValue implements Value, CharSequence {
                 return value / power;
 
             }
-
-
         }
 
         return Float.parseFloat ( toString () ) * sign;
-
     }
 
     public final void chop () {
@@ -402,13 +352,8 @@ public class CharSequenceValue implements Value, CharSequence {
         }
     }
 
-
-
-
     @Override
     public char charValue () {
         return buffer[startIndex];
     }
-
-
 }

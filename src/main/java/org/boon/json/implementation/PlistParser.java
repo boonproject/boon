@@ -1,73 +1,62 @@
 package org.boon.json.implementation;
 
-import org.boon.core.Typ;
 import org.boon.core.Type;
 import org.boon.core.Value;
-import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by rick on 12/21/13.
  */
 public class PlistParser extends JsonParserCharArray {
 
-
-
-
-
-
-    private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.EMPTY_LIST );
-
+    private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.emptyList() );
 
     private final boolean useValues;
     private final boolean chop;
     private final boolean lazyChop;
+    private final boolean checkDates;
 
-
-    public PlistParser( FieldsAccessor fieldsAccessor ) {
-
-        super( fieldsAccessor );
-
-        useValues = false;
-        chop = false;
-        lazyChop = true;
-
-
+    public PlistParser(  ) {
+        this( FieldAccessMode.FIELD );
     }
 
+    public PlistParser( FieldAccessMode mode ) {
+        this( mode, true );
+    }
+
+    public PlistParser( FieldAccessMode mode, boolean useAnnotations ) {
+        this( FieldAccessMode.create(mode, useAnnotations) );
+    }
+
+    public PlistParser(FieldsAccessor fieldsAccessor) {
+        this( fieldsAccessor, false );
+    }
 
     public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues ) {
-        super( fieldsAccessor );
-        this.useValues = useValues;
-        chop = false;
-        lazyChop = true;
-
+        this( fieldsAccessor, useValues, false );
     }
-
 
     public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop ) {
-        super( fieldsAccessor );
-        this.useValues = useValues;
-        this.chop = chop;
-        lazyChop = !chop;
-
+        this( fieldsAccessor, useValues, chop, !chop );
     }
 
-
     public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop ) {
+        this( fieldsAccessor, useValues, chop, lazyChop, true );
+    }
+
+    public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop, boolean checkDates ) {
         super( fieldsAccessor );
         this.useValues = useValues;
         this.chop = chop;
         this.lazyChop = lazyChop;
-
+        this.checkDates = checkDates;
     }
-
 
     private Value decodeJsonObjectLax() {
 
@@ -76,7 +65,6 @@ public class PlistParser extends JsonParserCharArray {
 
         ValueMap map = useValues ? new ValueMapImpl() : new LazyValueMap( lazyChop );
         Value value = new ValueContainer ( map );
-
 
         skipWhiteSpace();
         int startIndexOfKey = __index;
@@ -168,7 +156,6 @@ public class PlistParser extends JsonParserCharArray {
                         }
                     }
                     break done;
-
             }
         }
 
@@ -215,7 +202,6 @@ public class PlistParser extends JsonParserCharArray {
         return new CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
     }
 
-
     protected final Object decodeValue() {
         return this.decodeValueInternal();
     }
@@ -223,10 +209,8 @@ public class PlistParser extends JsonParserCharArray {
     private Value decodeValueInternal() {
         Value value = null;
 
-
         for (; __index < charArray.length; __index++ ) {
             skipWhiteSpace();
-
 
             switch ( __currentChar ) {
 
@@ -413,9 +397,7 @@ public class PlistParser extends JsonParserCharArray {
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
 
         return value;
-
     }
-
 
     private boolean isNull() {
 
@@ -430,7 +412,6 @@ public class PlistParser extends JsonParserCharArray {
         return false;
     }
 
-
     private boolean isTrue() {
 
         if ( __index + TRUE.length <= charArray.length ) {
@@ -442,10 +423,8 @@ public class PlistParser extends JsonParserCharArray {
 
             }
         }
-
         return false;
     }
-
 
     private boolean isFalse() {
 
@@ -473,17 +452,13 @@ public class PlistParser extends JsonParserCharArray {
 
             if (isPLISTDelimiter( currentChar )) break;
             else if (currentChar == '\\') break;
-
         }
 
-
-        Value value = this.extractLaxString( startIndex, index, encoded, true );
+        Value value = this.extractLaxString( startIndex, index, encoded, checkDates );
 
         __index = index;
         return value;
-
     }
-
 
     private Value decodeStringPlist(  ) {
 
@@ -497,17 +472,14 @@ public class PlistParser extends JsonParserCharArray {
 
         final int startIndex = index;
 
-
         boolean encoded = hasEscapeChar ( array, index, indexHolder );
         index = indexHolder[0];
-
 
         if (encoded)  {
             index = findEndQuote ( array, index );
         }
 
-        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, true );
-
+        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, checkDates );
 
         if ( index < array.length ) {
             index++;
@@ -523,9 +495,7 @@ public class PlistParser extends JsonParserCharArray {
             __index++;
         }
 
-
         skipWhiteSpace();
-
 
                 /* the list might be empty  */
         if ( __currentChar == ')' ) {
@@ -543,17 +513,14 @@ public class PlistParser extends JsonParserCharArray {
 
         Value value = new ValueContainer ( list );
 
-
         skipWhiteSpace();
 
         do {
-
             skipWhiteSpace();
 
             Object arrayItem = decodeValueInternal();
 
             list.add( arrayItem );
-
 
             skipWhiteSpace();
 
@@ -578,16 +545,10 @@ public class PlistParser extends JsonParserCharArray {
             }
         } while ( this.hasMore() );
 
-
         return value;
-
     }
-
-
 
     protected Object decodeFromChars( char[] cs ) {
         return ( ( Value ) super.decodeFromChars( cs ) ).toValue();
     }
-
-
 }
