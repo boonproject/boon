@@ -145,13 +145,20 @@ public class CharSequenceValue implements Value, CharSequence {
                 }
             case STRING:
                 if ( checkDate ) {
+                    Date date = null;
                     if ( Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex ) ) {
                         if (Dates.isJsonDate ( buffer,startIndex, endIndex )) {
-                            return Dates.fromJsonDate ( buffer, startIndex, endIndex );
+                            date =  Dates.fromJsonDate ( buffer, startIndex, endIndex );
                         } else if (Dates.isISO8601( buffer, startIndex, endIndex )) {
-                            return Dates.fromISO8601( buffer, startIndex, endIndex );
+                            date =  Dates.fromISO8601( buffer, startIndex, endIndex );
                         } else {
                             return stringValue();
+                        }
+
+                        if (date == null) {
+                            return stringValue ();
+                        } else {
+                            return date;
                         }
                     }
                 }

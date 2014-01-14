@@ -620,6 +620,7 @@ public class Dates {
 
     public static Date fromISO8601( char[] charArray, int from, int to ) {
 
+        try {
         int length = to - from;
         if ( isISO8601( charArray, from, to ) ) {
             int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
@@ -650,11 +651,14 @@ public class Dates {
         } else {
             return null;
         }
+        } catch (Exception ex) {
+            return null;
+        }
 
     }
 
     public static Date fromJsonDate( char[] charArray, int from, int to ) {
-
+        try {
         if ( isJsonDate( charArray, from, to ) ) {
             int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
             int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
@@ -673,6 +677,9 @@ public class Dates {
             return toDate( tz, year, month, day, hour, minute, second, miliseconds );
 
         } else {
+            return null;
+        }
+        } catch (Exception ex) {
             return null;
         }
 
