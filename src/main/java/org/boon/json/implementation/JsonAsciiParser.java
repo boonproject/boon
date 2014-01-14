@@ -3,43 +3,26 @@ package org.boon.json.implementation;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonParser;
-import org.boon.primitive.CharBuf;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by rick on 12/15/13.
  */
 public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonParser {
 
-
     public JsonAsciiParser() {
-        super( FieldAccessMode.create( FieldAccessMode.FIELD, true ) );
-        this.charset = StandardCharsets.US_ASCII;
-
+    	this( FieldAccessMode.FIELD );
     }
 
     public JsonAsciiParser( FieldAccessMode mode ) {
-        super( FieldAccessMode.create( mode, true ) );
-        this.charset = StandardCharsets.US_ASCII;
-
+        this( FieldAccessMode.create( mode, true ) );
     }
 
     public JsonAsciiParser( FieldsAccessor fieldsAccessor ) {
         super( fieldsAccessor );
         this.charset = StandardCharsets.US_ASCII;
-
     }
-
-
-
-
-
 
     protected final String decodeString() {
 
@@ -53,11 +36,9 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
 
         final int startIndex = index;
 
-
         boolean escape = false;
 
         boolean hasEscaped = false;
-
 
         while ( true ) {
             currentChar = array[ index ];
@@ -76,11 +57,8 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
             if ( index >= array.length ) break;
         }
 
-
         String value;
         if ( hasEscaped ) {
-
-
             value = builder.decodeJsonStringAscii(array, startIndex, index).toStringAndRecycle();
 
         } else {
@@ -93,6 +71,4 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonPars
         __index = index;
         return value;
     }
-
-
 }

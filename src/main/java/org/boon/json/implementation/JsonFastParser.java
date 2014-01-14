@@ -1,9 +1,7 @@
 package org.boon.json.implementation;
 
-import org.boon.core.Typ;
 import org.boon.core.Type;
 import org.boon.core.Value;
-import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
@@ -12,7 +10,6 @@ import org.boon.json.JsonException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -21,58 +18,48 @@ import java.util.Map;
  */
 public class JsonFastParser extends JsonParserCharArray {
 
-
-    private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.EMPTY_LIST );
-
+    private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.emptyList() );
 
     private final boolean useValues;
     private final boolean chop;
     private final boolean lazyChop;
+    private final boolean checkDates;
 
     public JsonFastParser(  ) {
-        this( FieldAccessMode.create( FieldAccessMode.FIELD, true ) );
+        this( FieldAccessMode.FIELD );
+    }
+
+    public JsonFastParser( FieldAccessMode mode ) {
+        this( mode, true );
     }
 
     public JsonFastParser( FieldAccessMode mode, boolean useAnnotations ) {
         this( FieldAccessMode.create(mode, useAnnotations) );
     }
 
-
     public JsonFastParser(FieldsAccessor fieldsAccessor) {
-        super( fieldsAccessor );
-        useValues = false;
-        chop = false;
-        lazyChop = true;
-
+        this( fieldsAccessor, false );
     }
-
 
     public JsonFastParser( FieldsAccessor fieldsAccessor, boolean useValues ) {
-        super( fieldsAccessor );
-
-        this.useValues = useValues;
-        chop = false;
-        lazyChop = true;
+        this( fieldsAccessor, useValues, false );
     }
-
 
     public JsonFastParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop ) {
-        super( fieldsAccessor );
-
-        this.useValues = useValues;
-        this.chop = chop;
-        lazyChop = !chop;
-
+        this( fieldsAccessor, useValues, chop, !chop );
     }
 
-
     public JsonFastParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop ) {
+        this( fieldsAccessor, useValues, chop, lazyChop, true );
+    }
+
+    public JsonFastParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop, boolean checkDates ) {
         super( fieldsAccessor );
         this.useValues = useValues;
         this.chop = chop;
         this.lazyChop = lazyChop;
+        this.checkDates = checkDates;
     }
-
 
     protected final Value decodeJsonObjectLazyFinalParse() {
 
@@ -133,11 +120,9 @@ public class JsonFastParser extends JsonParserCharArray {
 
     private Value decodeValueOverlay() {
 
-
         skipWhiteSpace ();
 
         switch ( __currentChar ) {
-
 
             case '"':
                 return decodeStringOverlay ();
@@ -156,7 +141,6 @@ public class JsonFastParser extends JsonParserCharArray {
 
             case '[':
                 return decodeJsonArrayOverlay ();
-
 
             case '1':
             case '2':
@@ -177,15 +161,10 @@ public class JsonFastParser extends JsonParserCharArray {
 
                 throw new JsonException ( exceptionDetails ( "Unable to determine the " +
                         "current character, it is not a string, number, array, or object" ) );
-
-
         }
-
     }
 
-
     private final Value decodeNumberOverlay(final boolean minus) {
-
 
         char[] array = charArray;
 
@@ -197,8 +176,6 @@ public class JsonFastParser extends JsonParserCharArray {
         if (minus && index + 1 < array.length) {
             index++;
         }
-
-
 
         while (true) {
             currentChar = array[index];
@@ -223,12 +200,7 @@ public class JsonFastParser extends JsonParserCharArray {
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
 
         return value;
-
-
     }
-
-
-
 
     private Value decodeStringOverlay() {
 
@@ -242,17 +214,14 @@ public class JsonFastParser extends JsonParserCharArray {
 
         final int startIndex = index;
 
-
         boolean encoded = hasEscapeChar ( array, index, indexHolder );
         index = indexHolder[0];
 
-
         if (encoded)  {
-                index = findEndQuote ( array, index );
+            index = findEndQuote ( array, index );
         }
 
-        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, true );
-
+        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, checkDates );
 
         if ( index < array.length ) {
             index++;
@@ -261,8 +230,6 @@ public class JsonFastParser extends JsonParserCharArray {
         __index = index;
         return value;
     }
-
-
 
     private Value decodeJsonArrayOverlay() {
 
@@ -273,15 +240,11 @@ public class JsonFastParser extends JsonParserCharArray {
 
         skipWhiteSpace ();
 
-
-
-
         /* the list might be empty  */
         if ( __currentChar == ']' ) {
             __index++;
             return EMPTY_LIST;
         }
-
 
         List<Object> list;
 
@@ -293,7 +256,6 @@ public class JsonFastParser extends JsonParserCharArray {
 
         Value value = new ValueContainer ( list );
 
-
         Value item;
 
         arrayLoop:
@@ -301,7 +263,6 @@ public class JsonFastParser extends JsonParserCharArray {
             item = decodeValueOverlay ();
 
             list.add ( item );
-
 
             skipWhiteSpace ();
 
@@ -317,15 +278,10 @@ public class JsonFastParser extends JsonParserCharArray {
                                 " but got \nthe current character of  %s " +
                                 " on array size of %s \n", charDescription ( __currentChar ), list.size () )
                 );
-
             }
         }
         return value;
     }
-
-
-
-
 
     protected final Object decodeFromChars( char[] cs ) {
         Value value =  ( ( Value ) super.decodeFromChars ( cs ) );
@@ -335,6 +291,4 @@ public class JsonFastParser extends JsonParserCharArray {
             return value;
         }
     }
-
-
 }
