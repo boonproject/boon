@@ -718,10 +718,11 @@ public class BeanUtils {
         }
     }
 
+
     private static <T> T fieldByFieldCopy( T item ) {
 
         final Class<T> aClass = (Class<T>) item.getClass();
-        Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( item.getClass() );
+        Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( aClass );
 
         T clone = Reflection.newInstance( aClass );
 
@@ -742,7 +743,6 @@ public class BeanUtils {
                 }
             } else if (field.isPrimitive()) {
                 field.setValue( clone, field.getValue( item ) );
-
             } else {
                 Object value = field.getObject( item );
 
@@ -760,5 +760,94 @@ public class BeanUtils {
         return clone;
     }
 
+
+
+
+    public static void copyProperties( Object src, Object dest ) {
+         fieldByFieldCopy( src, dest );
+    }
+
+    private static void fieldByFieldCopy( Object src, Object dst ) {
+
+        final Class<?> srcClass = src.getClass();
+        Map<String, FieldAccess> srcFields = Reflection.getAllAccessorFields( srcClass );
+
+
+        final Class<?> dstClass =  dst.getClass();
+        Map<String, FieldAccess> dstFields = Reflection.getAllAccessorFields ( dstClass );
+
+        for ( FieldAccess srcField : srcFields.values() ) {
+            try {
+                if ( srcField.isStatic() ) {
+                    continue;
+                }
+
+                FieldAccess dstField = dstFields.get ( srcField.getName() );
+                if (dstField == null ) {
+                    continue;
+                }
+
+                if (!srcField.isPrimitive() && !Typ.isBasicType( srcField.getType() ))  {
+
+
+
+                    Object srcValue = srcField.getObject( src );
+                    if (srcValue == null) {
+                        if ( !dstField.isPrimitive () ) {
+                            dstField.setObject(dst, null);
+                        }
+                    } else {
+
+                        /* if the field is compatible then set it. */
+                        if (    dstField.getType() == srcValue.getClass() ||
+                                Typ.isSuperType ( dstField.getType(), srcValue.getClass() ) ) {
+
+                            dstField.setObject(dst, copy( srcField.getObject ( src ) ));
+                        } else {
+                            if ( srcValue instanceof Collection && dstField.getComponentClass() != null
+                                    && Typ.isCollection ( dstField.getType () ) ) {
+                                Collection srcCollection = (Collection) srcValue;
+
+                                Collection dstCollection = Reflection.createCollection( dstField.getType(), srcCollection.size() );
+                                for ( Object srcComponentValue : srcCollection ) {
+
+                                    Object newInstance = Reflection.newInstance( dstField.getComponentClass() );
+                                    fieldByFieldCopy( srcComponentValue, newInstance );
+                                    dstCollection.add ( newInstance );
+                                }
+
+                                dstField.setObject ( dst, dstCollection );
+
+                            } else {
+                                if (dstField.typeEnum () == Type.ABSTRACT || dstField.typeEnum () == Type.INTERFACE) {
+                                    //no op
+                                } else {
+                                    Object newInstance = Reflection.newInstance( dstField.getType() );
+                                    fieldByFieldCopy( srcField.getObject( src ), newInstance );
+                                    dstField.setObject ( dst, newInstance );
+                                }
+                            }
+                        }
+                    }
+                } else if (srcField.isPrimitive()) {
+                    dstField.setValue( dst, srcField.getValue( src ) );
+
+                } else {
+                    Object value = srcField.getObject( src );
+
+                    if (value == null) {
+                        if ( !dstField.isPrimitive () ) {
+                            dstField.setObject(dst, null);
+                        }
+                    } else {
+                        dstField.setValue( dst,  value  );
+                    }
+
+                }
+            }catch (Exception ex) {
+                 Exceptions.handle( ex );
+            }
+        }
+    }
 
 }

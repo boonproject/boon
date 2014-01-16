@@ -397,8 +397,11 @@ public class Conversions {
     }
 
     public static <T extends Enum> T toEnum( Class<T> cls, String value ) {
-        return  (T) Enum.valueOf( cls, value );
-
+        try {
+            return  (T) Enum.valueOf( cls, value );
+        } catch ( Exception ex ) {
+            return  (T) Enum.valueOf( cls, value.toUpperCase().replace( '-', '_' ) );
+        }
     }
 
 
