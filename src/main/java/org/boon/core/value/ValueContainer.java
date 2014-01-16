@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 
 public class ValueContainer implements CharSequence, Value {
@@ -50,12 +51,12 @@ public class ValueContainer implements CharSequence, Value {
 
     @Override
     public int intValue() {
-        return die(int.class, "intValue not supported");
+        return die(int.class, sputs("intValue not supported for type ", type) );
     }
 
     @Override
     public long longValue() {
-        return die(long.class, "intValue not supported");
+        return die(int.class, sputs("intValue not supported for type ", type) );
     }
 
 

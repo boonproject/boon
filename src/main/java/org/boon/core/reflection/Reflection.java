@@ -13,6 +13,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Str.*;
 
@@ -516,12 +518,29 @@ public class Reflection {
         T newInstance = null;
 
         try {
-            if ( _useUnsafe ) {
-                newInstance = ( T ) getUnsafe().allocateInstance( clazz );
-            } else {
+            /* See if there is a no arg constructor. */
+            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor ( null );
+            if (declaredConstructor !=null ) {
+                /* If there was a no argument consturctor, then use it. */
                 newInstance = clazz.newInstance();
+            } else {
+                if ( _useUnsafe ) {
+                    newInstance = ( T ) getUnsafe().allocateInstance( clazz );
+                } else {
+                    die ( sputs( clazz.getName (), "does not have a no arg constructor and unsafe is not turned on" ) );
+                }
+
             }
         } catch ( Exception ex ) {
+            try {
+                if ( _useUnsafe ) {
+                    newInstance = ( T ) getUnsafe().allocateInstance( clazz );
+                    return newInstance; //we handled it.
+                }
+            } catch ( Exception ex2 ) {
+                handle( ex2 );
+            }
+
             handle( ex );
         }
 

@@ -183,56 +183,9 @@ public class MapObjectConversion {
 
 
             if (ovalue instanceof Value) {
-                Value value = (Value) ovalue;
-
-                if ( value.isContainer() ) {
-                    Object objValue;
-
-                    objValue = value.toValue();
-                    if ( objValue instanceof Map ) {
-
-
-
-                        Class <?> clazz = field.getType();
-                        if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
-                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
-
-                        } else {
-
-                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
-                        }
-                        field.setObject( newInstance, objValue );
-                    } else if ( objValue instanceof Collection ) {
-                        handleCollectionOfValues(fieldsAccessor, newInstance, field,
-                                ( Collection<Value> ) objValue );
-                    }
-
-                } else {
-                    field.setFromValue( newInstance, value );
-                }
-
+                fromValueMapHandleValueCase ( fieldsAccessor, newInstance, field, ( Value ) ovalue );
             } else {
-
-                if ( ovalue instanceof Map ) {
-
-
-
-                    Class <?> clazz = field.getType();
-                    if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
-                        ovalue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) ovalue, field.getType() );
-
-                    } else {
-
-                        ovalue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) ovalue );
-                    }
-                    field.setObject( newInstance, ovalue );
-                } else if ( ovalue instanceof Collection ) {
-                    handleCollectionOfValues(fieldsAccessor, newInstance, field,
-                            ( Collection<Value> ) ovalue );
-                } else {
-                    field.setValue( newInstance, ovalue );
-                }
-
+                fromMapHandleNonValueCase ( fieldsAccessor, newInstance, field, ovalue );
             }
 
         }
@@ -240,6 +193,55 @@ public class MapObjectConversion {
         return newInstance;
     }
 
+    private static <T> void fromMapHandleNonValueCase( FieldsAccessor fieldsAccessor, T newInstance, FieldAccess field, Object ovalue ) {
+        try {
+            if ( ovalue instanceof Map ) {
+                Class <?> clazz = field.getType();
+                if ( !clazz.isInterface () && !Typ.isAbstract ( clazz ) )  {
+                    ovalue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) ovalue, field.getType() );
+                } else {
+                    ovalue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) ovalue );
+                }
+                field.setObject( newInstance, ovalue );
+            } else if ( ovalue instanceof Collection ) {
+                handleCollectionOfValues(fieldsAccessor, newInstance, field,
+                        ( Collection<Value> ) ovalue );
+            } else {
+                field.setValue( newInstance, ovalue );
+            }
+        } catch (Exception ex) {
+            Exceptions.handle ( sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
+                    "fieldType", field.getType().getName(), "object from map", ovalue), ex );
+        }
+    }
+
+    private static <T> void fromValueMapHandleValueCase( FieldsAccessor fieldsAccessor, T newInstance, FieldAccess field, Value value ) {
+        Object objValue = null;
+
+        try {
+            if ( value.isContainer() ) {
+                    objValue = value.toValue();
+                    if ( objValue instanceof Map ) {
+                        Class <?> clazz = field.getType();
+                        if ( !clazz.isInterface () && !Typ.isAbstract ( clazz ) )  {
+                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
+                        } else {
+                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
+                        }
+                        field.setObject( newInstance, objValue );
+                    } else if ( objValue instanceof Collection ) {
+                        handleCollectionOfValues(fieldsAccessor, newInstance, field,
+                                ( Collection<Value> ) objValue );
+                    }
+            } else {
+                field.setFromValue( newInstance, value );
+            }
+        } catch ( Exception ex ) {
+            Exceptions.handle ( sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
+                    "fieldType", field.getType().getName(), "object from map", "objValue", objValue, "value", value ), ex );
+
+        }
+    }
 
 
     @SuppressWarnings ( "unchecked" )
