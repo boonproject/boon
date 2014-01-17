@@ -629,6 +629,8 @@ public class Conversions {
             return ( List ) value;
         } else if ( value instanceof Collection ) {
             return new ArrayList( ( Collection ) value );
+        } else if (value == null ) {
+            return new ArrayList( );
         } else {
             ArrayList list = new ArrayList( Reflection.len( value ) );
             Iterator<Object> iterator = iterator( Typ.object, value );

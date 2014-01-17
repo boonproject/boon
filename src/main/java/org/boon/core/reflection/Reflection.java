@@ -481,8 +481,10 @@ public class Reflection {
             return ( ( Collection<?> ) obj ).size();
         } else if ( obj instanceof Map ) {
             return ( ( Map<?, ?> ) obj ).size();
+        } else if ( obj == null ) {
+            return 0;
         } else {
-            die( "Not an array like object" );
+            die( sputs("Not an array like object", obj, obj.getClass()) );
             return 0; //will never get here.
         }
     }

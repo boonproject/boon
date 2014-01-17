@@ -70,7 +70,13 @@ public class FilterDefault implements Filter, FilterComposer {
      */
     private ResultSet mainQueryPlan( Criteria[] expressions ) {
 
+
+
         ResultSetInternal results = new ResultSetImpl( this.fields );
+
+        if (expressions == null || expressions.length == 0) {
+            results.addResults ( searchableCollection.all() );
+        }
 
         /* I am sure this looked easy to read when I wrote it.
          * If there is only one expression and first expression is a group then
