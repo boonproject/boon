@@ -1208,7 +1208,9 @@ public class CharBuf extends Writer implements CharSequence {
         }
     }
 
-
+    public final CharBuf decodeJsonString ( char[] chars ) {
+        return decodeJsonString ( chars, 0, chars.length );
+    }
     public final CharBuf decodeJsonString ( char[] chars, int start, int to ) {
         int len = to - start;
 

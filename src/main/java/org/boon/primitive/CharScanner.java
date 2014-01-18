@@ -1,22 +1,86 @@
 package org.boon.primitive;
 
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class CharScanner {
 
 
-    public static final char[] DIGITS = { '0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9' };
 
 
-    public static boolean isDigit( char a ) {
-        for ( int j = 0; j < DIGITS.length; j++ ) {
-            if ( a == DIGITS[ j ] ) {
+
+    protected static final int COMMA = ',';
+    protected static final int CLOSED_CURLY = '}';
+    protected static final int CLOSED_BRACKET = ']';
+
+    protected static final int LETTER_E = 'e';
+    protected static final int LETTER_BIG_E = 'E';
+
+
+    protected static final int DECIMAL_POINT = '.';
+
+
+    protected static final int ALPHA_0 = '0';
+    protected static final int ALPHA_1 = '1';
+    protected static final int ALPHA_2 = '2';
+    protected static final int ALPHA_3 = '3';
+    protected static final int ALPHA_4 = '4';
+    protected static final int ALPHA_5 = '5';
+    protected static final int ALPHA_6 = '6';
+    protected static final int ALPHA_7 = '7';
+    protected static final int ALPHA_8 = '8';
+    protected static final int ALPHA_9 = '9';
+
+    protected static final int MINUS = '-';
+    protected static final int PLUS = '+';
+
+
+
+    protected static final int DOUBLE_QUOTE = '"';
+
+    protected static final int ESCAPE = '\\';
+
+
+    public static boolean isDigit( int c ) {
+        return c >= ALPHA_0 && c <= ALPHA_9;
+    }
+
+
+    public static boolean isDecimalDigit( int c ) {
+        return isDigit ( c ) || isDecimalChar ( c );
+    }
+
+
+
+    public static boolean isDecimalChar ( int currentChar ) {
+        switch ( currentChar ) {
+            case MINUS:
+            case PLUS:
+            case LETTER_E:
+            case LETTER_BIG_E:
+            case DECIMAL_POINT:
                 return true;
+        }
+        return false;
+
+    }
+
+
+    public static boolean hasDecimalChar ( char [] chars) {
+
+        for (int index =0; index < chars.length; index++) {
+            switch ( chars[index] ) {
+                case MINUS:
+                case PLUS:
+                case LETTER_E:
+                case LETTER_BIG_E:
+                case DECIMAL_POINT:
+                    return true;
             }
         }
         return false;
+
     }
 
     public static boolean isDigits( final char[] inputArray ) {
@@ -367,9 +431,53 @@ public class CharScanner {
         return true;
     }
 
+
+
+    public static boolean isLong( char[] digitChars ) {
+        return isLong ( digitChars, 0, digitChars.length );
+    }
+
+    public static boolean isLong( char[] digitChars, int offset, int len
+                                   ) {
+        String cmpStr = digitChars[offset]=='-' ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
+        int cmpLen = cmpStr.length();
+        if ( len < cmpLen ) return true;
+        if ( len > cmpLen ) return false;
+
+        for ( int i = 0; i < cmpLen; ++i ) {
+            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
+            if ( diff != 0 ) {
+                return ( diff < 0 );
+            }
+        }
+        return true;
+    }
+
     public static boolean isInteger( char[] digitChars, int offset, int len,
                                      boolean negative ) {
         String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
+        int cmpLen = cmpStr.length();
+        if ( len < cmpLen ) return true;
+        if ( len > cmpLen ) return false;
+
+        for ( int i = 0; i < cmpLen; ++i ) {
+            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
+            if ( diff != 0 ) {
+                return ( diff < 0 );
+            }
+        }
+        return true;
+    }
+
+
+    public static boolean isInteger( char[] digitChars ) {
+           return isInteger ( digitChars, 0, digitChars.length );
+    }
+
+    public static boolean isInteger( char[] digitChars, int offset, int len) {
+
+
+        String cmpStr = (digitChars[offset] == '-') ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
         int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
@@ -489,6 +597,11 @@ public class CharScanner {
         return val + ( long ) parseInt( digitChars, offset + len1, 9 );
     }
 
+
+    public static long parseLong( char[] digitChars ) {
+        return parseLong ( digitChars, 0, digitChars.length );
+    }
+
     public static long parseLongIgnoreDot( char[] digitChars, int offset, int len ) {
         int len1 = len - 9;
         long val = parseIntIgnoreDot( digitChars, offset, len1 ) * L_BILLION;
@@ -497,6 +610,9 @@ public class CharScanner {
 
     private final static long L_BILLION = 1000000000;
 
+    public static double doubleValue( char[] buffer) {
+        return doubleValue ( buffer, 0, buffer.length );
+    }
 
     public static double doubleValue( char[] buffer, int startIndex, int endIndex ) {
 
@@ -619,4 +735,72 @@ public class CharScanner {
     };
 
 
+
+
+    public static int skipWhiteSpace( char [] array, int index ) {
+        int c;
+        for (; index< array.length; index++ ) {
+            c = array [index];
+            if ( c > 32 ) {
+
+                return index;
+            }
+        }
+        return index-1;
+    }
+
+    public static char[] readNumber( char[] array, int idx ) {
+        final int startIndex = idx;
+
+        while (true) {
+            if ( !CharScanner.isDecimalDigit ( array[idx] )) {
+                break;
+            } else {
+                idx++;
+                if (idx  >= array.length) break;
+            }
+        }
+
+        return  Arrays.copyOfRange ( array, startIndex, idx );
+
+
+    }
+
+
+    public static char[] readNumber( char[] array, int idx, final int len ) {
+        final int startIndex = idx;
+
+        while (true) {
+            if ( !CharScanner.isDecimalDigit ( array[idx] )) {
+                break;
+            } else {
+                idx++;
+                if (idx  >= len ) break;
+            }
+        }
+
+        return  Arrays.copyOfRange ( array, startIndex, idx );
+
+
+    }
+
+
+
+
+
+
+
+
+    public static int  skipWhiteSpaceFast( char [] array ) {
+        int c;
+        int index=0;
+        for (; index< array.length; index++ ) {
+            c = array [index];
+            if ( c > 32 ) {
+
+                return index;
+            }
+        }
+        return index;
+    }
 }

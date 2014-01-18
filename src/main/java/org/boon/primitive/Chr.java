@@ -136,6 +136,17 @@ public class Chr {
         return false;
     }
 
+
+
+    @Universal
+    public static boolean in( int value, char[] array ) {
+        for ( int currentValue : array ) {
+            if ( currentValue == value ) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Universal
     public static boolean in( char value, int offset, char[] array ) {
         for ( int index = offset; index < array.length; index++ ) {
@@ -639,4 +650,36 @@ public class Chr {
     }
 
 
+    public static boolean equals( char[] chars1, char[] chars2 ) {
+        if (chars1==null && chars2 == null) {
+            return true;
+        }
+
+        if (chars1==null || chars2 == null) {
+            return false;
+        }
+
+        if (chars1.length != chars2.length) {
+            return false;
+        }
+
+        for (int index = 0; index < chars1.length; index++) {
+            if (chars1[index]!=chars2[index]) return false;
+        }
+
+        return true;
+    }
+
+    public static boolean equalsNoNullCheck( char[] chars1, char[] chars2 ) {
+
+        if (chars1.length != chars2.length) {
+            return false;
+        }
+
+        for (int index = 0; index < chars1.length; index++) {
+            if (chars1[index]!=chars2[index]) return false;
+        }
+
+        return true;
+    }
 }

@@ -80,7 +80,7 @@ public abstract class BaseJsonParser implements JsonParser {
 
 
 
-    protected String charDescription( char c ) {
+    protected String charDescription( int c ) {
         String charString;
         if ( c == ' ' ) {
             charString = "[SPACE]";
