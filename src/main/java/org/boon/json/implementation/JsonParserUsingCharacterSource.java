@@ -371,6 +371,16 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
     }
 
     @Override
+    public  <T> T parse( Class<T> type, Reader reader ) {
+
+        characterSource = new ReaderCharacterSource ( reader  );
+        T object = ( T )  this.decodeValue ();
+        return convert ( type, object );
+
+    }
+
+
+    @Override
     public Object parse ( byte[] value, Charset charset ) {
         characterSource = new CharArrayCharacterSource ( new String ( value, charset )  );
         return  this.decodeValue ();
@@ -384,6 +394,9 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         return  this.decodeValue ();
 
     }
+
+
+
 
 
 

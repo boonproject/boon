@@ -19,6 +19,7 @@ import org.boon.utils.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -312,7 +313,7 @@ public class JsonParserBaseTest {
     public void testParserSimpleMapWithNumber () {
 
         Object obj = jsonParser.parse ( Map.class,
-                " { 'foo': 1 }  ".replace ( '\'', '"' )
+                new StringReader ( " { 'foo': 1 }  ".replace ( '\'', '"' ) )
         );
 
         boolean ok = true;
@@ -337,7 +338,7 @@ public class JsonParserBaseTest {
 
         String fileContents = IO.read ( "files/AllTypes.json" );
 
-        AllTypes types = objectParser ().parse ( AllTypes.class, fileContents );
+        AllTypes types = objectParser ().parse ( AllTypes.class, new StringReader ( fileContents ) );
 
 
 

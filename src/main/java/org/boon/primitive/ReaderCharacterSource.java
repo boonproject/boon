@@ -125,6 +125,7 @@ public class ReaderCharacterSource implements CharacterSource {
 
 
         try {
+            reader.reset();
             reader.mark ( this.readAheadSize );
             reader.read ( readBuf );
 
@@ -205,6 +206,9 @@ public class ReaderCharacterSource implements CharacterSource {
 
 
         try {
+
+            reader.reset();
+
             reader.mark ( this.readAheadSize );
             int count = reader.read ( readBuf );
 
@@ -219,6 +223,7 @@ public class ReaderCharacterSource implements CharacterSource {
             if (results.length > 0) {
                 reader.read ( readBuf, 0, results.length );
             }
+            this.safeNextChar();
             return results;
 
 

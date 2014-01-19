@@ -104,12 +104,13 @@ public class ReaderCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar ();
+            int i = source.currentChar();
             switch ( i ) {
                 case '"':
                     found = true;
                     break loop;
             }
+            source.nextChar();
         }
 
         boolean ok = found || die("not found");
@@ -130,12 +131,13 @@ public class ReaderCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar ();
+            int i = source.currentChar();
             switch ( i ) {
                 case '"':
                     found = true;
                     break loop;
             }
+            source.nextChar();
         }
 
         boolean ok = found || die("not found");
@@ -155,12 +157,13 @@ public class ReaderCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar ();
+            int i = source.currentChar();
             switch ( i ) {
                 case '"':
                     found = true;
                     break loop;
             }
+            source.nextChar();
         }
 
         boolean ok = found || die("not found");

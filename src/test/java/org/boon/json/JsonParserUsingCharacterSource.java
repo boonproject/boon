@@ -20,11 +20,4 @@ public class JsonParserUsingCharacterSource extends JsonParserBaseTest {
     }
 
 
-    //TODO fix this and then benchmark it
-    @Test
-    public void testFilesFromReader() throws Exception {
-
-
-    }
-
 }
