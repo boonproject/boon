@@ -26,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class BaseJsonParser implements JsonParser {
 
+
+    protected static final int COLON = ':';
     protected static final int COMMA = ',';
     protected static final int CLOSED_CURLY = '}';
     protected static final int CLOSED_BRACKET = ']';
@@ -91,7 +93,7 @@ public abstract class BaseJsonParser implements JsonParser {
             charString = "[NEWLINE]";
 
         } else {
-            charString = "'" + c + "'";
+            charString = "'" + (char)c + "'";
         }
 
         charString = charString + " with an int value of " + ( ( int ) c );

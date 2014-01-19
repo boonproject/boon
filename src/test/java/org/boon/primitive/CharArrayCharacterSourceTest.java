@@ -58,12 +58,13 @@ public class CharArrayCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar ();
+            int i = source.currentChar();
             switch ( i ) {
                 case 't':
                    found = true;
                    break loop;
             }
+            source.nextChar();
         }
 
        boolean ok = found || die("not found");
@@ -81,12 +82,13 @@ public class CharArrayCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar ();
+            int i = source.currentChar();
             switch ( i ) {
                 case 't':
                     found = true;
                     break loop;
             }
+            source.nextChar();
         }
 
         boolean ok = found || die("not found");

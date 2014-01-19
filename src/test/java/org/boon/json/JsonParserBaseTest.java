@@ -22,6 +22,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.*;
 
 import static org.boon.Boon.putl;
@@ -376,6 +377,29 @@ public class JsonParserBaseTest {
         List<AllTypes> types = objectParser ().parseList ( AllTypes.class, fileContents );
 
         puts (types);
+
+    }
+
+
+
+    @Test
+    public void testFilesFromReader() throws Exception {
+
+
+        final List<String> list = IO.listByExt ( "files", ".json" );
+
+        for ( String file : list ) {
+
+
+            puts ( "testing", file );
+
+            Object object =  jsonParser.parse ( Files.newBufferedReader ( IO.path ( file), StandardCharsets.UTF_8 ) );
+            puts ( "FILE _________\n\n\n", file, object.getClass (), object);
+
+
+
+        }
+        puts ("done");
 
     }
 

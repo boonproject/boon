@@ -1,5 +1,6 @@
 package org.boon.json.implementation;
 
+import org.boon.IO;
 import org.boon.core.LazyMap;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccessMode;
@@ -7,6 +8,7 @@ import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonException;
 import org.boon.primitive.*;
 
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,14 +93,13 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
                     }
                 }
 
-                characterSource.skipWhiteSpace();
+                characterSource.skipWhiteSpace ();
+                if ( characterSource.currentChar() != COLON ) {
 
-                if ( characterSource.currentChar() != ':' ) {
-
-                    complain( "expecting current character to be " + charDescription( characterSource.currentChar() ) + "\n" );
+                    complain( "expecting current character to be : but was " + charDescription( characterSource.currentChar() ) + "\n" );
                 }
 
-                characterSource.nextChar();
+                characterSource.nextChar ();
 
                 characterSource.skipWhiteSpace();
 
@@ -116,6 +117,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
                 characterSource.nextChar();
                 break;
             } else if ( ch == ',' ) {
+                characterSource.nextChar();
                 continue;
             } else {
                 complain(
@@ -140,7 +142,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         Object value = null;
         characterSource.skipWhiteSpace ();
 
-        switch ( characterSource.currentChar() ) {
+        switch ( characterSource.currentChar () ) {
 
             case '"':
                 value = decodeString();
@@ -238,7 +240,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
     protected final boolean decodeFalse() {
 
         if ( characterSource.consumeIfMatch ( FALSE ) ) {
-            return true;
+            return false;
         } else {
             throw new JsonException( exceptionDetails( "false not parsed properly" ) );
         }
@@ -253,6 +255,8 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
         CharacterSource characterSource = this.characterSource;
 
+        characterSource.nextChar();
+
 
         char [] chars = characterSource.findNextChar ( '"', '\\' );
 
@@ -266,7 +270,6 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
             value = new String( chars  );
         }
 
-        characterSource.nextChar();
         return value;
     }
 
@@ -356,14 +359,14 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
     @Override
     public Object parse ( char[] chars ) {
         characterSource = new CharArrayCharacterSource ( chars  );
-        return decodeValue(  );
+        return decodeValue ();
     }
 
     @Override
     public final <T> T parse( Class<T> type, char[] chars ) {
         characterSource = new CharArrayCharacterSource ( chars  );
         T object = ( T )  this.decodeValue ();
-        return convert( type, object );
+        return convert ( type, object );
 
     }
 
@@ -372,6 +375,16 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         characterSource = new CharArrayCharacterSource ( new String ( value, charset )  );
         return  this.decodeValue ();
     }
+
+
+    @Override
+    public  Object parse(  Reader reader ) {
+
+        characterSource = new ReaderCharacterSource ( reader );
+        return  this.decodeValue ();
+
+    }
+
 
 
 }
