@@ -227,4 +227,7 @@ public class CharArrayCharacterSourceTest {
         ok = Chr.equals ( "456".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
 
     }
+
+
+
 }

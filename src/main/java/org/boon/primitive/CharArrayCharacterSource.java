@@ -92,7 +92,6 @@ public class CharArrayCharacterSource implements CharacterSource {
     public final boolean consumeIfMatch( char[] match ) {
 
         int idx = index;
-        int startIndex = idx;
         char[] _chars = chars;
 
         boolean ok = true;

@@ -35,7 +35,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     public void simpleString () {
 
         String str  = (String) jsonParser.parse (
-                new StringReader ("\"file\"")
+                new String ("\"file\"")
         );
 
         boolean ok = str.equals ( "file" ) || die ( str );
@@ -85,7 +85,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     public void simpleStringList () {
 
         List v  = (List ) jsonParser.parse (
-                new StringReader ("[\"abc\",\"\",3]")
+                new String ("[\"abc\",\"\",3]")
         );
 
         boolean ok = list("abc","",3).equals ( v ) || die ( "" + v );
@@ -98,7 +98,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
-                new StringReader (lines (
+                new String (lines (
 
                         "{ \"v\":1.1}"
                 ))

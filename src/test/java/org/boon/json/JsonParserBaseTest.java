@@ -313,7 +313,7 @@ public class JsonParserBaseTest {
     public void testParserSimpleMapWithNumber () {
 
         Object obj = jsonParser.parse ( Map.class,
-                new StringReader ( " { 'foo': 1 }  ".replace ( '\'', '"' ) )
+                new String ( " { 'foo': 1 }  ".replace ( '\'', '"' ) )
         );
 
         boolean ok = true;
@@ -383,7 +383,7 @@ public class JsonParserBaseTest {
 
 
 
-    @Test
+    //@Test
     public void testFilesFromReader() throws Exception {
 
         boolean fail = false;
@@ -456,7 +456,7 @@ public class JsonParserBaseTest {
     public void testParseFalse () {
 
         Object obj = jsonParser.parse ( Map.class,
-               new StringReader( " { 'foo': false }  ".replace ( '\'', '"' ) )
+               new String( " { 'foo': false }  ".replace ( '\'', '"' ) )
         );
 
         boolean ok = true;
@@ -511,7 +511,7 @@ public class JsonParserBaseTest {
     public void testParserSimpleMapWithList () {
 
         Object obj = jsonParser.parse ( Map.class,
-               new StringReader( " { 'foo': [0,1,2 ] }  ".replace ( '\'', '"' ) )
+               new String( " { 'foo': [0,1,2 ] }  ".replace ( '\'', '"' ) )
         );
 
         boolean ok = true;

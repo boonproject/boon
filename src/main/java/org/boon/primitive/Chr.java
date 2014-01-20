@@ -266,7 +266,6 @@ public class Chr {
 
     @Universal
     public static char[] add( char[] array, char[] array2 ) {
-        Objects.requireNonNull( array );
         char[] newArray = new char[ array.length + array2.length ];
         arraycopy ( array, 0, newArray, 0, array.length );
         arraycopy ( array2, 0, newArray, array.length, array2.length );

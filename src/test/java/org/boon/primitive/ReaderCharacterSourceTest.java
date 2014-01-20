@@ -21,7 +21,7 @@ public class ReaderCharacterSourceTest {
 
     @Test
     public void basicCurrentChar() {
-        int i = source.currentChar();
+        int i = source.nextChar();
         boolean ok = i  == 'a' || die( "" + (char) i);
 
         i = source.currentChar();
@@ -31,7 +31,7 @@ public class ReaderCharacterSourceTest {
 
     @Test
     public void safeNext() {
-        int i = source.safeNextChar();
+        int i = source.nextChar();
         boolean ok = i  == 'a' || die( "" + (char) i);
 
         i = source.nextChar();
@@ -40,9 +40,6 @@ public class ReaderCharacterSourceTest {
         i = source.nextChar();
         ok = i  == 'c' || die( "" + (char) i);
 
-
-        i = source.safeNextChar ();
-        ok = i  == -1 || die( "" +  i);
 
         try {
             i = source.nextChar();
@@ -138,7 +135,7 @@ public class ReaderCharacterSourceTest {
 
     @Test public void findStringWithFindNextCharWithEscape() {
 
-        String testString = "abc \"train \\b\" abc";
+        String testString = "abc \"train  a\\b\" abc";
         source = new ReaderCharacterSource ( testString );
         boolean found = false;
 
@@ -157,15 +154,43 @@ public class ReaderCharacterSourceTest {
         source.nextChar();
         char [] chars = source.findNextChar ( '"', '\\' ) ;
 
-        ok &= Chr.equals( chars, "train \\b".toCharArray ()) || die(new String(chars));
+        ok &= Chr.equals( chars, "train  a\\b".toCharArray ()) || die(new String(chars));
 
         ok |= source.currentChar () == ' ' || die("" + (char)source.currentChar());
 
     }
 
+
+
+    @Test public void findStringWithFindNextCharWithEscape2() {
+
+        String testString = "0123\"dog    bog\" z";
+        source = new ReaderCharacterSource ( testString );
+        boolean found = false;
+
+        loop:
+        while (source.hasChar()) {
+            int i = source.currentChar();
+            switch ( i ) {
+                case '"':
+                    found = true;
+                    break loop;
+            }
+            source.nextChar();
+        }
+
+        boolean ok = found || die("not found");
+        source.nextChar();
+        char [] chars = source.findNextChar ( '"', '\\' ) ;
+
+        ok &= Chr.equals( chars, "dog    bog".toCharArray ()) || die(new String(chars));
+
+        ok |= source.currentChar () == ' ' || die("" + (char)source.currentChar());
+
+    }
     @Test public void findStringWithFindNextCharWithEscapeOfQuote() {
 
-        String testString = "abc \"train \\\"\" abc0123456789";
+        String testString = "abc \"train\\\"\" abc0123456789";
         source = new ReaderCharacterSource( testString );
         boolean found = false;
 
@@ -184,11 +209,36 @@ public class ReaderCharacterSourceTest {
         source.nextChar();
         char [] chars = source.findNextChar ( '"', '\\' ) ;
 
-        ok &= Chr.equals( chars, "train \\\"".toCharArray ()) || die(new String(chars));
+        ok &= Chr.equals( chars, "train\\\"".toCharArray ()) || die(new String(chars));
         ok |= source.currentChar () == ' ' || die("" + (char)source.currentChar());
 
     }
 
+    @Test public void findString2() {
+
+        String testString = "\"train\"";
+        source = new ReaderCharacterSource( testString );
+        boolean found = false;
+
+        loop:
+        while (source.hasChar()) {
+            int i = source.currentChar();
+            switch ( i ) {
+                case '"':
+                    found = true;
+                    break loop;
+            }
+            source.nextChar();
+        }
+
+        boolean ok = found || die("not found");
+        source.nextChar();
+        char [] chars = source.findNextChar ( '"', '\\' ) ;
+
+        ok &= Chr.equals( chars, "train".toCharArray ()) || die(new String(chars));
+        ok |= source.currentChar() == '"' || die("" + (char)source.currentChar());
+
+    }
 
     @Test public void skipWhiteSpace() {
 
@@ -241,41 +291,6 @@ public class ReaderCharacterSourceTest {
     }
 
 
-
-    @Test
-    public void readNumberTest3() {
-
-
-        String testString = "123,456,abc";
-        source = new ReaderCharacterSource( testString );
-
-        source.nextChar();
-
-        if (source.currentChar() == '1') {
-            char [] numberChars = source.readNumber();
-            boolean ok = Chr.equals ( "123".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
-
-        } else {
-            die();
-        }
-
-
-        if (source.nextChar() == ',') {
-
-            if (source.nextChar() == '4') {
-                char[] numberChars = source.readNumber();
-                boolean ok = Chr.equals ( "456".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
-            } else {
-                die("" + (char)source.currentChar());
-            }
-
-        } else {
-            die("" + (char)source.currentChar());
-        }
-
-
-
-    }
 
 
 }
