@@ -18,6 +18,17 @@ public class ReaderCharacterSourceTest {
     }
 
 
+
+    @Test
+    public void basicCurrentChar() {
+        int i = source.currentChar();
+        boolean ok = i  == 'a' || die( "" + (char) i);
+
+        i = source.currentChar();
+        ok = i  == 'a' || die( "" + (char) i);
+
+    }
+
     @Test
     public void safeNext() {
         int i = source.safeNextChar();
@@ -104,18 +115,20 @@ public class ReaderCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.currentChar();
+            int i = source.nextChar();
+            puts ("current char", (char)i);
             switch ( i ) {
                 case '"':
                     found = true;
                     break loop;
             }
-            source.nextChar();
         }
 
         boolean ok = found || die("not found");
+        source.nextChar();
         char [] chars = source.findNextChar ( '"', '\\' ) ;
 
+        puts (new String(chars));
         ok &= Chr.equals( chars, "train".toCharArray ()) || die(new String(chars));
 
         ok |= source.currentChar () == ' ' || die("" + (char)source.currentChar());
@@ -141,6 +154,7 @@ public class ReaderCharacterSourceTest {
         }
 
         boolean ok = found || die("not found");
+        source.nextChar();
         char [] chars = source.findNextChar ( '"', '\\' ) ;
 
         ok &= Chr.equals( chars, "train \\b".toCharArray ()) || die(new String(chars));
@@ -167,6 +181,7 @@ public class ReaderCharacterSourceTest {
         }
 
         boolean ok = found || die("not found");
+        source.nextChar();
         char [] chars = source.findNextChar ( '"', '\\' ) ;
 
         ok &= Chr.equals( chars, "train \\\"".toCharArray ()) || die(new String(chars));
@@ -183,11 +198,11 @@ public class ReaderCharacterSourceTest {
 
         boolean ok = source.nextChar() == 'a' || die("" + (char)source.currentChar());
 
-
+        source.nextChar();
         source.skipWhiteSpace();
 
-        ok &= source.nextChar() == 'b' || die("" + (char)source.currentChar());
-
+        ok &= source.nextChar() == 'b' || die("$$" + (char)source.currentChar() + "$$");
+        source.nextChar();
         source.skipWhiteSpace();
 
         ok &= source.nextChar() == 'c' || die("" + (char)source.currentChar());
@@ -222,6 +237,43 @@ public class ReaderCharacterSourceTest {
 
         numberChars = source.readNumber();
         ok = Chr.equals ( "456".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
+
+    }
+
+
+
+    @Test
+    public void readNumberTest3() {
+
+
+        String testString = "123,456,abc";
+        source = new ReaderCharacterSource( testString );
+
+        source.nextChar();
+
+        if (source.currentChar() == '1') {
+            char [] numberChars = source.readNumber();
+            boolean ok = Chr.equals ( "123".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
+
+        } else {
+            die();
+        }
+
+
+        if (source.nextChar() == ',') {
+
+            if (source.nextChar() == '4') {
+                char[] numberChars = source.readNumber();
+                boolean ok = Chr.equals ( "456".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
+            } else {
+                die("" + (char)source.currentChar());
+            }
+
+        } else {
+            die("" + (char)source.currentChar());
+        }
+
+
 
     }
 

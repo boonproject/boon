@@ -386,6 +386,7 @@ public class JsonParserBaseTest {
     @Test
     public void testFilesFromReader() throws Exception {
 
+        boolean fail = false;
 
         final List<String> list = IO.listByExt ( "files", ".json" );
 
@@ -394,12 +395,20 @@ public class JsonParserBaseTest {
 
             puts ( "testing", file );
 
-            Object object =  jsonParser.parse ( Files.newBufferedReader ( IO.path ( file), StandardCharsets.UTF_8 ) );
-            puts ( "FILE _________\n\n\n", file, object.getClass (), object);
+            try {
+                Object object =  jsonParser.parse ( Files.newBufferedReader ( IO.path ( file), StandardCharsets.UTF_8 ) );
+                puts ( "FILE _________\n\n\n", file, object.getClass (), object);
 
 
+            } catch ( Exception ex ) {
+                puts (ex);
+                puts (file, "FAILED");
+                fail=true;
+                ex.printStackTrace();
+            }
 
         }
+        if (fail) die();
         puts ("done");
 
     }
@@ -447,7 +456,7 @@ public class JsonParserBaseTest {
     public void testParseFalse () {
 
         Object obj = jsonParser.parse ( Map.class,
-                " { 'foo': false }  ".replace ( '\'', '"' )
+               new StringReader( " { 'foo': false }  ".replace ( '\'', '"' ) )
         );
 
         boolean ok = true;
@@ -502,7 +511,7 @@ public class JsonParserBaseTest {
     public void testParserSimpleMapWithList () {
 
         Object obj = jsonParser.parse ( Map.class,
-                " { 'foo': [0,1,2] }  ".replace ( '\'', '"' )
+               new StringReader( " { 'foo': [0,1,2 ] }  ".replace ( '\'', '"' ) )
         );
 
         boolean ok = true;
@@ -514,6 +523,17 @@ public class JsonParserBaseTest {
         System.out.println ( obj );
 
         ok &= idx ( map, "foo" ).equals ( list ( 0, 1, 2 ) ) || die ( "I did not find (0,1,2) " + map.get("foo") );
+    }
+
+    @Test
+    public void testParserList () {
+
+        Object obj = jsonParser.parse ( List.class,
+                new StringReader( "[0,1,2]".replace ( '\'', '"' ) )
+        );
+
+        List list = (List)obj;
+        boolean ok = list.equals ( list ( 0, 1, 2 ) ) || die ( "I did not find (0,1,2) " + list );
     }
 
     @Test

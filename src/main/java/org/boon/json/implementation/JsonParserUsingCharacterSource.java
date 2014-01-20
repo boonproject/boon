@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.boon.Boon.puts;
 import static org.boon.primitive.CharScanner.doubleValue;
 import static org.boon.primitive.CharScanner.isInteger;
 
@@ -82,6 +83,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
             if ( characterSource.currentChar () == DOUBLE_QUOTE ) {
 
                 String key = decodeString();
+                //puts ("key", key);
 
                 if ( internKeys ) {
                     String keyPrime = internedKeysCache.get( key );
@@ -104,6 +106,9 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
                 characterSource.skipWhiteSpace();
 
                 Object value = decodeValue();
+
+                //puts ("key", key, "value", value);
+
 
                 characterSource.skipWhiteSpace();
 
@@ -255,6 +260,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
         CharacterSource characterSource = this.characterSource;
 
+
         characterSource.nextChar();
 
 
@@ -301,6 +307,8 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
             Object arrayItem = decodeValue ();
 
             list.add( arrayItem );
+
+            //puts("list", list) ;
 
 
             characterSource.skipWhiteSpace ();

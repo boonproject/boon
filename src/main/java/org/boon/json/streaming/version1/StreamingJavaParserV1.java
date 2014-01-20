@@ -135,11 +135,13 @@ public class StreamingJavaParserV1 implements JsonParser {
     @Override
     public <T> T parse( Class<T> type, String jsonString ) {
 
-        Map<String, Object> map = (Map<String, Object>) slurper.parseText(jsonString);
+        Object obj = slurper.parseText(jsonString);
         if (type == Map.class)  {
-            return (T)map;
+            return (T)obj;
+        } else if (type==List.class) {
+            return (T)obj;
         } else {
-            return MapObjectConversion.fromMap ( map, type );
+            return (T)MapObjectConversion.fromMap ( (Map)obj, type );
         }
 
     }

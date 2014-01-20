@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 
+//import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 public class ReaderCharacterSource implements CharacterSource {
@@ -14,12 +15,12 @@ public class ReaderCharacterSource implements CharacterSource {
 
     private final Reader reader;
     private final int readAheadSize;
-    private int ch;
+    private int ch = -2;
 
     private boolean foundEscape;
 
 
-    private final char[] readBuf;
+    private char[] readBuf;
 
     public ReaderCharacterSource( final Reader reader, final int readAheadSize ) {
         this.reader = reader;
@@ -29,8 +30,8 @@ public class ReaderCharacterSource implements CharacterSource {
 
     public ReaderCharacterSource( final Reader reader ) {
         this.reader = reader;
-        this.readAheadSize = 1_000;
-        this.readBuf =  new char[1_000];
+        this.readAheadSize = 100;
+        this.readBuf =  new char[100];
     }
 
     public ReaderCharacterSource( final String string ) {
@@ -43,9 +44,7 @@ public class ReaderCharacterSource implements CharacterSource {
         try {
             reader.mark ( 1 );
             ch = reader.read();
-            if ( ch==-1 ) {
-                die("There are no more characters to consume");
-            }
+            //puts ("next Char", (char) ch);
             return ch;
         } catch ( IOException e ) {
             return Exceptions.handle(int.class, e);
@@ -60,15 +59,16 @@ public class ReaderCharacterSource implements CharacterSource {
 
     @Override
     public  final boolean hasChar() {
-        try {
-            reader.mark ( 1 );
-            int i = reader.read();
-            boolean canRead = i!=-1;
-            reader.reset();
-            return canRead;
-        } catch ( IOException e ) {
-            return Exceptions.handle(boolean.class, e);
-        }
+//        try {
+//            reader.mark ( 1 );
+//            int i = reader.read();
+//            boolean canRead = i!=-1;
+//            reader.reset();
+//            return canRead;
+            return ch != -1;
+//        } catch ( IOException e ) {
+//            return Exceptions.handle(boolean.class, e);
+//        }
     }
 
     @Override
@@ -111,7 +111,9 @@ public class ReaderCharacterSource implements CharacterSource {
     @Override
     public final int safeNextChar() {
         try {
-            return ch = reader.read (  );
+            reader.mark ( 1 );
+            ch = reader.read();
+            return ch;
         } catch ( IOException e ) {
             return Exceptions.handle ( int.class, e );
         }
@@ -130,34 +132,43 @@ public class ReaderCharacterSource implements CharacterSource {
             reader.read ( readBuf );
 
             int idx = 0;
+            int start = 0;
+
             char[] _chars = readBuf;
             int ch;
             this.ch = -2;
             foundEscape=false;
 
-            for (; idx < _chars.length; idx++) {
-                ch  = _chars[idx];
-                if ( ch == match || ch == esc ) {
-                    if ( ch == match ) {
-                        /* Go back to the mark. */
-                        reader.reset();
-                        /* Copy the part of the buffer that we do need. */
-                        char [] results =  Arrays.copyOfRange ( _chars, 0, idx );
-                        /* Consume the part of the buffer that we did  use from the reader. */
-                        reader.read ( readBuf, 0, idx + 1 );
-                        return results;
-                    } else if ( ch == esc ) {
-                        foundEscape=true;
-                        /** if we are dealing with an escape then see if the escaped char is a match
-                         *  if so, skip it.
-                         */
-                        if ( idx + 1 < _chars.length) {
-                            idx++;
+            if (_chars.length > 0)  {
+
+//                if (_chars[idx] == '"') {
+//                    idx++;
+//                    start++;
+//                }
+                for (; idx < _chars.length; idx++) {
+                    ch  = _chars[idx];
+                    if ( ch == match || ch == esc ) {
+                        if ( ch == match ) {
+                            /* Go back to the mark. */
+                            reader.reset();
+                            /* Copy the part of the buffer that we do need. */
+                            char [] results =  Arrays.copyOfRange ( _chars, start, idx );
+                            /* Consume the part of the buffer that we did  use from the reader. */
+                            reader.read ( readBuf, 0, idx + 1 );
+                            return results;
+                        } else if ( ch == esc ) {
+                            foundEscape=true;
+                            /** if we are dealing with an escape then see if the escaped char is a match
+                             *  if so, skip it.
+                             */
+                            if ( idx + 1 < _chars.length) {
+                                idx++;
+                            }
                         }
                     }
                 }
-            }
 
+            }
             reader.reset();
             return EMPTY_CHARS;
 
@@ -177,18 +188,29 @@ public class ReaderCharacterSource implements CharacterSource {
     public void skipWhiteSpace() {
 
         try {
-            reader.mark ( this.readAheadSize );
-            reader.read ( readBuf );
+                if (ch>32) {
+                    return;
+                }
+                reader.mark ( this.readAheadSize );
+                reader.read ( readBuf );
 
-            this.ch = -2;
+                //puts("skipwhitespace", new String(readBuf));
 
-            int skipped = CharScanner.skipWhiteSpaceFast ( readBuf );
+                this.ch = -2;
 
-            reader.reset();
+                int skipped = CharScanner.skipWhiteSpaceFast ( readBuf );
+                //ch = readBuf[skipped];
+                //puts("skipwhitespace consume char", skipped, "$$" + (char) ch +"$$");
 
-            if (skipped > 0) {
-                reader.read ( readBuf, 0, skipped );
-            }
+                reader.reset();
+
+                if (skipped > 0) {
+                    reader.read ( readBuf, 0, skipped );
+                }
+
+
+                //puts("skipwhitespace consume buf", skipped, new String(readBuf));
+                reader.mark ( 1 );
 
         } catch ( IOException e ) {
              Exceptions.handle (  e );
@@ -212,10 +234,13 @@ public class ReaderCharacterSource implements CharacterSource {
             reader.mark ( this.readAheadSize );
             int count = reader.read ( readBuf );
 
-            char[] _chars = readBuf;
+            //puts("readNumber buf", new String(readBuf) );
+
             this.ch = -2;
 
             char [] results =  CharScanner.readNumber( readBuf, 0, count);
+
+            //puts("readNumber results", new String(results) );
 
 
             reader.reset();
@@ -223,7 +248,10 @@ public class ReaderCharacterSource implements CharacterSource {
             if (results.length > 0) {
                 reader.read ( readBuf, 0, results.length );
             }
-            this.safeNextChar();
+            //puts("readNumber consume buf", new String(readBuf) );
+
+            reader.mark ( 1 );
+            //this.safeNextChar();
             return results;
 
 
