@@ -15,7 +15,7 @@ public class ReaderCharacterSource implements CharacterSource {
     private static final int MAX_TOKEN_SIZE=5;
 
     private final Reader reader;
-    private final int readAheadSize;
+    private int readAheadSize;
     private int ch = -2;
 
     private boolean foundEscape;
@@ -34,13 +34,13 @@ public class ReaderCharacterSource implements CharacterSource {
 
     public ReaderCharacterSource( final Reader reader, final int readAheadSize ) {
         this.reader = reader;
-        this.readBuf =  new char[readAheadSize];
+        this.readBuf =  new char[readAheadSize + MAX_TOKEN_SIZE];
         this.readAheadSize = readAheadSize;
     }
 
     public ReaderCharacterSource( final Reader reader ) {
         this.reader = reader;
-        this.readAheadSize = 100_000;
+        this.readAheadSize = 10_000;
         this.readBuf =  new char[ readAheadSize + MAX_TOKEN_SIZE ];
     }
 
@@ -57,6 +57,9 @@ public class ReaderCharacterSource implements CharacterSource {
         }
     }
     private void ensureBuffer() {
+
+
+
         if (index >= length && !done) {
             try {
                 length = reader.read ( readBuf, 0, readAheadSize );
@@ -150,6 +153,7 @@ public class ReaderCharacterSource implements CharacterSource {
 
             int ch = this.ch;
             if ( ch == '"' ) {
+
             } else if ( idx < length -1 ) {
                 ch = _chars[idx];
 
@@ -159,7 +163,7 @@ public class ReaderCharacterSource implements CharacterSource {
             }
 
 
-            if ( idx < length -1 ) {
+            if ( idx < length ) {
                 ch = _chars[idx];
             }
 
@@ -234,7 +238,6 @@ public class ReaderCharacterSource implements CharacterSource {
 
     @Override
     public void skipWhiteSpace() {
-        ensureBuffer();
         index = CharScanner.skipWhiteSpace( readBuf, index, length );
         if (index >= length && more) {
 
@@ -256,10 +259,10 @@ public class ReaderCharacterSource implements CharacterSource {
         char [] results =  CharScanner.readNumber( readBuf, index, length);
         index += results.length;
 
-        if (index >= length) {
+        if (index >= length && more) {
             ensureBuffer();
             if (length!=0) {
-                char results2[] = CharScanner.readNumber( readBuf, index, length);
+                char results2[] = readNumber();
                 return Chr.add(results, results2);
             } else  {
                 return results;
@@ -269,5 +272,7 @@ public class ReaderCharacterSource implements CharacterSource {
         }
 
     }
+
+
 
 }

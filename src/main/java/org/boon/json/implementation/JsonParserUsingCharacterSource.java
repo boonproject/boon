@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.boon.Boon.puts;
 
 
 /**
@@ -103,8 +102,8 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
                 Object value = decodeValue();
 
-                //
-                // puts ("key", key, "value", value);
+
+                //puts ("key", key, "value", value);
 
 
                 characterSource.skipWhiteSpace();

@@ -143,11 +143,11 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
                 "            \"logo\": \"/images/UE0AAAAACEKo/QAAAAVDSVRN\",\n" +
                 "            \"name\": \"Alessandro - G.F. Haendel\",\n" +
                 "            \"subTopicIds\": [\n" +
-                "                337184284,\n" +
-                "                337184263,\n" +
-                "                337184298,\n" +
-                "                337184283,\n" +
-                "                337184275\n" +
+                "                123456789,\n" +
+                "                987654321,\n" +
+                "                333333333,\n" +
+                "                444444444,\n" +
+                "                555555555\n" +
                 "            ],\n" +
                 "            \"subjectCode\": null,\n" +
                 "            \"subtitle\": null,\n" +

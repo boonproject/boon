@@ -390,7 +390,7 @@ public class JsonParserBaseTest {
 
 
 
-    //@Test
+    @Test
     public void testFilesFromReader() throws Exception {
 
         boolean fail = false;
@@ -420,7 +420,7 @@ public class JsonParserBaseTest {
 
     }
 
-    //@Test
+    @Test
     public void testFiles () {
 
 

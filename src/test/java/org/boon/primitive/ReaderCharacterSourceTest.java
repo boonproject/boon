@@ -296,6 +296,32 @@ public class ReaderCharacterSourceTest {
 
     }
 
+    @Test public void findString3() {
+
+        String testString = "12345 \"train brain stain fain\" 678910";
+        source = new ReaderCharacterSource( testString );
+        boolean found = false;
+
+        loop:
+        while (source.hasChar()) {
+            int i = source.currentChar();
+            switch ( i ) {
+                case '"':
+                    found = true;
+                    break loop;
+            }
+            source.nextChar();
+        }
+
+        boolean ok = found || die("not found");
+        source.nextChar();
+        char [] chars = source.findNextChar ( '"', '\\' ) ;
+
+        ok &= Chr.equals( chars, "train brain stain fain".toCharArray ()) || die(new String(chars));
+
+    }
+
+
     @Test public void skipWhiteSpace() {
 
         String testString = "a   b c";
@@ -327,6 +353,16 @@ public class ReaderCharacterSourceTest {
 
         char [] numberChars = source.readNumber();
         boolean ok = Chr.equals ( "123".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
+
+    }
+
+    @Test public void readNumberTest3() {
+
+        String testString = "123456789";
+        source = new ReaderCharacterSource ( testString );
+
+        char [] numberChars = source.readNumber();
+        boolean ok = Chr.equals ( "123456789".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
 
     }
 
