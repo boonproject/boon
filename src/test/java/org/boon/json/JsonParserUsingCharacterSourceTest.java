@@ -32,13 +32,26 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
 
 
     @Test
-    public void simpleString () {
+    public void simpleStringReader () {
 
         String str  = (String) jsonParser.parse (
-                new String ("\"file\"")
+                new StringReader ("\"file\"")
         );
 
         boolean ok = str.equals ( "file" ) || die ( str );
+
+
+    }
+
+
+    @Test
+    public void simpleFalseFromReader () {
+
+        Boolean v  = (Boolean) jsonParser.parse (
+                new StringReader ("false")
+        );
+
+        boolean ok = v.equals ( Boolean.FALSE ) || die ( "" + v );
 
 
     }
@@ -82,14 +95,18 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     }
 
     @Test
-    public void simpleStringList () {
+    public void simpleStringListFromReader () {
 
         List v  = (List ) jsonParser.parse (
-                new String ("[\"abc\",\"\",3]")
+                new StringReader ("[\"abc\",\"\",3]")
         );
 
-        boolean ok = list("abc","",3).equals ( v ) || die ( "" + v );
+        String empty = ( String ) v.get(1);
+        v.remove ( 1 );
 
+        boolean ok = list("abc",3).equals ( v ) || die ( "" + v );
+
+        ok = "".equals ( empty ) || die ( "" + empty);
 
     }
 
@@ -98,7 +115,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
 
 
         Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
-                new String (lines (
+                new StringReader (lines (
 
                         "{ \"v\":1.1}"
                 ))
@@ -113,6 +130,41 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
         }
 
         boolean ok = o.equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
+    }
+
+
+    @Test
+    public void readBug() {
+
+        String test = "{" +
+                "        \"138586365\": {\n" +
+                "            \"description\": null,\n" +
+                "            \"id\": 138586365,\n" +
+                "            \"logo\": \"/images/UE0AAAAACEKo/QAAAAVDSVRN\",\n" +
+                "            \"name\": \"Alessandro - G.F. Haendel\",\n" +
+                "            \"subTopicIds\": [\n" +
+                "                337184284,\n" +
+                "                337184263,\n" +
+                "                337184298,\n" +
+                "                337184283,\n" +
+                "                337184275\n" +
+                "            ],\n" +
+                "            \"subjectCode\": null,\n" +
+                "            \"subtitle\": null,\n" +
+                "            \"topicIds\": [\n" +
+                "                324846099,\n" +
+                "                107888604,\n" +
+                "                324846100\n" +
+                "            ]\n" +
+                "        }" +
+                "}";
+
+        jsonParser.parse (
+                new StringReader (test)
+        );
+
+
+
     }
 
 

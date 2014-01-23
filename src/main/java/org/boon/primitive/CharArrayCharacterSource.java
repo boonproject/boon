@@ -13,6 +13,7 @@ public class CharArrayCharacterSource implements CharacterSource {
 
 
 
+
     public CharArrayCharacterSource ( char[] chars ) {
         this.chars = chars;
     }

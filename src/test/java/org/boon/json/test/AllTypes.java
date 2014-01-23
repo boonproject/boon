@@ -6,9 +6,7 @@ import org.boon.json.annotations.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @JsonIgnoreProperties ("ignoreMe2")
 public class AllTypes {
@@ -63,6 +61,17 @@ public class AllTypes {
 
     List<AllTypes> allTypes = new ArrayList<> (  );
 
+
+    Set<AllTypes> allTypesSet = new HashSet<> (  );
+
+
+    public Set<AllTypes> getAllTypesSet() {
+        return allTypesSet;
+    }
+
+    public void setAllTypesSet( Set<AllTypes> allTypesSet ) {
+        this.allTypesSet = allTypesSet;
+    }
 
     public String getString2 () {
         return string2;

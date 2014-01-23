@@ -1,8 +1,6 @@
 package org.boon.json.implementation;
 
-import org.boon.IO;
 import org.boon.core.LazyMap;
-import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonException;
@@ -15,8 +13,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.boon.Boon.puts;
-import static org.boon.primitive.CharScanner.doubleValue;
-import static org.boon.primitive.CharScanner.isInteger;
 
 
 /**
@@ -107,7 +103,8 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
                 Object value = decodeValue();
 
-                //puts ("key", key, "value", value);
+                //
+                // puts ("key", key, "value", value);
 
 
                 characterSource.skipWhiteSpace();

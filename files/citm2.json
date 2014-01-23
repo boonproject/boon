@@ -37,7 +37,8 @@
             ],
             "subjectCode": null,
             "subtitle": null,
-            "topicIds": [
+            "topicIds": [5,
+                1,
                 324846099,
                 107888604,
                 324846100
@@ -54,14 +55,14 @@
             ],
             "subjectCode": null,
             "subtitle": null,
-            "topicIds": [
+            "topicIds": [ 99,
                 324846099,
                 107888604
             ]
         },
         "138586345": {
             "description": null,
-            "id": 138586345,
+            "id": "138586345",
             "logo": "/images/UE0AAAAACEKo6QAAAAZDSVRN",
             "name": "Berliner Philharmoniker",
             "subTopicIds": [
@@ -72,6 +73,7 @@
             "subjectCode": null,
             "subtitle": null,
             "topicIds": [
+                123,
                 324846099,
                 107888604,
                 324846100

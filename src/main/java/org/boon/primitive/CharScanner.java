@@ -746,9 +746,23 @@ public class CharScanner {
                 return index;
             }
         }
-        return index-1;
+        return index;
     }
 
+
+
+
+    public static int skipWhiteSpace( char [] array, int index, final int length ) {
+        int c;
+        for (; index< length; index++ ) {
+            c = array [index];
+            if ( c > 32 ) {
+
+                return index;
+            }
+        }
+        return index;
+    }
     public static char[] readNumber( char[] array, int idx ) {
         final int startIndex = idx;
 
@@ -765,6 +779,7 @@ public class CharScanner {
 
 
     }
+
 
 
     public static char[] readNumber( char[] array, int idx, final int len ) {

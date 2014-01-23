@@ -12,6 +12,8 @@ import static org.boon.Exceptions.die;
 public class ReaderCharacterSource implements CharacterSource {
 
 
+    private static final int MAX_TOKEN_SIZE=5;
+
     private final Reader reader;
     private final int readAheadSize;
     private int ch = -2;
@@ -38,8 +40,8 @@ public class ReaderCharacterSource implements CharacterSource {
 
     public ReaderCharacterSource( final Reader reader ) {
         this.reader = reader;
-        this.readAheadSize = 10;
-        this.readBuf =  new char[10];
+        this.readAheadSize = 100_000;
+        this.readBuf =  new char[ readAheadSize + MAX_TOKEN_SIZE ];
     }
 
     public ReaderCharacterSource( final String string ) {
@@ -47,10 +49,17 @@ public class ReaderCharacterSource implements CharacterSource {
     }
 
 
+    private void readForToken() {
+        try {
+            length += reader.read ( readBuf, readBuf.length-MAX_TOKEN_SIZE, MAX_TOKEN_SIZE );
+        } catch ( IOException e ) {
+            Exceptions.handle ( e );
+        }
+    }
     private void ensureBuffer() {
         if (index >= length && !done) {
             try {
-                length = reader.read ( readBuf );
+                length = reader.read ( readBuf, 0, readAheadSize );
                 index = 0;
                 if (length == -1) {
                     ch = -1;
@@ -58,7 +67,7 @@ public class ReaderCharacterSource implements CharacterSource {
                     more = false;
                     done = true;
                 } else {
-                    if (length<readBuf.length) {
+                    if (length<readBuf.length-5) {
                         done = true;
                         more = true;
                     }
@@ -94,23 +103,14 @@ public class ReaderCharacterSource implements CharacterSource {
     @Override
     public  final boolean consumeIfMatch( char[] match ) {
 
-        ensureBuffer();
 
         char [] _chars = readBuf;
         int i=0;
-        int idx = --index;
+        int idx = index;
         boolean ok = true;
 
         if ( idx + match.length > length ) {
-            for (; idx < length; i++, idx++) {
-                ok &=  ( match[i] == _chars[idx] );
-                if (!ok) break;
-            }
-            if (ok) {
-                index = idx;
-                ensureBuffer();
-                idx = 0;
-            }
+            readForToken ();
         }
 
         for (; i < match.length; i++, idx++) {
@@ -146,9 +146,30 @@ public class ReaderCharacterSource implements CharacterSource {
             ensureBuffer();
 
             int idx = index;
-            int start = index;
-
             char[] _chars = readBuf;
+
+            int ch = this.ch;
+            if ( ch == '"' ) {
+            } else if ( idx < length -1 ) {
+                ch = _chars[idx];
+
+                if (ch == '"') {
+                    idx++;
+                }
+            }
+
+
+            if ( idx < length -1 ) {
+                ch = _chars[idx];
+            }
+
+            if (ch == '"') {
+                index = idx;
+                index++;
+                return EMPTY_CHARS;
+            }
+            int start = idx;
+
 
             foundEscape=false;
 
@@ -156,7 +177,7 @@ public class ReaderCharacterSource implements CharacterSource {
             char [] results ;
 
 
-                for (; idx < length; idx++) {
+            for (; idx < length; idx++) {
                     ch  = _chars[idx];
                     if ( ch == match || ch == esc ) {
                         if ( ch == match ) {
@@ -168,7 +189,7 @@ public class ReaderCharacterSource implements CharacterSource {
                             /** if we are dealing with an escape then see if the escaped char is a match
                              *  if so, skip it.
                              */
-                            if ( idx + 1 < _chars.length) {
+                            if ( idx + 1 < length) {
                                 idx++;
                             }
                         }
@@ -176,7 +197,6 @@ public class ReaderCharacterSource implements CharacterSource {
                 }
 
 
-                start = start == 0 ? 0 : start -1;
                 if (idx == 0 ) {
                      results = EMPTY_CHARS;
                 }   else {
@@ -189,11 +209,12 @@ public class ReaderCharacterSource implements CharacterSource {
                     index++;
                     if (index < length) {
                         ch = _chars[index ];
+                        this.ch = ch;
                     }
                     return results;
                 } else {
 
-                    if (index >= length) {
+                    if (index >= length && !done) {
                         ensureBuffer();
                         char results2[] = findNextChar(match, esc);
                         return Chr.add(results, results2);
@@ -214,7 +235,7 @@ public class ReaderCharacterSource implements CharacterSource {
     @Override
     public void skipWhiteSpace() {
         ensureBuffer();
-        index = CharScanner.skipWhiteSpace( readBuf, index );
+        index = CharScanner.skipWhiteSpace( readBuf, index, length );
         if (index >= length && more) {
 
             ensureBuffer();
@@ -232,13 +253,13 @@ public class ReaderCharacterSource implements CharacterSource {
     public char[] readNumber(  ) {
          ensureBuffer();
 
-        char [] results =  CharScanner.readNumber( readBuf, index);
+        char [] results =  CharScanner.readNumber( readBuf, index, length);
         index += results.length;
 
         if (index >= length) {
             ensureBuffer();
             if (length!=0) {
-                char results2[] = CharScanner.readNumber( readBuf, index);
+                char results2[] = CharScanner.readNumber( readBuf, index, length);
                 return Chr.add(results, results2);
             } else  {
                 return results;

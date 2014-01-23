@@ -25,7 +25,7 @@ public class ReaderCharacterSourceTest {
         boolean ok = i  == 'a' || die( "" + (char) i);
 
         i = source.currentChar();
-        ok = i  == 'a' || die( "" + (char) i);
+        ok = i  == 'b' || die( "" + (char) i);
 
     }
 
@@ -68,12 +68,13 @@ public class ReaderCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar ();
+            int i = source.currentChar();
             switch ( i ) {
                 case 't':
                     found = true;
                     break loop;
             }
+            source.nextChar();
         }
 
         boolean ok = found || die("not found");
@@ -90,12 +91,13 @@ public class ReaderCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar ();
+            int i = source.currentChar();
             switch ( i ) {
                 case 't':
                     found = true;
                     break loop;
             }
+            source.nextChar ();
         }
 
         boolean ok = found || die("not found");
@@ -112,13 +114,14 @@ public class ReaderCharacterSourceTest {
 
         loop:
         while (source.hasChar()) {
-            int i = source.nextChar();
+            int i = source.currentChar();
             puts ("current char", (char)i);
             switch ( i ) {
                 case '"':
                     found = true;
                     break loop;
             }
+            source.nextChar();
         }
 
         boolean ok = found || die("not found");
@@ -160,7 +163,61 @@ public class ReaderCharacterSourceTest {
 
     }
 
+    @Test public void stringBug() {
 
+        String testString = " \"file\"";
+        source = new ReaderCharacterSource ( testString );
+        boolean found = false;
+
+        loop:
+        while (source.hasChar()) {
+            int i = source.currentChar();
+            switch ( i ) {
+                case '"':
+                    found = true;
+                    break loop;
+            }
+            source.nextChar();
+        }
+
+        boolean ok = found || die("not found");
+        source.nextChar();
+        char [] chars = source.findNextChar ( '"', '\\' ) ;
+
+        ok &= Chr.equals( chars, "file".toCharArray ()) || die(new String(chars));
+
+
+    }
+
+
+
+    @Test public void stringBug2() {
+
+        String testString = "\"\"";
+        source = new ReaderCharacterSource ( testString );
+        boolean found = false;
+
+
+
+        loop:
+        while (source.hasChar()) {
+            int i = source.currentChar();
+            switch ( i ) {
+                case '"':
+                    found = true;
+                    break loop;
+            }
+            source.nextChar();
+        }
+
+        boolean ok = found || die("not found");
+        source.nextChar();
+        char [] chars = source.findNextChar ( '"', '\\' ) ;
+
+        ok &= Chr.equals( chars, "".toCharArray ()) || die(new String(chars));
+
+
+    }
 
     @Test public void findStringWithFindNextCharWithEscape2() {
 
@@ -236,7 +293,6 @@ public class ReaderCharacterSourceTest {
         char [] chars = source.findNextChar ( '"', '\\' ) ;
 
         ok &= Chr.equals( chars, "train".toCharArray ()) || die(new String(chars));
-        ok |= source.currentChar() == '"' || die("" + (char)source.currentChar());
 
     }
 
@@ -244,6 +300,7 @@ public class ReaderCharacterSourceTest {
 
         String testString = "a   b c";
         source = new ReaderCharacterSource( testString );
+
 
 
         boolean ok = source.nextChar() == 'a' || die("" + (char)source.currentChar());
