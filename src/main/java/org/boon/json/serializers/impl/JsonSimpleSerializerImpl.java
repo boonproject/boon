@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Boon.sputs;
+
 /**
  * This is a simple fast serializer.
  * It excludes default values, i.e., int v by default is 0.
@@ -435,7 +437,11 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
     private void serializeFieldName ( String name, CharBuf builder ) {
-        builder.addJsonFieldName ( FastStringUtils.toCharArray ( name ) );
+        try {
+            builder.addJsonFieldName ( FastStringUtils.toCharArray ( name ) );
+        } catch (Exception ex) {
+            Exceptions.handle ( sputs("Unable to serialize field name", name), ex );
+        }
     }
 
 

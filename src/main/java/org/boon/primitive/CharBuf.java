@@ -1,6 +1,7 @@
 package org.boon.primitive;
 
 
+import org.boon.Exceptions;
 import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
@@ -15,6 +16,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.CharScanner.*;
 import static org.boon.primitive.CharScanner.parseLong;
@@ -543,31 +545,36 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
     public final CharBuf addJsonFieldName( char[] chars ) {
-
         int _location = location;
         char [] _buffer = buffer;
         int _capacity = capacity;
 
-        int sizeNeeded = chars.length + 2 + _location;
-        if (  sizeNeeded > _capacity ) {
-            _buffer = Chr.grow( _buffer, sizeNeeded * 2  );
-            _capacity = _buffer.length;
+        try {
+
+
+            int sizeNeeded = chars.length + 3 + _location;
+            if (  sizeNeeded > _capacity ) {
+                _buffer = Chr.grow( _buffer, sizeNeeded * 2  );
+                _capacity = _buffer.length;
+            }
+            _buffer [_location] = '"';
+            _location++;
+
+            arraycopy( chars, 0, _buffer, _location, chars.length );
+
+            _location += (chars.length);
+            _buffer [_location] = '"';
+            _location++;
+            _buffer [_location] = ':';
+            _location++;
+
+            location = _location;
+            buffer = _buffer;
+            capacity = _capacity;
+            return this;
+        } catch (Exception ex) {
+            return Exceptions.handle (CharBuf.class, sputs( toDebugString(), new String(chars), "_location", _location), ex);
         }
-        _buffer [_location] = '"';
-        _location++;
-
-        arraycopy( chars, 0, _buffer, _location, chars.length );
-
-        _location += (chars.length);
-        _buffer [_location] = '"';
-        _location++;
-        _buffer [_location] = ':';
-        _location++;
-
-        location = _location;
-        buffer = _buffer;
-        capacity = _capacity;
-        return this;
     }
 
     public final CharBuf addQuoted( String str ) {
@@ -663,6 +670,12 @@ public class CharBuf extends Writer implements CharSequence {
         return new String( buffer, 0, location );
     }
 
+    public String toDebugString() {
+        return "CharBuf{" +
+                "capacity=" + capacity +
+                ", location=" + location +
+                '}';
+    }
 
     public String toStringAndRecycle() {
 
@@ -1465,5 +1478,8 @@ public class CharBuf extends Writer implements CharSequence {
             capacity = buffer.length;
         }
     }
+
+
+
 }
 
