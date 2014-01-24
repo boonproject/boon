@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.boon.Arrays.idx;
 import static org.boon.Arrays.len;
 import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -16,6 +17,15 @@ public class StringScannerTest {
     private static final String TEST_STRING = "[199984,1384795052823,\"/127.0.0.1:51706\",[\"abc123\",\"rickHigh\"," +
             "\"217.0.0.1\",\"start\",1234567,12345678,\"abcsesson123\",\"asdfasdf\"]]";
 
+
+    @Test
+    public void testRemoveChars() {
+
+        String testString = "1_2 345 6    _____\t\t7\t890";
+
+        String after = StringScanner.removeChars ( testString, '_', ' ', '\t' );
+        boolean ok =  "1234567890".equals (after ) || die( "$"+ after + "$");
+    }
 
     @Test
     public void testCreateFromString() {

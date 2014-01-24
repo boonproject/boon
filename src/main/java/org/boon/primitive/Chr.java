@@ -681,4 +681,24 @@ public class Chr {
 
         return true;
     }
+
+
+
+    public static char[] add( char[]... strings ) {
+        int length = 0;
+        for ( char[] str : strings ) {
+            if ( str == null ) {
+                continue;
+            }
+            length += str.length;
+        }
+        CharBuf builder = CharBuf.createExact( length );
+        for ( char[] str : strings ) {
+            if ( str == null ) {
+                continue;
+            }
+            builder.add( str );
+        }
+        return builder.toCharArray ();
+    }
 }

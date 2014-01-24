@@ -3,6 +3,7 @@ package org.boon;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharScanner;
+import org.boon.primitive.Chr;
 
 import java.util.Objects;
 
@@ -42,12 +43,15 @@ public class StringScanner {
 
 
     public static String[] splitByCharsNoneEmpty( final String string, final char... delimiters ) {
-        Objects.requireNonNull( string );
 
         char[][] comps = CharScanner.splitByCharsNoneEmpty( FastStringUtils.toCharArray( string ), delimiters );
         return Str.fromCharArrayOfArrayToStringArray( comps );
     }
 
+    public static String removeChars( final String string, final char... delimiters ) {
+        char[][] comps = CharScanner.splitByCharsNoneEmpty( FastStringUtils.toCharArray( string ), delimiters );
+        return new String(Chr.add ( comps ));
+    }
 
     public static String[] splitByCharsNoneEmpty( final String string, int start, int end, final char... delimiters ) {
         Objects.requireNonNull( string );
