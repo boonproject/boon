@@ -1,5 +1,6 @@
 package org.boon.json;
 
+import org.boon.Exceptions;
 import org.junit.After;
 import org.junit.Test;
 
@@ -25,7 +26,6 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
 
     @After
     public void after () {
-        //TODO either have it auto-close or delegate close to char source and then to reader
         jsonCharSrcParser.close ();
     }
 
@@ -162,6 +162,50 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
         jsonParser.parse (
                 new StringReader (test)
         );
+
+
+
+    }
+
+
+
+    @Test (expected = JsonException.class)
+    public void readBug2() {
+
+        try {
+
+        String test = "{" +
+                "        \"138586365\": {\n" +
+                "            \"description\": null,\n" +
+                "            \"id\": 138586365,\n" +
+                "            \"logo\": \"/images/UE0AAAAACEKo/QAAAAVDSVRN\",\n" +
+                "            \"name\": \"Alessandro - G.F. Haendel\",\n" +
+                "            \"subTopicIds\": [\n" +
+                "                123456789,\n" +
+                "                987654321,\n" +
+                "                333333333,\n" +
+                "                444444444,\n" +
+                "                555555555\n" +
+                "            ],\n" +
+                "            \"subjectCode\": null,\n" +
+                "            \"subjectCode\": trau,\n" +
+                "            \"subtitle\": null,\n" +
+                "            \"topicIds\": [\n" +
+                "                324846099,\n" +
+                "                107888604,\n" +
+                "                324846100\n" +
+                "            ]\n" +
+                "        }" +
+                "}";
+
+        jsonParser.parse (
+                new StringReader (test)
+        );
+
+        } catch (Exception ex) {
+            puts (ex.getMessage ());
+            throw ex;
+        }
 
 
 

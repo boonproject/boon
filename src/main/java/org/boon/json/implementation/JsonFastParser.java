@@ -158,9 +158,9 @@ public class JsonFastParser extends JsonParserCharArray {
                 return decodeNumberOverlay (true);
 
             default:
-
-                throw new JsonException ( exceptionDetails ( "Unable to determine the " +
-                        "current character, it is not a string, number, array, or object" ) );
+                complain ( "Unable to determine the " +
+                        "current character, it is not a string, number, array, or object" );
+                return null;
         }
     }
 

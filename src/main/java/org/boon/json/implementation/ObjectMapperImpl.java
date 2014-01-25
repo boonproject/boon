@@ -269,4 +269,29 @@ public class ObjectMapperImpl implements ObjectMapper {
     public <T> T fromJson( InputStream inputStream, Class<T> clazz ) {
         return readValue ( inputStream, clazz );
     }
+
+    @Override
+    public Object fromJson( String json ) {
+        return parser().parse(json);
+    }
+
+    @Override
+    public Object fromJson( Reader reader ) {
+        return parser().parse(reader);
+    }
+
+    @Override
+    public Object fromJson( byte[] bytes ) {
+        return parser().parse(bytes);
+    }
+
+    @Override
+    public Object fromJson( char[] chars ) {
+        return parser().parse(chars);
+    }
+
+    @Override
+    public Object fromJson( InputStream reader ) {
+        return parser().parse(reader);
+    }
 }

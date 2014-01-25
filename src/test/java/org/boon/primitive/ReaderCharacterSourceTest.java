@@ -384,6 +384,24 @@ public class ReaderCharacterSourceTest {
     }
 
 
+    @Test public void someErrorTest() {
+
+        String testString = "0123456789\n" +
+                "0123456789\n" +
+                "abcdefghijklmnopqrstuvwxyz";
+
+        source = new ReaderCharacterSource( testString );
+
+
+        for (int index =0; index<28; index++) {
+            source.nextChar();
+        }
+
+        String str = source.errorDetails ( "some error" );
+
+        puts(str);
+    }
+
 
 
 }

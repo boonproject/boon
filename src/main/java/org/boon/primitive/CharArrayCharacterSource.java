@@ -9,6 +9,7 @@ public class CharArrayCharacterSource implements CharacterSource {
     private char[] chars;
     private int index=0;
     private boolean foundEscape;
+    private int ch;
 
 
 
@@ -26,11 +27,11 @@ public class CharArrayCharacterSource implements CharacterSource {
 
     @Override
     public final int nextChar() {
-        return chars[index++];
+        return ch = chars[index++];
     }
 
     public final int safeNextChar() {
-        return index + 1 < chars.length ? chars[index++] : -1;
+        return ch = (index + 1 < chars.length ? chars[index++] : -1);
     }
 
 
@@ -42,14 +43,14 @@ public class CharArrayCharacterSource implements CharacterSource {
         int startIndex = idx;
         foundEscape = false;
         char[] _chars = chars;
-        int ch;
-
+        int ch = 0;
         for (; idx < _chars.length; idx++) {
              ch  = _chars[idx];
              if ( ch == match || ch == esc ) {
                  if ( ch == match ) {
                      /** If you have found the next char, then return a copy of the buffer range.*/
                      index = idx+1;
+                     this.ch = ch;
                      return  Arrays.copyOfRange ( _chars, startIndex, idx );
                  } else if ( ch == esc ) {
                      foundEscape = true;
@@ -64,6 +65,7 @@ public class CharArrayCharacterSource implements CharacterSource {
         }
 
        index = idx;
+       this.ch = ch;
        return EMPTY_CHARS;
     }
 
@@ -124,5 +126,15 @@ public class CharArrayCharacterSource implements CharacterSource {
     }
 
 
+
+    @Override
+    public String errorDetails( String message ) {
+        if (index < chars.length) {
+            ch = chars[index];
+        } else {
+            ch = chars[chars.length-1];
+        }
+        return CharScanner.errorDetails ( message, chars, index, ch );
+    }
 
 }

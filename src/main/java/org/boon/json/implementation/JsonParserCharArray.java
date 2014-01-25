@@ -86,58 +86,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
     protected String exceptionDetails( String message ) {
-        CharBuf buf = CharBuf.create( 255 );
-
-        buf.addLine( message );
-
-
-        buf.addLine( "" );
-        buf.addLine( "The current character read is " + charDescription( __currentChar ) );
-
-
-        buf.addLine( message );
-
-        int line = 0;
-        int lastLineIndex = 0;
-
-        for ( int i = 0; i < __index && i < charArray.length; i++ ) {
-            if ( charArray[ i ] == '\n' ) {
-                line++;
-                lastLineIndex = i + 1;
-            }
-        }
-
-        int count = 0;
-
-        for ( int i = lastLineIndex; i < charArray.length; i++, count++ ) {
-            if ( charArray[ i ] == '\n' ) {
-                break;
-            }
-        }
-
-
-        buf.addLine( "line number " + line + 1 );
-        buf.addLine( "index number " + __index );
-
-
-        try {
-            buf.addLine( new String( charArray, lastLineIndex, count ) );
-        } catch ( Exception ex ) {
-
-            try {
-                int index = ( __index - 10 < 0 ) ? 0 : __index - 10;
-
-                buf.addLine( new String( charArray, index, __index ) );
-            } catch ( Exception ex2 ) {
-                buf.addLine( new String( charArray, 0, charArray.length ) );
-            }
-        }
-        for ( int i = 0; i < ( __index - lastLineIndex ); i++ ) {
-            buf.add( '.' );
-        }
-        buf.add( '^' );
-
-        return buf.toString();
+        return CharScanner.errorDetails ( message, charArray, __index, __currentChar );
     }
 
 

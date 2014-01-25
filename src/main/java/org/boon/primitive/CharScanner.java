@@ -818,4 +818,81 @@ public class CharScanner {
         }
         return index;
     }
+
+
+    public static String errorDetails( String message, char[] array, int index, int ch ) {
+        CharBuf buf = CharBuf.create( 255 );
+
+        buf.addLine( message );
+
+
+        buf.addLine( "" );
+        buf.addLine( "The current character read is " + debugCharDescription( ch ) );
+
+
+        buf.addLine( message );
+
+        int line = 0;
+        int lastLineIndex = 0;
+
+        for ( int i = 0; i < index && i < array.length; i++ ) {
+            if ( array[ i ] == '\n' ) {
+                line++;
+                lastLineIndex = i + 1;
+            }
+        }
+
+        int count = 0;
+
+        for ( int i = lastLineIndex; i < array.length; i++, count++ ) {
+            if ( array[ i ] == '\n' ) {
+                break;
+            }
+        }
+
+
+        buf.addLine( "line number " + (line + 1) );
+        buf.addLine( "index number " + index );
+
+
+        try {
+            buf.addLine( new String( array, lastLineIndex, count ) );
+        } catch ( Exception ex ) {
+
+            try {
+                int start =  index = ( index - 10 < 0 ) ? 0 : index - 10;
+
+                buf.addLine( new String( array, start, index ) );
+            } catch ( Exception ex2 ) {
+                buf.addLine( new String( array, 0, array.length ) );
+            }
+        }
+        for ( int i = 0; i < ( index - lastLineIndex ); i++ ) {
+            buf.add( '.' );
+        }
+        buf.add( '^' );
+
+        return buf.toString();
+    }
+
+
+    public static String debugCharDescription( int c ) {
+        String charString;
+        if ( c == ' ' ) {
+            charString = "[SPACE]";
+        } else if ( c == '\t' ) {
+            charString = "[TAB]";
+
+        } else if ( c == '\n' ) {
+            charString = "[NEWLINE]";
+
+        } else {
+            charString = "'" + (char)c + "'";
+        }
+
+        charString = charString + " with an int value of " + ( ( int ) c );
+        return charString;
+    }
+
+
 }

@@ -27,7 +27,6 @@ public class ReaderCharacterSource implements CharacterSource {
 
     private int length;
 
-    private int location;
 
     boolean more = true;
     private boolean done = false;
@@ -56,32 +55,37 @@ public class ReaderCharacterSource implements CharacterSource {
             Exceptions.handle ( e );
         }
     }
+
     private void ensureBuffer() {
 
-
-
-        if (index >= length && !done) {
-            try {
-                length = reader.read ( readBuf, 0, readAheadSize );
-                index = 0;
-                if (length == -1) {
-                    ch = -1;
-                    length = 0;
-                    more = false;
-                    done = true;
-                } else {
-                    if (length<readBuf.length-5) {
-                        done = true;
-                        more = true;
-                    }
-                }
-            } catch ( IOException e ) {
-                Exceptions.handle ( e );
+        try {
+            if (index >= length && !done) {
+                readNextBuffer ();
+            } else if (done && index >=length) {
+                more = false;
+            }else {
+                more = true;
             }
-        } else if (done && index >=length) {
-            more = false;
-        }else {
-            more = true;
+        } catch ( Exception ex ) {
+            String str = CharScanner.errorDetails ( "ensureBuffer issue", readBuf, index, ch );
+            Exceptions.handle (  str, ex );
+        }
+    }
+
+    private void readNextBuffer() throws IOException {
+        length = reader.read ( readBuf, 0, readAheadSize );
+
+        index = 0;
+        if (length == -1) {
+             ch = -1;
+             length = 0;
+             more = false;
+             done = true;
+        } else {
+            if (length<readBuf.length-5) {
+                     done = true;
+                     more = true;
+            }
         }
     }
 
@@ -99,45 +103,54 @@ public class ReaderCharacterSource implements CharacterSource {
 
     @Override
     public  final boolean hasChar() {
-            ensureBuffer();
-            return more;
+        ensureBuffer();
+        return more;
     }
 
     @Override
     public  final boolean consumeIfMatch( char[] match ) {
+        try {
 
+            char [] _chars = readBuf;
+            int i=0;
+            int idx = index;
+            boolean ok = true;
 
-        char [] _chars = readBuf;
-        int i=0;
-        int idx = index;
-        boolean ok = true;
+            if ( idx + match.length > length ) {
+                readForToken ();
+            }
 
-        if ( idx + match.length > length ) {
-            readForToken ();
-        }
+            for (; i < match.length; i++, idx++) {
+                    ok &=  ( match[i] == _chars[idx] );
+                    if (!ok) break;
+            }
 
-        for (; i < match.length; i++, idx++) {
-                ok &=  ( match[i] == _chars[idx] );
-                if (!ok) break;
-        }
-
-        if ( ok ) {
-            index = idx;
-            return true;
-        } else {
-            return false;
+            if ( ok ) {
+                index = idx;
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            String str = CharScanner.errorDetails ( "consumeIfMatch issue", readBuf, index, ch );
+            return Exceptions.handle ( boolean.class, str, ex );
         }
 
     }
 
     @Override
     public final  int location() {
-        return die(int.class, "not supported");
+        return index;
     }
 
     public final int safeNextChar() {
-        ensureBuffer();
-        return index + 1 < readBuf.length ? readBuf[index++] : -1;
+        try {
+            ensureBuffer();
+            return index + 1 < readBuf.length ? readBuf[index++] : -1;
+        } catch (Exception ex) {
+            String str = CharScanner.errorDetails ( "safeNextChar issue", readBuf, index, ch );
+            return Exceptions.handle ( int.class, str, ex );
+        }
     }
 
 
@@ -146,6 +159,7 @@ public class ReaderCharacterSource implements CharacterSource {
 
     @Override
     public char[] findNextChar( int match, int esc ) {
+        try{
             ensureBuffer();
 
             int idx = index;
@@ -226,6 +240,10 @@ public class ReaderCharacterSource implements CharacterSource {
                         return die (char[].class, "Unable to find close char " + (char)match + " " + new String(results));
                     }
                 }
+        } catch (Exception ex ) {
+            String str = CharScanner.errorDetails ( "findNextChar issue", readBuf, index, ch );
+            return Exceptions.handle ( char[].class, str, ex );
+        }
 
 
     }
@@ -238,12 +256,17 @@ public class ReaderCharacterSource implements CharacterSource {
 
     @Override
     public void skipWhiteSpace() {
-        index = CharScanner.skipWhiteSpace( readBuf, index, length );
-        if (index >= length && more) {
+        try {
+            index = CharScanner.skipWhiteSpace( readBuf, index, length );
+            if (index >= length && more) {
 
-            ensureBuffer();
+                ensureBuffer();
 
-            skipWhiteSpace();
+                skipWhiteSpace();
+            }
+        } catch ( Exception ex ) {
+            String str = CharScanner.errorDetails ( "skipWhiteSpace issue", readBuf, index, ch );
+             Exceptions.handle (  str, ex );
         }
     }
 
@@ -254,25 +277,34 @@ public class ReaderCharacterSource implements CharacterSource {
 
 
     public char[] readNumber(  ) {
-         ensureBuffer();
-
-        char [] results =  CharScanner.readNumber( readBuf, index, length);
-        index += results.length;
-
-        if (index >= length && more) {
+        try {
             ensureBuffer();
-            if (length!=0) {
-                char results2[] = readNumber();
-                return Chr.add(results, results2);
-            } else  {
+
+            char [] results =  CharScanner.readNumber( readBuf, index, length);
+            index += results.length;
+
+            if (index >= length && more) {
+                ensureBuffer();
+                if (length!=0) {
+                    char results2[] = readNumber();
+                    return Chr.add(results, results2);
+                } else  {
+                    return results;
+                }
+            } else {
                 return results;
             }
-        } else {
-            return results;
+        } catch (Exception ex) {
+            String str = CharScanner.errorDetails ( "readNumber issue", readBuf, index, ch );
+            return Exceptions.handle ( char[].class, str, ex );
         }
 
     }
 
+    @Override
+    public String errorDetails( String message ) {
 
+        return CharScanner.errorDetails ( message, readBuf, index, ch );
+    }
 
 }

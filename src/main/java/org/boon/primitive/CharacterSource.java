@@ -37,4 +37,6 @@ public interface CharacterSource {
     /** Reads a number from the character source. */
     char[] readNumber(  );
 
+    String errorDetails( String message  );
+
 }

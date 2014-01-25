@@ -41,22 +41,8 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
 
 
-    //TODO you have to improve this.
     protected String exceptionDetails( String message ) {
-        CharBuf buf = CharBuf.create( 255 );
-
-        buf.addLine( message );
-
-
-        buf.addLine( "" );
-        buf.addLine( "The current character read is " + charDescription( characterSource.currentChar() ) );
-
-
-        buf.addLine( message );
-
-
-
-        return buf.toString();
+        return characterSource.errorDetails ( message );
     }
 
 

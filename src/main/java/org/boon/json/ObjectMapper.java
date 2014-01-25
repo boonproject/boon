@@ -242,6 +242,12 @@ public interface ObjectMapper {
     public <T> T fromJson(Reader reader, Class<T> clazz);
     public <T> T fromJson(InputStream reader, Class<T> clazz);
 
+    public Object fromJson(String json);
+    public Object fromJson(Reader reader);
+    public Object fromJson(byte[] bytes);
+    public Object fromJson(char[] chars);
+    public Object fromJson(InputStream reader);
+
 
 
 }
