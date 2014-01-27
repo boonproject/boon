@@ -777,76 +777,110 @@ public class BeanUtils {
         Map<String, FieldAccess> dstFields = Reflection.getAllAccessorFields ( dstClass );
 
         for ( FieldAccess srcField : srcFields.values() ) {
+
+            FieldAccess dstField = dstFields.get ( srcField.getName() );
             try {
-                if ( srcField.isStatic() ) {
-                    continue;
-                }
 
-                FieldAccess dstField = dstFields.get ( srcField.getName() );
-                if (dstField == null ) {
-                    continue;
-                }
+                copySrcFieldToDestField ( src, dst, dstField, srcField );
 
-                if (!srcField.isPrimitive() && !Typ.isBasicType( srcField.getType() ))  {
-
-
-
-                    Object srcValue = srcField.getObject( src );
-                    if (srcValue == null) {
-                        if ( !dstField.isPrimitive () ) {
-                            dstField.setObject(dst, null);
-                        }
-                    } else {
-
-                        /* if the field is compatible then set it. */
-                        if (    dstField.getType() == srcValue.getClass() ||
-                                Typ.isSuperType ( dstField.getType(), srcValue.getClass() ) ) {
-
-                            dstField.setObject(dst, copy( srcField.getObject ( src ) ));
-                        } else {
-                            if ( srcValue instanceof Collection && dstField.getComponentClass() != null
-                                    && Typ.isCollection ( dstField.getType () ) ) {
-                                Collection srcCollection = (Collection) srcValue;
-
-                                Collection dstCollection = Reflection.createCollection( dstField.getType(), srcCollection.size() );
-                                for ( Object srcComponentValue : srcCollection ) {
-
-                                    Object newInstance = Reflection.newInstance( dstField.getComponentClass() );
-                                    fieldByFieldCopy( srcComponentValue, newInstance );
-                                    dstCollection.add ( newInstance );
-                                }
-
-                                dstField.setObject ( dst, dstCollection );
-
-                            } else {
-                                if (dstField.typeEnum () == Type.ABSTRACT || dstField.typeEnum () == Type.INTERFACE) {
-                                    //no op
-                                } else {
-                                    Object newInstance = Reflection.newInstance( dstField.getType() );
-                                    fieldByFieldCopy( srcField.getObject( src ), newInstance );
-                                    dstField.setObject ( dst, newInstance );
-                                }
-                            }
-                        }
-                    }
-                } else if (srcField.isPrimitive()) {
-                    dstField.setValue( dst, srcField.getValue( src ) );
-
-                } else {
-                    Object value = srcField.getObject( src );
-
-                    if (value == null) {
-                        if ( !dstField.isPrimitive () ) {
-                            dstField.setObject(dst, null);
-                        }
-                    } else {
-                        dstField.setValue( dst,  value  );
-                    }
-
-                }
             }catch (Exception ex) {
-                 Exceptions.handle( ex );
+                 Exceptions.handle( sputs("copying field", srcField.getName (), srcClass, " to ", dstField.getName(), dstClass), ex );
             }
+        }
+    }
+
+    private static void copySrcFieldToDestField( Object src, Object dst, FieldAccess dstField, FieldAccess srcField ) {
+        if ( srcField.isStatic() ) {
+            return ;
+        }
+
+        if (dstField == null ) {
+            return ;
+        }
+
+                /* If its primitive handle it. */
+        if ( srcField.isPrimitive() ) {
+            dstField.setValue( dst, srcField.getValue( src ) );
+            return ;
+        }
+
+        Object srcValue = srcField.getObject( src );
+
+                /* if value is null then handle it unless it is primitive.*/
+        if (srcValue == null) {
+            if ( !dstField.isPrimitive () ) {
+                dstField.setObject(dst, null);
+            }
+            return ;
+        }
+
+
+
+
+
+                /* Basic type. */
+        if ( Typ.isBasicType( srcField.getType() ) ) {
+            /* Handle non primitive copy. */
+            Object value = srcField.getObject( src );
+            dstField.setValue( dst,  value  );
+            return ;
+        }
+
+                /* Types match and not a collection so just copy. */
+        if (    !(srcValue instanceof Collection ) && dstField.getType() == srcValue.getClass() ||
+                Typ.isSuperType ( dstField.getType (), srcValue.getClass () ) ) {
+
+            dstField.setObject(dst, copy( srcField.getObject ( src ) ));
+            return ;
+        }
+
+
+
+                /* Collection field copy. */
+        if ( srcValue instanceof Collection && dstField.getComponentClass() != null
+                            && Typ.isCollection ( dstField.getType () )
+                            ) {
+
+            handleCollectionFieldCopy ( dst, dstField, ( Collection ) srcValue );
+            return ;
+
+        }
+
+
+                      /* Non identical object copy. */
+        if (dstField.typeEnum () == Type.ABSTRACT || dstField.typeEnum () == Type.INTERFACE) {
+                            //no op
+        } else {
+                Object newInstance = Reflection.newInstance ( dstField.getType () );
+                fieldByFieldCopy( srcField.getObject( src ), newInstance );
+                dstField.setObject ( dst, newInstance );
+        }
+    }
+
+    private static void handleCollectionFieldCopy( Object dst, FieldAccess dstField, Collection srcValue ) {
+        if ( dstField.getComponentClass () != Typ.string )  {
+
+            Collection dstCollection = Reflection.createCollection ( dstField.getType (), srcValue.size () );
+            for ( Object srcComponentValue : srcValue ) {
+
+                Object newInstance = Reflection.newInstance( dstField.getComponentClass() );
+                fieldByFieldCopy( srcComponentValue, newInstance );
+                dstCollection.add ( newInstance );
+            }
+
+            dstField.setObject ( dst, dstCollection );
+        } else {
+
+            Collection dstCollection = Reflection.createCollection( dstField.getType(), srcValue.size() );
+            for ( Object srcComponentValue : srcValue ) {
+
+                if (srcComponentValue!=null) {
+                    dstCollection.add ( srcComponentValue.toString () );
+                }
+            }
+
+            dstField.setObject ( dst, dstCollection );
+
         }
     }
 

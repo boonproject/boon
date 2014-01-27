@@ -89,6 +89,8 @@ public class PropertyField extends BaseField {
         }
 
     }
+
+
     public final boolean getBoolean( Object obj ) {
         try {
             return ( Boolean ) this.getObject ( obj );

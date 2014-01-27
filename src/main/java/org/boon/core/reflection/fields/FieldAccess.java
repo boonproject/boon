@@ -61,6 +61,8 @@ public interface FieldAccess {
     boolean isVolatile();
     boolean isQualified();
     boolean isReadOnly();
+    boolean isWriteOnly();
+
     Class<?> getType();
     Field getField();
 

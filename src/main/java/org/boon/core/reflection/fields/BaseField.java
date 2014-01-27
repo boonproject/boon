@@ -32,6 +32,7 @@ public abstract class BaseField implements FieldAccess {
     private static final int READ_ONLY = 5;
     private static final int INCLUDE = 6;
     private static final int IGNORE = 7;
+    private static final int WRITE_ONLY = 8;
 
     protected final BitSet bits = new BitSet (  );
     protected final Class<?> type;
@@ -142,8 +143,14 @@ public abstract class BaseField implements FieldAccess {
     protected BaseField ( String name, Method getter, Method setter ) {
 
         try {
+            if (setter==null) {
+                bits.set(READ_ONLY);
 
-            bits.set(READ_ONLY,  setter == null);
+            } else if (getter == null) {
+                bits.set( WRITE_ONLY );
+                bits.set( IGNORE );
+            }
+
             this.name = name.intern();
 
             bits.set( VOLATILE,  false);
@@ -541,6 +548,11 @@ public abstract class BaseField implements FieldAccess {
         return bits.get(READ_ONLY);
     }
 
+
+    @Override
+    public boolean isWriteOnly() {
+        return bits.get(WRITE_ONLY);
+    }
 
 
     @Override

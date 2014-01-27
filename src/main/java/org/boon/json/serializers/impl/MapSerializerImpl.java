@@ -31,11 +31,16 @@ public class MapSerializerImpl implements MapSerializer {
         builder.addChar( '{' );
 
         final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+        int index=0;
         for ( Map.Entry<String, Object> entry : entrySet ) {
-            serializeFieldName ( entry.getKey (), builder );
-            serializer.serializeObject ( entry.getValue (), builder );
-            builder.addChar ( ',' );
+            if (entry.getValue ()!=null) {
+                serializeFieldName ( entry.getKey (), builder );
+                serializer.serializeObject ( entry.getValue (), builder );
+                builder.addChar ( ',' );
+                index++;
+            }
         }
+        if (index>0)
         builder.removeLastChar ();
         builder.addChar( '}' );
 

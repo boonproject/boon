@@ -302,6 +302,11 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+    public boolean isWriteOnly() {
+        return false;
+    }
+
+    @Override
     public final Class<?> getType() {
         return Object.class;
     }

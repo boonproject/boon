@@ -407,11 +407,7 @@ public class CharBuf extends Writer implements CharSequence {
         /* 34 is double quote. */
         } else if (c == 34 ){
             return true;
-        /* 47 is back slash. */
-        } else if (c == 47) {
-            return true;
-        /* 92 is forward slash. */
-        }else if (c == 92) {
+        } else if (c == 92) {
             return true;
         }
         return false;
@@ -463,68 +459,73 @@ public class CharBuf extends Writer implements CharSequence {
         int index = 0;
         while ( true ) {
                 char c = charArray[ index ];
-                if ( ++index >= charArray.length) break;
+
 
                 if ( isJSONControl ( c )) {
 
-                switch ( c ) {
-                    case '\"':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  '"';
-                        _location ++;
-                        break;
-                    case '\\':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  '\\';
-                        _location ++;
-                        break;
-                    case '/':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  '/';
-                        _location ++;
-                        break;
+                    switch ( c ) {
+                        case '\"':
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  '"';
+                            _location ++;
+                            break;
+                        case '\\':
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  '\\';
+                            _location ++;
+                            break;
+                        //There is not requirement to escape solidus so we will not.
+//                        case '/':
+//                            _buffer[_location] = '\\';
+//                            _location ++;
+//                            _buffer[_location] =  '/';
+//                            _location ++;
+//                            break;
 
-                    case '\b':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  'b';
-                        _location ++;
-                        break;
-                    case '\f':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  'f';
-                        _location ++;
-                        break;
-                    case '\n':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  'n';
-                        _location ++;
-                        break;
-                    case '\r':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  'r';
-                        _location ++;
-                        break;
+                        case '\b':
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  'b';
+                            _location ++;
+                            break;
+                        case '\f':
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  'f';
+                            _location ++;
+                            break;
+                        case '\n':
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  'n';
+                            _location ++;
+                            break;
+                        case '\r':
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  'r';
+                            _location ++;
+                            break;
 
-                    case '\t':
-                        _buffer[_location] = '\\';
-                        _location ++;
-                        _buffer[_location] =  't';
-                        _location ++;
-                        break;
-                }
+                        case '\t':
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  't';
+                            _location ++;
+                            break;
+                    }
                 }else {
 
                         _buffer[_location] = c;
                         _location ++;
 
                 }
+
+
+                if ( ++index >= charArray.length) break;
+
 
         }
         _buffer[_location] = '"';

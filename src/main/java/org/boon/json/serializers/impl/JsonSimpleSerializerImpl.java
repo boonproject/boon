@@ -2,6 +2,7 @@ package org.boon.json.serializers.impl;
 
 
 import org.boon.Exceptions;
+import org.boon.Maps;
 import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Reflection;
@@ -378,7 +379,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
 
-        public Map<String, FieldAccess> getFields( Class<? extends Object> aClass ) {
+   public Map<String, FieldAccess> getFields( Class<? extends Object> aClass ) {
             Map<String, FieldAccess> map = fieldMap.get( aClass );
             if (map == null) {
                 map = doGetFields ( aClass );
@@ -386,10 +387,16 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             }
             return map;
 
-        }
+   }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-            return Reflection.getPropertyFieldAccessMapFieldFirst ( aClass );
+        Map<String, FieldAccess> fields =  Maps.copy ( Reflection.getPropertyFieldAccessMapFieldFirst ( aClass ) );
+        for (FieldAccess field : fields.values()) {
+            if (field.isWriteOnly ())  {
+                fields.remove ( field.getName ()  );
+            }
+        }
+        return fields;
     }
 
 
@@ -406,12 +413,17 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         builder.addChar( '{' );
 
+        int index=0;
         final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
         for ( Map.Entry<String, Object> entry : entrySet ) {
-            serializeFieldName ( entry.getKey ().toString (), builder );
-            serializeObject( entry.getValue(), builder );
-            builder.addChar ( ',' );
+            if (entry.getValue ()!=null) {
+                serializeFieldName ( entry.getKey ().toString (), builder );
+                serializeObject( entry.getValue(), builder );
+                builder.addChar ( ',' );
+                index++;
+            }
         }
+        if (index>0)
         builder.removeLastChar ();
         builder.addChar( '}' );
 

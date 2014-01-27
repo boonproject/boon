@@ -20,6 +20,7 @@ public class JsonSerializeTest {
     public static class Employee {
 
         String name = "Rick";
+        String url = "http://foo.bar/foo.jpg";
 
         public String getName() {
             return name;
@@ -35,7 +36,11 @@ public class JsonSerializeTest {
 
         Employee rick = new Employee();
         String sRick = new JsonSimpleSerializerImpl().serialize( rick ).toString();
-        boolean ok = sRick.equals( "{\"name\":\"Rick\"}" ) || die( sRick );
+        boolean ok = sRick.equals( "{\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\"}" ) || die( sRick );
+
+        rick = new JsonParserFactory ().create ().parse ( Employee.class, sRick );
+        ok = rick.url.equals( "http://foo.bar/foo.jpg" ) || die( sRick );
+
     }
 
     @Test
@@ -45,7 +50,7 @@ public class JsonSerializeTest {
         Employee rick = new Employee();
         String sRick = new JsonSerializerFactory().useFieldsFirst().setOutputType( true ).create()
                 .serialize( rick ).toString();
-        boolean ok = sRick.equals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\"}" ) || die( sRick );
+        boolean ok = sRick.equals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\"}" ) || die( sRick );
     }
 
 
@@ -120,10 +125,14 @@ public class JsonSerializeTest {
     @Test
     public void bug3() {
 
-        JsonSerializer serializer = new JsonSerializerFactory().create();
+        JsonSerializer serializer = new JsonSerializerFactory().create ();
 
         String sMedium = serializer.serialize( MEDIUM_DATA ).toString();
         puts( sMedium );
+
+        Map<String, Object> map = new JsonParserFactory ().create ().parseMap ( sMedium );
+        map = ( Map<String, Object> ) map.get("photo");
+        puts ( "url", map.get ( "url" ) );
 
         String str = serializer.serialize( COMPLEX_DATA ).toString();
         puts( str );
