@@ -1,6 +1,7 @@
 package org.boon.core.reflection;
 
 import org.boon.Exceptions;
+import org.boon.Lists;
 import org.boon.StringScanner;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
@@ -8,12 +9,14 @@ import org.boon.core.Type;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.MapField;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
+import static org.boon.Str.lines;
 import static org.boon.StringScanner.isDigits;
 
 /**
@@ -94,7 +97,7 @@ public class BeanUtils {
 
             if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-                object = Reflection.idx( object, Integer.parseInt( property ) );
+                object = idx ( object, Integer.parseInt ( property ) );
 
             } else {
 
@@ -144,7 +147,7 @@ public class BeanUtils {
 
             if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-                object = Reflection.idx( object, Integer.parseInt( property ) );
+                object = idx ( object, Integer.parseInt ( property ) );
 
             } else {
 
@@ -243,6 +246,23 @@ public class BeanUtils {
     }
 
     /**
+     * Get property value
+     *
+     * @param object
+     * @param path   in dotted notation
+     * @return
+     */
+    public static void idx( Object object, String path, Object value ) {
+
+        Objects.requireNonNull( object );
+        Objects.requireNonNull( path );
+
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+
+        setPropertyValue( object, value, properties );
+    }
+
+    /**
      * @param object
      * @param path
      * @return
@@ -288,7 +308,7 @@ public class BeanUtils {
 
         if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-            object = Reflection.idx( object, Integer.parseInt( property ) );
+            object = idx ( object, Integer.parseInt ( property ) );
 
         }
 
@@ -352,7 +372,7 @@ public class BeanUtils {
 
             if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-                object = Reflection.idx( object, Integer.parseInt( property ) );
+                object = idx ( object, Integer.parseInt ( property ) );
 
             } else {
 
@@ -728,7 +748,7 @@ public class BeanUtils {
 
         for ( FieldAccess field : fields.values() ) {
             try {
-            if ( field.isStatic() ) {
+            if ( field.isStatic() || field.isWriteOnly()) {
                 continue;
             }
             if (!field.isPrimitive() && !Typ.isBasicType( field.getType() ))  {
@@ -884,4 +904,34 @@ public class BeanUtils {
         }
     }
 
+    public static Object idx( Object object, int index ) {
+        if ( Reflection.isArray ( object ) ) {
+            object = Array.get ( object, index );
+        } else if ( object instanceof List ) {
+            object = Lists.idx ( ( List ) object, index );
+        }
+        return object;
+    }
+
+    public static void idx( Object object, int index, Object value ) {
+        try {
+            if ( Reflection.isArray ( object ) ) {
+                Array.set( object, index, value );
+            } else if ( object instanceof List ) {
+                Lists.idx( ( List ) object, index, value );
+            }
+        } catch ( Exception notExpected ) {
+            String msg = lines( "An unexpected error has occurred",
+                    "This is likely a programming error!",
+                    String.format( "Object is %s, index is %s, and set is %s", object, index, value ),
+                    String.format( "The object is an array? %s", object == null ? "null" : object.getClass().isArray() ),
+                    String.format( "The object is of type %s", object == null ? "null" : object.getClass().getName() ),
+                    String.format( "The set is of type %s", value == null ? "null" : value.getClass().getName() ),
+
+                    ""
+
+            );
+            Exceptions.handle( msg, notExpected );
+        }
+    }
 }

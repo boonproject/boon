@@ -1,6 +1,7 @@
 package org.boon.tests;
 
 import junit.framework.Assert;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.datarepo.Repo;
 import org.boon.criteria.CriteriaFactory;
 import org.boon.criteria.Visitor;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.*;
-import static org.boon.Boon.puts;
 import static org.boon.criteria.ProjectedSelector.max;
 import static org.boon.criteria.Selector.*;
 import static org.boon.criteria.Update.set;
@@ -20,7 +20,7 @@ import static org.boon.criteria.Update.update;
 import static org.boon.tests.model.Employee.employee;
 
 
-import static org.boon.core.reflection.Reflection.idx;
+import static org.boon.core.reflection.BeanUtils.idx;
 
 
 public class RepoDefaultTest {
@@ -248,7 +248,7 @@ public class RepoDefaultTest {
                 CriteriaFactory.eq( "lastName", "Hightower" ) );
 
         System.out.println( list.get( 0 ) );
-        Assert.assertEquals( "tag1", idx( list.get( 0 ).get( "tags.name" ), 0 ) );
+        Assert.assertEquals( "tag1", BeanUtils.idx ( list.get ( 0 ).get ( "tags.name" ), 0 ) );
 
     }
 
@@ -264,7 +264,7 @@ public class RepoDefaultTest {
                 selects( select( "tags", "metas", "name0" ) ),
                 CriteriaFactory.eq( "lastName", "Hightower" ) );
 
-        Assert.assertEquals( "mtag1", idx( list.get( 0 ).get( "tags.metas.name0" ), 0 ) );
+        Assert.assertEquals( "mtag1", BeanUtils.idx ( list.get ( 0 ).get ( "tags.metas.name0" ), 0 ) );
 
 
     }
@@ -282,7 +282,7 @@ public class RepoDefaultTest {
                 CriteriaFactory.eq( "lastName", "Hightower" ) );
 
 
-        Assert.assertEquals( "2tag1", idx( list.get( 0 ).get( "tags.metas.metas2.name2" ), 0 ) );
+        Assert.assertEquals( "2tag1", BeanUtils.idx ( list.get ( 0 ).get ( "tags.metas.metas2.name2" ), 0 ) );
 
 
     }
@@ -300,7 +300,7 @@ public class RepoDefaultTest {
                 CriteriaFactory.eqNestedAdvanced( "2tag1", "tags", "metas", "metas2", "name2" ) );
 
 
-        Assert.assertEquals( "2tag1", idx( list.get( 0 ).get( "tags.metas.metas2.name2" ), 0 ) );
+        Assert.assertEquals( "2tag1", BeanUtils.idx ( list.get ( 0 ).get ( "tags.metas.metas2.name2" ), 0 ) );
 
 
     }
@@ -411,7 +411,7 @@ public class RepoDefaultTest {
 
         //rint("listStream", listStream);
 
-        Assert.assertEquals( "3tag1", idx( list.get( 0 ).get( "tags.metas.metas2.metas3.name3" ), 0 ) );
+        Assert.assertEquals( "3tag1", BeanUtils.idx ( list.get ( 0 ).get ( "tags.metas.metas2.metas3.name3" ), 0 ) );
 
     }
 

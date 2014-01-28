@@ -1,8 +1,8 @@
 package org.boon.core;
 
-import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.StringScanner;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
@@ -457,7 +457,7 @@ public class Conversions {
             Object newInstance = Array.newInstance( clz.getComponentType(), Reflection.len( value ) );
             Iterator<Object> iterator = iterator( Typ.object, value );
             while ( iterator.hasNext() ) {
-                Reflection.idx( newInstance, index, iterator.next() );
+                BeanUtils.idx ( newInstance, index, iterator.next () );
                 index++;
             }
             return ( T ) newInstance;
@@ -591,7 +591,7 @@ public class Conversions {
 
                 @Override
                 public T next() {
-                    T next = ( T ) Reflection.idx( value, i );
+                    T next = ( T ) BeanUtils.idx ( value, i );
                     i++;
                     return next;
                 }
@@ -737,7 +737,7 @@ public class Conversions {
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator();
         int index = 0;
         while ( iterator.hasNext() ) {
-            Reflection.idx( array, index, iterator.next() );
+            BeanUtils.idx ( array, index, iterator.next () );
             index++;
         }
         return array;
@@ -750,7 +750,7 @@ public class Conversions {
         Iterator<Object> iterator = ( Iterator<Object> ) value.iterator();
         int index = 0;
         while ( iterator.hasNext() ) {
-            Reflection.idx( array, index, iterator.next() );
+            BeanUtils.idx ( array, index, iterator.next () );
             index++;
         }
         return array;
@@ -903,7 +903,7 @@ public class Conversions {
         if ( Reflection.isArray( o ) ) {
             int length = Reflection.len( o );
             for ( int index = 0; index < length; index++ ) {
-                unifyList( Reflection.idx( o, index ), list );
+                unifyList( BeanUtils.idx ( o, index ), list );
             }
         } else if ( o instanceof Iterable ) {
             Iterable i = ( ( Iterable ) o );

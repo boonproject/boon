@@ -54,6 +54,18 @@ public class Lists {
         return new ArrayList<>( collection );
     }
 
+
+
+    public static <V, WRAP> List<WRAP> wrap(Class<WRAP> wrapper, Collection<V> collection ) {
+        List<WRAP> list = new ArrayList<>( collection.size () );
+
+        for (V v : collection) {
+            WRAP wrap = Reflection.newInstance ( wrapper, v );
+            list.add ( wrap );
+        }
+        return list;
+    }
+
     public static <V> List<V> list( Enumeration<V> enumeration ) {
         List<V> list = new ArrayList<>();
         while ( enumeration.hasMoreElements() ) {

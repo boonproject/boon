@@ -2,7 +2,6 @@ package org.boon.datarepo.impl;
 
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.Conversions;
-import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.Criteria;
 import org.boon.criteria.QueryFactory;
@@ -282,7 +281,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getName();
         for ( int index = 0; index < results.size(); index++ ) {
             Map<String, Object> map = maps.get( index );
-            Reflection.idx( values, index, map.get( keyName ) );
+            BeanUtils.idx ( values, index, map.get ( keyName ) );
         }
         return ( OBJ[] ) values;
     }
@@ -299,7 +298,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getName();
         for ( int index = 0; index < results.size(); index++ ) {
             Map<String, Object> map = maps.get( index );
-            Reflection.idx( values, index, map.get( keyName ) );
+            BeanUtils.idx ( values, index, map.get ( keyName ) );
         }
         OBJ[] array = ( OBJ[] ) values;
         List list = new ArrayList( Arrays.asList( array ) );

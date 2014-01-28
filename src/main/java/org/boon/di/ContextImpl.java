@@ -4,12 +4,13 @@ import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class ContextImpl implements Context {
 
-    private Set<Module> modules = new HashSet<> (  );
+    private Set<Module> modules = new LinkedHashSet<> (  );
 
     public ContextImpl (Module... modules) {
         for (Module module : modules)  {

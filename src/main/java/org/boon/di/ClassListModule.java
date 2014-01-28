@@ -1,6 +1,7 @@
 package org.boon.di;
 
 import org.boon.Exceptions;
+import org.boon.core.reflection.Reflection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class ClassListModule implements Module {
     @Override
     public <T> T get( Class<T> type ) {
         try {
-            return (T)  classes.get(type).newInstance();
+            return (T) Reflection.newInstance (classes.get(type));
         } catch ( Exception e ) {
             Exceptions.handle ( e );
             return null;

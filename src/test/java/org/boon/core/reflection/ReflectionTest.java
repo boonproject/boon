@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.boon.Maps;
-
 
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
@@ -144,7 +142,7 @@ public class ReflectionTest {
         ok &= Reflection.len( objectMap.get( "employees" ) ) == 4 || die();
 
         final Map<String, Object> oMapEmployee = ( Map<String, Object> )
-                Reflection.idx( objectMap.get( "employees" ), 0 );
+                BeanUtils.idx ( objectMap.get ( "employees" ), 0 );
         ok &= oMapEmployee.get( "firstName" ).equals( "Rick" ) || die();
 
 

@@ -8,7 +8,6 @@ import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.core.reflection.fields.FieldFieldsAccessor;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
@@ -463,7 +462,7 @@ public class MapObjectConversion {
                 int length = Reflection.arrayLength ( value );
                 List<Map<String, Object>> list = new ArrayList<>( length );
                 for ( int index = 0; index < length; index++ ) {
-                    Object item = Reflection.idx ( value, index );
+                    Object item = BeanUtils.idx ( value, index );
                     list.add( toMap( item ) );
                 }
                 map.put( entry.key(), list );

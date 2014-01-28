@@ -79,9 +79,23 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
         key = getKey( key );
 
 
+
+
+
+        if (key instanceof Collection) {
+            Collection collection = (Collection) key;
+
+            for (Object keyComponent : collection) {
+
+                MultiValue mv = map.get( keyComponent );
+                mv = mvCreateOrAddToMV( mv, item );
+                map.put((KEY) keyComponent, mv );
+            }
+            return;
+        }
+
+
         MultiValue mv = map.get( key );
-
-
         if ( storeKeyInIndexOnly ) {
             Object primaryKey = primaryKeyGetter.apply( item );
 

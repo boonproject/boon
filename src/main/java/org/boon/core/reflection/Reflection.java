@@ -3,7 +3,6 @@ package org.boon.core.reflection;
 import org.boon.*;
 import org.boon.core.*;
 import org.boon.core.reflection.fields.*;
-import org.boon.core.value.ValueMapImpl;
 import org.boon.primitive.CharBuf;
 import sun.misc.Unsafe;
 
@@ -13,7 +12,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Str.*;
@@ -523,8 +521,9 @@ public class Reflection {
             /* See if there is a no arg constructor. */
             Constructor<T> declaredConstructor = clazz.getDeclaredConstructor ( null );
             if (declaredConstructor !=null ) {
-                /* If there was a no argument consturctor, then use it. */
-                newInstance = clazz.newInstance();
+                declaredConstructor.setAccessible ( true );
+                /* If there was a no argument constructor, then use it. */
+                newInstance = declaredConstructor.newInstance (  );
             } else {
                 if ( _useUnsafe ) {
                     newInstance = ( T ) getUnsafe().allocateInstance( clazz );
@@ -550,6 +549,22 @@ public class Reflection {
 
     }
 
+    public static <T> T newInstance( Class<T> clazz, Object arg ) {
+        T newInstance = null;
+
+        try {
+            /* See if there is a no arg constructor. */
+            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor ( arg.getClass() );
+            if (declaredConstructor !=null ) {
+                declaredConstructor.setAccessible ( true );
+                /* If there was a no argument constructor, then use it. */
+                newInstance = declaredConstructor.newInstance ( arg );
+            }
+        } catch ( Exception ex ) {
+            handle( ex );
+        }
+        return newInstance;
+    }
 
     public static Class<?> getComponentType( Collection<?> collection, FieldAccess fieldAccess ) {
         Class<?> clz = fieldAccess.getComponentClass();
@@ -731,7 +746,7 @@ public class Reflection {
 
                 @Override
                 public Object next() {
-                    Object value = Reflection.idx( o, index );
+                    Object value = BeanUtils.idx ( o, index );
                     index++;
                     return value;
                 }
@@ -766,40 +781,6 @@ public class Reflection {
         }
         return list;
     }
-
-
-    public static Object idx( Object object, int index ) {
-        if ( isArray( object ) ) {
-            object = Array.get( object, index );
-        } else if ( object instanceof List ) {
-            object = Lists.idx( ( List ) object, index );
-        }
-        return object;
-    }
-
-    public static void idx( Object object, int index, Object value ) {
-        try {
-            if ( isArray( object ) ) {
-                Array.set( object, index, value );
-            } else if ( object instanceof List ) {
-                Lists.idx( ( List ) object, index, value );
-            }
-        } catch ( Exception notExpected ) {
-            String msg = lines( "An unexpected error has occurred",
-                    "This is likely a programming error!",
-                    String.format( "Object is %s, index is %s, and set is %s", object, index, value ),
-                    String.format( "The object is an array? %s", object == null ? "null" : object.getClass().isArray() ),
-                    String.format( "The object is of type %s", object == null ? "null" : object.getClass().getName() ),
-                    String.format( "The set is of type %s", value == null ? "null" : value.getClass().getName() ),
-
-                    ""
-
-            );
-            Exceptions.handle( msg, notExpected );
-        }
-    }
-
-
 
 
 }
