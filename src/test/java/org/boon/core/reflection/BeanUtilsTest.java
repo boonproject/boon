@@ -15,6 +15,15 @@ public class BeanUtilsTest {
     public static class TestClass {
         private String id="foo";
         private  Long time;
+        TestClass child =null;
+
+        void init()
+        {
+            child = new TestClass ();
+
+            child.id = "child";
+            child.time = 1L;
+        }
         List<Player> players = Player.players (
                 Player.player ( "1", "Rick", "Hightower"  ),
                 Player.player ( "2", "Diana", "Hightower"  ) );
@@ -25,9 +34,13 @@ public class BeanUtilsTest {
     public static class TestPrime {
         private String id="bar";
         private  long time;
+
+        TestPrime child;
         List<String> players;
 
     }
+
+
 
 
 
@@ -107,9 +120,28 @@ public class BeanUtilsTest {
     @Test
     public void test() {
         TestClass tc = new TestClass ();
+        tc.init ();
         TestPrime prime = new TestPrime ();
         BeanUtils.copyProperties ( tc, prime );
         boolean ok = prime.id.equals ( "foo" ) || die();
+
+        ok = prime.child.id.equals ( "child" ) || die();
+        ok &= Lists.list("1", "2").equals ( prime.players ) || die("" + prime.players);
+    }
+
+
+    @Test
+    public void test2() {
+        TestClass tc = new TestClass ();
+        tc.init();
+
+        TestPrime prime = new TestPrime ();
+        BeanUtils.copyProperties ( tc, prime, "id" );
+        boolean ok = prime.id.equals ( "bar" ) || die(prime.id);
+
+        ok = prime.child.id.equals ( "bar" ) || die(prime.child.id);
+
+        ok = prime.child.time == 1L  || die();
         ok &= Lists.list("1", "2").equals ( prime.players ) || die("" + prime.players);
     }
 }

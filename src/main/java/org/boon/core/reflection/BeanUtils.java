@@ -2,6 +2,7 @@ package org.boon.core.reflection;
 
 import org.boon.Exceptions;
 import org.boon.Lists;
+import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
@@ -787,6 +788,42 @@ public class BeanUtils {
          fieldByFieldCopy( src, dest );
     }
 
+
+
+    public static void copyProperties( Object src, Object dest, String... ignore) {
+        fieldByFieldCopy( src, dest, Sets.set ( ignore ) );
+    }
+
+    public static void copyProperties( Object src, Object dest, Set<String> ignore) {
+        fieldByFieldCopy( src, dest, ignore );
+    }
+
+    private static void fieldByFieldCopy( Object src, Object dst, Set<String> ignore ) {
+
+        final Class<?> srcClass = src.getClass();
+        Map<String, FieldAccess> srcFields = Reflection.getAllAccessorFields( srcClass );
+
+
+        final Class<?> dstClass =  dst.getClass();
+        Map<String, FieldAccess> dstFields = Reflection.getAllAccessorFields ( dstClass );
+
+        for ( FieldAccess srcField : srcFields.values() ) {
+
+            if (ignore.contains ( srcField.getName () )) {
+                continue;
+            }
+
+            FieldAccess dstField = dstFields.get ( srcField.getName() );
+            try {
+
+                copySrcFieldToDestField ( src, dst, dstField, srcField, ignore );
+
+            }catch (Exception ex) {
+                Exceptions.handle( sputs("copying field", srcField.getName (), srcClass, " to ", dstField.getName(), dstClass), ex );
+            }
+        }
+    }
+
     private static void fieldByFieldCopy( Object src, Object dst ) {
 
         final Class<?> srcClass = src.getClass();
@@ -801,7 +838,7 @@ public class BeanUtils {
             FieldAccess dstField = dstFields.get ( srcField.getName() );
             try {
 
-                copySrcFieldToDestField ( src, dst, dstField, srcField );
+                copySrcFieldToDestField ( src, dst, dstField, srcField, null );
 
             }catch (Exception ex) {
                  Exceptions.handle( sputs("copying field", srcField.getName (), srcClass, " to ", dstField.getName(), dstClass), ex );
@@ -809,7 +846,7 @@ public class BeanUtils {
         }
     }
 
-    private static void copySrcFieldToDestField( Object src, Object dst, FieldAccess dstField, FieldAccess srcField ) {
+    private static void copySrcFieldToDestField( Object src, Object dst, FieldAccess dstField, FieldAccess srcField, Set<String> ignore ) {
         if ( srcField.isStatic() ) {
             return ;
         }
@@ -872,7 +909,11 @@ public class BeanUtils {
                             //no op
         } else {
                 Object newInstance = Reflection.newInstance ( dstField.getType () );
-                fieldByFieldCopy( srcField.getObject( src ), newInstance );
+                if (ignore == null) {
+                    fieldByFieldCopy( srcField.getObject( src ), newInstance );
+                } else {
+                    fieldByFieldCopy( srcField.getObject( src ), newInstance, ignore );
+                }
                 dstField.setObject ( dst, newInstance );
         }
     }
