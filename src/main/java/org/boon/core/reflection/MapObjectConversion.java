@@ -3,6 +3,7 @@ package org.boon.core.reflection;
 import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.Maps;
+import org.boon.Sets;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Value;
@@ -28,6 +29,15 @@ public class MapObjectConversion {
 
     }
 
+    public static <T> T fromMap( Map<String, Object> map, Class<T> clazz, String... ignore ) {
+        return fromMap( map, Reflection.newInstance ( clazz ), ignore );
+
+    }
+
+    public static <T> T fromMap( FieldsAccessor fieldFieldsAccessor, Map<String, Object> map, Class<T> clazz, Set<String> ignore ) {
+        return fromMap( fieldFieldsAccessor, map, Reflection.newInstance ( clazz ), ignore );
+
+    }
 
     public static <T> T fromMap( FieldsAccessor fieldFieldsAccessor, Map<String, Object> map, Class<T> clazz ) {
         return fromMap( fieldFieldsAccessor, map, Reflection.newInstance ( clazz ) );
@@ -44,8 +54,104 @@ public class MapObjectConversion {
         return fromMap( fieldFieldsAccessor, map, newInstance );
     }
 
+
+    @SuppressWarnings ( "unchecked" )
+    public static Object fromMap( FieldsAccessor fieldFieldsAccessor, Map<String, Object> map, Set<String> ignoreSet ) {
+        String className = ( String ) map.get( "class" );
+        Object newInstance = Reflection.newInstance ( className );
+        return fromMap( fieldFieldsAccessor, map, newInstance, ignoreSet );
+    }
+
     public static <T> T fromMap( Map<String, Object> map, T newInstance ) {
            return  fromMap ( FieldAccessMode.FIELD.create(false), map, newInstance );
+    }
+
+
+    public static <T> T fromMap( Map<String, Object> map, T object, String... ignore ) {
+        return  fromMap ( FieldAccessMode.FIELD.create(false), map, object, ignore );
+    }
+
+    public static <T> T fromMap( Map<String, Object> map, T newInstance, Set<String> ignore ) {
+        return  fromMap ( FieldAccessMode.FIELD.create(false), map, newInstance, ignore );
+    }
+
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T fromMap( FieldsAccessor fieldsAccessor, Map<String, Object> map, T object, String... ignore ) {
+        Set<String> ignoreSet = Sets.set ( ignore );
+         return fromMap ( fieldsAccessor, map, object, ignoreSet );
+    }
+
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T fromMap( FieldsAccessor fieldsAccessor, Map<String, Object> map, T toObject, Set<String> ignoreSet ) {
+
+        Map<String, FieldAccess> fields = fieldsAccessor.getFields ( toObject.getClass () );
+        Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+
+
+        /* Iterate through the fields. */
+        //for ( FieldAccess field : fields ) {
+        for ( Map.Entry<String, Object> entry : entrySet ) {
+            String key = entry.getKey();
+
+            if (ignoreSet.contains ( key ) ) {
+                continue;
+            }
+
+            FieldAccess field = fields.get( key );
+
+            if ( field == null ) {
+                continue;
+            }
+            Object value = entry.getValue();
+
+
+            if ( value instanceof Value ) {
+                if ( ( ( Value ) value ).isContainer() ) {
+                    value = ( ( Value ) value ).toValue();
+                } else {
+                    field.setFromValue( toObject, ( Value ) value );
+                    continue;
+                }
+            }
+
+            if (value == null) {
+                field.setObject ( toObject, null );
+                continue;
+            }
+
+            if (value.getClass() == field.getType()) {
+                field.setObject( toObject, value );
+            } else if ( Typ.isBasicType ( value ) ) {
+
+                field.setValue( toObject, value );
+            } else if ( value instanceof Value ) {
+                field.setValue( toObject, value );
+            }
+            /* See if it is a map<string, object>, and if it is then process it. */
+            //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
+            else if ( value instanceof Map ) {
+                Class <?> clazz = field.getType();
+                if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
+                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, field.getType(), ignoreSet );
+
+                } else {
+                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, ignoreSet );
+                }
+                field.setObject( toObject, value );
+            } else if ( value instanceof Collection ) {
+                /*It is a collection so process it that way. */
+                processCollectionFromMapUsingFields( fieldsAccessor, toObject, field, ( Collection ) value, ignoreSet );
+            } else if ( value instanceof Map[] ) {
+                /* It is an array of maps so, we need to process it as such. */
+                processArrayOfMaps( fieldsAccessor, toObject, field, value );
+            } else {
+                field.setValue( toObject, value );
+            }
+
+        }
+
+        return toObject;
+
     }
 
     @SuppressWarnings ( "unchecked" )
@@ -306,26 +412,36 @@ public class MapObjectConversion {
         return newInstance;
     }
     private static void processCollectionFromMapUsingFields(
-                    final FieldsAccessor fieldsAccessor, final Object newInstance,
-                                                  final FieldAccess field,
-                                                  final Collection<?> collection ) {
-
+            final FieldsAccessor fieldsAccessor, final Object newInstance,
+            final FieldAccess field,
+            final Collection<?> collection, final Set<String> ignoreSet  ) {
         final Class<?> componentType = Reflection.getComponentType ( collection );
         /** See if we have a collection of maps because if we do, then we have some
          * recursive processing to do.
          */
         if ( Typ.isMap( componentType ) ) {
-            handleCollectionOfMaps( fieldsAccessor, newInstance, field,
-                    ( Collection<Map<String, Object>> ) collection );
+            if (ignoreSet != null ) {
+                handleCollectionOfMaps( fieldsAccessor, newInstance, field,
+                    ( Collection<Map<String, Object>> ) collection, ignoreSet );
+            }else {
+                handleCollectionOfMaps( fieldsAccessor, newInstance, field,
+                        ( Collection<Map<String, Object>> ) collection );
+            }
         } else if ( Typ.isValue( componentType ) ) {
-            handleCollectionOfValues( fieldsAccessor, newInstance, field,
-                    ( Collection<Value> ) collection );
+            if (ignoreSet != null ) {
+                handleCollectionOfValues ( fieldsAccessor, newInstance, field,
+                        ( Collection<Value> ) collection, ignoreSet );
+            }else {
+                handleCollectionOfValues ( fieldsAccessor, newInstance, field,
+                        ( Collection<Value> ) collection );
+            }
+
 
         } else {
 
             /* It might be a collection of regular types. */
 
-            /*If it is a compatiable type just inject it. */
+            /*If it is a compatible type just inject it. */
             if ( field.getType().isInterface() &&
                     Typ.implementsInterface( collection.getClass(), field.getType() ) ) {
 
@@ -343,6 +459,15 @@ public class MapObjectConversion {
 
         }
 
+
+
+    }
+
+    private static void processCollectionFromMapUsingFields(
+                    final FieldsAccessor fieldsAccessor, final Object newInstance,
+                                                  final FieldAccess field,
+                                                  final Collection<?> collection ) {
+           processCollectionFromMapUsingFields ( fieldsAccessor, newInstance, field, collection, null );
     }
 
     private static void processArrayOfMaps(final FieldsAccessor fieldsAccessor, Object newInstance, FieldAccess field, Object value ) {
@@ -355,7 +480,8 @@ public class MapObjectConversion {
 
     @SuppressWarnings ( "unchecked" )
     private static void handleCollectionOfMaps( final FieldsAccessor fieldsAccessor, Object newInstance,
-                                                FieldAccess field, Collection<Map<String, Object>> collectionOfMaps ) {
+                                                FieldAccess field, Collection<Map<String, Object>> collectionOfMaps,
+                                                final Set<String> ignoreSet) {
 
         Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfMaps.size () );
 
@@ -367,7 +493,31 @@ public class MapObjectConversion {
 
             for ( Map<String, Object> mapComponent : collectionOfMaps ) {
 
-                newCollection.add( fromMap( mapComponent, componentClass ) );
+                newCollection.add( fromMap( fieldsAccessor, mapComponent, componentClass, ignoreSet ) );
+
+            }
+            field.setObject( newInstance, newCollection );
+
+        }
+
+    }
+
+    @SuppressWarnings ( "unchecked" )
+    private static void handleCollectionOfMaps( final FieldsAccessor fieldsAccessor, Object newInstance,
+                                                FieldAccess field, Collection<Map<String, Object>> collectionOfMaps
+                                                ) {
+
+        Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfMaps.size () );
+
+
+        Class<?> componentClass = field.getComponentClass();
+
+        if ( componentClass != null ) {
+
+
+            for ( Map<String, Object> mapComponent : collectionOfMaps ) {
+
+                newCollection.add( fromMap( fieldsAccessor, mapComponent, componentClass ) );
 
             }
             field.setObject( newInstance, newCollection );
@@ -379,6 +529,42 @@ public class MapObjectConversion {
     @SuppressWarnings ( "unchecked" )
     private static void handleCollectionOfValues( FieldsAccessor fieldsAccessor, Object newInstance,
                                                   FieldAccess field, Collection<Value> acollectionOfValues ) {
+
+        Collection collectionOfValues = acollectionOfValues;
+
+        if (collectionOfValues instanceof ValueList) {
+            collectionOfValues = ((ValueList)collectionOfValues).list();
+        }
+
+        Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfValues.size () );
+
+
+        Class<?> componentClass = field.getComponentClass();
+
+        if ( componentClass != null ) {
+
+
+            for ( Value value : (List<Value>) collectionOfValues ) {
+
+                if ( value.isContainer() ) {
+                    Object oValue = value.toValue();
+                    if ( oValue instanceof Map ) {
+                        newCollection.add( fromValueMap( fieldsAccessor, ( Map ) oValue, componentClass ) );
+                    }
+                } else {
+                    newCollection.add( Conversions.coerce ( componentClass, value.toValue () ) );
+                }
+
+
+            }
+            field.setObject( newInstance, newCollection );
+
+        }
+
+    }
+
+    private static void handleCollectionOfValues( FieldsAccessor fieldsAccessor, Object newInstance,
+                                                  FieldAccess field, Collection<Value> acollectionOfValues, Set<String> ignoreSet ) {
 
         Collection collectionOfValues = acollectionOfValues;
 

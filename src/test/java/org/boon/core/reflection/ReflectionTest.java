@@ -80,7 +80,9 @@ public class ReflectionTest {
 
         }
 
-        private String firstName = "Rick";
+        private String firstName = "Bozo";
+        private String id = "foo";
+
     }
 
 
@@ -110,15 +112,41 @@ public class ReflectionTest {
             map(
                     "name", ( Object ) "manufacturing",
                     "employees", set(
-                    map( "firstName", "Rick" ),
-                    map( "firstName", "Tom" ),
-                    map( "firstName", "Chris" ),
-                    map( "firstName", "Diana" )
+                    map( "firstName", "Rick", "id", "aaa" ),
+                    map( "firstName", "Tom",  "id", "aaa"  ),
+                    map( "firstName", "Chris",  "id", "aaa"  ),
+                    map( "firstName", "Diana",  "id", "aaa"  )
             )
 
             );
 
 
+
+    @Test
+    public void copyButNotAllProperites() {
+         Department dept = MapObjectConversion.fromMap ( department3, Department.class, "name", "id" );
+         boolean ok = dept.name == null || die();
+         ok = dept.employees.get ( 0 ).firstName.equals ( "Rick") || die();
+         ok = dept.employees.get ( 0 ).id.equals ( "foo") || die();
+
+
+         dept = MapObjectConversion.fromMap ( department3, new Department (), "name", "id" );
+         ok = dept.name == null || die();
+         ok = dept.employees.get ( 0 ).firstName.equals ( "Rick") || die();
+         ok = dept.employees.get ( 0 ).id.equals ( "foo") || die();
+
+         dept = MapObjectConversion.fromMap ( department3, Department.class,  "id" );
+         ok = dept.name.equals ( "manufacturing" ) || die();
+         ok = dept.employees.get ( 0 ).firstName.equals ( "Rick") || die();
+         ok = dept.employees.get ( 0 ).id.equals ( "foo") || die();
+
+
+         dept = MapObjectConversion.fromMap ( department3, Department.class );
+         ok = dept.name.equals ( "manufacturing" ) || die();
+         ok = dept.employees.get ( 0 ).firstName.equals ( "Rick") || die();
+         ok = dept.employees.get ( 0 ).id.equals ( "aaa") || die();
+
+    }
 
     @Test
     public void testFromMapOfListOfMapsCauseIamHardcoreLikeThat() throws Exception {
@@ -259,7 +287,7 @@ public class ReflectionTest {
 
         value = BeanUtils.getPropertyValue( employee, "firstName" );
 
-        ok &= "Rick".equals( value ) || die();
+        ok &= "Bozo".equals( value ) || die();
 
 
         value = BeanUtils.getPropertyValue( dog, "name" );
@@ -286,7 +314,7 @@ public class ReflectionTest {
 
         value = BeanUtils.idx( employee, "firstName" );
 
-        ok &= "Rick".equals( value ) || die();
+        ok &= "Bozo".equals( value ) || die();
 
 
         value = BeanUtils.idx( dog, "name" );
