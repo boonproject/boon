@@ -599,6 +599,100 @@ public class MapObjectConversion {
 
     }
 
+
+
+    public static Map<String, Object> toMap( final Object object, final String... ignore ) {
+        return toMap ( object, Sets.set(ignore) );
+    }
+
+    public static Map<String, Object> toMap( final Object object, Set<String> ignore) {
+
+        if ( object == null ) {
+            return null;
+        }
+
+        Map<String, Object> map = new LinkedHashMap<>();
+
+
+        class FieldToEntryConverter implements
+                Conversions.Converter<Maps.Entry<String, Object>, FieldAccess> {
+            @Override
+            public Maps.Entry<String, Object> convert( FieldAccess from ) {
+                if ( from.isReadOnly() ) {
+                    return null;
+                }
+                Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.getName(),
+                        from.getValue( object ) );
+                return entry;
+            }
+        }
+
+        final Map<String, FieldAccess> fieldMap = Reflection.getAllAccessorFields ( object.getClass () );
+        List<FieldAccess> fields = new ArrayList( fieldMap.values() );
+
+
+        Collections.reverse( fields ); // make super classes fields first that
+        // their update get overridden by
+        // subclass fields with the same name
+
+        List<Maps.Entry<String, Object>> entries = Conversions.mapFilterNulls(
+                new FieldToEntryConverter(), new ArrayList( fields ) );
+
+        map.put( "class", object.getClass().getName() );
+
+        for ( Maps.Entry<String, Object> entry : entries ) {
+
+            String key = entry.key();
+
+            if (ignore.contains ( key )) {
+                continue;
+            }
+
+            Object value = entry.value();
+            if ( value == null ) {
+                continue;
+            }
+            if ( Typ.isBasicType( value ) ) {
+                map.put( key, entry.value() );
+            } else if ( Reflection.isArray ( value )
+                    && Typ.isBasicType( value.getClass().getComponentType() ) ) {
+                map.put( key, entry.value() );
+            } else if ( Reflection.isArray ( value ) ) {
+                int length = Reflection.arrayLength ( value );
+                List<Map<String, Object>> list = new ArrayList<>( length );
+                for ( int index = 0; index < length; index++ ) {
+                    Object item = BeanUtils.idx ( value, index );
+                    list.add( toMap( item, ignore ) );
+                }
+                map.put( key, list );
+            } else if ( value instanceof Collection ) {
+                Collection<?> collection = ( Collection<?> ) value;
+                Class<?> componentType = Reflection.getComponentType ( collection, fieldMap.get ( entry.key () ) );
+                if ( Typ.isBasicType( componentType ) ) {
+                    map.put( key, value );
+                } else {
+                    List<Map<String, Object>> list = new ArrayList<>(
+                            collection.size() );
+                    for ( Object item : collection ) {
+                        if ( item != null ) {
+                            list.add( toMap( item, ignore ) );
+                        } else {
+
+                        }
+                    }
+                    map.put( entry.key(), list );
+                }
+            } else if ( value instanceof Map ) {
+
+            } else {
+                map.put( entry.key(), toMap( value, ignore ) );
+            }
+        }
+        return map;
+
+
+    }
+
     public static Map<String, Object> toMap( final Object object ) {
 
         if ( object == null ) {
@@ -626,7 +720,7 @@ public class MapObjectConversion {
 
 
         Collections.reverse( fields ); // make super classes fields first that
-        // their update get overriden by
+        // their update get overridden by
         // subclass fields with the same name
 
         List<Maps.Entry<String, Object>> entries = Conversions.mapFilterNulls(
