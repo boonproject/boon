@@ -136,18 +136,26 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
             return false;
         }
 
-        MultiValue mv = map.get( key );
+        if (key instanceof  Collection) {
+            Collection collection = (Collection) key;
+            for (Object objKey : collection) {
+                removeKey ( item, (KEY) objKey );
+            }
+        } else {
+            MultiValue mv = map.get( key );
 
-        if ( mv == null ) {
-            return false;
-        }
+            if ( mv == null ) {
+                return false;
+            }
 
-        mv = MultiValue.remove( mv, item );
+            mv = MultiValue.remove( mv, item );
 
-        if ( mv == null ) {
-            map.remove( key );
+            if ( mv == null ) {
+                map.remove( key );
+            }
         }
         return true;
+
     }
 
 

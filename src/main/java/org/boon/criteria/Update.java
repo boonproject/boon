@@ -27,6 +27,15 @@ public abstract class Update implements Serializable {
         };
     }
 
+    public static Update delete(  ) {
+        return new Update() {
+            @Override
+            public void doSet( ObjectEditor repo, Object item ) {
+                repo.delete( item );
+            }
+        };
+    }
+
     public static Update incInt( final String name ) {
         return new Update() {
             @Override

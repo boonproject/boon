@@ -11,6 +11,10 @@ public class ContextFactory {
         return new ClassListModule ( classes );
     }
 
+    public static Module objects(Object... objects) {
+
+        return new ObjectListModule ( objects );
+    }
 
     public static Module module( Object module ) {
 
