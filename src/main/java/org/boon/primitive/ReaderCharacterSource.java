@@ -82,10 +82,7 @@ public class ReaderCharacterSource implements CharacterSource {
              more = false;
              done = true;
         } else {
-            if (length<readBuf.length-5) {
-                     done = true;
-                     more = true;
-            }
+             more = true;
         }
     }
 
