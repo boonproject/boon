@@ -1,6 +1,7 @@
 package org.boon.json;
 
 import org.boon.Lists;
+import org.boon.Maps;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.json.implementation.JsonParserLax;
 import org.boon.utils.DateUtils;
@@ -365,6 +366,47 @@ public class JsonLaxTest extends JsonParserBaseTest {
     @Test
     public void testArrayOfArrayWithSimpleValuesValue4() {
             List list = (List) jsonParser.parse("[1,");
+    }
+
+
+    @Test
+    public void testBackSlashEscaping2() {
+        Object obj = null;
+
+        boolean ok = false;
+
+        obj =  parser().parse("{\"a\":\"\\\\\\\\\" }");
+
+        ok = obj.equals ( Maps.map ( "a", "\\\\" ) ) || die ("" + obj);
+
+
+        obj =  parser().parse("{\"a\":\"C:\\\\\\\"Documents and Settings\\\"\\\\\"}");
+
+        Object obj2 = Maps.map("a", "C:\\\"Documents and Settings\"\\");
+
+        ok = obj.equals ( obj2 ) || die ("" + obj);
+
+        String str = "{\"a\":\"c:\\\\\\\\GROOVY5144\\\\\\\\\",\"y\":\"z\"}";
+
+        obj =  parser().parse(str);
+
+        obj2 = Maps.map("a","c:\\\\GROOVY5144\\\\", "y", "z");
+
+        ok = obj.equals ( obj2 ) || die ("" + obj);
+
+        str = "[\"c:\\\\\\\\GROOVY5144\\\\\\\\\",\"d\"]";
+
+        obj = parser().parse( str );
+
+        obj2 = Lists.list("c:\\\\GROOVY5144\\\\", "d");
+
+        ok = obj.equals ( obj2 ) || die ("" + obj);
+
+        str = "{\"a\":\"c:\\\\\\\"}";
+
+        parser().parse( str );
+
+
     }
 
 

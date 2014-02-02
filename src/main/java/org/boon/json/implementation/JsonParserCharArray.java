@@ -419,7 +419,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
         char[] array = charArray;
         int index = __index;
-        char currentChar = charArray[index];
+        char currentChar = array[index];
 
         if ( index < array.length && currentChar == '"' ) {
             index++;

@@ -156,20 +156,14 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     @Override
     public boolean equals( Object o ) {
-        if ( map == null ) {
-            return false;
-        } else {
-            return map.equals( o );
-        }
+       buildIfNeeded ();
+       return map.equals( o );
     }
 
     @Override
     public int hashCode() {
-        if ( map == null ) {
-            return "{}".hashCode();
-        } else {
-            return map.hashCode();
-        }
+       buildIfNeeded ();
+       return map.hashCode();
     }
 
     @Override

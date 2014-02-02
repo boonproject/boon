@@ -1144,8 +1144,20 @@ public class JsonParserBaseTest {
 
 
 
+
+
     @Test
     public void testArrayOfArrayWithSimpleValuesValue6() {
+        try {
+            List list = (List) jsonParser.parse("[1,");
+            die();
+        } catch (JsonException jsonException) {
+            jsonException.printStackTrace ();
+        }
+
+    }
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue7() {
         try {
             List list = (List) jsonParser.parse("[1, [2]");
             die();
@@ -1160,12 +1172,75 @@ public class JsonParserBaseTest {
     public void testBackSlashEscaping() {
         Object obj =  parser().parse("{\"a\":\"\\\\a\\\\b\" }");
 
-        puts (obj);
-        puts (Maps.map ( "a", "\\a\\b"));
         boolean ok = obj.equals ( Maps.map ( "a", "\\a\\b") ) || die ("" + obj);
 
 
+        obj =  parser().parse("{\"a\":\" \\\\\\\\ \" }");
 
+        ok = obj.equals ( Maps.map ( "a", " \\\\ ") ) || die ("" + obj);
+
+
+    }
+
+    @Test
+    public void testBackSlashEscaping2() {
+        Object obj = null;
+
+        boolean ok = false;
+
+        obj =  parser().parse("{\"a\":\"\\\\\\\\\" }");
+
+        ok = obj.equals ( Maps.map ( "a", "\\\\") ) || die ("" + obj);
+
+
+        obj =  parser().parse("{\"a\":\"C:\\\\\\\"Documents and Settings\\\"\\\\\"}");
+
+        Object obj2 = Maps.map("a", "C:\\\"Documents and Settings\"\\");
+
+        ok = obj.equals ( obj2 ) || die ("" + obj);
+
+        String str = "{\"a\":\"c:\\\\\\\\GROOVY5144\\\\\\\\\",\"y\":\"z\"}";
+
+        obj =  parser().parse(str);
+
+        obj2 = Maps.map("a","c:\\\\GROOVY5144\\\\", "y", "z");
+
+        ok = obj.equals ( obj2 ) || die ("" + obj);
+
+        str = "[\"c:\\\\\\\\GROOVY5144\\\\\\\\\",\"d\"]";
+
+        obj = parser().parse( str );
+
+        obj2 = Lists.list("c:\\\\GROOVY5144\\\\", "d");
+
+        ok = obj.equals ( obj2 ) || die ("" + obj);
+
+        str = "{\"a\":\"c:\\\\\\\"}";
+
+        try {
+            parser().parse( str );
+            die();
+        } catch ( JsonException ex ) {
+              ex.printStackTrace();
+        }
+
+
+    }
+
+
+    @Test
+    public void testNullEmptyMalformedPayloads() {
+
+        List<String> list = Lists.list ( "[", "[a", "{\"key\"", "{\"key\":1", "[\"a\"", "[\"a\", ", "[\"a\", true" );
+
+        for (String str : list) {
+            try {
+                parser().parse( str );
+                die(str);
+            } catch ( Exception ex ) {
+                ex.printStackTrace();
+            }
+        }
     }
 
 

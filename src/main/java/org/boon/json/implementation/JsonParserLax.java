@@ -503,8 +503,12 @@ public class JsonParserLax extends JsonParserCharArray {
                     }
 
                 case '\\':
+                    if ( !escape ) {
+                        escape = true;
+                    } else {
+                        escape = false;
+                    }
                     encoded = true;
-                    escape = true;
                     continue;
             }
             escape = false;

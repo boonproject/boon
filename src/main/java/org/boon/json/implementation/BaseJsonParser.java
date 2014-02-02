@@ -792,7 +792,11 @@ public abstract class BaseJsonParser implements JsonParser {
                 }
             }
             if ( isEscape (currentChar) ) {
-                escape = true;
+                if (!escape) {
+                    escape = true;
+                } else {
+                    escape = false;
+                }
             } else {
                 escape = false;
             }

@@ -47,6 +47,9 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
 
     protected final Object decodeJsonObject() {
+        LazyMap map = new LazyMap ();
+
+        try {
 
         CharacterSource characterSource = this.characterSource;
 
@@ -54,7 +57,6 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
             characterSource.nextChar();
         }
 
-        LazyMap map = new LazyMap ();
 
         while (characterSource.hasChar()) {
 
@@ -111,6 +113,9 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
                         "expecting '}' or ',' but got current char " + charDescription( ch ) );
 
             }
+        }
+        } catch (Exception ex) {
+            throw new JsonException ( exceptionDetails ( "Unable to parse JSON object" ), ex );
         }
 
 
@@ -263,7 +268,12 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
 
     protected final List decodeJsonArray() {
+
+        ArrayList<Object> list = null;
+
+        boolean foundEnd = false;
         try {
+
 
         CharacterSource characterSource = this.characterSource;
 
@@ -275,13 +285,14 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         characterSource.skipWhiteSpace ();
 
 
+
         /* the list might be empty  */
         if ( this.characterSource.currentChar() == ']' ) {
             characterSource.nextChar();
             return Collections.EMPTY_LIST;
         }
 
-        ArrayList<Object> list = new ArrayList();
+        list = new ArrayList();
 
         do {
 
@@ -302,6 +313,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
                 characterSource.nextChar();
                 continue;
             } else if ( c == CLOSED_BRACKET ) {
+                foundEnd = true;
                 characterSource.nextChar();
                 break;
             } else {
@@ -317,11 +329,17 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
             }
         } while ( characterSource.hasChar () );
 
-        return list;
 
         } catch (Exception ex) {
             throw new JsonException (exceptionDetails("Unexpected issue"),  ex );
         }
+
+        if (!foundEnd) {
+            throw new JsonException (exceptionDetails("Could not find end of JSON array") );
+
+        }
+        return list;
+
     }
 
 
