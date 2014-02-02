@@ -2,11 +2,13 @@ package org.boon.json;
 
 import org.boon.IO;
 import org.boon.Lists;
+import org.boon.Maps;
 import org.boon.Sets;
 import org.boon.core.Conversions;
 import org.boon.core.Dates;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.json.implementation.JsonParserCharArray;
 import org.boon.json.serializers.CustomFieldSerializer;
 import org.boon.json.serializers.FieldFilter;
 import org.boon.json.serializers.JsonSerializerInternal;
@@ -63,7 +65,7 @@ public class JsonParserBaseTest {
     }
 
     public JsonParser parser () {
-        return factory ().create ();
+        return new JsonParserCharArray (  );
     }
 
     public JsonParser objectParser () {
@@ -1078,6 +1080,92 @@ public class JsonParserBaseTest {
         }
 
         boolean ok = o.equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
+    }
+
+
+
+
+    @Test
+    public void testArrayOfArrayWithSimpleValues() {
+        boolean ok = jsonParser.parse ("[1, 2, 3, [\"a\", \"b\", \"c\", [true, false], \"d\"], 4]").equals (
+        list(1, 2, 3, list("a", "b", "c", list(true, false), "d"), 4)) || die();
+
+//        shouldFail(JsonException) { parser.parseText('[') }
+//        shouldFail(JsonException) { parser.parseText('[,]') }
+//        shouldFail(JsonException) { parser.parseText('[1') }
+//        shouldFail(JsonException) { parser.parseText('[1,') }
+//        shouldFail(JsonException) { parser.parseText('[1, 2') }
+//        shouldFail(JsonException) { parser.parseText('[1, 2, [3, 4]') }
+    }
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue1() {
+        try {
+            List list = (List) jsonParser.parse("[,]");
+            die();
+        } catch (JsonException jsonException) {
+
+        }
+    }
+
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue2() {
+        try {
+            List list = (List) jsonParser.parse("[");
+            die();
+        } catch (JsonException jsonException) {
+             jsonException.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue3() {
+        try {
+            List list = (List) jsonParser.parse("[1");
+            die();
+        } catch (JsonException jsonException) {
+
+        }
+    }
+
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue5() {
+        try {
+            List list = (List) jsonParser.parse("[1");
+            die();
+        } catch (JsonException jsonException) {
+             jsonException.printStackTrace ();
+        }
+
+    }
+
+
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue6() {
+        try {
+            List list = (List) jsonParser.parse("[1, [2]");
+            die();
+        } catch (JsonException jsonException) {
+
+        }
+    }
+
+
+
+    @Test
+    public void testBackSlashEscaping() {
+        Object obj =  parser().parse("{\"a\":\"\\\\a\\\\b\" }");
+
+        puts (obj);
+        puts (Maps.map ( "a", "\\a\\b"));
+        boolean ok = obj.equals ( Maps.map ( "a", "\\a\\b") ) || die ("" + obj);
+
+
+
     }
 
 

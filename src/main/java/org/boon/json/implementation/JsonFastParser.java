@@ -257,19 +257,38 @@ public class JsonFastParser extends JsonParserCharArray {
         Value value = new ValueContainer ( list );
 
         Value item;
+        char c;
+        int lastIndex;
+        boolean foundEnd = false;
 
         arrayLoop:
         for ( ;__index < array.length; __index++) {
             item = decodeValueOverlay ();
 
             list.add ( item );
-
-            skipWhiteSpace ();
-
-            switch (__currentChar) {
+            c = currentChar();
+            switch (c) {
                 case ',':
                     continue;
                 case ']':
+                    __index++;
+                    foundEnd = true;
+                    break arrayLoop;
+            }
+
+
+            lastIndex = __index;
+            skipWhiteSpace();
+            c = currentChar();
+
+            switch (c) {
+                case ',':
+                    continue;
+                case ']':
+                    if (__index == lastIndex) {
+                        complain ( "missing ]" );
+                    }
+                    foundEnd = true;
                     __index++;
                     break arrayLoop;
                 default:
@@ -279,6 +298,11 @@ public class JsonFastParser extends JsonParserCharArray {
                                 " on array size of %s \n", charDescription ( __currentChar ), list.size () )
                 );
             }
+        }
+
+
+        if (!foundEnd ) {
+            complain ( "Did not find end of Json Array" );
         }
         return value;
     }

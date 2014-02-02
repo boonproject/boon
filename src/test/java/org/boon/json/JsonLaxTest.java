@@ -344,4 +344,29 @@ public class JsonLaxTest extends JsonParserBaseTest {
     }
 
 
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue1() {
+            List list = (List) jsonParser.parse("[,]");
+    }
+
+
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue6() {
+            List list = (List) jsonParser.parse("[1, 2, [3, 4]");
+    }
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue7() {
+            List list = (List) jsonParser.parse("[1, [2]");
+    }
+
+
+    @Test
+    public void testArrayOfArrayWithSimpleValuesValue4() {
+            List list = (List) jsonParser.parse("[1,");
+    }
+
+
+
 }

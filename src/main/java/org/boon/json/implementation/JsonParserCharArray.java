@@ -42,9 +42,12 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
 
+    private int lastIndex;
+
     protected Object decodeFromChars( char[] cs ) {
         __index = 0;
         charArray = cs;
+        lastIndex = cs.length -1;
         Object value = decodeValue();
         return value;
     }
@@ -67,7 +70,54 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
     }
 
     protected final boolean hasMore() {
-        return __index + 1 < charArray.length;
+        return __index  < lastIndex;
+    }
+
+
+    protected final boolean hasCurrent() {
+        return __index  <= lastIndex;
+    }
+
+
+
+    protected final void skipWhiteSpace() {
+        int ix = __index;
+
+
+        if (hasCurrent ()) {
+            this.__currentChar = this.charArray[ix];
+        }
+
+        if (__currentChar <= 32) {
+            ix = skipWhiteSpaceFast ( this.charArray, ix );
+            this.__currentChar = this.charArray[ix];
+            __index = ix;
+        }
+
+
+
+    }
+
+
+    protected final void skipWhiteSpaceAndNext() {
+        int ix = __index;
+
+
+        if (hasMore()) {
+            __index++;
+            this.__currentChar = this.charArray[ix];
+        } else {
+            this.__currentChar = 127;
+        }
+
+        if (__currentChar <= 32) {
+            ix = skipWhiteSpaceFast ( this.charArray, ix );
+            this.__currentChar = this.charArray[ix];
+            __index = ix;
+        }
+
+
+
     }
 
     protected final char nextChar() {
@@ -103,11 +153,6 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return index-1;
     }
 
-
-    protected final void skipWhiteSpace() {
-        __index = skipWhiteSpaceFast ( this.charArray, __index );
-        this.__currentChar = this.charArray[__index];
-    }
 
     protected final Object decodeJsonObject() {
 
@@ -404,12 +449,20 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
         return value;
     }
 
-
     protected final List decodeJsonArray() {
+
+
+        ArrayList<Object> list = null;
+
+        boolean foundEnd = false;
+        char [] charArray = this.charArray;
+
+        try {
         if ( __currentChar == '[' ) {
             __index++;
         }
 
+        int lastIndex;
 
         skipWhiteSpace();
 
@@ -420,26 +473,40 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             return Collections.EMPTY_LIST;
         }
 
-        ArrayList<Object> list = new ArrayList();
+        list = new ArrayList();
 
-        do {
 
-            skipWhiteSpace();
-
+        while ( this.hasMore() ) {
+ 
             Object arrayItem = decodeValueInternal();
 
             list.add( arrayItem );
 
 
-            skipWhiteSpace();
+            char c  =  charArray[__index];
 
-            char c = __currentChar;
 
             if ( c == ',' ) {
                 __index++;
                 continue;
             } else if ( c == ']' ) {
                 __index++;
+                foundEnd = true;
+                break;
+            }
+
+            lastIndex = __index;
+            skipWhiteSpace();
+
+
+            c  =  charArray[__index];
+
+            if ( c == ',' ) {
+                __index++;
+                continue;
+            } else if ( c == ']' && lastIndex != __index) {
+                __index++;
+                foundEnd = true;
                 break;
             } else {
 
@@ -452,9 +519,29 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                 );
 
             }
-        } while ( this.hasMore() );
+        }
 
+        }catch ( Exception ex ) {
+            if (ex instanceof JsonException) {
+                JsonException jsonException = (JsonException) ex;
+                throw ex;
+            }
+            throw new JsonException ( exceptionDetails("issue parsing JSON array"), ex );
+        }
+        if (!foundEnd ) {
+            complain ( "Did not find end of Json Array" );
+        }
         return list;
+
+    }
+
+    protected final char currentChar() {
+        if (__index > lastIndex) {
+            return 0;
+        }
+        else {
+            return charArray[__index];
+        }
     }
 
 

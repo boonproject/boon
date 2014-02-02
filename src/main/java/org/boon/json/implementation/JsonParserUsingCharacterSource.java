@@ -263,6 +263,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
 
     protected final List decodeJsonArray() {
+        try {
 
         CharacterSource characterSource = this.characterSource;
 
@@ -317,6 +318,10 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         } while ( characterSource.hasChar () );
 
         return list;
+
+        } catch (Exception ex) {
+            throw new JsonException (exceptionDetails("Unexpected issue"),  ex );
+        }
     }
 
 
