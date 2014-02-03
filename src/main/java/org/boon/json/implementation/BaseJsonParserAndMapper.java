@@ -357,6 +357,46 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
         return Conversions.toLong ( parseFile ( fileName ) );
     }
 
+    @Override
+    public String parseString( String value ) {
+        return Conversions.toString( parse ( value ) );
+    }
+
+    @Override
+    public String parseString( InputStream value ) {
+        return Conversions.toString( parse ( value ) );
+    }
+
+    @Override
+    public String parseString( InputStream value, Charset charset ) {
+        return Conversions.toString( parse ( value, charset ) );
+    }
+
+    @Override
+    public String parseString( byte[] value ) {
+        return Conversions.toString( parse ( value ) );
+    }
+
+    @Override
+    public String parseString( byte[] value, Charset charset ) {
+        return Conversions.toString( parse ( value, charset ) );
+    }
+
+    @Override
+    public String parseString( char[] value ) {
+        return Conversions.toString( parse ( value ) );
+    }
+
+    @Override
+    public String parseString( CharSequence value ) {
+        return Conversions.toString( parse ( value ) );
+    }
+
+    @Override
+    public String parseStringFromFile( String value ) {
+        return Conversions.toString( parseFile ( value ) );
+    }
+
 
     @Override
     public double parseDouble ( String value ) {

@@ -64,6 +64,17 @@ public interface JsonParserAndMapper extends JsonParser {
     long  parseLong(  CharSequence jsonSeq );
     long  parseLongFromFile(  String fileName );
 
+
+
+    String  parseString(  String value );
+    String  parseString(  InputStream value );
+    String  parseString(  InputStream value, Charset charset );
+    String  parseString(  byte[] value );
+    String  parseString(  byte[] value, Charset charset );
+    String  parseString(  char[] value );
+    String  parseString(  CharSequence value );
+    String  parseStringFromFile(  String value );
+
     double  parseDouble(  String value );
     double  parseDouble(  InputStream value );
     double  parseDouble(  byte[] value );

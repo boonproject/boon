@@ -28,6 +28,9 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
     private final JsonParserAndMapper objectParser;
     private final JsonParserAndMapper basicParser;
+
+
+    private final JsonParserAndMapper largeFileParser;
     private final FieldsAccessor fields;
     private final Charset charset;
 
@@ -58,7 +61,7 @@ public class JsonMappingParser implements JsonParserAndMapper {
         ( (BaseJsonParserAndMapper ) objectParser).setCharset ( charset );
 
 
-
+        largeFileParser = new JsonParserFactory().createCharacterSourceParser();
 
     }
 
@@ -105,7 +108,8 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
     @Override
     public Map<String, Object> parseMapFromFile( String file ) {
-        return basicParser.parseMap( file );
+
+        return ( Map<String, Object> ) parseFile( file );
     }
 
     @Override
@@ -226,14 +230,21 @@ public class JsonMappingParser implements JsonParserAndMapper {
     @Override
     public <T> T parseFile( Class<T> type, String fileName ) {
         int bufSize = this.bufSize;
-
         try {
+
+
             Path filePath = IO.path ( fileName );
             long size = Files.size ( filePath );
-            size = size > 2_000_000_000 ? bufSize : size;
-            this.bufSize = (int)size;
+
+            if (size > 10_000_000) {
+                return this.largeFileParser.parseFile( type, fileName );
+            } else {
+                size = size > 2_000_000 ? bufSize : size;
+                this.bufSize = (int)size;
+            }
+
             if (size < 1_000_000)  {
-                return parse ( type, Files.newInputStream ( filePath ) );
+                return parse ( type, Files.newInputStream ( filePath ), charset );
             } else {
                 return parse ( type, Files.newBufferedReader ( filePath, charset ) );
             }
@@ -322,6 +333,55 @@ public class JsonMappingParser implements JsonParserAndMapper {
     @Override
     public long parseLongFromFile( String fileName ) {
         return basicParser.parseLongFromFile( fileName );
+    }
+
+    @Override
+    public String parseString( String value ) {
+        return basicParser.parseString( value );
+    }
+
+    @Override
+    public String parseString( InputStream value ) {
+
+        return basicParser.parseString( value );
+    }
+
+    @Override
+    public String parseString( InputStream value, Charset charset ) {
+
+        return basicParser.parseString( value, charset );
+    }
+
+    @Override
+    public String parseString( byte[] value ) {
+
+        return basicParser.parseString( value );
+    }
+
+    @Override
+    public String parseString( byte[] value, Charset charset ) {
+
+        return basicParser.parseString( value, charset );
+    }
+
+    @Override
+    public String parseString( char[] value ) {
+
+
+        return basicParser.parseString( value );
+    }
+
+    @Override
+    public String parseString( CharSequence value ) {
+
+
+        return basicParser.parseString( value );
+    }
+
+    @Override
+    public String parseStringFromFile( String value ) {
+
+        return basicParser.parseStringFromFile( value );
     }
 
     @Override
@@ -637,7 +697,32 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
     @Override
     public Object parseFile( String fileName ) {
-        return basicParser.parseFile ( fileName );
+
+        int bufSize = this.bufSize;
+        try {
+
+
+            Path filePath = IO.path ( fileName );
+            long size = Files.size ( filePath );
+
+            if (size > 10_000_000) {
+                return this.largeFileParser.parseFile( fileName );
+            } else {
+                size = size > 2_000_000 ? bufSize : size;
+                this.bufSize = (int)size;
+            }
+
+            if (size < 1_000_000)  {
+                return parse ( Files.newInputStream ( filePath ), charset );
+            } else {
+                return parse (  Files.newBufferedReader ( filePath, charset ) );
+            }
+        } catch ( IOException ex ) {
+            return Exceptions.handle (Typ.object, fileName, ex);
+        } finally {
+            this.bufSize = bufSize;
+        }
+
     }
 
     @Override
