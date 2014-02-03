@@ -5,7 +5,8 @@ public enum Type {
     INT, SHORT, BYTE, LONG, CHAR, BOOLEAN, COLLECTION, ARRAY, FLOAT, INSTANCE, BIG_INT, BIG_DECIMAL,
     DATE, NUMBER, LONG_WRAPPER, INTEGER_WRAPPER, SHORT_WRAPPER, CHAR_WRAPPER, BOOLEAN_WRAPPER,
     BYTE_WRAPPER, FLOAT_WRAPPER, DOUBLE_WRAPPER,
-    INTEGER, STRING, DOUBLE, TRUE, FALSE, NULL, MAP, LIST, SET, CHAR_SEQUENCE, INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM;
+    INTEGER, STRING, DOUBLE, TRUE, FALSE, NULL, MAP, LIST, SET, CHAR_SEQUENCE,
+    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE;
 
 
 
@@ -93,6 +94,9 @@ public enum Type {
                 case "java.lang.Character":
                     return Type.CHAR_WRAPPER;
 
+                case "java.lang.Long":
+                    return Type.LONG_WRAPPER;
+
 
                 case "java.util.Set":
                 case "java.util.HashSet":
@@ -105,9 +109,11 @@ public enum Type {
                     return Type.LIST;
 
                 case "java.util.Map":
+                case "org.boon.core.LazyMap":
                 case "java.util.HashMap":
                 case "java.util.LinkedHashMap":
                 case "java.util.TreeMap":
+                case "org.boon.core.value.LazyValueMap":
                     return Type.MAP;
 
                 case "java.lang.CharSequence":
@@ -123,6 +129,18 @@ public enum Type {
                 case "java.sql.Time":
                 case "java.sql.Timestamp":
                     return Type.DATE;
+
+
+
+                case "java.util.Calendar":
+                    return Type.CALENDAR;
+
+                case "org.boon.core.value.ValueMapImpl":
+                    return Type.VALUE_MAP;
+
+                case "org.boon.core.value.NumberValue":
+                case "org.boon.core.value.CharSequenceValue":
+                    return Type.VALUE;
 
 
             }

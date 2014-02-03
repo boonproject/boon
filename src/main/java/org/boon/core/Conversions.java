@@ -336,10 +336,83 @@ public class Conversions {
     }
 
 
-
-    /** TODO optimize this. It might get used a lot. */
-    @SuppressWarnings ( "unchecked" )
     public static <T> T coerce( Class<T> clz, Object value ) {
+        return coerce( Type.getType( clz ), clz, value);
+    }
+    public static <T> T coerce( Type coerceTo, Class<T> clz, Object value ) {
+        if ( value == null ) {
+            return null;
+        }
+        switch (coerceTo) {
+            case STRING:
+            case CHAR_SEQUENCE:
+                return ( T ) value.toString();
+
+            case INTEGER:
+            case INTEGER_WRAPPER:
+                Integer i = toInt( value );
+                return ( T ) i;
+
+            case LONG:
+            case LONG_WRAPPER:
+                Long l = toLong ( value );
+                return ( T ) l;
+
+            case DOUBLE:
+            case DOUBLE_WRAPPER:
+                Double d = toDouble ( value );
+                return ( T ) d;
+
+            case DATE:
+                return (T) toDate(value);
+
+            case BIG_DECIMAL:
+                return (T) toBigDecimal( value );
+
+
+            case BIG_INT:
+                return (T) toBigInteger( value );
+
+            case CALENDAR:
+                return (T) toCalendar( toDate(value) );
+
+            case FLOAT:
+            case FLOAT_WRAPPER:
+                return (T) (Float) toFloat( value );
+
+            case BOOLEAN:
+            case BOOLEAN_WRAPPER:
+                return (T) (Boolean) toBoolean( value );
+
+            case MAP:
+                if ( value instanceof Map ) {
+                    return ( T ) value;
+                }
+                return ( T ) toMap( value );
+
+            case ARRAY:
+                return toPrimitiveArrayIfPossible( clz, value );
+
+            case COLLECTION:
+                return toCollection( clz, value );
+
+            case INSTANCE:
+                if ( Typ.isMap( value.getClass() ) && Typ.doesMapHaveKeyTypeString( value ) ) {
+                    return ( T ) MapObjectConversion.fromMap ( ( Map<String, Object> ) value );
+                }
+
+            case ENUM:
+                return (T) toEnum( (Class<? extends Enum>)clz, value );
+
+
+            default:
+                return (T)value;
+        }
+    }
+
+
+    @SuppressWarnings ( "unchecked" )
+    public static <T> T coerceClassic( Class<T> clz, Object value ) {
 
         if ( value == null ) {
             return null;
@@ -432,7 +505,7 @@ public class Conversions {
             int i = toInt( value );
             return toEnum( cls, i );
         } else {
-            die( "Can't convert  value " + value + " into enum of type " + cls );
+            //die( "Can't convert  value " + value + " into enum of type " + cls ); //TODO Fix this
             return null;
         }
     }

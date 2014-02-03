@@ -381,7 +381,8 @@ public abstract class BaseField implements FieldAccess {
                     } else if ( Typ.implementsInterface ( value.getClass (), type ) ) {
                         this.setObject ( obj, value );
                     } else {
-                        setObject ( obj, Conversions.coerce ( type, value ) );
+
+                        setObject ( obj, Conversions.coerce( typeEnum, type, value ) );
                     }
                 } else {
                     this.setObject ( obj, null );
@@ -460,7 +461,7 @@ public abstract class BaseField implements FieldAccess {
                 this.setObject ( obj, value.toEnum (  ( Class<? extends Enum> )type ) );
                 return;
             default:
-                setObject ( obj, coerce ( type, value.toValue() ) );
+                setObject ( obj, coerce ( typeEnum, type, value.toValue() ) );
         }
 
     }

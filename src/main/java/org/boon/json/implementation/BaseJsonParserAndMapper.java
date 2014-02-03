@@ -4,10 +4,10 @@ import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
+import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.value.ValueMapImpl;
 import org.boon.json.JsonParser;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.primitive.CharBuf;
@@ -46,27 +46,43 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
 
 
-    //TODO optimize this
-    protected final  <T> T convert( Class<T> type, Object object ) {
+    protected final  <T> T convert( Class<T> clz, Object object ) {
+            if (object == null ) {
+                return null;
+            }
 
-            if (type == Map.class || type == List.class || type == Object.class) {
-                return (T)object;
-            }
-            else if ( object instanceof ValueMapImpl ) {
-                return MapObjectConversion.fromValueMap( fieldsAccessor, ( Map<String, Value> ) object, type );
-            } else if ( object instanceof Map ) {
-                return MapObjectConversion.fromMap ( fieldsAccessor, ( Map<String, Object> ) object, type );
-            } else if ( object instanceof Value &&  Typ.isBasicType ( type )  ) {
-                return (T)( (Value) object).toValue ();
-            } else if (object instanceof List) {
-                return (T)MapObjectConversion.convertListOfMapsToObjects(this.fieldsAccessor, type, (List<Object>)object);
-            }
-            else {
-                if ( Typ.isBasicTypeOrCollection( type ) ) {
-                    return Conversions.coerce(type, object);
-                } else {
+            Type coerceTo = Type.getType(clz);
+
+            switch ( coerceTo ) {
+                case MAP:
+                case LIST:
+                case OBJECT:
                     return (T)object;
-                }
+
+            }
+
+            Type coerceFrom = Type.getType(object.getClass());
+
+            switch ( coerceFrom ) {
+
+                case VALUE_MAP:
+                    return MapObjectConversion.fromValueMap( fieldsAccessor, ( Map<String, Value> ) object, clz );
+
+                case MAP:
+                    return MapObjectConversion.fromMap ( fieldsAccessor, ( Map<String, Object> ) object, clz );
+
+                case VALUE:
+                    return (T)( (Value) object).toValue ();
+
+                case LIST:
+                    return (T)MapObjectConversion.convertListOfMapsToObjects(this.fieldsAccessor, clz, (List<Object>)object);
+
+                default:
+                    if ( Typ.isBasicTypeOrCollection( clz ) ) {
+                        return Conversions.coerce(coerceTo, clz, object);
+                    } else {
+                        return (T)object;
+                    }
             }
 
     }
