@@ -1,6 +1,8 @@
 package org.boon.core;
 
 
+import org.boon.Sets;
+
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
@@ -154,5 +156,15 @@ public class Typ {
 
     public static <T> boolean isAbstract ( Class<T> clazz ) {
         return Modifier.isAbstract ( clazz.getModifiers () );
+    }
+
+
+    private static Set<Class> basicTypeOrCollection = Sets.safeSet((Class)int.class, float.class, short.class,
+            char.class, byte.class, double.class, long.class, Long.class, List.class, Set.class, Map.class,  String.class,
+            StringBuilder.class, Integer.class, Float.class, Double.class, Short.class, Byte.class, Character.class,
+            BigInteger.class, BigDecimal.class, boolean.class, Boolean.class);
+
+    public static boolean isBasicTypeOrCollection( Class<?> type ) {
+        return basicTypeOrCollection.contains( type );
     }
 }

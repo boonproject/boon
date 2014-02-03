@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 public class JsonParserFactory {
 
 
-    private Charset charset = null;
+    private Charset charset = StandardCharsets.UTF_8;
     private boolean lax;
     private boolean chop = false;
     private boolean lazyChop = true;
@@ -62,62 +62,82 @@ public class JsonParserFactory {
 
 
 
-    public JsonParser createFastParser() {
-        BaseJsonParser jsonParser = new JsonFastParser(  FieldAccessMode.create( fieldAccessType, useAnnotations ), false, true );
+    public JsonParserAndMapper createFastParser() {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  false, chop, lazyChop ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
         jsonParser.setCharset ( charset );
-        return (JsonParser)jsonParser;
+        return jsonParser;
+    }
+
+
+
+    public JsonParserAndMapper createFastObjectMapperParser() {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  true ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        jsonParser.setCharset ( charset );
+        return jsonParser;
     }
 
 
 
 
-    public JsonParser createUTF8DirectByteParser() {
-        BaseJsonParser jsonParser = new JsonUTF8Parser( FieldAccessMode.create( fieldAccessType, useAnnotations ) );
+    public JsonParserAndMapper createUTF8DirectByteParser() {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonUTF8Parser (  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+
         jsonParser.setCharset ( StandardCharsets.UTF_8 );
-        return (JsonParser)jsonParser;
+        return jsonParser;
 
     }
 
-    public JsonParser createASCIIParser() {
-        BaseJsonParser jsonParser = new JsonAsciiParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ) );
+    public JsonParserAndMapper createASCIIParser() {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonAsciiParser (  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+
         jsonParser.setCharset ( StandardCharsets.US_ASCII );
-        return (JsonParser)jsonParser;
+        return jsonParser;
 
     }
 
 
-    public JsonParser createLaxParser() {
-        BaseJsonParser jsonParser = new JsonParserLax ( FieldAccessMode.create( fieldAccessType, useAnnotations ),
-                false, chop, lazyChop );
+    public JsonParserAndMapper createLaxParser() {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+
         jsonParser.setCharset ( charset );
-        return (JsonParser)jsonParser;
+        return jsonParser;
     }
 
-    public JsonParser createPlistParser() {
+
+    public JsonParserAndMapper createCharacterSourceParser() {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserUsingCharacterSource ( ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+
+        jsonParser.setCharset ( charset );
+        return jsonParser;
+    }
+
+    public JsonParserAndMapper createJsonCharArrayParser() {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserCharArray( ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+
+        jsonParser.setCharset ( charset );
+        return jsonParser;
+    }
+
+    public JsonParserAndMapper createPlistParser() {
 
         if (charset==null) {
            charset= StandardCharsets.US_ASCII;
         }
-        BaseJsonParser jsonParser = new PlistParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ), false, chop, lazyChop );
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new PlistParser ( false, chop, lazyChop  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+
         jsonParser.setCharset ( charset );
-        return (JsonParser)jsonParser;
+        return jsonParser;
     }
 
-    public JsonParser createLazyFinalParser() {
-        BaseJsonParser jsonParser = new JsonFastParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ),  false, chop, lazyChop );
-        jsonParser.setCharset ( charset );
-        return (JsonParser)jsonParser;
-
+    public JsonParserAndMapper createLazyFinalParser() {
+        return createFastParser();
     }
 
-    public JsonParser createJsonParserForJsonPath() {
-
-        BaseJsonParser jsonParser = new JsonFastParser (  FieldAccessMode.create( fieldAccessType, useAnnotations ), false, chop, lazyChop );
-        jsonParser.setCharset ( charset );
-        return (JsonParser)jsonParser;
+    public JsonParserAndMapper createJsonParserForJsonPath() {
+        return createFastParser();
     }
 
-    public JsonParser create() {
+    public JsonParserAndMapper create() {
 
 
 
@@ -125,7 +145,7 @@ public class JsonParserFactory {
             charset = StandardCharsets.UTF_8;
         }
 
-        return new JsonParserImpl( FieldAccessMode.create( fieldAccessType, useAnnotations ), charset,
+        return new JsonMappingParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ), charset,
                  lax,  chop, lazyChop );
     }
 

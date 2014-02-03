@@ -1,13 +1,10 @@
 package org.boon.json;
 
 import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.json.implementation.JsonParserLax;
 import org.boon.json.implementation.PlistParser;
 import org.boon.utils.DateUtils;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +36,13 @@ public class PlistTest {
     }
 
 
-    public JsonParser parser () {
-        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), false, true, true );
-
+    public JsonParserAndMapper parser () {
+        return new JsonParserFactory().createPlistParser();
     }
 
-    public JsonParser objectParser () {
-        return new PlistParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), true, false, false );
+    public JsonParserAndMapper objectParser () {
 
+        return new JsonParserFactory().createPlistParser();
     }
 
     @Test

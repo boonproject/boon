@@ -1,26 +1,13 @@
 package org.boon.json.implementation;
 
-import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.json.JsonParser;
-
 import java.nio.charset.StandardCharsets;
 
 /**
  * Created by rick on 12/15/13.
  */
-public class JsonAsciiParser extends JsonBaseByteArrayParser implements JsonParser {
+public class JsonAsciiParser extends JsonBaseByteArrayParser {
 
     public JsonAsciiParser() {
-    	this( FieldAccessMode.FIELD );
-    }
-
-    public JsonAsciiParser( FieldAccessMode mode ) {
-        this( FieldAccessMode.create( mode, true ) );
-    }
-
-    public JsonAsciiParser( FieldsAccessor fieldsAccessor ) {
-        super( fieldsAccessor );
         this.charset = StandardCharsets.US_ASCII;
     }
 

@@ -40,6 +40,7 @@ public class MapObjectConversion {
     }
 
     public static <T> T fromMap( FieldsAccessor fieldFieldsAccessor, Map<String, Object> map, Class<T> clazz ) {
+
         return fromMap( fieldFieldsAccessor, map, Reflection.newInstance ( clazz ) );
 
     }

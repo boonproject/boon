@@ -11,9 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static org.boon.Boon.putl;
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.idx;
@@ -25,23 +23,21 @@ import static org.boon.Str.lines;
  * Make sure it can handle these
  * https://code.google.com/p/json-smart/wiki/FeaturesTests
  */
-public class JsonLaxTest extends JsonParserBaseTest {
+public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
 
-    public JsonParser parser () {
-        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), false, true, true );
-
+    public JsonParserAndMapper parser () {
+        return new JsonParserFactory().setLazyChop( true ).createLaxParser();
     }
 
-    public JsonParser objectParser () {
-        return new JsonParserLax ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), true, false, false );
-
+    public JsonParserAndMapper objectParser () {
+        return parser();
     }
 
     @Test
     public void testLax () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse ( Map.class,
                 " {foo: hi mom hi dad how are you? }  "
         );
 
@@ -68,7 +64,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
         String testString = " {foo:\"bar\", //hi mom \n" +
                 " foo2:baz }  ";
 
-        Map<String, Object> map = jsonParser.parse ( Map.class, testString );
+        Map<String, Object> map = jsonParserAndMapper.parse ( Map.class, testString );
 
         puts ( "map = " + map );
 
@@ -86,7 +82,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
         String testString = " {foo:bar, #hi mom \n" +
                 " foo2:baz }  ";
 
-        Map<String, Object> map = jsonParser.parse ( Map.class, testString );
+        Map<String, Object> map = jsonParserAndMapper.parse ( Map.class, testString );
 
         puts ( "map = " + map );
         inspectMap ( map );
@@ -103,7 +99,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
         String testString = " {foo:bar, /* hi mom */" +
                 " foo2:baz }  ";
 
-        Map<String, Object> map = jsonParser.parse ( Map.class, testString );
+        Map<String, Object> map = jsonParserAndMapper.parse ( Map.class, testString );
 
         puts ( "map = " + map );
 
@@ -121,7 +117,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
                 "list:[love, rocket, fire],\t" +
                 " num:1, " +
                 "mix: [ true, false, 1, 2, blue, true\n,\t,false\t,foo\n,], }  ";
-        Object obj = jsonParser.parse ( Map.class, testString
+        Object obj = jsonParserAndMapper.parse ( Map.class, testString
         );
 
         puts ( testString );
@@ -181,7 +177,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
                 " num:1, " +
                 "mix: [ true, false, 1, 2, blue, true\n,\t,false\t,foo\n,], " +
                 "date: \"1994-11-05T08:15:30Z\" } ";
-        Object obj = jsonParser.parse ( Map.class, testString
+        Object obj = jsonParserAndMapper.parse ( Map.class, testString
         );
 
         puts ( testString );
@@ -236,7 +232,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     public void textInMiddleOfArray () {
 
         try {
-            Object obj = jsonParser.parse ( Map.class,
+            Object obj = jsonParserAndMapper.parse ( Map.class,
                     lines ( "[A, 0]"
                     ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
             );
@@ -252,7 +248,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     @Test ()
     public void testBooleanParseError () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse ( Map.class,
                 "  tbone  "
         );
 
@@ -263,7 +259,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     public void doubleQuoteInsideOfSingleQuote () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":'ab\"c'}"
@@ -275,7 +271,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
     @Test ()
     public void supportSimpleQuoteInNonProtectedStringValue () {
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":It's'Work}"
@@ -285,7 +281,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
     @Test ()
     public void supportNonProtectedStrings () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ a:1234}"
@@ -296,7 +292,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
     @Test ()
     public void crapInAnArray () {
-        jsonParser.parse ( Map.class,
+        jsonParserAndMapper.parse (
                 lines (
 
                         "[ a,bc]"
@@ -308,7 +304,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
     @Test ()
     public void randomStringAsValuesWithSpaces () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":s1 s2}"
@@ -320,7 +316,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
     @Test ()
     public void randomStringAsValuesWithSpaceAndMoreSpaces () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":s1 s2 }"
@@ -332,7 +328,7 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
     @Test ()
     public void singleQuotes () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ 'value':'string'}"
@@ -347,25 +343,25 @@ public class JsonLaxTest extends JsonParserBaseTest {
 
     @Test
     public void testArrayOfArrayWithSimpleValuesValue1() {
-            List list = (List) jsonParser.parse("[,]");
+            List list = (List) jsonParserAndMapper.parse("[,]");
     }
 
 
 
     @Test
     public void testArrayOfArrayWithSimpleValuesValue6() {
-            List list = (List) jsonParser.parse("[1, 2, [3, 4]");
+            List list = (List) jsonParserAndMapper.parse("[1, 2, [3, 4]");
     }
 
     @Test
     public void testArrayOfArrayWithSimpleValuesValue7() {
-            List list = (List) jsonParser.parse("[1, [2]");
+            List list = (List) jsonParserAndMapper.parse("[1, [2]");
     }
 
 
     @Test
     public void testArrayOfArrayWithSimpleValuesValue4() {
-            List list = (List) jsonParser.parse("[1,");
+            List list = (List) jsonParserAndMapper.parse("[1,");
     }
 
 

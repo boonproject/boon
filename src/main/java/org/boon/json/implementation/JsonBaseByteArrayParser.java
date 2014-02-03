@@ -9,16 +9,13 @@ import org.boon.core.LazyMap;
 import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
-import org.boon.primitive.CharScanner;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
-import static org.boon.primitive.ByteScanner.isInteger;
 
 /**
  * Created by rick on 12/15/13.
@@ -72,10 +69,6 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
 
     protected final CharBuf builder = CharBuf.create( 20 );
-
-    public JsonBaseByteArrayParser( FieldsAccessor fieldsAccessor ) {
-        super( fieldsAccessor );
-    }
 
 
     protected final boolean hasMore() {
@@ -531,42 +524,63 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
 
         ArrayList<Object> list = new ArrayList();
 
+        boolean foundEnd = false;
+
 
 
         int arrayIndex = 0;
 
-        do {
-            skipWhiteSpace();
 
-            Object arrayItem = decodeValue();
+        try {
+            while ( this.hasMore() ) {
+                skipWhiteSpace();
 
-            list.add( arrayItem );
+                Object arrayItem = decodeValue();
 
-            arrayIndex++;
+                list.add( arrayItem );
+
+                arrayIndex++;
+
+                __currentChar = this.charArray[__index];
 
 
-            skipWhiteSpace();
+                if ( __currentChar == COMMA ) {
+                    this.nextChar();
+                    continue;
+                } else if ( __currentChar == CLOSED_BRACKET ) {
+                    this.nextChar();
+                    foundEnd = true;
+                    break;
+                }
+
+                skipWhiteSpace();
 
 
-            if ( __currentChar == COMMA ) {
-                this.nextChar();
-                continue;
-            } else if ( __currentChar == CLOSED_BRACKET ) {
-                this.nextChar();
-                break;
-            } else {
-                String charString = charDescription( __currentChar );
+                if ( __currentChar == COMMA ) {
+                    this.nextChar();
+                    continue;
+                } else if ( __currentChar == CLOSED_BRACKET ) {
+                    this.nextChar();
+                    foundEnd = true;
+                    break;
+                } else {
+                    String charString = charDescription( __currentChar );
 
-                complain(
-                        String.format( "expecting a ',' or a ']', " +
-                                " but got \nthe current character of  %s " +
-                                " on array index of %s \n", charString, arrayIndex )
-                );
+                    complain(
+                            String.format( "expecting a ',' or a ']', " +
+                                    " but got \nthe current character of  %s " +
+                                    " on array index of %s \n", charString, arrayIndex )
+                    );
 
+                }
             }
-        } while ( this.hasMore() );
+        }catch (Exception ex) {
+            throw new JsonException( exceptionDetails( ex.getMessage() ), ex );
+        }
 
-
+        if (!foundEnd) {
+            complain( "No end bracket found for JSON Array" );
+        }
         return list;
     }
 

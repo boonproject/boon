@@ -262,7 +262,7 @@ public class ReaderCharacterSource implements CharacterSource {
                 skipWhiteSpace();
             }
         } catch ( Exception ex ) {
-            String str = CharScanner.errorDetails ( "skipWhiteSpace issue", readBuf, index, ch );
+            String str = CharScanner.errorDetails ( "skipWhiteSpaceIfNeeded issue", readBuf, index, ch );
              Exceptions.handle (  str, ex );
         }
     }

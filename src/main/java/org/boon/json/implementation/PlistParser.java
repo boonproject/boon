@@ -13,49 +13,30 @@ import java.util.List;
 /**
  * Created by rick on 12/21/13.
  */
-public class PlistParser extends JsonParserCharArray {
+public class PlistParser extends JsonFastParser {
 
-    private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.emptyList() );
 
-    private final boolean useValues;
-    private final boolean chop;
-    private final boolean lazyChop;
-    private final boolean checkDates;
+    protected static final int CLOSED_PAREN = ')';
+    protected static final int SEMI_COLON = ';';
 
-    public PlistParser(  ) {
-        this( FieldAccessMode.FIELD );
+
+    public PlistParser() {
     }
 
-    public PlistParser( FieldAccessMode mode ) {
-        this( mode, true );
+    public PlistParser( boolean useValues ) {
+        super ( useValues );
     }
 
-    public PlistParser( FieldAccessMode mode, boolean useAnnotations ) {
-        this( FieldAccessMode.create(mode, useAnnotations) );
+    public PlistParser( boolean useValues, boolean chop ) {
+        super ( useValues, chop );
     }
 
-    public PlistParser(FieldsAccessor fieldsAccessor) {
-        this( fieldsAccessor, false );
+    public PlistParser( boolean useValues, boolean chop, boolean lazyChop ) {
+        super ( useValues, chop, lazyChop );
     }
 
-    public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues ) {
-        this( fieldsAccessor, useValues, false );
-    }
-
-    public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop ) {
-        this( fieldsAccessor, useValues, chop, !chop );
-    }
-
-    public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop ) {
-        this( fieldsAccessor, useValues, chop, lazyChop, true );
-    }
-
-    public PlistParser( FieldsAccessor fieldsAccessor, boolean useValues, boolean chop, boolean lazyChop, boolean checkDates ) {
-        super( fieldsAccessor );
-        this.useValues = useValues;
-        this.chop = chop;
-        this.lazyChop = lazyChop;
-        this.checkDates = checkDates;
+    public PlistParser( boolean useValues, boolean chop, boolean lazyChop, boolean checkDates ) {
+        super ( useValues, chop, lazyChop, checkDates );
     }
 
     private Value decodeJsonObjectLax() {
@@ -66,7 +47,7 @@ public class PlistParser extends JsonParserCharArray {
         ValueMap map = useValues ? new ValueMapImpl() : new LazyValueMap( lazyChop );
         Value value = new ValueContainer ( map );
 
-        skipWhiteSpace();
+        skipWhiteSpaceIfNeeded ();
         int startIndexOfKey = __index;
         Value key;
         MapItemValue miv;
@@ -75,7 +56,7 @@ public class PlistParser extends JsonParserCharArray {
         done:
         for (; __index < this.charArray.length; __index++ ) {
 
-            skipWhiteSpace();
+            skipWhiteSpaceIfNeeded ();
 
             switch ( __currentChar ) {
                 case '/': /* */ //
@@ -101,7 +82,7 @@ public class PlistParser extends JsonParserCharArray {
 
 
                     item = decodeValueInternal();
-                    skipWhiteSpace();
+                    skipWhiteSpaceIfNeeded ();
 
                     miv = new MapItemValue( key, item );
 
@@ -119,7 +100,7 @@ public class PlistParser extends JsonParserCharArray {
                     key = decodeStringPlist(  );
 
 
-                    skipWhiteSpace();
+                    skipWhiteSpaceIfNeeded ();
 
                     if ( __currentChar != '=' ) {
 
@@ -129,7 +110,7 @@ public class PlistParser extends JsonParserCharArray {
                     item = decodeValueInternal();
 
 
-                    skipWhiteSpace();
+                    skipWhiteSpaceIfNeeded ();
                     miv = new MapItemValue( key, item );
 
                     map.add( miv );
@@ -202,7 +183,7 @@ public class PlistParser extends JsonParserCharArray {
         return new CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
     }
 
-    protected final Object decodeValue() {
+    protected final Value decodeValue() {
         return this.decodeValueInternal();
     }
 
@@ -210,7 +191,7 @@ public class PlistParser extends JsonParserCharArray {
         Value value = null;
 
         for (; __index < charArray.length; __index++ ) {
-            skipWhiteSpace();
+            skipWhiteSpaceIfNeeded ();
 
             switch ( __currentChar ) {
 
@@ -352,8 +333,6 @@ public class PlistParser extends JsonParserCharArray {
     }
 
 
-    protected static final int CLOSED_PAREN = ')';
-    protected static final int SEMI_COLON = ';';
 
 
     protected static boolean isPLISTDelimiter( int c ) {
@@ -495,7 +474,7 @@ public class PlistParser extends JsonParserCharArray {
             __index++;
         }
 
-        skipWhiteSpace();
+        skipWhiteSpaceIfNeeded ();
 
                 /* the list might be empty  */
         if ( __currentChar == ')' ) {
@@ -513,16 +492,16 @@ public class PlistParser extends JsonParserCharArray {
 
         Value value = new ValueContainer ( list );
 
-        skipWhiteSpace();
+        skipWhiteSpaceIfNeeded ();
 
         do {
-            skipWhiteSpace();
+            skipWhiteSpaceIfNeeded ();
 
             Object arrayItem = decodeValueInternal();
 
             list.add( arrayItem );
 
-            skipWhiteSpace();
+            skipWhiteSpaceIfNeeded ();
 
             char c = __currentChar;
 
@@ -548,7 +527,4 @@ public class PlistParser extends JsonParserCharArray {
         return value;
     }
 
-    protected Object decodeFromChars( char[] cs ) {
-        return ( ( Value ) super.decodeFromChars( cs ) ).toValue();
-    }
 }

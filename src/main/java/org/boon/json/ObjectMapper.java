@@ -11,7 +11,7 @@ import java.util.Collection;
  * This mapper (or, data binder, or codec) provides functionality for
  * converting between Java objects (instances of JDK provided core classes,
  * beans), and matching JSON constructs.
- * It will use instances of {@link org.boon.json.JsonParser} and {@link org.boon.json.JsonSerializer}
+ * It will use instances of {@link JsonParserAndMapper} and {@link org.boon.json.JsonSerializer}
  * for implementing actual reading/writing of JSON.
  *<p>
  */
@@ -228,7 +228,7 @@ public interface ObjectMapper {
 
 
 
-    public JsonParser parser();
+    public JsonParserAndMapper parser();
 
     public JsonSerializer serializer();
 

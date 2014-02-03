@@ -12,11 +12,11 @@ import static org.boon.Str.lines;
 /**
  * Created by rick on 12/12/13.
  */
-public class JsonCharArrayTest extends JsonParserBaseTest {
+public class JsonCharArrayTest extends JsonParserAndMapperBaseTest {
 
 
-    public JsonParser parser () {
-        return new JsonParserCharArray ();
+    public JsonParserAndMapper parser () {
+        return new JsonParserFactory().createJsonCharArrayParser();
     }
 
     @Test
@@ -25,7 +25,7 @@ public class JsonCharArrayTest extends JsonParserBaseTest {
 
         String nest = IO.read ( "files/nest.json" );
 
-        this.jsonParser.parse ( Map.class, nest );
+        this.jsonParserAndMapper.parse ( Map.class, nest );
 
 
     }
@@ -36,7 +36,7 @@ public class JsonCharArrayTest extends JsonParserBaseTest {
 
         String json = IO.read ( "files/nonest.json" );
 
-        this.jsonParser.parse ( Map.class, json );
+        this.jsonParserAndMapper.parse ( Map.class, json );
 
 
     }
@@ -45,7 +45,7 @@ public class JsonCharArrayTest extends JsonParserBaseTest {
     @Test
     public void classic() {
 
-            Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+            Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                     lines (
 
                             "{ \"nums\": [12, 12345678, 999.999, 123456789.99],\n " +

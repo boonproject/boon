@@ -222,7 +222,7 @@ public class ObjectMapperImpl implements ObjectMapper {
     }
 
     @Override
-    public JsonParser parser() {
+    public JsonParserAndMapper parser() {
         return parserFactory.create();
     }
 

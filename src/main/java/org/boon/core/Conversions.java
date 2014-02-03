@@ -335,6 +335,9 @@ public class Conversions {
 
     }
 
+
+
+    /** TODO optimize this. It might get used a lot. */
     @SuppressWarnings ( "unchecked" )
     public static <T> T coerce( Class<T> clz, Object value ) {
 

@@ -6,10 +6,8 @@ import org.boon.core.Dates;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.json.annotations.Expose;
-import org.boon.json.annotations.JsonIgnore;
 import org.boon.json.annotations.JsonInclude;
 import org.boon.json.annotations.JsonViews;
-import org.boon.json.test.AllTypes;
 import org.boon.json.test.Dog;
 import org.boon.json.test.Person;
 import org.junit.Test;
@@ -563,7 +561,7 @@ public class JsonTutorial {
         List<User> users = Lists.list(  rick, diana );
 
         //You can use parser and serializer directly.
-        final JsonParser jsonParser = jsonParserFactory.create();
+        final JsonParserAndMapper jsonParserAndMapper = jsonParserFactory.create();
         final JsonSerializer jsonSerializer = jsonSerializerFactory.create();
 
         File file = File.createTempFile( "userList", ".json" );
@@ -572,7 +570,7 @@ public class JsonTutorial {
         puts( "JSON STRING", jsonString );
 
         IO.write( IO.path( file.toString()), jsonString);
-        List<User> users2 = jsonParser.parseListFromFile( User.class, file.toString() );
+        List<User> users2 = jsonParserAndMapper.parseListFromFile( User.class, file.toString() );
   
         //Or you can pass them to the ObjectMapper interface you know and love, just pass the factories to it.
         ObjectMapper mapper = ObjectMapperFactory.create(jsonParserFactory, jsonSerializerFactory);

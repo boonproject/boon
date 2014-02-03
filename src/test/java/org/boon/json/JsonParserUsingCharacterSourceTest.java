@@ -1,6 +1,5 @@
 package org.boon.json;
 
-import org.boon.Exceptions;
 import org.junit.After;
 import org.junit.Test;
 
@@ -14,12 +13,12 @@ import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Str.lines;
 
-public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
+public class JsonParserUsingCharacterSourceTest extends JsonParserAndMapperBaseTest {
 
-    JsonParser jsonCharSrcParser;
+    JsonParserAndMapper jsonCharSrcParser;
 
-    public JsonParser parser () {
-        jsonCharSrcParser =  new org.boon.json.implementation.JsonParserUsingCharacterSource (  );
+    public JsonParserAndMapper parser () {
+        jsonCharSrcParser =  new JsonParserFactory( ).createCharacterSourceParser();
         return  jsonCharSrcParser;
     }
 
@@ -34,7 +33,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     @Test
     public void simpleStringReader () {
 
-        String str  = (String) jsonParser.parse (
+        String str  = (String) jsonParserAndMapper.parse (
                 new StringReader ("\"file\"")
         );
 
@@ -47,7 +46,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     @Test
     public void simpleFalseFromReader () {
 
-        Boolean v  = (Boolean) jsonParser.parse (
+        Boolean v  = (Boolean) jsonParserAndMapper.parse (
                 new StringReader ("false")
         );
 
@@ -60,7 +59,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     @Test
     public void simpleNumber () {
 
-        int i  = (int) jsonParser.parse (
+        int i  = (int) jsonParserAndMapper.parse (
                 new StringReader ("123")
         );
 
@@ -72,7 +71,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     @Test
     public void simpleFloat2 () {
 
-        double f  = (double) jsonParser.parse (
+        double f  = (double) jsonParserAndMapper.parse (
                 new StringReader ("1.1")
         );
 
@@ -85,7 +84,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     @Test
     public void simpleListFromReader () {
 
-        List v  = (List ) jsonParser.parse (
+        List v  = (List ) jsonParserAndMapper.parse (
                 new StringReader ("[1,2,3]")
         );
 
@@ -97,7 +96,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     @Test
     public void simpleStringListFromReader () {
 
-        List v  = (List ) jsonParser.parse (
+        List v  = (List ) jsonParserAndMapper.parse (
                 new StringReader ("[\"abc\",\"\",3]")
         );
 
@@ -114,7 +113,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
     public void simpleFloat () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 new StringReader (lines (
 
                         "{ \"v\":1.1}"
@@ -159,7 +158,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
                 "        }" +
                 "}";
 
-        jsonParser.parse (
+        jsonParserAndMapper.parse (
                 new StringReader (test)
         );
 
@@ -198,7 +197,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserBaseTest {
                 "        }" +
                 "}";
 
-        jsonParser.parse (
+        jsonParserAndMapper.parse (
                 new StringReader (test)
         );
 

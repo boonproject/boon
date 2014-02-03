@@ -2,8 +2,8 @@ package org.boon.core.value;
 
 import org.boon.IO;
 import org.boon.core.Value;
-import org.boon.json.JsonParser;
-import org.boon.json.implementation.JsonFastParser;
+import org.boon.json.JsonParserAndMapper;
+import org.boon.json.JsonParserFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,9 +59,7 @@ public class LazyValueMapTest {
         for ( String file : files) {
             puts ( file );
 
-            JsonParser parser = new JsonFastParser ();
-
-            Object object  = parser.parseFile ( Map.class, file.toString () );
+            Object object  =  new JsonParserFactory().createFastParser().parseFile ( Map.class, file.toString () );
 
 
             walkObject( object, null, null );
@@ -85,7 +83,7 @@ public class LazyValueMapTest {
         for ( String file : files) {
             puts ( file );
 
-            JsonParser parser = new JsonFastParser ();
+            JsonParserAndMapper parser = new  JsonParserFactory().createFastParser();
 
             Object object  = parser.parseFile ( Map.class, file.toString () );
 

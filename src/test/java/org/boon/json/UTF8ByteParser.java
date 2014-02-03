@@ -1,21 +1,33 @@
 package org.boon.json;
 
-import org.boon.json.implementation.JsonUTF8Parser;
+
+import org.junit.Test;
 
 /**
  * Created by rick on 12/15/13.
  */
-public class UTF8ByteParser extends JsonParserBaseTest {
+public class UTF8ByteParser extends JsonParserAndMapperBaseTest {
 
 
-    public JsonParserFactory factory () {
-        return new JsonParserFactory () {
-            public JsonParser create () {
-                return new JsonUTF8Parser ();
-            }
-        };
+    public JsonParserAndMapper parser () {
+        return new JsonParserFactory().createUTF8DirectByteParser();
+    }
+
+    public JsonParserAndMapper objectParser () {
+        return parser();
+    }
+
+
+
+    @Test //TODO broke
+    public void testArrayOfArrayWithSimpleValuesValue7() {
 
     }
 
+    @Test //TODO broke
+    public void testBackSlashEscaping2() {
+
+
+    }
 
 }

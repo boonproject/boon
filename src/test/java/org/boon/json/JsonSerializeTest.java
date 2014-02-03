@@ -4,6 +4,7 @@ import org.boon.Lists;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.json.serializers.impl.JsonSimpleSerializerImpl;
 import org.boon.json.test.AllTypes;
+import org.boon.json.test.FooEnum;
 import org.junit.Test;
 
 import java.net.URL;

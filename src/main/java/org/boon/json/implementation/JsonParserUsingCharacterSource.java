@@ -24,17 +24,9 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
     private  CharacterSource characterSource;
 
-    public JsonParserUsingCharacterSource(  ) {
-        super( FieldAccessMode.create ( FieldAccessMode.FIELD, true ) );
+    public JsonParserUsingCharacterSource() {
     }
 
-    public JsonParserUsingCharacterSource( FieldAccessMode mode, boolean useAnnotations ) {
-        super( FieldAccessMode.create(mode, useAnnotations) );
-    }
-
-    public JsonParserUsingCharacterSource( FieldsAccessor fieldsAccessor ) {
-        super( fieldsAccessor );
-    }
 
 
 
@@ -343,29 +335,6 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
     }
 
 
-    @Override
-    public final <T> T parse( Class<T> type, String str ) {
-
-        characterSource = new CharArrayCharacterSource ( str  );
-        T object = ( T )  this.decodeValue ();
-        return convert( type, object );
-    }
-
-
-    @Override
-    public final <T> T parse( Class<T> type, byte[] value ) {
-        characterSource = new CharArrayCharacterSource ( new String ( value, charset )  );
-        T object = ( T )  this.decodeValue ();
-        return convert( type, object );
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, byte[] value, Charset charset ) {
-        characterSource = new CharArrayCharacterSource ( new String ( value, charset )  );
-        T object = ( T )  this.decodeValue ();
-        return convert( type, object );
-    }
-
 
 
 
@@ -375,22 +344,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         return decodeValue ();
     }
 
-    @Override
-    public final <T> T parse( Class<T> type, char[] chars ) {
-        characterSource = new CharArrayCharacterSource ( chars  );
-        T object = ( T )  this.decodeValue ();
-        return convert ( type, object );
 
-    }
-
-    @Override
-    public  <T> T parse( Class<T> type, Reader reader ) {
-
-        characterSource = new ReaderCharacterSource ( reader  );
-        T object = ( T )  this.decodeValue ();
-        return convert ( type, object );
-
-    }
 
 
     @Override

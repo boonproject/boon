@@ -6,14 +6,13 @@ import org.boon.json.implementation.JsonFastParser;
 /**
  * Created by rick on 12/12/13.
  */
-public class JsonLazyChopFastParserTest extends JsonParserBaseTest {
-
-    public JsonParser parser () {
-        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), false, true, true );
+public class JsonLazyChopFastParserTest extends JsonParserAndMapperBaseTest {
+    public JsonParserAndMapper parser () {
+        return new JsonParserFactory().setLazyChop( true ).createFastParser();
     }
 
-    public JsonParser objectParser () {
-        return new JsonFastParser ( FieldAccessMode.create( FieldAccessMode.FIELD, true ), true, false, false );
+    public JsonParserAndMapper objectParser () {
+        return parser();
     }
 
 }

@@ -13,18 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.boon.json.streaming.version1;
+package org.boon.json;
 
-import static org.boon.json.streaming.version1.JsonTokenType.*;
-
-import org.boon.json.JsonException;
-//import org.codehaus.groovy.runtime.DefaultGroovyMethodsSupport;
-//import org.codehaus.groovy.runtime.ResourceGroovyMethods;
-//import java.io.IOException;
 import org.boon.IO;
-import org.boon.HTTP; //Boon versions of the above
-import org.boon.json.ObjectMapper;
-import org.boon.json.ObjectMapperFactory;
+import org.boon.HTTP;
 import org.boon.json.implementation.JsonParserUsingCharacterSource;
 
 import java.io.File;
@@ -161,21 +153,7 @@ public class JsonSlurper {
     }
 
     private Object parseURL(URL url, Map params) {
-        Reader reader = null;
-        try {
-//            if (params == null || params.isEmpty()) {
-//                reader = ResourceGroovyMethods.newReader(url);
-//            } else {
-//                reader = ResourceGroovyMethods.newReader(url, params);
-//            }
             return parse(new StringReader ( IO.read ( url.toString () )));
-        } catch(Exception ioe) {
-            throw new JsonException("Unable to process url: " + url.toString(), ioe);
-        } finally {
-//            if (reader != null) {
-//                DefaultGroovyMethodsSupport.closeWithWarning(reader);
-//            }
-        }
     }
 
     /**
@@ -217,20 +195,6 @@ public class JsonSlurper {
     }
 
     private Object parseURL(URL url, Map params, String charset) {
-        Reader reader = null;
-        try {
-//            if (params == null || params.isEmpty()) {
-//                reader = ResourceGroovyMethods.newReader(url, charset);
-//            } else {
-//                reader = ResourceGroovyMethods.newReader(url, params, charset);
-//            }
             return parse(new StringReader( HTTP.getJSONWithParams ( url.toString (), null, params )));
-        } catch(Exception ioe) {
-            throw new JsonException("Unable to process url: " + url.toString(), ioe);
-        } finally {
-//            if (reader != null) {
-//                DefaultGroovyMethodsSupport.closeWithWarning(reader);
-//            }
-        }
     }
 }

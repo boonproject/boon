@@ -4,7 +4,7 @@ import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonException;
-import org.boon.json.JsonParser;
+import org.boon.json.JsonParserAndMapper;
 import org.boon.core.LazyMap;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
@@ -21,7 +21,7 @@ import static org.boon.primitive.CharScanner.isInteger;
  * to Java.
  * <p/>
  */
-public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
+public class JsonParserCharArray extends BaseJsonParser  {
 
     protected char[] charArray;
     protected int __index;
@@ -29,44 +29,24 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
 
-    public JsonParserCharArray(  ) {
-        super( FieldAccessMode.create(FieldAccessMode.FIELD, true ) );
-    }
-
-    public JsonParserCharArray( FieldAccessMode mode, boolean useAnnotations ) {
-        super( FieldAccessMode.create(mode, useAnnotations) );
-    }
-
-    public JsonParserCharArray( FieldsAccessor fieldsAccessor ) {
-        super( fieldsAccessor );
-    }
 
 
     private int lastIndex;
 
-    protected Object decodeFromChars( char[] cs ) {
+    @Override
+    public  Object parse ( final char[] chars ) {
         __index = 0;
-        charArray = cs;
-        lastIndex = cs.length -1;
+        charArray = chars;
+        lastIndex = chars.length -1;
         Object value = decodeValue();
         return value;
     }
 
 
-    protected final Object decodeFromString( String cs ) {
-        return decodeFromChars( FastStringUtils.toCharArray( cs ) );
-    }
 
-
-    protected final Object decodeFromBytes( byte[] bytes ) {
+    public Object parse ( byte[] bytes, Charset charset ) {
         final char[] chars = FastStringUtils.toCharArrayFromBytes( bytes, charset );
-        return decodeFromChars( chars );
-    }
-
-
-    protected final Object decodeFromBytes( byte[] bytes, Charset charset ) {
-        final char[] chars = FastStringUtils.toCharArrayFromBytes( bytes, charset );
-        return decodeFromChars( chars );
+        return parse( chars );
     }
 
     protected final boolean hasMore() {
@@ -80,7 +60,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
 
 
-    protected final void skipWhiteSpace() {
+    protected final void skipWhiteSpaceIfNeeded() {
         int ix = __index;
 
 
@@ -98,6 +78,18 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     }
 
+
+    protected final void skipWhiteSpaceOld() {
+        int ix = __index;
+
+
+        ix = skipWhiteSpaceFast ( this.charArray, ix );
+        this.__currentChar = this.charArray[ix];
+        __index = ix;
+
+
+
+    }
 
     protected final void skipWhiteSpaceAndNext() {
         int ix = __index;
@@ -165,7 +157,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
         for (; __index < this.charArray.length; __index++ ) {
 
-            skipWhiteSpace();
+            skipWhiteSpaceIfNeeded ();
 
 
             if ( __currentChar == '"' ) {
@@ -183,7 +175,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                     }
                 }
 
-                skipWhiteSpace();
+                skipWhiteSpaceIfNeeded ();
 
                 if ( __currentChar != ':' ) {
 
@@ -191,11 +183,11 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
                 }
                 __index++;
 
-                skipWhiteSpace();
+                skipWhiteSpaceIfNeeded ();
 
                 Object value = decodeValueInternal();
 
-                skipWhiteSpace();
+                skipWhiteSpaceIfNeeded ();
                 map.put( key, value );
 
 
@@ -228,7 +220,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
     private final Object decodeValueInternal() {
         Object value = null;
-        skipWhiteSpace ();
+        skipWhiteSpaceIfNeeded ();
 
         switch ( __currentChar ) {
 
@@ -464,7 +456,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
 
         int lastIndex;
 
-        skipWhiteSpace();
+        skipWhiteSpaceIfNeeded ();
 
 
         /* the list might be empty  */
@@ -496,7 +488,7 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             }
 
             lastIndex = __index;
-            skipWhiteSpace();
+            skipWhiteSpaceIfNeeded ();
 
 
             c  =  charArray[__index];
@@ -543,47 +535,5 @@ public class JsonParserCharArray extends BaseJsonParser implements JsonParser {
             return charArray[__index];
         }
     }
-
-
-    @Override
-    public final <T> T parse( Class<T> type, String str ) {
-
-        T object = ( T ) this.decodeFromString( str );
-        return convert( type, object );
-    }
-
-
-    @Override
-    public final <T> T parse( Class<T> type, byte[] value ) {
-        T object = ( T ) this.decodeFromBytes( value );
-        return convert( type, object );
-    }
-
-    @Override
-    public <T> T parse( Class<T> type, byte[] bytes, Charset charset ) {
-        T object = ( T ) this.decodeFromBytes( bytes, charset );
-        return convert( type, object );
-    }
-
-
-
-
-    @Override
-    public Object parse ( char[] chars ) {
-        return this.decodeFromChars( chars );
-    }
-
-    @Override
-    public final <T> T parse( Class<T> type, char[] chars ) {
-        T object = ( T ) this.decodeFromChars( chars );
-        return convert( type, object );
-
-    }
-
-    @Override
-    public Object parse ( byte[] bytes, Charset charset ) {
-        return this.decodeFromBytes ( bytes );
-    }
-
 
 }

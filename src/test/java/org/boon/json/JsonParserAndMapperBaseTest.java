@@ -8,7 +8,6 @@ import org.boon.core.Conversions;
 import org.boon.core.Dates;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.json.implementation.JsonParserCharArray;
 import org.boon.json.serializers.CustomFieldSerializer;
 import org.boon.json.serializers.FieldFilter;
 import org.boon.json.serializers.JsonSerializerInternal;
@@ -17,6 +16,7 @@ import org.boon.json.serializers.impl.JsonSerializerImpl;
 import org.boon.json.test.AllTypes;
 import org.boon.json.test.Dog;
 import org.boon.json.test.FooBasket;
+import org.boon.json.test.FooEnum;
 import org.boon.primitive.CharBuf;
 import org.boon.utils.DateUtils;
 import org.junit.Before;
@@ -39,10 +39,10 @@ import static org.boon.Maps.map;
 import static org.boon.Str.lines;
 import static org.junit.Assert.assertEquals;
 
-public class JsonParserBaseTest {
+public class JsonParserAndMapperBaseTest {
 
 
-    JsonParser jsonParser;
+    JsonParserAndMapper jsonParserAndMapper;
 
 
     protected void inspectMap ( Map<String, Object> map ) {
@@ -64,11 +64,11 @@ public class JsonParserBaseTest {
         return new JsonParserFactory ();
     }
 
-    public JsonParser parser () {
-        return new JsonParserCharArray (  );
+    public JsonParserAndMapper parser () {
+        return new JsonParserFactory().setLazyChop( true ).create();
     }
 
-    public JsonParser objectParser () {
+    public JsonParserAndMapper objectParser () {
         return factory ().create ();
     }
 
@@ -76,7 +76,7 @@ public class JsonParserBaseTest {
     @Before
     public void setup () {
 
-        jsonParser = parser ();
+        jsonParserAndMapper = parser ();
 
 
 
@@ -95,7 +95,7 @@ public class JsonParserBaseTest {
 
         puts ( serializer.serialize ( foo ).toString () );
 
-        Map <String, Object> map = ( Map<String, Object> ) jsonParser.parse ( serializer.serialize ( foo ).toString () );
+        Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( serializer.serialize ( foo ).toString () );
 
         Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet" );
 
@@ -103,7 +103,7 @@ public class JsonParserBaseTest {
 
         boolean ok = className.endsWith ( ".Dog" )  || die(className);
 
-        AllTypes foo2 = jsonParser.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
+        AllTypes foo2 = jsonParserAndMapper.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
 
         Dog dog = (Dog)foo2.pet;
         ok = dog.name.equals ( "Mooney" )  || die( dog.name );
@@ -124,7 +124,7 @@ public class JsonParserBaseTest {
 
         puts ( serializer.serialize ( foo ).toString () );
 
-        Map <String, Object> map = ( Map<String, Object> ) jsonParser.parse ( serializer.serialize ( foo ).toString () );
+        Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( serializer.serialize ( foo ).toString () );
 
         Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet2" );
 
@@ -132,7 +132,7 @@ public class JsonParserBaseTest {
 
         boolean ok = className.endsWith ( ".Dog" )  || die(className);
 
-        AllTypes foo2 = jsonParser.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
+        AllTypes foo2 = jsonParserAndMapper.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
 
         Dog dog = (Dog)foo2.pet2;
         ok = dog.name.equals ( "Mooney" )  || die( dog.name );
@@ -153,7 +153,7 @@ public class JsonParserBaseTest {
 
         puts ( serializer.serialize ( foo ).toString () );
 
-        Map <String, Object> map = ( Map<String, Object> ) jsonParser.parse ( serializer.serialize ( foo ).toString () );
+        Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( serializer.serialize ( foo ).toString () );
 
         Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet2" );
 
@@ -161,7 +161,7 @@ public class JsonParserBaseTest {
 
         boolean ok = className.endsWith ( ".Dog" )  || die(className);
 
-        AllTypes foo2 = jsonParser.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
+        AllTypes foo2 = jsonParserAndMapper.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
 
         Dog dog = (Dog)foo2.pet2;
         ok = dog.name.equals ( "Mooney" )  || die( dog.name );
@@ -232,7 +232,7 @@ public class JsonParserBaseTest {
 
 
         puts (json);
-        AllTypes testMe = jsonParser.parse( AllTypes.class, new StringReader ( json));
+        AllTypes testMe = jsonParserAndMapper.parse( AllTypes.class, new StringReader ( json));
 
          ok |= testMe.equals ( foo ) || die();
 
@@ -280,7 +280,7 @@ public class JsonParserBaseTest {
         boolean ok = true;
 
         puts (json);
-        AllTypes testMe = jsonParser.parse( AllTypes.class, new StringReader ( json ));
+        AllTypes testMe = jsonParserAndMapper.parse( AllTypes.class, new StringReader ( json ));
 
         ok |= testMe.equals ( foo ) || die();
 
@@ -311,7 +311,7 @@ public class JsonParserBaseTest {
         boolean ok = true;
 
         puts (json);
-        AllTypes testMe = jsonParser.parse( AllTypes.class, new StringReader(json));
+        AllTypes testMe = jsonParserAndMapper.parse( AllTypes.class, new StringReader(json));
 
         ok |= testMe.equals ( foo ) || die();
 
@@ -321,7 +321,7 @@ public class JsonParserBaseTest {
     @Test
     public void testParserSimpleMapWithNumber () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse ( Map.class,
                 new StringReader ( " { 'foo': 1 }  ".replace ( '\'', '"' ) )
         );
 
@@ -405,7 +405,7 @@ public class JsonParserBaseTest {
             puts ( "testing", file );
 
             try {
-                Object object =  jsonParser.parse ( Files.newBufferedReader ( IO.path ( file), StandardCharsets.UTF_8 ) );
+                Object object =  jsonParserAndMapper.parse ( Files.newBufferedReader ( IO.path ( file), StandardCharsets.UTF_8 ) );
                 puts ( "FILE _________\n\n\n", file, object.getClass (), object);
 
 
@@ -433,7 +433,7 @@ public class JsonParserBaseTest {
 
             puts ( "testing", file );
 
-            Object object =  jsonParser.parse ( new String ( IO.read ( file ) ) );
+            Object object =  jsonParserAndMapper.parse ( new String ( IO.read ( file ) ) );
             puts ( "FILE _________\n\n\n", file, object.getClass (), object);
 
 
@@ -464,8 +464,8 @@ public class JsonParserBaseTest {
     @Test
     public void testParseFalse () {
 
-        Object obj = jsonParser.parse ( Map.class,
-               new String( " { 'foo': false }  ".replace ( '\'', '"' ) )
+        Object obj = jsonParserAndMapper.parseMap(
+               new String( " { 'foo': false }  ".replace( '\'', '"' ) )
         );
 
         boolean ok = true;
@@ -482,7 +482,7 @@ public class JsonParserBaseTest {
     @Test
     public void testParseNull () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse (
                 " { 'foo': null }  ".replace ( '\'', '"' )
         );
 
@@ -500,7 +500,7 @@ public class JsonParserBaseTest {
     @Test
     public void testParserSimpleMapWithBoolean () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse (
                 " { 'foo': true }  ".replace ( '\'', '"' )
         );
 
@@ -519,7 +519,7 @@ public class JsonParserBaseTest {
     @Test
     public void testParserSimpleMapWithList () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse (
                new String( " { 'foo': [0,1,2 ] }  ".replace ( '\'', '"' ) )
         );
 
@@ -537,7 +537,7 @@ public class JsonParserBaseTest {
     @Test
     public void testParserList () {
 
-        Object obj = jsonParser.parse ( List.class,
+        Object obj = jsonParserAndMapper.parse (
                 new StringReader( "[0,1,2]".replace ( '\'', '"' ) )
         );
 
@@ -548,7 +548,7 @@ public class JsonParserBaseTest {
     @Test
     public void testParserSimpleMapWithString () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse (
                 " { 'foo': 'str ' }  ".replace ( '\'', '"' )
         );
 
@@ -611,7 +611,7 @@ public class JsonParserBaseTest {
 
         System.out.printf ( "%s, %s, %s", name, json, compareTo );
 
-        Object obj = jsonParser.parse (
+        Object obj = jsonParserAndMapper.parse (
                 json.replace ( '\'', '"' )
         );
 
@@ -628,7 +628,7 @@ public class JsonParserBaseTest {
     @Test
     public void testNumber () {
 
-        Object obj = jsonParser.parse ( Integer.class,
+        Object obj = jsonParserAndMapper.parse (Integer.class,
                 "1".replace ( '\'', '"' )
         );
 
@@ -646,7 +646,7 @@ public class JsonParserBaseTest {
     @Test
     public void testBoolean () {
 
-        Object obj = jsonParser.parse ( Boolean.class,
+        Object obj = jsonParserAndMapper.parse (boolean.class,
                 "  true  ".replace ( '\'', '"' )
         );
 
@@ -664,7 +664,7 @@ public class JsonParserBaseTest {
     @Test ( expected = JsonException.class )
     public void testBooleanParseError () {
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse ( Map.class,
                 "  tbone  ".replace ( '\'', '"' )
         );
 
@@ -687,13 +687,13 @@ public class JsonParserBaseTest {
                         "   do you think it is \\'cool\\' '" ).replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse ( String.class, testString );
+        Object obj = jsonParserAndMapper.parse ( String.class, testString );
 
         System.out.println ( "here is what I got " + obj );
 
         boolean ok = true;
 
-        ok &= obj instanceof String || die ( "Object was not a String" );
+        ok &= obj instanceof String || die ( "Object was not a String" + obj.getClass());
 
         String value = ( String ) obj;
 
@@ -711,7 +711,7 @@ public class JsonParserBaseTest {
                         "   do you think it is \\'cool\\' '] " ).replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse ( testString );
+        Object obj = jsonParserAndMapper.parse ( testString );
 
 
         System.out.println ( "here is what I got " + obj );
@@ -736,7 +736,7 @@ public class JsonParserBaseTest {
                 "[ 'abc','def' ]".replace ( '\'', '"' );
 
 
-        Object obj = jsonParser.parse ( testString );
+        Object obj = jsonParserAndMapper.parse ( testString );
         System.out.println ( "here is what I got " + obj );
 
         boolean ok = true;
@@ -756,7 +756,7 @@ public class JsonParserBaseTest {
     public void textInMiddleOfArray () {
 
         try {
-            Object obj = jsonParser.parse ( Map.class,
+            Object obj = jsonParserAndMapper.parse ( Map.class,
                     lines ( "[A, 0]"
                     ).replace ( '\'', '"' ).getBytes ( StandardCharsets.UTF_8 )
             );
@@ -772,7 +772,7 @@ public class JsonParserBaseTest {
     @Test
     public void oddlySpaced2 () {
 
-        Object obj = jsonParser.parse (
+        Object obj = jsonParserAndMapper.parse (
                 lines ( "[   2   ,    1, 0]"
                 ).replace ( '\'', '"' )
         );
@@ -795,26 +795,26 @@ public class JsonParserBaseTest {
         float [] compareFloatArray = {0, 2, 4, 8, 16};
         double [] compareDoubleArray = {0, 2, 4, 8, 16};
 
-        final int[] array = jsonParser.parseIntArray ( testString );
+        final int[] array = jsonParserAndMapper.parseIntArray ( testString );
 
         boolean ok = Arrays.equals (compareArray, array) || die( sputs(array));
 
 
-        final long[] larray = jsonParser.parseLongArray ( testString );
+        final long[] larray = jsonParserAndMapper.parseLongArray ( testString );
 
         ok = Arrays.equals (compareLongArray, larray) || die( sputs(larray));
 
 
-        final byte[] barray = jsonParser.parseByteArray ( testString );
+        final byte[] barray = jsonParserAndMapper.parseByteArray ( testString );
         ok |= Arrays.equals (compareByteArray, barray) || die( sputs(barray));
 
-        final short[] sarray = jsonParser.parseShortArray ( testString );
+        final short[] sarray = jsonParserAndMapper.parseShortArray ( testString );
         ok |= Arrays.equals (compareShortArray, sarray) || die( sputs(sarray));
 
-        final float[] farray = jsonParser.parseFloatArray ( testString );
+        final float[] farray = jsonParserAndMapper.parseFloatArray ( testString );
         ok |= Arrays.equals (compareFloatArray, farray) || die( sputs(farray));
 
-        final double[] darray = jsonParser.parseDoubleArray ( testString );
+        final double[] darray = jsonParserAndMapper.parseDoubleArray ( testString );
         ok |= Arrays.equals (compareDoubleArray, darray) || die( sputs(darray));
 
         puts ("parseArray", ok);
@@ -823,29 +823,29 @@ public class JsonParserBaseTest {
 
     @Test
     public void parseNumber () {
-        int i = jsonParser.parseInt ( "123" );
+        int i = jsonParserAndMapper.parseInt ( "123" );
         boolean ok = i == 123 || die ( "" + i );
 
-        i = jsonParser.parseInt ( "123".getBytes ( StandardCharsets.UTF_8 ) );
+        i = jsonParserAndMapper.parseInt ( "123".getBytes ( StandardCharsets.UTF_8 ) );
         ok = i == 123 || die ( "" + i );
 
-        i = jsonParser.parseByte ( "123" );
-        ok = i == 123 || die ( "" + i );
-
-
-
-        i = jsonParser.parseShort ( "123" );
+        i = jsonParserAndMapper.parseByte ( "123" );
         ok = i == 123 || die ( "" + i );
 
 
-        i = (int)jsonParser.parseDouble ( "123" );
+
+        i = jsonParserAndMapper.parseShort ( "123" );
         ok = i == 123 || die ( "" + i );
 
 
-        i = (int)jsonParser.parseFloat ( "123" );
+        i = (int) jsonParserAndMapper.parseDouble ( "123" );
         ok = i == 123 || die ( "" + i );
 
-        i = (int)jsonParser.parseLong ( "123" );
+
+        i = (int) jsonParserAndMapper.parseFloat ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+        i = (int) jsonParserAndMapper.parseLong ( "123" );
         ok = i == 123 || die ( "" + i );
 
         puts ( ok );
@@ -856,7 +856,7 @@ public class JsonParserBaseTest {
     public void complex () {
 
 
-        Object obj = jsonParser.parse ( Map.class,
+        Object obj = jsonParserAndMapper.parse (
                 lines (
 
                         "{    'num' : 1   , ",
@@ -875,7 +875,7 @@ public class JsonParserBaseTest {
     public void bug2 () {
 
 
-        Object obj = jsonParser.parse (
+        Object obj = jsonParserAndMapper.parse (
                 lines (
 
                         "    [ {'bar': {'zed': 1}} , 1]\n "
@@ -895,7 +895,7 @@ public class JsonParserBaseTest {
     public void complianceFromJsonSmartForPI () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
                 lines (
 
                         "{ \"PI\":3.141E-10} "
@@ -914,7 +914,7 @@ public class JsonParserBaseTest {
     public void complianceForLowerCaseNumber () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
                 lines (
 
                         "{ \"v\":\"\\u00c1\\u00e1\"}"
@@ -929,7 +929,7 @@ public class JsonParserBaseTest {
     public void complianceForUpperCaseNumber () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
                 lines (
 
                         "{ \"v\":\"\\u00C1\\u00E1\"}"
@@ -946,7 +946,7 @@ public class JsonParserBaseTest {
     public void doublePrecisionFloatingPoint () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
                 lines (
 
                         "{ \"v\":1.7976931348623157E308}"
@@ -969,7 +969,7 @@ public class JsonParserBaseTest {
     public void doubleQuoteInsideOfSingleQuote () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":'ab\"c'}"
@@ -981,7 +981,7 @@ public class JsonParserBaseTest {
     @Test ( expected = JsonException.class )
     public void supportSimpleQuoteInNonProtectedStringValue () {
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":It's'Work}"
@@ -991,7 +991,7 @@ public class JsonParserBaseTest {
 
     @Test ( expected = JsonException.class )
     public void supportNonProtectedStrings () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ a:1234}"
@@ -1002,7 +1002,7 @@ public class JsonParserBaseTest {
 
     @Test ( expected = JsonException.class )
     public void crapInAnArray () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "[ a,bc]"
@@ -1014,7 +1014,7 @@ public class JsonParserBaseTest {
 
     @Test ( expected = JsonException.class )
     public void randomStringAsValuesWithSpaces () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":s1 s2}"
@@ -1026,7 +1026,7 @@ public class JsonParserBaseTest {
 
     @Test ( expected = JsonException.class )
     public void randomStringAsValuesWithSpaceAndMoreSpaces () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
                 lines (
 
                         "{ \"v\":s1 s2 }"
@@ -1038,7 +1038,7 @@ public class JsonParserBaseTest {
 
     @Test ()
     public void garbageAtEndOfString () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
                 lines (
 
                         "{ \"a\":\"foo.bar\"}#toto"
@@ -1050,7 +1050,7 @@ public class JsonParserBaseTest {
 
     @Test ( expected = JsonException.class )
     public void singleQuotes () {
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
                 lines (
 
                         "{ 'value':'string'}"
@@ -1065,7 +1065,7 @@ public class JsonParserBaseTest {
     public void simpleFloat () {
 
 
-        Map<String, Object> map = ( Map<String, Object> ) jsonParser.parse ( Map.class,
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
                 lines (
 
                         "{ \"v\":1.1}"
@@ -1087,7 +1087,7 @@ public class JsonParserBaseTest {
 
     @Test
     public void testArrayOfArrayWithSimpleValues() {
-        boolean ok = jsonParser.parse ("[1, 2, 3, [\"a\", \"b\", \"c\", [true, false], \"d\"], 4]").equals (
+        boolean ok = jsonParserAndMapper.parse ("[1, 2, 3, [\"a\", \"b\", \"c\", [true, false], \"d\"], 4]").equals (
         list(1, 2, 3, list("a", "b", "c", list(true, false), "d"), 4)) || die();
 
 //        shouldFail(JsonException) { parser.parseText('[') }
@@ -1101,7 +1101,7 @@ public class JsonParserBaseTest {
     @Test
     public void testArrayOfArrayWithSimpleValuesValue1() {
         try {
-            List list = (List) jsonParser.parse("[,]");
+            List list = (List) jsonParserAndMapper.parse("[,]");
             die();
         } catch (JsonException jsonException) {
 
@@ -1112,7 +1112,7 @@ public class JsonParserBaseTest {
     @Test
     public void testArrayOfArrayWithSimpleValuesValue2() {
         try {
-            List list = (List) jsonParser.parse("[");
+            List list = (List) jsonParserAndMapper.parse("[");
             die();
         } catch (JsonException jsonException) {
              jsonException.printStackTrace();
@@ -1123,7 +1123,7 @@ public class JsonParserBaseTest {
     @Test
     public void testArrayOfArrayWithSimpleValuesValue3() {
         try {
-            List list = (List) jsonParser.parse("[1");
+            List list = (List) jsonParserAndMapper.parse("[1");
             die();
         } catch (JsonException jsonException) {
 
@@ -1134,7 +1134,7 @@ public class JsonParserBaseTest {
     @Test
     public void testArrayOfArrayWithSimpleValuesValue5() {
         try {
-            List list = (List) jsonParser.parse("[1");
+            List list = (List) jsonParserAndMapper.parse("[1");
             die();
         } catch (JsonException jsonException) {
              jsonException.printStackTrace ();
@@ -1149,7 +1149,7 @@ public class JsonParserBaseTest {
     @Test
     public void testArrayOfArrayWithSimpleValuesValue6() {
         try {
-            List list = (List) jsonParser.parse("[1,");
+            List list = (List) jsonParserAndMapper.parse("[1,");
             die();
         } catch (JsonException jsonException) {
             jsonException.printStackTrace ();
@@ -1159,7 +1159,7 @@ public class JsonParserBaseTest {
     @Test
     public void testArrayOfArrayWithSimpleValuesValue7() {
         try {
-            List list = (List) jsonParser.parse("[1, [2]");
+            List list = (List) jsonParserAndMapper.parse("[1, [2]");
             die();
         } catch (JsonException jsonException) {
 

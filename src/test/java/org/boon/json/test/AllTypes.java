@@ -1,6 +1,5 @@
 package org.boon.json.test;
 
-import org.boon.json.FooEnum;
 import org.boon.json.annotations.JsonIgnore;
 import org.boon.json.annotations.JsonIgnoreProperties;
 
