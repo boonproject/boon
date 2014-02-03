@@ -1,16 +1,17 @@
-package org.boon.di;
+package org.boon.di.impl;
 
+import org.boon.collections.ConcurrentLinkedHashSet;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.di.Context;
+import org.boon.di.Module;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class ContextImpl implements Context {
 
-    private Set<Module> modules = new LinkedHashSet<> (  );
+    private Set<Module> modules = new ConcurrentLinkedHashSet<>(  );
 
     public ContextImpl (Module... modules) {
         for (Module module : modules)  {

@@ -1,14 +1,16 @@
-package org.boon.di;
+package org.boon.di.modules;
 
 import org.boon.Exceptions;
 import org.boon.core.reflection.Reflection;
+import org.boon.di.Module;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassListModule implements Module {
 
-    Map<Class, Class> classes = new HashMap<>(  );
+    Map<Class, Class> classes = new ConcurrentHashMap<>(  );
 
     public ClassListModule(Class... classes) {
 

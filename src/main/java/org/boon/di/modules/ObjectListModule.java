@@ -1,16 +1,20 @@
-package org.boon.di;
+package org.boon.di.modules;
 
 import org.boon.Exceptions;
+import org.boon.core.reflection.BeanUtils;
+import org.boon.di.Module;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ObjectListModule implements Module {
 
-    Map<Class, Object> objects = new HashMap<> (  );
+    private final boolean prototypes;
+    Map<Class, Object> objects = new ConcurrentHashMap<>(  );
 
-    public ObjectListModule(Object... objects) {
+    public ObjectListModule(boolean prototypes, Object... objects) {
 
+        this.prototypes = prototypes;
         for ( Object object : objects ) {
             Class cls = object.getClass ();
             this.objects.put ( cls, object );
@@ -39,7 +43,11 @@ public class ObjectListModule implements Module {
     @Override
     public <T> T get( Class<T> type ) {
         try {
-            return (T) objects.get ( type );
+            if (!prototypes) {
+                return (T) objects.get ( type );
+            } else {
+                return BeanUtils.copy((T)objects.get(type));
+            }
         } catch ( Exception e ) {
             Exceptions.handle ( e );
             return null;

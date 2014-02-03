@@ -1,16 +1,17 @@
-package org.boon.di;
+package org.boon.di.modules;
 
 import org.boon.Exceptions;
 import org.boon.core.Supplier;
+import org.boon.di.Module;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class InstanceModule implements Module{
+public class InstanceModule implements Module {
 
-    private Map<Class, Supplier<Object>> supplierMap = new HashMap<> (  );
+    private Map<Class, Supplier<Object>> supplierMap = new ConcurrentHashMap<>(  );
     private Object module;
 
     public InstanceModule(Object object) {
