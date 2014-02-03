@@ -17,48 +17,119 @@ public class FastStringUtils {
     public static final long STRING_COUNT_FIELD_OFFSET;
     public static final boolean ENABLED;
 
-    private static final boolean WRITE_TO_FINAL_FIELDS = Boolean.parseBoolean( System.getProperty( "org.boon.write.to.final.fields", "false" ) );
-    private static final boolean DISABLE = Boolean.parseBoolean( System.getProperty( "org.boon.faststringutils", "false" ) );
+    private static final boolean WRITE_TO_FINAL_FIELDS = Boolean.parseBoolean(System.getProperty("org.boon.write.to.final.fields", "false"));
+    private static final boolean DISABLE = Boolean.parseBoolean(System.getProperty("org.boon.faststringutils", "false"));
+
+    private static Unsafe loadUnsafe() {
+        try {
+            Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            return (Unsafe) unsafeField.get(null);
+
+        } catch (NoSuchFieldException e) {
+            return null;
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
 
     static {
+        UNSAFE = DISABLE ? null : loadUnsafe();
+        ENABLED = UNSAFE != null;
+    }
 
-        if (!DISABLE)  {
-        	Unsafe unsafe;
+    private static long getFieldOffset(String fieldName) {
+        if (ENABLED) {
             try {
-                Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-                unsafeField.setAccessible(true);
-                unsafe = (Unsafe) unsafeField.get(null);
-
-            } catch ( Throwable cause ) {
-                unsafe = null;
+                return UNSAFE.objectFieldOffset(String.class.getDeclaredField(fieldName));
+            } catch (NoSuchFieldException e) {
+                // field undefined
             }
+        }
+        return -1L;
+    }
 
-            UNSAFE = unsafe;
-            ENABLED = unsafe != null;
+    static {
+        STRING_VALUE_FIELD_OFFSET = getFieldOffset("value");
+        STRING_OFFSET_FIELD_OFFSET = getFieldOffset("offset");
+        STRING_COUNT_FIELD_OFFSET = getFieldOffset("count");
+    }
 
-            long stringValueFieldOffset = -1L;
-            long stringOffsetFieldOffset = -1L;
-            long stringCountFieldOffset = -1L;
-
-            if ( ENABLED ) {
-                try {
-                    stringValueFieldOffset = unsafe.objectFieldOffset(String.class.getDeclaredField("value"));
-                    stringOffsetFieldOffset = unsafe.objectFieldOffset(String.class.getDeclaredField("offset"));
-                    stringCountFieldOffset = unsafe.objectFieldOffset(String.class.getDeclaredField("count"));
-                } catch ( Throwable cause ) {
+    private enum StringImplementation {
+        DIRECT_CHARS {
+            @Override
+            public char[] toCharArray(String string) {
+                return (char[]) UNSAFE.getObject(string, STRING_VALUE_FIELD_OFFSET);
+            }
+            
+            @Override
+            public String noCopyStringFromChars(char[] chars) {
+                if (WRITE_TO_FINAL_FIELDS) {
+                    String string = new String();
+                    UNSAFE.putObject(string, STRING_VALUE_FIELD_OFFSET, chars);
+                    return string;
+                } else {
+                    return new String(chars);
                 }
             }
+        },
+        OFFSET {
+            @Override
+            public char[] toCharArray(String string) {
+                char[] value = (char[]) UNSAFE.getObject(string, STRING_VALUE_FIELD_OFFSET);
+                int offset = UNSAFE.getInt(string, STRING_OFFSET_FIELD_OFFSET);
+                int count = UNSAFE.getInt(string, STRING_COUNT_FIELD_OFFSET);
+                if (offset == 0 && count == value.length)
+                    // no need to copy
+                    return value;
+                else
+                    return string.toCharArray();
+            }
+            
+            @Override
+            public String noCopyStringFromChars(char[] chars) {
+                if (WRITE_TO_FINAL_FIELDS) {
+                    String string = new String();
+                    UNSAFE.putObject(string, STRING_VALUE_FIELD_OFFSET, chars);
+                    UNSAFE.putInt(string, STRING_COUNT_FIELD_OFFSET, chars.length);
+                    return string;
+                } else {
+                    return new String(chars);
+                }
+            }
+        },
+        UNKNOWN {
+            @Override
+            public char[] toCharArray(String string) {
+                return string.toCharArray();
+            }
+            
+            @Override
+            public String noCopyStringFromChars(char[] chars) {
+                return new String(chars);
+            }
+        };
 
-            STRING_VALUE_FIELD_OFFSET = stringValueFieldOffset;
-            STRING_OFFSET_FIELD_OFFSET = stringOffsetFieldOffset;
-            STRING_COUNT_FIELD_OFFSET = stringCountFieldOffset;
+        public abstract char[] toCharArray(String string);
+        public abstract String noCopyStringFromChars(char[] chars);
+    }
 
+    public static StringImplementation STRING_IMPLEMENTATION = computeStringImplementation();
+
+    private static StringImplementation computeStringImplementation() {
+
+        if (STRING_VALUE_FIELD_OFFSET != -1L) {
+            if (STRING_OFFSET_FIELD_OFFSET != -1L && STRING_COUNT_FIELD_OFFSET != -1L) {
+                return StringImplementation.OFFSET;
+
+            } else if (STRING_OFFSET_FIELD_OFFSET == -1L && STRING_COUNT_FIELD_OFFSET == -1L) {
+                return StringImplementation.DIRECT_CHARS;
+            } else {
+                // WTF
+                return StringImplementation.UNKNOWN;
+            }
         } else {
-            STRING_VALUE_FIELD_OFFSET = -1;
-            STRING_OFFSET_FIELD_OFFSET = -1;
-            STRING_COUNT_FIELD_OFFSET = -1;
-            UNSAFE = null;
-            ENABLED = false;
+            return StringImplementation.UNKNOWN;
         }
     }
 
@@ -66,56 +137,20 @@ public class FastStringUtils {
         return ENABLED;
     }
 
-    public static char[] toCharArray( final String string ) {
-        if ( ENABLED ) {
-            char[] value = (char[]) UNSAFE.getObject(string, STRING_VALUE_FIELD_OFFSET);
+    public static char[] toCharArray(final String string) {
+        return STRING_IMPLEMENTATION.toCharArray(string);
 
-            if ( STRING_OFFSET_FIELD_OFFSET != -1 ) {
-                // old String version with offset and count
-                int offset = (int) UNSAFE.getObject(string, STRING_OFFSET_FIELD_OFFSET);
-                int count = (int) UNSAFE.getObject(string, STRING_COUNT_FIELD_OFFSET);
-
-                if ( offset == 0 && count == value.length ) {
-                    // no need to copy
-                    return value;
-
-                } else {
-                    char result[] = new char[count];
-                    System.arraycopy(value, offset, result, 0, count);
-                    return result;
-                }
-
-            } else {
-                return value;
-            }
-
-        } else {
-            return string.toCharArray();
-        }
     }
 
-    public static char[] toCharArray( final CharSequence charSequence ) {
-        return toCharArray( charSequence.toString() );
+    public static char[] toCharArray(final CharSequence charSequence) {
+        return toCharArray(charSequence.toString());
     }
 
-    public static char[] toCharArrayFromBytes( final byte[] bytes, Charset charset ) {
-    	return toCharArray( new String( bytes, charset != null? charset: StandardCharsets.UTF_8 ) );
+    public static char[] toCharArrayFromBytes(final byte[] bytes, Charset charset) {
+        return toCharArray(new String(bytes, charset != null ? charset : StandardCharsets.UTF_8));
     }
 
-    public static String noCopyStringFromChars( final char[] chars ) {
-
-        if ( WRITE_TO_FINAL_FIELDS && ENABLED ) {
-
-            final String string = new String();
-            UNSAFE.putObject( string, STRING_VALUE_FIELD_OFFSET, chars );
-
-            if ( STRING_COUNT_FIELD_OFFSET != -1 ) {
-            	UNSAFE.putObject( string, STRING_COUNT_FIELD_OFFSET, chars.length );
-            }
-
-            return string;
-        } else {
-            return new String( chars );
-        }
+    public static String noCopyStringFromChars(final char[] chars) {
+        return STRING_IMPLEMENTATION.noCopyStringFromChars(chars);
     }
 }
