@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import static org.boon.primitive.CharScanner.isInteger;
+import static org.boon.primitive.CharScanner.skipWhiteSpaceFast;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
@@ -78,40 +79,6 @@ public class JsonParserCharArray extends BaseJsonParser  {
 
     }
 
-
-    protected final void skipWhiteSpaceOld() {
-        int ix = __index;
-
-
-        ix = skipWhiteSpaceFast ( this.charArray, ix );
-        this.__currentChar = this.charArray[ix];
-        __index = ix;
-
-
-
-    }
-
-    protected final void skipWhiteSpaceAndNext() {
-        int ix = __index;
-
-
-        if (hasMore()) {
-            __index++;
-            this.__currentChar = this.charArray[ix];
-        } else {
-            this.__currentChar = 127;
-        }
-
-        if (__currentChar <= 32) {
-            ix = skipWhiteSpaceFast ( this.charArray, ix );
-            this.__currentChar = this.charArray[ix];
-            __index = ix;
-        }
-
-
-
-    }
-
     protected final char nextChar() {
 
         try {
@@ -133,17 +100,6 @@ public class JsonParserCharArray extends BaseJsonParser  {
 
 
 
-    private static int  skipWhiteSpaceFast( char [] array, int index ) {
-        char c;
-        for (; index< array.length; index++ ) {
-            c = array [index];
-            if ( c > 32 ) {
-
-                return index;
-            }
-        }
-        return index-1;
-    }
 
 
     protected final Object decodeJsonObject() {
@@ -454,7 +410,6 @@ public class JsonParserCharArray extends BaseJsonParser  {
             __index++;
         }
 
-        int lastIndex;
 
         skipWhiteSpaceIfNeeded ();
 
@@ -468,6 +423,9 @@ public class JsonParserCharArray extends BaseJsonParser  {
         list = new ArrayList();
 
 
+        char c;
+
+        loop:
         while ( this.hasMore() ) {
  
             Object arrayItem = decodeValueInternal();
@@ -475,20 +433,24 @@ public class JsonParserCharArray extends BaseJsonParser  {
             list.add( arrayItem );
 
 
-            char c  =  charArray[__index];
+            while (true) {
+                c  =  charArray[__index];
+                if ( c == ',' ) {
+                    __index++;
+                    continue loop;
+                } else if ( c == ']' ) {
+                    foundEnd = true;
+                    __index++;
+                    break loop;
+                } else if (c <= 32) {
+                     __index++;
+                    continue;
+                } else {
+                    break;
+                }
 
-
-            if ( c == ',' ) {
-                __index++;
-                continue;
-            } else if ( c == ']' ) {
-                __index++;
-                foundEnd = true;
-                break;
             }
 
-            lastIndex = __index;
-            skipWhiteSpaceIfNeeded ();
 
 
             c  =  charArray[__index];
@@ -496,7 +458,7 @@ public class JsonParserCharArray extends BaseJsonParser  {
             if ( c == ',' ) {
                 __index++;
                 continue;
-            } else if ( c == ']' && lastIndex != __index) {
+            } else if ( c == ']' ) {
                 __index++;
                 foundEnd = true;
                 break;

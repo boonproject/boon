@@ -820,6 +820,19 @@ public class CharScanner {
     }
 
 
+
+    public static int  skipWhiteSpaceFast( char [] array, int index ) {
+        char c;
+        for (; index< array.length; index++ ) {
+            c = array [index];
+            if ( c > 32 ) {
+
+                return index;
+            }
+        }
+        return index-1;
+    }
+
     public static String errorDetails( String message, char[] array, int index, int ch ) {
         CharBuf buf = CharBuf.create( 255 );
 
