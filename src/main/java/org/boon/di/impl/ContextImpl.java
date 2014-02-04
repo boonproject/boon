@@ -84,9 +84,10 @@ public class ContextImpl implements Context, Module {
         if ( object != null ) {
             Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( object.getClass(), true );
             for ( FieldAccess field : fields.values() ) {
-                if ( field.hasAnnotation( "Inject" ) && field.hasAnnotation( "Named" ) ) {
+                if ( ( field.hasAnnotation( "Inject" ) || field.hasAnnotation( "Autowired" ) ) &&
+                        (field.hasAnnotation( "Named" ) || field.hasAnnotation( "Qualifier" )) ) {
                     field.setValue( object, get( field.getType(), named( field ) ) );
-                } else if ( field.hasAnnotation( "Inject" ) ) {
+                } else if ( field.hasAnnotation( "Inject" ) || field.hasAnnotation( "Autowired" ) ) {
                     field.setValue( object, get( field.getType() ) );
                 }
             }
