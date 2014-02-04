@@ -291,4 +291,16 @@ public class Str {
         }
 
     }
+
+
+    public static String uncapitalize( String string ) {
+        StringBuilder rv = new StringBuilder();
+        if ( string.length() > 0 ) {
+            rv.append( Character.toLowerCase( string.charAt( 0 ) ) );
+            if ( string.length() > 1 ) {
+                rv.append( string.substring( 1 ) );
+            }
+        }
+        return rv.toString();
+    }
 }

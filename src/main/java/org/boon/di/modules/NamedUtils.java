@@ -1,12 +1,15 @@
 package org.boon.di.modules;
 
 import org.boon.Maps;
+import org.boon.Str;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+
+import static org.boon.Str.uncapitalize;
 
 /**
  * Created by Richard on 2/3/14.
@@ -18,6 +21,10 @@ public class NamedUtils {
         Map<String, AnnotationData> annotationMap = Annotations.getAnnotationDataForClassAsMap( type );
         if ( annotationMap.containsKey( "named" ) ) {
             named = ( String ) annotationMap.get( "named" ).getValues().get( "value" );
+
+            if ( Str.isEmpty(named)) {
+                 named = uncapitalize( type.getSimpleName() );
+            }
         }
         return named;
     }

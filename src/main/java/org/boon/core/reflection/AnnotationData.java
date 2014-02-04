@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static org.boon.Str.uncapitalize;
+
 
 /**
  * This is a helper class that helps us extract annotation data
@@ -51,22 +53,11 @@ public class AnnotationData {
         this.annotationPackageName = annotationClassName.substring ( 0, annotationClassName.length ()
                 - annotationSimpleName.length () - 1 );
         this.allowedAnnotations = allowedAnnotations;
-        this.name = unCapitalize( annotationSimpleName );
+        this.name = uncapitalize( annotationSimpleName );
         this.values = doGetValues(annotation);
     }
 
 
-    /* TODO this needs to be in Str or StringScanner, but it is here for now. */
-    private static String unCapitalize( String string ) {
-        StringBuilder rv = new StringBuilder();
-        if ( string.length() > 0 ) {
-            rv.append( Character.toLowerCase( string.charAt( 0 ) ) );
-            if ( string.length() > 1 ) {
-                rv.append( string.substring( 1 ) );
-            }
-        }
-        return rv.toString();
-    }
 
 
     /**

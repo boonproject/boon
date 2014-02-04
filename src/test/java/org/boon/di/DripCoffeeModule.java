@@ -1,7 +1,8 @@
 package org.boon.di;
 
 public class DripCoffeeModule {
-    Heater providesHeater() {
+
+    ElectricHeater providesHeater() {
         return new ElectricHeater();
     }
 

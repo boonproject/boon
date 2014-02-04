@@ -73,7 +73,7 @@ public class CoffeeApp implements Runnable {
     }
 
     public static void main( String... args ) {
-        Module m1 = ContextFactory.classes( CoffeeApp.class, CoffeeMaker.class );
+        Module m1 = ContextFactory.classes( CoffeeApp.class, CoffeeMaker.class, FoodImpl.class );
         Module m2 = ContextFactory.module( new DripCoffeeModule() );
         Module m3 = ContextFactory.module( new PumpModule() );
         Module m4 = ContextFactory.suppliers( supplierOf( Coffee.class, new Supplier<Coffee>() {
@@ -140,6 +140,13 @@ public class CoffeeApp implements Runnable {
         ok = context.has( "black" ) || die();
 
         ok = context.get( "black" ) != null || die();
+        ok = context.get( "electricHeater" ) != null || die();
+
+        ok = context.get( "foodImpl" ) != null || die();
+
+
+
+
 
         context.remove( m0 );
         context.add( m11 );

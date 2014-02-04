@@ -1,6 +1,8 @@
 package org.boon.di;
 
 
+
+@Named
 public class ElectricHeater extends BaseObject implements Heater {
     boolean heating;
 
