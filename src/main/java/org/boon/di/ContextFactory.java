@@ -8,6 +8,7 @@ import org.boon.di.modules.SupplierModule;
 
 public class ContextFactory {
 
+
     public static Context context( final Module... modules ) {
         return new ContextImpl( modules );
     }

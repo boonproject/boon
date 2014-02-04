@@ -6,6 +6,7 @@ import org.boon.core.reflection.fields.*;
 import org.boon.primitive.CharBuf;
 import sun.misc.Unsafe;
 
+import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.util.*;
@@ -126,6 +127,37 @@ public class Reflection {
 
     }
 
+    public static void invokeMethodWithAnnotationNoReturn( Object object, String annotation ) {
+            invokeMethodWithAnnotationWithReturnType( object, annotation, void.class );
+    }
+
+    public static void invokeMethodWithAnnotationWithReturnType( Object object, String annotation, Class<?> returnType ) {
+          invokeMethodWithAnnotationWithReturnType( object.getClass(), object, annotation, returnType );
+    }
+
+    public static void invokeMethodWithAnnotationWithReturnType( Class<?> type, Object object, String annotation, Class<?> returnType ) {
+        Method[] methods = type.getDeclaredMethods();
+        for (Method method : methods) {
+            if ( method.getParameterTypes().length!=0 || method.getReturnType() !=returnType) {
+                continue;
+            }
+            List<AnnotationData> annotations = Annotations.getAnnotationDataForMethod( method );
+            Map<String, AnnotationData> annotationMap = Maps.toMap( "name", annotations );
+            if (annotationMap.containsKey( annotation )) {
+                invokeMethod( object, method );
+            }
+
+        }
+    }
+
+    private static void invokeMethod( Object object, Method method ) {
+        try {
+            method.setAccessible( true );
+            method.invoke( object );
+        } catch ( Exception ex ) {
+            Exceptions.handle( ex );
+        }
+    }
 
     private static class Context {
 

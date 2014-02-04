@@ -9,9 +9,9 @@ import org.boon.di.Module;
 import java.util.Map;
 import java.util.Set;
 
-public class ContextImpl implements Context {
+public class ContextImpl implements Context, Module {
 
-    private Set<Module> modules = new ConcurrentLinkedHashSet<>();
+    protected Set<Module> modules = new ConcurrentLinkedHashSet<>();
 
     public ContextImpl( Module... modules ) {
         for ( Module module : modules ) {
@@ -53,6 +53,33 @@ public class ContextImpl implements Context {
         return object;
     }
 
+    @Override
+    public boolean has( Class type ) {
+
+        for ( Module module : modules ) {
+
+            if ( module.has( type ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean has( String name ) {
+
+        for ( Module module : modules ) {
+
+            if ( module.has( name ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     private void resolveProperties( Object object ) {
         if ( object != null ) {
             Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( object.getClass(), true );
@@ -63,7 +90,9 @@ public class ContextImpl implements Context {
                     field.setValue( object, get( field.getType() ) );
                 }
             }
+            Reflection.invokeMethodWithAnnotationNoReturn( object, "postConstruct" );
         }
+
     }
 
     private String named( FieldAccess field ) {

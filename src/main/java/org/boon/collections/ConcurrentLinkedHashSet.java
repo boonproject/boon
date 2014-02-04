@@ -50,6 +50,13 @@ public class ConcurrentLinkedHashSet<T> implements Set<T> {
         return set.add( t );
     }
 
+
+    public synchronized boolean addFirst( T t ) {
+        list.remove( t );
+        list.add(0, t );
+        return set.add( t );
+    }
+
     @Override
     public synchronized boolean remove( Object o ) {
         list.remove( o );

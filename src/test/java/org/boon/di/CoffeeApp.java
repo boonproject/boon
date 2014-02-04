@@ -24,6 +24,13 @@ public class CoffeeApp implements Runnable {
 
     @Inject @Named("rick's habit") Coffee rickCoffee;
 
+    boolean started = false;
+
+    @PostConstruct
+    void init() {
+        started = true;
+    }
+
 
     @Override public void run() {
         coffeeMaker.brew();
@@ -108,6 +115,10 @@ public class CoffeeApp implements Runnable {
 
     private static void validateApp( CoffeeApp coffeeApp ) {
         boolean ok;
+
+
+        ok = coffeeApp.started  || die();
+
         ok = coffeeApp.coffee != null || die();
 
         ok = coffeeApp.sugar == staticSugar || die();
