@@ -95,7 +95,7 @@ public class InstanceModule implements Module {
 
     @Override
     public boolean has( String name ) {
-        return false;
+        return nameMap.containsKey( name );
     }
 
 

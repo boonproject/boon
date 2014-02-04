@@ -24,6 +24,9 @@ public class CoffeeApp implements Runnable {
 
     @Inject @Named("rick's habit") Coffee rickCoffee;
 
+
+    @Inject @Named("black") Coffee blackCoffee;
+
     boolean started = false;
 
     @PostConstruct
@@ -156,6 +159,11 @@ public class CoffeeApp implements Runnable {
         ok = coffeeApp.rickCoffee != null || die();
 
         ok = (coffeeApp.rickCoffee instanceof Coffee) || die( coffeeApp.rickCoffee.toString());
+
+
+        ok = coffeeApp.blackCoffee != null || die();
+
+        ok = (coffeeApp.blackCoffee instanceof Coffee) || die( coffeeApp.blackCoffee.toString());
     }
 
 
