@@ -6,6 +6,8 @@ import org.boon.di.modules.InstanceModule;
 import org.boon.di.modules.ObjectListModule;
 import org.boon.di.modules.SupplierModule;
 
+import java.util.Map;
+
 public class ContextFactory {
 
 
@@ -56,4 +58,7 @@ public class ContextFactory {
         return new ObjectListModule( true, suppliers );
     }
 
+    public static Context fromMap( Map<?, ?> map ) {
+        return new ContextImpl(new SupplierModule( map ));
+    }
 }

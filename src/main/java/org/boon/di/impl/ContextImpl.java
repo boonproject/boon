@@ -104,10 +104,18 @@ public class ContextImpl implements Context, Module {
         Object value = null;
 
 
-        if (field.isNamed()) {
-             value =   get(field.type(), field.named());
+        boolean fieldNamed = field.isNamed();
+        if (fieldNamed) {
+            value =   get(field.type(), field.named());
         } else {
             value =   get(field.type() );
+        }
+
+        if (value == null && field.isNamed()) {
+            value =   get( field.named() );
+            if (value !=null ) {
+                field.type().isAssignableFrom( value.getClass() );
+            }
         }
 
         if (field.requiresInjection()) {

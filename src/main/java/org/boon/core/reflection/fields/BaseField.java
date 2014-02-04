@@ -237,6 +237,9 @@ public abstract class BaseField implements FieldAccess {
                 }
 
 
+                initAnnotationData ( getter.getDeclaringClass () );
+
+
 
             } else {
                 bits.set(STATIC,  Modifier.isStatic ( setter.getModifiers () ));
@@ -248,11 +251,12 @@ public abstract class BaseField implements FieldAccess {
                 componentClass = null;
                 parentType = setter.getDeclaringClass();
 
+                initAnnotationData ( setter.getDeclaringClass () );
+
 
             }
 
 
-            initAnnotationData ( getter.getDeclaringClass () );
             alias = findAlias();
 
             if (name.startsWith ( "$" )) {
@@ -432,8 +436,9 @@ public abstract class BaseField implements FieldAccess {
                         this.setObject ( obj, value );
                     } else if ( Typ.implementsInterface ( value.getClass (), type ) ) {
                         this.setObject ( obj, value );
+                    } else if (this.type.isAssignableFrom( value.getClass() )) {
+                        this.setObject ( obj, value );
                     } else {
-
                         setObject ( obj, Conversions.coerce( typeEnum, type, value ) );
                     }
                 } else {

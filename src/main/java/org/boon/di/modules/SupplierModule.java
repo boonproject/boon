@@ -8,6 +8,8 @@ import org.boon.core.reflection.Reflection;
 import org.boon.di.Module;
 import org.boon.di.SupplierInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,63 +26,23 @@ public class SupplierModule implements Module {
     private MultiMap<String, SupplierInfo> supplierNameMap = new MultiMap<>();
 
     public SupplierModule( SupplierInfo... suppliers ) {
-        for ( SupplierInfo supplierInfo : suppliers ) {
-
-            Class<?> type = supplierInfo.type();
-            if ( type == null && supplierInfo.value() != null ) {
-                type = supplierInfo.value().getClass();
-
-            }
-            String named = supplierInfo.name();
-            Supplier supplier = supplierInfo.supplier();
-
-            if ( supplier == null ) {
-                supplier = createSupplier( type, supplierInfo.value() );
-            }
-
-            if ( type != null ) {
-
-                supplierTypeMap.put( type, supplier );
-
-
-                    /* Named passed in overrides name in class annotation @Named. */
-                if ( named == null ) {
-
-                    named = namedValueForClass( type );
-                }
-            }
-
-            extractClassIntoMaps( type, named != null, supplier );
-            if ( named != null ) {
-                supplierNameMap.put( named, new SupplierInfo( named, type, supplier, null ) );
-            }
-        }
+        supplierExtraction( suppliers );
     }
 
-    private Supplier createSupplier( final Class<?> type, final Object value ) {
-        if ( value != null ) {
-            return new Supplier() {
-                @Override
-                public Object get() {
-                    return value;
-                }
-            };
-        } else if ( type != null ) {
-            return new Supplier() {
-                @Override
-                public Object get() {
-                    return Reflection.newInstance( type );
-                }
-            };
-        } else {
-            return new Supplier() {
-                @Override
-                public Object get() {
-                    return null;
-                }
-            };
+
+    public SupplierModule( Map<?, ?> map ) {
+        List<SupplierInfo> list = new ArrayList<>(  );
+
+        for (Map.Entry<?,?> entry : map.entrySet()) {
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            list.add( SupplierInfo.supplier( key, value  ));
         }
+
+         supplierExtraction( list.toArray( new SupplierInfo[list.size()] ) );
     }
+
+
 
 
     @Override
@@ -168,5 +130,69 @@ public class SupplierModule implements Module {
             superClass = superClass.getSuperclass();
         }
     }
+
+
+    private void supplierExtraction( SupplierInfo[] suppliers ) {
+        for ( SupplierInfo supplierInfo : suppliers ) {
+
+            Class<?> type = supplierInfo.type();
+            /* Get type from value. */
+            if ( type == null && supplierInfo.value() != null ) {
+                type = supplierInfo.value().getClass();
+
+            }
+            String named = supplierInfo.name();
+            Supplier supplier = supplierInfo.supplier();
+
+            if ( supplier == null ) {
+                supplier = createSupplier( type, supplierInfo.value() );
+            }
+
+            if ( type != null ) {
+
+                supplierTypeMap.put( type, supplier );
+
+
+                /* Named passed in overrides name in class annotation @Named. */
+                if ( named == null ) {
+
+                    named = namedValueForClass( type );
+                }
+            }
+
+            extractClassIntoMaps( type, named != null, supplier );
+            if ( named != null ) {
+                supplierNameMap.put( named, new SupplierInfo( named, type, supplier, null ) );
+            }
+        }
+    }
+
+
+    private Supplier createSupplier( final Class<?> type, final Object value ) {
+        if ( value != null ) {
+            return new Supplier() {
+                @Override
+                public Object get() {
+                    return value;
+                }
+            };
+        } else if ( type != null ) {
+            return new Supplier() {
+                @Override
+                public Object get() {
+                    return Reflection.newInstance( type );
+                }
+            };
+        } else {
+            return new Supplier() {
+                @Override
+                public Object get() {
+                    return null;
+                }
+            };
+        }
+    }
+
+
 
 }

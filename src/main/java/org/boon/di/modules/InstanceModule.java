@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.boon.Boon.puts;
 
 public class InstanceModule implements Module {
 
@@ -111,7 +110,7 @@ public class InstanceModule implements Module {
         Class cls = method.getReturnType();
 
 
-        /* Next see if isNamed is in the class. */
+        /* Next see if named is in the class. */
         if ( !foundName ) {
             named = NamedUtils.namedValueForClass( cls );
             foundName = named != null;
@@ -133,7 +132,7 @@ public class InstanceModule implements Module {
             while ( superClass != Object.class ) {
                 this.supplierMap.put( superClass, supplier );
 
-                  /* Next see if isNamed is in the super if not found. */
+                  /* Next see if named is in the super if not found. */
                 if ( !foundName ) {
                     named = NamedUtils.namedValueForClass( cls );
                     foundName = named != null;

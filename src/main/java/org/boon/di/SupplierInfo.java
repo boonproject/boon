@@ -54,6 +54,28 @@ public class SupplierInfo<T> {
         return new SupplierInfo<>( null, null, null, object );
     }
 
+
+    public static <T> SupplierInfo<T> supplier(Object name,  Object value ) {
+
+        SupplierInfo info;
+
+        if (value instanceof SupplierInfo) {
+            SupplierInfo valueInfo = ( SupplierInfo ) value;
+            info  = new SupplierInfo( name.toString(), valueInfo.type(), valueInfo.supplier(), valueInfo.value()  );
+        } else if (value instanceof Class) {
+            info = new SupplierInfo( name.toString(), (Class) value, null, null  );
+        } else if (value instanceof Supplier) {
+            info = new SupplierInfo( name.toString(), null, (Supplier) value, null  );
+        } else  {
+            if (value == null) {
+                info = new SupplierInfo( name.toString(), null, null, value  );
+            }  else {
+                info = new SupplierInfo( name.toString(), value.getClass(), null, value  );
+            }
+        }
+        return info;
+    }
+
     public Class<T> type() {
         return type;
     }
