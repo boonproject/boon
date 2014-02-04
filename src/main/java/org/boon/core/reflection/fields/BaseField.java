@@ -20,6 +20,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
 import static org.boon.core.Conversions.*;
 import static org.boon.core.Conversions.toFloat;
 
@@ -239,8 +241,6 @@ public abstract class BaseField implements FieldAccess {
 
                 initAnnotationData ( getter.getDeclaringClass () );
 
-
-
             } else {
                 bits.set(STATIC,  Modifier.isStatic ( setter.getModifiers () ));
                 bits.set(FINAL, Modifier.isFinal ( setter.getModifiers () ));
@@ -252,7 +252,6 @@ public abstract class BaseField implements FieldAccess {
                 parentType = setter.getDeclaringClass();
 
                 initAnnotationData ( setter.getDeclaringClass () );
-
 
             }
 
@@ -439,7 +438,18 @@ public abstract class BaseField implements FieldAccess {
                     } else if (this.type.isAssignableFrom( value.getClass() )) {
                         this.setObject ( obj, value );
                     } else {
-                        setObject ( obj, Conversions.coerce( typeEnum, type, value ) );
+
+                        Object object = Conversions.coerce( typeEnum, type, value );
+                        if (object != null && this.type.isAssignableFrom( object.getClass() )) {
+                            this.setObject ( obj, object );
+                        } else {
+                            if (object != null) {
+                                die(sputs("Unable to set value into field after conversion was called",
+                                    this, "converted value", object, "original value", value, "field", this,
+                                    "converted object type", object.getClass()
+                                        ));
+                            }
+                        }
                     }
                 } else {
                     this.setObject ( obj, null );
