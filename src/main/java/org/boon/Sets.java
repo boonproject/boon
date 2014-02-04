@@ -11,6 +11,9 @@ public class Sets {
 
     /* Creation */
     public static <V> Set<V> set( Collection<V> collection ) {
+        if (collection instanceof Set) {
+            return (Set <V>) collection;
+        }
         if (collection==null) {
             return Collections.EMPTY_SET;
         }

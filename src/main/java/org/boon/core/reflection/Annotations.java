@@ -24,8 +24,6 @@ public class Annotations {
     private static WeakReference<Context> weakContext = new WeakReference<>( null );
 
 
-
-
     private static class Context {
 
         private Map<
@@ -141,6 +139,14 @@ public class Annotations {
         return getAnnotationDataForClass ( clazz, Collections.EMPTY_SET );
 
     }
+
+
+
+    public static List<AnnotationData> getAnnotationDataForMethod( Method method ) {
+        List<AnnotationData> list = extractValidationAnnotationData( method.getDeclaredAnnotations(), Collections.EMPTY_SET );
+        return list;
+    }
+
 
     public static Map<String, AnnotationData> getAnnotationDataForClassAsMap( Class<?> clazz  ) {
 

@@ -1,5 +1,6 @@
 package org.boon.di;
 
-public class Bacon {
+public class Bacon implements Food {
     boolean crispy;
+    String tag;
 }

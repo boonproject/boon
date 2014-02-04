@@ -8,22 +8,28 @@ import org.boon.di.modules.SupplierModule;
 
 public class ContextFactory {
 
-    public static Context context ( final Module... modules ) {
+    public static Context context( final Module... modules ) {
         return new ContextImpl( modules );
     }
 
-    public static Module classes(Class... classes) {
+    public static Module classes( Class... classes ) {
 
         return new ClassListModule( classes );
     }
 
-    public static Module objects(Object... objects) {
+
+    public static Module classes( SupplierInfo... classes ) {
+
+        return new ClassListModule( classes );
+    }
+
+    public static Module objects( Object... objects ) {
 
         return new ObjectListModule( false, objects );
     }
 
 
-    public static Module prototypes(Object... objects) {
+    public static Module prototypes( Object... objects ) {
 
         return new ObjectListModule( true, objects );
     }
@@ -36,6 +42,17 @@ public class ContextFactory {
     public static Module suppliers( SupplierInfo... suppliers ) {
 
         return new SupplierModule( suppliers );
+    }
+
+    public static Module objects( SupplierInfo... suppliers ) {
+
+        return new ObjectListModule( false, suppliers );
+    }
+
+
+    public static Module prototypes( SupplierInfo... suppliers ) {
+
+        return new ObjectListModule( true, suppliers );
     }
 
 }

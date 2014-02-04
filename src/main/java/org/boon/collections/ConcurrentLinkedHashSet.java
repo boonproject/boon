@@ -1,6 +1,5 @@
 package org.boon.collections;
 
-import org.boon.Lists;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -11,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ConcurrentLinkedHashSet<T> implements Set<T> {
 
     List<T> list = new CopyOnWriteArrayList<>();
-    Set <T> set = new ConcurrentHashSet<>();
+    Set<T> set = new ConcurrentHashSet<>();
 
     @Override
     public int size() {
@@ -35,7 +34,7 @@ public class ConcurrentLinkedHashSet<T> implements Set<T> {
 
     @Override
     public Object[] toArray() {
-        return list.toArray(new Object[list.size()]);
+        return list.toArray( new Object[list.size()] );
     }
 
     @Override
@@ -52,7 +51,7 @@ public class ConcurrentLinkedHashSet<T> implements Set<T> {
     }
 
     @Override
-    public synchronized  boolean remove( Object o ) {
+    public synchronized boolean remove( Object o ) {
         list.remove( o );
         return set.remove( o );
     }
