@@ -145,7 +145,7 @@ public class ObjectListModule implements Module {
             for ( Class superType : superTypes ) {
                 this.objects.put( superType, object );
             }
-            superClass = cls.getSuperclass();
+            superClass = superClass.getSuperclass();
         }
     }
 

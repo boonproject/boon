@@ -132,7 +132,7 @@ public class ClassListModule implements Module {
             for ( Class superType : superTypes ) {
                 this.classes.put( superType, cls );
             }
-            superClass = cls.getSuperclass();
+            superClass = superClass.getSuperclass();
         }
     }
 

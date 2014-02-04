@@ -139,7 +139,7 @@ public class InstanceModule implements Module {
                 for ( Class superType : superTypes ) {
                     this.supplierMap.put( superType, supplier );
                 }
-                superClass = cls.getSuperclass();
+                superClass = superClass.getSuperclass();
             }
         }
 

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * @author Rick Hightower
  */
-@Target( {ElementType.METHOD } )
+@Target( {ElementType.METHOD} )
 @Retention( RetentionPolicy.RUNTIME )
 public @interface PostConstruct {
 }

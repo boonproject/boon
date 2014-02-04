@@ -165,7 +165,7 @@ public class SupplierModule implements Module {
             for ( Class superType : superTypes ) {
                 this.supplierTypeMap.put( superType, supplier );
             }
-            superClass = type.getSuperclass();
+            superClass = superClass.getSuperclass();
         }
     }
 

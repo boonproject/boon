@@ -7,11 +7,10 @@ import org.boon.di.Context;
 import org.boon.di.Module;
 
 import java.util.Map;
-import java.util.Set;
 
 public class ContextImpl implements Context, Module {
 
-    protected Set<Module> modules = new ConcurrentLinkedHashSet<>();
+    protected ConcurrentLinkedHashSet<Module> modules = new ConcurrentLinkedHashSet<>();
 
     public ContextImpl( Module... modules ) {
         for ( Module module : modules ) {
@@ -85,7 +84,7 @@ public class ContextImpl implements Context, Module {
             Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( object.getClass(), true );
             for ( FieldAccess field : fields.values() ) {
                 if ( ( field.hasAnnotation( "Inject" ) || field.hasAnnotation( "Autowired" ) ) &&
-                        (field.hasAnnotation( "Named" ) || field.hasAnnotation( "Qualifier" )) ) {
+                        ( field.hasAnnotation( "Named" ) || field.hasAnnotation( "Qualifier" ) ) ) {
                     field.setValue( object, get( field.getType(), named( field ) ) );
                 } else if ( field.hasAnnotation( "Inject" ) || field.hasAnnotation( "Autowired" ) ) {
                     field.setValue( object, get( field.getType() ) );
@@ -115,5 +114,23 @@ public class ContextImpl implements Context, Module {
         resolveProperties( object );
 
         return object;
+    }
+
+    @Override
+    public Context add( Module module ) {
+        this.modules.add( module );
+        return this;
+    }
+
+    @Override
+    public Context remove( Module module ) {
+        this.modules.remove( module );
+        return this;
+    }
+
+    @Override
+    public Context addFirst( Module module ) {
+        this.modules.addFirst( module );
+        return this;
     }
 }

@@ -1,5 +1,5 @@
 package org.boon.di;
 
-@Named ("chicago")
-public class Hotdogs implements Food {
+@Named("chicago")
+public class Hotdogs extends FoodImpl implements Food {
 }
