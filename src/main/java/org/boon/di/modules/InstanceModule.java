@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Boon.puts;
+
 public class InstanceModule implements Module {
 
     private Map<Class, Supplier<Object>> supplierMap = new ConcurrentHashMap<>();
@@ -23,6 +25,7 @@ public class InstanceModule implements Module {
         module = object;
         Method[] methods = object.getClass().getDeclaredMethods();
         for ( Method method : methods ) {
+
             if ( !Modifier.isStatic( method.getModifiers() ) && method.getName().startsWith( "provide" ) ) {
                 addCreationMethod( method );
             }
@@ -108,7 +111,7 @@ public class InstanceModule implements Module {
         Class cls = method.getReturnType();
 
 
-        /* Next see if named is in the class. */
+        /* Next see if isNamed is in the class. */
         if ( !foundName ) {
             named = NamedUtils.namedValueForClass( cls );
             foundName = named != null;
@@ -130,7 +133,7 @@ public class InstanceModule implements Module {
             while ( superClass != Object.class ) {
                 this.supplierMap.put( superClass, supplier );
 
-                  /* Next see if named is in the super if not found. */
+                  /* Next see if isNamed is in the super if not found. */
                 if ( !foundName ) {
                     named = NamedUtils.namedValueForClass( cls );
                     foundName = named != null;

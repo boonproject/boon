@@ -90,7 +90,7 @@ public abstract class ProjectedSelector extends Selector {
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
 
                 FieldAccess field = fields.get( fieldName );
-                if ( field.getType() == Typ.intgr ) {
+                if ( field.type() == Typ.intgr ) {
                     int value = field.getInt( item );
                     sum += value;
                 } else {
@@ -123,7 +123,7 @@ public abstract class ProjectedSelector extends Selector {
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
 
                 FieldAccess field = fields.get( fieldName );
-                if ( field.getType() == Typ.flt ) {
+                if ( field.type() == Typ.flt ) {
                     float value = field.getFloat( item );
                     sum += value;
                 } else {
@@ -157,7 +157,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get( fieldName );
-                if ( field.getType() == Typ.intgr ) {
+                if ( field.type() == Typ.intgr ) {
                     int value = field.getInt( item );
                     if ( value > max ) {
                         max = value;
@@ -194,7 +194,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get( fieldName );
-                if ( field.getType() == Typ.lng ) {
+                if ( field.type() == Typ.lng ) {
                     long value = field.getLong( item );
                     if ( value > max ) {
                         max = value;
@@ -232,7 +232,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get( fieldName );
-                if ( field.getType() == Typ.intgr ) {
+                if ( field.type() == Typ.intgr ) {
                     int value = field.getInt( item );
                     if ( value < min ) {
                         min = value;
@@ -268,7 +268,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get( fieldName );
-                if ( field.getType() == Typ.lng ) {
+                if ( field.type() == Typ.lng ) {
                     long value = field.getLong( item );
                     if ( value < min ) {
                         min = value;
@@ -304,7 +304,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get( fieldName );
-                if ( field.getType() == Typ.flt ) {
+                if ( field.type() == Typ.flt ) {
                     float value = field.getFloat( item );
                     if ( value > max ) {
                         max = value;
@@ -341,7 +341,7 @@ public abstract class ProjectedSelector extends Selector {
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
                 FieldAccess field = fields.get( fieldName );
 
-                if ( field.getType() == Typ.flt ) {
+                if ( field.type() == Typ.flt ) {
                     float value = field.getFloat( item );
                     if ( value > min ) {
                         min = value;

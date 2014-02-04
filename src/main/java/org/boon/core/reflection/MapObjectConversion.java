@@ -120,7 +120,7 @@ public class MapObjectConversion {
                 continue;
             }
 
-            if (value.getClass() == field.getType()) {
+            if (value.getClass() == field.type()) {
                 field.setObject( toObject, value );
             } else if ( Typ.isBasicType ( value ) ) {
 
@@ -131,9 +131,9 @@ public class MapObjectConversion {
             /* See if it is a map<string, object>, and if it is then process it. */
             //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
             else if ( value instanceof Map ) {
-                Class <?> clazz = field.getType();
+                Class <?> clazz = field.type();
                 if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
-                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, field.getType(), ignoreSet );
+                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, field.type(), ignoreSet );
 
                 } else {
                     value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, ignoreSet );
@@ -188,7 +188,7 @@ public class MapObjectConversion {
                 continue;
             }
 
-            if (value.getClass() == field.getType()) {
+            if (value.getClass() == field.type()) {
                   field.setObject( newInstance, value );
             } else if ( Typ.isBasicType ( value ) ) {
 
@@ -199,9 +199,9 @@ public class MapObjectConversion {
             /* See if it is a map<string, object>, and if it is then process it. */
             //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
             else if ( value instanceof Map ) {
-                Class <?> clazz = field.getType();
+                Class <?> clazz = field.type();
                 if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
-                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, field.getType() );
+                    value = fromMap( fieldsAccessor, ( Map<String, Object> ) value, field.type() );
 
                 } else {
                     value = fromMap( fieldsAccessor, ( Map<String, Object> ) value );
@@ -302,9 +302,9 @@ public class MapObjectConversion {
     private static <T> void fromMapHandleNonValueCase( FieldsAccessor fieldsAccessor, T newInstance, FieldAccess field, Object ovalue ) {
         try {
             if ( ovalue instanceof Map ) {
-                Class <?> clazz = field.getType();
+                Class <?> clazz = field.type();
                 if ( !clazz.isInterface () && !Typ.isAbstract ( clazz ) )  {
-                    ovalue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) ovalue, field.getType() );
+                    ovalue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) ovalue, field.type() );
                 } else {
                     ovalue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) ovalue );
                 }
@@ -317,7 +317,7 @@ public class MapObjectConversion {
             }
         } catch (Exception ex) {
             Exceptions.handle ( sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
-                    "fieldType", field.getType().getName(), "object from map", ovalue), ex );
+                    "fieldType", field.type().getName(), "object from map", ovalue), ex );
         }
     }
 
@@ -328,9 +328,9 @@ public class MapObjectConversion {
             if ( value.isContainer() ) {
                     objValue = value.toValue();
                     if ( objValue instanceof Map ) {
-                        Class <?> clazz = field.getType();
+                        Class <?> clazz = field.type();
                         if ( !clazz.isInterface () && !Typ.isAbstract ( clazz ) )  {
-                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
+                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.type() );
                         } else {
                             objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
                         }
@@ -344,7 +344,7 @@ public class MapObjectConversion {
             }
         } catch ( Exception ex ) {
             Exceptions.handle ( sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
-                    "fieldType", field.getType().getName(), "object from map", "objValue", objValue, "value", value ), ex );
+                    "fieldType", field.type().getName(), "object from map", "objValue", objValue, "value", value ), ex );
 
         }
     }
@@ -391,9 +391,9 @@ public class MapObjectConversion {
                     objValue = value.toValue();
                     if ( objValue instanceof Map ) {
 
-                        Class <?> clazz = field.getType();
+                        Class <?> clazz = field.type();
                         if ( !clazz.isInterface () && !Typ.isAbstract (clazz) )  {
-                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.getType() );
+                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.type() );
 
                         } else {
 
@@ -443,15 +443,15 @@ public class MapObjectConversion {
             /* It might be a collection of regular types. */
 
             /*If it is a compatible type just inject it. */
-            if ( field.getType().isInterface() &&
-                    Typ.implementsInterface( collection.getClass(), field.getType() ) ) {
+            if ( field.type().isInterface() &&
+                    Typ.implementsInterface( collection.getClass(), field.type() ) ) {
 
                 field.setValue( newInstance, collection );
 
             } else {
                 /* The type was not compatible so create a new collection that is. */
                 Collection<Object> newCollection =
-                        Reflection.createCollection ( field.getType (), collection.size () );
+                        Reflection.createCollection ( field.type(), collection.size () );
 
                 newCollection.addAll( collection );
                 field.setValue( newInstance, newCollection );
@@ -484,7 +484,7 @@ public class MapObjectConversion {
                                                 FieldAccess field, Collection<Map<String, Object>> collectionOfMaps,
                                                 final Set<String> ignoreSet) {
 
-        Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfMaps.size () );
+        Collection<Object> newCollection = Reflection.createCollection ( field.type(), collectionOfMaps.size () );
 
 
         Class<?> componentClass = field.getComponentClass();
@@ -508,7 +508,7 @@ public class MapObjectConversion {
                                                 FieldAccess field, Collection<Map<String, Object>> collectionOfMaps
                                                 ) {
 
-        Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfMaps.size () );
+        Collection<Object> newCollection = Reflection.createCollection ( field.type(), collectionOfMaps.size () );
 
 
         Class<?> componentClass = field.getComponentClass();
@@ -537,7 +537,7 @@ public class MapObjectConversion {
             collectionOfValues = ((ValueList)collectionOfValues).list();
         }
 
-        Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfValues.size () );
+        Collection<Object> newCollection = Reflection.createCollection ( field.type(), collectionOfValues.size () );
 
 
         Class<?> componentClass = field.getComponentClass();
@@ -573,7 +573,7 @@ public class MapObjectConversion {
             collectionOfValues = ((ValueList)collectionOfValues).list();
         }
 
-        Collection<Object> newCollection = Reflection.createCollection ( field.getType (), collectionOfValues.size () );
+        Collection<Object> newCollection = Reflection.createCollection ( field.type(), collectionOfValues.size () );
 
 
         Class<?> componentClass = field.getComponentClass();

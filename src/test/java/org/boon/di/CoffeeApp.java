@@ -35,6 +35,8 @@ public class CoffeeApp implements Runnable {
     @Named( "rick's habit" )
     Food rickDrinks;
 
+    @In( "rick's habit")
+    Food rickDrinks2;
 
     @Inject
     @Named( "rick's habit" )
@@ -44,6 +46,16 @@ public class CoffeeApp implements Runnable {
     @Inject
     @Named( "black" )
     Coffee blackCoffee;
+
+
+    //Todo this works but I need a real unit test.
+//    @Inject
+//    @Named( "this is not found" )
+//    @Required
+//    Coffee notFound;
+
+//    @In("more stuff not found")
+//    Coffee notFound2;
 
     boolean started = false;
 
@@ -195,6 +207,11 @@ public class CoffeeApp implements Runnable {
 
         ok = !( coffeeApp.rickDrinks instanceof Coffee ) || die( coffeeApp.rickDrinks.toString() );
 
+
+
+        ok = coffeeApp.rickDrinks2 == null || die();
+
+        ok = !( coffeeApp.rickDrinks2 instanceof Coffee ) || die( coffeeApp.rickDrinks.toString() );
 
         ok = coffeeApp.rickCoffee != null || die();
 

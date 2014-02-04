@@ -183,7 +183,7 @@ public class BeanUtils {
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap( root.getClass() );
 
         FieldAccess field = fields.get( property );
-        return field.getType();
+        return field.type();
     }
 
 
@@ -346,7 +346,7 @@ public class BeanUtils {
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType() == Typ.intgr ) {
+        if ( field.type() == Typ.intgr ) {
             return field.getInt( object );
         } else {
             return Conversions.toInt( field.getValue( object ) );
@@ -423,7 +423,7 @@ public class BeanUtils {
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType() == Typ.bt ) {
+        if ( field.type() == Typ.bt ) {
             return field.getByte( object );
         } else {
             return Conversions.toByte( field.getValue( object ) );
@@ -457,7 +457,7 @@ public class BeanUtils {
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType() == Typ.flt ) {
+        if ( field.type() == Typ.flt ) {
             return field.getFloat( object );
         } else {
             return Conversions.toFloat( field.getValue( object ) );
@@ -497,7 +497,7 @@ public class BeanUtils {
         FieldAccess field = fields.get( lastProperty );
 
 
-        if ( field.getType() == Typ.shrt ) {
+        if ( field.type() == Typ.shrt ) {
             return field.getShort( object );
         } else {
             return Conversions.toShort( field.getValue( object ) );
@@ -534,7 +534,7 @@ public class BeanUtils {
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType() == Typ.chr ) {
+        if ( field.type() == Typ.chr ) {
             return field.getChar( object );
         } else {
             return Conversions.toChar( field.getValue( object ) );
@@ -573,7 +573,7 @@ public class BeanUtils {
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType() == Typ.dbl ) {
+        if ( field.type() == Typ.dbl ) {
             return field.getDouble( object );
         } else {
             return Conversions.toDouble( field.getValue( object ) );
@@ -612,7 +612,7 @@ public class BeanUtils {
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType() == Typ.lng ) {
+        if ( field.type() == Typ.lng ) {
             return field.getLong( object );
         } else {
             return Conversions.toLong( field.getValue( object ) );
@@ -651,7 +651,7 @@ public class BeanUtils {
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
-        if ( field.getType() == Typ.bln ) {
+        if ( field.type() == Typ.bln ) {
             return field.getBoolean( object );
         } else {
             return Conversions.toBoolean( field.getValue( object ) );
@@ -752,7 +752,7 @@ public class BeanUtils {
             if ( field.isStatic() || field.isWriteOnly()) {
                 continue;
             }
-            if (!field.isPrimitive() && !Typ.isBasicType( field.getType() ))  {
+            if (!field.isPrimitive() && !Typ.isBasicType( field.type() ))  {
 
 
 
@@ -876,7 +876,7 @@ public class BeanUtils {
 
 
                 /* Basic type. */
-        if ( Typ.isBasicType( srcField.getType() ) ) {
+        if ( Typ.isBasicType( srcField.type() ) ) {
             /* Handle non primitive copy. */
             Object value = srcField.getObject( src );
             dstField.setValue( dst,  value  );
@@ -884,8 +884,8 @@ public class BeanUtils {
         }
 
                 /* Types match and not a collection so just copy. */
-        if (    !(srcValue instanceof Collection ) && dstField.getType() == srcValue.getClass() ||
-                Typ.isSuperType ( dstField.getType (), srcValue.getClass () ) ) {
+        if (    !(srcValue instanceof Collection ) && dstField.type() == srcValue.getClass() ||
+                Typ.isSuperType ( dstField.type(), srcValue.getClass () ) ) {
 
             dstField.setObject(dst, copy( srcField.getObject ( src ) ));
             return ;
@@ -895,7 +895,7 @@ public class BeanUtils {
 
                 /* Collection field copy. */
         if ( srcValue instanceof Collection && dstField.getComponentClass() != null
-                            && Typ.isCollection ( dstField.getType () )
+                            && Typ.isCollection ( dstField.type() )
                             ) {
 
             handleCollectionFieldCopy ( dst, dstField, ( Collection ) srcValue );
@@ -908,7 +908,7 @@ public class BeanUtils {
         if (dstField.typeEnum () == Type.ABSTRACT || dstField.typeEnum () == Type.INTERFACE) {
                             //no op
         } else {
-                Object newInstance = Reflection.newInstance ( dstField.getType () );
+                Object newInstance = Reflection.newInstance ( dstField.type() );
                 if (ignore == null) {
                     fieldByFieldCopy( srcField.getObject( src ), newInstance );
                 } else {
@@ -921,7 +921,7 @@ public class BeanUtils {
     private static void handleCollectionFieldCopy( Object dst, FieldAccess dstField, Collection srcValue ) {
         if ( dstField.getComponentClass () != Typ.string )  {
 
-            Collection dstCollection = Reflection.createCollection ( dstField.getType (), srcValue.size () );
+            Collection dstCollection = Reflection.createCollection ( dstField.type(), srcValue.size () );
             for ( Object srcComponentValue : srcValue ) {
 
                 Object newInstance = Reflection.newInstance( dstField.getComponentClass() );
@@ -932,7 +932,7 @@ public class BeanUtils {
             dstField.setObject ( dst, dstCollection );
         } else {
 
-            Collection dstCollection = Reflection.createCollection( dstField.getType(), srcValue.size() );
+            Collection dstCollection = Reflection.createCollection( dstField.type(), srcValue.size() );
             for ( Object srcComponentValue : srcValue ) {
 
                 if (srcComponentValue!=null) {

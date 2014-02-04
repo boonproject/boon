@@ -196,7 +196,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
 
 
         if ( overrideMap!=null ) {
-            final CustomObjectSerializer customObjectSerializer = overrideMap.get ( fieldAccess.getType () );
+            final CustomObjectSerializer customObjectSerializer = overrideMap.get ( fieldAccess.type() );
             if (customObjectSerializer!=null) {
                 serializeFieldName ( fieldName, builder );
                 customObjectSerializer.serializeObject ( serializer, value, builder );
@@ -321,7 +321,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 }
 
                 serializeFieldName ( fieldName, builder );
-                if ( fieldAccess.getType () == value.getClass () ) {
+                if ( fieldAccess.type() == value.getClass () ) {
                     serializer.serializeInstance ( value, builder );
                 } else {
                     serializer.serializeSubtypeInstance ( value, builder );

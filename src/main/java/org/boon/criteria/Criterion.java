@@ -296,7 +296,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             return;
         }
 
-        Class type = field.getType();
+        Class type = field.type();
 
 
         if ( !type.isPrimitive() && type != Typ.date ) {

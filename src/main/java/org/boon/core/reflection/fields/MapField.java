@@ -20,8 +20,33 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+    public boolean injectable() {
+        return false;
+    }
+
+    @Override
+    public boolean requiresInjection() {
+        return false;
+    }
+
+    @Override
+    public boolean isNamed() {
+        return false;
+    }
+
+    @Override
+    public boolean hasAlias() {
+        return false;
+    }
+
+    @Override
     public String getAlias() {
         return name;
+    }
+
+    @Override
+    public String named() {
+        return getAlias();
     }
 
     @Override
@@ -307,7 +332,12 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public final Class<?> getType() {
+    public final Class<?> type() {
         return Object.class;
+    }
+
+    @Override
+    public Object parent() {
+        return null;
     }
 }

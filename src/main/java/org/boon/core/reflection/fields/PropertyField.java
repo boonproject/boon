@@ -46,7 +46,7 @@ public class PropertyField extends BaseField {
 //        if ( parentType != null && setter != null ) {
 //
 //            methodType
-//                    = MethodType.methodType ( void.class, this.getType() );
+//                    = MethodType.methodType ( void.class, this.type() );
 //
 //
 //            try {
@@ -89,6 +89,7 @@ public class PropertyField extends BaseField {
         }
 
     }
+
 
 
     public final boolean getBoolean( Object obj ) {

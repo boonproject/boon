@@ -246,7 +246,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
             if ( item != null ) {
                 FieldAccess field = this.fields.get( property );
 
-                if ( field.getType() == long.class ) {
+                if ( field.type() == long.class ) {
                     return field.getLong( item );
                 }
             }
@@ -322,7 +322,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
             if ( item != null ) {
                 FieldAccess field = this.fields.get( property );
 
-                if ( field.getType() == long.class ) {
+                if ( field.type() == long.class ) {
                     return field.getLong( item );
                 }
             }

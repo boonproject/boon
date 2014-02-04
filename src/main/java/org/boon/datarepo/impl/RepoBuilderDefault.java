@@ -2,7 +2,6 @@ package org.boon.datarepo.impl;
 
 import org.boon.Str;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.datarepo.*;
 import org.boon.datarepo.impl.decorators.FilterWithSimpleCache;
@@ -846,7 +845,7 @@ public class RepoBuilderDefault implements RepoBuilder {
 
             Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
-            Class<?> type = fieldAccess.getType();
+            Class<?> type = fieldAccess.type();
 
             SearchIndex searchIndex = this.searchIndexFactory.apply( type );
             configSearchIndex( fields, prop, searchIndex );
@@ -856,7 +855,7 @@ public class RepoBuilderDefault implements RepoBuilder {
             FieldAccess fieldAccess = fields.get( prop );
             Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
-            SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply( fieldAccess.getType() );
+            SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply( fieldAccess.type() );
             configSearchIndex( fields, prop, searchIndex );
         }
 
@@ -865,7 +864,7 @@ public class RepoBuilderDefault implements RepoBuilder {
             FieldAccess fieldAccess = fields.get( prop );
             Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
-            LookupIndex index = this.lookupIndexFactory.apply( fieldAccess.getType() );
+            LookupIndex index = this.lookupIndexFactory.apply( fieldAccess.type() );
             configLookupIndex( fields, prop, index );
         }
         for ( String prop : uniqueLookupIndexes ) {
@@ -873,7 +872,7 @@ public class RepoBuilderDefault implements RepoBuilder {
             Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
 
-            LookupIndex index = this.uniqueLookupIndexFactory.apply( fieldAccess.getType() );
+            LookupIndex index = this.uniqueLookupIndexFactory.apply( fieldAccess.type() );
             configLookupIndex( fields, prop, index );
         }
 

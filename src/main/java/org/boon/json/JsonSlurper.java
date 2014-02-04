@@ -141,7 +141,7 @@ public class JsonSlurper {
     }
 
     /**
-     * Parse a JSON data structure from content at a given URL. Convenience variant when using Groovy named parameters for the connection params.
+     * Parse a JSON data structure from content at a given URL. Convenience variant when using Groovy isNamed parameters for the connection params.
      *
      * @param params connection parameters
      * @param url URL containing JSON content
@@ -182,7 +182,7 @@ public class JsonSlurper {
     }
 
     /**
-     * Parse a JSON data structure from content at a given URL. Convenience variant when using Groovy named parameters for the connection params.
+     * Parse a JSON data structure from content at a given URL. Convenience variant when using Groovy isNamed parameters for the connection params.
      *
      * @param params connection parameters
      * @param url URL containing JSON content

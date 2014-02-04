@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Boon.puts;
+
 public class ClassListModule implements Module {
 
     Map<Class, Class> classes = new ConcurrentHashMap<>();
@@ -99,6 +101,7 @@ public class ClassListModule implements Module {
         String named = null;
 
         if ( !foundName ) {
+
             named = NamedUtils.namedValueForClass( cls );
 
 

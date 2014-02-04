@@ -315,10 +315,10 @@ public class CriteriaFactory {
 
                 boolean returnVal;
                 FieldAccess field = fields.get( name );
-                if ( Typ.implementsInterface( field.getType(), Typ.collection ) ) {
+                if ( Typ.implementsInterface( field.type(), Typ.collection ) ) {
                     Collection collection = ( Collection ) field.getValue( owner );
                     returnVal = collection.contains( value );
-                } else if ( field.getType().isArray() ) {
+                } else if ( field.type().isArray() ) {
                     returnVal = false;
                     Object array = ( Object ) field.getValue( owner );
                     Iterator iter = iterator( array );
@@ -355,10 +355,10 @@ public class CriteriaFactory {
 
                 boolean returnVal;
                 FieldAccess field = fields.get( name );
-                if ( Typ.implementsInterface( field.getType(), Typ.collection ) ) {
+                if ( Typ.implementsInterface( field.type(), Typ.collection ) ) {
                     Collection collection = ( Collection ) field.getValue( owner );
                     returnVal = collection == null || collection.isEmpty();
-                } else if ( field.getType().isArray() ) {
+                } else if ( field.type().isArray() ) {
                     Object array = ( Object ) field.getValue( owner );
                     returnVal = array == null || Reflection.len( array ) == 0;
                 } else {

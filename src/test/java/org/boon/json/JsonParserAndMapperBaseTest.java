@@ -203,7 +203,7 @@ public class JsonParserAndMapperBaseTest {
                     @Override
                     public boolean serializeField ( JsonSerializerInternal serializer, Object parent,
                                                     FieldAccess fieldAccess, CharBuf builder ) {
-                        if ( fieldAccess.getType ().equals ( long.class ) &&
+                        if ( fieldAccess.type().equals ( long.class ) &&
                                 fieldAccess.getName ().endsWith ( "Date" ) ) {
 
                             builder.addJsonFieldName ( fieldAccess.getName () );

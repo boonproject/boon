@@ -9,7 +9,14 @@ import java.util.Map;
 
 
 public interface FieldAccess {
+    boolean injectable();
+    boolean requiresInjection();
+    boolean isNamed();
+    boolean hasAlias();
+
     String getAlias();
+
+    String named();
 
     String getName();
     Object getValue( Object obj );
@@ -63,7 +70,9 @@ public interface FieldAccess {
     boolean isReadOnly();
     boolean isWriteOnly();
 
-    Class<?> getType();
+    Class<?> type();
+
+    Object parent();
     Field getField();
 
 

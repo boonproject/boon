@@ -8,6 +8,10 @@ import org.boon.di.Module;
 
 import java.util.Map;
 
+import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
+
 public class ContextImpl implements Context, Module {
 
     protected ConcurrentLinkedHashSet<Module> modules = new ConcurrentLinkedHashSet<>();
@@ -83,21 +87,41 @@ public class ContextImpl implements Context, Module {
         if ( object != null ) {
             Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( object.getClass(), true );
             for ( FieldAccess field : fields.values() ) {
-                if ( ( field.hasAnnotation( "Inject" ) || field.hasAnnotation( "Autowired" ) ) &&
-                        ( field.hasAnnotation( "Named" ) || field.hasAnnotation( "Qualifier" ) ) ) {
-                    field.setValue( object, get( field.getType(), named( field ) ) );
-                } else if ( field.hasAnnotation( "Inject" ) || field.hasAnnotation( "Autowired" ) ) {
-                    field.setValue( object, get( field.getType() ) );
+
+                if ( ( field.injectable() ) ) {
+                    handleInjectionOfField( object, field );
                 }
+
+
             }
             Reflection.invokeMethodWithAnnotationNoReturn( object, "postConstruct" );
         }
 
     }
 
-    private String named( FieldAccess field ) {
-        return ( String ) field.getAnnotationData( "Named" ).get( "value" );
+    private void handleInjectionOfField( Object object, FieldAccess field ) {
+
+        Object value = null;
+
+
+        if (field.isNamed()) {
+             value =   get(field.type(), field.named());
+        } else {
+            value =   get(field.type() );
+        }
+
+        if (field.requiresInjection()) {
+            if (value == null) {
+                die(sputs(
+                        "Unable to inject into", field.getName(), " of ", field.parent() , "with alias", field.named(), "was named",field.isNamed(), "field info",
+                        field
+                ));
+            }
+        }
+
+        field.setValue( object, value  );
     }
+
 
     @Override
     public Object get( String name ) {

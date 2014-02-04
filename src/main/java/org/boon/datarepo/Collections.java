@@ -232,7 +232,7 @@ public class Collections {
         query.setFilter( filter );
 
 
-        LookupIndex index = SPIFactory.getUniqueLookupIndexFactory().apply( fields.get( primaryKey ).getType() );
+        LookupIndex index = SPIFactory.getUniqueLookupIndexFactory().apply( fields.get( primaryKey ).type() );
         index.setKeyGetter( keyGetter );
         ( ( SearchableCollection ) query ).addLookupIndex( primaryKey, index );
 
@@ -241,7 +241,7 @@ public class Collections {
             if ( f.getName().equals( primaryKey ) ) {
                 continue;
             }
-            if ( Typ.isBasicType( f.getType() ) ) {
+            if ( Typ.isBasicType( f.type() ) ) {
                 configIndexes( ( SearchableCollection ) query, f.getName(), fields );
             }
         }
@@ -465,13 +465,13 @@ public class Collections {
     private static void configIndexes( SearchableCollection query, String prop,
                                        Map<String, FieldAccess> fields ) {
 
-        SearchIndex searchIndex = SPIFactory.getSearchIndexFactory().apply( fields.get( prop ).getType() );
+        SearchIndex searchIndex = SPIFactory.getSearchIndexFactory().apply( fields.get( prop ).type() );
         searchIndex.init();
         Function kg = createKeyGetter( fields.get( prop ) );
         searchIndex.setKeyGetter( kg );
         query.addSearchIndex( prop, searchIndex );
 
-        LookupIndex index = SPIFactory.getLookupIndexFactory().apply( fields.get( prop ).getType() );
+        LookupIndex index = SPIFactory.getLookupIndexFactory().apply( fields.get( prop ).type() );
         index.setKeyGetter( kg );
         query.addLookupIndex( prop, index );
 

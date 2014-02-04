@@ -1,6 +1,7 @@
 package org.boon.core.reflection.fields;
 
 import org.boon.Exceptions;
+import org.boon.Sets;
 import org.boon.Str;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
@@ -8,7 +9,6 @@ import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
-import org.omg.CORBA.TRANSIENT;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Boon.puts;
 import static org.boon.core.Conversions.*;
 import static org.boon.core.Conversions.toFloat;
 
@@ -33,6 +34,10 @@ public abstract class BaseField implements FieldAccess {
     private static final int INCLUDE = 6;
     private static final int IGNORE = 7;
     private static final int WRITE_ONLY = 8;
+    private static final int HAS_INJECT = 9;
+    private static final int NAMED = 10;
+
+    private static final int REQUIRES_INJECTION = 11;
 
     protected final BitSet bits = new BitSet (  );
     protected final Class<?> type;
@@ -46,9 +51,11 @@ public abstract class BaseField implements FieldAccess {
     private  HashSet<String> includedViews;
     private  HashSet<String> ignoreWithViews;
     private final String alias;
+    private static Set<String> annotationsThatHaveAliases = Sets.set("JsonProperty","SerializedName", "Named", "id", "In", "Qualifier" );
 
 
-    private String initAnnotationData(Class clazz ) {
+
+    private void initAnnotationData(Class clazz ) {
 
         final Collection<AnnotationData> annotationDataForFieldAndProperty =
                 Annotations.getAnnotationDataForFieldAndProperty ( clazz, name, Collections.EMPTY_SET );
@@ -103,17 +110,34 @@ public abstract class BaseField implements FieldAccess {
             bits.set( IGNORE, !serialize);
         }
 
-        String alias = null;
-
-        if (hasAnnotation ( "SerializedName" ))  {
-            final Map<String, Object> aliasD = getAnnotationData ( "SerializedName" );
-            alias = (String) aliasD.get ( "value" );
+        if (hasAnnotation ( "Inject" ) || hasAnnotation( "Autowired" ) || hasAnnotation( "In" ))  {
+            bits.set( HAS_INJECT );
         }
 
-        if (alias==null && hasAnnotation ( "JsonProperty" )) {
-            final Map<String, Object> aliasD = getAnnotationData ( "JsonProperty" );
-            alias = (String) aliasD.get ( "value" );
+        if (hasAnnotation( "Autowired" ))  {
+            final Map<String, Object> props = getAnnotationData ( "Autowired" );
+
+            boolean required = (boolean) props.get ( "required" );
+            if (required)
+            bits.set( REQUIRES_INJECTION );
+
         }
+
+        if (hasAnnotation( "In" ))  {
+            final Map<String, Object> props = getAnnotationData ( "In" );
+
+            boolean required = (boolean) props.get ( "required" );
+            if (required)
+                bits.set( REQUIRES_INJECTION );
+
+        }
+
+        if (hasAnnotation( "Required" ))  {
+            bits.set( REQUIRES_INJECTION );
+        }
+
+
+
 
 
         if (parentType!=null) {
@@ -136,8 +160,33 @@ public abstract class BaseField implements FieldAccess {
 
         }
 
-        return alias;
 
+    }
+
+    private String findAlias() {
+        String alias = null;
+        for (String aliasAnnotation : annotationsThatHaveAliases) {
+            alias = getAlias(aliasAnnotation);
+            if (alias != null) {
+                bits.set( NAMED );
+                break;
+            }
+        }
+
+        return alias != null ? alias : name;
+    }
+
+
+    private String getAlias(String annotationName) {
+
+        String alias = null;
+        if ( hasAnnotation ( annotationName )) {
+
+            Map<String, Object> aliasD = getAnnotationData ( annotationName );
+            alias = (String) aliasD.get ( "value" );
+        }
+
+        return alias;
     }
 
     protected BaseField ( String name, Method getter, Method setter ) {
@@ -188,7 +237,6 @@ public abstract class BaseField implements FieldAccess {
                 }
 
 
-                alias = initAnnotationData ( getter.getDeclaringClass () );
 
             } else {
                 bits.set(STATIC,  Modifier.isStatic ( setter.getModifiers () ));
@@ -201,8 +249,11 @@ public abstract class BaseField implements FieldAccess {
                 parentType = setter.getDeclaringClass();
 
 
-                alias = initAnnotationData ( setter.getDeclaringClass () );
             }
+
+
+            initAnnotationData ( getter.getDeclaringClass () );
+            alias = findAlias();
 
             if (name.startsWith ( "$" )) {
                this.typeEnum = Type.SYSTEM;
@@ -274,9 +325,10 @@ public abstract class BaseField implements FieldAccess {
         } else {
             this.typeEnum = Type.getType(type);
         }
-        String alias = initAnnotationData ( field.getDeclaringClass () );
 
-        this.alias = alias != null ? alias : name;
+        initAnnotationData ( field.getDeclaringClass () );
+
+        alias = findAlias();
 
 
 
@@ -484,7 +536,7 @@ public abstract class BaseField implements FieldAccess {
         Exceptions.handle( Str.lines (
                 e.getClass ().getName (),
                 String.format ( "cause %s", e.getCause () ),
-                String.format ( "Field info name %s, type %s, class that declared field %s", this.getName (), this.getType (), this.getField ().getDeclaringClass () ),
+                String.format ( "Field info name %s, type %s, class that declared field %s", this.getName (), this.type(), this.getField ().getDeclaringClass () ),
                 String.format ( "Type of object passed %s", obj.getClass ().getName () )
         ), e );
 
@@ -557,7 +609,7 @@ public abstract class BaseField implements FieldAccess {
 
 
     @Override
-    public final Class<?> getType() {
+    public final Class<?> type() {
         return type;
     }
 
@@ -575,8 +627,10 @@ public abstract class BaseField implements FieldAccess {
 
     @Override
     public String toString() {
-        return "BaseField [name=" + name
+        return "FieldInfo [name=" + name
                + ", type=" + type
+                + ", parentType=" + parentType
+
                 + "]";
     }
 
@@ -615,5 +669,41 @@ public abstract class BaseField implements FieldAccess {
         return  bits.get( IGNORE );
     }
 
+
+    @Override
+    public boolean injectable() {
+        return bits.get( HAS_INJECT );
+    }
+
+    @Override
+    public boolean requiresInjection() {
+
+        return bits.get( REQUIRES_INJECTION );
+    }
+
+    @Override
+    public boolean isNamed() {
+
+        return bits.get( NAMED );
+    }
+
+    @Override
+    public boolean hasAlias() {
+        return bits.get( NAMED );
+    }
+
+
+
+    @Override
+    public String named() {
+        return this.alias;
+    }
+
+
+
+    @Override
+    public Object parent() {
+        return this.parentType;
+    }
 
 }
