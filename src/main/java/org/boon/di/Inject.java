@@ -7,11 +7,9 @@ import java.lang.annotation.Target;
 
 
 /**
- *
  * @author Rick Hightower
- *
  */
-@Target({ ElementType.METHOD, ElementType.FIELD })
-@Retention( RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Inject {
 }
