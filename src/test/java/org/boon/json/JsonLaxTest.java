@@ -7,6 +7,7 @@ import org.boon.json.implementation.JsonParserLax;
 import org.boon.utils.DateUtils;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,29 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
     public JsonParserAndMapper objectParser () {
         return parser();
+    }
+
+
+
+    @Test
+    public void simpleFloat () {
+
+
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
+                lines (
+
+                        "{ \"v\":1.1}"
+                )
+        );
+
+
+        Object o = map.get ( "v" );
+
+        if (o instanceof BigDecimal ) {
+            o = ((BigDecimal) o).doubleValue();
+        }
+
+        boolean ok = o.equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
     }
 
     @Test

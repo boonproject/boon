@@ -19,6 +19,11 @@ public class JsonCharArrayTest extends JsonParserAndMapperBaseTest {
         return new JsonParserFactory().createJsonCharArrayParser();
     }
 
+
+    public JsonParserAndMapper objectParser () {
+        return parser();
+    }
+
     @Test
     public void testNest () {
 

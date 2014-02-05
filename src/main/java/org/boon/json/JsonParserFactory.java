@@ -104,6 +104,16 @@ public class JsonParserFactory {
     }
 
 
+
+    public JsonParserAndMapper createParserWithEvents(JsonParserEvents events) {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop, false, events  ),
+                FieldAccessMode.create( fieldAccessType, useAnnotations ));
+
+        jsonParser.setCharset ( charset );
+        return jsonParser;
+    }
+
+
     public JsonParserAndMapper createCharacterSourceParser() {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserUsingCharacterSource ( ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
 

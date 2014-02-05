@@ -1,5 +1,6 @@
 package org.boon.di;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.map;
 import static org.boon.di.Creator.create;
@@ -295,6 +296,7 @@ public class CreatorTest {
 
 
 
+
     @Test
     public void testCreateWithStuff2() {
 
@@ -312,6 +314,19 @@ public class CreatorTest {
 
 
         ok = foo.bar.name.equals( "bar" )  || die();
+
+    }
+
+
+
+    //@Test
+    public void namedConfig() {
+
+
+        Context context = configFromNameSpace("dev", "classpath://config_files/");
+        Bar bar = context.get( Bar.class );
+        boolean ok = bar != null || die();
+        puts(bar.name);
 
     }
 

@@ -1,0 +1,13 @@
+{
+
+    /* Production namespace. */
+    "META": {
+        namespace:qa
+    },
+
+    "bar":
+    {
+        "class":"org.boon.di.CreatorTest$Bar",
+        "name": "QA Bar"
+    }
+}

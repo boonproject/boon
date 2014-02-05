@@ -50,8 +50,49 @@ public class JsonCreator {
         return ContextFactory.context( ContextFactory.fromMap( config ) );
     }
 
-    private static void handleDir( Map<String, Object> config, JsonParserAndMapper laxParser, String resource ) {
+    public static Context configFromNameSpace(String configNamespace, String... resources) {
+        Map<String,Object> config = new LinkedHashMap<>(  );
+        Map<String,Object> fileConfig;
+        for (String resource : resources) {
+            if ( resource.endsWith( "/" )) {
+                handleDirWithNamespace( config, configNamespace, resource );
+            } else if (resource.endsWith( ".json" )) {
+                fileConfig = handleConfigWithNamespace( configNamespace, resource );
+                config.putAll( fileConfig );
+            }
+        }
+        return ContextFactory.context( ContextFactory.fromMap( config ) );
+    }
+
+    private static void handleDirWithNamespace( Map<String, Object> config, String namespace, String resource ) {
         Map<String, Object> fileConfig;List<String> jsonFiles = IO.listByExt( resource, ".json" );
+        for (String jsonFile : jsonFiles) {
+            fileConfig  = handleConfigWithNamespace( namespace, jsonFile );
+            if (fileConfig!=null && fileConfig.size()!=0) {
+                config.putAll( fileConfig );
+            }
+        }
+
+    }
+
+    private static Map<String,Object> handleConfigWithNamespace( String namespace, String resource ) {
+        JsonCreatorEventHandler jsonCreatorEventHandler = new JsonCreatorEventHandler(namespace);
+        JsonParserAndMapper laxParser = new JsonParserFactory().createParserWithEvents(jsonCreatorEventHandler);
+
+        Map<String,Object> fileConfig = laxParser.parseMap( IO.read( resource ) );
+        if (fileConfig.containsKey( "META" )) {
+            fileConfig.remove( "META" );
+            return fileConfig.size() == 0 ? null : fileConfig;
+        } else {
+            /* No meta then assume it is a global config. */
+            return fileConfig;
+        }
+
+    }
+
+    private static void handleDir( Map<String, Object> config, JsonParserAndMapper laxParser, String resource ) {
+        Map<String, Object> fileConfig;
+        List<String> jsonFiles = IO.listByExt( resource, ".json" );
         for (String jsonFile : jsonFiles) {
             String contents = IO.read(jsonFile);
             fileConfig  = laxParser.parseMap( contents );

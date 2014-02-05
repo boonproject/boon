@@ -104,10 +104,6 @@ public class JsonFastParser extends JsonParserCharArray {
         return value;
     }
 
-    protected Value decodeValue() {
-        return decodeValueOverlay ();
-    }
-
     private Value decodeValueOverlay() {
 
         skipWhiteSpaceIfNeeded ();
@@ -297,8 +293,12 @@ public class JsonFastParser extends JsonParserCharArray {
         return value;
     }
 
-    public  Object parse( char[] cs ) {
-        Value value =  ( ( Value ) super.parse( cs ) );
+    public  Object parse( char[] chars ) {
+        lastIndex = chars.length -1;
+        __index = 0;
+        charArray = chars;
+
+        Value value = decodeValueOverlay(  );
         if (value.isContainer ()) {
             return value.toValue ();
         } else {

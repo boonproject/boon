@@ -6,6 +6,9 @@ import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
+import org.boon.json.JsonException;
+import org.boon.json.JsonParserEvents;
+import org.boon.primitive.Chr;
 
 import java.util.*;
 
@@ -15,6 +18,8 @@ import java.util.*;
 public class JsonParserLax extends JsonFastParser {
 
     private static ValueContainer EMPTY_LIST = new ValueContainer ( Collections.emptyList() );
+
+    private final JsonParserEvents events;
 
 
     public JsonParserLax() {
@@ -46,15 +51,27 @@ public class JsonParserLax extends JsonFastParser {
     }
 
     public JsonParserLax(  boolean useValues, boolean chop, boolean lazyChop, boolean defaultCheckDates ) {
-        super(useValues, chop, lazyChop, defaultCheckDates);
+        this( useValues, chop, lazyChop, defaultCheckDates, null );
     }
 
-    private Value decodeJsonObjectLax() {
+    public JsonParserLax(  boolean useValues, boolean chop, boolean lazyChop, boolean defaultCheckDates, JsonParserEvents events) {
+        super(useValues, chop, lazyChop, defaultCheckDates);
+        this.events = events;
+    }
+
+    private Value decodeJsonObjectLax(boolean isRoot) {
 
         if ( __currentChar == '{' )
             this.nextChar();
 
+
         ValueMap map =  useValues ? new ValueMapImpl () : new LazyValueMap ( lazyChop );
+
+        if (events!=null ) {
+            if (isRoot) root = map;
+            if (!events.objectStart(__index))stop();
+
+        }
         Value value  = new ValueContainer ( map );
 
         skipWhiteSpaceIfNeeded ();
@@ -86,10 +103,13 @@ public class JsonParserLax extends JsonFastParser {
                     }
 
                     key = extractLaxString( startIndexOfKey, __index - 1, false, false );
+
+                    if (events!=null) if(!events.objectFieldName( __index, map, (CharSequenceValue) key ))stop();
                     __index++; //skip :
 
 
                     item = decodeValueInternal();
+                    if (events!=null) if(!events.objectField( __index,  map, (CharSequenceValue) key, item ))stop();
                     skipWhiteSpaceIfNeeded ();
 
                     miv = new MapItemValue( key, item );
@@ -107,7 +127,8 @@ public class JsonParserLax extends JsonFastParser {
                 case '\'':
                     key = decodeStringSingle(  );
 
-                    //puts ( "key with quote", key );
+
+                    if (events!=null) if(!events.objectFieldName( __index, map, (CharSequenceValue) key ))stop();
 
                     skipWhiteSpaceIfNeeded ();
 
@@ -118,7 +139,8 @@ public class JsonParserLax extends JsonFastParser {
                     __index++;
                     item = decodeValueInternal();
 
-                    //puts ( "key", "#" + key + "#", value );
+                    if (events!=null) if (!events.objectField( __index, map, ( CharSequenceValue ) key, item ))stop();
+
 
                     skipWhiteSpaceIfNeeded ();
 
@@ -136,7 +158,7 @@ public class JsonParserLax extends JsonFastParser {
                 case '"':
                     key = decodeStringDouble(  );
 
-                    //puts ( "key with quote", key );
+                    if (events!=null) events.objectFieldName( __index, map, (CharSequenceValue) key );
 
                     skipWhiteSpaceIfNeeded ();
 
@@ -147,7 +169,7 @@ public class JsonParserLax extends JsonFastParser {
                     __index++;
                     item = decodeValueInternal();
 
-                    //puts ( "key", "#" + key + "#", value );
+                    if (events!=null) if(!events.objectField( __index, map, (CharSequenceValue) key, item ))stop();
 
                     skipWhiteSpaceIfNeeded ();
 
@@ -168,6 +190,8 @@ public class JsonParserLax extends JsonFastParser {
             }
         }
 
+
+        if (events!=null) if (!events.objectEnd( __index, map ))stop();
         return value;
     }
 
@@ -208,16 +232,50 @@ public class JsonParserLax extends JsonFastParser {
                     break endIndexLookup;
             }
         }
-        return new CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
+        CharSequenceValue value = new  CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
+        if (events!=null) if (!events.string( startIndexOfKey, endIndex + 1, value ))stop();
+        return value;
     }
 
 
 
-    protected Value decodeValue() {
-        return decodeValueInternal ();
+    Object root;
+
+
+    @Override
+    public  Object parse( char[] chars ) {
+        lastIndex = chars.length -1;
+
+        try {
+
+
+            __index = 0;
+            charArray = chars;
+
+            Value value = decodeValueInternal( true );
+            if (value.isContainer ()) {
+                return value.toValue ();
+            } else {
+                return value;
+            }
+
+        } catch (StopException stop) {
+            return root;
+        }
+
     }
 
-    protected Value decodeValueInternal() {
+
+
+    protected final Value decodeValue() {
+        return decodeValueInternal( false );
+    }
+
+
+    protected final Value decodeValueInternal() {
+        return decodeValueInternal( false );
+    }
+    protected final Value decodeValueInternal(boolean isRoot) {
         Value value = null;
 
         for (; __index < charArray.length; __index++ ) {
@@ -261,7 +319,7 @@ public class JsonParserLax extends JsonFastParser {
 
                 case 't':
                     if ( isTrue() ) {
-                        return decodeTrue() == true ? ValueContainer.TRUE : ValueContainer.FALSE;
+                        return decodeTrueWithEvents() == true ? ValueContainer.TRUE : ValueContainer.FALSE;
                     } else {
                         value = decodeStringLax();
                     }
@@ -269,7 +327,7 @@ public class JsonParserLax extends JsonFastParser {
 
                 case 'f':
                     if ( isFalse() ) {
-                        return decodeFalse() == false ? ValueContainer.FALSE : ValueContainer.TRUE;
+                        return decodeFalseWithEvents() == false ? ValueContainer.FALSE : ValueContainer.TRUE;
                     } else {
                         value = decodeStringLax();
                     }
@@ -277,7 +335,7 @@ public class JsonParserLax extends JsonFastParser {
 
                 case 'n':
                     if ( isNull() ) {
-                        return decodeNull() == null ? ValueContainer.NULL : ValueContainer.NULL;
+                        return decodeNullWithEvents() == null ? ValueContainer.NULL : ValueContainer.NULL;
                     } else {
                         value = decodeStringLax();
                     }
@@ -285,11 +343,11 @@ public class JsonParserLax extends JsonFastParser {
                     break;
 
                 case '[':
-                    value = decodeJsonArrayLax();
+                    value = decodeJsonArrayLax(isRoot);
                     break;
 
                 case '{':
-                    value = decodeJsonObjectLax();
+                    value = decodeJsonObjectLax(isRoot);
                     break;
 
                 case '1':
@@ -318,6 +376,7 @@ public class JsonParserLax extends JsonFastParser {
 
         return null;
     }
+
 
     private void handleBashComment() {
         for (; __index < charArray.length; __index++ ) {
@@ -408,6 +467,7 @@ public class JsonParserLax extends JsonFastParser {
         Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
 
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
+        if (events!=null) if (!events.number( startIndex, __index, value ))stop();
 
         return value;
     }
@@ -452,7 +512,7 @@ public class JsonParserLax extends JsonFastParser {
 
     private Value decodeStringLax() {
         int index = __index;
-        char currentChar = charArray[ __index ];
+        char currentChar;
         final int startIndex = __index;
         boolean encoded = false;
         char [] charArray = this.charArray;
@@ -464,8 +524,7 @@ public class JsonParserLax extends JsonFastParser {
             else if (currentChar == '\\') break;
         }
 
-        Value value = this.extractLaxString( startIndex, index, encoded, checkDates );
-
+        Value value = this.extractLaxString( startIndex, index, encoded, checkDates);
         __index = index;
         return value;
     }
@@ -508,11 +567,12 @@ public class JsonParserLax extends JsonFastParser {
             escape = false;
         }
 
-        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDates );
+        CharSequenceValue value = new CharSequenceValue ( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDates );
 
         if ( __index < charArray.length ) {
             __index++;
         }
+        if (events!=null) if (!events.string( startIndex, __index, value )) stop();
 
         return value;
     }
@@ -562,20 +622,25 @@ public class JsonParserLax extends JsonFastParser {
 
         boolean checkDates = this.checkDates && !encoded && minusCount >= 2 && colonCount >= 2;
 
-        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDates );
+        CharSequenceValue value = new CharSequenceValue ( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDates );
 
         if ( __index < charArray.length ) {
             __index++;
         }
 
+
+        if (events!=null) if (!events.string( startIndex, __index, value )) stop();
         return value;
     }
 
-    private Value decodeJsonArrayLax() {
+    private Value decodeJsonArrayLax(boolean isRoot) {
+
+        if (events!=null) if (!events.arrayStart( __index )) stop();
 
         if ( __currentChar == '[' ) {
             __index++;
         }
+
 
         skipWhiteSpaceIfNeeded ();
 
@@ -592,6 +657,10 @@ public class JsonParserLax extends JsonFastParser {
             list = new ValueList ( lazyChop );
         }
 
+//        if (events!=null && isRoot) {
+//            root = list;
+//        }
+
         Value value = new ValueContainer ( list );
 
         do {
@@ -600,7 +669,10 @@ public class JsonParserLax extends JsonFastParser {
 
             Object arrayItem = decodeValueInternal();
 
+
             list.add( arrayItem );
+
+            //if (events!=null) if (!events.arrayItem( __index, list, arrayItem )) stop();
 
             skipWhiteSpaceIfNeeded ();
 
@@ -623,7 +695,80 @@ public class JsonParserLax extends JsonFastParser {
             }
         } while ( this.hasMore() );
 
+
+        //if (events!=null) if (!events.arrayEnd( __index, list )) stop();
         return value;
     }
+
+
+    public static class StopException extends JsonException {
+        public StopException( String message ) {
+            super( message );
+        }
+
+    }
+    private void stop () {
+        throw new StopException( "STOPPED BY EVENT HANDLER at index " + __index );
+    }
+
+
+    protected final boolean decodeTrueWithEvents() {
+
+        if ( __index + TRUE.length <= charArray.length ) {
+            if ( charArray[ __index ] == 't' &&
+                    charArray[ ++__index ] == 'r' &&
+                    charArray[ ++__index ] == 'u' &&
+                    charArray[ ++__index ] == 'e' ) {
+
+                if (events!=null) if (!events.bool( __index, true )) stop();
+
+                __index++;
+                return true;
+
+            }
+        }
+
+        throw new JsonException( exceptionDetails( "true not parsed properly" ) );
+    }
+
+
+
+    protected final boolean decodeFalseWithEvents() {
+
+        if ( __index + FALSE.length <= charArray.length ) {
+            if ( charArray[ __index ] == 'f' &&
+                    charArray[ ++__index ] == 'a' &&
+                    charArray[ ++__index ] == 'l' &&
+                    charArray[ ++__index ] == 's' &&
+                    charArray[ ++__index ] == 'e' ) {
+                if (events!=null) if (!events.bool( __index, false )) stop();
+
+                __index++;
+
+                return false;
+            }
+        }
+        throw new JsonException( exceptionDetails( "false not parsed properly" ) );
+    }
+
+
+
+
+    protected final Object decodeNullWithEvents() {
+
+        if ( __index + NULL.length <= charArray.length ) {
+            if ( charArray[ __index ] == 'n' &&
+                    charArray[ ++__index ] == 'u' &&
+                    charArray[ ++__index ] == 'l' &&
+                    charArray[ ++__index ] == 'l' ) {
+                __index++;
+                if (events!=null) if (!events.nullValue( __index )) stop();
+
+                return null;
+            }
+        }
+        throw new JsonException( exceptionDetails( "null not parse properly" ) );
+    }
+
 
 }

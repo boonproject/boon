@@ -8,6 +8,8 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Created by rick on 12/15/13.
+ * @author  Stéphane Landelle
+ * J'ai écrit JSON parser du Boon. Sans Stéphane, l'analyseur n'existerait pas. Stéphane est la muse de Boon JSON, et mon entraîneur pour l'open source, github, et plus encore. Stéphane n'est pas le créateur directe, mais il est le maître architecte et je l'appelle mon ami.
  */
 public class FastStringUtils {
 

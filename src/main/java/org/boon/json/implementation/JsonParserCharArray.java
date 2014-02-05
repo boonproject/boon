@@ -32,7 +32,7 @@ public class JsonParserCharArray extends BaseJsonParser  {
 
 
 
-    private int lastIndex;
+    protected int lastIndex;
 
     @Override
     public  Object parse ( final char[] chars ) {

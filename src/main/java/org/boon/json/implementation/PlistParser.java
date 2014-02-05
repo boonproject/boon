@@ -2,12 +2,9 @@ package org.boon.json.implementation;
 
 import org.boon.core.Type;
 import org.boon.core.Value;
-import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -81,7 +78,7 @@ public class PlistParser extends JsonFastParser {
                     __index++; //skip :
 
 
-                    item = decodeValueInternal();
+                    item = decodeValuePlist();
                     skipWhiteSpaceIfNeeded ();
 
                     miv = new MapItemValue( key, item );
@@ -107,7 +104,7 @@ public class PlistParser extends JsonFastParser {
                         complain( "expecting current character to be '='  but got " + charDescription( __currentChar ) + "\n" );
                     }
                     __index++;
-                    item = decodeValueInternal();
+                    item = decodeValuePlist();
 
 
                     skipWhiteSpaceIfNeeded ();
@@ -183,11 +180,7 @@ public class PlistParser extends JsonFastParser {
         return new CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
     }
 
-    protected final Value decodeValue() {
-        return this.decodeValueInternal();
-    }
-
-    private Value decodeValueInternal() {
+    private Value decodeValuePlist() {
         Value value = null;
 
         for (; __index < charArray.length; __index++ ) {
@@ -251,10 +244,10 @@ public class PlistParser extends JsonFastParser {
                 case '7':
                 case '8':
                 case '9':
-                    value = decodeNumberLax( false );
+                    value = decodeNumberPLIST( false );
                     break;
                 case '-':
-                    value = decodeNumberLax( true );
+                    value = decodeNumberPLIST( true );
                     break;
 
                 default:
@@ -340,7 +333,7 @@ public class PlistParser extends JsonFastParser {
         return c == SEMI_COLON || c == CLOSED_CURLY || c == CLOSED_PAREN || c == COMMA;
     }
 
-    protected Value decodeNumberLax( boolean minus ) {
+    protected Value decodeNumberPLIST( boolean minus ) {
         char[] array = charArray;
 
         final int startIndex = __index;
@@ -497,7 +490,7 @@ public class PlistParser extends JsonFastParser {
         do {
             skipWhiteSpaceIfNeeded ();
 
-            Object arrayItem = decodeValueInternal();
+            Object arrayItem = decodeValuePlist();
 
             list.add( arrayItem );
 
@@ -525,6 +518,20 @@ public class PlistParser extends JsonFastParser {
         } while ( this.hasMore() );
 
         return value;
+    }
+
+
+    public  Object parse( char[] chars ) {
+        lastIndex = chars.length -1;
+        __index = 0;
+        charArray = chars;
+
+        Value value = decodeValuePlist();
+        if (value.isContainer ()) {
+            return value.toValue ();
+        } else {
+            return value;
+        }
     }
 
 }

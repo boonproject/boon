@@ -23,6 +23,10 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserAndMapperBaseT
     }
 
 
+    public JsonParserAndMapper objectParser () {
+        return parser();
+    }
+
     @After
     public void after () {
         jsonCharSrcParser.close ();
