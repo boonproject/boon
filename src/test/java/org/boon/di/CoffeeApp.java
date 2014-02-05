@@ -48,6 +48,12 @@ public class CoffeeApp implements Runnable {
     Coffee blackCoffee;
 
 
+
+    @Inject
+    @Named( "blue" )
+    Supplier<Bacon> blueBaconSupplier;
+
+
     //Todo this works but I need a real unit test.
 //    @Inject
 //    @Named( "this is not found" )
@@ -130,7 +136,7 @@ public class CoffeeApp implements Runnable {
 
         Module m11 = ContextFactory.classes( supplierOf( "rick's habit", Coffee.class ) );
 
-        Context context = ContextFactory.context( m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11 );
+        Context context = ContextFactory.context( m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m0 );
         Heater heater = context.get( Heater.class );
         boolean ok = heater instanceof ElectricHeater || die();
         CoffeeApp coffeeApp = context.get( CoffeeApp.class );
@@ -221,6 +227,12 @@ public class CoffeeApp implements Runnable {
         ok = coffeeApp.blackCoffee != null || die();
 
         ok = ( coffeeApp.blackCoffee instanceof Coffee ) || die( coffeeApp.blackCoffee.toString() );
+
+
+
+        ok = coffeeApp.blueBaconSupplier != null || die();
+
+        ok = ( coffeeApp.blueBaconSupplier.get() instanceof Bacon ) || die( coffeeApp.blueBaconSupplier.get().toString() );
     }
 
 

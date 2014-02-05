@@ -1,6 +1,7 @@
 package org.boon.di.impl;
 
 import org.boon.collections.ConcurrentLinkedHashSet;
+import org.boon.core.Supplier;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -83,6 +84,54 @@ public class ContextImpl implements Context, Module {
         return false;
     }
 
+    @Override
+    public <T> Supplier<T> getSupplier( Class<T> type, String name ) {
+
+
+        Supplier<T> supplier = null;
+        for ( Module module : modules ) {
+
+            if ( module.has( name ) ) {
+                supplier = module.getSupplier( type, name );
+                break;
+            }
+        }
+        final Supplier<T> s = supplier;
+
+        return new Supplier<T>() {
+            @Override
+            public T get() {
+                T o = s.get();
+                resolveProperties( o );
+                return o;
+            }
+        };
+    }
+
+    @Override
+    public <T> Supplier<T> getSupplier( Class<T> type ) {
+
+        Supplier<T> supplier = null;
+        for ( Module module : modules ) {
+
+            if ( module.has( type ) ) {
+                supplier = module.getSupplier( type );
+                break;
+            }
+        }
+
+        final Supplier<T> s = supplier;
+
+        return new Supplier<T>() {
+            @Override
+            public T get() {
+                T o = s.get();
+                resolveProperties( o );
+                return o;
+            }
+        };
+    }
+
 
     private void resolveProperties( Object object ) {
         if ( object != null ) {
@@ -106,9 +155,12 @@ public class ContextImpl implements Context, Module {
 
 
         boolean fieldNamed = field.isNamed();
-        if (fieldNamed) {
-            value =   get(field.type(), field.named());
-        } else {
+        if (fieldNamed && field.type() != Supplier.class) {
+            value =   get( field.type(), field.named() );
+        } else if (fieldNamed && field.type() == Supplier.class)  {
+            value =  getSupplier( field.getComponentClass(), field.named() );
+        }
+        else {
             value =   get(field.type() );
         }
 

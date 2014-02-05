@@ -3,6 +3,7 @@ package org.boon.di.modules;
 import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.collections.MultiMap;
+import org.boon.core.Supplier;
 import org.boon.core.reflection.Reflection;
 import org.boon.di.Module;
 import org.boon.di.SupplierInfo;
@@ -82,6 +83,31 @@ public class ClassListModule implements Module {
         }
 
     }
+
+
+
+    @Override
+    public <T> Supplier<T> getSupplier( final Class<T> type, final String name ) {
+        return new  Supplier<T>() {
+
+            @Override
+            public T get() {
+                return ClassListModule.this.get(type, name);
+            }
+        };
+    }
+
+    @Override
+    public <T> Supplier<T> getSupplier( final Class<T> type ) {
+        return new  Supplier<T>() {
+
+            @Override
+            public T get() {
+                return ClassListModule.this.get( type );
+            }
+        };
+    }
+
 
     @Override
     public boolean has( Class type ) {

@@ -59,6 +59,15 @@ public class SupplierModule implements Module {
     @Override
     public <T> T get( Class<T> type, String name ) {
 
+        return getSupplier( type, name ).get();
+    }
+
+
+
+    @Override
+    public <T> Supplier<T> getSupplier( final Class<T> type, final String name ) {
+
+
         SupplierInfo nullInfo = null;
 
         try {
@@ -71,17 +80,38 @@ public class SupplierModule implements Module {
                     continue;
                 }
                 if ( type.isAssignableFrom( info.type() ) ) {
-                    return ( T ) info.supplier().get();
+                    return (  Supplier<T> ) info.supplier();
                 }
             }
 
-            return ( T ) ( nullInfo != null ? nullInfo.supplier().get() : null );
+            return (  Supplier<T> ) ( nullInfo != null ? nullInfo.supplier() :   new Supplier<T>() {
+                @Override
+                public T get() {
+                    return null;
+                }
+            });
 
         } catch ( Exception e ) {
             Exceptions.handle( e );
             return null;
         }
+    }
 
+
+
+    @Override
+    public <T> Supplier<T> getSupplier( Class<T> type ) {
+        Supplier<T> supplier = ( Supplier<T> ) supplierTypeMap.get( type );
+        if (supplier == null ) {
+            supplier =  new Supplier<T>() {
+                @Override
+                public T get() {
+                    return null;
+                }
+            };
+        }
+
+        return supplier;
     }
 
     @Override
@@ -129,6 +159,8 @@ public class SupplierModule implements Module {
             }
             superClass = superClass.getSuperclass();
         }
+
+
     }
 
 
