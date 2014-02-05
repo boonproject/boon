@@ -1,0 +1,6 @@
+{"foo":
+{
+    "class":"org.boon.di.CreatorTest$Foo",
+    "name": "barFromJsonResource"
+}
+}

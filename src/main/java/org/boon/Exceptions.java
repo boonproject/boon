@@ -20,6 +20,11 @@ public class Exceptions {
     }
 
 
+    public static boolean die( Object[] messages ) {
+        throw new SoftenedException( sputs(messages) );
+    }
+
+
     public static <T> T die( Class<T> clazz, String message ) {
         throw new SoftenedException( message );
     }

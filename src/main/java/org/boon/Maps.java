@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import static org.boon.Exceptions.die;
+
 public class Maps {
 
     /**
@@ -107,6 +109,27 @@ public class Maps {
 
     public static <K, V> Entry<K, V> entry( Entry<K, V> entry ) {
         return new EntryImpl<>( entry );
+    }
+
+    public static Map<?, ?> mapFromArray( Object... args ) {
+        Map<Object, Object> map = map(Object.class, Object.class);
+
+        if (args.length % 2 != 0) {
+            return die(Map.class, "mapFromArray arguments must be equal");
+        }
+
+        Object lastKey = null;
+        for (int index = 0; index < args.length; index++) {
+
+            if (index % 2 == 0) {
+                lastKey = args[index];
+            } else {
+                map.put( lastKey, args[index] );
+            }
+
+        }
+        return map;
+
     }
 
     public static interface Entry<K, V> extends Comparable<Entry>,

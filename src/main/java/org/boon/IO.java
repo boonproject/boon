@@ -911,9 +911,9 @@ public class IO {
             }
         }
 
-        for ( int index = 0; index < result.size(); index++ ) {
-            result.set( index, "classpath:" + result.get( index ) );
-        }
+//        for ( int index = 0; index < result.size(); index++ ) {
+//            result.set( index, "classpath:" + result.get( index ) );
+//        }
 
         return result;
     }

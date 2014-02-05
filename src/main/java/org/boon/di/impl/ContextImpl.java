@@ -1,6 +1,7 @@
 package org.boon.di.impl;
 
 import org.boon.collections.ConcurrentLinkedHashSet;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.di.Context;
@@ -140,6 +141,13 @@ public class ContextImpl implements Context, Module {
             if ( module.has( name ) ) {
                 object = module.get( name );
                 break;
+            }
+        }
+
+        if (object instanceof Map) {
+            Map map = ( Map ) object;
+            if (map.containsKey( "class" )) {
+                object =  MapObjectConversion.fromMap( map );
             }
         }
 
