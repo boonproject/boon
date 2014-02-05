@@ -5,7 +5,6 @@ import org.boon.core.Supplier;
 import org.junit.Test;
 
 import static org.boon.Exceptions.die;
-import static org.boon.di.SupplierInfo.supplierOf;
 
 public class CoffeeApp implements Runnable {
     @Inject
@@ -94,7 +93,7 @@ public class CoffeeApp implements Runnable {
         Module m1 = ContextFactory.classes( CoffeeApp.class, CoffeeMaker.class, FoodImpl.class );
         Module m2 = ContextFactory.module( new DripCoffeeModule() );
         Module m3 = ContextFactory.module( new PumpModule() );
-        Module m4 = ContextFactory.suppliers( supplierOf( Coffee.class, new Supplier<Coffee>() {
+        Module m4 = ContextFactory.suppliers( ProviderInfo.providerOf( Coffee.class, new Supplier<Coffee>() {
             @Override
             public Coffee get() {
                 return new Coffee();
@@ -105,10 +104,10 @@ public class CoffeeApp implements Runnable {
         Module m6 = ContextFactory.prototypes( prototypeBacon );
 
         Module m7 = ContextFactory.suppliers(
-                supplierOf( Bacon.class ),
-                supplierOf( "orange", Bacon.class ),
-                supplierOf( "red", new Bacon() ),
-                supplierOf( "brown", Bacon.class, new Supplier<Bacon>() {
+                ProviderInfo.providerOf( Bacon.class ),
+                ProviderInfo.providerOf( "orange", Bacon.class ),
+                ProviderInfo.providerOf( "red", new Bacon() ),
+                ProviderInfo.providerOf( "brown", Bacon.class, new Supplier<Bacon>() {
                     @Override
                     public Bacon get() {
                         Bacon bacon = new Bacon();
@@ -118,7 +117,7 @@ public class CoffeeApp implements Runnable {
                 } ) );
 
 
-        Module m0 = ContextFactory.suppliers( supplierOf( "blue", new Supplier<Bacon>() {
+        Module m0 = ContextFactory.suppliers( ProviderInfo.providerOf( "blue", new Supplier<Bacon>() {
             @Override
             public Bacon get() {
                 Bacon bacon = new Bacon();
@@ -131,10 +130,10 @@ public class CoffeeApp implements Runnable {
         Module m8 = ContextFactory.classes( Cheese.class );
         Module m9 = ContextFactory.objects( new FrenchFries() );
 
-        Module m10 = ContextFactory.objects( supplierOf( "new york", new Hotdogs() ) );
+        Module m10 = ContextFactory.objects( ProviderInfo.providerOf( "new york", new Hotdogs() ) );
 
 
-        Module m11 = ContextFactory.classes( supplierOf( "rick's habit", Coffee.class ) );
+        Module m11 = ContextFactory.classes( ProviderInfo.providerOf( "rick's habit", Coffee.class ) );
 
         Context context = ContextFactory.context( m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m0 );
         Heater heater = context.get( Heater.class );

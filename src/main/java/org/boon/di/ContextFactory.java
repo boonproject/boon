@@ -21,7 +21,7 @@ public class ContextFactory {
     }
 
 
-    public static Module classes( SupplierInfo... classes ) {
+    public static Module classes( ProviderInfo... classes ) {
 
         return new ClassListModule( classes );
     }
@@ -42,18 +42,18 @@ public class ContextFactory {
         return new InstanceModule( module );
     }
 
-    public static Module suppliers( SupplierInfo... suppliers ) {
+    public static Module suppliers( ProviderInfo... suppliers ) {
 
         return new SupplierModule( suppliers );
     }
 
-    public static Module objects( SupplierInfo... suppliers ) {
+    public static Module objects( ProviderInfo... suppliers ) {
 
         return new ObjectListModule( false, suppliers );
     }
 
 
-    public static Module prototypes( SupplierInfo... suppliers ) {
+    public static Module prototypes( ProviderInfo... suppliers ) {
 
         return new ObjectListModule( true, suppliers );
     }

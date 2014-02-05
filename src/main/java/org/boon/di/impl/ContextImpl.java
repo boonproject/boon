@@ -10,9 +10,9 @@ import org.boon.di.Module;
 
 import java.util.Map;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
+import static org.boon.core.reflection.BeanUtils.idxBoolean;
 
 public class ContextImpl implements Context, Module {
 
@@ -134,7 +134,19 @@ public class ContextImpl implements Context, Module {
 
 
     private void resolveProperties( Object object ) {
+
+
         if ( object != null ) {
+
+            /* Since there is no concept of singleton or scope, you need some sort of flag to determine
+            if injection has already happened for objects that are like singletons.
+             */
+            if (Reflection.hasField( object, "__init__" )) {
+                if (idxBoolean( object, "__init__" )) {
+                    return;
+                }
+            }
+
             Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( object.getClass(), true );
             for ( FieldAccess field : fields.values() ) {
 

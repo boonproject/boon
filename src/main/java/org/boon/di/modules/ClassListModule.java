@@ -6,13 +6,12 @@ import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
 import org.boon.core.reflection.Reflection;
 import org.boon.di.Module;
-import org.boon.di.SupplierInfo;
+import org.boon.di.ProviderInfo;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.boon.Boon.puts;
 
 public class ClassListModule implements Module {
 
@@ -21,9 +20,9 @@ public class ClassListModule implements Module {
     private MultiMap<String, Class> nameMap = new MultiMap<>();
 
 
-    public ClassListModule( SupplierInfo... classes ) {
+    public ClassListModule( ProviderInfo... classes ) {
 
-        for ( SupplierInfo info : classes ) {
+        for ( ProviderInfo info : classes ) {
             if ( info.name() != null ) {
                 nameMap.put( info.name(), info.type() );
                 extractClassIntoMaps( info.type(), true );

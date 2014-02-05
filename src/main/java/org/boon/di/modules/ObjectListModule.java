@@ -6,7 +6,7 @@ import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.di.Module;
-import org.boon.di.SupplierInfo;
+import org.boon.di.ProviderInfo;
 
 import java.util.Map;
 import java.util.Set;
@@ -29,9 +29,9 @@ public class ObjectListModule implements Module {
     }
 
 
-    public ObjectListModule( boolean prototypes, SupplierInfo... objects ) {
+    public ObjectListModule( boolean prototypes, ProviderInfo... objects ) {
         this.prototypes = prototypes;
-        for ( SupplierInfo info : objects ) {
+        for ( ProviderInfo info : objects ) {
             if ( info.name() != null ) {
                 nameMap.put( info.name(), info.value() );
                 extractTypeInfo( info.value(), true );

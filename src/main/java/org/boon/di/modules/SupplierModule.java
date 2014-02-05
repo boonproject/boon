@@ -6,7 +6,7 @@ import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
 import org.boon.core.reflection.Reflection;
 import org.boon.di.Module;
-import org.boon.di.SupplierInfo;
+import org.boon.di.ProviderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,23 +23,23 @@ public class SupplierModule implements Module {
 
     private Map<Class, Supplier<Object>> supplierTypeMap = new ConcurrentHashMap<>();
 
-    private MultiMap<String, SupplierInfo> supplierNameMap = new MultiMap<>();
+    private MultiMap<String, ProviderInfo> supplierNameMap = new MultiMap<>();
 
-    public SupplierModule( SupplierInfo... suppliers ) {
+    public SupplierModule( ProviderInfo... suppliers ) {
         supplierExtraction( suppliers );
     }
 
 
     public SupplierModule( Map<?, ?> map ) {
-        List<SupplierInfo> list = new ArrayList<>(  );
+        List<ProviderInfo> list = new ArrayList<>(  );
 
         for (Map.Entry<?,?> entry : map.entrySet()) {
             Object key = entry.getKey();
             Object value = entry.getValue();
-            list.add( SupplierInfo.supplier( key, value  ));
+            list.add( ProviderInfo.provider( key, value ));
         }
 
-         supplierExtraction( list.toArray( new SupplierInfo[list.size()] ) );
+         supplierExtraction( list.toArray( new ProviderInfo[list.size()] ) );
     }
 
 
@@ -68,12 +68,12 @@ public class SupplierModule implements Module {
     public <T> Supplier<T> getSupplier( final Class<T> type, final String name ) {
 
 
-        SupplierInfo nullInfo = null;
+        ProviderInfo nullInfo = null;
 
         try {
-            Set<SupplierInfo> set = Sets.set( supplierNameMap.getAll( name ) );
+            Set<ProviderInfo> set = Sets.set( supplierNameMap.getAll( name ) );
 
-            for ( SupplierInfo info : set ) {
+            for ( ProviderInfo info : set ) {
 
                 if ( info.type() == null ) {
                     nullInfo = info;
@@ -148,7 +148,7 @@ public class SupplierModule implements Module {
             if ( !foundName ) {
                 named = NamedUtils.namedValueForClass( superClass );
                 if ( named != null ) {
-                    supplierNameMap.put( named, new SupplierInfo( named, type, supplier, null ) );
+                    supplierNameMap.put( named, new ProviderInfo( named, type, supplier, null ) );
                     foundName = true;
                 }
             }
@@ -164,20 +164,20 @@ public class SupplierModule implements Module {
     }
 
 
-    private void supplierExtraction( SupplierInfo[] suppliers ) {
-        for ( SupplierInfo supplierInfo : suppliers ) {
+    private void supplierExtraction( ProviderInfo[] suppliers ) {
+        for ( ProviderInfo providerInfo : suppliers ) {
 
-            Class<?> type = supplierInfo.type();
+            Class<?> type = providerInfo.type();
             /* Get type from value. */
-            if ( type == null && supplierInfo.value() != null ) {
-                type = supplierInfo.value().getClass();
+            if ( type == null && providerInfo.value() != null ) {
+                type = providerInfo.value().getClass();
 
             }
-            String named = supplierInfo.name();
-            Supplier supplier = supplierInfo.supplier();
+            String named = providerInfo.name();
+            Supplier supplier = providerInfo.supplier();
 
             if ( supplier == null ) {
-                supplier = createSupplier( type, supplierInfo.value() );
+                supplier = createSupplier( type, providerInfo.value() );
             }
 
             if ( type != null ) {
@@ -194,7 +194,7 @@ public class SupplierModule implements Module {
 
             extractClassIntoMaps( type, named != null, supplier );
             if ( named != null ) {
-                supplierNameMap.put( named, new SupplierInfo( named, type, supplier, null ) );
+                supplierNameMap.put( named, new ProviderInfo( named, type, supplier, null ) );
             }
         }
     }
