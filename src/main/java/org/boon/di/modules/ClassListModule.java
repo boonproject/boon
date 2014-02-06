@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class ClassListModule implements Module {
+public class ClassListModule extends BaseModule {
 
     Map<Class, Class> classes = new ConcurrentHashMap<>();
 
@@ -105,6 +105,21 @@ public class ClassListModule implements Module {
                 return ClassListModule.this.get( type );
             }
         };
+    }
+
+    @Override
+    public Iterable values() {
+        return this.classes.values();
+    }
+
+    @Override
+    public Iterable<String> names() {
+        return this.nameMap.keySet();
+    }
+
+    @Override
+    public Iterable types() {
+        return this.classes.keySet();
     }
 
 

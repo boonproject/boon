@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class InstanceModule implements Module {
+public class InstanceModule extends BaseModule {
 
     private Map<Class, Supplier<Object>> supplierMap = new ConcurrentHashMap<>();
     private MultiMap<String, Supplier<Object>> nameMap = new MultiMap<>();
@@ -117,6 +117,22 @@ public class InstanceModule implements Module {
         }
 
         return supplier;
+    }
+
+    @Override
+    public Iterable values() {
+        return supplierMap.values();
+    }
+
+    @Override
+    public Iterable<String> names() {
+
+        return nameMap.keySet();
+    }
+
+    @Override
+    public Iterable types() {
+        return supplierMap.keySet();
     }
 
     @Override

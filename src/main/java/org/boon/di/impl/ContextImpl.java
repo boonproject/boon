@@ -8,8 +8,12 @@ import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.di.Context;
 import org.boon.di.Module;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.core.reflection.BeanUtils.idxBoolean;
@@ -17,9 +21,65 @@ import static org.boon.core.reflection.BeanUtils.idxBoolean;
 public class ContextImpl implements Context, Module {
 
     protected ConcurrentLinkedHashSet<Module> modules = new ConcurrentLinkedHashSet<>();
+    private String name;
+    private AtomicReference <Context> parent = new AtomicReference<>(  );
+
+    @Override
+    public void setParent( Context context ) {
+        this.parent.set( context );
+    }
+
+    @Override
+    public Iterable<Object> values() {
+
+        List list = new ArrayList();
+        for ( Module m : modules ) {
+
+            for (Object o : m.values()) {
+                list.add( o );
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Iterable<String> names() {
+        List list = new ArrayList();
+        for ( Module m : modules ) {
+
+            for (String n : m.names()) {
+                list.add( n );
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Iterable<Class<?>> types() {
+        List list = new ArrayList();
+        for ( Module m : modules ) {
+
+            for (Class<?> c : m.types()) {
+                list.add( c );
+            }
+        }
+        return list;
+    }
+
+
+    @Override
+    public Iterable<Module> children() {
+        return modules;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+
 
     public ContextImpl( Module... modules ) {
         for ( Module module : modules ) {
+            module.setParent( this );
             this.modules.add( module );
         }
     }
@@ -27,35 +87,46 @@ public class ContextImpl implements Context, Module {
     @Override
     public <T> T get( Class<T> type ) {
 
-        Object object = null;
-        for ( Module module : modules ) {
+        try {
 
-            if ( module.has( type ) ) {
-                object = module.get( type );
-                break;
+            Object object = null;
+            for ( Module module : modules ) {
+
+                if ( module.has( type ) ) {
+                    object = module.get( type );
+                    break;
+                }
             }
+
+            resolveProperties( object );
+
+            return ( T ) object;
+        } finally {
         }
-
-        resolveProperties( object );
-
-        return ( T ) object;
     }
+
+
+
 
     @Override
     public <T> T get( Class<T> type, String name ) {
 
-        T object = null;
-        for ( Module module : modules ) {
+        try {
 
-            if ( module.has( name ) ) {
-                object = module.get( type, name );
-                break;
+
+            T object = null;
+            for ( Module module : modules ) {
+
+                if ( module.has( name ) ) {
+                    object = module.get( type, name );
+                    break;
+                }
             }
+
+            return object;
+
+        } finally {
         }
-
-        resolveProperties( object );
-
-        return object;
     }
 
     @Override
@@ -88,52 +159,72 @@ public class ContextImpl implements Context, Module {
     public <T> Supplier<T> getSupplier( Class<T> type, String name ) {
 
 
-        Supplier<T> supplier = null;
-        for ( Module module : modules ) {
+        try {
 
-            if ( module.has( name ) ) {
-                supplier = module.getSupplier( type, name );
-                break;
+
+            Supplier<T> supplier = null;
+            for ( Module module : modules ) {
+
+                if ( module.has( name ) ) {
+                    supplier = module.getSupplier( type, name );
+                    break;
+                }
             }
+            final Supplier<T> s = supplier;
+            final Context resolver = ( Context ) this;
+
+
+            return new Supplier<T>() {
+                @Override
+                public T get() {
+                    T o = s.get();
+                    resolver.resolveProperties( o );
+                    return o;
+                }
+            };
+
+
+        } finally {
         }
-        final Supplier<T> s = supplier;
-
-        return new Supplier<T>() {
-            @Override
-            public T get() {
-                T o = s.get();
-                resolveProperties( o );
-                return o;
-            }
-        };
     }
 
     @Override
     public <T> Supplier<T> getSupplier( Class<T> type ) {
 
-        Supplier<T> supplier = null;
-        for ( Module module : modules ) {
+        try {
 
-            if ( module.has( type ) ) {
-                supplier = module.getSupplier( type );
-                break;
+
+            Supplier<T> supplier = null;
+            for ( Module module : modules ) {
+
+                if ( module.has( type ) ) {
+                    supplier = module.getSupplier( type );
+                    break;
+                }
             }
+
+            final Supplier<T> s = supplier;
+
+
+            final Context resolver = ( Context ) this;
+
+            return new Supplier<T>() {
+                @Override
+                public T get() {
+                    T o = s.get();
+                    resolveProperties( o );
+                    return o;
+                }
+            };
+
+
+        } finally {
         }
-
-        final Supplier<T> s = supplier;
-
-        return new Supplier<T>() {
-            @Override
-            public T get() {
-                T o = s.get();
-                resolveProperties( o );
-                return o;
-            }
-        };
     }
 
 
-    private void resolveProperties( Object object ) {
+
+    public void resolveProperties( Object object ) {
 
 
         if ( object != null ) {
@@ -141,8 +232,8 @@ public class ContextImpl implements Context, Module {
             /* Since there is no concept of singleton or scope, you need some sort of flag to determine
             if injection has already happened for objects that are like singletons.
              */
-            if (Reflection.hasField( object, "__init__" )) {
-                if (idxBoolean( object, "__init__" )) {
+            if ( Reflection.hasField( object, "__init__" ) ) {
+                if ( idxBoolean( object, "__init__" ) ) {
                     return;
                 }
             }
@@ -167,32 +258,83 @@ public class ContextImpl implements Context, Module {
 
 
         boolean fieldNamed = field.isNamed();
-        if (fieldNamed && field.type() != Supplier.class) {
-            value =   get( field.type(), field.named() );
-        } else if (fieldNamed && field.type() == Supplier.class)  {
-            value =  getSupplier( field.getComponentClass(), field.named() );
-        }
-        else {
-            value =   get(field.type() );
+        if ( fieldNamed && field.type() != Supplier.class ) {
+            value = this.get( field.type(), field.named() );
+        } else if ( fieldNamed && field.type() == Supplier.class ) {
+            value = this.getSupplier( field.getComponentClass(), field.named() );
+        } else {
+            value = this.get( field.type() );
         }
 
-        if (value == null && field.isNamed()) {
-            value =   get( field.named() );
-            if (value !=null ) {
+        if ( value == null && field.isNamed() ) {
+            value = get( field.named() );
+            if ( value != null ) {
                 field.type().isAssignableFrom( value.getClass() );
             }
         }
 
-        if (field.requiresInjection()) {
-            if (value == null) {
-                die(sputs(
-                        "Unable to inject into", field.getName(), " of ", field.parent() , "with alias", field.named(), "was named",field.isNamed(), "field info",
-                        field
-                ));
+        if ( field.requiresInjection() ) {
+            if ( value == null ) {
+
+                debug();
+                die( sputs(
+                        "Unable to inject into", field.getName(), " of ", field.parent(), "with alias\n",
+                        field.named(), "was named", field.isNamed(), "field info",
+                        field, "\n"
+                ) );
             }
         }
 
-        field.setValue( object, value  );
+        field.setValue( object, value );
+    }
+
+    public void debug() {
+
+        puts (this, "----debug----");
+
+        if (this.parent.get()!=null) {
+
+            puts (this, "delegating to parent----");
+            this.parent.get().debug();
+
+        } else {
+
+            displayModuleInfo();
+        }
+    }
+
+    private void displayModuleInfo() {
+
+        int index = 0;
+
+        for (Module module : modules) {
+
+            if (module instanceof ContextImpl) {
+                ContextImpl context = ( ContextImpl ) module;
+                context.displayModuleInfo();
+            } else {
+                puts (index, module);
+
+                puts ("Names:---------------------------");
+                for ( String name : module.names() ) {
+                    puts ("              ", name);
+                }
+
+
+                puts ("Type--:---------------------------");
+                for ( Class<?> cls : module.types() ) {
+                    puts ("              ", name);
+                }
+
+
+                puts ("Object--:---------------------------");
+                for ( Object value : module.values() ) {
+                    puts ("              ", name);
+                }
+            }
+
+            index++;
+        }
     }
 
 
@@ -208,10 +350,10 @@ public class ContextImpl implements Context, Module {
             }
         }
 
-        if (object instanceof Map) {
+        if ( object instanceof Map ) {
             Map map = ( Map ) object;
-            if (map.containsKey( "class" )) {
-                object =  MapObjectConversion.fromMap( map );
+            if ( map.containsKey( "class" ) ) {
+                object = MapObjectConversion.fromMap( map );
             }
         }
 
@@ -222,19 +364,30 @@ public class ContextImpl implements Context, Module {
 
     @Override
     public Context add( Module module ) {
+        module.setParent( this );
         this.modules.add( module );
         return this;
     }
 
     @Override
     public Context remove( Module module ) {
+        module.setParent( null );
         this.modules.remove( module );
         return this;
     }
 
     @Override
     public Context addFirst( Module module ) {
+        module.setParent( this );
         this.modules.addFirst( module );
         return this;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ContextImpl{" +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

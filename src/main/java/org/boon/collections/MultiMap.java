@@ -88,4 +88,21 @@ public class MultiMap<K, V> implements Iterable<Map.Entry<K, Collection<V>>> {
         map.put( key, collection );
         return collection;
     }
+
+    public Iterable<K> keySet() {
+      return map.keySet();
+    }
+
+    public Iterable<Object> values() {
+
+        List list = new ArrayList(  );
+        Collection<Collection<V>> values = map.values();
+
+        for (Collection c : values) {
+            for (Object o : c) {
+                list.add( o );
+            }
+        }
+        return list;
+    }
 }

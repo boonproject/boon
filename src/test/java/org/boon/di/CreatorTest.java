@@ -340,6 +340,29 @@ public class CreatorTest {
         ok = bar != null || die();
         ok = bar.name.toString().equals( "QA Bar" )  || die("$"+bar.name+"$");
 
+
+    }
+
+
+    @Test
+    public void includeConfig() {
+
+
+        Context context;
+        Bar bar;
+        boolean ok;
+
+        context = ContextConfig.JSON.createContextUsingNamespace( "qa", "classpath://config_files/" );
+
+        Foo foo = context.get( Foo.class );
+
+        ok = foo != null || die();
+
+        bar = context.get( Bar.class );
+        ok = bar != null || die();
+        ok = bar.name.toString().equals( "QA Bar" )  || die("$"+bar.name+"$");
+
+
     }
 
 }

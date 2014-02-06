@@ -21,7 +21,7 @@ import static org.boon.di.modules.NamedUtils.namedValueForClass;
 /**
  * Created by Richard on 2/3/14.
  */
-public class SupplierModule implements Module {
+public class SupplierModule extends BaseModule {
 
     private Map<Class, Supplier<Object>> supplierTypeMap = new ConcurrentHashMap<>();
 
@@ -31,6 +31,22 @@ public class SupplierModule implements Module {
         supplierExtraction( suppliers );
     }
 
+
+
+    @Override
+    public Iterable<Object> values() {
+        return supplierNameMap.values();
+    }
+
+    @Override
+    public Iterable<String> names() {
+        return supplierNameMap.keySet();
+    }
+
+    @Override
+    public Iterable types() {
+        return supplierTypeMap.keySet();
+    }
 
     public SupplierModule( Map<?, ?> map ) {
         List<ProviderInfo> list = new ArrayList<>(  );
@@ -145,6 +161,7 @@ public class SupplierModule implements Module {
 
         return supplier;
     }
+
 
     @Override
     public boolean has( Class type ) {

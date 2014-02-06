@@ -23,4 +23,15 @@ public interface Module {
 
     public <T> Supplier<T>  getSupplier( Class<T> type );
 
+    public void setParent(Context context);
+
+
+
+    public Iterable<Object> values();
+
+    public Iterable<String> names();
+
+
+    public Iterable<Class<?>> types();
+
 }

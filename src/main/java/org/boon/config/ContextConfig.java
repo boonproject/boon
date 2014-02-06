@@ -3,14 +3,18 @@ package org.boon.config;
 import org.boon.IO;
 import org.boon.di.Context;
 import org.boon.di.ContextFactory;
+import org.boon.di.Module;
+import org.boon.di.impl.ContextImpl;
+import org.boon.di.modules.SupplierModule;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
 
 /**
  * Created by Richard on 2/5/14.
@@ -35,58 +39,75 @@ public enum ContextConfig {
             return ContextFactory.context( ContextFactory.fromMap( config ) );
         }
 
-        public Context createContextUsingNamespace( String configNamespace, String... resources ) {
-            Context parent = ContextFactory.context();
+        public Context createContextUsingNamespace( String namespace, String... resources ) {
+            return ContextFactory.fromMap( createMapUsingNameSpace(namespace, resources)  );
+        }
+
+        private void setName( String name, Context context ) {
+            ContextImpl i = ( ContextImpl ) context;
+            i.setName( name );
+        }
+
+        private Map<String, Object> createMapUsingNameSpace( String namespace,  String... resources ) {
+
+            return createMapUsingNameSpace( namespace, Arrays.asList(resources) );
+        }
+
+        private Map<String, Object> createMapUsingNameSpace( String namespace,  List<String> resources ) {
+
+            Map<String, Object> all = new HashMap<>(  );
+
+            Map<String, Object> child;
 
             for ( String resource : resources ) {
-                Context child;
                 if ( resource.endsWith( "/" ) ) {
-                    child = handleDirWithNamespace( configNamespace, resource );
-                    parent.add( child );
+                    child = createMapFromDir( namespace, resource );
+                    all.putAll( child );
                 } else if ( resource.endsWith( ".json" ) ) {
-                    child = handleConfigWithNamespace( configNamespace, resource );
-                    parent.add( child );
+                    child = createMapFromFile( namespace, resource );
+                    all.putAll( child );
                 }
 
             }
-            return parent;
+            return all;
         }
 
-        private Context handleDirWithNamespace( String namespace, String resource ) {
-            Context parent = ContextFactory.context();
-            List<String> jsonFiles = IO.listByExt( resource, ".json" );
-            for ( String jsonFile : jsonFiles ) {
-                Context child = handleConfigWithNamespace( namespace, jsonFile );
-                parent.add( child );
-            }
-            return parent;
-        }
-
-
-        private Context handleConfigWithNamespace( String namespace, String resource ) {
-
+        private Map<String,Object> createMapFromFile( String namespace, String resource ) {
             JsonCreatorEventHandler jsonCreatorEventHandler = new JsonCreatorEventHandler( namespace );
             JsonParserAndMapper laxParser = new JsonParserFactory().createParserWithEvents( jsonCreatorEventHandler );
 
+
+            Map<String, Object> all;
 
             Map<String, Object> fileConfig = laxParser.parseMap( IO.read( resource ) );
             if ( fileConfig.containsKey( "META" ) ) {
                 fileConfig.remove( "META" );
             }
 
-            Context parent = ContextFactory.context( ContextFactory.fromMap( fileConfig ) );
+            if (jsonCreatorEventHandler.include().size() > 0) {
+                all = createMapUsingNameSpace(namespace, jsonCreatorEventHandler.include());
+                all.putAll( fileConfig );
+            } else {
+               all = fileConfig;
+            }
 
-            List<String> include = jsonCreatorEventHandler.include();
-
-
-            Context child = createContextUsingNamespace( namespace, include.toArray( new String[include.size()] ) );
-
-            parent.add( child );
-
-            return parent;
-
+            return all;
         }
 
+
+        private Map<String, Object> createMapFromDir( String namespace, String resource ) {
+
+            Map<String, Object> all = new HashMap<>(  );
+
+            Map<String, Object> child;
+
+            List<String> jsonFiles = IO.listByExt( resource, ".json" );
+            for ( String jsonFile : jsonFiles ) {
+                child = createMapFromFile( namespace, jsonFile );
+                all.putAll( child );
+            }
+            return all;
+        }
         private void handleDir( Map<String, Object> config, JsonParserAndMapper laxParser, String resource ) {
             Map<String, Object> fileConfig;
             List<String> jsonFiles = IO.listByExt( resource, ".json" );

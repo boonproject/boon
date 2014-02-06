@@ -12,11 +12,28 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ObjectListModule implements Module {
+public class ObjectListModule extends BaseModule {
 
     private final boolean prototypes;
     Map<Class, Object> objects = new ConcurrentHashMap<>();
     MultiMap<String, Object> nameMap = new MultiMap<>();
+
+
+
+    @Override
+    public Iterable<Object> values() {
+        return objects.values();
+    }
+
+    @Override
+    public Iterable<String> names() {
+        return nameMap.keySet();
+    }
+
+    @Override
+    public Iterable types() {
+        return objects.keySet();
+    }
 
 
     public ObjectListModule( boolean prototypes, Object... objects ) {
@@ -125,6 +142,7 @@ public class ObjectListModule implements Module {
             }
         };
     }
+
 
 
     private void extractTypeInfo( Object object, boolean foundName ) {

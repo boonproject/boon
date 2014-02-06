@@ -6,6 +6,8 @@ import org.boon.json.JsonParserEvents;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Boon.puts;
+
 
 /**
  * Created by Richard on 2/5/14.
@@ -61,6 +63,7 @@ public class JsonCreatorEventHandler implements JsonParserEvents {
             Map<String, Object> meta = toMap( field );
             if (meta.containsKey( "include" )) {
               include = toList( meta.get( "include" ) );
+              puts ("include", include);
             }
             inMeta = false;
         }
