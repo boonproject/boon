@@ -43,11 +43,6 @@ public enum ContextConfig {
             return ContextFactory.fromMap( createMapUsingNameSpace(namespace, resources)  );
         }
 
-        private void setName( String name, Context context ) {
-            ContextImpl i = ( ContextImpl ) context;
-            i.setName( name );
-        }
-
         private Map<String, Object> createMapUsingNameSpace( String namespace,  String... resources ) {
 
             return createMapUsingNameSpace( namespace, Arrays.asList(resources) );
