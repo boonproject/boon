@@ -401,24 +401,48 @@ public class CharBuf extends Writer implements CharSequence {
 
     }
 
-    private  static boolean isJSONControlOrUnicode( int c ) {
-        /* Anything less than space is a control character. */
-        if ( c < 30 ) {
+
+    private static  boolean isJSONControlOrUnicode( int c ) {
+
+        if (c < 30) {
             return true;
-        /* 34 is double quote. */
-        } else if (c == 34 ){
+        } else if (c == 34 || c == 92 ) {
             return true;
-        } else if (c == 92) {
-            return true;
-        } else if (c < ' ' || c > 126) {
+        } else if ( c > 126 ) {
             return true;
         }
-
         return false;
     }
 
-    private static boolean hasAnyJSONControlOrUnicodeChars( final char[] charArray ) {
+    static final  int calculateSizeForJsonEncodedString( final char[] charArray ) {
+        int index = 0;
+        int c;
+        int controlCount=0;
+        int unicodeCount=0;
 
+        while ( true ) {
+            c = charArray[ index ];
+
+            if (c < 30) {
+                //less than space double quote or tab add 1 for each
+                if (   c == 7 || c == 12 || c == 15) {
+                    controlCount++;
+                } else {
+                    unicodeCount++;
+                }
+            } else if (c == 34 || c == 92 ) {
+                controlCount++;
+            } else if ( c > 126 ) {
+                //above 126 assume unicode and add five for each
+                unicodeCount++;
+            }
+            if ( ++index >= charArray.length) break;
+        }
+        return charArray.length + controlCount + (unicodeCount * 5) + 2;
+
+    }
+
+    private static  boolean hasAnyJSONControlOrUnicodeChars( final char[] charArray ) {
         int index = 0;
         char c;
         while ( true ) {
@@ -430,6 +454,8 @@ public class CharBuf extends Writer implements CharSequence {
         }
 
     }
+
+
 
     public final CharBuf addJsonEscapedString( final char[] charArray ) {
         if (charArray.length == 0 ) return this;
@@ -453,7 +479,7 @@ public class CharBuf extends Writer implements CharSequence {
 
         final byte[] _charTo = charTo;
         /* We are making a bet that not all chars will be unicode. */
-        int  ensureThisMuch = charArray.length * 2 + 2;
+        int  ensureThisMuch = calculateSizeForJsonEncodedString( charArray );
 
         int sizeNeeded =  (ensureThisMuch) + _location;
         if ( sizeNeeded  > capacity ) {
@@ -476,13 +502,6 @@ public class CharBuf extends Writer implements CharSequence {
 
 
                 if ( isJSONControlOrUnicode( c )) {
-                   /* We are covering our bet with a safety net.
-                      otherwise we would have to have 5x buffer
-                      allocated for control chars */
-                    if (_location + 5 > _buffer.length) {
-                        _buffer = Chr.grow( _buffer, 20 );
-                    }
-
 
                     switch ( c ) {
                         case '\"':
