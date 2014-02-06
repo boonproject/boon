@@ -711,7 +711,7 @@ public class JsonTutorial {
 
 
 
-        puts ( mapper.toJson ( person ) );
+        //uts ( mapper.toJson ( person ) );
 
         Map <String, Object> map = ( Map<String, Object> ) mapper.fromJson ( mapper.toJson ( person ), Map.class );
 

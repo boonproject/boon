@@ -16,11 +16,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import static javax.xml.bind.DatatypeConverter.parseInt;
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
 import static org.boon.Lists.len;
-import static org.boon.Lists.list;
 import static org.junit.Assert.assertEquals;
 
 public class IOTest {
@@ -648,7 +646,7 @@ public class IOTest {
 
         //You can do a listing of a directory inside of a jar file or anywhere on the classpath
         //this also handles duplicate entries as in two jar files having identical file locations.
-        puts( IO.list( "classpath:/org/node" ) );
+        //uts( IO.list( "classpath:/org/node" ) );
 
         //Proper URL
         ok |= Lists.idx( IO.list( "classpath:/org/node" ), 0 ).endsWith( "org" + File.separator + "node" + File.separator + "file1.txt" )

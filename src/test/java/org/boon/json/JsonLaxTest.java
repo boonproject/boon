@@ -2,8 +2,6 @@ package org.boon.json;
 
 import org.boon.Lists;
 import org.boon.Maps;
-import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.json.implementation.JsonParserLax;
 import org.boon.utils.DateUtils;
 import org.junit.Test;
 
@@ -13,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.idx;
 import static org.boon.Str.lines;
@@ -90,7 +87,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
         Map<String, Object> map = jsonParserAndMapper.parse ( Map.class, testString );
 
-        puts ( "map = " + map );
+        //uts ( "map = " + map );
 
         inspectMap ( map );
 
@@ -108,7 +105,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
         Map<String, Object> map = jsonParserAndMapper.parse ( Map.class, testString );
 
-        puts ( "map = " + map );
+        //uts ( "map = " + map );
         inspectMap ( map );
 
         boolean ok = idx ( map, "foo" ).equals ( "bar" ) || die ( "I did not find:" + idx ( map, "foo" ) + "#" );
@@ -125,7 +122,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
         Map<String, Object> map = jsonParserAndMapper.parse ( Map.class, testString );
 
-        puts ( "map = " + map );
+        //uts ( "map = " + map );
 
         boolean ok = idx ( map, "foo" ).equals ( "bar" ) || die ( "I did not find:" + idx ( map, "foo" ) + "#" );
         ok = idx ( map, "foo2" ).equals ( "baz" ) || die ( "I did not find:" + idx ( map, "foo2" ) + "#" );
@@ -144,7 +141,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
         Object obj = jsonParserAndMapper.parse ( Map.class, testString
         );
 
-        puts ( testString );
+        //uts ( testString );
 
 
         boolean ok = true;
@@ -153,7 +150,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
-        puts ( map );
+        //uts ( map );
 
         inspectMap ( map );
 
@@ -187,7 +184,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
         ok &= Lists.idx ( mix, 4 ).equals ( "blue" ) || die ( "I did not find blue:" + Lists.idx ( mix, 3 ) );
 
-        puts ( "testLax2?", ok );
+        //uts ( "testLax2?", ok );
 
     }
 
@@ -204,7 +201,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
         Object obj = jsonParserAndMapper.parse ( Map.class, testString
         );
 
-        puts ( testString );
+        //uts ( testString );
 
 
         boolean ok = true;
@@ -213,7 +210,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
         Map<String, Object> map = ( Map<String, Object> ) obj;
 
-        puts ( map );
+        //uts ( map );
 
 
         String dateGMTString = DateUtils.getGMTString((Date) idx ( map, "date" ));
@@ -248,7 +245,7 @@ public class JsonLaxTest extends JsonParserAndMapperBaseTest {
 
         ok &= Lists.idx ( mix, 4 ).equals ( "blue" ) || die ( "I did not find blue:" + Lists.idx ( mix, 3 ) );
 
-        puts ( "testLax2?", ok );
+        //uts ( "testLax2?", ok );
 
     }
 

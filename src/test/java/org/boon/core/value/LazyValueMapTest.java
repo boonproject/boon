@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 
@@ -57,7 +56,7 @@ public class LazyValueMapTest {
         List<String> files  = IO.listByFileExtension ( "./files/", "json" );
 
         for ( String file : files) {
-            puts ( file );
+            //outputs ( file );
 
             Object object  =  new JsonParserFactory().createFastParser().parseFile ( Map.class, file.toString () );
 
@@ -66,9 +65,9 @@ public class LazyValueMapTest {
 
         }
 
-        puts ( "leaf", leafCount, "map", mapCount, "collection", collectionCount );
-        puts ( "integer", integerCount, "long", longCount, "double", doubleCount, "boolean", booleanCount );
-        puts ( "string", stringCount, "date", dateCount, "null", nullCount );
+        //outputs ( "leaf", leafCount, "map", mapCount, "collection", collectionCount );
+        //outputs ( "integer", integerCount, "long", longCount, "double", doubleCount, "boolean", booleanCount );
+        //outputs ( "string", stringCount, "date", dateCount, "null", nullCount );
 
     }
 
@@ -81,7 +80,7 @@ public class LazyValueMapTest {
         List<String> files  = IO.listByFileExtension ( "./files/", "json" );
 
         for ( String file : files) {
-            puts ( file );
+            //outputs ( file );
 
             JsonParserAndMapper parser = new  JsonParserFactory().createFastParser();
 
@@ -92,9 +91,9 @@ public class LazyValueMapTest {
 
         }
 
-        puts ( "leaf", leafCount, "map", mapCount, "list", listCount );
-        puts ( "integer", integerCount, "long", longCount, "double", doubleCount );
-        puts ( "string", stringCount, "date", dateCount, "null", nullCount );
+        //outputs ( "leaf", leafCount, "map", mapCount, "list", listCount );
+        //outputs ( "integer", integerCount, "long", longCount, "double", doubleCount );
+        //outputs ( "string", stringCount, "date", dateCount, "null", nullCount );
 
     }
 
@@ -115,7 +114,7 @@ public class LazyValueMapTest {
         Set<Map.Entry<String, Object>> entries = map.entrySet ();
 
         for ( Map.Entry<String, Object> entry : entries ) {
-            puts (entry.getKey ());
+            //outputs (entry.getKey ());
             walkGetObject ( map.get ( entry.getKey () ), map, null );
         }
 

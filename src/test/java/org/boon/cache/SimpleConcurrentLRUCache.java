@@ -2,7 +2,6 @@ package org.boon.cache;
 
 import org.junit.Test;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 
@@ -27,7 +26,6 @@ public class SimpleConcurrentLRUCache {
         cache.put( 4, 4 );
         cache.put( 5, 5 );
 
-        puts( cache );
         ok |= cache.size() == 4 || die( "size" + cache.size() );
         ok |= cache.getSilent( 2 ) == 2 || die();
         ok |= cache.getSilent( 3 ) == 3 || die();
@@ -50,7 +48,6 @@ public class SimpleConcurrentLRUCache {
         ok |= cache.getSilent( 5 ) == null || die();
 
 
-        puts( cache );
 
 
         if ( !ok ) die();

@@ -3,7 +3,6 @@ package org.boon.primitive;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 public class ReaderCharacterSourceTest {
@@ -115,7 +114,7 @@ public class ReaderCharacterSourceTest {
         loop:
         while (source.hasChar()) {
             int i = source.currentChar();
-            puts ("current char", (char)i);
+            outputs( "current char", ( char ) i );
             switch ( i ) {
                 case '"':
                     found = true;
@@ -128,7 +127,7 @@ public class ReaderCharacterSourceTest {
         source.nextChar();
         char [] chars = source.findNextChar ( '"', '\\' ) ;
 
-        puts (new String(chars));
+        outputs( new String( chars ) );
         ok &= Chr.equals( chars, "train".toCharArray ()) || die(new String(chars));
 
         ok |= source.currentChar () == ' ' || die("" + (char)source.currentChar());
@@ -399,9 +398,15 @@ public class ReaderCharacterSourceTest {
 
         String str = source.errorDetails ( "some error" );
 
-        puts(str);
+        outputs( str );
     }
 
 
+
+
+    public static void outputs( Object... messages ) {
+
+
+    }
 
 }

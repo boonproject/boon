@@ -2,7 +2,6 @@ package org.boon.validation;
 
 import org.boon.validation.RecursiveDescentPropertyValidator.MessageHolder;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 import java.util.Collections;
@@ -56,8 +55,8 @@ public class PropertiesFileValidationTest {
         int errors = 0;
 
         for ( MessageHolder messageHolder : messageHolders ) {
-            puts( messageHolder.propertyPath );
-            puts( messageHolder.holder.hasError() );
+            outputs( messageHolder.propertyPath );
+            outputs( messageHolder.holder.hasError() );
 
             if ( messageHolder.holder.hasError() ) {
                 errors++;
@@ -67,5 +66,8 @@ public class PropertiesFileValidationTest {
         if ( errors > 0 ) {
             die( " Not expecting any errors " );
         }
+    }
+
+    private void outputs( Object propertyPath ) {
     }
 }

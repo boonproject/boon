@@ -267,9 +267,6 @@ public class JsonParserLax extends JsonFastParser {
 
 
 
-    protected final Value decodeValue() {
-        return decodeValueInternal( false );
-    }
 
 
     protected final Value decodeValueInternal() {

@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.nio.charset.StandardCharsets;
 
 import static junit.framework.Assert.assertTrue;
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.Chr.chars;
 import static org.junit.Assert.assertEquals;
@@ -54,7 +53,7 @@ public class CharBufTest {
                 " 遥 | 瑛 | 皓 | 竣 | 琳 | 椋";
         byte[] bytes = str.getBytes( StandardCharsets.UTF_8 );
         CharBuf buf = CharBuf.createFromUTF8Bytes( bytes );
-        puts (buf.toString());
+        outputs( buf.toString() );
         boolean ok = str.equals( buf.toString() ) || die( buf.toString() );
     }
 
@@ -63,7 +62,7 @@ public class CharBufTest {
         String str = "鷹 | 麟";
         byte[] bytes = str.getBytes( StandardCharsets.UTF_8 );
         CharBuf buf = CharBuf.createFromUTF8Bytes( bytes );
-        puts (buf.toString());
+        outputs( buf.toString() );
         boolean ok = str.equals( buf.toString() ) || die( buf.toString() );
     }
 
@@ -72,8 +71,11 @@ public class CharBufTest {
         String str = "鳥 | 語 | 罐 | 佛"; //Bird speaks through tin can to prophet
         byte[] bytes = str.getBytes( StandardCharsets.UTF_8 );
         CharBuf buf = CharBuf.createFromUTF8Bytes( bytes );
-        puts (buf.toString());
+        outputs( buf.toString() );
         boolean ok = str.equals( buf.toString() ) || die( buf.toString() );
+    }
+
+    private void outputs( String string ) {
     }
 
 

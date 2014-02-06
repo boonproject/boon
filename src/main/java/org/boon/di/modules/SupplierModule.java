@@ -4,6 +4,8 @@ import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
+import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.di.Module;
 import org.boon.di.ProviderInfo;
@@ -36,13 +38,43 @@ public class SupplierModule implements Module {
         for (Map.Entry<?,?> entry : map.entrySet()) {
             Object key = entry.getKey();
             Object value = entry.getValue();
-            list.add( ProviderInfo.provider( key, value ));
-        }
+            if (value instanceof Map) {
+                Map <String, Object> valueMap = (Map <String, Object>) value;
+                ProviderInfo pi = addProviderFromMapToList(key, valueMap);
+                list.add( pi );
 
-         supplierExtraction( list.toArray( new ProviderInfo[list.size()] ) );
+            } else {
+                list.add( ProviderInfo.provider( key, value ));
+            }
+        }
+        supplierExtraction( list.toArray( new ProviderInfo[list.size()] ) );
     }
 
+    private ProviderInfo addProviderFromMapToList( final Object key, final Map<String, Object> valueMap) {
+        if (valueMap.containsKey( "class" )) {
+            CharSequence className =  (String) valueMap.get( "class" );
+            if (className!=null) {
+                try {
 
+                    final Class<Object> type = (Class<Object>) Class.forName( className.toString());
+
+                    final Supplier<Object> supplier = new Supplier<Object>() {
+                        @Override
+                        public Object get() {
+                            return MapObjectConversion.fromMap(valueMap);
+                        }
+                    };
+                    return ProviderInfo.providerOf( key.toString(),  type, supplier );
+                } catch ( ClassNotFoundException e ) {
+                    return ProviderInfo.provider( key, valueMap ) ;
+                }
+
+            }
+
+        }
+        return ProviderInfo.provider( key, valueMap ) ;
+
+    }
 
 
     @Override

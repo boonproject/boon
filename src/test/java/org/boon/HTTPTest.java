@@ -17,12 +17,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.copy;
 import static org.boon.Maps.map;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class HTTPTest {
@@ -160,7 +158,7 @@ public class HTTPTest {
         }
         Thread.sleep( 10 );
 
-        puts( "binary test passed", ok );
+        //uts( "binary test passed", ok );
 
         server.stop( 0 );
 

@@ -1,13 +1,10 @@
 package org.boon.core.reflection;
 
 import org.boon.Lists;
-import org.boon.core.Typ;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 
 public class BeanUtilsTest {

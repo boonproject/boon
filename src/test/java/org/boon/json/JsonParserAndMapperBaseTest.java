@@ -359,7 +359,7 @@ public class JsonParserAndMapperBaseTest {
         boolean ok = true;
 
 
-        //        puts ("################", types.getBigDecimal (), types.getBirthDate (), types.getBigInteger ());
+        //        outputs ("################", types.getBigDecimal (), types.getBirthDate (), types.getBigInteger ());
 
         ok |= types.getBigDecimal ().equals ( new BigDecimal ( "99" ) ) || die();
 

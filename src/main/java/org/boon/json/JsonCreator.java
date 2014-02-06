@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Boon.puts;
+
 /**
  * Created by Richard on 2/4/14.
  */
@@ -69,6 +71,8 @@ public class JsonCreator {
         for (String jsonFile : jsonFiles) {
             fileConfig  = handleConfigWithNamespace( namespace, jsonFile );
             if (fileConfig!=null && fileConfig.size()!=0) {
+
+                puts ("file config", namespace, fileConfig );
                 config.putAll( fileConfig );
             }
         }
@@ -76,16 +80,21 @@ public class JsonCreator {
     }
 
     private static Map<String,Object> handleConfigWithNamespace( String namespace, String resource ) {
+
+        puts (namespace, resource);
         JsonCreatorEventHandler jsonCreatorEventHandler = new JsonCreatorEventHandler(namespace);
         JsonParserAndMapper laxParser = new JsonParserFactory().createParserWithEvents(jsonCreatorEventHandler);
 
+
         Map<String,Object> fileConfig = laxParser.parseMap( IO.read( resource ) );
         if (fileConfig.containsKey( "META" )) {
+            puts("found META");
             fileConfig.remove( "META" );
             return fileConfig.size() == 0 ? null : fileConfig;
         } else {
+            puts("no META");
             /* No meta then assume it is a global config. */
-            return fileConfig;
+            return null;
         }
 
     }

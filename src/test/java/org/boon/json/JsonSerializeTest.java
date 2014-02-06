@@ -10,7 +10,6 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 /**
@@ -67,7 +66,7 @@ public class JsonSerializeTest {
 
         String sRick = serializer.serialize( rick ).toString();
 
-        puts( sRick );
+        //uts( sRick );
 
         AllTypes foo = new AllTypes();
         foo.ignoreMe = "THIS WILL NOT PASS";
@@ -85,7 +84,7 @@ public class JsonSerializeTest {
 
 
         String sFoo = serializer.serialize( foo ).toString();
-        puts( sFoo );
+        //uts( sFoo );
     }
 
 
@@ -101,7 +100,7 @@ public class JsonSerializeTest {
 
         String sRick = serializer.serialize( rick ).toString();
 
-        puts( sRick );
+        outputs( sRick );
 
         AllTypes foo = new AllTypes();
         foo.ignoreMe = "THIS WILL NOT PASS";
@@ -119,8 +118,11 @@ public class JsonSerializeTest {
 
 
         String sFoo = serializer.serialize( foo ).toString();
-        puts( sFoo );
+        outputs( sFoo );
 
+    }
+
+    private void outputs( Object... args ) {
     }
 
     @Test
@@ -129,14 +131,14 @@ public class JsonSerializeTest {
         JsonSerializer serializer = new JsonSerializerFactory().create ();
 
         String sMedium = serializer.serialize( MEDIUM_DATA ).toString();
-        puts( sMedium );
+        outputs( sMedium );
 
         Map<String, Object> map = new JsonParserFactory ().create ().parseMap ( sMedium );
         map = ( Map<String, Object> ) map.get("photo");
-        puts ( "url", map.get ( "url" ) );
+        outputs( "url", map.get( "url" ) );
 
         String str = serializer.serialize( COMPLEX_DATA ).toString();
-        puts( str );
+        outputs( str );
 
     }
 

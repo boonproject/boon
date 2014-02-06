@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Str.lines;
@@ -125,7 +124,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserAndMapperBaseT
         );
 
 
-        puts ( "map", map );
+        outputs( "map", map );
         Object o = map.get ( "v" );
 
         if (o instanceof BigDecimal ) {
@@ -133,6 +132,9 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserAndMapperBaseT
         }
 
         boolean ok = o.equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
+    }
+
+    private void outputs( Object... args ) {
     }
 
 
@@ -206,7 +208,7 @@ public class JsonParserUsingCharacterSourceTest extends JsonParserAndMapperBaseT
         );
 
         } catch (Exception ex) {
-            puts (ex.getMessage ());
+            //uts (ex.getMessage ());
             throw ex;
         }
 

@@ -52,10 +52,10 @@ public class User extends Subject {
     public static void main( String... args ) {
 
         String email = "richardhightower@gmail.com";
-        Boon.puts( email, generateSubjectNameFromEmail( email ) );
+        //Boon.uts( email, generateSubjectNameFromEmail( email ) );
 
         String email2 = "marcomilk@gmail.com.br";
-        Boon.puts( email2, generateSubjectNameFromEmail( email2 ) );
+        //Boon.uts( email2, generateSubjectNameFromEmail( email2 ) );
 
     }
 

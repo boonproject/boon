@@ -2,7 +2,6 @@ package org.boon.primitive;
 
 import org.junit.Test;
 
-import static org.boon.Boon.puts;
 
 public class LngTest {
 
@@ -13,6 +12,9 @@ public class LngTest {
     }
 
     public static void main( String... args ) {
-        puts( "data", Lng.str( 1_000_000_000L ) );
+        outputs( "data", Lng.str( 1_000_000_000L ) );
+    }
+
+    private static void outputs( String data, String str ) {
     }
 }

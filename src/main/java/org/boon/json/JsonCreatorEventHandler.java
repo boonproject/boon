@@ -3,6 +3,8 @@ package org.boon.json;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Boon.puts;
+
 /**
  * Created by Richard on 2/5/14.
  */
@@ -39,6 +41,7 @@ public class JsonCreatorEventHandler implements JsonParserEvents {
 
     @Override
     public boolean objectField( int index, Map<String, Object> map, CharSequence name, Object field ) {
+        puts (index, name, field);
 
         if ( inMeta && name!=null && name.toString().equals( "namespace" )
                 && field instanceof CharSequence && !field.toString().equals( namespace )) {
@@ -46,7 +49,7 @@ public class JsonCreatorEventHandler implements JsonParserEvents {
              return continueParse=false;
         }
 
-        if (name!=null && name.toString().equals( "META" ) ) {
+        if (inMeta && name!=null && name.toString().equals( "META" ) ) {
             inMeta = false;
         }
 

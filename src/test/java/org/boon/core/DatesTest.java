@@ -1,14 +1,11 @@
 package org.boon.core;
 
-import org.boon.core.Dates;
 import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static org.boon.Boon.puts;
-import static org.boon.Exceptions.die;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -24,7 +21,6 @@ public class DatesTest {
 
         assertEquals( date2.toString(), date.toString() );
 
-        puts( date );
     }
 
     @Test
@@ -36,7 +32,6 @@ public class DatesTest {
 
         assertEquals( date2.toString(), date.toString() );
 
-        puts( date );
     }
 
 
@@ -62,7 +57,6 @@ public class DatesTest {
 
         assertEquals( date2.toString(), "" + date );
 
-        puts( date );
     }
 
 
@@ -72,8 +66,6 @@ public class DatesTest {
 
         Date date = Dates.fromISO8601DateLoose( test );
 
-
-        puts( "loose date " + date );
 
         //This breaks if you locale is France..
         //boolean ok = "Sat Nov 05 08:11:22 PST 1994".equals (  date.toString () ) || die("#"+date.toString ()+"#");
@@ -86,7 +78,6 @@ public class DatesTest {
         Date date = Dates.fromISO8601DateLoose( test );
 
 
-        puts( "loose date " + date );
 
         //This breaks if you locale is not PST
         //boolean ok = "Sat Nov 05 00:00:00 PST 1994".equals (  date.toString () ) || die("#"+date.toString ()+"#");
@@ -99,7 +90,6 @@ public class DatesTest {
         Date date = Dates.fromISO8601DateLoose( test );
 
 
-        puts( "loose date " + date );
 
         //Ditto
         //boolean ok = "Sat Nov 05 08:11:22 PST 1994".equals (  date.toString () ) || die("#"+date.toString ()+"#");
@@ -121,7 +111,6 @@ public class DatesTest {
     @Test
     public void testBeforeAfter() {
 
-        puts( TimeZone.getDefault() );
 
 
         long epic = Dates.date( 1970, Calendar.MAY, 29 );

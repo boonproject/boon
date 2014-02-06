@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 /**
@@ -59,8 +58,11 @@ public class CacheTest {
         ok |= lruCache.get( 2 ) == null || die();
 
 
-        puts( "fifo", lruCache );
+        outputs( "fifo", lruCache );
 
+    }
+
+    private void outputs( Object... args ) {
     }
 
     @Test
@@ -94,7 +96,7 @@ public class CacheTest {
         lruCache.put( 6, 60 );
         lruCache.get( 6 );
 
-        puts( lruCache );
+        outputs( lruCache );
         lruCache.put( 7, 70 );
 
 
@@ -104,7 +106,7 @@ public class CacheTest {
         lruCache.put( 98, 60 );
 
 
-        puts( "here is what is there", lruCache.size(), lruCache );
+        outputs( "here is what is there", lruCache.size(), lruCache );
         boolean ok = lruCache.get( -1 ) == null || die();
         ok |= lruCache.getSilent( 2 ) == 20 || die();
         ok |= lruCache.getSilent( 9 ) == 90 || die();
@@ -156,7 +158,7 @@ public class CacheTest {
         ok |= lruCache.get( 5 ) == 50 || die();
         ok |= lruCache.get( 6 ) == 60 || die();
 
-        puts( lruCache );
+        outputs( lruCache );
 
     }
 

@@ -20,7 +20,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.criteria.CriteriaFactory.*;
 import static org.boon.datarepo.Collections.$q;
@@ -637,11 +636,14 @@ public class MoreTests {
             repo.put( e3 );
             die( "you never get here" );
         } catch ( DataRepoException dre ) {
-            puts( "you tried to put something in the repo that is already there", dre.getMessage() );
+            outputs( "you tried to put something in the repo that is already there", dre.getMessage() );
         }
 
         List<Employee> results2 = repo.query( exp );
         assertEquals( 1, results2.size() );
+    }
+
+    private void outputs( String s, String message ) {
     }
 
 
@@ -682,7 +684,7 @@ public class MoreTests {
             repo.update( e4 );
             die( "you never get here" );
         } catch ( DataRepoException dre ) {
-            puts( "you tried to update something but it does not exist", dre.getMessage() );
+            outputs( "you tried to update something but it does not exist", dre.getMessage() );
         }
 
 

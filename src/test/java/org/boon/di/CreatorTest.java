@@ -319,7 +319,7 @@ public class CreatorTest {
 
 
 
-    //@Test
+    @Test
     public void namedConfig() {
 
 

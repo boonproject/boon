@@ -3,7 +3,6 @@ package org.boon;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
 
 import static org.boon.Boon.puts;
 
@@ -45,7 +44,7 @@ public class ProcessRunnerTest {
 
 //    @Test  (expected = Runner.ProcessException.class)
 //    public void execTimeoutFails () {
-//        puts ( Runner.exec ( 1, "sleep 20" ) );
+//        outputs ( Runner.exec ( 1, "sleep 20" ) );
 //    }
 
 
@@ -57,7 +56,7 @@ public class ProcessRunnerTest {
 //
 //        while (str!=null && !inOut.isDone ()) {
 //            str = inOut.getStdOut ().take ();
-//            puts (str);
+//            outputs (str);
 //        }
 //
 //        str = inOut.getStdErr ().poll (1L, TimeUnit.SECONDS);

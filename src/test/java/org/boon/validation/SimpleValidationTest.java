@@ -1,11 +1,9 @@
 package org.boon.validation;
 
-import static org.boon.Boon.puts;
 import static org.boon.Maps.map;
 
 import org.boon.Lists;
 import org.boon.validation.annotations.Length;
-import org.boon.validation.annotations.Phone;
 import org.boon.validation.annotations.ProperNoun;
 import org.boon.validation.validators.CompositeValidator;
 import org.boon.validation.validators.LengthValidator;
@@ -15,9 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-import javax.naming.Name;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -213,9 +209,9 @@ public class SimpleValidationTest {
 
         for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts( messageHolder.propertyPath );
+            outputs( messageHolder.propertyPath );
 
-            puts( messageHolder.holder.hasError() );
+            outputs( messageHolder.holder.hasError() );
 
 
             if ( messageHolder.holder.hasError() ) {
@@ -235,9 +231,9 @@ public class SimpleValidationTest {
 
         for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts( messageHolder.propertyPath );
+            outputs( messageHolder.propertyPath );
 
-            puts( messageHolder.holder.hasError() );
+            outputs( messageHolder.holder.hasError() );
 
 
             if ( messageHolder.holder.hasError() ) {
@@ -250,6 +246,9 @@ public class SimpleValidationTest {
             die( " expecting two errors " + errors );
         }
 
+    }
+
+    private void outputs( Object propertyPath ) {
     }
 
 
@@ -319,9 +318,9 @@ public class SimpleValidationTest {
 
         for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts( messageHolder.propertyPath );
+            outputs( messageHolder.propertyPath );
 
-            puts( messageHolder.holder.hasError() );
+            outputs( messageHolder.holder.hasError() );
 
 
             if ( messageHolder.holder.hasError() ) {
@@ -341,9 +340,9 @@ public class SimpleValidationTest {
 
         for ( RecursiveDescentPropertyValidator.MessageHolder messageHolder : messageHolders ) {
 
-            puts( messageHolder.propertyPath );
+            outputs( messageHolder.propertyPath );
 
-            puts( messageHolder.holder.hasError() );
+            outputs( messageHolder.holder.hasError() );
 
 
             if ( messageHolder.holder.hasError() ) {

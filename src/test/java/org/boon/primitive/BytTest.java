@@ -3,7 +3,6 @@ package org.boon.primitive;
 import org.junit.Test;
 
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.primitive.Byt.*;
 import static org.junit.Assert.*;
@@ -71,7 +70,7 @@ public class BytTest {
         val = idxUnsignedInt( bytes, 0 );
 
         //Convert it to string and print it to console
-        puts( "" + val );
+        outputs( "" + val );
 
         ok |= val == 2860002643L || die();
 
@@ -101,6 +100,9 @@ public class BytTest {
 
         ok |= val == 2860002643L || die();
 
+    }
+
+    private void outputs( String s ) {
     }
 
     @Test
