@@ -357,6 +357,8 @@ public class CreatorTest {
         Foo foo = context.get( Foo.class );
 
         ok = foo != null || die();
+        ok = foo.bar != null || die();
+        ok = foo.bar.name.toString().equals( "QA Bar" )  || die("$"+foo.bar.name+"$");
 
         bar = context.get( Bar.class );
         ok = bar != null || die();
