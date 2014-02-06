@@ -1,15 +1,14 @@
 {
 
-    /* Production namespace. */
+    /* QA namespace. */
     "META": {
         namespace:qa,
         include:[classpath://include/]
     },
 
-"foo":
-{
-"class":"org.boon.di.CreatorTest$Foo",
-"name": "barFromJsonResource"
-}
+    "foo": {
+        "class":"org.boon.di.CreatorTest$Foo",
+        "name": "barFromJsonResource"
+    }
 
 }

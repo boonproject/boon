@@ -1,13 +1,14 @@
 {
 
-/* Production namespace. */
-"META": {
-    namespace:prod
-},
+    /* Production namespace. */
+    "META": {
+        namespace:prod
+    },
 
-"bar":
-{
-    "class":"org.boon.di.CreatorTest$Bar",
-    "name": "Prod Bar"
-}
+    "bar":
+    {
+        "class":"org.boon.di.CreatorTest$Bar",
+        "name": "Prod Bar"
+    }
+
 }
