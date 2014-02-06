@@ -2,7 +2,8 @@
 
     /* Production namespace. */
     "META": {
-        namespace:qa
+        namespace:qa,
+        include:[classpath://include//]
     },
 
     "bar":

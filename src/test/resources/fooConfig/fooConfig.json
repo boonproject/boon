@@ -1,6 +1,6 @@
 {"foo":
 {
-    "class":"org.boon.di.CreatorTest$Foo",
-    "name": "barFromJsonResource"
+"class":"org.boon.di.CreatorTest$Foo",
+"name": "barFromJsonResource"
 }
 }

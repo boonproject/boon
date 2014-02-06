@@ -1,6 +1,5 @@
 package org.boon.di;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.map;
 import static org.boon.di.Creator.create;
@@ -10,6 +9,7 @@ import static org.boon.json.JsonCreator.*;
 
 import static org.boon.di.ContextFactory.*;
 
+import org.boon.config.ContextConfig;
 import org.boon.core.Supplier;
 import org.junit.Test;
 
@@ -217,7 +217,7 @@ public class CreatorTest {
     @Test
     public void testCreateWithInstance9() {
 
-        Context context = createContextFromJSONResources(  "classpath://config/", "classpath://fooConfig/" );
+        Context context = ContextConfig.JSON.createContext( "classpath://config/", "classpath://fooConfig/" );
         Foo foo = (Foo) context.get( "foo" );
         boolean ok = foo != null || die();
         ok = foo.bar != null || die();
@@ -323,10 +323,22 @@ public class CreatorTest {
     public void namedConfig() {
 
 
-        Context context = configFromNameSpace("dev", "classpath://config_files/");
+        Context context = ContextConfig.JSON.createContextUsingNamespace( "dev", "classpath://config_files/" );
         Bar bar = context.get( Bar.class );
         boolean ok = bar != null || die();
-        puts(bar.name);
+
+        ok = bar.name.toString().equals( "DEV Bar" )  || die("$"+bar.name+"$");
+
+
+        context = ContextConfig.JSON.createContextUsingNamespace( "prod", "classpath://config_files/" );
+        bar = context.get( Bar.class );
+        ok = bar != null || die();
+        ok = bar.name.toString().equals( "Prod Bar" )  || die("$"+bar.name+"$");
+
+        context = ContextConfig.JSON.createContextUsingNamespace( "qa", "classpath://config_files/" );
+        bar = context.get( Bar.class );
+        ok = bar != null || die();
+        ok = bar.name.toString().equals( "QA Bar" )  || die("$"+bar.name+"$");
 
     }
 

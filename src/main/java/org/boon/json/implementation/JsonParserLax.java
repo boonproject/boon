@@ -8,7 +8,6 @@ import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
 import org.boon.json.JsonException;
 import org.boon.json.JsonParserEvents;
-import org.boon.primitive.Chr;
 
 import java.util.*;
 
@@ -654,9 +653,9 @@ public class JsonParserLax extends JsonFastParser {
             list = new ValueList ( lazyChop );
         }
 
-//        if (events!=null && isRoot) {
-//            root = list;
-//        }
+        if (events!=null && isRoot) {
+            root = list;
+        }
 
         Value value = new ValueContainer ( list );
 
@@ -669,7 +668,7 @@ public class JsonParserLax extends JsonFastParser {
 
             list.add( arrayItem );
 
-            //if (events!=null) if (!events.arrayItem( __index, list, arrayItem )) stop();
+            if (events!=null) if (!events.arrayItem( __index, list, arrayItem )) stop();
 
             skipWhiteSpaceIfNeeded ();
 
@@ -693,7 +692,7 @@ public class JsonParserLax extends JsonFastParser {
         } while ( this.hasMore() );
 
 
-        //if (events!=null) if (!events.arrayEnd( __index, list )) stop();
+        if (events!=null) if (!events.arrayEnd( __index, list )) stop();
         return value;
     }
 
