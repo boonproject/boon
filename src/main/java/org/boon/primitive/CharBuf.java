@@ -18,6 +18,7 @@ import java.util.Arrays;
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.handle;
 import static org.boon.primitive.CharScanner.*;
 import static org.boon.primitive.CharScanner.parseLong;
 
@@ -475,6 +476,12 @@ public class CharBuf extends Writer implements CharSequence {
 
 
                 if ( isJSONControlOrUnicode( c )) {
+                   /* We are covering our bet with a safety net.
+                      otherwise we would have to have 5x buffer
+                      allocated for control chars */
+                    if (_location + 5 > _buffer.length) {
+                        _buffer = Chr.grow( _buffer, 20 );
+                    }
 
 
                     switch ( c ) {
@@ -523,12 +530,6 @@ public class CharBuf extends Writer implements CharSequence {
                             break;
 
                         default:
-                           /* We are covering our bet with a safety net.
-                             otherwise we would have to have 5x buffer
-                             allocated for control chars */
-                            if (_location + 5 > charArray.length) {
-                                _buffer = Chr.grow( _buffer, 20 );
-                            }
 
                             _buffer[_location] = '\\';
                             _location ++;
@@ -596,7 +597,7 @@ public class CharBuf extends Writer implements CharSequence {
         try {
 
 
-            int sizeNeeded = chars.length + 3 + _location;
+            int sizeNeeded = chars.length + 4 + _location;
             if (  sizeNeeded > _capacity ) {
                 _buffer = Chr.grow( _buffer, sizeNeeded * 2  );
                 _capacity = _buffer.length;
@@ -654,15 +655,16 @@ public class CharBuf extends Writer implements CharSequence {
 
 
     private final static void sysstemarraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
-         System.arraycopy( src, srcPos, dest, destPos, length );
 
-    }
-    private final static void directArraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
-        int destIndex = destPos;
-        for (int index = srcPos; index < srcPos + length; index++, destIndex++ ) {
-            dest [destIndex] = src[index];
+        try {
+
+            System.arraycopy( src, srcPos, dest, destPos, length );
+
+        }catch (Exception ex) {
+            handle( sputs("arraycopy issue", "src", src, "srcPos", srcPos, "dest", dest, "destPos", destPos, "length", length), ex );
         }
     }
+
 
     private final static void arraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
 
@@ -1127,6 +1129,9 @@ public class CharBuf extends Writer implements CharSequence {
 
     public void removeLastChar () {
         location--;
+        if (location < 0) {
+            location = 0;
+        }
     }
 
 

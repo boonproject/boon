@@ -63,7 +63,7 @@ public class Boon {
     }
 
     public static String sputs( Object... messages ) {
-        CharBuf buf = CharBuf.create( 100 );
+        StringBuilder buf = new StringBuilder(  );
         return sputs( buf, messages );
     }
 
@@ -105,6 +105,29 @@ public class Boon {
             }
         }
         buf.add( '\n' );
+
+        return buf.toString();
+
+    }
+
+    public static String sputs( StringBuilder buf, Object... messages ) {
+
+        int index = 0;
+        for ( Object message : messages ) {
+            if ( index != 0 ) {
+                buf.append( ' ' );
+            }
+            index++;
+
+            if ( message == null ) {
+                buf.append( "<NULL>" );
+            } else if ( message.getClass().isArray() ) {
+                buf.append( toList( message ).toString() );
+            } else {
+                buf.append( message.toString() );
+            }
+        }
+        buf.append( '\n' );
 
         return buf.toString();
 
