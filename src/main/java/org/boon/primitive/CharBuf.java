@@ -476,11 +476,6 @@ public class CharBuf extends Writer implements CharSequence {
 
                 if ( isJSONControlOrUnicode( c )) {
 
-                    /* We are covering our bet with a safety net.
-                    * otherwise we would have to have 5x buffer allocated for control chars*/
-                    if (_location + 5 > charArray.length) {
-                        _buffer = Chr.grow( _buffer, 20 );
-                    }
 
                     switch ( c ) {
                         case '\"':
@@ -495,14 +490,6 @@ public class CharBuf extends Writer implements CharSequence {
                             _buffer[_location] =  '\\';
                             _location ++;
                             break;
-                        //There is not requirement to escape solidus so we will not.
-//                        case '/':
-//                            _buffer[_location] = '\\';
-//                            _location ++;
-//                            _buffer[_location] =  '/';
-//                            _location ++;
-//                            break;
-
                         case '\b':
                             _buffer[_location] = '\\';
                             _location ++;
@@ -536,6 +523,13 @@ public class CharBuf extends Writer implements CharSequence {
                             break;
 
                         default:
+                           /* We are covering our bet with a safety net.
+                             otherwise we would have to have 5x buffer
+                             allocated for control chars */
+                            if (_location + 5 > charArray.length) {
+                                _buffer = Chr.grow( _buffer, 20 );
+                            }
+
                             _buffer[_location] = '\\';
                             _location ++;
                             _buffer[_location] =  'u';
