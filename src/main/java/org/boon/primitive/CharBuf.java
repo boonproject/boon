@@ -400,7 +400,7 @@ public class CharBuf extends Writer implements CharSequence {
 
     }
 
-    private  static boolean isJSONControl ( int c ) {
+    private  static boolean isJSONControlOrUnicode( int c ) {
         /* Anything less than space is a control character. */
         if ( c < 30 ) {
             return true;
@@ -409,17 +409,20 @@ public class CharBuf extends Writer implements CharSequence {
             return true;
         } else if (c == 92) {
             return true;
+        } else if (c < ' ' || c > 126) {
+            return true;
         }
+
         return false;
     }
 
-    private static boolean hasAnyJSONControlChars ( final char[] charArray ) {
+    private static boolean hasAnyJSONControlOrUnicodeChars( final char[] charArray ) {
 
         int index = 0;
         char c;
         while ( true ) {
             c = charArray[ index ];
-            if ( isJSONControl ( c )) {
+            if ( isJSONControlOrUnicode( c )) {
                 return true;
             }
             if ( ++index >= charArray.length) return false;
@@ -429,18 +432,27 @@ public class CharBuf extends Writer implements CharSequence {
 
     public final CharBuf addJsonEscapedString( final char[] charArray ) {
         if (charArray.length == 0 ) return this;
-        if ( hasAnyJSONControlChars ( charArray )) {
+        if ( hasAnyJSONControlOrUnicodeChars( charArray )) {
             return doAddJsonEscapedString(charArray);
         } else {
             return this.addQuoted ( charArray );
         }
     }
 
+
+    final byte[] encoded = new byte[2];
+
+    final byte[] charTo = new byte[2];
     private final CharBuf doAddJsonEscapedString( char[] charArray ) {
 
         char [] _buffer = buffer;
         int _location =  this.location;
-        int  ensureThisMuch = charArray.length * 2;
+
+        final byte[] _encoded = encoded;
+
+        final byte[] _charTo = charTo;
+        /* We are making a bet that not all chars will be unicode. */
+        int  ensureThisMuch = charArray.length * 2 + 2;
 
         int sizeNeeded =  (ensureThisMuch) + _location;
         if ( sizeNeeded  > capacity ) {
@@ -458,10 +470,17 @@ public class CharBuf extends Writer implements CharSequence {
 
         int index = 0;
         while ( true ) {
+
                 char c = charArray[ index ];
 
 
-                if ( isJSONControl ( c )) {
+                if ( isJSONControlOrUnicode( c )) {
+
+                    /* We are covering our bet with a safety net.
+                    * otherwise we would have to have 5x buffer allocated for control chars*/
+                    if (_location + 5 > charArray.length) {
+                        _buffer = Chr.grow( _buffer, 20 );
+                    }
 
                     switch ( c ) {
                         case '\"':
@@ -515,6 +534,36 @@ public class CharBuf extends Writer implements CharSequence {
                             _buffer[_location] =  't';
                             _location ++;
                             break;
+
+                        default:
+                            _buffer[_location] = '\\';
+                            _location ++;
+                            _buffer[_location] =  'u';
+                            _location ++;
+                            if (c <= 255) {
+                                _buffer[_location] =  '0';
+                                _location ++;
+                                _buffer[_location] =  '0';
+                                _location ++;
+                                ByteScanner.encodeByteIntoTwoAsciiCharBytes( c, _encoded );
+                                for (int b : _encoded) {
+                                    _buffer [_location] = (char)b;
+                                    _location ++;
+
+                                }
+                            } else {
+                                Byt.charTo( _charTo, c );
+
+                                for (int charByte : _charTo) {
+                                    ByteScanner.encodeByteIntoTwoAsciiCharBytes( charByte, _encoded );
+                                    for (int b : _encoded) {
+                                        _buffer [_location] = (char)b;
+                                        _location ++;
+                                    }
+                                }
+
+                            }
+
                     }
                 }else {
 

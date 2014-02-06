@@ -13,6 +13,50 @@ import static org.junit.Assert.assertEquals;
 public class CharBufTest {
 
 
+
+
+    @Test
+    public void unicodeAndControl() {
+        String str =  CharBuf.create(0).addJsonEscapedString("\u0001").toString();
+
+        boolean ok = str.equals( "\"\\u0001\"") || die(str);
+        str =  CharBuf.create(0).addJsonEscapedString("\u00ff").toString();
+        ok = str.equals( "\"\\u00ff\"") || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString("\u0fff").toString();
+        ok = str.equals( "\"\\u0fff\"") || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString("\uffff").toString();
+        ok = str.equals( "\"\\uffff\"") || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString("\uefef").toString();
+        ok = str.equals( "\"\\uefef\"") || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString(" \b ").toString();
+        ok = str.equals( "\" \\b \"" ) || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString(" \r ").toString();
+        ok = str.equals( "\" \\r \"" ) || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString(" \n ").toString();
+        ok = str.equals( "\" \\n \"" ) || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString(" \n ").toString();
+        ok = str.equals( "\" \\n \"" ) || die(str);
+
+
+        str =  CharBuf.create(0).addJsonEscapedString(" \f ").toString();
+        ok = str.equals( "\" \\f \"" ) || die(str);
+
+        str =  CharBuf.create(0).addJsonEscapedString(" \" Hi mom \" ").toString();
+        ok = str.equals( "\" \\\" Hi mom \\\" \"" ) || die(str);
+
+
+        str =  CharBuf.create(0).addJsonEscapedString(" \\ ").toString();
+        ok = str.equals( "\" \\\\ \"" ) || die(str);
+
+    }
+
     @Test
     public void testFrenchChars() {
           String str = "Éé, Èè, Êê, Ëë, Àà, Ââ, Ææ, Ôô, Œœ, Ùù, Ûû, Üü, Ÿÿ";

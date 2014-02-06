@@ -525,6 +525,11 @@ public class Byt {
     }
 
 
+    public static void charTo( byte[] b,  char val ) {
+        b[  1 ] = ( byte ) ( val );
+        b[ 0 ] = ( byte ) ( val >>> 8 );
+    }
+
     public static float idxFloat( byte[] array, int off ) {
         return Float.intBitsToFloat( idxInt( array, off ) );
     }

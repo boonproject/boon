@@ -3,8 +3,6 @@ package org.boon.primitive;
 import org.boon.Exceptions;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 import static org.boon.Exceptions.die;
 
@@ -279,7 +277,7 @@ public class ByteBuf implements Output {
             } else if ( i == ' ' ) {
                 this.addByte( '+' );
             } else {
-                encodeByteIntoTwoAsciiCharBytes( i, encoded );
+                ByteScanner.encodeByteIntoTwoAsciiCharBytes( i, encoded );
                 this.addByte( '%' );
                 this.addByte( encoded[ 0 ] );
                 this.addByte( encoded[ 1 ] );
@@ -352,7 +350,7 @@ public class ByteBuf implements Output {
                         this.addByte( '0' );
                         this.addByte( '0' );
                         final byte[] encoded = new byte[ 2 ];
-                        encodeByteIntoTwoAsciiCharBytes( ch, encoded );
+                        ByteScanner.encodeByteIntoTwoAsciiCharBytes( ch, encoded );
                         this.addByte( encoded[ 0 ] );
                         this.addByte( encoded[ 1 ] );
 
@@ -367,59 +365,6 @@ public class ByteBuf implements Output {
         return this;
     }
 
-    /**
-     * Turns a single nibble into an ascii HEX digit.
-     *
-     * @param nibble the nibble to serializeObject.
-     * @return the encoded nibble (1/2 byte).
-     */
-    protected static int encodeNibbleToHexAsciiCharByte( final int nibble ) {
-
-        switch ( nibble ) {
-            case 0x00:
-            case 0x01:
-            case 0x02:
-            case 0x03:
-            case 0x04:
-            case 0x05:
-            case 0x06:
-            case 0x07:
-            case 0x08:
-            case 0x09:
-                return nibble + 0x30; // 0x30('0') - 0x39('9')
-            case 0x0A:
-            case 0x0B:
-            case 0x0C:
-            case 0x0D:
-            case 0x0E:
-            case 0x0F:
-                return nibble + 0x57; // 0x41('a') - 0x46('f')
-            default:
-                die( "illegal nibble: " + nibble );
-                return -1;
-        }
-    }
-
-
-    /**
-     * Turn a single bytes into two hex character representation.
-     *
-     * @param decoded the byte to serializeObject.
-     * @param encoded the array to which each encoded nibbles are now ascii hex representations.
-     */
-    public static void encodeByteIntoTwoAsciiCharBytes( final int decoded, final byte[] encoded ) {
-
-        Objects.requireNonNull( encoded );
-
-        boolean ok = true;
-
-
-        ok |= encoded.length == 2 || die( "encoded array must be 2" );
-
-
-        encoded[ 0 ] = ( byte ) encodeNibbleToHexAsciiCharByte( ( decoded >> 4 ) & 0x0F );
-        encoded[ 1 ] = ( byte ) encodeNibbleToHexAsciiCharByte( decoded & 0x0F );
-    }
 
     public ByteBuf addUrlEncoded( String key ) {
         try {
