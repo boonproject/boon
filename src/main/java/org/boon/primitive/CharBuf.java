@@ -950,7 +950,7 @@ public class CharBuf extends Writer implements CharSequence {
             sign = -1;
 
         }
-        return parseInt( buffer, startIndex, location - startIndex ) * sign;
+        return parseIntFromTo( buffer, startIndex, location ) * sign;
     }
 
     public long longValue() {
@@ -962,7 +962,7 @@ public class CharBuf extends Writer implements CharSequence {
             sign = -1;
 
         }
-        return parseLong( buffer, startIndex, location - startIndex ) * sign;
+        return parseLongFromTo( buffer, startIndex, location  ) * sign;
     }
 
 

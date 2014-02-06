@@ -173,7 +173,11 @@ public class NumberValue extends Number implements Value {
             sign = -1;
 
         }
-        return parseInt ( buffer, startIndex, endIndex - startIndex ) * sign;
+        if ( isInteger ( buffer, startIndex, endIndex - startIndex, sign < 0 ) ){
+            return parseIntFromTo ( buffer, startIndex, endIndex  ) * sign;
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -185,9 +189,11 @@ public class NumberValue extends Number implements Value {
 
         }
         if ( isInteger ( buffer, startIndex, endIndex - startIndex, sign < 0 ) ){
-            return parseInt( buffer, startIndex, endIndex - startIndex ) * sign;
+            return parseIntFromTo( buffer, startIndex, endIndex  ) * sign;
+        } else if( isLong(  buffer, startIndex, endIndex - startIndex, sign < 0 )){
+            return parseLongFromTo( buffer, startIndex, endIndex  ) * sign;
         } else {
-            return parseLong( buffer, startIndex, endIndex - startIndex ) * sign;
+            return 0L;
         }
     }
 

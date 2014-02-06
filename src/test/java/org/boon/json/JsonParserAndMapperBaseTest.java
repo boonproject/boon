@@ -84,7 +84,7 @@ public class JsonParserAndMapperBaseTest {
 
 
 
-    @Test
+        @Test
     public void subclass() {
         AllTypes foo = new AllTypes ();
         foo.pet = new Dog ();

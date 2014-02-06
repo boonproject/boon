@@ -3,6 +3,7 @@ package org.boon.primitive;
 
 import org.junit.Test;
 
+import static org.boon.Exceptions.die;
 import static org.boon.primitive.Chr.chars;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -10,11 +11,35 @@ import static org.junit.Assert.assertEquals;
 public class CharScannerTest {
 
 
-
-
-    ///
-    ///
     @Test
+    public void parseLong() {
+
+        String str = "12345678910";
+        long l1 =  CharScanner.parseLongFromTo( str.toCharArray(), 0, str.length() );
+        boolean ok = l1 ==  12345678910L || die("" + l1);
+
+
+
+        str = "abc12345678910";
+        l1 =  CharScanner.parseLongFromTo( str.toCharArray(), 3, str.length() );
+        ok = l1 ==  12345678910L || die("" + l1);
+
+
+
+
+        str = "abcdefghijklmnopqrstuvwxyz12345678910";
+        l1 =  CharScanner.parseLongFromTo( str.toCharArray(), 26, str.length() );
+        ok = l1 ==  12345678910L || die("" + l1);
+
+
+
+
+        String str2 = "abcdefghijklmnopqrstuvwxyz12345678910mymilkshakemakestheboysintheyard";
+        l1 =  CharScanner.parseLongFromTo( str2.toCharArray(), 26, str.length() );
+        ok = l1 ==  12345678910L || die("" + l1);
+    }
+
+        @Test
     public void autoSplitThisEndsInSpace() {
 
         char[] letters =
