@@ -2,6 +2,7 @@ package org.boon.di;
 
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.map;
+import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.di.Creator.create;
 import static org.boon.di.Creator.newOf;
 
@@ -10,6 +11,9 @@ import static org.boon.json.JsonCreator.*;
 import static org.boon.di.ContextFactory.*;
 
 import org.boon.config.ContextConfig;
+import org.boon.config.ContextConfigReader;
+
+import static org.boon.config.ContextConfigReader.config;
 import org.boon.core.Supplier;
 import org.junit.Test;
 
@@ -323,19 +327,19 @@ public class CreatorTest {
     public void namedConfig() {
 
 
-        Context context = ContextConfig.JSON.createContextUsingNamespace( "dev", "classpath://config_files/" );
+        Context context = ContextConfig.JSON.createContext( "dev", false, "classpath://config_files/" );
         Bar bar = context.get( Bar.class );
         boolean ok = bar != null || die();
 
         ok = bar.name.toString().equals( "DEV Bar" )  || die("$"+bar.name+"$");
 
 
-        context = ContextConfig.JSON.createContextUsingNamespace( "prod", "classpath://config_files/" );
+        context = ContextConfig.JSON.createContext( "prod", false, "classpath://config_files/" );
         bar = context.get( Bar.class );
         ok = bar != null || die();
         ok = bar.name.toString().equals( "Prod Bar" )  || die("$"+bar.name+"$");
 
-        context = ContextConfig.JSON.createContextUsingNamespace( "qa", "classpath://config_files/" );
+        context = ContextConfig.JSON.createContext( "qa", false, "classpath://config_files/" );
         bar = context.get( Bar.class );
         ok = bar != null || die();
         ok = bar.name.toString().equals( "QA Bar" )  || die("$"+bar.name+"$");
@@ -352,7 +356,7 @@ public class CreatorTest {
         Bar bar;
         boolean ok;
 
-        context = ContextConfig.JSON.createContextUsingNamespace( "qa", "classpath://config_files/" );
+        context = ContextConfig.JSON.createContext( "qa", false, "classpath://config_files/" );
 
         Foo foo = context.get( Foo.class );
 
@@ -364,6 +368,52 @@ public class CreatorTest {
         ok = bar != null || die();
         ok = bar.name.toString().equals( "QA Bar" )  || die("$"+bar.name+"$");
 
+
+    }
+
+    @Test
+    public void includeConfigWithRule() {
+
+
+        Context context;
+        Bar bar;
+        boolean ok;
+
+
+        context = ContextConfigReader.config().namespace( "qa" ).resource( "classpath://config_files/" )
+                .rule( gte( "version", 1.0 ) ).read();
+
+        Foo foo = context.get( Foo.class );
+
+        ok = foo != null || die();
+        ok = foo.bar != null || die();
+        ok = foo.bar.name.toString().equals( "QA Bar" )  || die("$"+foo.bar.name+"$");
+
+        bar = context.get( Bar.class );
+        ok = bar != null || die();
+        ok = bar.name.toString().equals( "QA Bar" )  || die("$"+bar.name+"$");
+
+
+    }
+
+
+    @Test
+    public void includeConfigWithRules() {
+
+
+        Context context;
+        Bar bar;
+        boolean ok;
+
+
+        context = config().namespace( "qa" ).resource( "classpath://config_files/" )
+                .rule(
+                    and(
+                            gte ( "version", 1.0 ),
+                            lt  ( "version", 3.3 ),
+                            eq  ( "developer", "John Fryar")
+                      )
+                ).read();
 
     }
 

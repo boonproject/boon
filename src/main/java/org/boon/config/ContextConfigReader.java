@@ -1,8 +1,15 @@
 package org.boon.config;
 
 
+import org.boon.criteria.internal.Criteria;
 import org.boon.di.Context;
 import org.boon.di.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.boon.Boon.puts;
 
 public class ContextConfigReader {
 
@@ -12,22 +19,90 @@ public class ContextConfigReader {
 
     private static final String MODULE_CONFIG_DIR = System.getProperty( "BOON_MODULE_CONFIG_DIR", CONFIG_DIR + RUNTIME_MODULE_NAME + "/");
 
-    @Inject
-    private ContextConfig contextConfig;
 
+
+    @Inject
+    private boolean useNameSpacePrefix = false;
+
+
+    @Inject
+    private ContextConfig contextConfig = ContextConfig.JSON;
+
+
+    @Inject
+    private String namespace;
+
+
+    @Inject
+    private List<String> resources = new ArrayList<>(  );
+
+
+    @Inject
+    private Criteria rules;
 
     public Context read() {
-        return contextConfig.createContext( MODULE_CONFIG_DIR  );
+
+        if (resources.size() == 0 ) {
+            resources.add( MODULE_CONFIG_DIR );
+        }
+
+        MetaConfigEvents metaConfigEvents = null;
+        if ( rules != null  ) {
+
+             metaConfigEvents = new MetaConfigEvents() {
+                @Override
+                public boolean parsedMeta( Map<String, Object> meta ) {
+                    return handleMeta(meta);
+                }
+            };
+        }
+
+        return contextConfig.createContext( namespace, useNameSpacePrefix, metaConfigEvents, resources  );
+
+    }
+
+    private boolean handleMeta( Map<String,Object> meta ) {
+        return rules.test(meta);
     }
 
 
-    public Context read( String namespace ) {
-        return contextConfig.createContextUsingNamespace( namespace, MODULE_CONFIG_DIR  );
+    public ContextConfigReader resource(String resource) {
+        resources.add( resource );
+        return this;
+    }
+
+
+    public ContextConfigReader resources(String... resources) {
+        for ( String resource : resources ) {
+            this.resources.add( resource );
+        }
+        return this;
     }
 
 
 
-    public Context read( String namespace, boolean configFileMustStartWithNameSpace ) {
-        return contextConfig.createContext( namespace, MODULE_CONFIG_DIR  );
+    public ContextConfigReader userNamespacePrefix() {
+        useNameSpacePrefix = true;
+        return this;
     }
+
+
+
+    public ContextConfigReader rule( Criteria criteria ) {
+        this.rules = criteria;
+        return this;
+    }
+
+
+    public ContextConfigReader namespace( String namespace ) {
+        this.namespace = namespace;
+        return this;
+    }
+
+
+    public static ContextConfigReader config() {
+        return new ContextConfigReader();
+    }
+
+
 }

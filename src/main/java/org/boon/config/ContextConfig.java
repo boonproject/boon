@@ -6,8 +6,6 @@ import org.boon.di.ContextFactory;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 
@@ -15,47 +13,48 @@ public enum ContextConfig {
 
 
     JSON {
+
+
+        @Override
+        public Context createContext( String configNamespace, boolean startsWith, MetaConfigEvents events, List<String> resources ) {
+            return createContext( configNamespace, startsWith, events, resources.toArray( new String[resources.size()] ) );
+        }
+
         public Context createContext( String... resources ) {
-            Map<String, Object> config = new LinkedHashMap<>();
-            JsonParserAndMapper laxParser = new JsonParserFactory().createLaxParser();
-            Map<String, Object> fileConfig;
-            for ( String resource : resources ) {
-                Path path = IO.path( resource );
-                if ( Files.isDirectory( path ) ) {
-                    handleDir( config, laxParser, resource );
-                } else {
-                    fileConfig = laxParser.parseMap( IO.read( resource ) );
-                    config.putAll( fileConfig );
-                }
-            }
-            return ContextFactory.context( ContextFactory.fromMap( config ) );
-        }
-
-        public Context createContextUsingNamespace( String namespace, String... resources ) {
-            return createContextUsingNamespace( namespace, false, resources );
+            return createContext( null, false, null, resources );
         }
 
 
-        public Context createContextUsingNamespace( String namespace, boolean configFileMustHaveNameSpace, String... resources ) {
-            return ContextFactory.fromMap( createMapUsingNameSpace(namespace, configFileMustHaveNameSpace, resources)  );
+        public Context createContext( List<String> resources ) {
+            return createContext( null, false, null, resources.toArray( new String[resources.size()] ) );
+        }
+
+
+
+        public Context createContext(  String namespace, boolean startsWith,  String... resources ) {
+            return createContext( namespace, startsWith, null, resources );
         }
 
         @Override
-        public Context createContextUsingEvents( MetaConfigEvents events, boolean startsWith, String... resources ) {
-            return null;
+        public Context createContext( MetaConfigEvents events,  String... resources ) {
+            return createContext( null, false, events, resources );
         }
 
-        @Override
-        public Context createContextUsingEventsAndNamespace( MetaConfigEvents events, boolean startsWith, String... resources ) {
-            return null;
+        public Context createContext( String namespace, boolean startsWith, MetaConfigEvents events, String... resources ) {
+            return ContextFactory.fromMap( createConfigMap( namespace, startsWith, events, resources )  );
         }
 
-        private Map<String, Object> createMapUsingNameSpace( String namespace,  boolean startsWith, String... resources ) {
 
-            return createMapUsingNameSpace( namespace, startsWith, Arrays.asList(resources) );
+        private Map<String, Object> createConfigMap( String namespace, boolean startsWith,
+                                                     MetaConfigEvents events, String... resources ) {
+            return createConfigMap( namespace, startsWith, events, Arrays.asList( resources ) );
         }
 
-        private Map<String, Object> createMapUsingNameSpace( String namespace,  boolean startsWith, List<String> resources ) {
+
+
+        private Map<String, Object> createConfigMap( String namespace, boolean startsWith,
+                                                     MetaConfigEvents events,
+                                                     List<String> resources ) {
 
             Map<String, Object> all = new HashMap<>(  );
 
@@ -68,10 +67,10 @@ public enum ContextConfig {
                     }
                 }
                 if ( resource.endsWith( "/" ) ) {
-                    child = createMapFromDir( namespace, startsWith, resource );
+                    child = createMapFromDir( namespace, startsWith, events, resource );
                     all.putAll( child );
                 } else if ( resource.endsWith( ".json" ) ) {
-                    child = createMapFromFile( namespace, startsWith, resource );
+                    child = createMapFromFile( namespace, startsWith, events, resource );
                     all.putAll( child );
                 }
 
@@ -79,8 +78,8 @@ public enum ContextConfig {
             return all;
         }
 
-        private Map<String,Object> createMapFromFile( String namespace, boolean startsWith, String resource ) {
-            NamespaceEventHandler jsonCreatorEventHandler = new NamespaceEventHandler( namespace );
+        private Map<String,Object> createMapFromFile( String namespace, boolean startsWith, MetaConfigEvents events, String resource ) {
+            NamespaceEventHandler jsonCreatorEventHandler = new NamespaceEventHandler( namespace, events );
             JsonParserAndMapper laxParser = new JsonParserFactory().createParserWithEvents( jsonCreatorEventHandler );
 
 
@@ -92,7 +91,7 @@ public enum ContextConfig {
             }
 
             if (jsonCreatorEventHandler.include().size() > 0) {
-                all = createMapUsingNameSpace(namespace, startsWith, jsonCreatorEventHandler.include());
+                all = createConfigMap( namespace, startsWith, events, jsonCreatorEventHandler.include() );
                 all.putAll( fileConfig );
             } else {
                all = fileConfig;
@@ -102,7 +101,7 @@ public enum ContextConfig {
         }
 
 
-        private Map<String, Object> createMapFromDir( String namespace, boolean startWith, String resource ) {
+        private Map<String, Object> createMapFromDir( String namespace, boolean startWith, MetaConfigEvents events, String resource ) {
 
             Map<String, Object> all = new HashMap<>(  );
 
@@ -110,19 +109,10 @@ public enum ContextConfig {
 
             List<String> jsonFiles = IO.listByExt( resource, ".json" );
             for ( String jsonFile : jsonFiles ) {
-                child = createMapFromFile( namespace, startWith, jsonFile );
+                child = createMapFromFile( namespace, startWith, events, jsonFile );
                 all.putAll( child );
             }
             return all;
-        }
-        private void handleDir( Map<String, Object> config, JsonParserAndMapper laxParser, String resource ) {
-            Map<String, Object> fileConfig;
-            List<String> jsonFiles = IO.listByExt( resource, ".json" );
-            for ( String jsonFile : jsonFiles ) {
-                String contents = IO.read( jsonFile );
-                fileConfig = laxParser.parseMap( contents );
-                config.putAll( fileConfig );
-            }
         }
 
     };
@@ -130,13 +120,17 @@ public enum ContextConfig {
 
     public abstract Context createContext( String... resources );
 
-    public abstract Context createContextUsingNamespace( String configNamespace, String... resources );
+
+    public abstract Context createContext( List<String> resources );
 
 
-    public abstract Context createContextUsingNamespace( String configNamespace, boolean startsWith, String... resources );
 
-    public abstract Context createContextUsingEvents(  MetaConfigEvents events, boolean startsWith, String... resources );
+    public abstract Context createContext( String configNamespace, boolean startsWith, String... resources );
 
-    public abstract Context createContextUsingEventsAndNamespace(  MetaConfigEvents events, boolean startsWith, String... resources );
+    public abstract Context createContext(  MetaConfigEvents events,  String... resources );
+
+    public abstract Context createContext(  String configNamespace,  boolean startsWith, MetaConfigEvents events, String... resources );
+
+    public abstract Context createContext(  String configNamespace,  boolean startsWith, MetaConfigEvents events, List<String> resources );
 
 }

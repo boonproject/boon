@@ -15,6 +15,7 @@ import static org.boon.Boon.puts;
 public class NamespaceEventHandler implements JsonParserEvents {
 
 
+    private final MetaConfigEvents events;
     private String namespace;
 
     private List<String> include;
@@ -26,8 +27,9 @@ public class NamespaceEventHandler implements JsonParserEvents {
         return include == null ? java.util.Collections.EMPTY_LIST : include;
     }
 
-    public NamespaceEventHandler( String namespace ) {
+    public NamespaceEventHandler( String namespace, MetaConfigEvents events ) {
         this.namespace = namespace;
+        this.events = events;
     }
 
     @Override
@@ -50,22 +52,25 @@ public class NamespaceEventHandler implements JsonParserEvents {
     }
 
     @Override
-    public boolean objectField( int index, Map<String, Object> map, CharSequence name, Object field ) {
+    public boolean objectField( int index, Map<String, Object> map, CharSequence name, Object value ) {
 
         if ( inMeta && name!=null && name.toString().equals( "namespace" )
-                && field instanceof CharSequence && !field.toString().equals( namespace )) {
+                && value instanceof CharSequence && !value.toString().equals( namespace )) {
 
              return continueParse=false;
         }
 
-        if (inMeta && name!=null && name.toString().equals( "META" ) ) {
+        if (name!=null && name.toString().equals( "META" ) ) {
 
-            Map<String, Object> meta = toMap( field );
+            Map<String, Object> meta = toMap( value );
             if (meta.containsKey( "include" )) {
               include = toList( meta.get( "include" ) );
               puts ("include", include);
             }
             inMeta = false;
+            if (events!=null) {
+                continueParse = events.parsedMeta( meta );
+            }
         }
 
         return continueParse;

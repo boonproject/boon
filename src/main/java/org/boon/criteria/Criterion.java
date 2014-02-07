@@ -179,6 +179,12 @@ public abstract class Criterion<VALUE> extends Criteria {
             }
 
 
+            FieldAccess field = fields.get(name);
+
+            if (field == null)  {
+                return false;
+            }
+
             boolean result = resolve( fields, o );
 
             return result;

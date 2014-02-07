@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface MetaConfigEvents {
 
-     public void parsedMeta(Map<String, Object> meta);
+     public boolean parsedMeta(Map<String, Object> meta);
 
 }

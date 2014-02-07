@@ -3,7 +3,8 @@
     /* QA namespace. */
     "META": {
         namespace:qa,
-        include:[classpath://include/]
+        include:[classpath://include/],
+        version : 1.0
     },
 
     "foo": {
