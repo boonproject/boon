@@ -1,9 +1,8 @@
-package org.boon.criteria;
+package org.boon.criteria.internal;
 
 
 import org.boon.Ordering;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 
 import java.util.*;

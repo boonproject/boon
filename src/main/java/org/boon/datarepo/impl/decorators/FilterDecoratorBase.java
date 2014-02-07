@@ -1,6 +1,6 @@
 package org.boon.datarepo.impl.decorators;
 
-import org.boon.criteria.Criteria;
+import org.boon.criteria.internal.Criteria;
 import org.boon.datarepo.Filter;
 import org.boon.datarepo.ResultSet;
 

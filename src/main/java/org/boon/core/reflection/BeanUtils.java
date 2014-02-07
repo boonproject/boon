@@ -37,6 +37,27 @@ public class BeanUtils {
     }
 
 
+    public static  FieldAccess getField( Class clazz, String name ) {
+
+        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( clazz );
+        if ( fields != null) {
+            return fields.get(name);
+        } else {
+            return null;
+        }
+    }
+
+
+    public static  FieldAccess getField( Object object, String name ) {
+
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
+        if ( fields != null) {
+            return fields.get(name);
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Get fields from object or Map.
      * Allows maps to act like they have fields.

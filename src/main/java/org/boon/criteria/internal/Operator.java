@@ -1,4 +1,4 @@
-package org.boon.criteria;
+package org.boon.criteria.internal;
 
 public enum Operator {
     EQUAL,          //Indexed

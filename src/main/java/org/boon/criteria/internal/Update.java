@@ -1,4 +1,4 @@
-package org.boon.criteria;
+package org.boon.criteria.internal;
 
 import org.boon.Lists;
 import org.boon.datarepo.ObjectEditor;

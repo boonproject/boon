@@ -4,6 +4,8 @@ import org.boon.Exceptions;
 import org.boon.core.Typ;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.criteria.internal.Criteria;
+import org.boon.criteria.internal.Operator;
 import org.boon.primitive.CharBuf;
 
 import java.util.Arrays;
@@ -241,42 +243,42 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqShort( name, v );
+                nativeDelegate = ObjectFilter.eqShort( name, v );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqShort( name, v );
+                nativeDelegate = ObjectFilter.notEqShort( name, v );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltShort( name, v );
+                nativeDelegate = ObjectFilter.ltShort( name, v );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteShort( name, v );
+                nativeDelegate = ObjectFilter.lteShort( name, v );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtShort( name, v );
+                nativeDelegate = ObjectFilter.gtShort( name, v );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteShort( name, v );
+                nativeDelegate = ObjectFilter.gteShort( name, v );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inShorts( name, Conversions.sarray( values ) );
+                nativeDelegate = ObjectFilter.inShorts( name, Conversions.sarray( values ) );
                 break;
 
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenShort( name, ( v ),
-                        Conversions.toShort( values[ 1 ] ) );
+                nativeDelegate = ObjectFilter.betweenShort( name, ( v ),
+                        Conversions.toShort( values[1] ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInShorts( name, Conversions.sarray( values ) );
+                nativeDelegate = ObjectFilter.notInShorts( name, Conversions.sarray( values ) );
 
                 break;
 
@@ -357,11 +359,11 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             switch ( operator ) {
                 case EQUAL:
-                    nativeDelegate = CriteriaFactory.eqBoolean( name, Conversions.toBoolean( value ) );
+                    nativeDelegate = ObjectFilter.eqBoolean( name, Conversions.toBoolean( value ) );
                     break;
 
                 case NOT_EQUAL:
-                    nativeDelegate = CriteriaFactory.notEqBoolean( name, Conversions.toBoolean( value ) );
+                    nativeDelegate = ObjectFilter.notEqBoolean( name, Conversions.toBoolean( value ) );
                     break;
 
 
@@ -388,41 +390,41 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqChar( name, ( value ) );
+                nativeDelegate = ObjectFilter.eqChar( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqChar( name, ( value ) );
+                nativeDelegate = ObjectFilter.notEqChar( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltChar( name, ( value ) );
+                nativeDelegate = ObjectFilter.ltChar( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteChar( name, ( value ) );
+                nativeDelegate = ObjectFilter.lteChar( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtChar( name, ( value ) );
+                nativeDelegate = ObjectFilter.gtChar( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteChar( name, ( value ) );
+                nativeDelegate = ObjectFilter.gteChar( name, ( value ) );
                 break;
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenChar( name, ( value ),
-                        Conversions.toChar( values[ 1 ] ) );
+                nativeDelegate = ObjectFilter.betweenChar( name, ( value ),
+                        Conversions.toChar( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inChars( name, Conversions.carray( values ) );
+                nativeDelegate = ObjectFilter.inChars( name, Conversions.carray( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInChars( name, Conversions.carray( values ) );
+                nativeDelegate = ObjectFilter.notInChars( name, Conversions.carray( values ) );
                 break;
 
             default:
@@ -436,42 +438,42 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqDouble( name, ( value ) );
+                nativeDelegate = ObjectFilter.eqDouble( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqDouble( name, ( value ) );
+                nativeDelegate = ObjectFilter.notEqDouble( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltDouble( name, ( value ) );
+                nativeDelegate = ObjectFilter.ltDouble( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteDouble( name, ( value ) );
+                nativeDelegate = ObjectFilter.lteDouble( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtDouble( name, ( value ) );
+                nativeDelegate = ObjectFilter.gtDouble( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteDouble( name, ( value ) );
+                nativeDelegate = ObjectFilter.gteDouble( name, ( value ) );
                 break;
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenDouble( name, ( value ),
-                        Conversions.toDouble( values[ 1 ] ) );
+                nativeDelegate = ObjectFilter.betweenDouble( name, ( value ),
+                        Conversions.toDouble( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inDoubles( name,
+                nativeDelegate = ObjectFilter.inDoubles( name,
                         Conversions.darray( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInDoubles( name,
+                nativeDelegate = ObjectFilter.notInDoubles( name,
                         Conversions.darray( values ) );
                 break;
 
@@ -486,41 +488,41 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqFloat( name, ( value ) );
+                nativeDelegate = ObjectFilter.eqFloat( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqFloat( name, ( value ) );
+                nativeDelegate = ObjectFilter.notEqFloat( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltFloat( name, ( value ) );
+                nativeDelegate = ObjectFilter.ltFloat( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteFloat( name, ( value ) );
+                nativeDelegate = ObjectFilter.lteFloat( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtFloat( name, ( value ) );
+                nativeDelegate = ObjectFilter.gtFloat( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteFloat( name, ( value ) );
+                nativeDelegate = ObjectFilter.gteFloat( name, ( value ) );
                 break;
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenFloat( name, ( value ),
-                        Conversions.toFloat( values[ 1 ] ) );
+                nativeDelegate = ObjectFilter.betweenFloat( name, ( value ),
+                        Conversions.toFloat( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inFloats( name, Conversions.farray( values ) );
+                nativeDelegate = ObjectFilter.inFloats( name, Conversions.farray( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInFloats( name, Conversions.farray( values ) );
+                nativeDelegate = ObjectFilter.notInFloats( name, Conversions.farray( values ) );
 
                 break;
 
@@ -535,42 +537,42 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqLong( name, ( value ) );
+                nativeDelegate = ObjectFilter.eqLong( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqLong( name, ( value ) );
+                nativeDelegate = ObjectFilter.notEqLong( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltLong( name, ( value ) );
+                nativeDelegate = ObjectFilter.ltLong( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteLong( name, ( value ) );
+                nativeDelegate = ObjectFilter.lteLong( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtLong( name, ( value ) );
+                nativeDelegate = ObjectFilter.gtLong( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteLong( name, ( value ) );
+                nativeDelegate = ObjectFilter.gteLong( name, ( value ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inLongs( name, Conversions.larray( values ) );
+                nativeDelegate = ObjectFilter.inLongs( name, Conversions.larray( values ) );
                 break;
 
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenLong( name, ( value ),
-                        Conversions.toLong( values[ 1 ] ) );
+                nativeDelegate = ObjectFilter.betweenLong( name, ( value ),
+                        Conversions.toLong( values[1] ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInLongs( name, Conversions.larray( values ) );
+                nativeDelegate = ObjectFilter.notInLongs( name, Conversions.larray( values ) );
 
                 break;
 
@@ -585,43 +587,43 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.eqByte( name, ( value ) );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.notEqByte( name, ( value ) );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.ltByte( name, ( value ) );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.lteByte( name, ( value ) );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.gtByte( name, ( value ) );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.gteByte( name, ( value ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inBytes( name, Conversions.barray( values ) );
+                nativeDelegate = ObjectFilter.inBytes( name, Conversions.barray( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInBytes( name, Conversions.barray( values ) );
+                nativeDelegate = ObjectFilter.notInBytes( name, Conversions.barray( values ) );
 
                 break;
 
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenByte( name, ( value ),
-                        Conversions.toByte( values[ 1 ] ) );
+                nativeDelegate = ObjectFilter.betweenByte( name, ( value ),
+                        Conversions.toByte( values[1] ) );
                 break;
 
 
@@ -648,41 +650,41 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = CriteriaFactory.eqInt( name, v );
+                nativeDelegate = ObjectFilter.eqInt( name, v );
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = CriteriaFactory.notEqInt( name, v );
+                nativeDelegate = ObjectFilter.notEqInt( name, v );
                 break;
 
             case LESS_THAN:
-                nativeDelegate = CriteriaFactory.ltInt( name, v );
+                nativeDelegate = ObjectFilter.ltInt( name, v );
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.lteInt( name, v );
+                nativeDelegate = ObjectFilter.lteInt( name, v );
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = CriteriaFactory.gtInt( name, v );
+                nativeDelegate = ObjectFilter.gtInt( name, v );
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = CriteriaFactory.gteInt( name, v );
+                nativeDelegate = ObjectFilter.gteInt( name, v );
                 break;
 
             case BETWEEN:
-                nativeDelegate = CriteriaFactory.betweenInt( name, v,
-                        Conversions.toInt( values[ 1 ] ) );
+                nativeDelegate = ObjectFilter.betweenInt( name, v,
+                        Conversions.toInt( values[1] ) );
                 break;
 
             case IN:
-                nativeDelegate = CriteriaFactory.inInts( name, Conversions.iarray( values ) );
+                nativeDelegate = ObjectFilter.inInts( name, Conversions.iarray( values ) );
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = CriteriaFactory.notInInts( name, Conversions.iarray( values ) );
+                nativeDelegate = ObjectFilter.notInInts( name, Conversions.iarray( values ) );
 
                 break;
 

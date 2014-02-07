@@ -1,6 +1,6 @@
 package org.boon.datarepo.impl;
 
-import org.boon.criteria.*;
+import org.boon.criteria.internal.*;
 import org.boon.datarepo.*;
 import org.boon.datarepo.spi.RepoComposer;
 import org.boon.datarepo.spi.SearchIndex;

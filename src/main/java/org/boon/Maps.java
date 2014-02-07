@@ -43,6 +43,25 @@ public class Maps {
         map.put( k, v );
     }
 
+
+
+    public static <K, V> String idxStr( Map<K, V> map, K k ) {
+        return (String)map.get( k );
+    }
+
+
+    public static <K, V> Integer idxInt( Map<K, V> map, K k ) {
+        return (Integer)map.get( k );
+    }
+
+
+
+    public static <K, V> Long idxLong( Map<K, V> map, K k ) {
+        return (Long)map.get( k );
+    }
+
+
+
     @Universal
     public static <K, V> SortedMap<K, V> copy( SortedMap<K, V> map ) {
         if ( map instanceof TreeMap ) {

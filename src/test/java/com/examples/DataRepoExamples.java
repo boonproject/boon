@@ -19,9 +19,9 @@ import static org.boon.Boon.putl;
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
-import static org.boon.criteria.CriteriaFactory.eq;
-import static org.boon.criteria.CriteriaFactory.eqNestedAdvanced;
-import static org.boon.criteria.CriteriaFactory.notEq;
+import static org.boon.criteria.ObjectFilter.eq;
+import static org.boon.criteria.ObjectFilter.eqNestedAdvanced;
+import static org.boon.criteria.ObjectFilter.notEq;
 
 
 import com.examples.model.test.UserEmail;

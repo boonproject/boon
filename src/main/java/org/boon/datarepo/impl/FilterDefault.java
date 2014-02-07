@@ -3,7 +3,9 @@ package org.boon.datarepo.impl;
 import org.boon.Sets;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.criteria.*;
+import org.boon.criteria.ObjectFilter;
+import org.boon.criteria.Criterion;
+import org.boon.criteria.internal.*;
 import org.boon.datarepo.Filter;
 import org.boon.datarepo.LookupIndex;
 import org.boon.datarepo.ResultSet;
@@ -17,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.boon.criteria.CriteriaFactory.instanceOf;
-import static org.boon.criteria.CriteriaFactory.not;
+import static org.boon.criteria.ObjectFilter.instanceOf;
+import static org.boon.criteria.ObjectFilter.not;
 
 /**
  * This class should be renamed mother of all beasts.
@@ -47,7 +49,7 @@ public class FilterDefault implements Filter, FilterComposer {
      * @param expressions listStream of expressions
      * @return result set
      * @see ResultSet
-     * @see org.boon.criteria.Criteria
+     * @see org.boon.criteria.internal.Criteria
      */
     @Override
     public ResultSet filter( Criteria... expressions ) {
@@ -84,7 +86,7 @@ public class FilterDefault implements Filter, FilterComposer {
          * all of the expressions in an and clause. */
         Group group = expressions.length ==
                 1 && expressions[ 0 ] instanceof Group
-                ? ( Group ) expressions[ 0 ] : CriteriaFactory.and( expressions );
+                ? ( Group ) expressions[ 0 ] : ObjectFilter.and( expressions );
 
         /**
          * Run the filter on the group.
@@ -279,11 +281,11 @@ public class FilterDefault implements Filter, FilterComposer {
         Criteria[] expressions = Conversions.array( Criteria.class, QueryFactory.filter( expressionSet, not( instanceOf( Group.class ) ) ) );
 
         if ( foundIndex ) {
-            resultSet.filterAndPrune( CriteriaFactory.and( expressions ) );
+            resultSet.filterAndPrune( ObjectFilter.and( expressions ) );
         } else {
             resultSet.addResults(
                     QueryFactory.filter( searchableCollection.all(),
-                            CriteriaFactory.and( expressions ) )
+                            ObjectFilter.and( expressions ) )
             );
         }
         for ( Criteria expression : expressions ) {

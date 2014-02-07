@@ -1,5 +1,7 @@
-package org.boon.criteria;
+package org.boon.criteria.internal;
 
+import org.boon.criteria.ObjectFilter;
+import org.boon.criteria.Criterion;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,17 +18,17 @@ public class CriterionTest {
 
     @Test
     public void test() throws Exception {
-        Criteria criteria = CriteriaFactory.and( CriteriaFactory.eq( "foo", "bar" ) );
+        Criteria criteria = ObjectFilter.and( ObjectFilter.eq( "foo", "bar" ) );
         criteria.toString();
 
-        Criteria criteria1 = CriteriaFactory.and( CriteriaFactory.eq( "foo", "bar" ) );
+        Criteria criteria1 = ObjectFilter.and( ObjectFilter.eq( "foo", "bar" ) );
 
         boolean ok = true;
         ok &= ( criteria.equals( criteria1 ) ) || die( "Die" );
 
 
-        Criterion c1 = CriteriaFactory.eq( "foo", "bar" );
-        Criterion c2 = CriteriaFactory.eq( "foo", "bar" );
+        Criterion c1 = ObjectFilter.eq( "foo", "bar" );
+        Criterion c2 = ObjectFilter.eq( "foo", "bar" );
 
         ok &= ( c1.equals( c2 ) ) || die( "Die" );
 

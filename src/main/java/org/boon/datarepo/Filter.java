@@ -15,7 +15,7 @@
  */
 package org.boon.datarepo;
 
-import org.boon.criteria.Criteria;
+import org.boon.criteria.internal.Criteria;
 
 
 /**

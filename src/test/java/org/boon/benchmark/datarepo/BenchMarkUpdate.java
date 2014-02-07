@@ -6,7 +6,7 @@ import org.boon.datarepo.Repo;
 import org.boon.datarepo.Repos;
 import org.boon.benchmark.datarepo.model.Employee;
 import org.boon.benchmark.datarepo.utils.BenchmarkHelper;
-import org.boon.criteria.Update;
+import org.boon.criteria.internal.Update;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.println;
-import static org.boon.Boon.puts;
-import static org.boon.criteria.CriteriaFactory.eqNestedAdvanced;
+import static org.boon.criteria.ObjectFilter.eqNestedAdvanced;
 
 
 import static org.boon.core.reflection.BeanUtils.copy;
@@ -65,7 +64,7 @@ public class BenchMarkUpdate {
                 System.gc();
                 Thread.sleep( 10 );
                 run.run();
-                puts( "Name", run.name(), "Time", run.time() );
+                //puts( "Name", run.name(), "Time", run.time() );
             }
         }
 

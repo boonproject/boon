@@ -3,9 +3,6 @@ package org.boon.config;
 import org.boon.IO;
 import org.boon.di.Context;
 import org.boon.di.ContextFactory;
-import org.boon.di.Module;
-import org.boon.di.impl.ContextImpl;
-import org.boon.di.modules.SupplierModule;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 
@@ -13,12 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static org.boon.Boon.puts;
-import static org.boon.Boon.sputs;
 
-/**
- * Created by Richard on 2/5/14.
- */
 public enum ContextConfig {
 
 
@@ -40,26 +32,46 @@ public enum ContextConfig {
         }
 
         public Context createContextUsingNamespace( String namespace, String... resources ) {
-            return ContextFactory.fromMap( createMapUsingNameSpace(namespace, resources)  );
+            return createContextUsingNamespace( namespace, false, resources );
         }
 
-        private Map<String, Object> createMapUsingNameSpace( String namespace,  String... resources ) {
 
-            return createMapUsingNameSpace( namespace, Arrays.asList(resources) );
+        public Context createContextUsingNamespace( String namespace, boolean configFileMustHaveNameSpace, String... resources ) {
+            return ContextFactory.fromMap( createMapUsingNameSpace(namespace, configFileMustHaveNameSpace, resources)  );
         }
 
-        private Map<String, Object> createMapUsingNameSpace( String namespace,  List<String> resources ) {
+        @Override
+        public Context createContextUsingEvents( MetaConfigEvents events, boolean startsWith, String... resources ) {
+            return null;
+        }
+
+        @Override
+        public Context createContextUsingEventsAndNamespace( MetaConfigEvents events, boolean startsWith, String... resources ) {
+            return null;
+        }
+
+        private Map<String, Object> createMapUsingNameSpace( String namespace,  boolean startsWith, String... resources ) {
+
+            return createMapUsingNameSpace( namespace, startsWith, Arrays.asList(resources) );
+        }
+
+        private Map<String, Object> createMapUsingNameSpace( String namespace,  boolean startsWith, List<String> resources ) {
 
             Map<String, Object> all = new HashMap<>(  );
 
             Map<String, Object> child;
 
             for ( String resource : resources ) {
+                if (startsWith) {
+                    if (!resource.startsWith( namespace + "." ) ){
+                       continue;
+                    }
+                }
                 if ( resource.endsWith( "/" ) ) {
-                    child = createMapFromDir( namespace, resource );
+                    child = createMapFromDir( namespace, startsWith, resource );
                     all.putAll( child );
                 } else if ( resource.endsWith( ".json" ) ) {
-                    child = createMapFromFile( namespace, resource );
+                    child = createMapFromFile( namespace, startsWith, resource );
                     all.putAll( child );
                 }
 
@@ -67,8 +79,8 @@ public enum ContextConfig {
             return all;
         }
 
-        private Map<String,Object> createMapFromFile( String namespace, String resource ) {
-            JsonCreatorEventHandler jsonCreatorEventHandler = new JsonCreatorEventHandler( namespace );
+        private Map<String,Object> createMapFromFile( String namespace, boolean startsWith, String resource ) {
+            NamespaceEventHandler jsonCreatorEventHandler = new NamespaceEventHandler( namespace );
             JsonParserAndMapper laxParser = new JsonParserFactory().createParserWithEvents( jsonCreatorEventHandler );
 
 
@@ -80,7 +92,7 @@ public enum ContextConfig {
             }
 
             if (jsonCreatorEventHandler.include().size() > 0) {
-                all = createMapUsingNameSpace(namespace, jsonCreatorEventHandler.include());
+                all = createMapUsingNameSpace(namespace, startsWith, jsonCreatorEventHandler.include());
                 all.putAll( fileConfig );
             } else {
                all = fileConfig;
@@ -90,7 +102,7 @@ public enum ContextConfig {
         }
 
 
-        private Map<String, Object> createMapFromDir( String namespace, String resource ) {
+        private Map<String, Object> createMapFromDir( String namespace, boolean startWith, String resource ) {
 
             Map<String, Object> all = new HashMap<>(  );
 
@@ -98,7 +110,7 @@ public enum ContextConfig {
 
             List<String> jsonFiles = IO.listByExt( resource, ".json" );
             for ( String jsonFile : jsonFiles ) {
-                child = createMapFromFile( namespace, jsonFile );
+                child = createMapFromFile( namespace, startWith, jsonFile );
                 all.putAll( child );
             }
             return all;
@@ -120,5 +132,11 @@ public enum ContextConfig {
 
     public abstract Context createContextUsingNamespace( String configNamespace, String... resources );
 
+
+    public abstract Context createContextUsingNamespace( String configNamespace, boolean startsWith, String... resources );
+
+    public abstract Context createContextUsingEvents(  MetaConfigEvents events, boolean startsWith, String... resources );
+
+    public abstract Context createContextUsingEventsAndNamespace(  MetaConfigEvents events, boolean startsWith, String... resources );
 
 }

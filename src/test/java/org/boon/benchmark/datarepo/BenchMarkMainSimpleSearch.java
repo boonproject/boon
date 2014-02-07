@@ -6,7 +6,7 @@ import org.boon.datarepo.Repo;
 import org.boon.datarepo.Repos;
 import org.boon.benchmark.datarepo.model.Employee;
 import org.boon.benchmark.datarepo.utils.BenchmarkHelper;
-import org.boon.criteria.Criteria;
+import org.boon.criteria.internal.Criteria;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,9 +14,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.println;
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
-import static org.boon.criteria.CriteriaFactory.eq;
+import static org.boon.criteria.ObjectFilter.eq;
 
 
 public class BenchMarkMainSimpleSearch {
@@ -62,7 +61,7 @@ public class BenchMarkMainSimpleSearch {
                 System.gc();
                 Thread.sleep( 10 );
                 run.run();
-                puts( "Name", run.name(), "Time", run.time() );
+                //puts( "Name", run.name(), "Time", run.time() );
             }
         }
 

@@ -1,11 +1,11 @@
-package org.boon.criteria;
+package org.boon.criteria.internal;
 
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.boon.Exceptions.die;
-import static org.boon.criteria.CriteriaFactory.*;
+import static org.boon.criteria.ObjectFilter.*;
 
 public class CriteriaTest {
 

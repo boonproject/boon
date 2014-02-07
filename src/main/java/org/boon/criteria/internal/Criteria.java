@@ -1,8 +1,7 @@
-package org.boon.criteria;
+package org.boon.criteria.internal;
 
 
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.predicates.Predicate;
 
@@ -34,13 +33,22 @@ public abstract class Criteria implements Predicate {
     }
 
     protected Map<String, FieldAccess> getFieldsInternal( Object o ) {
-        return getFieldsInternal( o.getClass() );
+        return getFieldsInternal( o.getClass(), o );
     }
 
-    protected Map<String, FieldAccess> getFieldsInternal( Class clazz ) {
+
+    protected Map<String, FieldAccess> getFieldsInternal( Class o ) {
+        return getFieldsInternal( o.getClass(), null );
+    }
+
+    protected Map<String, FieldAccess> getFieldsInternal( Class clazz, Object o ) {
         Map<String, FieldAccess> fields = fieldsLocal == null ? null : fieldsLocal.get();
         if ( fields == null ) {
-            fields = BeanUtils.getPropertyFieldAccessMap( clazz );
+            if ( o != null ) {
+                fields =  BeanUtils.getFieldsFromObject( o );
+            } else {
+                fields = BeanUtils.getPropertyFieldAccessMap( clazz );
+            }
         }
         return fields;
     }

@@ -1,10 +1,10 @@
 package org.boon.tests;
 
+import org.boon.criteria.ObjectFilter;
 import org.boon.datarepo.Repo;
 import org.boon.datarepo.Repos;
 import org.boon.datarepo.modification.ModificationEvent;
 import org.boon.datarepo.modification.ModificationListener;
-import org.boon.criteria.CriteriaFactory;
 import org.boon.tests.model.ClassForTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -130,50 +130,50 @@ public class TypeTest {
 
     @Test
     public void testQuery() throws Exception {
-        repo.query( CriteriaFactory.eq( "ints", 1 ), CriteriaFactory.eq( "floats", 1.1f ),
-                CriteriaFactory.eq( "doubles", 1.1 ), CriteriaFactory.eq( "shorts", ( short ) 1 ),
-                CriteriaFactory.eq( "chars", 'c' ), CriteriaFactory.eq( "longs", 1L ),
-                CriteriaFactory.eq( "bytes", ( byte ) 1 ) );
+        repo.query( ObjectFilter.eq( "ints", 1 ), ObjectFilter.eq( "floats", 1.1f ),
+                ObjectFilter.eq( "doubles", 1.1 ), ObjectFilter.eq( "shorts", ( short ) 1 ),
+                ObjectFilter.eq( "chars", 'c' ), ObjectFilter.eq( "longs", 1L ),
+                ObjectFilter.eq( "bytes", ( byte ) 1 ) );
 
-        repo.query( CriteriaFactory.gt( "ints", 1 ), CriteriaFactory.gt( "floats", 1.1f ),
-                CriteriaFactory.gt( "doubles", 1.1 ), CriteriaFactory.gt( "shorts", ( short ) 1 ),
-                CriteriaFactory.gt( "chars", 'c' ), CriteriaFactory.gt( "longs", 1L ),
-                CriteriaFactory.gt( "bytes", ( byte ) 1 ) );
+        repo.query( ObjectFilter.gt( "ints", 1 ), ObjectFilter.gt( "floats", 1.1f ),
+                ObjectFilter.gt( "doubles", 1.1 ), ObjectFilter.gt( "shorts", ( short ) 1 ),
+                ObjectFilter.gt( "chars", 'c' ), ObjectFilter.gt( "longs", 1L ),
+                ObjectFilter.gt( "bytes", ( byte ) 1 ) );
 
-        repo.query( CriteriaFactory.lt( "ints", 1 ), CriteriaFactory.lt( "floats", 1.1f ),
-                CriteriaFactory.lt( "doubles", 1.1 ), CriteriaFactory.lt( "shorts", ( short ) 1 ),
-                CriteriaFactory.lt( "chars", 'c' ), CriteriaFactory.lt( "longs", 1L ),
-                CriteriaFactory.lt( "bytes", ( byte ) 1 ) );
+        repo.query( ObjectFilter.lt( "ints", 1 ), ObjectFilter.lt( "floats", 1.1f ),
+                ObjectFilter.lt( "doubles", 1.1 ), ObjectFilter.lt( "shorts", ( short ) 1 ),
+                ObjectFilter.lt( "chars", 'c' ), ObjectFilter.lt( "longs", 1L ),
+                ObjectFilter.lt( "bytes", ( byte ) 1 ) );
 
 
-        repo.query( CriteriaFactory.gte( "ints", 1 ), CriteriaFactory.gte( "floats", 1.1f ),
-                CriteriaFactory.gte( "doubles", 1.1 ), CriteriaFactory.gte( "shorts", ( short ) 1 ),
-                CriteriaFactory.gte( "chars", 'c' ), CriteriaFactory.gte( "longs", 1L ),
-                CriteriaFactory.gte( "bytes", ( byte ) 1 ) );
+        repo.query( ObjectFilter.gte( "ints", 1 ), ObjectFilter.gte( "floats", 1.1f ),
+                ObjectFilter.gte( "doubles", 1.1 ), ObjectFilter.gte( "shorts", ( short ) 1 ),
+                ObjectFilter.gte( "chars", 'c' ), ObjectFilter.gte( "longs", 1L ),
+                ObjectFilter.gte( "bytes", ( byte ) 1 ) );
 
-        repo.query( CriteriaFactory.lte( "ints", 1 ), CriteriaFactory.lte( "floats", 1.1f ),
-                CriteriaFactory.lte( "doubles", 1.1 ), CriteriaFactory.lte( "shorts", ( short ) 1 ),
-                CriteriaFactory.lte( "chars", 'c' ), CriteriaFactory.lte( "longs", 1L ),
-                CriteriaFactory.lte( "bytes", ( byte ) 1 ) );
+        repo.query( ObjectFilter.lte( "ints", 1 ), ObjectFilter.lte( "floats", 1.1f ),
+                ObjectFilter.lte( "doubles", 1.1 ), ObjectFilter.lte( "shorts", ( short ) 1 ),
+                ObjectFilter.lte( "chars", 'c' ), ObjectFilter.lte( "longs", 1L ),
+                ObjectFilter.lte( "bytes", ( byte ) 1 ) );
 
-        repo.query( CriteriaFactory.in( "ints", 1, 2, 3 ), CriteriaFactory.in( "floats", 1.1f, 1.2f ),
-                CriteriaFactory.in( "doubles", 1.1, 2.2 ), CriteriaFactory.in( "shorts", ( short ) 1, ( short ) 2, ( short ) 3 ),
-                CriteriaFactory.in( "chars", 'a', 'b', 'c' ), CriteriaFactory.in( "longs", 1L, 2L, 3L ),
-                CriteriaFactory.in( "bytes", ( byte ) 1, ( byte ) 2, ( byte ) 3 ) );
+        repo.query( ObjectFilter.in( "ints", 1, 2, 3 ), ObjectFilter.in( "floats", 1.1f, 1.2f ),
+                ObjectFilter.in( "doubles", 1.1, 2.2 ), ObjectFilter.in( "shorts", ( short ) 1, ( short ) 2, ( short ) 3 ),
+                ObjectFilter.in( "chars", 'a', 'b', 'c' ), ObjectFilter.in( "longs", 1L, 2L, 3L ),
+                ObjectFilter.in( "bytes", ( byte ) 1, ( byte ) 2, ( byte ) 3 ) );
 
-        repo.query( CriteriaFactory.between( "ints", 1, 2 ), CriteriaFactory.between( "floats", 1.1f, 1.2f ),
-                CriteriaFactory.between( "doubles", 1.1, 2.2 ), CriteriaFactory.between( "shorts", ( short ) 1, ( short ) 2 ),
-                CriteriaFactory.between( "chars", 'a', 'b' ), CriteriaFactory.between( "longs", 1L, 2L ),
-                CriteriaFactory.between( "bytes", ( byte ) 1, ( byte ) 2 ) );
+        repo.query( ObjectFilter.between( "ints", 1, 2 ), ObjectFilter.between( "floats", 1.1f, 1.2f ),
+                ObjectFilter.between( "doubles", 1.1, 2.2 ), ObjectFilter.between( "shorts", ( short ) 1, ( short ) 2 ),
+                ObjectFilter.between( "chars", 'a', 'b' ), ObjectFilter.between( "longs", 1L, 2L ),
+                ObjectFilter.between( "bytes", ( byte ) 1, ( byte ) 2 ) );
 
-        repo.query( CriteriaFactory.notIn( "ints", 1, 2, 3 ), CriteriaFactory.notIn( "floats", 1.1f, 1.2f ),
-                CriteriaFactory.notIn( "doubles", 1.1, 2.2 ), CriteriaFactory.notIn( "shorts", 1, 2, 3 ),
-                CriteriaFactory.notIn( "chars", 'a', 'b', 'c' ), CriteriaFactory.notIn( "longs", 1L, 2L, 3L ),
-                CriteriaFactory.notIn( "bytes", 1, 2, 3 ) );
+        repo.query( ObjectFilter.notIn( "ints", 1, 2, 3 ), ObjectFilter.notIn( "floats", 1.1f, 1.2f ),
+                ObjectFilter.notIn( "doubles", 1.1, 2.2 ), ObjectFilter.notIn( "shorts", 1, 2, 3 ),
+                ObjectFilter.notIn( "chars", 'a', 'b', 'c' ), ObjectFilter.notIn( "longs", 1L, 2L, 3L ),
+                ObjectFilter.notIn( "bytes", 1, 2, 3 ) );
 
-        repo.query( CriteriaFactory.startsWith( "strings", "foo" ) );
+        repo.query( ObjectFilter.startsWith( "strings", "foo" ) );
 
-        repo.query( CriteriaFactory.endsWith( "strings", "foo" ) );
+        repo.query( ObjectFilter.endsWith( "strings", "foo" ) );
 
     }
 

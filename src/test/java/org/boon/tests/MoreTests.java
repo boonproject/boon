@@ -2,13 +2,13 @@ package org.boon.tests;
 
 import org.boon.Lists;
 import org.boon.core.Typ;
-import org.boon.criteria.Criteria;
+import org.boon.criteria.ObjectFilter;
+import org.boon.criteria.internal.Criteria;
 import org.boon.datarepo.DataRepoException;
 import org.boon.datarepo.Repo;
 import org.boon.datarepo.RepoBuilder;
 import org.boon.datarepo.Repos;
-import org.boon.criteria.CriteriaFactory;
-import org.boon.criteria.ProjectedSelector;
+import org.boon.criteria.internal.ProjectedSelector;
 import org.boon.datarepo.impl.RepoBuilderDefault;
 import org.boon.tests.model.Department;
 import org.boon.tests.model.Employee;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.boon.Exceptions.die;
-import static org.boon.criteria.CriteriaFactory.*;
+import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.datarepo.Collections.$q;
 import static org.boon.datarepo.Collections.sortedQuery;
 
@@ -80,25 +80,25 @@ public class MoreTests {
 
         repo.addAll( bigList );
 
-        int max = repo.results( CriteriaFactory.gt( "salary", 100 ) )
+        int max = repo.results( ObjectFilter.gt( "salary", 100 ) )
                 .firstInt( ProjectedSelector.max( "salary" ) );
 
 
         assertEquals( 2999, max );
 
-        max = repo.results( CriteriaFactory.gt( "salary", 100 ) )
+        max = repo.results( ObjectFilter.gt( "salary", 100 ) )
                 .firstInt( ProjectedSelector.maxInt( "salary" ) );
 
         assertEquals( 2999, max );
 
 
-        int min = repo.results( CriteriaFactory.gt( "salary", 0 ) )
+        int min = repo.results( ObjectFilter.gt( "salary", 0 ) )
                 .firstInt( ProjectedSelector.min( "salary" ) );
 
         assertEquals( 100, min );
 
 
-        min = repo.results( CriteriaFactory.gt( "salary", 0 ) )
+        min = repo.results( ObjectFilter.gt( "salary", 0 ) )
                 .firstInt( ProjectedSelector.minInt( "salary" ) );
 
         assertEquals( 100, min );
@@ -151,7 +151,7 @@ public class MoreTests {
     @Test
     public void typeOfTestLongName() throws Exception {
         List<Employee> queryableList = $q( h_list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "SalesEmployee" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.typeOf( "SalesEmployee" ) );
         assertEquals( 1, results.size() );
         assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
@@ -160,7 +160,7 @@ public class MoreTests {
     @Test
     public void typeOfTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "SalesEmployee" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.typeOf( "SalesEmployee" ) );
         assertEquals( 1, results.size() );
         assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
 
@@ -169,7 +169,7 @@ public class MoreTests {
     @Test
     public void instanceOfTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.instanceOf( SalesEmployee.class ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.instanceOf( SalesEmployee.class ) );
         assertEquals( 1, results.size() );
         assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
     }
@@ -177,7 +177,7 @@ public class MoreTests {
     @Test
     public void implementsTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.implementsInterface( Comparable.class ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.implementsInterface( Comparable.class ) );
         assertEquals( 1, results.size() );
         assertEquals( "SalesEmployee", results.get( 0 ).getClass().getSimpleName() );
     }
@@ -185,7 +185,7 @@ public class MoreTests {
     @Test
     public void superClassTest() throws Exception {
         List<Employee> queryableList = $q( h_list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.typeOf( "ZSalaryEmployee" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.typeOf( "ZSalaryEmployee" ) );
         assertEquals( 0, results.size() );
 
     }
@@ -194,13 +194,13 @@ public class MoreTests {
     public void testBetweenSalary_AND_LOTS_OF_TERMS_BIG_LIST() throws Exception {
         List<Employee> queryableList = $q( bigList, Employee.class, HourlyEmployee.class );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.and(
-                        CriteriaFactory.between( "salary", 1000, 2000 ),
+                ObjectFilter.and(
+                        ObjectFilter.between( "salary", 1000, 2000 ),
                         eq( "firstName", "firstC1" ),
-                        CriteriaFactory.startsWith( "lastName", "last" ),
-                        CriteriaFactory.gt( "birthDate", toDate( "5.29.1940" ) ),
-                        CriteriaFactory.startsWith( "id", "ssn" ),
-                        CriteriaFactory.gt( "salary", 1000 )
+                        ObjectFilter.startsWith( "lastName", "last" ),
+                        ObjectFilter.gt( "birthDate", toDate( "5.29.1940" ) ),
+                        ObjectFilter.startsWith( "id", "ssn" ),
+                        ObjectFilter.gt( "salary", 1000 )
                 ) );
 
         assertEquals( 1, results.size() );
@@ -211,18 +211,18 @@ public class MoreTests {
     public void testBetweenSalary_OR_PRECISE_NESTED_OR_AND() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or(
-                        CriteriaFactory.between( "salary", 1001, 1002 ),
-                        CriteriaFactory.between( "salary", 1002, 1003 ),
-                        CriteriaFactory.or( eq( "firstName", "firstC12" ), CriteriaFactory.and( eq( "firstName", "firstC10" ), eq( "firstName", "firstC11" ) ) ),
-                        CriteriaFactory.and( eq( "firstName", "firstC20" ), eq( "firstName", "firstC21" ), eq( "firstName", "first22" ),
-                                CriteriaFactory.or( eq( "firstName", "firstC30" ), eq( "firstName", "firstC31" ) ) ),
+                ObjectFilter.or(
+                        ObjectFilter.between( "salary", 1001, 1002 ),
+                        ObjectFilter.between( "salary", 1002, 1003 ),
+                        ObjectFilter.or( eq( "firstName", "firstC12" ), ObjectFilter.and( eq( "firstName", "firstC10" ), eq( "firstName", "firstC11" ) ) ),
+                        ObjectFilter.and( eq( "firstName", "firstC20" ), eq( "firstName", "firstC21" ), eq( "firstName", "first22" ),
+                                ObjectFilter.or( eq( "firstName", "firstC30" ), eq( "firstName", "firstC31" ) ) ),
 
-                        CriteriaFactory.or(
-                                CriteriaFactory.or(
-                                        CriteriaFactory.or(
+                        ObjectFilter.or(
+                                ObjectFilter.or(
+                                        ObjectFilter.or(
                                                 eq( "firstName", "firstC52" ),
-                                                CriteriaFactory.and(
+                                                ObjectFilter.and(
                                                         eq( "firstName", "firstC60" ),
                                                         eq( "firstName", "firstC61" )
                                                 )
@@ -248,10 +248,10 @@ public class MoreTests {
     public void testBetweenSalary_OR_PRECISE_NESTED_AND() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or(
-                        CriteriaFactory.between( "salary", 1001, 1002 ),
-                        CriteriaFactory.between( "salary", 1002, 1003 ),
-                        CriteriaFactory.and( eq( "firstName", "firstC10" ), eq( "firstName", "firstC11" ) )
+                ObjectFilter.or(
+                        ObjectFilter.between( "salary", 1001, 1002 ),
+                        ObjectFilter.between( "salary", 1002, 1003 ),
+                        ObjectFilter.and( eq( "firstName", "firstC10" ), eq( "firstName", "firstC11" ) )
 
                 ) );
 
@@ -263,9 +263,9 @@ public class MoreTests {
     public void testBetweenSalary_OR_PRECISE() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or(
-                        CriteriaFactory.between( "salary", 1001, 1002 ),
-                        CriteriaFactory.between( "salary", 1002, 1003 ),
+                ObjectFilter.or(
+                        ObjectFilter.between( "salary", 1001, 1002 ),
+                        ObjectFilter.between( "salary", 1002, 1003 ),
                         eq( "firstName", "firstC10" ),
                         eq( "firstName", "firstC11" )
 
@@ -279,13 +279,13 @@ public class MoreTests {
     public void testBetweenSalary_OR_LOTS_OF_TERMS_BIG_LIST() throws Exception {
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or(
-                        CriteriaFactory.between( "salary", 1000, 2000 ),
+                ObjectFilter.or(
+                        ObjectFilter.between( "salary", 1000, 2000 ),
                         eq( "firstName", "firstC1" ),
-                        CriteriaFactory.startsWith( "lastName", "last" ),
-                        CriteriaFactory.gt( "birthDate", toDate( "5.29.1940" ) ),
-                        CriteriaFactory.startsWith( "id", "ssn" ),
-                        CriteriaFactory.gt( "salary", 1000 )
+                        ObjectFilter.startsWith( "lastName", "last" ),
+                        ObjectFilter.gt( "birthDate", toDate( "5.29.1940" ) ),
+                        ObjectFilter.startsWith( "id", "ssn" ),
+                        ObjectFilter.gt( "salary", 1000 )
                 ) );
 
         assertEquals( 2002, results.size() );
@@ -297,7 +297,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or( CriteriaFactory.between( "salary", 1000, 2000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
+                ObjectFilter.or( ObjectFilter.between( "salary", 1000, 2000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
 
         assertEquals( 1000, results.size() );
 
@@ -308,7 +308,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.between( "salary", 1000, 2000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) );
+                ObjectFilter.between( "salary", 1000, 2000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) );
 
         assertEquals( 0, results.size() );
 
@@ -319,7 +319,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or( CriteriaFactory.between( "salary", 1, 3 ), CriteriaFactory.startsWith( "firstName", "firstC" ) ) );
+                ObjectFilter.or( ObjectFilter.between( "salary", 1, 3 ), ObjectFilter.startsWith( "firstName", "firstC" ) ) );
 
         assertEquals( 2000, results.size() );
 
@@ -330,7 +330,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( bigList );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.and( CriteriaFactory.between( "salary", 1, 3 ), CriteriaFactory.startsWith( "firstName", "firstC" ) ) );
+                ObjectFilter.and( ObjectFilter.between( "salary", 1, 3 ), ObjectFilter.startsWith( "firstName", "firstC" ) ) );
 
         assertEquals( 0, results.size() );
 
@@ -341,7 +341,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or( CriteriaFactory.between( "salary", 199, 201 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
+                ObjectFilter.or( ObjectFilter.between( "salary", 199, 201 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
 
         assertEquals( 1, results.size() );
 
@@ -353,7 +353,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.or( CriteriaFactory.between( "salary", -1, -1 ), eq( "firstName", "firstA" ) ) );
+                ObjectFilter.or( ObjectFilter.between( "salary", -1, -1 ), eq( "firstName", "firstA" ) ) );
 
         assertEquals( 1, results.size() );
 
@@ -364,7 +364,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.and( CriteriaFactory.between( "salary", -1, -1 ), eq( "firstName", "firstA" ) ) );
+                ObjectFilter.and( ObjectFilter.between( "salary", -1, -1 ), eq( "firstName", "firstA" ) ) );
 
         assertEquals( 0, results.size() );
 
@@ -375,7 +375,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.and( CriteriaFactory.between( "salary", 0, 1000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
+                ObjectFilter.and( ObjectFilter.between( "salary", 0, 1000 ), eq( "firstName", "RANDOMISHSTRING" + System.currentTimeMillis() ) ) );
 
         assertEquals( 0, results.size() );
 
@@ -386,7 +386,7 @@ public class MoreTests {
 
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                CriteriaFactory.and( CriteriaFactory.between( "salary", 0, 1000 ), eq( "firstName", "firstA" ) ) );
+                ObjectFilter.and( ObjectFilter.between( "salary", 0, 1000 ), eq( "firstName", "firstA" ) ) );
 
         assertEquals( 1, results.size() );
 
@@ -396,7 +396,7 @@ public class MoreTests {
     public void testBetweenSalary() throws Exception {
 
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 100, 200 ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "salary", 100, 200 ) );
 
         assertEquals( 1, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
@@ -407,7 +407,7 @@ public class MoreTests {
     public void testBetweenSalaryExact() throws Exception {
 
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 100, 201 ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "salary", 100, 201 ) );
 
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
@@ -420,7 +420,7 @@ public class MoreTests {
     public void testBetweenSalaryExactOutOfRange() throws Exception {
         //rint(listStream);
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "salary", 400, 500 ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "salary", 400, 500 ) );
 
         assertEquals( 0, results.size() );
 
@@ -432,7 +432,7 @@ public class MoreTests {
         //rint(listStream);
 
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1960:00:00:01", "5/29/1970:00:00:00" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "birthDate", "5/29/1960:00:00:01", "5/29/1970:00:00:00" ) );
 
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
@@ -444,7 +444,7 @@ public class MoreTests {
     @Test
     public void testBetweenDateExactJustOverAndUnder1Year() throws Exception {
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1959", "5/29/1971" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "birthDate", "5/29/1959", "5/29/1971" ) );
 
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
@@ -456,7 +456,7 @@ public class MoreTests {
     @Test
     public void testBetweenDate() throws Exception {
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( "birthDate", "5/29/1950", "5/29/1990" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "birthDate", "5/29/1950", "5/29/1990" ) );
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
         assertEquals( "firstB", results.get( 1 ).getFirstName() );
@@ -466,7 +466,8 @@ public class MoreTests {
     @Test
     public void testBetweenDatePreInit() throws Exception {
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", CriteriaFactory.between( Employee.class, "birthDate", "5/29/1950", "5/29/1990" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName",
+                ObjectFilter.between( Employee.class, "birthDate", "5/29/1950", "5/29/1990" ) );
 
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );

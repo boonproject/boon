@@ -19,7 +19,7 @@ import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.criteria.Criteria;
+import org.boon.criteria.internal.Criteria;
 import org.boon.datarepo.impl.decorators.FilterWithSimpleCache;
 import org.boon.datarepo.spi.SPIFactory;
 import org.boon.datarepo.spi.SearchIndex;

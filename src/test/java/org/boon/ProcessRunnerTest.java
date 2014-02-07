@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-import static org.boon.Boon.puts;
 
 public class ProcessRunnerTest {
 
@@ -16,12 +15,15 @@ public class ProcessRunnerTest {
 
     @Test
     public void run() {
-        puts( Runner.runShell( "ls -l" ) );
+        Runner.runShell( "ls -l" );
     }
 
     @Test
     public void runWithTimeout() {
         puts( Runner.runShell( 1, "ls -l" ) );
+    }
+
+    private void puts( Object s ) {
     }
 
     @Test

@@ -3,9 +3,9 @@ package org.boon.datarepo.impl.decorators;
 import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleConcurrentCache;
-import org.boon.criteria.Criteria;
-import org.boon.criteria.CriteriaFactory;
-import org.boon.criteria.Group;
+import org.boon.criteria.ObjectFilter;
+import org.boon.criteria.internal.Criteria;
+import org.boon.criteria.internal.Group;
 import org.boon.datarepo.Filter;
 import org.boon.datarepo.ResultSet;
 
@@ -18,7 +18,7 @@ public class FilterWithSimpleCache extends FilterDecoratorBase {
 
     @Override
     public ResultSet filter( Criteria... expressions ) {
-        Group and = CriteriaFactory.and( expressions );
+        Group and = ObjectFilter.and( expressions );
 
         ResultSet results = fifoCache.get( and );
 

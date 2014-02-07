@@ -1,5 +1,7 @@
-package org.boon.criteria;
+package org.boon.criteria.internal;
 
+
+import org.boon.criteria.ObjectFilter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,11 +16,11 @@ public class QueryFactory {
     }
 
     public static boolean andTest( Object obj, Criteria... exp ) {
-        return CriteriaFactory.and( exp ).test( obj );
+        return ObjectFilter.and( exp ).test( obj );
     }
 
     public static boolean orTest( Object obj, Criteria... exp ) {
-        return CriteriaFactory.or( exp ).test( obj );
+        return ObjectFilter.or( exp ).test( obj );
     }
 
 

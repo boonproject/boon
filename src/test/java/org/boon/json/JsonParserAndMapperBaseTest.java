@@ -93,7 +93,7 @@ public class JsonParserAndMapperBaseTest {
 
         final JsonSerializer serializer = new JsonSerializerFactory ().useAnnotations().create ();
 
-        puts ( serializer.serialize ( foo ).toString () );
+        //puts ( serializer.serialize ( foo ).toString () );
 
         Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( serializer.serialize ( foo ).toString () );
 
@@ -122,7 +122,7 @@ public class JsonParserAndMapperBaseTest {
 
         final JsonSerializer serializer = new JsonSerializerFactory ().useAnnotations().create ();
 
-        puts ( serializer.serialize ( foo ).toString () );
+        //puts ( serializer.serialize ( foo ).toString () );
 
         Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( serializer.serialize ( foo ).toString () );
 
@@ -151,7 +151,7 @@ public class JsonParserAndMapperBaseTest {
 
         final JsonSerializer serializer = new JsonSerializerFactory ().create ();
 
-        puts ( serializer.serialize ( foo ).toString () );
+        //puts ( serializer.serialize ( foo ).toString () );
 
         Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( serializer.serialize ( foo ).toString () );
 
@@ -226,12 +226,12 @@ public class JsonParserAndMapperBaseTest {
                 } )
                 .create ();
         String json = serializer.serialize ( foo ).toString ();
-         puts (json);
+         //puts (json);
 
         boolean ok = json.contains  ("[\"wiki\",\"wiki\",\"wiki\"]" ) || die();
 
 
-        puts (json);
+        //puts (json);
         AllTypes testMe = jsonParserAndMapper.parse( AllTypes.class, new StringReader ( json));
 
          ok |= testMe.equals ( foo ) || die();
@@ -241,10 +241,10 @@ public class JsonParserAndMapperBaseTest {
 
         ok |= testMe.ignoreMe == null || die();
 
-        puts (testMe.ignoreMe2);
+        //puts (testMe.ignoreMe2);
         ok |= testMe.ignoreMe2 == null || die();
 
-        puts (testMe.ignoreMe3);
+        //puts (testMe.ignoreMe3);
         ok |= testMe.ignoreMe3 == null || die();
 
         ok |= testMe.someDate > 0 || die();
@@ -279,7 +279,7 @@ public class JsonParserAndMapperBaseTest {
 
         boolean ok = true;
 
-        puts (json);
+        //puts (json);
         AllTypes testMe = jsonParserAndMapper.parse( AllTypes.class, new StringReader ( json ));
 
         ok |= testMe.equals ( foo ) || die();
@@ -310,7 +310,7 @@ public class JsonParserAndMapperBaseTest {
 
         boolean ok = true;
 
-        puts (json);
+        //puts (json);
         AllTypes testMe = jsonParserAndMapper.parse( AllTypes.class, new StringReader(json));
 
         ok |= testMe.equals ( foo ) || die();
@@ -335,7 +335,7 @@ public class JsonParserAndMapperBaseTest {
 
         System.out.println ( obj );
 
-        puts ( idx ( map, "foo" ).getClass () );
+        //puts ( idx ( map, "foo" ).getClass () );
 
         ok &= idx ( map, "foo" ).equals ( 1 ) || die ( "I did not find 1 " + idx ( map, "foo" ) );
     }
@@ -351,7 +351,7 @@ public class JsonParserAndMapperBaseTest {
 
 
 
-        puts ( types );
+        //puts ( types );
         validateAllTypes ( types );
 
         validateAllTypes ( types.getAllType () );
@@ -386,7 +386,7 @@ public class JsonParserAndMapperBaseTest {
 
         List<AllTypes> types = objectParser ().parseList ( AllTypes.class, fileContents );
 
-        puts (types);
+        //puts (types);
 
     }
 
@@ -402,15 +402,15 @@ public class JsonParserAndMapperBaseTest {
         for ( String file : list ) {
 
 
-            puts ( "testing", file );
+            //puts ( "testing", file );
 
             try {
                 Object object =  jsonParserAndMapper.parse ( Files.newBufferedReader ( IO.path ( file), StandardCharsets.UTF_8 ) );
-                puts ( "FILE _________\n\n\n", file, object.getClass (), object);
+                //puts ( "FILE _________\n\n\n", file, object.getClass (), object);
 
 
             } catch ( Exception ex ) {
-                puts (ex);
+                //puts (ex);
                 puts ("FAIL....................", file, "FAILED");
                 fail=true;
                 ex.printStackTrace(System.out);
@@ -418,7 +418,7 @@ public class JsonParserAndMapperBaseTest {
 
         }
         if (fail) die();
-        puts ("done");
+        //puts ("done");
 
     }
 
@@ -434,12 +434,12 @@ public class JsonParserAndMapperBaseTest {
             puts ( "testing", file );
 
             Object object =  jsonParserAndMapper.parse ( new String ( IO.read ( file ) ) );
-            puts ( "FILE _________\n\n\n", file, object.getClass (), object);
+            //puts ( "FILE _________\n\n\n", file, object.getClass (), object);
 
 
 
         }
-        puts ("done");
+        //puts ("done");
 
     }
 
@@ -921,7 +921,7 @@ public class JsonParserAndMapperBaseTest {
                 )
         );
 
-        puts ( map );
+        //puts ( map );
         boolean ok = map.get ( "v" ).equals ( "Áá" ) || die ( "map " + map.get ( "v" ) );
     }
 
@@ -937,7 +937,7 @@ public class JsonParserAndMapperBaseTest {
         );
 
 
-        puts ( map );
+        //puts ( map );
         boolean ok = map.get ( "v" ).equals ( "Áá" ) || die ( "map " + map.get ( "v" ) );
     }
 
@@ -1044,7 +1044,7 @@ public class JsonParserAndMapperBaseTest {
                         "{ \"a\":\"foo.bar\"}#toto"
                 )
         );
-        puts ( map );
+        //puts ( map );
     }
 
 

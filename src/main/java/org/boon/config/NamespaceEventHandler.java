@@ -12,7 +12,7 @@ import static org.boon.Boon.puts;
 /**
  * Created by Richard on 2/5/14.
  */
-public class JsonCreatorEventHandler implements JsonParserEvents {
+public class NamespaceEventHandler implements JsonParserEvents {
 
 
     private String namespace;
@@ -26,7 +26,7 @@ public class JsonCreatorEventHandler implements JsonParserEvents {
         return include == null ? java.util.Collections.EMPTY_LIST : include;
     }
 
-    public JsonCreatorEventHandler( String namespace ) {
+    public NamespaceEventHandler( String namespace ) {
         this.namespace = namespace;
     }
 

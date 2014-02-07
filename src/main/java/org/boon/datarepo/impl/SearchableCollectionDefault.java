@@ -2,10 +2,10 @@ package org.boon.datarepo.impl;
 
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.criteria.Criteria;
-import org.boon.criteria.Selector;
-import org.boon.criteria.Sort;
-import org.boon.criteria.Visitor;
+import org.boon.criteria.internal.Criteria;
+import org.boon.criteria.internal.Selector;
+import org.boon.criteria.internal.Sort;
+import org.boon.criteria.internal.Visitor;
 import org.boon.datarepo.Filter;
 import org.boon.datarepo.LookupIndex;
 import org.boon.datarepo.ResultSet;

@@ -1,8 +1,8 @@
 package org.boon.datarepo;
 
-import org.boon.criteria.Criteria;
-import org.boon.criteria.Selector;
-import org.boon.criteria.Sort;
+import org.boon.criteria.internal.Criteria;
+import org.boon.criteria.internal.Selector;
+import org.boon.criteria.internal.Sort;
 
 import java.util.Collection;
 import java.util.List;

@@ -3,8 +3,8 @@ package org.boon.tests;
 import org.boon.Lists;
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.criteria.Sort;
-import org.boon.criteria.SortType;
+import org.boon.criteria.internal.Sort;
+import org.boon.criteria.internal.SortType;
 import org.boon.tests.model.Employee;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +13,6 @@ import java.util.List;
 
 
 import static org.junit.Assert.assertEquals;
-
-
-import org.boon.core.reflection.Reflection;
 
 public class SortTest {
 

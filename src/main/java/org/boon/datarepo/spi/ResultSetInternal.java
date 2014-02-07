@@ -1,6 +1,6 @@
 package org.boon.datarepo.spi;
 
-import org.boon.criteria.Criteria;
+import org.boon.criteria.internal.Criteria;
 import org.boon.datarepo.ResultSet;
 
 import java.util.List;

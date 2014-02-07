@@ -1,7 +1,7 @@
 package org.boon.datarepo.impl.decorators;
 
 
-import org.boon.criteria.Update;
+import org.boon.criteria.internal.Update;
 import org.boon.datarepo.ObjectEditor;
 
 import java.util.Objects;

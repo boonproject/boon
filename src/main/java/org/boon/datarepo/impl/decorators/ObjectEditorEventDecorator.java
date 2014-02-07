@@ -1,7 +1,7 @@
 package org.boon.datarepo.impl.decorators;
 
 
-import org.boon.criteria.Update;
+import org.boon.criteria.internal.Update;
 import org.boon.datarepo.ObjectEditor;
 import org.boon.datarepo.modification.ModificationEvent;
 import org.boon.datarepo.modification.ModificationListener;

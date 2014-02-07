@@ -169,6 +169,14 @@ public class Lists {
         list.add( value );
     }
 
+
+    @Universal
+    public static <V> void add( List<V> list, V... values ) {
+        for (V v : values) {
+            list.add( v );
+        }
+    }
+
     @Universal
     public static <T> T idx( List<T> list, final int index ) {
         int i = calculateIndex( list, index );
