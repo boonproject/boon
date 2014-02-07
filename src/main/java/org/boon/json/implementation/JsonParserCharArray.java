@@ -285,7 +285,9 @@ public class JsonParserCharArray extends BaseJsonParser  {
     private final Object getNumberFromSpan ( int startIndex, boolean doubleFloat, boolean simple, int digitsPastPoint ) {
         Object value;
         if ( doubleFloat ) {
-            value = CharScanner.simpleDouble ( this.charArray, simple,  digitsPastPoint - 1, startIndex, __index );
+            return Double.parseDouble( new String( charArray, startIndex, ( __index - startIndex ) ) );
+
+            //value = CharScanner.simpleDouble ( this.charArray, simple,  digitsPastPoint-1, startIndex, __index );
         } else {
 
             if ( isInteger( this.charArray, startIndex, __index - startIndex ) ) {

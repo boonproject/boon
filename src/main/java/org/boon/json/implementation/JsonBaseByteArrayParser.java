@@ -390,17 +390,10 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         boolean doubleFloat = false;
         boolean simple = true;
         int digitsPastPoint = 0;
-        int sign = 1;
 
-
-
-
-        if ( minus ) {
-            minus = true;
-            sign = -1;
-            nextChar ();
+        if (minus) {
+            index++;
         }
-
 
         while (true) {
             currentChar = array[index];
@@ -427,21 +420,21 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
         __index = index;
         __currentChar = currentChar;
 
-        return getNumberFromSpan ( startIndex, doubleFloat, simple, digitsPastPoint, minus, sign );
+        return getNumberFromSpan ( startIndex, doubleFloat, simple, digitsPastPoint );
     }
 
 
 
-    private final Object getNumberFromSpan ( int startIndex, boolean doubleFloat, boolean simple, int digitsPastPoint, boolean minus, int sign ) {
+    private final Object getNumberFromSpan ( int startIndex, boolean doubleFloat, boolean simple, int digitsPastPoint) {
         Object value;
         if ( doubleFloat ) {
-            value = ByteScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
+            value = ByteScanner.simpleDouble ( this.charArray, simple,  digitsPastPoint - 1, startIndex, __index );
         } else {
 
-            if ( ByteScanner.isInteger ( this.charArray, startIndex, __index - startIndex, minus ) ) {
-                value = ByteScanner.parseInt( charArray, startIndex, __index - startIndex ) * sign;
+            if ( ByteScanner.isInteger ( this.charArray, startIndex, __index - startIndex ) ) {
+                value = ByteScanner.parseInt( charArray, startIndex, __index - startIndex );
             } else {
-                value =  ByteScanner.parseLong( charArray, startIndex, __index - startIndex ) * sign;
+                value =  ByteScanner.parseLong( charArray, startIndex, __index - startIndex );
             }
 
         }

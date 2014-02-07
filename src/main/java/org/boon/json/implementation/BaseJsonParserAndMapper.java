@@ -319,7 +319,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
     @Override
     public long parseLong ( String jsonString ) {
-        return Conversions.toLong ( parse ( jsonString ) );
+        return Conversions.toLong ( parse (jsonString) );
     }
 
     @Override

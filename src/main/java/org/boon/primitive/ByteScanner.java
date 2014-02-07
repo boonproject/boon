@@ -229,9 +229,9 @@ public class ByteScanner {
     final static String MAX_LONG_STR = String.valueOf( Long.MAX_VALUE );
 
 
-    public static boolean isInteger( byte[] digitChars, int offset, int len,
-                                     boolean negative ) {
-        String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
+    public static boolean isInteger( byte[] digitChars, int offset, int len
+                                      ) {
+        String cmpStr = digitChars[offset] == '-' ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
         int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
@@ -245,9 +245,9 @@ public class ByteScanner {
         return true;
     }
 
-    public static boolean isLong( byte[] digitChars, int offset, int len,
-                                  boolean negative ) {
-        String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
+    public static boolean isLong( byte[] digitChars, int offset, int len
+                                   ) {
+        String cmpStr = digitChars[offset] == '-' ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
         int cmpLen = cmpStr.length();
         if ( len < cmpLen ) return true;
         if ( len > cmpLen ) return false;
@@ -348,17 +348,10 @@ public class ByteScanner {
         boolean simple = true;
         int digitsPastPoint = 0;
         boolean foundPoint = false;
-        boolean negative = false;
 
-        double sign;
 
         if ( buffer[ startIndex ] == '-' ) {
             startIndex++;
-            negative = true;
-            sign = -1.0;
-        } else {
-            negative = false;
-            sign = 1.0;
         }
 
         loop:
@@ -394,13 +387,13 @@ public class ByteScanner {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger( buffer, startIndex, length, negative ) ) {
+            if ( isInteger( buffer, startIndex, length ) ) {
                 value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
                 value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[ digitsPastPoint ] * sign;
+                double power = powersOf10[ digitsPastPoint ];
                 return value / power;
 
             }
@@ -408,32 +401,27 @@ public class ByteScanner {
 
         }
 
-        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) );
     }
 
 
-    public static double simpleDouble( byte[] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex ) {
+    public static double simpleDouble( byte[] buffer, boolean simple,  int digitsPastPoint, int startIndex, int endIndex ) {
 
         double sign;
 
-        if ( negative ) {
-            sign = -1.0;
-        } else {
-            sign = 1.0;
-        }
 
 
         if ( simple ) {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger( buffer, startIndex, length, negative ) ) {
+            if ( isInteger( buffer, startIndex, length ) ) {
                 value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
                 value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[ digitsPastPoint ] * sign;
+                double power = powersOf10[ digitsPastPoint ];
                 return value / power;
 
             }
@@ -441,7 +429,7 @@ public class ByteScanner {
 
         }
 
-        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) );
     }
 
 

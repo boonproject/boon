@@ -181,8 +181,8 @@ public class Conversions {
 
     public static long toLong( Object obj, final long longDefault ) {
 
-        if ( obj.getClass() == long.class ) {
-            return long.class.cast( obj );
+        if ( obj instanceof Long) {
+            return (Long) obj;
         }
 
         try {

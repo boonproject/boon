@@ -70,9 +70,13 @@ public class CharScanner {
     }
 
 
-    public static boolean hasDecimalChar ( char [] chars) {
+    public static boolean hasDecimalChar( char[] chars, boolean negative ) {
 
-        for (int index =0; index < chars.length; index++) {
+        int index =0;
+
+        if (negative) index++;
+
+        for (; index < chars.length; index++) {
             switch ( chars[index] ) {
                 case MINUS:
                 case PLUS:

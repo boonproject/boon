@@ -845,14 +845,18 @@ public class JsonParserAndMapperBaseTest {
         i = (int) jsonParserAndMapper.parseFloat ( "123" );
         ok = i == 123 || die ( "" + i );
 
-        i = (int) jsonParserAndMapper.parseLong ( "123" );
+        i =  (int)jsonParserAndMapper.parseLong ( "123" );
         ok = i == 123 || die ( "" + i );
 
         i = (int) jsonParserAndMapper.parseLong ( "-123" );
         ok = i == -123 || die ( "" + i );
 
-//        long l = (int) jsonParserAndMapper.parseLong ( "-123456789099" );
-//        ok = l == -123456789099L || die ( "" + l );
+        long l = jsonParserAndMapper.parseLong ( "-123456789099" );
+        ok = l == -123456789099L || die ( "" + l );
+
+
+//        double d = jsonParserAndMapper.parseDouble ( "-123456789099.1" );
+//        ok = d == -1.23455932109009E13 || die ( "" + d );
 
         puts ( ok );
     }

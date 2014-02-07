@@ -4,8 +4,11 @@ import org.boon.IO;
 import org.boon.json.implementation.JsonParserCharArray;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 import static org.boon.Str.lines;
 
 
@@ -61,5 +64,19 @@ public class JsonCharArrayTest extends JsonParserAndMapperBaseTest {
             );
 
         }
+
+
+
+    @Test
+    public void parseNegativeLong () {
+        int i = jsonParserAndMapper.parseInt ( "123" );
+        boolean ok = i == 123 || die ( "" + i );
+
+        long l =  jsonParserAndMapper.parseLong ( "-123456789099" );
+        ok = l == -123456789099L || die ( "" + l );
+
+        puts ( ok );
+    }
+
 
 }

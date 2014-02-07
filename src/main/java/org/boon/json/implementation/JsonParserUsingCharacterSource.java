@@ -163,8 +163,11 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
             case '7':
             case '8':
             case '9':
+                value = decodeNumber(false);
+                break;
+
             case '-':
-                value = decodeNumber();
+                value = decodeNumber(true);
                 break;
 
             default:
@@ -179,12 +182,12 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
 
 
-    private final Object decodeNumber( ) {
+    private final Object decodeNumber(boolean negative) {
 
         char[] chars = characterSource.readNumber ();
         Object value = null;
 
-        if ( CharScanner.hasDecimalChar ( chars ) )  {
+        if ( CharScanner.hasDecimalChar ( chars, negative ) )  {
             value = CharScanner.doubleValue ( chars );
         } else if (CharScanner.isInteger ( chars )) {
             value = CharScanner.parseInt ( chars );
