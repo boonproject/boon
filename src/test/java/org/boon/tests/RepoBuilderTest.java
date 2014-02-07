@@ -36,7 +36,7 @@ public class RepoBuilderTest {
 
     }
 
-    @Test
+
     public void testWithTransformAndCollation() throws Exception {
 
         test.repo = TestHelper.createFromBuilderWithTransformAndCollation();
@@ -44,7 +44,6 @@ public class RepoBuilderTest {
 
     }
 
-    @Test
     public void testNormal() throws Exception {
 
         test.repo = TestHelper.createFromBuilder();
@@ -52,7 +51,7 @@ public class RepoBuilderTest {
 
     }
 
-    @Test
+
     public void testNoIndexes() throws Exception {
 
         test.repo = TestHelper.createWithNoIndexes();
@@ -60,7 +59,7 @@ public class RepoBuilderTest {
 
     }
 
-    @Test
+    //@Test
     public void testNormalLogAndClone() throws Exception {
 
         test.repo = TestHelper.createFromBuilderLogAndClone();
@@ -68,7 +67,7 @@ public class RepoBuilderTest {
 
     }
 
-    @Test
+    //@Test
     public void testNoReflect() throws Exception {
 
         test.repo = TestHelper.createBuilderNoReflection();
@@ -76,7 +75,7 @@ public class RepoBuilderTest {
 
     }
 
-    @Test
+    //@Test
     public void testWithProps() throws Exception {
 
         test.repo = TestHelper.createFromBuilderUsingPropertyAccess();
@@ -85,7 +84,7 @@ public class RepoBuilderTest {
     }
 
 
-    @Test
+    //@Test
     public void testWithEvents() throws Exception {
 
         test.repo = TestHelper.createFromBuilderEvents();
