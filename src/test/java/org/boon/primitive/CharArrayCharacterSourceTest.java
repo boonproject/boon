@@ -194,8 +194,6 @@ public class CharArrayCharacterSourceTest {
 
         source.skipWhiteSpace();
 
-        //TODO fix
-        //ok &= source.currentChar() == 'c' || die("" + (char)source.currentChar());
 
     }
 

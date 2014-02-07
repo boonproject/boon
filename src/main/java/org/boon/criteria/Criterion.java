@@ -181,7 +181,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             FieldAccess field = fields.get(name);
 
-            if (field == null)  {
+            if (field == null && o instanceof Map)  {
                 return false;
             }
 

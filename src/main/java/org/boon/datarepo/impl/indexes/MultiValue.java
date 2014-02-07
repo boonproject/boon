@@ -17,17 +17,6 @@ class MultiValue<T> {
             return new MultiValue<>( newItem, bucketSize );
         } else {
 
-            //This fixes Jeff's issues but introduces a performance problem.
-            //I think the correct fix is to use modify not put.
-//            boolean found = false;
-//            for (T value : org.values) {
-//                 if (value.equals ( newItem )) {
-//                    found = true;
-//                 }
-//            }
-//            if ( ! found ) {
-//                org.addObject(newItem);
-//            }
             org.add( newItem );
         }
         return org;

@@ -1,15 +1,13 @@
 package org.boon.config;
 
 
-import org.boon.criteria.internal.Criteria;
 import org.boon.di.Context;
 import org.boon.di.Inject;
+import org.boon.core.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static org.boon.Boon.puts;
 
 public class ContextConfigReader {
 
@@ -38,7 +36,7 @@ public class ContextConfigReader {
 
 
     @Inject
-    private Criteria rules;
+    private Predicate rules;
 
     public Context read() {
 
@@ -88,7 +86,7 @@ public class ContextConfigReader {
 
 
 
-    public ContextConfigReader rule( Criteria criteria ) {
+    public ContextConfigReader rule( Predicate criteria ) {
         this.rules = criteria;
         return this;
     }
