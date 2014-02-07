@@ -848,6 +848,12 @@ public class JsonParserAndMapperBaseTest {
         i = (int) jsonParserAndMapper.parseLong ( "123" );
         ok = i == 123 || die ( "" + i );
 
+        i = (int) jsonParserAndMapper.parseLong ( "-123" );
+        ok = i == -123 || die ( "" + i );
+
+//        long l = (int) jsonParserAndMapper.parseLong ( "-123456789099" );
+//        ok = l == -123456789099L || die ( "" + l );
+
         puts ( ok );
     }
 

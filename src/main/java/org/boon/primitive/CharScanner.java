@@ -418,21 +418,7 @@ public class CharScanner {
     final static String MIN_INT_STR_NO_SIGN = String.valueOf( Integer.MIN_VALUE ).substring( 1 );
     final static String MAX_INT_STR = String.valueOf( Integer.MAX_VALUE );
 
-    public static boolean isLong( char[] digitChars, int offset, int len,
-                                  boolean negative ) {
-        String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
-        int cmpLen = cmpStr.length();
-        if ( len < cmpLen ) return true;
-        if ( len > cmpLen ) return false;
 
-        for ( int i = 0; i < cmpLen; ++i ) {
-            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
-            if ( diff != 0 ) {
-                return ( diff < 0 );
-            }
-        }
-        return true;
-    }
 
 
 
@@ -456,21 +442,7 @@ public class CharScanner {
         return true;
     }
 
-    public static boolean isInteger( char[] digitChars, int offset, int len,
-                                     boolean negative ) {
-        String cmpStr = negative ? MIN_INT_STR_NO_SIGN : MAX_INT_STR;
-        int cmpLen = cmpStr.length();
-        if ( len < cmpLen ) return true;
-        if ( len > cmpLen ) return false;
 
-        for ( int i = 0; i < cmpLen; ++i ) {
-            int diff = digitChars[ offset + i ] - cmpStr.charAt( i );
-            if ( diff != 0 ) {
-                return ( diff < 0 );
-            }
-        }
-        return true;
-    }
 
 
     public static boolean isInteger( char[] digitChars ) {
@@ -501,7 +473,15 @@ public class CharScanner {
 
     public static int parseIntIgnoreDot( char[] digitChars, int offset, int len ) {
 
-        int num = digitChars[ offset ] - '0';
+        int num;
+        boolean negative=false;
+        char c = digitChars[ offset ];
+        if (c == '-') {
+            offset++;
+            negative=true;
+        }
+
+        num = (digitChars[ offset ] - '0');
         int to = len + offset;
         // This looks ugly, but appears the fastest way (as per measurements)
         if ( ++offset < to ) {
@@ -531,14 +511,24 @@ public class CharScanner {
                 }
             }
         }
-        return num;
+
+        return negative ? num*-1 : num;
     }
 
 
     public static int parseIntFromTo( char[] digitChars, int offset, int to ) {
 
         try {
-            int num = digitChars[ offset ] - '0';
+
+
+            int num;
+            boolean negative=false;
+            char c = digitChars[ offset ];
+            if (c == '-') {
+                offset++;
+                negative=true;
+            }
+            num = (digitChars[ offset ] - '0');
             if ( ++offset < to ) {
                 num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
                 if ( ++offset < to ) {
@@ -563,15 +553,26 @@ public class CharScanner {
                     }
                 }
             }
-            return num;
+            return negative ? num*-1 : num;
         } catch ( Exception ex ) {
             return handle( int.class, ex );
         }
     }
 
     public static long parseLongFromTo( char[] digitChars, int offset, int to ) {
+
+
+        int num;
+        boolean negative=false;
+        char c = digitChars[ offset ];
+        if (c == '-') {
+            offset++;
+            negative=true;
+        }
+
         long val = parseIntFromTo( digitChars, offset, to - 9  ) * L_BILLION;
-        return val + ( long ) parseIntFromTo( digitChars, to - 9, to );
+        val = val + ( long ) parseIntFromTo( digitChars, to - 9, to );
+        return negative ? val*-1 : val;
     }
 
 
@@ -596,18 +597,7 @@ public class CharScanner {
         boolean simple = true;
         int digitsPastPoint = 0;
         boolean foundPoint = false;
-        boolean negative = false;
 
-        double sign;
-
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            negative = true;
-            sign = -1.0;
-        } else {
-            negative = false;
-            sign = 1.0;
-        }
 
         loop:
         for ( int index = startIndex; index < endIndex; index++ ) {
@@ -642,13 +632,13 @@ public class CharScanner {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger( buffer, startIndex, length, negative ) ) {
+            if ( isInteger( buffer, startIndex, length ) ) {
                 value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
                 value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[ digitsPastPoint ] * sign;
+                double power = powersOf10[ digitsPastPoint ];
                 return value / power;
 
             }
@@ -656,32 +646,25 @@ public class CharScanner {
 
         }
 
-        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) );
     }
 
 
-    public static double simpleDouble( char[] buffer, boolean simple, boolean negative, int digitsPastPoint, int startIndex, int endIndex ) {
+    public static double simpleDouble( char[] buffer, boolean simple,  int digitsPastPoint, int startIndex, int endIndex ) {
 
-        double sign;
-
-        if ( negative ) {
-            sign = -1.0;
-        } else {
-            sign = 1.0;
-        }
 
 
         if ( simple ) {
             long value;
             final int length = endIndex - startIndex;
 
-            if ( isInteger( buffer, startIndex, length, negative ) ) {
+            if ( isInteger( buffer, startIndex, length ) ) {
                 value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
                 value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[ digitsPastPoint ] * sign;
+                double power = powersOf10[ digitsPastPoint ];
                 return value / power;
 
             }
@@ -689,7 +672,7 @@ public class CharScanner {
 
         }
 
-        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) ) * sign;
+        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) );
     }
 
 

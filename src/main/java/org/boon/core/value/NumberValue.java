@@ -93,20 +93,12 @@ public class NumberValue extends Number implements Value {
                 return doubleValue ();
             case INTEGER:
 
-                int sign = 1;
-                boolean negative = false;
-                if ( buffer[ startIndex ] == '-' ) {
-                    startIndex++;
-                    sign = -1;
-                    negative = true;
-
-                }
 
 
-                if ( isInteger ( buffer, startIndex, endIndex - startIndex, negative ) ) {
-                    return intValue () * sign;
+                if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ) {
+                    return intValue ();
                 } else {
-                    return longValue () * sign;
+                    return longValue ();
                 }
         }
         die ();
@@ -167,14 +159,8 @@ public class NumberValue extends Number implements Value {
 
     @Override
     public int intValue () {
-        int sign = 1;
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1;
-
-        }
-        if ( isInteger ( buffer, startIndex, endIndex - startIndex, sign < 0 ) ){
-            return parseIntFromTo ( buffer, startIndex, endIndex  ) * sign;
+        if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
+            return parseIntFromTo ( buffer, startIndex, endIndex  );
         } else {
             return 0;
         }
@@ -182,16 +168,11 @@ public class NumberValue extends Number implements Value {
 
     @Override
     public long longValue () {
-        long sign = 1;
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1;
 
-        }
-        if ( isInteger ( buffer, startIndex, endIndex - startIndex, sign < 0 ) ){
-            return parseIntFromTo( buffer, startIndex, endIndex  ) * sign;
-        } else if( isLong(  buffer, startIndex, endIndex - startIndex, sign < 0 )){
-            return parseLongFromTo( buffer, startIndex, endIndex  ) * sign;
+        if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
+            return parseIntFromTo( buffer, startIndex, endIndex  );
+        } else if( isLong(  buffer, startIndex, endIndex - startIndex)){
+            return parseLongFromTo( buffer, startIndex, endIndex  );
         } else {
             return 0L;
         }

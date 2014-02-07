@@ -236,7 +236,7 @@ public class JsonParserCharArray extends BaseJsonParser  {
 
 
 
-    private final Object decodeNumber(boolean minus) {
+    private final Object decodeNumber(boolean negative) {
 
         char[] array = charArray;
 
@@ -246,16 +246,12 @@ public class JsonParserCharArray extends BaseJsonParser  {
         boolean doubleFloat = false;
         boolean simple = true;
         int digitsPastPoint = 0;
-        int sign = 1;
 
 
-
-
-        if ( minus ) {
-            minus = true;
-            sign = -1;
-            nextChar ();
+        if (negative) {
+            index++;
         }
+
 
 
         while (true) {
@@ -283,19 +279,19 @@ public class JsonParserCharArray extends BaseJsonParser  {
         __index = index;
         __currentChar = currentChar;
 
-        return getNumberFromSpan ( startIndex, doubleFloat, simple, digitsPastPoint, minus, sign );
+        return getNumberFromSpan ( startIndex, doubleFloat, simple, digitsPastPoint );
     }
 
-    private final Object getNumberFromSpan ( int startIndex, boolean doubleFloat, boolean simple, int digitsPastPoint, boolean minus, int sign ) {
+    private final Object getNumberFromSpan ( int startIndex, boolean doubleFloat, boolean simple, int digitsPastPoint ) {
         Object value;
         if ( doubleFloat ) {
-            value = CharScanner.simpleDouble ( this.charArray, simple, minus, digitsPastPoint - 1, startIndex, __index );
+            value = CharScanner.simpleDouble ( this.charArray, simple,  digitsPastPoint - 1, startIndex, __index );
         } else {
 
-            if ( isInteger( this.charArray, startIndex, __index - startIndex, minus ) ) {
-                value = CharScanner.parseIntFromTo( charArray, startIndex, __index  ) * sign;
+            if ( isInteger( this.charArray, startIndex, __index - startIndex ) ) {
+                value = CharScanner.parseIntFromTo( charArray, startIndex, __index  );
             } else {
-                value =  CharScanner.parseLongFromTo( charArray, startIndex, __index  ) * sign;
+                value =  CharScanner.parseLongFromTo( charArray, startIndex, __index  );
             }
 
         }

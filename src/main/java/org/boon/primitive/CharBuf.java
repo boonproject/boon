@@ -810,19 +810,8 @@ public class CharBuf extends Writer implements CharSequence {
         boolean simple = true;
         int digitsPastPoint = 0;
         boolean foundPoint = false;
-        boolean negative = false;
         int startIndex = 0;
 
-        double sign;
-
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            negative = true;
-            sign = -1.0;
-        } else {
-            negative = false;
-            sign = 1.0;
-        }
 
         loop:
         for ( int index = startIndex; index < location; index++ ) {
@@ -857,13 +846,13 @@ public class CharBuf extends Writer implements CharSequence {
             long value;
             final int length = location - startIndex;
 
-            if ( isInteger( buffer, startIndex, length, negative ) ) {
+            if ( isInteger( buffer, startIndex, length ) ) {
                 value = parseIntIgnoreDot( buffer, startIndex, length );
             } else {
                 value = parseLongIgnoreDot( buffer, startIndex, length );
             }
             if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[ digitsPastPoint ] * sign;
+                double power = powersOf10[ digitsPastPoint ];
                 return value / power;
 
             }
@@ -871,7 +860,7 @@ public class CharBuf extends Writer implements CharSequence {
 
         }
 
-        return Double.parseDouble( toString() ) * sign;
+        return Double.parseDouble( toString() );
     }
 
 
@@ -977,21 +966,12 @@ public class CharBuf extends Writer implements CharSequence {
 
     public Number toIntegerWrapper() {
 
-        int sign = 1;
-        boolean negative = false;
         int startIndex = 0;
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1;
-            negative = true;
 
-        }
-
-
-        if ( isInteger( buffer, startIndex, location - startIndex, negative ) ) {
-            return intValue() * sign;
+        if ( isInteger( buffer, startIndex, location - startIndex ) ) {
+            return intValue() ;
         } else {
-            return longValue() * sign;
+            return longValue();
         }
 
     }

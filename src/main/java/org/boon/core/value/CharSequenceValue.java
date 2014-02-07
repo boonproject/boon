@@ -93,20 +93,12 @@ public class CharSequenceValue implements Value, CharSequence {
                 return doubleValue ();
             case INTEGER:
 
-                int sign = 1;
-                boolean negative = false;
-                if ( buffer[ startIndex ] == '-' ) {
-                    startIndex++;
-                    sign = -1;
-                    negative = true;
-
-                }
 
 
-                if ( isInteger ( buffer, startIndex, endIndex - startIndex, negative ) ) {
-                    return intValue () * sign;
+                if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ) {
+                    return intValue () ;
                 } else {
-                    return longValue () * sign;
+                    return longValue () ;
                 }
             case STRING:
                 if ( checkDate ) {
@@ -225,15 +217,9 @@ public class CharSequenceValue implements Value, CharSequence {
 
     @Override
     public int intValue () {
-        int sign = 1;
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1;
+        if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
 
-        }
-        if ( isInteger ( buffer, startIndex, endIndex - startIndex, sign < 0 ) ){
-
-            return parseIntFromTo ( buffer, startIndex, endIndex ) * sign;
+            return parseIntFromTo ( buffer, startIndex, endIndex );
         }  else {
             return die(int.class, "not an int");
         }
@@ -241,16 +227,10 @@ public class CharSequenceValue implements Value, CharSequence {
 
     @Override
     public long longValue () {
-        long sign = 1;
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1;
-
-        }
-        if ( isInteger ( buffer, startIndex, endIndex - startIndex, sign < 0 ) ){
-            return parseIntFromTo( buffer, startIndex, endIndex  ) * sign;
+        if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
+            return parseIntFromTo( buffer, startIndex, endIndex  );
         } else {
-           return parseLongFromTo( buffer, startIndex, endIndex  ) * sign;
+           return parseLongFromTo( buffer, startIndex, endIndex  );
         }
     }
 

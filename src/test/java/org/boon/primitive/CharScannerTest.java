@@ -11,6 +11,26 @@ import static org.junit.Assert.assertEquals;
 public class CharScannerTest {
 
 
+
+    @Test
+    public void parseInt() {
+
+        int i =  CharScanner.parseInt( "-22".toCharArray() );
+        boolean ok  = i  == -22 || die( "" + i);
+
+        long l =  CharScanner.parseLong( "-123456789099".toCharArray() );
+        ok  = l  == -123456789099L || die( "" + l);
+
+
+
+        i =  CharScanner.parseInt( "22".toCharArray() );
+        ok  = i  == 22 || die( "" + i);
+
+        l =  CharScanner.parseLong( "123456789099".toCharArray() );
+        ok  = l  == 123456789099L || die( "" + l);
+
+    }
+
     @Test
     public void parseLong() {
 
