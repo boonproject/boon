@@ -144,7 +144,7 @@ public class CharScannerTest {
 
         String str = "123456789";
         double num =
-                CharScanner.parseNumber( str.toCharArray(), 0, str.length() ).doubleValue();
+                CharScanner.parseJsonNumber( str.toCharArray(), 0, str.length() ).doubleValue();
         boolean ok = num ==  123456789d || die("" + num);
     }
 
@@ -154,7 +154,7 @@ public class CharScannerTest {
 
         String str = "-1.23456789E8";
         double num =
-                (Double)CharScanner.parseNumber( str.toCharArray(), 0, str.length() );
+                (Double)CharScanner.parseJsonNumber( str.toCharArray(), 0, str.length() );
         boolean ok = num ==  -1.23456789E8 || die("" + num);
     }
 
@@ -211,7 +211,7 @@ public class CharScannerTest {
     private void testDouble( String str ) {
         puts (str);
         double num =
-                (Double)CharScanner.parseNumber( str.toCharArray(), 0, str.length() ).doubleValue();
+                (Double)CharScanner.parseJsonNumber( str.toCharArray(), 0, str.length() ).doubleValue();
         double numTest = Double.parseDouble( str );
 
         boolean ok = num == numTest || die("num",  num, "numTest", numTest);
@@ -221,7 +221,7 @@ public class CharScannerTest {
 
     private void testDoubleInStringThreeOver( String str  ) {
         double numTest = Double.parseDouble( str );
-        double num = CharScanner.parseNumber( ( "   " + str ).toCharArray(), 3, str.length()+3 ).doubleValue();
+        double num = CharScanner.parseJsonNumber( ( "   " + str ).toCharArray(), 3, str.length()+3 ).doubleValue();
         boolean ok = num == numTest || die("num",  num, "numTest", numTest);
     }
 
@@ -333,6 +333,33 @@ public class CharScannerTest {
         testDoubleInStringThreeOver( "" + Double.MIN_VALUE );
     }
 
+    @Test
+    public void testDoubleMaxWithOffset2 () {
+        testDoubleInStringThreeOver( "" + Double.MAX_VALUE/2 );
+    }
+
+
+
+
+    @Test
+    public void testDoubleMinWithOffset2 () {
+        testDoubleInStringThreeOver( "" + Double.MIN_VALUE/2 );
+    }
+
+
+
+    @Test
+    public void testDoubleMaxWithOffset3 () {
+        testDoubleInStringThreeOver( "" + (Double.MAX_VALUE/9)*8 );
+    }
+
+
+
+
+    @Test
+    public void testDoubleMinWithOffset3 () {
+        testDoubleInStringThreeOver( "" + (Double.MIN_VALUE/9)*8 );
+    }
 
     @Test
     public void parseLong() {

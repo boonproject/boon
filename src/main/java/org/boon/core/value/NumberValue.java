@@ -203,8 +203,8 @@ public class NumberValue extends Number implements Value {
 
     @Override
     public double doubleValue () {
-        //TODO Optimize this
-        return CharScanner.parseNumber( this.buffer, startIndex, endIndex ).doubleValue();
+
+        return CharScanner.parseDouble( this.buffer, startIndex, endIndex );
 
     }
 
@@ -216,7 +216,7 @@ public class NumberValue extends Number implements Value {
     @Override
     public float floatValue () {
 
-        return CharScanner.parseNumber( this.buffer, startIndex, endIndex ).floatValue();
+        return CharScanner.parseFloat( this.buffer, startIndex, endIndex );
     }
 
     public final void chop () {

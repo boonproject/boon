@@ -271,13 +271,6 @@ public class Conversions {
                 try {
                     return Double.parseDouble( ( ( CharSequence ) obj ).toString() );
                 } catch ( Exception ex ) {
-//                    String svalue = str(obj);
-//                    Matcher re = Regex.re(
-//                            "[-+]?[0-9]+\\.?[0-9]+([eE][-+]?[0-9]+)?", svalue);
-//                    if (re.find()) {
-//                        svalue = re.group(0);
-//                        return Double.parseDouble(svalue);
-//                    }
                     die( String.format( "Unable to convert %s to a double", obj.getClass() ) );
                     return Double.NaN;
                 }

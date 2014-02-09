@@ -643,14 +643,14 @@ public class CharScanner {
 
 
 
-    public static Number parseNumber( char[] buffer ) {
-        return parseNumber( buffer, 0, buffer.length );
+    public static Number parseJsonNumber( char[] buffer ) {
+        return parseJsonNumber( buffer, 0, buffer.length );
     }
 
 
 
-    public static Number parseNumber( char[] buffer, int from, int to ) {
-        return parseNumber( buffer, from, to, null );
+    public static Number parseJsonNumber( char[] buffer, int from, int to ) {
+        return parseJsonNumber( buffer, from, to, null );
     }
 
 
@@ -666,7 +666,7 @@ public class CharScanner {
         return c == COMMA || c == CLOSED_CURLY || c == CLOSED_BRACKET;
     }
 
-    public static Number parseNumber( char[] buffer, int from, int max, int size[] ) {
+    public static Number parseJsonNumber( char[] buffer, int from, int max, int size[] ) {
         Number value = null;
         boolean simple = true;
         int digitsPastPoint = 0;
@@ -745,6 +745,90 @@ public class CharScanner {
         return value;
     }
 
+
+    public static float parseFloat( char[] buffer, int from, int to ) {
+        return (float) parseDouble( buffer, from , to );
+    }
+
+
+    public static double parseDouble( char[] buffer ) {
+        return parseDouble( buffer, 0, buffer.length );
+    }
+
+    public static double parseDouble( char[] buffer, int from, int to ) {
+        double value;
+        boolean simple = true;
+        int digitsPastPoint = 0;
+
+        int index = from;
+
+
+        if (buffer[index] == '-') {
+            index++;
+        }
+
+        boolean foundDot = false;
+        for (;index<to; index++)  {
+            char ch = buffer[ index ];
+            if ( isNumberDigit(ch) ) {
+
+                if (foundDot==true) {
+                    digitsPastPoint++;
+                }
+            } else if ( ch == '.' ) {
+                foundDot = true;
+            }
+            else if (ch == 'E' || ch == 'e' || ch == '-' || ch == '+') {
+                simple = false;
+            } else {
+                die ("unexpected character " + ch);
+            }
+        }
+
+
+        if ( digitsPastPoint >= powersOf10.length-1 ) {
+            simple = false;
+        }
+
+
+        final int length = index -from;
+
+        if (!foundDot && simple) {
+            if ( isInteger( buffer, from, length ) ) {
+                value = parseIntFromTo( buffer, from, index );
+            } else {
+                value = parseLongFromTo( buffer, from, index );
+            }
+        }
+        else if ( foundDot && simple ) {
+            long lvalue;
+
+
+            if ( length < powersOf10.length ) {
+
+                if ( isInteger( buffer, from, length ) ) {
+                    lvalue = parseIntFromToIgnoreDot( buffer, from, index );
+                } else {
+                    lvalue = parseLongFromToIgnoreDot( buffer, from, index );
+                }
+
+                double power = powersOf10[ digitsPastPoint ];
+                value = lvalue / power;
+
+            } else {
+                value =  Double.parseDouble( new String( buffer, from, length ) );
+
+            }
+
+
+        } else {
+            value =  Double.parseDouble( new String( buffer, from, index - from ) );
+        }
+
+
+
+        return value;
+    }
 
     private static double powersOf10[] = {
                               1.0,

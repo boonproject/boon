@@ -805,17 +805,17 @@ public class CharBuf extends Writer implements CharSequence {
     };
 
     int[] endIndex = new int[1];
+
+
     public double doubleValue() {
 
-        double d = (Double)CharScanner.parseNumber( this.buffer, location, capacity, endIndex );
-        this.location = endIndex[0];
-        return d;
+        return CharScanner.parseJsonNumber( this.buffer, location, capacity, endIndex ).doubleValue();
     }
 
 
     public float floatValue() {
 
-        return (float) doubleValue(  );
+        return CharScanner.parseJsonNumber( this.buffer, location, capacity, endIndex ).floatValue();
     }
 
     public int intValue() {

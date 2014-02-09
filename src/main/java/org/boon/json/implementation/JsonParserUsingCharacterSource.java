@@ -186,7 +186,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         Object value = null;
 
         if ( CharScanner.hasDecimalChar ( chars, negative ) )  {
-            value = CharScanner.parseNumber( chars );
+            value = CharScanner.parseDouble( chars );
         } else if (CharScanner.isInteger ( chars )) {
             value = CharScanner.parseInt ( chars );
         } else if (CharScanner.isLong( chars )) {

@@ -257,7 +257,7 @@ public class CharSequenceValue implements Value, CharSequence {
 
     @Override
     public double doubleValue () {
-        return (double)CharScanner.parseNumber( this.buffer, startIndex, endIndex );
+        return CharScanner.parseDouble( this.buffer, startIndex, endIndex );
     }
 
     @Override
@@ -267,7 +267,7 @@ public class CharSequenceValue implements Value, CharSequence {
 
     @Override
     public float floatValue () {
-        return (float) CharScanner.parseNumber( this.buffer, startIndex, endIndex );
+        return CharScanner.parseFloat( this.buffer, startIndex, endIndex );
     }
 
     public final void chop () {

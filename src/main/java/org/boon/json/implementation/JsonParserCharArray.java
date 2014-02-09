@@ -215,10 +215,10 @@ public class JsonParserCharArray extends BaseJsonParser  {
             case '7':
             case '8':
             case '9':
-                value = decodeNumber(false);
+                value = decodeNumber();
                 break;
             case '-':
-                value = decodeNumber(true);
+                value = decodeNumber();
                 break;
 
             default:
@@ -234,9 +234,9 @@ public class JsonParserCharArray extends BaseJsonParser  {
 
     int[] endIndex = new int[1];
 
-    private final Object decodeNumber(boolean negative) {
+    private final Object decodeNumber() {
 
-        Number num =  CharScanner.parseNumber( charArray, __index, charArray.length, endIndex );
+        Number num =  CharScanner.parseJsonNumber( charArray, __index, charArray.length, endIndex );
         __index = endIndex[0];
 
         return num;
