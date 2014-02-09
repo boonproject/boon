@@ -188,19 +188,6 @@ public class NumberValue extends Number implements Value {
     }
 
 
-    private static float fpowersOf10[] = {
-            1.0f,
-            10.0f,
-            100.0f,
-            1_000.0f,
-            10_000.0f,
-            100_000.0f,
-            1_000_000.0f,
-            10_000_000.0f,
-            100_000_000.0f,
-            1_000_000_000.0f,
-    };
-
     @Override
     public double doubleValue () {
 

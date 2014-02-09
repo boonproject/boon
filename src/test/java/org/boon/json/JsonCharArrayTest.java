@@ -51,33 +51,5 @@ public class JsonCharArrayTest extends JsonParserAndMapperBaseTest {
     }
 
 
-    @Test
-    public void classic() {
-
-            Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
-                    lines (
-
-                            "{ \"nums\": [12, 12345678, 999.999, 123456789.99],\n " +
-                                    "    \"nums2\": [12, 12345678, 999.999, 123456789.99],\n" +
-                                    "    \"nums3\": [12, 12345678, 999.999, 123456789.99]\n" +
-                                    "}"
-                    )
-            );
-
-        }
-
-
-
-    @Test
-    public void parseNegativeLong () {
-        int i = jsonParserAndMapper.parseInt ( "123" );
-        boolean ok = i == 123 || die ( "" + i );
-
-        long l =  jsonParserAndMapper.parseLong ( "-123456789099" );
-        ok = l == -123456789099L || die ( "" + l );
-
-        puts ( ok );
-    }
-
 
 }

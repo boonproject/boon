@@ -83,5 +83,17 @@ public class UTF8ByteParser extends JsonParserAndMapperBaseTest {
         puts ( ok );
     }
 
+    @Test
+    public void parseNegativeLong () {
+    }
+
+
+
+    @Test
+    public void tesParseSmallNum() {
+
+    }
+
+
 
 }

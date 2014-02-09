@@ -80,4 +80,16 @@ public class AsciiParserTest extends JsonParserAndMapperBaseTest {
     }
 
 
+
+    @Test
+    public void parseNegativeLong () {
+    }
+
+
+
+    @Test
+    public void tesParseSmallNum() {
+
+    }
+
 }

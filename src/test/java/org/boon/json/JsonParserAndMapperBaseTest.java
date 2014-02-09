@@ -86,6 +86,54 @@ public class JsonParserAndMapperBaseTest {
 
 
     @Test
+    public void classic() {
+
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
+                lines (
+
+                        "{ \"nums\": [12, 12345678, 999.999, 123456789.99],\n " +
+                                "    \"nums2\": [12, 12345678, 999.999, 123456789.99],\n" +
+                                "    \"nums3\": [12, 12345678, 999.999, 123456789.99]\n" +
+                                "}"
+                )
+        );
+
+    }
+
+
+
+    @Test
+    public void parseNegativeLong () {
+        int i = jsonParserAndMapper.parseInt ( "123" );
+        boolean ok = i == 123 || die ( "" + i );
+
+        long l =  jsonParserAndMapper.parseLong ( "-123456789099" );
+        ok = l == -123456789099L || die ( "" + l );
+
+        puts ( ok );
+    }
+
+
+
+    @Test
+    public void tesParseSmallNum() {
+        long num = jsonParserAndMapper.parseLong( "" + Long.MIN_VALUE );
+        long num2 = Long.MIN_VALUE;
+        boolean ok = num == num2 || die ( "" + num);
+
+    }
+
+
+
+    @Test
+    public void testWithSpaces() {
+        int num = ((Number)jsonParserAndMapper.parse( "           123")).intValue();
+        int num2 = 123;
+        boolean ok = num == num2 || die ( "" + num);
+
+    }
+
+    @Test
     public void parseInt () {
         int i;
         boolean ok;
