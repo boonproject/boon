@@ -20,7 +20,6 @@ import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.primitive.CharScanner.*;
-import static org.boon.primitive.CharScanner.parseLong;
 
 public class CharBuf extends Writer implements CharSequence {
     protected int capacity = 16;
@@ -805,130 +804,18 @@ public class CharBuf extends Writer implements CharSequence {
             1_000_000_000.0f,
     };
 
+    int[] endIndex = new int[1];
     public double doubleValue() {
 
-        boolean simple = true;
-        int digitsPastPoint = 0;
-        boolean foundPoint = false;
-        int startIndex = 0;
-
-
-        loop:
-        for ( int index = startIndex; index < location; index++ ) {
-            char ch = buffer[ index ];
-            switch ( ch ) {
-                case 'e':
-                    simple = false;
-                    break loop;
-                case 'E':
-                    simple = false;
-                    break loop;
-                case 'F':
-                    simple = false;
-                    break loop;
-                case 'f':
-                    simple = false;
-                    break loop;
-                case '.':
-                    foundPoint = true;
-                    continue loop;
-            }
-            if ( foundPoint ) {
-                digitsPastPoint++;
-                if ( digitsPastPoint >= powersOf10.length ) {
-                    simple = true;
-                    break;
-                }
-            }
-        }
-
-        if ( simple ) {
-            long value;
-            final int length = location - startIndex;
-
-            if ( isInteger( buffer, startIndex, length ) ) {
-                value = parseIntIgnoreDot( buffer, startIndex, length );
-            } else {
-                value = parseLongIgnoreDot( buffer, startIndex, length );
-            }
-            if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[ digitsPastPoint ];
-                return value / power;
-
-            }
-
-
-        }
-
-        return Double.parseDouble( toString() );
+        double d = (Double)CharScanner.parseNumber( this.buffer, location, capacity, endIndex );
+        this.location = endIndex[0];
+        return d;
     }
 
 
     public float floatValue() {
 
-        boolean simple = true;
-        int digitsPastPoint = 0;
-        boolean foundPoint = false;
-
-        float sign;
-        int startIndex = 0;
-
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1.0f;
-        } else {
-            sign = 1.0f;
-        }
-
-
-        int length = location - startIndex;
-        if ( length > 10 ) {
-            return Float.parseFloat( toString() ) * sign;
-        }
-        loop:
-        for ( int index = startIndex; index < location; index++ ) {
-            char ch = buffer[ index ];
-            switch ( ch ) {
-                case 'e':
-                    simple = false;
-                    break loop;
-                case 'E':
-                    simple = false;
-                    break loop;
-                case 'F':
-                    simple = false;
-                    break loop;
-                case 'f':
-                    simple = false;
-                    break loop;
-                case '.':
-                    foundPoint = true;
-                    continue loop;
-            }
-            if ( foundPoint ) {
-                digitsPastPoint++;
-                if ( digitsPastPoint >= powersOf10.length ) {
-                    simple = true;
-                    break;
-                }
-            }
-        }
-
-        if ( simple ) {
-            int value;
-
-            value = parseIntIgnoreDot( buffer, startIndex, length );
-            if ( digitsPastPoint < powersOf10.length ) {
-                float power = fpowersOf10[ digitsPastPoint ] * sign;
-                return value / power;
-
-            }
-
-
-        }
-
-        return Float.parseFloat( toString() ) * sign;
-
+        return (float) doubleValue(  );
     }
 
     public int intValue() {

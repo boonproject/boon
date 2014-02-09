@@ -261,9 +261,6 @@ public class Conversions {
     }
 
     public static double toDouble( Object obj ) {
-        if ( obj.getClass() == double.class ) {
-            return ( Double ) obj;
-        }
 
         try {
             if ( obj instanceof Double ) {

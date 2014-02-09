@@ -203,7 +203,8 @@ public class NumberValue extends Number implements Value {
 
     @Override
     public double doubleValue () {
-        return CharScanner.doubleValue ( this.buffer, startIndex, endIndex );
+        //TODO Optimize this
+        return CharScanner.parseNumber( this.buffer, startIndex, endIndex ).doubleValue();
 
     }
 
@@ -215,68 +216,7 @@ public class NumberValue extends Number implements Value {
     @Override
     public float floatValue () {
 
-        boolean simple = true;
-        int digitsPastPoint = 0;
-        boolean foundPoint = false;
-
-        float sign;
-
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1.0f;
-        } else {
-            sign = 1.0f;
-        }
-
-
-        int length = endIndex - startIndex;
-        if ( length > 10 ) {
-            return Float.parseFloat ( toString () ) * sign;
-        }
-        loop:
-        for ( int index = startIndex; index < endIndex; index++ ) {
-            char ch = buffer[ index ];
-            switch ( ch ) {
-                case 'e':
-                    simple = false;
-                    break loop;
-                case 'E':
-                    simple = false;
-                    break loop;
-                case 'F':
-                    simple = false;
-                    break loop;
-                case 'f':
-                    simple = false;
-                    break loop;
-                case '.':
-                    foundPoint = true;
-                    continue loop;
-            }
-            if ( foundPoint ) {
-                digitsPastPoint++;
-                if ( digitsPastPoint >= fpowersOf10.length ) {
-                    simple = true;
-                    break;
-                }
-            }
-        }
-
-        if ( simple ) {
-            int value;
-
-            value = parseIntIgnoreDot ( buffer, startIndex, length );
-            if ( digitsPastPoint < fpowersOf10.length ) {
-                float power = fpowersOf10[ digitsPastPoint ] * sign;
-                return value / power;
-
-            }
-
-
-        }
-
-        return Float.parseFloat ( toString () ) * sign;
-
+        return CharScanner.parseNumber( this.buffer, startIndex, endIndex ).floatValue();
     }
 
     public final void chop () {

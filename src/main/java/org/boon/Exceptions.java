@@ -20,7 +20,7 @@ public class Exceptions {
     }
 
 
-    public static boolean die( Object[] messages ) {
+    public static boolean die( Object... messages ) {
         throw new SoftenedException( sputs(messages) );
     }
 

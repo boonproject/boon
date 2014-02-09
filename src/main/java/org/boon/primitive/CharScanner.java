@@ -45,6 +45,8 @@ public class CharScanner {
     protected static final int ESCAPE = '\\';
 
 
+
+
     public static boolean isDigit( int c ) {
         return c >= ALPHA_0 && c <= ALPHA_9;
     }
@@ -475,49 +477,6 @@ public class CharScanner {
     }
 
 
-    public static int parseIntIgnoreDot( char[] digitChars, int offset, int len ) {
-
-        int num;
-        boolean negative=false;
-        char c = digitChars[ offset ];
-        if (c == '-') {
-            offset++;
-            negative=true;
-        }
-
-        num = (digitChars[ offset ] - '0');
-        int to = len + offset;
-        // This looks ugly, but appears the fastest way (as per measurements)
-        if ( ++offset < to ) {
-            num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-            if ( ++offset < to ) {
-                num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                if ( ++offset < to ) {
-                    num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                    if ( ++offset < to ) {
-                        num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                        if ( ++offset < to ) {
-                            num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                            if ( ++offset < to ) {
-                                num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                                if ( ++offset < to ) {
-                                    num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                                    if ( ++offset < to ) {
-                                        num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                                        if ( ++offset < to ) {
-                                            num = digitChars[ offset ] != '.' ? ( num * 10 ) + ( digitChars[ offset ] - '0' ) : num;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return negative ? num*-1 : num;
-    }
 
 
     public static int parseIntFromTo( char[] digitChars, int offset, int to ) {
@@ -532,6 +491,7 @@ public class CharScanner {
                 offset++;
                 negative=true;
             }
+            if (negative) {
             num = (digitChars[ offset ] - '0');
             if ( ++offset < to ) {
                 num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
@@ -549,6 +509,9 @@ public class CharScanner {
                                         num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
                                         if ( ++offset < to ) {
                                             num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                            if ( ++offset < to ) {
+                                                num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                            }
                                         }
                                     }
                                 }
@@ -557,16 +520,73 @@ public class CharScanner {
                     }
                 }
             }
+            } else {
+                num = (digitChars[ offset ] - '0');
+                if ( ++offset < to ) {
+                    num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                    if ( ++offset < to ) {
+                        num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                        if ( ++offset < to ) {
+                            num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                            if ( ++offset < to ) {
+                                num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                if ( ++offset < to ) {
+                                    num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                    if ( ++offset < to ) {
+                                        num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                        if ( ++offset < to ) {
+                                            num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                            if ( ++offset < to ) {
+                                                num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                                if ( ++offset < to ) {
+                                                    num = ( num * 10 ) + ( digitChars[ offset ] - '0' );
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
             return negative ? num*-1 : num;
         } catch ( Exception ex ) {
             return handle( int.class, ex );
         }
     }
 
-    public static long parseLongFromTo( char[] digitChars, int offset, int to ) {
+
+    public static int parseIntFromToIgnoreDot( char[] digitChars, int offset, int to ) {
+
+            int num;
+            boolean negative=false;
+            char c = digitChars[ offset ];
+            if (c == '-') {
+                offset++;
+                negative=true;
+            }
+
+            c = digitChars[ offset ];
+            num = (c - '0');
+            offset++;
+
+            for (; offset < to; offset++) {
+                c = digitChars[ offset ];
+                if (c != '.') {
+                    num = ( num * 10 ) + ( c - '0' );
+                }
+
+            }
+
+            return negative ? num * -1 : num;
+    }
 
 
-        int num;
+    public static long parseLongFromToIgnoreDot( char[] digitChars, int offset, int to ) {
+
+        long num;
         boolean negative=false;
         char c = digitChars[ offset ];
         if (c == '-') {
@@ -574,9 +594,46 @@ public class CharScanner {
             negative=true;
         }
 
-        long val = parseIntFromTo( digitChars, offset, to - 9  ) * L_BILLION;
-        val = val + ( long ) parseIntFromTo( digitChars, to - 9, to );
-        return negative ? val*-1 : val;
+        c = digitChars[ offset ];
+        num = (c - '0');
+        offset++;
+
+        for (; offset < to; offset++) {
+            c = digitChars[ offset];
+            if (c != '.') {
+                num = ( num * 10 ) + ( c - '0' );
+            }
+
+        }
+
+        return negative ? num * -1 : num;
+    }
+
+    public static long parseLongFromTo( char[] digitChars, int offset, int to ) {
+
+
+        long num;
+        boolean negative=false;
+        char c = digitChars[ offset ];
+        if (c == '-') {
+            offset++;
+            negative=true;
+        }
+
+        c = digitChars[ offset ];
+        num = (c - '0');
+        offset++;
+
+        long digit;
+
+        for (; offset < to; offset++) {
+            c = digitChars [offset];
+            digit = ( c - '0' );
+            num = ( num * 10 ) + digit;
+        }
+
+        return negative ? num * -1 : num;
+
     }
 
 
@@ -584,118 +641,132 @@ public class CharScanner {
         return parseLongFromTo( digitChars, 0, digitChars.length );
     }
 
-    public static long parseLongIgnoreDot( char[] digitChars, int offset, int len ) {
-        int len1 = len - 9;
-        long val = parseIntIgnoreDot( digitChars, offset, len1 ) * L_BILLION;
-        return val + ( long ) parseIntIgnoreDot( digitChars, offset + len1, 9 );
+
+
+    public static Number parseNumber( char[] buffer ) {
+        return parseNumber( buffer, 0, buffer.length );
     }
 
-    private final static long L_BILLION = 1000000000;
 
-    public static double doubleValue( char[] buffer) {
-        return doubleValue ( buffer, 0, buffer.length );
+
+    public static Number parseNumber( char[] buffer, int from, int to ) {
+        return parseNumber( buffer, from, to, null );
     }
 
-    public static double doubleValue( char[] buffer, int startIndex, int endIndex ) {
 
+
+    public static final boolean isNumberDigit (int c)  {
+        return c >= ALPHA_0 && c <= ALPHA_9;
+    }
+
+
+
+    protected static boolean isDelimiter ( int c ) {
+
+        return c == COMMA || c == CLOSED_CURLY || c == CLOSED_BRACKET;
+    }
+
+    public static Number parseNumber( char[] buffer, int from, int max, int size[] ) {
+        Number value = null;
         boolean simple = true;
         int digitsPastPoint = 0;
-        boolean foundPoint = false;
+
+        int index = from;
 
 
-        loop:
-        for ( int index = startIndex; index < endIndex; index++ ) {
+        if (buffer[index] == '-') {
+            index++;
+        }
+
+        boolean foundDot = false;
+        for (;index<max; index++)  {
             char ch = buffer[ index ];
-            switch ( ch ) {
-                case 'e':
-                    simple = false;
-                    break loop;
-                case 'E':
-                    simple = false;
-                    break loop;
-                case 'F':
-                    simple = false;
-                    break loop;
-                case 'f':
-                    simple = false;
-                    break loop;
-                case '.':
-                    foundPoint = true;
-                    continue loop;
-            }
-            if ( foundPoint ) {
-                digitsPastPoint++;
-                if ( digitsPastPoint >= powersOf10.length ) {
-                    simple = true;
-                    break;
+            if ( isNumberDigit(ch) ) {
+
+                if (foundDot==true) {
+                    digitsPastPoint++;
                 }
+            } else if ( ch <= 32 || isDelimiter( ch ) ) { break;}
+            else if ( ch == '.' ) {
+                foundDot = true;
             }
-        }
-
-        if ( simple ) {
-            long value;
-            final int length = endIndex - startIndex;
-
-            if ( isInteger( buffer, startIndex, length ) ) {
-                value = parseIntIgnoreDot( buffer, startIndex, length );
+            else if (ch == 'E' || ch == 'e' || ch == '-' || ch == '+') {
+                simple = false;
             } else {
-                value = parseLongIgnoreDot( buffer, startIndex, length );
+                die ("unexpected character " + ch);
             }
-            if ( digitsPastPoint < powersOf10.length ) {
-                double power = powersOf10[ digitsPastPoint ];
-                return value / power;
-
-            }
-
-
         }
 
-        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) );
-    }
+
+        if ( digitsPastPoint >= powersOf10.length-1 ) {
+            simple = false;
+        }
 
 
-    public static double simpleDouble( char[] buffer, boolean simple,  int digitsPastPoint, int startIndex, int endIndex ) {
+        final int length = index -from;
 
-
-
-        if ( simple ) {
-            long value;
-            final int length = endIndex - startIndex;
-
-            if ( isInteger( buffer, startIndex, length ) ) {
-                value = parseIntIgnoreDot( buffer, startIndex, length );
+        if (!foundDot && simple) {
+            if ( isInteger( buffer, from, length ) ) {
+                value = parseIntFromTo( buffer, from, index );
             } else {
-                value = parseLongIgnoreDot( buffer, startIndex, length );
+                value = parseLongFromTo( buffer, from, index );
             }
-            if ( digitsPastPoint < powersOf10.length ) {
+        }
+        else if ( foundDot && simple ) {
+            long lvalue;
+
+
+            if ( length < powersOf10.length ) {
+
+                if ( isInteger( buffer, from, length ) ) {
+                    lvalue = parseIntFromToIgnoreDot( buffer, from, index );
+                } else {
+                    lvalue = parseLongFromToIgnoreDot( buffer, from, index );
+                }
+
                 double power = powersOf10[ digitsPastPoint ];
-                return value / power;
+                value = lvalue / power;
+
+            } else {
+                value =  Double.parseDouble( new String( buffer, from, length ) );
 
             }
 
 
+        } else {
+            value =  Double.parseDouble( new String( buffer, from, index - from ) );
         }
 
-        return Double.parseDouble( new String( buffer, startIndex, ( endIndex - startIndex ) ) );
+
+        if (size != null) {
+            size[0] = index;
+        }
+
+        return value;
     }
 
 
     private static double powersOf10[] = {
-            1.0,
-            10.0,
-            100.0,
-            1_000.0,
-            10_000.0,
-            100_000.0,
-            1_000_000.0,
-            10_000_000.0,
-            100_000_000.0,
-            1_000_000_000.0,
-            10_000_000_000.0,
-            100_000_000_000.0,
-            1_000_000_000_000.0,
-            10_000_000_000_000.0,
+                              1.0,
+                             10.0,
+                            100.0,
+                          1_000.0,
+                         10_000.0,
+                        100_000.0,
+                      1_000_000.0,
+                     10_000_000.0,
+                    100_000_000.0,
+                  1_000_000_000.0,
+                 10_000_000_000.0,
+                100_000_000_000.0,
+              1_000_000_000_000.0,
+             10_000_000_000_000.0,
             100_000_000_000_000.0,
+          1_000_000_000_000_000.0,
+         10_000_000_000_000_000.0,
+        100_000_000_000_000_000.0,
+      1_000_000_000_000_000_000.0,
+
     };
 
 

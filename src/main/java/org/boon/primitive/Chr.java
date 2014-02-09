@@ -217,6 +217,60 @@ public class Chr {
         return newArray;
     }
 
+
+
+    public static char[] remove( char c, char[] array ) {
+
+        int removeCount = 0;
+        for ( char ch : array ) {
+
+            if ( ch == c ) {
+                removeCount++;
+            }
+        }
+        char[] newArray = new char[ array.length - removeCount ];
+
+        int j = 0;
+        for ( char ch : array ) {
+
+            if ( ch == c ) {
+                continue;
+            }
+
+            newArray[ j ] = ch;
+            j++;
+        }
+        return newArray;
+    }
+
+
+    public static char[] remove( char c, char[] array, int start, int to ) {
+
+        int removeCount = 0;
+        for (int index = start; index < to; index++ ) {
+            char ch = array[index];
+
+            if ( ch == c ) {
+                removeCount++;
+            }
+        }
+        char[] newArray = new char[ array.length - removeCount ];
+
+        int j = 0;
+        for (int index = start; index < to; index++ ) {
+            char ch = array[index];
+
+            if ( ch == c ) {
+                continue;
+            }
+
+            newArray[ j ] = ch;
+            j++;
+        }
+        return newArray;
+    }
+
+
     public static char[][] split( char[] chars ) {
         return CharScanner.splitByChars( chars, DEFAULT_SPLIT );
     }

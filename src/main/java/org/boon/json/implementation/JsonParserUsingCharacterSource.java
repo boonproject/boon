@@ -1,8 +1,6 @@
 package org.boon.json.implementation;
 
 import org.boon.core.LazyMap;
-import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonException;
 import org.boon.primitive.*;
 
@@ -188,7 +186,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
         Object value = null;
 
         if ( CharScanner.hasDecimalChar ( chars, negative ) )  {
-            value = CharScanner.doubleValue ( chars );
+            value = CharScanner.parseNumber( chars );
         } else if (CharScanner.isInteger ( chars )) {
             value = CharScanner.parseInt ( chars );
         } else if (CharScanner.isLong( chars )) {
