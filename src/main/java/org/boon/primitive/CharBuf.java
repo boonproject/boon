@@ -772,73 +772,24 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
-    private static double powersOf10[] = {
-            1.0,
-            10.0,
-            100.0,
-            1_000.0,
-            10_000.0,
-            100_000.0,
-            1_000_000.0,
-            10_000_000.0,
-            100_000_000.0,
-            1_000_000_000.0,
-            10_000_000_000.0,
-            100_000_000_000.0,
-            1_000_000_000_000.0,
-            10_000_000_000_000.0,
-            100_000_000_000_000.0,
-    };
 
-
-    private static float fpowersOf10[] = {
-            1.0f,
-            10.0f,
-            100.0f,
-            1_000.0f,
-            10_000.0f,
-            100_000.0f,
-            1_000_000.0f,
-            10_000_000.0f,
-            100_000_000.0f,
-            1_000_000_000.0f,
-    };
-
-    int[] endIndex = new int[1];
 
 
     public double doubleValue() {
-
-        return CharScanner.parseJsonNumber( this.buffer, location, capacity, endIndex ).doubleValue();
+        return CharScanner.parseDouble( this.buffer, 0, location );
     }
 
 
     public float floatValue() {
-
-        return CharScanner.parseJsonNumber( this.buffer, location, capacity, endIndex ).floatValue();
+        return CharScanner.parseFloat( this.buffer, 0, location );
     }
 
     public int intValue() {
-        int sign = 1;
-        int startIndex = 0;
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1;
-
-        }
-        return parseIntFromTo( buffer, startIndex, location ) * sign;
+        return CharScanner.parseIntFromTo( buffer, 0, location );
     }
 
     public long longValue() {
-        long sign = 1;
-        int startIndex = 0;
-
-        if ( buffer[ startIndex ] == '-' ) {
-            startIndex++;
-            sign = -1;
-
-        }
-        return parseLongFromTo( buffer, startIndex, location  ) * sign;
+        return CharScanner.parseLongFromTo( buffer, 0, location );
     }
 
 
@@ -853,9 +804,7 @@ public class CharBuf extends Writer implements CharSequence {
 
     public Number toIntegerWrapper() {
 
-        int startIndex = 0;
-
-        if ( isInteger( buffer, startIndex, location - startIndex ) ) {
+         if ( isInteger( buffer, 0, location  ) ) {
             return intValue() ;
         } else {
             return longValue();
