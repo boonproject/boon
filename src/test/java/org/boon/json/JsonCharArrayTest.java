@@ -29,66 +29,6 @@ public class JsonCharArrayTest extends JsonParserAndMapperBaseTest {
     }
 
     @Test
-    public void parseInt () {
-        int i;
-        boolean ok;
-
-        i = jsonParserAndMapper.parseInt ("1");
-
-
-
-         ok = i == 1 || die ( "i" + i  );
-    }
-
-
-    @Test
-    public void parseDouble() {
-        double v;
-        boolean ok;
-
-        v = jsonParserAndMapper.parseDouble ("1");
-
-
-
-        ok = v == 1 || die ( "v=" + v  );
-    }
-
-
-
-    @Test
-    public void parseMaxDouble() {
-        double v;
-        boolean ok;
-
-        v = jsonParserAndMapper.parseDouble (""+Double.MAX_VALUE);
-
-
-
-        ok = v == Double.MAX_VALUE || die ( "v=" + v  );
-    }
-
-    @Test
-    public void simpleFloat () {
-
-
-        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse (
-                lines (
-
-                        "{ \"v\":1.1}"
-                )
-        );
-
-
-        Object o = map.get ( "v" );
-
-        if (o instanceof BigDecimal ) {
-            o = ((BigDecimal) o).doubleValue();
-        }
-
-        boolean ok = o.equals ( 1.1 ) || die ( "map " + map.get ( "v" ) );
-    }
-
-    @Test
     public void testNest () {
 
 
