@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl;
 
+import org.boon.Exceptions;
 import org.boon.Str;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -19,6 +20,8 @@ import org.boon.core.Supplier;
 import java.text.Collator;
 import java.util.*;
 import java.util.logging.Level;
+
+import static org.boon.Exceptions.requireNonNull;
 
 
 /**
@@ -811,7 +814,7 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     private Function createKeyGetter( final FieldAccess field ) {
-        Objects.requireNonNull( field, "field cannot be null" );
+        Exceptions.requireNonNull( field, "field cannot be null" );
 
         return new Function() {
             @Override
@@ -843,7 +846,7 @@ public class RepoBuilderDefault implements RepoBuilder {
         for ( String prop : searchIndexes ) {
             FieldAccess fieldAccess = fields.get( prop );
 
-            Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+            requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
             Class<?> type = fieldAccess.type();
 
@@ -853,7 +856,7 @@ public class RepoBuilderDefault implements RepoBuilder {
         }
         for ( String prop : uniqueSearchIndexes ) {
             FieldAccess fieldAccess = fields.get( prop );
-            Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+            requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
             SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply( fieldAccess.type() );
             configSearchIndex( fields, prop, searchIndex );
@@ -862,14 +865,14 @@ public class RepoBuilderDefault implements RepoBuilder {
         for ( String prop : lookupIndexes ) {
 
             FieldAccess fieldAccess = fields.get( prop );
-            Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+            Exceptions.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
             LookupIndex index = this.lookupIndexFactory.apply( fieldAccess.type() );
             configLookupIndex( fields, prop, index );
         }
         for ( String prop : uniqueLookupIndexes ) {
             FieldAccess fieldAccess = fields.get( prop );
-            Objects.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+            Exceptions.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
 
             LookupIndex index = this.uniqueLookupIndexFactory.apply( fieldAccess.type() );
@@ -907,8 +910,8 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     private Function getKeyGetterOrCreate( Map<String, FieldAccess> fields, String prop ) {
-        Objects.requireNonNull( fields, "field cannot be null" );
-        Objects.requireNonNull( prop, "prop cannot be null" );
+        Exceptions.requireNonNull( fields, "field cannot be null" );
+        Exceptions.requireNonNull( prop, "prop cannot be null" );
 
         Function kg = null;
 
@@ -926,7 +929,7 @@ public class RepoBuilderDefault implements RepoBuilder {
 
     private void configPrimaryKey( Class<?> type, Map<String, FieldAccess> fields ) {
 
-        Objects.requireNonNull( primaryKey, "primary key cannot be null" );
+        Exceptions.requireNonNull( primaryKey, "primary key cannot be null" );
 
         LookupIndex primaryKeyIndex = this.uniqueLookupIndexFactory.apply( type );
 

@@ -1,11 +1,9 @@
 package org.boon;
 
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
-import java.util.Objects;
 
 public class StringScanner {
 
@@ -54,7 +52,7 @@ public class StringScanner {
     }
 
     public static String[] splitByCharsNoneEmpty( final String string, int start, int end, final char... delimiters ) {
-        Objects.requireNonNull( string );
+        Exceptions.requireNonNull( string );
 
         char[][] comps = CharScanner.splitByCharsNoneEmpty( FastStringUtils.toCharArray( string ), start, end, delimiters );
         return Str.fromCharArrayOfArrayToStringArray( comps );

@@ -491,7 +491,7 @@ public class IOTest {
         private Proxy2( String address, int port ) {
 
             /* Validate address in not null.*/
-            Objects.requireNonNull( address, "address should not be null" );
+            Exceptions.requireNonNull( address, "address should not be null" );
 
             /* Validate port is in range. */
             if ( port < 1 || port > 65535 ) {

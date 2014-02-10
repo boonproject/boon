@@ -7,7 +7,6 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.boon.Exceptions.die;
 
@@ -23,7 +22,6 @@ public class Arrays {
 
 
     public static <V> V[] grow( V[] array, int size ) {
-        Objects.requireNonNull( array );
         Object newArray = Array.newInstance( array.getClass().getComponentType(),
                 array.length + size );
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -32,7 +30,6 @@ public class Arrays {
 
 
     public static <V> V[] grow( V[] array ) {
-        Objects.requireNonNull( array );
         Object newArray = Array.newInstance( array.getClass().getComponentType(),
                 array.length * 2 );
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -40,15 +37,13 @@ public class Arrays {
     }
 
     public static <V> V[] shrink( V[] array, int size ) {
-        Objects.requireNonNull( array );
         Object newArray = Array.newInstance( array.getClass().getComponentType(),
                 array.length - size );
-        System.arraycopy( array, 0, ( V[] ) newArray, 0, array.length - size );
+        System.arraycopy( array, 0, newArray, 0, array.length - size );
         return ( V[] ) newArray;
     }
 
     public static <V> V[] compact( V[] array ) {
-        Objects.requireNonNull( array );
 
         int nullCount = 0;
         for ( V anArray1 : array ) {
@@ -104,7 +99,6 @@ public class Arrays {
 
     @Universal
     public static <V> V[] slc( V[] array, int startIndex, int endIndex ) {
-        Objects.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -133,7 +127,6 @@ public class Arrays {
 
     @Universal
     public static <V> V[] slc( V[] array, int startIndex ) {
-        Objects.requireNonNull( array );
 
 
         final int start = calculateIndex( array, startIndex );
@@ -154,7 +147,6 @@ public class Arrays {
 
     @Universal
     public static <V> V[] copy( V[] array ) {
-        Objects.requireNonNull( array );
         Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length );
         System.arraycopy( array, 0, newArray, 0, array.length );
         return ( V[] ) newArray;
@@ -163,7 +155,6 @@ public class Arrays {
 
     @Universal
     public static <V> V[] add( V[] array, V v ) {
-        Objects.requireNonNull( array );
         Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length + 1 );
         System.arraycopy( array, 0, newArray, 0, array.length );
         Array.set( newArray, array.length, v );
@@ -173,7 +164,6 @@ public class Arrays {
 
     @Universal
     public static <V> V[] add( V[] array, V[] array2 ) {
-        Objects.requireNonNull( array );
         Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length + array2.length );
         System.arraycopy( array, 0, newArray, 0, array.length );
         System.arraycopy( array2, 0, newArray, array.length, array2.length );
@@ -183,7 +173,6 @@ public class Arrays {
 
     @Universal
     public static <V> V[] insert( V[] array, int index, V v ) {
-        Objects.requireNonNull( array );
         Object newArray = Array.newInstance( array.getClass().getComponentType(), array.length + 1 );
         if ( index != 0 ) {
             System.arraycopy( array, 0, newArray, 0, index );
@@ -207,8 +196,6 @@ public class Arrays {
 
     @Universal
     public static <V> V[] slcEnd( V[] array, int endIndex ) {
-        Objects.requireNonNull( array );
-
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end;
@@ -229,10 +216,6 @@ public class Arrays {
     /* End universal methods. */
     private static <T> int calculateIndex( T[] array, int originalIndex ) {
         final int length = array.length;
-
-        Objects.requireNonNull( array, "array cannot be null" );
-
-
         int index = originalIndex;
 
         /* Adjust for reading from the right as in

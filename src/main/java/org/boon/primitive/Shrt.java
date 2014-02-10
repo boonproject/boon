@@ -1,14 +1,15 @@
 package org.boon.primitive;
 
+import org.boon.Exceptions;
 import org.boon.Universal;
 
-import java.util.Objects;
+
 
 public class Shrt {
 
 
     public static short[] grow( short[] array, final int size ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         short[] newArray = new short[ array.length + size ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -17,7 +18,7 @@ public class Shrt {
 
 
     public static short[] grow( short[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         short[] newArray = new short[ array.length * 2 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -26,7 +27,7 @@ public class Shrt {
 
 
     public static short[] shrink( short[] array, int size ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         short[] newArray = new short[ array.length - size ];
 
@@ -36,7 +37,7 @@ public class Shrt {
 
 
     public static short[] compact( short[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         int nullCount = 0;
         for ( short ch : array ) {
@@ -77,7 +78,7 @@ public class Shrt {
      */
     @Universal
     public static short[] array( final short... array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         return array;
     }
 
@@ -106,7 +107,7 @@ public class Shrt {
 
     @Universal
     public static short[] slc( short[] array, int startIndex, int endIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -126,7 +127,7 @@ public class Shrt {
 
     @Universal
     public static short[] slc( short[] array, int startIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -145,7 +146,7 @@ public class Shrt {
 
     @Universal
     public static short[] slcEnd( short[] array, int endIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
@@ -175,7 +176,7 @@ public class Shrt {
 
     @Universal
     public static short[] copy( short[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         short[] newArray = new short[ array.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
@@ -184,7 +185,7 @@ public class Shrt {
 
     @Universal
     public static short[] add( short[] array, short v ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         short[] newArray = new short[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
@@ -193,7 +194,7 @@ public class Shrt {
 
     @Universal
     public static short[] add( short[] array, short[] array2 ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         short[] newArray = new short[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         System.arraycopy( array2, 0, newArray, array.length, array2.length );
@@ -203,7 +204,7 @@ public class Shrt {
 
     @Universal
     public static short[] insert( final short[] array, final int idx, final short v ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         if ( idx >= array.length ) {
             return add( array, v );
@@ -243,7 +244,7 @@ public class Shrt {
 
     @Universal
     public static short[] insert( final short[] array, final int fromIndex, final short[] values ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
             return add( array, values );
@@ -289,7 +290,7 @@ public class Shrt {
     private static int calculateIndex( short[] array, int originalIndex ) {
         final int length = array.length;
 
-        Objects.requireNonNull( array, "array cannot be null" );
+        Exceptions.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;

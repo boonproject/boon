@@ -14,9 +14,9 @@ import java.nio.file.*;
 import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.requireNonNull;
 import static org.boon.Lists.len;
 import static org.boon.Str.slc;
 
@@ -938,7 +938,7 @@ public class IO {
 
     public static String readFromClasspath( String location ) {
 
-        Objects.requireNonNull( location, "location can't be null" );
+        requireNonNull( location, "location can't be null" );
 
         if ( !location.startsWith( CLASSPATH_SCHEMA + ":" ) ) {
             die( "Location must starts with " + CLASSPATH_SCHEMA );

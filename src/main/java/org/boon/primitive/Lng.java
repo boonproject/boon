@@ -1,8 +1,9 @@
 package org.boon.primitive;
 
+import org.boon.Exceptions;
 import org.boon.Universal;
 
-import java.util.Objects;
+
 
 public class Lng {
 
@@ -13,7 +14,7 @@ public class Lng {
 
 
     public static long[] grow( long[] array, final int size ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         long[] newArray = new long[ array.length + size ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -22,7 +23,7 @@ public class Lng {
 
 
     public static long[] grow( long[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         long[] newArray = new long[ array.length * 2 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -31,7 +32,7 @@ public class Lng {
 
 
     public static long[] shrink( long[] array, int size ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         long[] newArray = new long[ array.length - size ];
 
@@ -41,7 +42,7 @@ public class Lng {
 
 
     public static long[] compact( long[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         int nullCount = 0;
         for ( long ch : array ) {
@@ -82,7 +83,7 @@ public class Lng {
      */
     @Universal
     public static long[] array( final long... array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         return array;
     }
 
@@ -111,7 +112,7 @@ public class Lng {
 
     @Universal
     public static long[] slc( long[] array, int startIndex, int endIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -131,7 +132,7 @@ public class Lng {
 
     @Universal
     public static long[] slc( long[] array, int startIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -150,7 +151,7 @@ public class Lng {
 
     @Universal
     public static long[] slcEnd( long[] array, int endIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
@@ -180,7 +181,7 @@ public class Lng {
 
     @Universal
     public static long[] copy( long[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         long[] newArray = new long[ array.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
@@ -189,7 +190,7 @@ public class Lng {
 
     @Universal
     public static long[] add( long[] array, long v ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         long[] newArray = new long[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
@@ -198,7 +199,7 @@ public class Lng {
 
     @Universal
     public static long[] add( long[] array, long[] array2 ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         long[] newArray = new long[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         System.arraycopy( array2, 0, newArray, array.length, array2.length );
@@ -208,7 +209,7 @@ public class Lng {
 
     @Universal
     public static long[] insert( final long[] array, final int idx, final long v ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         if ( idx >= array.length ) {
             return add( array, v );
@@ -248,7 +249,7 @@ public class Lng {
 
     @Universal
     public static long[] insert( final long[] array, final int fromIndex, final long[] values ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
             return add( array, values );
@@ -294,7 +295,7 @@ public class Lng {
     private static int calculateIndex( long[] array, int originalIndex ) {
         final int length = array.length;
 
-        Objects.requireNonNull( array, "array cannot be null" );
+        Exceptions.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;

@@ -7,6 +7,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import static org.boon.Exceptions.requireNonNull;
+
 
 /**
  * Utility methods to convert MBeans to a Map.
@@ -17,8 +19,8 @@ public class MBeans {
                                            final ObjectName name ) {
 
 
-        Objects.requireNonNull( server, "server cannot be null" );
-        Objects.requireNonNull( name, "name cannot be null" );
+        requireNonNull( server, "server cannot be null" );
+        requireNonNull( name, "name cannot be null" );
 
 
             /* Return the bean attributes converted to a map. */
@@ -138,8 +140,8 @@ public class MBeans {
 
     public static DynamicMBean createMBean( final Object instance, final Class<?> managedInterface ) {
 
-        Objects.requireNonNull( instance, "instance cannot be null" );
-        Objects.requireNonNull( managedInterface, "managedInterface cannot be null" );
+        requireNonNull( instance, "instance cannot be null" );
+        requireNonNull( managedInterface, "managedInterface cannot be null" );
 
 
         try {
@@ -158,9 +160,9 @@ public class MBeans {
 
     public static void registerMBean( final String prefix, final String name, final Object mbean ) {
 
-        Objects.requireNonNull( prefix, "prefix can't be null" );
-        Objects.requireNonNull( name, "name can't be null" );
-        Objects.requireNonNull( mbean, "mbean can't be null" );
+        Exceptions.requireNonNull( prefix, "prefix can't be null" );
+        Exceptions.requireNonNull( name, "name can't be null" );
+        Exceptions.requireNonNull( mbean, "mbean can't be null" );
 
         String nameOfBean = nameOfBean = String.format( "%s.%s:type=%s",
                 prefix, mbean.getClass().getSimpleName(),

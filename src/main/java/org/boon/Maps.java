@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.requireNonNull;
 
 public class Maps {
 
@@ -170,23 +171,23 @@ public class Maps {
         }
 
         public EntryImpl( EntryImpl<K, V> impl ) {
-            Objects.requireNonNull( impl );
-            Objects.requireNonNull( impl.k );
+            requireNonNull( impl );
+            requireNonNull( impl.k );
 
             this.k = impl.k;
             this.v = impl.v;
         }
 
         public EntryImpl( Entry<K, V> entry ) {
-            Objects.requireNonNull( entry );
-            Objects.requireNonNull( entry.key() );
+            requireNonNull( entry );
+            requireNonNull( entry.key() );
 
             this.k = entry.key();
             this.v = entry.value();
         }
 
         public EntryImpl( K k, V v ) {
-            Objects.requireNonNull( k );
+            Exceptions.requireNonNull( k );
 
             this.k = k;
             this.v = v;
@@ -229,7 +230,7 @@ public class Maps {
 
         @Override
         public int compareTo( Entry entry ) {
-            Objects.requireNonNull( entry );
+            requireNonNull( entry );
             return this.key().toString().compareTo( entry.key().toString() );
         }
 

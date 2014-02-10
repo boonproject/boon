@@ -5,7 +5,7 @@ import org.boon.Arrays;
 import org.boon.Exceptions;
 import org.boon.Universal;
 
-import java.util.Objects;
+
 
 public class Chr {
 
@@ -30,7 +30,7 @@ public class Chr {
      */
     @Universal
     public static char[] array( final char... array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         return array;
     }
 
@@ -70,7 +70,7 @@ public class Chr {
 
     @Universal
     public static char[] slc( char[] array, int startIndex, int endIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -90,7 +90,7 @@ public class Chr {
 
     @Universal
     public static char[] slc( char[] array, int startIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -109,7 +109,7 @@ public class Chr {
 
     @Universal
     public static char[] slcEnd( char[] array, int endIndex ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
@@ -193,7 +193,7 @@ public class Chr {
 
 
     public static char[] compact( char[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         int nullCount = 0;
         for ( char ch : array ) {
@@ -282,7 +282,7 @@ public class Chr {
 
     @Universal
     public static char[] copy( char[] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         char[] newArray = new char[ array.length ];
         arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
@@ -290,7 +290,7 @@ public class Chr {
 
     @Universal
     public static char[] copy( char[] array, int offset, int length ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         char[] newArray = new char[ length ];
         arraycopy ( array, offset, newArray, 0, length );
         return newArray;
@@ -299,7 +299,7 @@ public class Chr {
 
     @Universal
     public static char[] add( char[] array, char v ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         char[] newArray = new char[ array.length + 1 ];
         arraycopy ( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
@@ -329,7 +329,7 @@ public class Chr {
 
     @Universal
     public static char[] insert( final char[] array, final int idx, final char v ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         if ( idx >= array.length ) {
             return add( array, v );
@@ -381,7 +381,7 @@ public class Chr {
 
     @Universal
     public static char[] insert( final char[] array, final int fromIndex, final char[] values ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
             return add( array, values );
@@ -437,7 +437,7 @@ public class Chr {
     private static int calculateIndex( char[] array, int originalIndex ) {
         final int length = array.length;
 
-        Objects.requireNonNull( array, "array cannot be null" );
+        Exceptions.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;

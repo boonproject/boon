@@ -28,6 +28,8 @@ import org.boon.core.Function;
 
 import java.util.*;
 
+import static org.boon.Exceptions.requireNonNull;
+
 
 /**
  * Wraps regular collections in data repo searchable collections.
@@ -342,7 +344,7 @@ public class Collections {
      */
     private static Function createKeyGetter( final FieldAccess field ) {
 
-        Objects.requireNonNull( field, "field cannot be null" );
+        requireNonNull( field, "field cannot be null" );
         return new Function() {
             @Override
             public Object apply( Object o ) {

@@ -8,6 +8,11 @@ import static org.boon.Lists.toList;
 
 public class Boon {
 
+
+    public static boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
+    }
+
     public static void println( String message ) {
         Sys.println( message );
     }

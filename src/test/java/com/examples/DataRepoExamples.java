@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Objects;
 
+
 import static com.examples.security.model.User.user;
 import static org.boon.Boon.putl;
 import static org.boon.Boon.puts;

@@ -1,6 +1,7 @@
 package org.boon.validation;
 
 
+import org.boon.Exceptions;
 import org.boon.Maps;
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
@@ -209,7 +210,7 @@ public class RecursiveDescentPropertyValidator {
 
         Map<String, Object> applicationContext = ValidationContext.get().getObjectRegistry();
 
-        Objects.requireNonNull( applicationContext );
+        Exceptions.requireNonNull( applicationContext );
 
         return ( FieldValidator ) applicationContext
                 .get( "/org/boon/validator/" + validationMetaDataName );

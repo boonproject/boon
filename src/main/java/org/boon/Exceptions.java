@@ -11,6 +11,28 @@ import static org.boon.Boon.sputs;
 public class Exceptions {
 
 
+
+    public static void requireNonNull(Object obj) {
+        if (obj == null)
+            die("Required object assertion exception");
+    }
+
+    public static void  requireNonNulls(String message, Object... array) {
+
+        for (Object obj : array) {
+            if (obj == null)
+               die("Required object assertion exception");
+
+        }
+    }
+
+
+    public static void requireNonNull(Object obj, String message) {
+        if (obj == null)
+            die(message);
+
+    }
+
     public static boolean die() {
         throw new SoftenedException( "died" );
     }

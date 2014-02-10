@@ -103,8 +103,8 @@ public class BeanUtils {
      * @return
      */
     public static void setPropertyValue( final Object root, final Object newValue, final String... properties ) {
-        Objects.requireNonNull( root );
-        Objects.requireNonNull( properties );
+        Exceptions.requireNonNull( root );
+        Exceptions.requireNonNull( properties );
 
 
         Object object = root;
@@ -155,8 +155,8 @@ public class BeanUtils {
      * @return
      */
     public static Object getPropertyValue( final Object root, final String... properties ) {
-        Objects.requireNonNull( root );
-        Objects.requireNonNull( properties );
+        Exceptions.requireNonNull( root );
+        Exceptions.requireNonNull( properties );
 
 
         Object object = root;
@@ -198,8 +198,8 @@ public class BeanUtils {
      * @return
      */
     public static Class<?> getPropertyType( final Object root, final String property ) {
-        Objects.requireNonNull( root );
-        Objects.requireNonNull( property );
+        Exceptions.requireNonNull( root );
+        Exceptions.requireNonNull( property );
 
         Map<String, FieldAccess> fields = getPropertyFieldAccessMap( root.getClass() );
 
@@ -211,8 +211,8 @@ public class BeanUtils {
     @SuppressWarnings ( "unchecked" )
     public static <T> T idxGeneric( Class<T> t, Object object, final String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -259,8 +259,8 @@ public class BeanUtils {
      */
     public static Object idx( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -276,8 +276,8 @@ public class BeanUtils {
      */
     public static void idx( Object object, String path, Object value ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -290,8 +290,8 @@ public class BeanUtils {
      * @return
      */
     public static Object idxRelax( Object object, final String path ) {
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -357,8 +357,8 @@ public class BeanUtils {
      */
     public static int getPropertyInt( final Object root, final String... properties ) {
 
-        Objects.requireNonNull( root );
-        Objects.requireNonNull( properties );
+        Exceptions.requireNonNull( root );
+        Exceptions.requireNonNull( properties );
 
 
         Object object = baseForGetProperty( root, properties );
@@ -423,8 +423,8 @@ public class BeanUtils {
      */
     public static int idxInt( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -458,8 +458,8 @@ public class BeanUtils {
      */
     public static byte idxByte( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -493,8 +493,8 @@ public class BeanUtils {
      */
     public static float idxFloat( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -533,8 +533,8 @@ public class BeanUtils {
      */
     public static short idxShort( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -570,8 +570,8 @@ public class BeanUtils {
      */
     public static char idxChar( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -609,8 +609,8 @@ public class BeanUtils {
      */
     public static double idxDouble( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -648,8 +648,8 @@ public class BeanUtils {
      */
     public static long idxLong( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -682,8 +682,8 @@ public class BeanUtils {
 
     public static boolean idxBoolean( Object object, String path ) {
 
-        Objects.requireNonNull( object );
-        Objects.requireNonNull( path );
+        Exceptions.requireNonNull( object );
+        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 

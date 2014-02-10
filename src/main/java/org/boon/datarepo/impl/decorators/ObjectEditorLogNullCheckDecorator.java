@@ -4,9 +4,10 @@ package org.boon.datarepo.impl.decorators;
 import org.boon.criteria.internal.Update;
 import org.boon.datarepo.ObjectEditor;
 
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static org.boon.Exceptions.requireNonNull;
 
 
 public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDecoratorBase<KEY, ITEM> {
@@ -54,7 +55,7 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void put( ITEM item ) {
-        Objects.requireNonNull( item, "item cannot be null" );
+        requireNonNull( item, "item cannot be null" );
         log( "put (item=%s)", item );
         super.put( item );
     }
@@ -62,14 +63,14 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean add( ITEM item ) {
-        Objects.requireNonNull( item, "item cannot be null" );
+        requireNonNull( item, "item cannot be null" );
         log( "addObject (item=%s)", item );
         return super.add( item );
     }
 
     @Override
     public ITEM get( KEY key ) {
-        Objects.requireNonNull( key, "key cannot be null" );
+        requireNonNull( key, "key cannot be null" );
         log( "get (key=%s)", key );
 
         return super.get( key );
@@ -78,7 +79,7 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modify( ITEM item ) {
-        Objects.requireNonNull( item, "item cannot be null" );
+        requireNonNull( item, "item cannot be null" );
         log( "modify (item=%s)", item );
 
         super.modify( item );
@@ -86,9 +87,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modify( ITEM item, String property, Object value ) {
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -97,9 +98,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modifyByValue( ITEM item, String property, String value ) {
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -108,9 +109,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modify( ITEM item, String property, int value ) {
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -120,9 +121,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
     @Override
     public void modify( ITEM item, String property, long value ) {
 
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -132,9 +133,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
     @Override
     public void modify( ITEM item, String property, char value ) {
 
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -144,9 +145,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
     @Override
     public void modify( ITEM item, String property, short value ) {
 
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -155,9 +156,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modify( ITEM item, String property, byte value ) {
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -166,9 +167,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modify( ITEM item, String property, float value ) {
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -177,9 +178,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modify( ITEM item, String property, double value ) {
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, set=%s)", item, property, value );
 
@@ -188,8 +189,8 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void modify( ITEM item, Update... values ) {
-        Objects.requireNonNull( item, "item cannot be null" );
-        Objects.requireNonNull( values, "value cannot be null" );
+        requireNonNull( item, "item cannot be null" );
+        requireNonNull( values, "value cannot be null" );
 
         log( "modify (item=%s, property=%s, update=%s)", item, values );
 
@@ -198,9 +199,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, String property, Object value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
 
         super.update( key, property, value );
@@ -208,9 +209,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void updateByValue( KEY key, String property, String value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "updateByValue (key=%s, property=%s, set=%s)", key, property, value );
 
         super.updateByValue( key, property, value );
@@ -218,18 +219,18 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, String property, int value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
         super.update( key, property, value );
     }
 
     @Override
     public void update( KEY key, String property, long value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
 
         super.update( key, property, value );
@@ -237,9 +238,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, String property, char value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
 
         super.update( key, property, value );
@@ -247,9 +248,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, String property, short value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
 
         super.update( key, property, value );
@@ -257,9 +258,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, String property, byte value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
 
         super.update( key, property, value );
@@ -267,9 +268,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, String property, float value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
 
         super.update( key, property, value );
@@ -277,9 +278,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, String property, double value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "update (key=%s, property=%s, set=%s)", key, property, value );
 
         super.update( key, property, value );
@@ -287,8 +288,8 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public void update( KEY key, Update... values ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( values, "values cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( values, "values cannot be null" );
 
         log( "update (key=%s, update=%s)", key, values );
 
@@ -297,10 +298,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, Object compare, Object value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -308,10 +309,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, int compare, int value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -319,10 +320,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, long compare, long value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -330,10 +331,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, char compare, char value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -341,10 +342,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, short compare, short value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -352,10 +353,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, byte compare, byte value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -363,10 +364,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, float compare, float value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -374,10 +375,10 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndUpdate( KEY key, String property, double compare, double value ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
-        Objects.requireNonNull( value, "value cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( value, "value cannot be null" );
         log( "compareAndUpdate (key=%s, property=%s, compare=%s, set=%s)", key, property, compare, value );
 
         return super.compareAndUpdate( key, property, compare, value );
@@ -385,9 +386,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndIncrement( KEY key, String property, int compare ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
         log( "compareAndIncrement (key=%s, property=%s, compare=%s)", key, property, compare );
 
         return super.compareAndIncrement( key, property, compare );
@@ -395,9 +396,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndIncrement( KEY key, String property, long compare ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
         log( "compareAndIncrement (key=%s, property=%s, compare=%s)", key, property, compare );
 
         return super.compareAndIncrement( key, property, compare );
@@ -405,9 +406,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndIncrement( KEY key, String property, short compare ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
         log( "compareAndIncrement (key=%s, property=%s, set=%s)", key, property, compare );
 
         return super.compareAndIncrement( key, property, compare );
@@ -415,9 +416,9 @@ public class ObjectEditorLogNullCheckDecorator<KEY, ITEM> extends ObjectEditorDe
 
     @Override
     public boolean compareAndIncrement( KEY key, String property, byte compare ) {
-        Objects.requireNonNull( key, "key cannot be null" );
-        Objects.requireNonNull( property, "property cannot be null" );
-        Objects.requireNonNull( compare, "compare cannot be null" );
+        requireNonNull( key, "key cannot be null" );
+        requireNonNull( property, "property cannot be null" );
+        requireNonNull( compare, "compare cannot be null" );
         log( "compareAndIncrement (key=%s, property=%s, set=%s)", key, property, compare );
 
         return super.compareAndIncrement( key, property, compare );

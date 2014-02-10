@@ -1,8 +1,10 @@
 package org.boon.primitive;
 
 
+import org.boon.Exceptions;
+
 import java.util.Arrays;
-import java.util.Objects;
+
 
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
@@ -375,7 +377,7 @@ public class CharScanner {
     }
 
     public static char[][] compact( char[][] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         int nullCount = 0;
         for ( char[] ch : array ) {
@@ -401,7 +403,7 @@ public class CharScanner {
 
 
     private static char[][] _grow( char[][] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         char[][] newArray = new char[ array.length * 2 ][];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -409,7 +411,7 @@ public class CharScanner {
     }
 
     private static char[][] __shrink( char[][] array, int size ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         char[][] newArray = new char[ array.length - size ][];
 
         System.arraycopy( array, 0, ( char[][] ) newArray, 0, array.length - size );

@@ -1,6 +1,8 @@
 package org.boon.primitive;
 
-import java.util.Objects;
+import org.boon.Exceptions;
+
+
 
 import static org.boon.Exceptions.die;
 
@@ -205,7 +207,7 @@ public class ByteScanner {
     }
 
     private static byte[][] _grow( byte[][] array ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
 
         byte[][] newArray = new byte[ array.length * 2 ][];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -213,7 +215,7 @@ public class ByteScanner {
     }
 
     private static byte[][] __shrink( byte[][] array, int size ) {
-        Objects.requireNonNull( array );
+        Exceptions.requireNonNull( array );
         byte[][] newArray = new byte[ array.length - size ][];
 
         System.arraycopy( array, 0, newArray, 0, array.length - size );

@@ -10,6 +10,7 @@ import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
 
 import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.requireNonNull;
 import static org.boon.Lists.*;
 
 public class Classpaths {
@@ -28,7 +29,7 @@ public class Classpaths {
             }
         }
 
-        Objects.requireNonNull( provider, "Zip file provider not found" );
+        requireNonNull( provider, "Zip file provider not found" );
 
         FileSystem fs = null;
 
@@ -46,7 +47,7 @@ public class Classpaths {
             }
         }
 
-        Objects.requireNonNull( provider, "Zip file system was not found" );
+        requireNonNull( provider, "Zip file system was not found" );
 
         return fs;
     }

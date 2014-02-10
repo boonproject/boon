@@ -11,10 +11,10 @@ import org.boon.primitive.CharBuf;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.boon.Boon.sputl;
 import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.*;
 
 
 public abstract class Criterion<VALUE> extends Criteria {
@@ -37,9 +37,9 @@ public abstract class Criterion<VALUE> extends Criteria {
     private Map<String, FieldAccess> fields;
 
     public Criterion( String name, Operator operator, VALUE... values ) {
-        Objects.requireNonNull( name, "name cannot be null" );
-        Objects.requireNonNull( operator, "operator cannot be null" );
-        Objects.requireNonNull( values, "values cannot be null" );
+        requireNonNull( name, "name cannot be null" );
+        requireNonNull( operator, "operator cannot be null" );
+        requireNonNull( values, "values cannot be null" );
 
         this.name = name;
         this.operator = operator;
@@ -168,7 +168,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         try {
 
-            Objects.requireNonNull( o, "object under test can't be null" );
+            requireNonNull( o, "object under test can't be null" );
 
             this.objectUnderTest = o;
 
@@ -193,7 +193,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             return Exceptions.handle( Typ.bool,
                     sputl( "In class " + this.getClass().getName(),
                             "the test method is unable to test the following criteria operator",
-                            Objects.toString( this.getOperator() ),
+                            String.valueOf( this.getOperator() ),
                             sputs( "The field name is          :          ", this.getName() ),
                             sputs( "The value is               :          ", this.getValue() ),
                             sputs( "The value type is          :          ", this.getValue().getClass().getName() ),

@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.requireNonNull;
 
 public class Annotations {
 
@@ -304,8 +305,8 @@ public class Annotations {
      */
     private static PropertyDescriptor getPropertyDescriptor( final Class<?> type, final String propertyName ) {
 
-        Objects.requireNonNull( type );
-        Objects.requireNonNull( propertyName );
+        requireNonNull( type );
+        requireNonNull( propertyName );
 
         if ( !propertyName.contains( "." ) ) {
             return doGetPropertyDescriptor( type, propertyName );

@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl.indexes;
 
+import org.boon.Exceptions;
 import org.boon.datarepo.LookupIndex;
 import org.boon.datarepo.spi.SPIFactory;
 import org.boon.core.Function;
@@ -160,12 +161,12 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
 
     public void setKeyGetter( Function<ITEM, KEY> keyGetter ) {
-        Objects.requireNonNull( keyGetter, "keyGetter cannot be null" );
+        Exceptions.requireNonNull( keyGetter, "keyGetter cannot be null" );
         this.keyGetter = keyGetter;
     }
 
     public void setPrimaryKeyGetter( Function<ITEM, KEY> keyGetter ) {
-        Objects.requireNonNull( keyGetter, "keyGetter cannot be null" );
+        Exceptions.requireNonNull( keyGetter, "keyGetter cannot be null" );
         storeKeyInIndexOnly = true;
         this.primaryKeyGetter = keyGetter;
     }

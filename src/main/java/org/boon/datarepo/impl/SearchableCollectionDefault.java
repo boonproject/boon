@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl;
 
+import org.boon.Exceptions;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.internal.Criteria;
@@ -53,7 +54,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
 
     public boolean add( ITEM item ) {
 
-        Objects.requireNonNull( item, "No nulls allowed in repo" );
+        Exceptions.requireNonNull( item, "No nulls allowed in repo" );
 
         KEY key = getKey( item );
         if ( primaryIndex.has( key ) ) {
