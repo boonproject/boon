@@ -649,7 +649,9 @@ public class IOTest {
         //uts( IO.list( "classpath:/org/node" ) );
 
         //Proper URL
-        ok |= Lists.idx( IO.list( "classpath:/org/node" ), 0 ).endsWith( "org" + File.separator + "node" + File.separator + "file1.txt" )
+        List<String> paths = IO.list( "classpath:/org/node" );
+        Collections.sort(paths);
+        ok |= Lists.idx( paths, 0 ).endsWith( "org" + File.separator + "node" + File.separator + "file1.txt" )
                 || die();
 
     }
