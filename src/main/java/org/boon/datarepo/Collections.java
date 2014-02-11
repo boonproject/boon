@@ -212,7 +212,7 @@ public class Collections {
         for ( Class<?> cls : classes ) {
 
             Map<String, FieldAccess> fieldsSubType
-                    = BeanUtils.getPropertyFieldAccessMap( cls );
+                    = BeanUtils.getFieldsFromObject( cls );
 
             for ( String sKey : fieldsSubType.keySet() ) {
                 if ( !fields.containsKey( sKey ) ) {

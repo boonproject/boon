@@ -700,6 +700,10 @@ public class MapObjectConversion {
             return null;
         }
 
+        if (object instanceof  Map) {
+            return ( Map<String, Object> ) object;
+        }
+
         Map<String, Object> map = new LinkedHashMap<>();
 
 

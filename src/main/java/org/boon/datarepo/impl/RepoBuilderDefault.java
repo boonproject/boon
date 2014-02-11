@@ -655,11 +655,11 @@ public class RepoBuilderDefault implements RepoBuilder {
         /**
          * Load all of the fields that we need.
          */
-        this.fields = BeanUtils.getPropertyFieldAccessMap( clazz );
+        this.fields = BeanUtils.getFieldsFromObject( clazz );
 
         for ( Class<?> cls : classes ) {
             Map<String, FieldAccess> fieldsComponentType
-                    = BeanUtils.getPropertyFieldAccessMap( cls );
+                    = BeanUtils.getFieldsFromObject( cls );
 
             for ( String sKey : fieldsComponentType.keySet() ) {
                 if ( !fields.containsKey( sKey ) ) {

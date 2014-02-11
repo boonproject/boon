@@ -44,7 +44,7 @@ public class CriteriaTest {
 
     @Before
     public void setUp() throws Exception {
-        fields = BeanUtils.getPropertyFieldAccessMap( TestClass.class );
+        fields = BeanUtils.getFieldsFromObject( TestClass.class );
 
         items = Lists.list(
                 new TestClass( 0, 0.1f, "a", ( short ) 1, "dog", "cat", "girl" ),

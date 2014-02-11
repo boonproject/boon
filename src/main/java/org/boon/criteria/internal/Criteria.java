@@ -47,7 +47,7 @@ public abstract class Criteria implements Predicate {
             if ( o != null ) {
                 fields =  BeanUtils.getFieldsFromObject( o );
             } else {
-                fields = BeanUtils.getPropertyFieldAccessMap( clazz );
+                fields = BeanUtils.getFieldsFromObject( clazz );
             }
         }
         return fields;

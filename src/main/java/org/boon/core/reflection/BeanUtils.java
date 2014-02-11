@@ -32,7 +32,7 @@ public class BeanUtils {
      * @param clazz gets the properties or fields of this class.
      * @return
      */
-    public static Map<String, FieldAccess> getPropertyFieldAccessMap( Class<?> clazz ) {
+    private static Map<String, FieldAccess> getPropertyFieldAccessMap( Class<?> clazz ) {
         return Reflection.getPropertyFieldAccessMapFieldFirst( clazz );
     }
 
@@ -58,6 +58,10 @@ public class BeanUtils {
         }
     }
 
+    public static Map<String, FieldAccess> getFieldsFromObject( Class<?> cls ) {
+        return getPropertyFieldAccessMap( cls );
+    }
+
     /**
      * Get fields from object or Map.
      * Allows maps to act like they have fields.
@@ -66,12 +70,13 @@ public class BeanUtils {
      * @return
      */
     public static Map<String, FieldAccess> getFieldsFromObject( Object item ) {
-        Map<String, FieldAccess> fields = null;
+        Map<String, FieldAccess> fields;
 
-        fields = getPropertyFieldAccessMap( item.getClass() );
 
-        if ( item instanceof Map ) {
-            fields = getFieldsFromMap( fields, ( Map<String, Object> ) item );
+
+       fields = getPropertyFieldAccessMap( item.getClass() );
+       if ( item instanceof Map ) {
+           fields = getFieldsFromMap( fields, ( Map<String, Object> ) item );
         }
         return fields;
 
@@ -103,16 +108,13 @@ public class BeanUtils {
      * @return
      */
     public static void setPropertyValue( final Object root, final Object newValue, final String... properties ) {
-        Exceptions.requireNonNull( root );
-        Exceptions.requireNonNull( properties );
-
 
         Object object = root;
         Object parent = root;
 
         int index = 0;
         for ( String property : properties ) {
-            Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+            Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
             FieldAccess field = fields.get( property );
 
@@ -155,9 +157,6 @@ public class BeanUtils {
      * @return
      */
     public static Object getPropertyValue( final Object root, final String... properties ) {
-        Exceptions.requireNonNull( root );
-        Exceptions.requireNonNull( properties );
-
 
         Object object = root;
 
@@ -259,8 +258,6 @@ public class BeanUtils {
      */
     public static Object idx( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -276,8 +273,6 @@ public class BeanUtils {
      */
     public static void idx( Object object, String path, Object value ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -440,7 +435,7 @@ public class BeanUtils {
     public static byte getPropertyByte( final Object root, final String... properties ) {
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
@@ -457,9 +452,6 @@ public class BeanUtils {
      * @return
      */
     public static byte idxByte( Object object, String path ) {
-
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -513,7 +505,7 @@ public class BeanUtils {
 
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
@@ -533,8 +525,6 @@ public class BeanUtils {
      */
     public static short idxShort( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -551,7 +541,7 @@ public class BeanUtils {
 
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
@@ -570,8 +560,6 @@ public class BeanUtils {
      */
     public static char idxChar( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
@@ -995,5 +983,9 @@ public class BeanUtils {
             );
             Exceptions.handle( msg, notExpected );
         }
+    }
+
+    public static <T> T idx( Class<T> type, Object object, String property ) {
+        return null;
     }
 }

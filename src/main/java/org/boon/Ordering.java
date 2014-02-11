@@ -35,7 +35,7 @@ public class Ordering {
         if ( list == null || list.size() == 0 ) {
             return;
         }
-        Map<String, FieldAccess> fields = BeanUtils.getPropertyFieldAccessMap( list.iterator().next().getClass() );
+        Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject( list.iterator().next() );
 
         sortAsc( list, sortBy, fields );
     }
@@ -44,7 +44,7 @@ public class Ordering {
         if ( list == null || list.size() == 0 ) {
             return;
         }
-        Map<String, FieldAccess> fields = BeanUtils.getPropertyFieldAccessMap( list.iterator().next().getClass() );
+        Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject( list.iterator().next() );
 
         sortDesc( list, sortBy, fields );
     }

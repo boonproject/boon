@@ -43,7 +43,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
     public ResultSetImpl( List<T> results ) {
         if ( results.size() > 0 ) {
-            this.fields = BeanUtils.getPropertyFieldAccessMap( results.get( 0 ).getClass() );
+            this.fields = BeanUtils.getFieldsFromObject( results.get( 0 ));
         } else {
             this.fields = Collections.EMPTY_MAP;
         }
