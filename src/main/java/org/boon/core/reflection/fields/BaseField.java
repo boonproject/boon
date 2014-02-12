@@ -168,13 +168,13 @@ public abstract class BaseField implements FieldAccess {
         String alias = null;
         for (String aliasAnnotation : annotationsThatHaveAliases) {
             alias = getAlias(aliasAnnotation);
-            if (alias != null) {
+            if (! Str.isEmpty(alias)) {
                 bits.set( NAMED );
                 break;
             }
         }
 
-        return alias != null ? alias : name;
+        return Str.isEmpty( alias ) ? name : alias;
     }
 
 

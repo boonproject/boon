@@ -16,8 +16,8 @@
 package org.boon.datarepo;
 
 import org.boon.criteria.internal.Criteria;
-import org.boon.criteria.internal.Selector;
-import org.boon.criteria.internal.Sort;
+import org.boon.criteria.Selector;
+import org.boon.sort.Sort;
 import org.boon.criteria.internal.Visitor;
 import org.boon.datarepo.spi.SearchIndex;
 

@@ -17,7 +17,7 @@ package org.boon.datarepo;
 
 
 import org.boon.criteria.internal.Criteria;
-import org.boon.criteria.internal.Update;
+import org.boon.criteria.Update;
 
 import java.util.List;
 

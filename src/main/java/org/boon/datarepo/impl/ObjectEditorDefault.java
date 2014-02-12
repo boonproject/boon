@@ -2,7 +2,7 @@ package org.boon.datarepo.impl;
 
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.criteria.internal.Update;
+import org.boon.criteria.Update;
 import org.boon.datarepo.DataRepoException;
 import org.boon.datarepo.ObjectEditor;
 import org.boon.datarepo.SearchableCollection;

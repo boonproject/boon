@@ -1,7 +1,6 @@
-package org.boon.criteria.internal;
+package org.boon.sort;
 
 
-import org.boon.Ordering;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 

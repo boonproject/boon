@@ -646,7 +646,7 @@ public class Reflection {
             List<FieldAccess> list = Conversions.map( new FieldConverter( useUnsafe ), getAllFields( theClass ) );
             map = new LinkedHashMap<>( list.size() );
             for ( FieldAccess fieldAccess : list ) {
-                map.put( fieldAccess.getAlias(), fieldAccess );
+                map.put( fieldAccess.getName(), fieldAccess );
             }
             setAccessorFieldInCache( theClass, useUnsafe, map );
         }

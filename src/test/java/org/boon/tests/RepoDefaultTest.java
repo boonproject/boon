@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.*;
-import static org.boon.criteria.internal.ProjectedSelector.max;
-import static org.boon.criteria.internal.Selector.*;
-import static org.boon.criteria.internal.Update.set;
-import static org.boon.criteria.internal.Update.update;
+import static org.boon.criteria.ProjectedSelector.max;
+import static org.boon.criteria.Selector.*;
+import static org.boon.criteria.Update.set;
+import static org.boon.criteria.Update.update;
 import static org.boon.tests.model.Employee.employee;
 
 

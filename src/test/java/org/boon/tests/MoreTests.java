@@ -8,7 +8,7 @@ import org.boon.datarepo.DataRepoException;
 import org.boon.datarepo.Repo;
 import org.boon.datarepo.RepoBuilder;
 import org.boon.datarepo.Repos;
-import org.boon.criteria.internal.ProjectedSelector;
+import org.boon.criteria.ProjectedSelector;
 import org.boon.datarepo.impl.RepoBuilderDefault;
 import org.boon.tests.model.Department;
 import org.boon.tests.model.Employee;

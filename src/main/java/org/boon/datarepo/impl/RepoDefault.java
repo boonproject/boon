@@ -1,9 +1,12 @@
 package org.boon.datarepo.impl;
 
+import org.boon.criteria.Selector;
+import org.boon.criteria.Update;
 import org.boon.criteria.internal.*;
 import org.boon.datarepo.*;
 import org.boon.datarepo.spi.RepoComposer;
 import org.boon.datarepo.spi.SearchIndex;
+import org.boon.sort.Sort;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -499,7 +499,7 @@ public class Dates {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
 
-        jsonDateChars( calendar, date, buf );
+          jsonDateChars( calendar, date, buf );
     }
     public static void jsonDateChars( Calendar calendar, Date date, CharBuf buf ) {
         if (isGMT) {

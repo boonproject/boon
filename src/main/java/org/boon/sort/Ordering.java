@@ -1,5 +1,7 @@
-package org.boon;
+package org.boon.sort;
 
+import org.boon.Exceptions;
+import org.boon.Str;
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.Conversions;

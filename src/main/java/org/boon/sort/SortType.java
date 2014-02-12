@@ -1,4 +1,4 @@
-package org.boon.criteria.internal;
+package org.boon.sort;
 
 public enum SortType {
     ASCENDING,
