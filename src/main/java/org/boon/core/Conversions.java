@@ -387,8 +387,14 @@ public class Conversions {
                 return toCollection( clz, value );
 
             case INSTANCE:
-                if ( Typ.isMap( value.getClass() ) && Typ.doesMapHaveKeyTypeString( value ) ) {
-                    return ( T ) MapObjectConversion.fromMap ( ( Map<String, Object> ) value );
+                if ( value instanceof Map  && Typ.doesMapHaveKeyTypeString( value ) ) {
+                    return  MapObjectConversion.fromMap ( ( Map<String, Object> ) value, clz );
+                } else if (value instanceof List) {
+                    return  MapObjectConversion.fromList( (List<Object>) value, clz );
+                } else if (clz.isInstance( value )){
+                    return (T) value;
+                } else {
+                    return null;
                 }
 
             case ENUM:

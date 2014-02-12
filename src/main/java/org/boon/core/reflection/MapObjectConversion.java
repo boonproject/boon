@@ -14,6 +14,9 @@ import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import static org.boon.Boon.sputs;
@@ -23,6 +26,71 @@ import static org.boon.Boon.sputs;
  * Created by rick on 12/26/13.
  */
 public class MapObjectConversion {
+
+    public static <T> T fromList( List<Object> list, Class<T> clazz ) {
+
+        int size = list.size();
+
+        list = new ArrayList(list);
+        Constructor<?>[] constructors = clazz.getConstructors();
+        Constructor match = null;
+
+        Class paramType;
+        Object item;
+
+        loop:
+        for (Constructor constructor : constructors) {
+            Class[] parameterTypes = constructor.getParameterTypes();
+            if ( parameterTypes.length == size ) {
+
+                for ( int index = 0; index < size; index++ ) {
+                    paramType = parameterTypes[index];
+                    item = list.get( index );
+                    if ( paramType.isPrimitive() &&
+                            ( item instanceof Number || item instanceof Boolean || item instanceof String )) {
+                         list.set( index, Conversions.coerce(paramType, item));
+                    } else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
+                        list.set( index, fromMap( (Map<String, Object>)item, paramType));
+                    } else if ( item instanceof List && !Typ.isList( paramType )) {
+                        list.set( index, fromList( (List<Object>)item, paramType));
+                    } else if (  Typ.isList( paramType ) && item instanceof List) {
+                        List<Object> itemList = (List<Object>)item;
+                        if (itemList.size() > 0 && itemList.get(0 ) instanceof List) {
+                            Type type = constructor.getGenericParameterTypes()[index];
+                            if (type instanceof ParameterizedType) {
+                                ParameterizedType pType = ( ParameterizedType ) type;
+                                Class<?> componentType = (Class<?>) pType.getActualTypeArguments()[0];
+                                List newList = new ArrayList( itemList.size() );
+
+                                for (Object o : itemList)  {
+                                    List fromList = (List)o;
+                                    newList.add( fromList( fromList, componentType ) );
+                                }
+                                list.set( index, newList );
+
+                            }
+                        }
+                    }
+                    else if (!paramType.isInstance( item )){
+                       continue loop;
+                    }
+                }
+                match = constructor;
+            }
+        }
+
+        if ( match != null ) {
+            try {
+                return (T)  match.newInstance( list.toArray( new Object[list.size()] ) );
+            } catch ( Exception e ) {
+               return (T) Exceptions.handle(Object.class, e );
+            }
+        } else {
+            return null;
+        }
+    }
+
+
     @SuppressWarnings ( "unchecked" )
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
             return fromMap( map, Reflection.newInstance ( clazz ) );

@@ -149,9 +149,9 @@ public enum Type {
     }
 
 
-    public static boolean hasLength ( Type type ) {
+    public boolean  hasLength (  ) {
 
-        switch ( type ) {
+        switch ( this ) {
             case LIST:
             case MAP:
             case STRING:
@@ -164,4 +164,17 @@ public enum Type {
                 return false;
         }
     }
+
+    public  boolean isCollection (  ) {
+
+        switch ( this ) {
+            case LIST:
+            case SET:
+            case COLLECTION:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }
