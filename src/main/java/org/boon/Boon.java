@@ -4,7 +4,7 @@ package org.boon;
 import org.boon.core.Sys;
 import org.boon.primitive.CharBuf;
 
-import static org.boon.Lists.toList;
+import static org.boon.Lists.toListOrSingletonList;
 
 public class Boon {
 
@@ -36,7 +36,7 @@ public class Boon {
         if ( message == null ) {
             print( "<NULL>" );
         } else if ( message.getClass().isArray() ) {
-            print( toList( message ).toString() );
+            print( toListOrSingletonList( message ).toString() );
         } else {
             print( message.toString() );
         }
@@ -79,7 +79,7 @@ public class Boon {
             if ( message == null ) {
                 buf.add( "<NULL>" );
             } else if ( message.getClass().isArray() ) {
-                buf.add( toList( message ).toString() );
+                buf.add( toListOrSingletonList( message ).toString() );
             } else {
                 buf.add( message.toString() );
             }
@@ -104,7 +104,7 @@ public class Boon {
             if ( message == null ) {
                 buf.add( "<NULL>" );
             } else if ( message.getClass().isArray() ) {
-                buf.add( toList( message ).toString() );
+                buf.add( toListOrSingletonList( message ).toString() );
             } else {
                 buf.add( message.toString() );
             }
@@ -127,7 +127,7 @@ public class Boon {
             if ( message == null ) {
                 buf.append( "<NULL>" );
             } else if ( message.getClass().isArray() ) {
-                buf.append( toList( message ).toString() );
+                buf.append( toListOrSingletonList( message ).toString() );
             } else {
                 buf.append( message.toString() );
             }

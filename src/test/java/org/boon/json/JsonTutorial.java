@@ -209,7 +209,7 @@ public class JsonTutorial {
         MyBean myBean = new MyBean();
         File dst = File.createTempFile( "emp", ".json" );
 
-        ObjectMapper mapper = ObjectMapperFactory.create();
+        ObjectMapper mapper = JsonFactory.create();
 
         puts( "json string", mapper.writeValueAsString( myBean ) );
 
@@ -262,7 +262,7 @@ public class JsonTutorial {
 
     public static void part2WorkingWithInputStreamsReaders() throws Exception {
 
-        ObjectMapper mapper = ObjectMapperFactory.create();
+        ObjectMapper mapper = JsonFactory.create();
 
 
         puts( mapper.writeValueAsString( user ) );
@@ -303,7 +303,7 @@ public class JsonTutorial {
 
     public static void part3_1() throws Exception {
 
-        ObjectMapper mapper = ObjectMapperFactory.create();
+        ObjectMapper mapper = JsonFactory.create();
         puts( mapper.writeValueAsString( user ) );
 
         User user2 = mapper.readValue( mapper.writeValueAsString( user ), User.class );
@@ -316,7 +316,7 @@ public class JsonTutorial {
 
     public static void part3_2() throws Exception {
 
-        ObjectMapper mapper = ObjectMapperFactory.createUseJSONDates();
+        ObjectMapper mapper = JsonFactory.createUseJSONDates();
         puts( mapper.writeValueAsString( user ) );
 
         User user2 = mapper.readValue( mapper.writeValueAsString( user ), User.class );
@@ -330,7 +330,7 @@ public class JsonTutorial {
 
         puts ("\n\n\n", "\npart5 WorkingWithLists");
 
-        ObjectMapper mapper = ObjectMapperFactory.createUseJSONDates();
+        ObjectMapper mapper = JsonFactory.createUseJSONDates();
 
 
         final User diana = BeanUtils.copy( user );
@@ -363,7 +363,7 @@ public class JsonTutorial {
 
     public static void part4IntoAMapFirst() throws Exception {
 
-        ObjectMapper mapper = ObjectMapperFactory.createUseJSONDates();
+        ObjectMapper mapper = JsonFactory.createUseJSONDates();
 
 
         puts( mapper.writeValueAsString( user ) );
@@ -412,7 +412,7 @@ public class JsonTutorial {
 
         puts ("\n\n\n", "\npart6WorkingWithLists");
 
-        ObjectMapper mapper = ObjectMapperFactory.createUseJSONDates();
+        ObjectMapper mapper = JsonFactory.createUseJSONDates();
 
 
         final User diana = BeanUtils.copy( user );
@@ -448,7 +448,7 @@ public class JsonTutorial {
 
         puts ("\n\n\n", "\npart7WorkingWithListFromFile");
 
-        ObjectMapper mapper = ObjectMapperFactory.createUseAnnotations( true );
+        ObjectMapper mapper = JsonFactory.createUseAnnotations( true );
 
 
         /* Create two users. */
@@ -494,7 +494,7 @@ public class JsonTutorial {
 
         puts ("\n\n\n\npart8WorkingWithPrimitives");
 
-        ObjectMapper mapper = ObjectMapperFactory.create();
+        ObjectMapper mapper = JsonFactory.create();
 
 
         String intStr = "123456";
@@ -573,7 +573,7 @@ public class JsonTutorial {
         List<User> users2 = jsonParserAndMapper.parseListFromFile( User.class, file.toString() );
   
         //Or you can pass them to the ObjectMapper interface you know and love, just pass the factories to it.
-        ObjectMapper mapper = ObjectMapperFactory.create(jsonParserFactory, jsonSerializerFactory);
+        ObjectMapper mapper = JsonFactory.create( jsonParserFactory, jsonSerializerFactory );
 
 
         mapper.writeValue( file, users  );
@@ -654,7 +654,7 @@ public class JsonTutorial {
 
     private static void part12Gson() {
 
-        ObjectMapper gson = ObjectMapperFactory.createUseAnnotations ( true );
+        ObjectMapper gson = JsonFactory.createUseAnnotations( true );
 
 
         puts ( gson.toJson ( 1 ) );
@@ -707,7 +707,7 @@ public class JsonTutorial {
 
         ((Dog)person.pet).barks = true;
 
-        ObjectMapper mapper = ObjectMapperFactory.createUseAnnotations( true );
+        ObjectMapper mapper = JsonFactory.createUseAnnotations( true );
 
 
 

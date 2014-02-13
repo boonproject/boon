@@ -2,6 +2,7 @@ package org.boon;
 
 
 import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.Function;
 
@@ -13,6 +14,10 @@ import static org.boon.Exceptions.requireNonNull;
 
 public class Lists {
 
+
+    public static <T> T fromList( List<Object> list, Class<T> clazz ) {
+        return MapObjectConversion.fromList( list, clazz );
+    }
 
     public static <V> List<V> list( Class<V> clazz ) {
         return new ArrayList<>();
@@ -27,7 +32,7 @@ public class Lists {
     }
 
 
-    public static List<?> toList( Object item ) {
+    public static List<?> toListOrSingletonList( Object item ) {
         if ( item == null ) {
             return new ArrayList<>();
         } else if ( item.getClass().isArray() ) {
@@ -52,6 +57,33 @@ public class Lists {
         }
     }
 
+
+    public static List<?> toList( Object item ) {
+        if ( item == null ) {
+            return new ArrayList<>();
+        } else if ( item.getClass().isArray() ) {
+            final int length = Array.getLength( item );
+            List<Object> list = new ArrayList<>();
+            for ( int index = 0; index < length; index++ ) {
+                list.add( Array.get( item, index ) );
+            }
+            return list;
+        } else if ( item instanceof Collection ) {
+            return list( ( Collection ) item );
+        } else if ( item instanceof Iterator ) {
+            return list( ( Iterator ) item );
+        } else if ( item instanceof Enumeration ) {
+            return list( ( Enumeration ) item );
+        } else if ( item instanceof Iterable ) {
+            return list( ( Iterable ) item );
+        } else {
+            //return MapObjectConversion.toList( item );
+            List<Object> list = new ArrayList<>();
+            list.add( item );
+            return list;
+
+        }
+    }
     public static <V> List<V> list( Collection<V> collection ) {
         return new ArrayList<>( collection );
     }
@@ -188,6 +220,16 @@ public class Lists {
         return list.get( i );
 
     }
+
+    public static <T> List idxList( List<T> list, final int index ) {
+        return (List) idx(list, index);
+    }
+
+
+    public static <T> Map idxMap( List<T> list, final int index ) {
+        return (Map) idx(list, index);
+    }
+
 
     @Universal
     public static <V> void idx( List<V> list, int index, V v ) {

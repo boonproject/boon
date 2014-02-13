@@ -10,6 +10,7 @@ import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
+import org.boon.core.value.ValueContainer;
 import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
@@ -100,8 +101,11 @@ public class MapObjectConversion {
                 for ( int index = 0; index < size; index++ ) {
                     paramType = parameterTypes[index];
                     item = list.get( index );
+                    if (item instanceof ValueContainer) {
+                        item = ((ValueContainer)item).toValue();
+                    }
                     if ( paramType.isPrimitive() &&
-                            ( item instanceof Number || item instanceof Boolean || item instanceof String ) ) {
+                            ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {
                         list.set( index, Conversions.coerce( paramType, item ) );
                     } else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
                         list.set( index, fromMap( ( Map<String, Object> ) item, paramType ) );
@@ -117,6 +121,10 @@ public class MapObjectConversion {
                                 List newList = new ArrayList( itemList.size() );
 
                                 for ( Object o : itemList ) {
+                                    if (o instanceof ValueContainer) {
+                                        o = ((ValueContainer)o).toValue();
+                                    }
+
                                     List fromList = ( List ) o;
                                     newList.add( fromList( fromList, componentType ) );
                                 }
@@ -124,7 +132,10 @@ public class MapObjectConversion {
 
                             }
                         }
-                    } else if ( !paramType.isInstance( item ) ) {
+                    } else if ( paramType == Typ.string && item instanceof CharSequence) {
+                        list.set(index, item.toString());
+                    }
+                    else if ( !paramType.isInstance( item ) ) {
                         continue loop;
                     }
                 }

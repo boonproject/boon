@@ -333,12 +333,13 @@ public class Conversions {
         if ( value == null ) {
             return null;
         }
+
         switch (coerceTo) {
             case STRING:
             case CHAR_SEQUENCE:
                 return ( T ) value.toString();
 
-            case INTEGER:
+            case INT:
             case INTEGER_WRAPPER:
                 Integer i = toInt( value );
                 return ( T ) i;

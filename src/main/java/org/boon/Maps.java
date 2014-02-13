@@ -62,6 +62,14 @@ public class Maps {
     }
 
 
+    public static <K, V> Map idxMap( Map<K, V> map, K k ) {
+        return  (Map) map.get( k );
+    }
+
+
+    public static <K, V> List idxList( Map<K, V> map, K k ) {
+        return  (List) map.get( k );
+    }
 
     @Universal
     public static <K, V> SortedMap<K, V> copy( SortedMap<K, V> map ) {

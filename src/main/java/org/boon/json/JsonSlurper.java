@@ -61,7 +61,7 @@ public class JsonSlurper {
             throw new IllegalArgumentException("The JSON input text should neither be null nor empty.");
         }
 
-        return ObjectMapperFactory.create().fromJson ( text );
+        return JsonFactory.create().fromJson ( text );
     }
 
     /**
@@ -110,7 +110,7 @@ public class JsonSlurper {
             }
         } else {
             try {
-                return ObjectMapperFactory.create ().fromJson ( Files.newBufferedReader( IO.path ( file.toString () ), charset ) );
+                return JsonFactory.create().fromJson ( Files.newBufferedReader( IO.path ( file.toString () ), charset ) );
             } catch ( IOException e ) {
                 throw new JsonException("Unable to process file: " + file.getPath(), e);
             }

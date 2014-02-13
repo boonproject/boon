@@ -164,8 +164,20 @@ public class JsonMappingParser implements JsonParserAndMapper {
             Object obj = basicParser.parse( type, value );
             return (T) obj;
         } else {
-           Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-           return MapObjectConversion.fromValueMap (fields, objectMap, type );
+            Object object = objectParser.parse( Map.class, value );
+            return finalExtract( type, object );
+        }
+    }
+
+    private <T> T finalExtract( Class<T> type, Object object ) {
+        if (object instanceof Map ) {
+            Map<String, Value> objectMap = ( Map<String, Value> ) object;
+           return MapObjectConversion.fromValueMap( fields, objectMap, type );
+        } else if (object instanceof List ) {
+            List<Object> list = ( List<Object> ) object;
+            return MapObjectConversion.fromList ( list, type );
+        } else {
+            return (T)object;
         }
     }
 
@@ -180,8 +192,8 @@ public class JsonMappingParser implements JsonParserAndMapper {
                 return this.basicParser.parseAsStream ( type, value );
             }
         } else {
-            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap (fields, objectMap, type );
+            Object object = objectParser.parse( Map.class, value );
+            return finalExtract( type, object );
         }
     }
 
@@ -191,8 +203,8 @@ public class JsonMappingParser implements JsonParserAndMapper {
         if ( type==Object.class || type == Map.class || type == List.class || Typ.isBasicType ( type ) ) {
             return this.basicParser.parse( type, value, charset );
         } else {
-            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap (fields, objectMap, type );
+            Object object = objectParser.parse( Map.class, value );
+            return finalExtract( type, object );
         }
     }
 
@@ -201,8 +213,8 @@ public class JsonMappingParser implements JsonParserAndMapper {
         if ( type==Object.class ||  type == Map.class || type == List.class || Typ.isBasicType ( type ) ) {
             return basicParser.parse( type, value );
         } else {
-            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap ( fields, objectMap, type );
+            Object object = objectParser.parse( Map.class, value );
+            return finalExtract( type, object );
         }
     }
 
@@ -211,8 +223,8 @@ public class JsonMappingParser implements JsonParserAndMapper {
         if (  type==Object.class || type == Map.class || type == List.class || Typ.isBasicType ( type ) ) {
             return basicParser.parse( type, value );
         } else {
-            Map<String, Value> objectMap = ( Map<String, Value> ) objectParser.parse( Map.class, value );
-            return MapObjectConversion.fromValueMap ( fields, objectMap, type );
+            Object object = objectParser.parse( Map.class, value );
+            return finalExtract( type, object );
         }
 
     }

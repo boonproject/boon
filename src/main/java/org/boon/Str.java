@@ -214,6 +214,11 @@ public class Str {
         return new String( Chr.lpad( inStr.toCharArray(), size, fill ) );
     }
 
+
+    public static String lpad( String inStr, int size ) {
+        return new String( Chr.lpad( inStr.toCharArray(), size, ' ' ) );
+    }
+
     public static String zfill( int num, int size ) {
         return new String( Chr.lpad( Integer.toString( num ).toCharArray(),
                 size, '0' ) );
@@ -222,6 +227,11 @@ public class Str {
 
     public static String rpad( String inStr, int size, char fill ) {
         return new String( Chr.rpad( inStr.toCharArray(), size, fill ) );
+    }
+
+
+    public static String rpad( String inStr, int size) {
+        return new String( Chr.rpad( inStr.toCharArray(), size, ' ' ) );
     }
 
 

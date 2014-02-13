@@ -2,13 +2,38 @@ package org.boon.json;
 
 import org.boon.json.implementation.ObjectMapperImpl;
 
+import java.io.Reader;
+
 /**
  * Created by rick on 1/4/14.
  */
-public class ObjectMapperFactory {
+public class JsonFactory {
+
+
+    private static ObjectMapper json = JsonFactory.create();
 
     public static ObjectMapper create () {
           return new ObjectMapperImpl();
+    }
+
+    public static String toJson(Object value) {
+         return json.toJson( value );
+    }
+
+    public static void toJson(Object value, Appendable appendable) {
+         json.toJson( value, appendable );
+    }
+
+    public static <T> T fromJson(String str, Class<T> clazz) {
+        return json.fromJson(str, clazz);
+    }
+
+    public static Object fromJson(String str) {
+         return json.fromJson(str);
+    }
+
+    public static Object fromJson(Reader reader) {
+        return json.fromJson(reader);
     }
 
     public static ObjectMapper create (JsonParserFactory parserFactory, JsonSerializerFactory serializerFactory) {
