@@ -235,6 +235,15 @@ public class Str {
     }
 
 
+    public static String rpad( Object obj, int size) {
+        if (obj != null) {
+            return new String( Chr.rpad( obj.toString().toCharArray(), size, ' ' ) );
+        } else {
+            return new String( Chr.rpad( "<NULL>".toCharArray(), size, ' ' ) );
+        }
+    }
+
+
     public static String[] split( final String input,
                                   final char split ) {
         return StringScanner.split( input, split );

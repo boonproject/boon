@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static org.boon.Boon.sputs;
+import static org.boon.core.Type.gatherTypes;
 
 
 /**
@@ -81,77 +82,113 @@ public class MapObjectConversion {
 
     }
 
-    public static <T> T fromList( List<Object> list, Class<T> clazz ) {
+    public static <T> T fromList( List<Object> argList, Class<T> clazz ) {
+          return fromList( FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), argList, clazz );
+    }
 
-        int size = list.size();
+    public static <T> T fromList( FieldsAccessor fieldsAccessor, List<Object> argList, Class<T> clazz ) {
+        int size = argList.size();
 
-        list = new ArrayList( list );
+        List<Object> list = new ArrayList( argList );
         Constructor<?>[] constructors = clazz.getConstructors();
         Constructor match = null;
 
-        Class paramType;
-        Object item;
 
-        loop:
-        for ( Constructor constructor : constructors ) {
-            constructor.setAccessible( true );
-            Class[] parameterTypes = constructor.getParameterTypes();
-            if ( parameterTypes.length == size ) {
+        try {
 
-                for ( int index = 0; index < size; index++ ) {
-                    paramType = parameterTypes[index];
-                    item = list.get( index );
-                    if (item instanceof ValueContainer) {
-                        item = ((ValueContainer)item).toValue();
+
+            loop:
+            for ( Constructor constructor : constructors ) {
+                constructor.setAccessible( true );
+                Class[] parameterTypes = constructor.getParameterTypes();
+                if ( parameterTypes.length == size ) {
+
+                    for ( int index = 0; index < size; index++ ) {
+                        if ( !matchAndConvertConstructorArg(fieldsAccessor, list, constructor, parameterTypes, index ) ) continue loop;
                     }
-                    if ( paramType.isPrimitive() &&
-                            ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {
-                        list.set( index, Conversions.coerce( paramType, item ) );
-                    } else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
-                        list.set( index, fromMap( ( Map<String, Object> ) item, paramType ) );
-                    } else if ( item instanceof List && !Typ.isList( paramType ) ) {
-                        list.set( index, fromList( ( List<Object> ) item, paramType ) );
-                    } else if ( Typ.isList( paramType ) && item instanceof List ) {
-                        List<Object> itemList = ( List<Object> ) item;
-                        if ( itemList.size() > 0 && itemList.get( 0 ) instanceof List ) {
-                            Type type = constructor.getGenericParameterTypes()[index];
-                            if ( type instanceof ParameterizedType ) {
-                                ParameterizedType pType = ( ParameterizedType ) type;
-                                Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
-                                List newList = new ArrayList( itemList.size() );
+                    match = constructor;
+                }
+            }
 
-                                for ( Object o : itemList ) {
-                                    if (o instanceof ValueContainer) {
-                                        o = ((ValueContainer)o).toValue();
-                                    }
+            if ( match != null ) {
+                return ( T ) match.newInstance( list.toArray( new Object[list.size()] ) );
+            } else {
+                return fromListUsingFields( list, clazz );
+            }
 
-                                    List fromList = ( List ) o;
-                                    newList.add( fromList( fromList, componentType ) );
-                                }
-                                list.set( index, newList );
+        } catch ( Exception e ) {
 
+            if (match != null)  {
+                return ( T ) Exceptions.handle( Object.class, e,
+                        "\nconstructor parameter types", match.getParameterTypes(),
+                        "\nlist args after conversion", list, "types",
+                        gatherTypes( list ),
+                        "\noriginal args", argList,
+                        "original types", gatherTypes( argList ) );
+            } else {
+                return ( T ) Exceptions.handle( Object.class, e,
+                        "\nlist args after conversion", list, "types",
+                        gatherTypes( list ),
+                        "\noriginal args", argList,
+                        "original types", gatherTypes( argList ) );
+
+            }
+        }
+
+    }
+
+    private static boolean matchAndConvertConstructorArg( FieldsAccessor fieldsAccessor, List<Object> list, Constructor constructor, Class[] parameterTypes, int index ) {
+        try {
+
+            Class paramType;
+            Object item;
+            paramType = parameterTypes[index];
+            item = list.get( index );
+            if ( item instanceof ValueContainer ) {
+                item = ( ( ValueContainer ) item ).toValue();
+            }
+
+            if ( Typ.isPrimitiveOrWrapper( paramType ) &&
+                    ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {
+
+                    Object o = Conversions.coerceOrDie( paramType, item );
+                    list.set( index, o );
+            }
+            else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
+                list.set( index, fromMap(fieldsAccessor,  ( Map<String, Object> ) item, paramType ) );
+            } else if ( item instanceof List && !Typ.isList( paramType ) ) {
+                list.set( index, fromList(fieldsAccessor,  ( List<Object> ) item, paramType ) );
+            } else if ( Typ.isList( paramType ) && item instanceof List ) {
+                List<Object> itemList = ( List<Object> ) item;
+                if ( itemList.size() > 0 && (itemList.get( 0 ) instanceof List || itemList.get(0) instanceof ValueContainer)  ) {
+                    Type type = constructor.getGenericParameterTypes()[index];
+                    if ( type instanceof ParameterizedType ) {
+                        ParameterizedType pType = ( ParameterizedType ) type;
+                        Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
+                        List newList = new ArrayList( itemList.size() );
+
+                        for ( Object o : itemList ) {
+                            if ( o instanceof ValueContainer ) {
+                                o = ( ( ValueContainer ) o ).toValue();
                             }
+
+                            List fromList = ( List ) o;
+                            newList.add( fromList( fieldsAccessor, fromList, componentType ) );
                         }
-                    } else if ( paramType == Typ.string && item instanceof CharSequence) {
-                        list.set(index, item.toString());
-                    }
-                    else if ( !paramType.isInstance( item ) ) {
-                        continue loop;
+                        list.set( index, newList );
+
                     }
                 }
-                match = constructor;
+            } else if ( paramType == Typ.string && item instanceof CharSequence ) {
+                list.set( index, item.toString() );
+            } else if ( !paramType.isInstance( item ) ) {
+                return false;
             }
+        } catch (Exception ex) {
+            return false;
         }
 
-        if ( match != null ) {
-            try {
-                return ( T ) match.newInstance( list.toArray( new Object[list.size()] ) );
-            } catch ( Exception e ) {
-                return ( T ) Exceptions.handle( Object.class, e );
-            }
-        } else {
-            return fromListUsingFields( list, clazz );
-        }
+        return true;
     }
 
 
@@ -668,10 +705,10 @@ public class MapObjectConversion {
         Collection<Object> newCollection = Reflection.createCollection( field.type(), collectionOfValues.size() );
 
 
-        Class<?> componentClass = field.getComponentClass();
 
-        if ( componentClass != null ) {
+        if ( field.typeEnum().isCollection() ) {
 
+            Class<?> componentClass = field.getComponentClass();
 
             for ( Value value : ( List<Value> ) collectionOfValues ) {
 
@@ -688,6 +725,8 @@ public class MapObjectConversion {
             }
             field.setObject( newInstance, newCollection );
 
+        } else  {
+            field.setObject( newInstance, fromList( fieldsAccessor,  (List) acollectionOfValues, field.type()));
         }
 
     }

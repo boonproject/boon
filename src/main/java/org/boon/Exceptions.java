@@ -51,6 +51,12 @@ public class Exceptions {
         throw new SoftenedException( message );
     }
 
+
+
+    public static <T> T die( Class<T> clazz, Object... messages ) {
+        throw new SoftenedException( sputs(messages) );
+    }
+
     public static void handle( java.lang.Exception e ) {
         throw new SoftenedException( e );
     }
@@ -67,6 +73,13 @@ public class Exceptions {
     public static <T> T handle( Class<T> clazz, String message, Throwable e ) {
 
         throw new SoftenedException( message, e );
+    }
+
+
+
+    public static <T> T handle( Class<T> clazz,  Throwable e, Object... messages ) {
+
+        throw new SoftenedException( sputs(messages), e );
     }
 
 

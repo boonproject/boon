@@ -339,10 +339,30 @@ public class Conversions {
             case CHAR_SEQUENCE:
                 return ( T ) value.toString();
 
+
+
             case INT:
             case INTEGER_WRAPPER:
                 Integer i = toInt( value );
                 return ( T ) i;
+
+            case SHORT:
+            case SHORT_WRAPPER:
+                Short s = toShort( value );
+                return ( T ) s;
+
+
+
+            case BYTE:
+            case BYTE_WRAPPER:
+                Byte by = toByte( value );
+                return ( T ) by;
+
+
+            case CHAR:
+            case CHAR_WRAPPER:
+                Character ch = toChar( value );
+                return ( T ) ch;
 
             case LONG:
             case LONG_WRAPPER:
@@ -353,6 +373,13 @@ public class Conversions {
             case DOUBLE_WRAPPER:
                 Double d = toDouble ( value );
                 return ( T ) d;
+
+
+            case FLOAT:
+            case FLOAT_WRAPPER:
+                Float f =   toFloat( value );
+                return ( T ) f;
+
 
             case DATE:
                 return (T) toDate(value);
@@ -366,10 +393,6 @@ public class Conversions {
 
             case CALENDAR:
                 return (T) toCalendar( toDate(value) );
-
-            case FLOAT:
-            case FLOAT_WRAPPER:
-                return (T) (Float) toFloat( value );
 
             case BOOLEAN:
             case BOOLEAN_WRAPPER:
@@ -407,6 +430,132 @@ public class Conversions {
         }
     }
 
+    public static <T> T coerceOrDie( Class<T> clz, Object value ) {
+        return coerceOrDie( Type.getType( clz ), clz, value);
+    }
+    public static <T> T coerceOrDie( Type coerceTo, Class<T> clz, Object value ) {
+        if ( value == null ) {
+            return null;
+        }
+
+        switch (coerceTo) {
+            case STRING:
+            case CHAR_SEQUENCE:
+                return ( T ) value.toString();
+
+            case INT:
+            case INTEGER_WRAPPER:
+                Integer i = toInt( value );
+                if (i==Integer.MIN_VALUE ) {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+                return ( T ) i;
+
+
+            case SHORT:
+            case SHORT_WRAPPER:
+                Short s = toShort( value );
+                if (s==Short.MIN_VALUE ) {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+                return ( T ) s;
+
+
+
+            case BYTE:
+            case BYTE_WRAPPER:
+                Byte by = toByte( value );
+                if (by==Byte.MIN_VALUE ) {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+                return ( T ) by;
+
+
+            case CHAR:
+            case CHAR_WRAPPER:
+                Character ch = toChar( value );
+                if (ch== (char)0 ) {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+                return ( T ) ch;
+
+            case LONG:
+            case LONG_WRAPPER:
+                Long l = toLong ( value );
+                if (l==Long.MIN_VALUE ) {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+
+                return ( T ) l;
+
+            case DOUBLE:
+            case DOUBLE_WRAPPER:
+                Double d = toDouble ( value );
+                if (d==Double.MIN_VALUE ) {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+
+                return ( T ) d;
+
+
+            case FLOAT:
+            case FLOAT_WRAPPER:
+                Float f =  (Float) toFloat( value );
+                if (f==Float.MIN_VALUE ) {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+                return ( T ) f;
+
+            case DATE:
+                return (T) toDate(value);
+
+            case BIG_DECIMAL:
+                return (T) toBigDecimal( value );
+
+
+            case BIG_INT:
+                return (T) toBigInteger( value );
+
+            case CALENDAR:
+                return (T) toCalendar( toDate(value) );
+
+
+
+            case BOOLEAN:
+            case BOOLEAN_WRAPPER:
+                return (T) (Boolean) toBoolean( value );
+
+            case MAP:
+                if ( value instanceof Map ) {
+                    return ( T ) value;
+                }
+                return ( T ) toMap( value );
+
+            case ARRAY:
+                return toPrimitiveArrayIfPossible( clz, value );
+
+            case COLLECTION:
+                return toCollection( clz, value );
+
+            case INSTANCE:
+                if ( value instanceof Map  && Typ.doesMapHaveKeyTypeString( value ) ) {
+                    return  MapObjectConversion.fromMap ( ( Map<String, Object> ) value, clz );
+                } else if (value instanceof List) {
+                    return  MapObjectConversion.fromList( (List<Object>) value, clz );
+                } else if (clz.isInstance( value )){
+                    return (T) value;
+                } else {
+                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                }
+
+            case ENUM:
+                return (T) toEnum( (Class<? extends Enum>)clz, value );
+
+
+            default:
+                return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+        }
+    }
 
     @SuppressWarnings ( "unchecked" )
     public static <T> T coerceClassic( Class<T> clz, Object value ) {

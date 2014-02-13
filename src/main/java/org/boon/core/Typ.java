@@ -74,6 +74,15 @@ public class Typ {
                 || value instanceof Date || value instanceof Calendar || value instanceof Boolean );
     }
 
+
+    public static boolean isPrimitiveOrWrapper( Class<?> theClass ) {
+        return ( number.isAssignableFrom( theClass )
+                || date.isAssignableFrom( theClass )
+                || calendar.isAssignableFrom( theClass )
+                || bool.isAssignableFrom( theClass )
+                || theClass.isPrimitive() );
+    }
+
     public static boolean isBasicType( Class<?> theClass ) {
         return ( number.isAssignableFrom( theClass )
                 || chars.isAssignableFrom( theClass )

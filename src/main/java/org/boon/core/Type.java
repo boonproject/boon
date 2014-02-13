@@ -1,5 +1,8 @@
 package org.boon.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Type {
 
     INT, SHORT, BYTE, LONG, CHAR, BOOLEAN, COLLECTION, ARRAY, FLOAT, INSTANCE, BIG_INT, BIG_DECIMAL,
@@ -177,4 +180,28 @@ public enum Type {
         }
     }
 
+
+
+    public  static List<Type> gatherTypes ( List<?> list ) {
+
+        List<Type> types = new ArrayList();
+
+        for (Object o : list) {
+            types.add(Type.getInstanceType( o )) ;
+        }
+
+        return types;
+    }
+
+
+    public  static List<Type> gatherTypes ( Object... list ) {
+
+        List<Type> types = new ArrayList();
+
+        for (Object o : list) {
+            types.add(Type.getInstanceType( o )) ;
+        }
+
+        return types;
+    }
 }

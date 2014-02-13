@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static org.boon.Boon.puts;
 import static org.boon.Lists.*;
+import static org.boon.Lists.list;
 import static org.boon.Maps.*;
 import static org.boon.json.JsonFactory.*;
 
@@ -83,7 +84,13 @@ public class MapConversionTest {
 
         /** Showing the list and map. */
         puts( "Rick List", rickList );
-        puts( "Rick Map ", rickMap );
+        puts( "Rick Map ", rickMap  );
+
+
+
+        /** Showing the list and map with type info. */
+        puts( "Rick List    ", rpad(rickList, 50), rickList.getClass() );
+        puts( "Rick Map     ", rpad(rickMap,  50),  rickMap.getClass() );
 
 
         /** Indexing the list and map with boon slice index operator. */
@@ -125,8 +132,8 @@ public class MapConversionTest {
     }
 
     @Test
-    public void test() {
-        Employee emp = MapObjectConversion.fromList( Lists.list( ( Object ) "Rick", 29 ), Employee.class );
+    public void testBasicFromList() {
+        Employee emp = fromList( list( ( Object ) "Rick", 29 ), Employee.class );
 
         boolean ok = emp != null || die();
         ok = emp.name != null || die();
@@ -138,8 +145,8 @@ public class MapConversionTest {
 
 
     @Test
-    public void test2() {
-        Employee emp = MapObjectConversion.fromMap( Maps.map( "name", ( Object ) "Rick", "age", 29 ), Employee.class );
+    public void testBasicFromMaps() {
+        Employee emp = fromMap( map( "name", ( Object ) "Rick", "age", 29 ), Employee.class );
         boolean ok = emp != null || die();
         ok = emp.name != null || die();
         ok = emp.name.equals( "Rick" ) || die();
@@ -149,9 +156,26 @@ public class MapConversionTest {
 
 
     @Test
-    public void test3() {
+    public void testFromMapWithAList() {
         List<Object> list = Lists.list( ( Object ) "Jason", 21 );
-        Employee emp = MapObjectConversion.fromMap( Maps.map( "name", ( Object ) "Rick", "age", 29, "boss", list ), Employee.class );
+        Employee emp = fromMap( Maps.map( "name", ( Object ) "Rick", "age", 29, "boss", list ), Employee.class );
+        boolean ok = emp != null || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+        ok = emp.age == 29 || die();
+
+        ok = emp.boss != null || die();
+        ok = emp.boss.name.equals( "Jason" ) || die();
+        ok = emp.boss.age == 21 || die();
+
+    }
+
+
+
+    @Test
+    public void testFromJsonMapWithAList() {
+        List<Object> list = Lists.list( ( Object ) "Jason", 21 );
+        Employee emp = fromJson( toJson( map ( "name",  "Rick", "age", 29, "boss", list )), Employee.class );
         boolean ok = emp != null || die();
         ok = emp.name != null || die();
         ok = emp.name.equals( "Rick" ) || die();
@@ -165,10 +189,10 @@ public class MapConversionTest {
 
 
     @Test
-    public void test4() {
+    public void testListWithSubList() {
 
         List<Object> list = Lists.list( ( Object ) "Jason", 21 );
-        Employee emp = MapObjectConversion.fromList( Lists.list( ( Object ) "Rick", 29, list ), Employee.class );
+        Employee emp = fromList( Lists.list( ( Object ) "Rick", 29, list ), Employee.class );
 
         boolean ok = emp != null || die();
         ok = emp.name != null || die();
@@ -187,17 +211,56 @@ public class MapConversionTest {
     }
 
 
-    @Test
-    public void test6() {
 
-        List<Object> boss = Lists.list( ( Object ) "Jason", 21 );
-        List<Object> report = Lists.list( ( Object ) "Lucas", 10 );
+
+    @Test
+    public void testListWithSubListWithSubListUsingJson() {
+
+        List<Object> boss = list( ( Object ) "Jason", 21 );
+        List<Object> report = list( ( Object ) "Lucas", 10 );
 
 
         List<Object> reports = new ArrayList<>();
         reports.add( report );
 
-        Employee emp = MapObjectConversion.fromList( Lists.list( "Rick", 29, boss, reports ), Employee.class );
+        String str = toJson(list( "Rick", 29, boss, reports));
+
+        Employee emp = fromJson( str, Employee.class );
+
+        boolean ok = emp != null || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+
+        ok = emp.age == 29 || die();
+
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+        ok = emp.age == 29 || die();
+
+        ok = emp.boss != null || die();
+        ok = emp.boss.name.equals( "Jason" ) || die();
+        ok = emp.boss.age == 21 || die();
+
+
+        ok = emp.reports != null || die();
+
+        ok = emp.reports.size() == 1 || die();
+        ok = emp.reports.get( 0 ).name.equals( "Lucas" ) || die();
+        ok = emp.reports.get( 0 ).age == 10 || die();
+
+    }
+
+    @Test
+    public void testListWithSubListWithSubList() {
+
+        List<Object> boss = list( ( Object ) "Jason", 21 );
+        List<Object> report = list( ( Object ) "Lucas", 10 );
+
+
+        List<Object> reports = new ArrayList<>();
+        reports.add( report );
+
+        Employee emp = fromList( list( "Rick", 29, boss, reports ), Employee.class );
 
         boolean ok = emp != null || die();
         ok = emp.name != null || die();
@@ -224,16 +287,16 @@ public class MapConversionTest {
 
 
     @Test
-    public void test7() {
+    public void testListNotUsingConstructor() {
 
-        List<Object> boss = Lists.list( ( Object ) "Jason", 21 );
-        List<Object> report = Lists.list( ( Object ) "Lucas", 10 );
+        List<Object> boss = list( ( Object ) "Jason", 21 );
+        List<Object> report = list( ( Object ) "Lucas", 10 );
 
 
         List<Object> reports = new ArrayList<>();
         reports.add( report );
 
-        Employee emp = MapObjectConversion.fromListUsingFields( Lists.list( "Rick", 29, boss, reports ), Employee.class );
+        Employee emp = MapObjectConversion.fromListUsingFields( list( "Rick", 29, boss, reports ), Employee.class );
 
         boolean ok = emp != null || die();
         ok = emp.name != null || die();
