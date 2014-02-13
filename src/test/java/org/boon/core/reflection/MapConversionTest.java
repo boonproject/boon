@@ -143,4 +143,42 @@ public class MapConversionTest {
         ok = emp.reports.get(0).age == 10 || die();
 
     }
+
+
+
+
+    @Test
+    public void test7() {
+
+        List<Object> boss = Lists.list( (Object)"Jason", 21 );
+        List<Object> report = Lists.list( (Object)"Lucas", 10 );
+
+
+        List<Object> reports = new ArrayList<>();
+        reports.add( report );
+
+        Employee emp = MapObjectConversion.fromListUsingFields( Lists.list( "Rick", 29 , boss, reports), Employee.class );
+
+        boolean ok = emp !=null || die();
+        ok = emp.name !=null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+
+        ok = emp.age == 29 || die();
+
+        ok = emp.name !=null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+        ok = emp.age == 29 || die();
+
+        ok = emp.boss !=null || die();
+        ok = emp.boss.name.equals( "Jason" ) || die();
+        ok = emp.boss.age == 21 || die();
+
+
+        ok = emp.reports !=null || die();
+
+        ok = emp.reports.size() == 1 || die();
+        ok = emp.reports.get(0).name.equals( "Lucas" ) || die();
+        ok = emp.reports.get(0).age == 10 || die();
+
+    }
 }
