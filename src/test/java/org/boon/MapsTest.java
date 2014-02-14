@@ -39,6 +39,7 @@ public class MapsTest {
     final List<Dog> dogs = Lists.list( dog1, dog2 );
 
 
+
     @Test
     public void testToMap() {
 
@@ -1278,6 +1279,21 @@ public class MapsTest {
         assertEquals( "dog9", dogMap.get( "dog9" ).name );
 
         assertEquals( 10, len( dogMap ) );
+
+    }
+
+
+
+
+    @Test
+    public void testMapEquals() {
+
+
+        final Map<String, Dog> dogMap = Maps.toMap( "name", dogs );
+
+        HashMap<String, Dog> hashMap = new HashMap<>( dogMap );
+
+        boolean ok = dogMap.equals( hashMap ) || die();
 
     }
 

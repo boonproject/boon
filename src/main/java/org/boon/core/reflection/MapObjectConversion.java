@@ -519,7 +519,7 @@ public class MapObjectConversion {
                                 newMap.put( key, evalue );
                             }
 
-
+                            objValue = newMap;
 
                         } else {
                             objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
