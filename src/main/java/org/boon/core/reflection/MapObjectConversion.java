@@ -15,10 +15,7 @@ import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 import static org.boon.Boon.sputs;
@@ -725,7 +722,113 @@ public class MapObjectConversion {
             }
             field.setObject( newInstance, newCollection );
 
-        } else  {
+        } else if (field.typeEnum() == org.boon.core.Type.ARRAY) {
+
+            Class<?> componentClass = field.getComponentClass();
+            org.boon.core.Type componentType =  org.boon.core.Type.getType(componentClass);
+            int index = 0;
+
+            switch (componentType) {
+                case INT:
+                    int [] iarray = new int[collectionOfValues.size()];
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                          iarray[index] = value.intValue();
+                        index++;
+
+                    }
+                    field.setObject( newInstance, iarray);
+                    return;
+                case SHORT:
+                    short [] sarray = new short[collectionOfValues.size()];
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        sarray[index] = value.shortValue();
+                        index++;
+
+                    }
+                    field.setObject( newInstance, sarray);
+                    return;
+                case DOUBLE:
+                    double [] darray = new double[collectionOfValues.size()];
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        darray[index] = value.doubleValue();
+                        index++;
+
+                    }
+                    field.setObject( newInstance, darray);
+                    return;
+                case FLOAT:
+                    float [] farray = new float[collectionOfValues.size()];
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        farray[index] = value.floatValue();
+                        index++;
+
+                    }
+                    field.setObject( newInstance, farray);
+                    return;
+
+                case LONG:
+                    long [] larray = new long[collectionOfValues.size()];
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        larray[index] = value.longValue();
+                        index++;
+
+                    }
+                    field.setObject( newInstance, larray);
+                    return;
+
+
+                case BYTE:
+                    byte [] barray = new byte[collectionOfValues.size()];
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        barray[index] = value.byteValue();
+                        index++;
+
+                    }
+                    field.setObject( newInstance, barray);
+                    return;
+
+
+                case CHAR:
+                    char [] chars = new char[collectionOfValues.size()];
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        chars[index] = value.charValue();
+                        index++;
+                    }
+                    field.setObject( newInstance, chars);
+                    return;
+
+
+                default:
+                    Object array = Array.newInstance( componentClass, collectionOfValues.size() );
+                    Object o;
+
+                    for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        if (value instanceof ValueContainer) {
+                            o = value.toValue();
+                            if (o instanceof List) {
+                                o = fromList(fieldsAccessor, (List)o, componentClass);
+                                if (componentClass.isInstance( o )) {
+                                   Array.set(array, index, o);
+                                } else {
+                                    break;
+                                }
+                            }
+                        } else {
+                            o = value.toValue();
+                            if (componentClass.isInstance( o )) {
+                                Array.set(array, index, o);
+                            } else {
+                                Array.set(array, index, Conversions.coerce(componentClass, o));
+                            }
+                        }
+                        index++;
+                    }
+                    field.setObject( newInstance, array);
+                    return;
+
+            }
+        }
+        else  {
             field.setObject( newInstance, fromList( fieldsAccessor,  (List) acollectionOfValues, field.type()));
         }
 

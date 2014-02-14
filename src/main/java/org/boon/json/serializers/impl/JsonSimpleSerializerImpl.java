@@ -208,10 +208,9 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                 }
                 return false;
             case ARRAY:
-                Object []  array  = (Object []) value;
-                if ( array.length > 0) {
+                if ( Array.getLength (value) > 0) {
                     serializeFieldName ( fieldName, builder );
-                    this.serializeArray ( ( Object[] ) value, builder );
+                    this.serializeArray (  value, builder );
                     return true;
                 }
                 return false;

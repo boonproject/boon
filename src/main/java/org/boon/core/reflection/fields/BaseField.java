@@ -226,9 +226,20 @@ public abstract class BaseField implements FieldAccess {
                 }
 
 
+                if (name.startsWith ( "$" )) {
+                    this.typeEnum = Type.SYSTEM;
+                } else {
+                    this.typeEnum = Type.getType(type);
+                }
+
                 if ( parameterizedType == null ) {
                     componentClass = null;
-                } else {
+                }  else if ( this.typeEnum == Type.ARRAY) {
+
+                    componentClass = this.type.getComponentType();
+
+                }
+                else {
                     Object obj2 = parameterizedType.getActualTypeArguments ()[ 0 ];
                     if (obj2 instanceof Class) {
                         componentClass = ( Class<?> ) parameterizedType.getActualTypeArguments ()[ 0 ];
@@ -244,6 +255,12 @@ public abstract class BaseField implements FieldAccess {
                 bits.set(STATIC,  Modifier.isStatic ( setter.getModifiers () ));
                 bits.set(FINAL, Modifier.isFinal ( setter.getModifiers () ));
                 type = setter.getParameterTypes ()[ 0 ];
+
+                if (name.startsWith ( "$" )) {
+                    this.typeEnum = Type.SYSTEM;
+                } else {
+                    this.typeEnum = Type.getType(type);
+                }
                 bits.set( PRIMITIVE, type.isPrimitive ());
                 typeName = type.getName ().intern ();
                 parameterizedType = null;
@@ -252,16 +269,13 @@ public abstract class BaseField implements FieldAccess {
 
                 initAnnotationData ( setter.getDeclaringClass () );
 
+
             }
 
 
             alias = findAlias();
 
-            if (name.startsWith ( "$" )) {
-               this.typeEnum = Type.SYSTEM;
-            } else {
-                this.typeEnum = Type.getType(type);
-            }
+
 
             this.alias = alias != null ? alias : name;
 
@@ -308,7 +322,18 @@ public abstract class BaseField implements FieldAccess {
         }
 
 
-        if ( parameterizedType == null ) {
+        if (name.startsWith ( "$" )) {
+            this.typeEnum = Type.SYSTEM;
+        } else {
+            this.typeEnum = Type.getType(type);
+        }
+
+        if ( this.typeEnum == Type.ARRAY) {
+
+            componentClass = this.type.getComponentType();
+
+        }
+        else if ( parameterizedType == null ) {
             componentClass = null;
         } else {
             Object obj = parameterizedType.getActualTypeArguments ()[ 0 ];
@@ -321,12 +346,6 @@ public abstract class BaseField implements FieldAccess {
 
 
 
-
-        if (name.startsWith ( "$" )) {
-            this.typeEnum = Type.SYSTEM;
-        } else {
-            this.typeEnum = Type.getType(type);
-        }
 
         initAnnotationData ( field.getDeclaringClass () );
 

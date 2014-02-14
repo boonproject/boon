@@ -8,6 +8,11 @@ import org.boon.Universal;
 public class Shrt {
 
 
+
+    public static short[] shorts( short... array ) {
+        return array;
+    }
+
     public static short[] grow( short[] array, final int size ) {
         Exceptions.requireNonNull( array );
 
