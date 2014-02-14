@@ -497,7 +497,33 @@ public class MapObjectConversion {
                     if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
                         objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue, field.type() );
                     } else {
-                        objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
+                        if (Typ.isMap( field.type() ))  {
+                            Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
+                            Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
+
+                            Map mapInner = (Map)objValue;
+                            Set<Map.Entry> set = mapInner.entrySet();
+                            Map newMap = new LinkedHashMap(  );
+
+                            for (Map.Entry entry : set) {
+                                Object evalue = entry.getValue();
+
+                                Object key = entry.getKey();
+
+                                if (evalue instanceof ValueContainer) {
+                                    evalue = ((ValueContainer) evalue).toValue();
+                                }
+
+                                key  = Conversions.coerce( keyType, key );
+                                evalue = Conversions.coerce( valueType, evalue );
+                                newMap.put( key, evalue );
+                            }
+
+
+
+                        } else {
+                            objValue = fromValueMap( fieldsAccessor, ( Map<String, Value> ) objValue );
+                        }
                     }
                     field.setObject( newInstance, objValue );
                 } else if ( objValue instanceof Collection ) {
@@ -818,7 +844,7 @@ public class MapObjectConversion {
                             if (componentClass.isInstance( o )) {
                                 Array.set(array, index, o);
                             } else {
-                                Array.set(array, index, Conversions.coerce(componentClass, o));
+                                Array.set(array, index, Conversions.coerce( componentClass, o ));
                             }
                         }
                         index++;

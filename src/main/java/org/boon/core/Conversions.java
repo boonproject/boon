@@ -411,7 +411,7 @@ public class Conversions {
                 return toCollection( clz, value );
 
             case INSTANCE:
-                if ( value instanceof Map  && Typ.doesMapHaveKeyTypeString( value ) ) {
+                if ( value instanceof Map  ) {
                     return  MapObjectConversion.fromMap ( ( Map<String, Object> ) value, clz );
                 } else if (value instanceof List) {
                     return  MapObjectConversion.fromList( (List<Object>) value, clz );
@@ -538,7 +538,7 @@ public class Conversions {
                 return toCollection( clz, value );
 
             case INSTANCE:
-                if ( value instanceof Map  && Typ.doesMapHaveKeyTypeString( value ) ) {
+                if ( value instanceof Map  ) {
                     return  MapObjectConversion.fromMap ( ( Map<String, Object> ) value, clz );
                 } else if (value instanceof List) {
                     return  MapObjectConversion.fromList( (List<Object>) value, clz );

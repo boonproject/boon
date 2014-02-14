@@ -401,9 +401,9 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     private static final char [] EMPTY_MAP_CHARS = {'{', '}'};
 
-    public final void serializeMap( Map<String, Object> map, CharBuf builder )  {
+    public final void serializeMap( Map<String, Object> smap, CharBuf builder )  {
 
-
+        Map map = smap;
         if ( map.size () == 0 ) {
             builder.addChars ( EMPTY_MAP_CHARS );
             return;
@@ -413,10 +413,10 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         builder.addChar( '{' );
 
         int index=0;
-        final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
-        for ( Map.Entry<String, Object> entry : entrySet ) {
+        final Set<Map.Entry> entrySet = map.entrySet();
+        for ( Map.Entry entry : entrySet ) {
             if (entry.getValue ()!=null) {
-                serializeFieldName ( entry.getKey ().toString (), builder );
+                serializeFieldName ( entry.getKey().toString (), builder );
                 serializeObject( entry.getValue(), builder );
                 builder.addChar ( ',' );
                 index++;
