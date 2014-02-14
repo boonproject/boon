@@ -19,6 +19,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import static org.boon.Boon.sputs;
+import static org.boon.core.Conversions.toEnum;
 import static org.boon.core.Type.gatherTypes;
 
 
@@ -170,14 +171,17 @@ public class MapObjectConversion {
                             }
 
                             List fromList = ( List ) o;
-                            newList.add( fromList( fieldsAccessor, fromList, componentType ) );
+                            o = fromList( fieldsAccessor, fromList, componentType );
+                            newList.add( o );
                         }
                         list.set( index, newList );
 
                     }
                 }
-            } else if ( paramType == Typ.string && item instanceof CharSequence ) {
+            } else if ( paramType == Typ.string  && item instanceof CharSequence ) {
                 list.set( index, item.toString() );
+            } else if ( paramType.isEnum()  && (item instanceof CharSequence| item instanceof Number)  ) {
+                list.set( index, toEnum(paramType, item));
             } else if ( !paramType.isInstance( item ) ) {
                 return false;
             }

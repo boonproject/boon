@@ -6,6 +6,7 @@ import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.fields.FieldsAccessor;
+import org.boon.core.value.ValueContainer;
 import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
 
@@ -170,10 +171,17 @@ public class JsonMappingParser implements JsonParserAndMapper {
     }
 
     private <T> T finalExtract( Class<T> type, Object object ) {
+
         if (object instanceof Map ) {
             Map<String, Value> objectMap = ( Map<String, Value> ) object;
            return MapObjectConversion.fromValueMap( fields, objectMap, type );
-        } else if (object instanceof List ) {
+        }
+
+        if (object instanceof ValueContainer) {
+            object = ((ValueContainer) object).toValue();
+        }
+
+        if (object instanceof List ) {
             List<Object> list = ( List<Object> ) object;
             return MapObjectConversion.fromList ( list, type );
         } else {

@@ -260,6 +260,16 @@ public class Str {
     }
 
 
+
+    public static String linesConvertQuotes( String... lines ) {
+
+        for (int index=0; index < lines.length; index++) {
+            lines[index]=lines[index].replace( '\'', '"' );
+        }
+        return join( '\n', lines );
+    }
+
+
     public static String join( char delim, String... args ) {
         CharBuf builder = CharBuf.create( 10 * args.length );
 
