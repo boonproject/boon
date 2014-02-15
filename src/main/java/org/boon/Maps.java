@@ -71,6 +71,27 @@ public class Maps {
         return  (List) map.get( k );
     }
 
+
+
+    public static <K, V> long toLong( Map<K, V> map, K key ) {
+        V value = map.get(key);
+        long l = Conversions.toLong ( value, Long.MIN_VALUE );
+        if ( l == Long.MIN_VALUE ) {
+            die("Cannot convert", key, "into long value", value);
+        }
+        return l;
+    }
+
+
+    public static <K, V> int toInt( Map<K, V> map, K key ) {
+        V value = map.get(key);
+        int v = Conversions.toInt ( value, Integer.MIN_VALUE );
+        if ( v == Integer.MIN_VALUE ) {
+            die("Cannot convert", key, "into int value", value);
+        }
+        return v;
+    }
+
     @Universal
     public static <K, V> SortedMap<K, V> copy( SortedMap<K, V> map ) {
         if ( map instanceof TreeMap ) {

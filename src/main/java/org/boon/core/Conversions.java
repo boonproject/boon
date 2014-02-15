@@ -179,6 +179,16 @@ public class Conversions {
         return toLong ( obj, Long.MIN_VALUE );
     }
 
+
+
+    public static long toLongOrDie( Object obj ) {
+        long l =  toLong ( obj, Long.MIN_VALUE );
+        if ( l == Long.MIN_VALUE ) {
+             die("Cannot convert", obj, "into long value", obj);
+        }
+        return l;
+    }
+
     public static long toLong( Object obj, final long longDefault ) {
 
         if ( obj instanceof Long) {
