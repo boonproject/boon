@@ -10,10 +10,6 @@ Use the lib or copy it into your code, tweak it.
 Blog about. Use it. Give me feedback. I am doing this for the street cred and to learn.
 
 
-For the next 15 minutes, before Cowboy coder wakes up and tunes Jackson, Boon has the fastest JSON parser.
-Boo yah!
-
-https://github.com/RichardHightower/parsers-in-java
 
 
 Java Boon
@@ -192,29 +188,67 @@ The readLines and read methods can read from URIs as well:
 
 
 
-Right now I have a JDK 1.8 branch and and a JDK 1.7 branch.
 
-Why Boon
+
+
+
+Thoughts
+===
+
+Thoughts? Write me at richard high tower AT g mail dot c-o-m (Rick Hightower).
+
+Further Reading:
+===
+
+If you are new to boon start here: 
+
+* [Java Boon Byte Buffer Builder](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder)
+* [Java Boon Slice Notation](https://github.com/RichardHightower/boon/wiki/Boon-Slice-Notation)
+* [Java Boon Slice's work with TreeSets](https://github.com/RichardHightower/boon/wiki/Sets-and-Slice-Notation-for-Java-Boon!)
+* [Java Boon Description](https://github.com/RichardHightower/boon/wiki)
+* [More...](https://github.com/RichardHightower/boon/wiki/_pages)
+* [Boon Home](https://github.com/RichardHightower/boon/wiki)
+* [Boon Source](https://github.com/RichardHightower/boon/wiki)
+* [Introducing Boon October 2013](http://rick-hightower.blogspot.com/2013/10/introducing-boon-for-java.html)
+* [Java Slice Notation](http://rick-hightower.blogspot.com/2013/10/java-slice-notation-to-split-up-strings.html)
+* [What if Java collections were easy to search and sort?](http://rick-hightower.blogspot.com/2013/11/what-if-java-collections-and-java.html)
+* [Boon HTTP utils](http://rick-hightower.blogspot.com/2013/11/stackoverflow-question-on-posting-http.html)
+* [Boon Java JSON parser Benchmarks or hell yeah JSON parsing is damn fast!](http://rick-hightower.blogspot.com/2013/11/benchmark-for-json-parsing-boon-scores.html)
+* [Boon JSON parser is really damn fast! Part II](http://rick-hightower.blogspot.com/2013/12/boon-fastest-way-to-turn-json-into.html)
+* [Boon JSON parser Round III now just not fast as but much faster than other Java JSON parsers](http://rick-hightower.blogspot.com/2013/12/here-we-go-again-latest-round-of.html)
+* [Boon World's fastest Java JSON parser Round IV from fast to blazing to rocket fuel aka Braggers going to brag](http://rick-hightower.blogspot.com/2013/12/worlds-fastest-json-parser.html)
+* [Boon gets adopted by JSON Path as the default Java JSON parser](http://rick-hightower.blogspot.com/2013/12/jsonpath-decides-boon-is-fastest-way-to.html)
+* [Boon graphics showing just how fast Boon JSON parsing is - about 50% to 200% faster than the graphs shown here now so wicked fast became wickeder - just got sick of making graphics](http://rick-hightower.blogspot.com/2013/12/boon-json-parser-seems-to-be-fastest.html)
+* [10 minute guide to Boon JSON parsing after I added @JsonIgnore, @JsonProperty, @JsonView, @Exposes, etc.](http://rick-hightower.blogspot.com/2014/01/boon-json-in-five-minutes-faster-json.html)
+* [Hightower speaks to the master of Java JSON parsing, the king of speed The COW TOWN CODER!](http://rick-hightower.blogspot.com/2014/01/boon-jackson-discussion-between.html)
+* [Boon provides easy Java objects from lists, from maps and from JSON.](http://rick-hightower.blogspot.com/2014/02/boon-fromlist-frommap-and-fromjson.html)
+
+
+Why Boon?
 ====
 Easily read in files into lines or a giant string with one method call.
-Slice notation for dealing with Strings, Lists, primitive arrays, etc.
+Works with files, URLs, class-path, etc. Boon IO support will surprise you how easy it is.
+Boon has Slice notation for dealing with Strings, Lists, primitive arrays, Tree Maps, etc.
 If you are from Groovy land, Ruby land, Python land, or whatever land, and you have to use
-Java then Boon might give you some relief.
+Java then Boon might give you some relief from API bloat. 
+If you are like me, and you like to use Java, then Boon is for you too.
+Boon lets Java be Java, but adds the missing productive APIs from Python, Ruby, and Groovy.
+Boon may not be Ruby or Groovy, but its a real Boon to Java development.
 
 Core Boon Philosophy
 ===
 Core Boon will never have any dependencies.
 It will always be able to run as a single jar.
+This is not just NIH, but it is partly.
+My view of what Java needs is more inline with what Python, Ruby and Groovy provide.
+Boon is an addition on top of the JVM to make up the difference between the harder to use APIs that come with Java and the types of utilities that are built into Ruby, Python, PHP, Groovy etc. 
+Boon is a Java centric view of those libs. 
+The vision of Boon and the current implementation is really far apart.
 
 
-Further Reading
 ===
 
+Contact Info
 
-+ [Boon's Universal Operations and the BBBB Java does have a ByteBuilder sort of](https://github.com/RichardHightower/boon/wiki/Boon's-Byte-Buffer-Builder)
-+ [Java Boon Sets and slice notation](https://github.com/RichardHightower/boon/wiki/Sets-and-Slice-Notation-for-Java-Boon!)
-+ [Java Boon Slice notation](https://github.com/RichardHightower/boon/wiki/Boon-Slice-Notation)
-+ [Random thoughts and TODO](https://github.com/RichardHightower/boon/wiki/Random-thoughts-and-TODO-for-Boon)
-+ [Birth of Boon](https://github.com/RichardHightower/boon/wiki/Birth-of-Boon)
-+ [Javadocs](http://richardhightower.github.io/site/javadocs/index.html)
-+ [jar file](http://richardhightower.github.io/site/releases/)
+
+[blog](http://rick-hightower.blogspot.com/)|[twitter](https://twitter.com/RickHigh|[infoq]http://www.infoq.com/author/Rick-Hightower|[stackoverflow](http://stackoverflow.com/users/2876739/rickhigh)|[java lobby](http://java.dzone.com/users/rhightower)|Other | richard high tower AT g mail dot c-o-m (Rick Hightower)|[work](http://www.mammatustech.com/)|[cloud](http://cloud.mammatustech.com/)|[nosql](http://nosql.mammatustech.com/)
