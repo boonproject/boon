@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static org.boon.Exceptions.die;
 
+//@Named ("/coffeeApp")
 public class CoffeeApp implements Runnable {
     @Inject
     CoffeeMaker coffeeMaker;

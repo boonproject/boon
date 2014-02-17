@@ -9,7 +9,6 @@ import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.di.Context;
 import org.boon.di.Module;
-import org.boon.di.ProviderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,7 @@ import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.core.reflection.BeanUtils.idxBoolean;
+import static org.boon.json.JsonFactory.fromJson;
 
 public class ContextImpl implements Context, Module {
 
@@ -363,6 +363,28 @@ public class ContextImpl implements Context, Module {
         resolveProperties( object );
 
         return object;
+    }
+
+    @Override
+    public Object invoke( String objectName, String methodName, Object args ) {
+        Object object = this.get( objectName );
+        return Invoker.invokeFromObject( object, methodName, args );
+    }
+
+    @Override
+    public Object invokeOverload( String objectName, String methodName, Object args ) {
+        Object object = this.get( objectName );
+        return Invoker.invokeOverloadedFromObject( object, methodName, args );
+    }
+
+    @Override
+    public Object invokeFromJson( String objectName, String methodName, String args ) {
+        return invoke( objectName, methodName, fromJson(args) );
+    }
+
+    @Override
+    public Object invokeOverloadFromJson( String objectName, String methodName, String args ) {
+        return invokeOverload( objectName, methodName, fromJson(args) );
     }
 
     @Override

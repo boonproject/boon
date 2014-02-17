@@ -34,41 +34,60 @@ public class Invoker {
 
 
         public static Object invokeOverloadedFromObject (Object object, String name, Object args){
-            if (object instanceof Map) {
+            if (args instanceof Map) {
                 return invokeOverloadedFromList( object, name, Lists.list( args ) );
-            } else if (object instanceof List) {
+            } else if (args instanceof List) {
                 List list = ( List ) args;
                 ClassMeta classMeta = ClassMeta.classMeta( object.getClass() );
                 MethodAccess m = classMeta.method( name );
-                if (m.parameterTypes().length == 1 && list.size() > 0 && !(list.get( 0 ) instanceof List)) {
+                if (m.parameterTypes().length == 1 && list.size() > 0 ) {
 
-                    return invokeOverloadedFromList( object, name, Lists.list( args ) );
+                    Object firstArg = list.get(0);
+                    if (firstArg instanceof Map || firstArg instanceof List) {
+                        return invokeOverloadedFromList( object, name, list );
+
+                    }  else {
+                        return invokeOverloadedFromList( object, name, Lists.list( args ) );
+                    }
                 } else {
+
                     return invokeOverloadedFromList( object, name, list );
 
                 }
+            } else if (args == null) {
+                return invoke( object, name );
             } else {
                 return invokeOverloadedFromList( object, name, Lists.list( args ) );
             }
         }
 
         public static Object invokeFromObject (Object object, String name, Object args){
-            if (object instanceof Map) {
+            if (args instanceof Map) {
                 return invokeFromList( object, name, Lists.list( args ) );
-            } else if (object instanceof List) {
+            } else if (args instanceof List) {
                 List list = ( List ) args;
                 ClassMeta classMeta = ClassMeta.classMeta( object.getClass() );
                 MethodAccess m = classMeta.method( name );
-                if (m.parameterTypes().length == 1 && list.size() > 0 && !(list.get( 0 ) instanceof List)) {
+                if (m.parameterTypes().length == 1 && list.size() > 0 ) {
 
-                    return invokeFromList( object, name, Lists.list( args ) );
+                    Object firstArg = list.get(0);
+                    if (firstArg instanceof Map || firstArg instanceof List) {
+                        return invokeFromList( object, name, list );
+
+                    }  else {
+                        return invokeFromList( object, name, Lists.list( args ) );
+                    }
                 } else {
+
                     return invokeFromList( object, name, list );
 
                 }
+            } else if (args == null) {
+                return invoke( object, name );
             } else {
                 return invokeFromList( object, name, Lists.list( args ) );
             }
+
         }
 
         public static Object invokeFromList (Object object, String name, List<?> args){
@@ -91,7 +110,11 @@ public class Invoker {
 
             }
 
-            return m.invoke( object, list.toArray(new Object[list.size()]) );
+            if (args == null && m.parameterTypes().length == 0) {
+                return m.invoke( object );
+            } else {
+                return m.invoke( object, list.toArray(new Object[list.size()]) );
+            }
 
     }
 
