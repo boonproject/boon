@@ -31,6 +31,27 @@ import static org.boon.core.reflection.MapObjectConversion.fromMap;
 public class Invoker {
 
 
+
+
+        public static Object invokeOverloadedFromObject (Object object, String name, Object args){
+            if (object instanceof Map) {
+                return invokeOverloadedFromList( object, name, Lists.list( args ) );
+            } else if (object instanceof List) {
+                List list = ( List ) args;
+                ClassMeta classMeta = ClassMeta.classMeta( object.getClass() );
+                MethodAccess m = classMeta.method( name );
+                if (m.parameterTypes().length == 1 && list.size() > 0 && !(list.get( 0 ) instanceof List)) {
+
+                    return invokeOverloadedFromList( object, name, Lists.list( args ) );
+                } else {
+                    return invokeOverloadedFromList( object, name, list );
+
+                }
+            } else {
+                return invokeOverloadedFromList( object, name, Lists.list( args ) );
+            }
+        }
+
         public static Object invokeFromObject (Object object, String name, Object args){
             if (object instanceof Map) {
                 return invokeFromList( object, name, Lists.list( args ) );
