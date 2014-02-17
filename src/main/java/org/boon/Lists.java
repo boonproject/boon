@@ -338,7 +338,7 @@ public class Lists {
 
 
     public static List<Map<String, Object>> toListOfMaps( List<?> list ) {
-        return Reflection.toListOfMaps( list );
+        return MapObjectConversion.toListOfMaps( list );
     }
 
 }

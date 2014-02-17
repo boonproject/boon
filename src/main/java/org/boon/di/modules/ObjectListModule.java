@@ -5,7 +5,6 @@ import org.boon.Sets;
 import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.di.Module;
 import org.boon.di.ProviderInfo;
 
 import java.util.Map;
@@ -21,7 +20,7 @@ public class ObjectListModule extends BaseModule {
 
 
     @Override
-    public Iterable<Object> values() {
+    public  Iterable<Object> values() {
         return objects.values();
     }
 

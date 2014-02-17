@@ -1,5 +1,6 @@
 package org.boon.core;
 
+import org.boon.Boon;
 import org.boon.Sets;
 import org.boon.StringScanner;
 import org.boon.core.reflection.BeanUtils;
@@ -263,8 +264,8 @@ public class Conversions {
             } else {
                 return Sets.in( str, TRUE_SET );
             }
-        } else if ( Reflection.isArray ( obj ) || obj instanceof Collection ) {
-            return Reflection.len( obj ) > 0;
+        } else if ( Boon.isArray( obj ) || obj instanceof Collection ) {
+            return Boon.len( obj ) > 0;
         } else {
             return toBoolean( Conversions.toString( obj ) );
         }
@@ -686,7 +687,7 @@ public class Conversions {
             return ( T ) value;
         } else {
             int index = 0;
-            Object newInstance = Array.newInstance( clz.getComponentType(), Reflection.len( value ) );
+            Object newInstance = Array.newInstance( clz.getComponentType(), Boon.len( value ) );
             Iterator<Object> iterator = iterator( Typ.object, value );
             while ( iterator.hasNext() ) {
                 BeanUtils.idx ( newInstance, index, iterator.next () );
@@ -702,7 +703,7 @@ public class Conversions {
         if ( value.getClass() == Typ.shortArray ) {
             return ( double[] ) value;
         }
-        double[] values = new double[ Reflection.len( value ) ];
+        double[] values = new double[ Boon.len( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator( Object.class, value );
         while ( iterator.hasNext() ) {
@@ -717,7 +718,7 @@ public class Conversions {
         if ( value.getClass() == Typ.floatArray ) {
             return ( float[] ) value;
         }
-        float[] values = new float[ Reflection.len( value ) ];
+        float[] values = new float[ Boon.len( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator( Object.class, value );
         while ( iterator.hasNext() ) {
@@ -732,7 +733,7 @@ public class Conversions {
         if ( value.getClass() == Typ.shortArray ) {
             return ( long[] ) value;
         }
-        long[] values = new long[ Reflection.len( value ) ];
+        long[] values = new long[ Boon.len( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator( Object.class, value );
         while ( iterator.hasNext() ) {
@@ -747,7 +748,7 @@ public class Conversions {
         if ( value.getClass() == Typ.shortArray ) {
             return ( short[] ) value;
         }
-        short[] values = new short[ Reflection.len( value ) ];
+        short[] values = new short[ Boon.len( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator( Object.class, value );
         while ( iterator.hasNext() ) {
@@ -762,7 +763,7 @@ public class Conversions {
         if ( value.getClass() == Typ.intArray ) {
             return ( int[] ) value;
         }
-        int[] values = new int[ Reflection.len( value ) ];
+        int[] values = new int[ Boon.len( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator( Object.class, value );
         while ( iterator.hasNext() ) {
@@ -777,7 +778,7 @@ public class Conversions {
         if ( value.getClass() == Typ.byteArray ) {
             return ( byte[] ) value;
         }
-        byte[] values = new byte[ Reflection.len( value ) ];
+        byte[] values = new byte[ Boon.len( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator( Object.class, value );
         while ( iterator.hasNext() ) {
@@ -792,7 +793,7 @@ public class Conversions {
         if ( value.getClass() == Typ.charArray ) {
             return ( char[] ) value;
         }
-        char[] values = new char[ Reflection.len( value ) ];
+        char[] values = new char[ Boon.len( value ) ];
         int index = 0;
         Iterator<Object> iterator = iterator( Typ.object, value );
         while ( iterator.hasNext() ) {
@@ -810,8 +811,8 @@ public class Conversions {
     public static <T> Iterator<T> iterator( Class<T> class1, final Object value ) {
 
 
-        if ( Reflection.isArray( value ) ) {
-            final int length = Reflection.arrayLength( value );
+        if ( Boon.isArray( value ) ) {
+            final int length = Boon.arrayLength( value );
 
             return new Iterator<T>() {
                 int i = 0;
@@ -864,7 +865,7 @@ public class Conversions {
         } else if (value == null ) {
             return new ArrayList( );
         } else {
-            ArrayList list = new ArrayList( Reflection.len( value ) );
+            ArrayList list = new ArrayList( Boon.len( value ) );
             Iterator<Object> iterator = iterator( Typ.object, value );
             while ( iterator.hasNext() ) {
                 list.add( iterator.next() );
@@ -880,7 +881,7 @@ public class Conversions {
         } else if ( value instanceof Collection ) {
             return new HashSet( ( Collection ) value );
         } else {
-            HashSet set = new HashSet( Reflection.len( value ) );
+            HashSet set = new HashSet( Boon.len( value ) );
             Iterator<Object> iterator = iterator( Typ.object, value );
             while ( iterator.hasNext() ) {
                 set.add( iterator.next() );
@@ -1085,6 +1086,26 @@ public class Conversions {
 
     }
 
+    public static Collection<Object> createCollection( Class<?> type, int size ) {
+
+        if ( type == List.class ) {
+            return new ArrayList<>( size );
+        } else if ( type == SortedSet.class ) {
+            return new TreeSet<>();
+        } else if ( type == Set.class ) {
+            return new LinkedHashSet<>( size );
+        } else if ( Typ.isList( type ) ) {
+            return new ArrayList<>();
+        } else if ( Typ.isSortedSet( type ) ) {
+            return new TreeSet<>();
+        } else if ( Typ.isSet( type ) ) {
+            return new LinkedHashSet<>( size );
+        } else {
+            return new ArrayList( size );
+        }
+
+    }
+
     public interface Converter<TO, FROM> {
         TO convert( FROM from );
     }
@@ -1125,15 +1146,15 @@ public class Conversions {
 
     public static Object unifyList( Object o, List list ) {
 
-        if ( list == null && !Reflection.isArray( o ) && !( o instanceof Iterable ) ) {
+        if ( list == null && !Boon.isArray( o ) && !( o instanceof Iterable ) ) {
             return o;
         }
 
         if ( list == null ) {
             list = new ArrayList( 400 );
         }
-        if ( Reflection.isArray( o ) ) {
-            int length = Reflection.len( o );
+        if ( Boon.isArray( o ) ) {
+            int length = Boon.len( o );
             for ( int index = 0; index < length; index++ ) {
                 unifyList( BeanUtils.idx ( o, index ), list );
             }

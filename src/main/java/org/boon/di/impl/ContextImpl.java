@@ -2,11 +2,14 @@ package org.boon.di.impl;
 
 import org.boon.collections.ConcurrentLinkedHashSet;
 import org.boon.core.Supplier;
+import org.boon.core.reflection.Fields;
+import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.di.Context;
 import org.boon.di.Module;
+import org.boon.di.ProviderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,7 +235,7 @@ public class ContextImpl implements Context, Module {
             /* Since there is no concept of singleton or scope, you need some sort of flag to determine
             if injection has already happened for objects that are like singletons.
              */
-            if ( Reflection.hasField( object, "__init__" ) ) {
+            if ( Fields.hasField( object, "__init__" ) ) {
                 if ( idxBoolean( object, "__init__" ) ) {
                     return;
                 }
@@ -247,7 +250,7 @@ public class ContextImpl implements Context, Module {
 
 
             }
-            Reflection.invokeMethodWithAnnotationNoReturn( object, "postConstruct" );
+            Invoker.invokeMethodWithAnnotationNoReturn( object, "postConstruct" );
         }
 
     }

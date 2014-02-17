@@ -1,6 +1,7 @@
 package org.boon.core.reflection;
 
 
+import org.boon.Boon;
 import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.Maps;
@@ -167,7 +168,7 @@ public class ReflectionTest {
         final Map<String, Object> objectMap = Maps.toMap( manufacturing );
 
         ok &= objectMap.get( "name" ).equals( "manufacturing" ) || die();
-        ok &= Reflection.len( objectMap.get( "employees" ) ) == 4 || die();
+        ok &= Boon.len( objectMap.get( "employees" ) ) == 4 || die();
 
         final Map<String, Object> oMapEmployee = ( Map<String, Object> )
                 BeanUtils.idx ( objectMap.get ( "employees" ), 0 );
@@ -213,45 +214,45 @@ public class ReflectionTest {
 
         boolean ok = true;
 
-        ok &= Reflection.hasField( employee, "firstName" ) || die();
+        ok &= Fields.hasField( employee, "firstName" ) || die();
 
-        ok &= !Reflection.hasField( employee, "bacon_bacon" ) || die();
+        ok &= !Fields.hasField( employee, "bacon_bacon" ) || die();
 
 
-        ok &= Reflection.getFirstComparableOrPrimitive( employee )
+        ok &= Fields.getFirstComparableOrPrimitive( employee )
                 .equals( "firstName" ) || die();
 
-        ok &= Reflection.getFirstComparableOrPrimitive( dog )
+        ok &= Fields.getFirstComparableOrPrimitive( dog )
                 .equals( "age" ) || die();
 
-        ok &= Reflection.getFirstComparableOrPrimitive( cat ) == null
+        ok &= Fields.getFirstComparableOrPrimitive( cat ) == null
                 || die();
 
 
-        ok &= Reflection.getFirstStringFieldNameEndsWith( employee, "Name" )
+        ok &= Fields.getFirstStringFieldNameEndsWith( employee, "Name" )
                 .equals( "firstName" ) || die();
 
 
-        ok &= Reflection.getFirstStringFieldNameEndsWith( cat, "Name" )
+        ok &= Fields.getFirstStringFieldNameEndsWith( cat, "Name" )
                 == null || die();
 
 
-        ok &= Reflection.hasStringField( employee, "firstName" )
+        ok &= Fields.hasStringField( employee, "firstName" )
                 || die();
 
 
-        ok &= !Reflection.hasStringField( employee, "bunnyShit" )
+        ok &= !Fields.hasStringField( employee, "bunnyShit" )
                 || die();
 
 
-        ok &= Reflection.getSortableField( employee ).equals( "firstName" ) ||
+        ok &= Fields.getSortableField( employee ).equals( "firstName" ) ||
                 die();
 
-        ok &= Reflection.getSortableField( dog ).equals( "name" ) ||
+        ok &= Fields.getSortableField( dog ).equals( "name" ) ||
                 die();
 
         try {
-            ok &= Reflection.getSortableField( cat ).equals( "name" );
+            ok &= Fields.getSortableField( cat ).equals( "name" );
             die( "Cat does not have a sortable property" );
         } catch ( Exceptions.SoftenedException se ) {
             if ( !se.getMessage().contains( "Could not find a sortable field for type" ) ) {
@@ -355,9 +356,9 @@ public class ReflectionTest {
         final int[] array = array( 1, 2, 3 );
 
 
-        final Iterator iterator = Reflection.iterator( list );
+        final Iterator iterator = Boon.iterator( list );
 
-        final Iterator iterator2 = Reflection.iterator( array );
+        final Iterator iterator2 = Boon.iterator( array );
 
         iterator.next();
         iterator2.next();

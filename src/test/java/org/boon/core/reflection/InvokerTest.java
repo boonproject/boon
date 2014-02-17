@@ -1,0 +1,337 @@
+package org.boon.core.reflection;
+
+import org.boon.Lists;
+import org.boon.Maps;
+import org.junit.Test;
+
+import javax.annotation.PostConstruct;
+
+
+import static org.boon.Boon.puts;
+import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
+
+/**
+ * Created by Richard on 2/17/14.
+ */
+public class InvokerTest {
+
+
+    public static class HelloWorldArg  {
+         int i = 0;
+         String hello = "null";
+
+        public HelloWorldArg( int i ) {
+            this.i = i;
+        }
+
+        public HelloWorldArg( int i, String hello ) {
+            this.i = i;
+            this.hello = hello;
+        }
+
+
+        public HelloWorldArg(  String hello ) {
+            this.hello = hello;
+        }
+
+        @Override
+        public boolean equals( Object o ) {
+            if ( this == o ) return true;
+            if ( o == null || getClass() != o.getClass() ) return false;
+
+            HelloWorldArg that = ( HelloWorldArg ) o;
+
+            if ( i != that.i ) return false;
+            if ( hello != null ? !hello.equals( that.hello ) : that.hello != null ) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = i;
+            result = 31 * result + ( hello != null ? hello.hashCode() : 0 );
+            return result;
+        }
+    }
+
+    public static class HelloWorld  {
+
+        boolean initCalled;
+
+        boolean called1st;
+        boolean called2nd;
+
+
+
+        private HelloWorldArg sayArg(HelloWorldArg hi, int i) {
+            return hi;
+        }
+
+
+
+        private HelloWorldArg sayArg2 (HelloWorldArg hi) {
+            return hi;
+        }
+
+        private void sayHi(String hi) {
+            puts ( "hi ", hi );
+
+        }
+
+
+
+        private String say(String hi, int i) {
+            return sputs( "hi ", hi, i );
+
+        }
+
+
+
+        private void sayHi2(String hi) {
+            called1st = true;
+            puts ( "hi ", hi );
+
+        }
+
+        private void sayHi2(String hi, int i) {
+            called2nd = true;
+
+            puts ( "hi ", hi );
+
+        }
+
+
+        @PostConstruct
+        private void init() {
+            initCalled = true;
+
+        }
+
+    }
+
+    @Test
+    public void test() {
+        Invoker.invoke( new HelloWorld(), "sayHi", "Rick" );
+    }
+
+
+
+    @Test
+    public void testPostConstruct() {
+        HelloWorld hw = new HelloWorld();
+        hw.initCalled = false;
+        Invoker.invokeMethodWithAnnotationNoReturn( hw, "postConstruct" );
+        if (!hw.initCalled) {
+            die("Post construct not called");
+        }
+    }
+
+
+    @Test
+    public void testPostConstruct2() {
+        HelloWorld hw = new HelloWorld();
+        hw.initCalled = false;
+        Invoker.invokeMethodWithAnnotationNoReturn( hw, "PostConstruct" );
+        if (!hw.initCalled) {
+            die("Post construct not called");
+        }
+    }
+
+
+    @Test
+    public void testPostConstruct3() {
+        HelloWorld hw = new HelloWorld();
+        hw.initCalled = false;
+        Invoker.invokeMethodWithAnnotationNoReturn( hw, "javax.annotation.PostConstruct" );
+        if (!hw.initCalled) {
+            die("Post construct not called");
+        }
+    }
+
+
+    @Test
+    public void testNoOverloads() {
+        try {
+            Invoker.invoke( new HelloWorld(), "sayHi2", "Rick" );
+            die("can't get this far");
+        } catch (Exception ex) {
+
+        }
+    }
+
+
+
+
+    @Test
+    public void testAllowOverloads() {
+        HelloWorld hw = new HelloWorld();
+        hw.called1st = false;
+        hw.called2nd = false;
+
+        Invoker.invokeOverloaded( hw, "sayHi2", "Rick" );
+
+        if ((!hw.called1st)) {
+            die("");
+        }
+
+
+        if ((hw.called2nd)) {
+            die("");
+        }
+    }
+
+
+
+
+    @Test
+    public void testAllowOverloads3() {
+        HelloWorld hw = new HelloWorld();
+        hw.called1st = false;
+        hw.called2nd = false;
+
+        Invoker.invokeOverloadedFromList( hw, "sayHi2", Lists.list("Rick") );
+
+        if ((!hw.called1st)) {
+            die("");
+        }
+
+
+        if ((hw.called2nd)) {
+            die("");
+        }
+    }
+
+
+
+    @Test
+    public void testAllowOverloads2() {
+        HelloWorld hw = new HelloWorld();
+        hw.called1st = false;
+        hw.called2nd = false;
+
+        Invoker.invokeOverloaded( hw, "sayHi2", "Rick", 1 );
+
+        if ((hw.called1st)) {
+            die("");
+        }
+
+
+        if ((!hw.called2nd)) {
+            die("");
+        }
+    }
+
+
+
+    @Test
+    public void testAllowOverloads4() {
+        HelloWorld hw = new HelloWorld();
+        hw.called1st = false;
+        hw.called2nd = false;
+
+        Invoker.invokeOverloadedFromList( hw, "sayHi2", Lists.list("Rick", "1") );
+
+        if ((hw.called1st)) {
+            die("");
+        }
+
+
+        if ((!hw.called2nd)) {
+            die("");
+        }
+    }
+
+
+
+    @Test
+    public void testWithListSimple() {
+        Invoker.invokeFromList( new HelloWorld(), "sayHi", Lists.list( "Rick" ) );
+    }
+
+
+    @Test
+    public void testWithListSimple2() {
+        String message = (String) Invoker.invokeFromList( new HelloWorld(), "say", Lists.list( "Rick", 1 ) );
+        puts (message);
+
+        if (!message.equals( "hi  Rick 1\n" )) die(message);
+    }
+
+
+    @Test
+    public void testWithListSimpleWithConversion() {
+        String message = (String) Invoker.invokeFromList( new HelloWorld(), "say", Lists.list( "Rick", "1" ) );
+        puts (message);
+        if (!message.equals( "hi  Rick 1\n" )) die(message);
+    }
+
+
+
+    @Test
+    public void testComplex() {
+        HelloWorldArg message = (HelloWorldArg) Invoker.invokeFromList( new HelloWorld(), "sayArg",
+                Lists.list( Lists.list( "1", "Hello" ), 1 ) );
+
+
+        if (!message.equals( new HelloWorldArg( 1, "Hello" ) )) {
+            die();
+        }
+    }
+
+
+
+    @Test
+    public void testComplex2() {
+        HelloWorldArg message = (HelloWorldArg) Invoker.invokeFromObject( new HelloWorld(), "sayArg2",
+                Lists.list( "1", "Hello" ) );
+
+
+        if (!message.equals( new HelloWorldArg( 1, "Hello" ) )) {
+            die();
+        }
+    }
+
+
+
+    @Test
+    public void testComplex3() {
+        HelloWorldArg message = (HelloWorldArg) Invoker.invokeFromList( new HelloWorld(), "sayArg2",
+                Lists.list( (Object)Lists.list( "1", "Hello" ) ) );
+
+
+        if (!message.equals( new HelloWorldArg( 1, "Hello" ) )) {
+            die();
+        }
+    }
+
+
+
+    @Test
+    public void testComplex4() {
+        HelloWorldArg message = (HelloWorldArg) Invoker.invokeFromList( new HelloWorld(), "sayArg2",
+                Lists.list( Maps.map( "i", "1", "hello", "Hello" )));
+
+
+        if (!message.equals( new HelloWorldArg( 1, "Hello" ) )) {
+            die();
+        }
+    }
+
+
+
+    @Test
+    public void testComplex5() {
+        HelloWorldArg message = (HelloWorldArg) Invoker.invokeFromList( new HelloWorld(), "sayArg2",
+                Lists.list( Maps.map( "i", "1", "hello", "Hello" )));
+
+
+        if (!message.equals( new HelloWorldArg( 1, "Hello" ) )) {
+            die();
+        }
+    }
+
+}
+
+

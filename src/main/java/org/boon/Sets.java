@@ -1,7 +1,7 @@
 package org.boon;
 
 
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.MapObjectConversion;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -323,7 +323,7 @@ public class Sets {
     //end universal
 
     public static List<Map<String, Object>> toListOfMaps( Set<?> list ) {
-        return Reflection.toListOfMaps( list );
+        return MapObjectConversion.toListOfMaps( list );
 
     }
 

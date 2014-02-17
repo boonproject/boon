@@ -4,7 +4,7 @@ import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
-import org.boon.di.Module;
+import org.boon.di.ProviderInfo;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -120,8 +120,8 @@ public class InstanceModule extends BaseModule {
     }
 
     @Override
-    public Iterable values() {
-        return supplierMap.values();
+    public Iterable<Object> values() {
+        return (Iterable<Object>) (Object)supplierMap.values();
     }
 
     @Override

@@ -3,10 +3,8 @@ package org.boon.core.reflection;
 import org.boon.*;
 import org.boon.core.*;
 import org.boon.core.reflection.fields.*;
-import org.boon.primitive.CharBuf;
 import sun.misc.Unsafe;
 
-import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.*;
 import java.util.*;
@@ -21,8 +19,6 @@ import static org.boon.Str.*;
 public class Reflection {
 
     private static final Logger log = Logger.getLogger( Reflection.class.getName() );
-    private final static Set<String> fieldSortNames = Sets.safeSet( "name", "orderBy", "title", "key" );
-    private final static Set<String> fieldSortNamesSuffixes = Sets.safeSet( "Name", "Title", "Key" );
 
     private static boolean _useUnsafe;
 
@@ -79,21 +75,12 @@ public class Reflection {
     }
 
 
-
-    private static void setSortableField( Class<?> clazz, String fieldName ) {
-        context()._sortableFields.put( clazz.getName(), fieldName );
-    }
-
-    private static String getSortableField( Class<?> clazz ) {
-        return context()._sortableFields.get( clazz.getName() );
-    }
-
     public static Object contextToHold() {
         return context();
     }
 
     /* Manages weak references. */
-    private static Context context() {
+    static Context context() {
 
         if ( _context != null ) {
             return _context;
@@ -107,66 +94,16 @@ public class Reflection {
         }
     }
 
-    public static Collection<Object> createCollection( Class<?> type, int size ) {
+    static class Context {
 
-        if ( type == List.class ) {
-            return new ArrayList<>( size );
-        } else if ( type == SortedSet.class ) {
-            return new TreeSet<>();
-        } else if ( type == Set.class ) {
-            return new LinkedHashSet<>( size );
-        } else if ( Typ.isList( type ) ) {
-            return new ArrayList<>();
-        } else if ( Typ.isSortedSet( type ) ) {
-            return new TreeSet<>();
-        } else if ( Typ.isSet( type ) ) {
-            return new LinkedHashSet<>( size );
-        } else {
-            return new ArrayList( size );
-        }
+        Unsafe control;
+        Map<String, String> _sortableFields = new ConcurrentHashMap<>();
 
-    }
+        Map<Class<?>, ClassMeta<?>> _classMetaMap = new ConcurrentHashMap<>( 200 );
 
-    public static void invokeMethodWithAnnotationNoReturn( Object object, String annotation ) {
-            invokeMethodWithAnnotationWithReturnType( object, annotation, void.class );
-    }
-
-    public static void invokeMethodWithAnnotationWithReturnType( Object object, String annotation, Class<?> returnType ) {
-          invokeMethodWithAnnotationWithReturnType( object.getClass(), object, annotation, returnType );
-    }
-
-    public static void invokeMethodWithAnnotationWithReturnType( Class<?> type, Object object, String annotation, Class<?> returnType ) {
-        Method[] methods = type.getDeclaredMethods();
-        for (Method method : methods) {
-            if ( method.getParameterTypes().length!=0 || method.getReturnType() !=returnType) {
-                continue;
-            }
-            List<AnnotationData> annotations = Annotations.getAnnotationDataForMethod( method );
-            Map<String, AnnotationData> annotationMap = Maps.toMap( "name", annotations );
-            if (annotationMap.containsKey( annotation )) {
-                invokeMethod( object, method );
-            }
-
-        }
-    }
-
-    private static void invokeMethod( Object object, Method method ) {
-        try {
-            method.setAccessible( true );
-            method.invoke( object );
-        } catch ( Exception ex ) {
-            Exceptions.handle( ex );
-        }
-    }
-
-    private static class Context {
-
-        private Unsafe control;
-        private Map<String, String> _sortableFields = new ConcurrentHashMap<>();
-
-        private Map<Class<?>, Map<String, FieldAccess>> _allAccessorReflectionFieldsCache = new ConcurrentHashMap<>( 200 );
-        private Map<Class<?>, Map<String, FieldAccess>> _allAccessorPropertyFieldsCache = new ConcurrentHashMap<>( 200 );
-        private Map<Class<?>, Map<String, FieldAccess>> _allAccessorUnsafeFieldsCache = new ConcurrentHashMap<>( 200 );
+        Map<Class<?>, Map<String, FieldAccess>> _allAccessorReflectionFieldsCache = new ConcurrentHashMap<>( 200 );
+        Map<Class<?>, Map<String, FieldAccess>> _allAccessorPropertyFieldsCache = new ConcurrentHashMap<>( 200 );
+        Map<Class<?>, Map<String, FieldAccess>> _allAccessorUnsafeFieldsCache = new ConcurrentHashMap<>( 200 );
 
 
     }
@@ -266,216 +203,6 @@ public class Reflection {
         return fieldsPrimary;
     }
 
-    /**
-     * Checks to see if we have a string field.
-     *
-     * @param value1
-     * @param name
-     * @return
-     */
-    public static boolean hasStringField( final Object value1, final String name ) {
-
-        Class<?> clz = value1.getClass();
-        return classHasStringField( clz, name );
-    }
-
-    /**
-     * Checks to see if this class has a string field.
-     *
-     * @param clz
-     * @param name
-     * @return
-     */
-    public static boolean classHasStringField( Class<?> clz, String name ) {
-
-        List<Field> fields = getAllFields( clz );
-        for ( Field field : fields ) {
-            if (
-                    field.getType().equals( Typ.string ) &&
-                            field.getName().equals( name ) &&
-                            !Modifier.isStatic( field.getModifiers() ) &&
-                            field.getDeclaringClass() == clz
-                    ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Checks to if an instance has a field
-     *
-     * @param value1
-     * @param name
-     * @return
-     */
-    public static boolean hasField( Object value1, String name ) {
-        return classHasField( value1.getClass(), name );
-    }
-
-    /**
-     * Checks to see if a class has a field.
-     *
-     * @param clz
-     * @param name
-     * @return
-     */
-    public static boolean classHasField( Class<?> clz, String name ) {
-        List<Field> fields = getAllFields( clz );
-        for ( Field field : fields ) {
-            if ( field.getName().equals( name )
-                    && !Modifier.isStatic( field.getModifiers() )
-                    && field.getDeclaringClass() == clz ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * This can be used for default sort.
-     *
-     * @param value1 value we are analyzing
-     * @return first field that is comparable or primitive.
-     */
-    public static String getFirstComparableOrPrimitive( Object value1 ) {
-        return getFirstComparableOrPrimitiveFromClass( value1.getClass() );
-    }
-
-    /**
-     * This can be used for default sort.
-     *
-     * @param clz class we are analyzing
-     * @return first field that is comparable or primitive or null if not found.
-     */
-    public static String getFirstComparableOrPrimitiveFromClass( Class<?> clz ) {
-        List<Field> fields = getAllFields( clz );
-        for ( Field field : fields ) {
-
-            if ( ( field.getType().isPrimitive() || Typ.isComparable( field.getType() )
-                    && !Modifier.isStatic( field.getModifiers() )
-                    && field.getDeclaringClass() == clz )
-                    ) {
-                return field.getName();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * getFirstStringFieldNameEndsWith
-     *
-     * @param value object we are looking at
-     * @param name  name
-     * @return field name or null
-     */
-    public static String getFirstStringFieldNameEndsWith( Object value, String name ) {
-        return getFirstStringFieldNameEndsWithFromClass( value.getClass(), name );
-    }
-
-    /**
-     * getFirstStringFieldNameEndsWithFromClass
-     *
-     * @param clz  class we are looking at
-     * @param name name
-     * @return field name or null
-     */
-    public static String getFirstStringFieldNameEndsWithFromClass( Class<?> clz, String name ) {
-        List<Field> fields = getAllFields( clz );
-        for ( Field field : fields ) {
-            if (
-                    field.getName().endsWith( name )
-                            && field.getType().equals( Typ.string )
-                            && !Modifier.isStatic( field.getModifiers() )
-                            && field.getDeclaringClass() == clz ) {
-
-                return field.getName();
-            }
-        }
-
-        return null;
-    }
-
-
-    /**
-     * Gets the first sortable fields found.
-     *
-     * @param value1
-     * @return sortable field
-     */
-    public static String getSortableField( Object value1 ) {
-        return getSortableFieldFromClass( value1.getClass() );
-    }
-
-    /**
-     * Gets the first sortable field.
-     *
-     * @param clazz the class we are getting the sortable field from.
-     * @return sortable field
-     */
-    public static String getSortableFieldFromClass( Class<?> clazz ) {
-
-        /** See if the fieldName is in the field listStream already.
-         * We keep a hashmap cache.
-         * */
-        String fieldName = getSortableField( clazz );
-
-        /**
-         * Not found in cache.
-         */
-        if ( fieldName == null ) {
-
-            /* See if we have this sortale field and look for string first. */
-            for ( String name : fieldSortNames ) {
-                if ( classHasStringField( clazz, name ) ) {
-                    fieldName = name;
-                    break;
-                }
-            }
-
-            /*
-             Now see if we can find one of our predefined suffixes.
-             */
-            if ( fieldName == null ) {
-                for ( String name : fieldSortNamesSuffixes ) {
-                    fieldName = getFirstStringFieldNameEndsWithFromClass( clazz, name );
-                    if ( fieldName != null ) {
-                        break;
-                    }
-                }
-            }
-
-            /**
-             * Ok. We still did not find it so give us the first
-             * primitive that we can find.
-             */
-            if ( fieldName == null ) {
-                fieldName = getFirstComparableOrPrimitiveFromClass( clazz );
-            }
-
-            /* We could not find a sortable field. */
-            if ( fieldName == null ) {
-                setSortableField( clazz, "NOT FOUND" );
-                die( "Could not find a sortable field for type " + clazz );
-
-            }
-
-            /* We found a sortable field. */
-            setSortableField( clazz, fieldName );
-        }
-        return fieldName;
-
-    }
-
-
-    public static boolean hasField( Class<?> aClass, String name ) {
-        Map<String, FieldAccess> fields = getAllAccessorFields( aClass );
-        return fields.containsKey( name );
-    }
 
     @SuppressWarnings ( "serial" )
     public static class ReflectionException extends RuntimeException {
@@ -495,33 +222,6 @@ public class Reflection {
         public ReflectionException( Throwable cause ) {
             super( cause );
         }
-    }
-
-    public static boolean isArray( Object obj ) {
-        if ( obj == null ) return false;
-        return obj.getClass().isArray();
-    }
-
-    public static int len( Object obj ) {
-        if ( isArray( obj ) ) {
-            return arrayLength( obj );
-        } else if ( obj instanceof CharSequence ) {
-            return ( ( CharSequence ) obj ).length();
-        } else if ( obj instanceof Collection ) {
-            return ( ( Collection<?> ) obj ).size();
-        } else if ( obj instanceof Map ) {
-            return ( ( Map<?, ?> ) obj ).size();
-        } else if ( obj == null ) {
-            return 0;
-        } else {
-            die( sputs("Not an array like object", obj, obj.getClass()) );
-            return 0; //will never get here.
-        }
-    }
-
-
-    public static int arrayLength( Object obj ) {
-        return Array.getLength( obj );
     }
 
 
@@ -758,58 +458,6 @@ public class Reflection {
         List<Field> list = Lists.list( theClass.getDeclaredFields() );
         for ( Field field : list ) {
             field.setAccessible( true );
-        }
-        return list;
-    }
-
-
-    public static Iterator iterator( final Object o ) {
-        if ( o instanceof Collection ) {
-            return ( ( Collection ) o ).iterator();
-        } else if ( isArray( o ) ) {
-            return new Iterator() {
-                int index = 0;
-                int length = len( o );
-
-                @Override
-                public boolean hasNext() {
-                    return index < length;
-                }
-
-                @Override
-                public Object next() {
-                    Object value = BeanUtils.idx ( o, index );
-                    index++;
-                    return value;
-                }
-
-                @Override
-                public void remove() {
-                }
-            };
-        }
-        return null;
-    }
-
-
-    public static String joinBy( char delim, Object... args ) {
-        CharBuf builder = CharBuf.create( 256 );
-        int index = 0;
-        for ( Object arg : args ) {
-            builder.add( arg.toString() );
-            if ( !( index == args.length - 1 ) ) {
-                builder.add( delim );
-            }
-            index++;
-        }
-        return builder.toString();
-    }
-
-
-    public static List<Map<String, Object>> toListOfMaps( Collection<?> collection ) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for ( Object o : collection ) {
-            list.add( MapObjectConversion.toMap ( o ) );
         }
         return list;
     }

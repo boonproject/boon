@@ -1,9 +1,6 @@
 package org.boon.core.reflection;
 
-import org.boon.Exceptions;
-import org.boon.Lists;
-import org.boon.Maps;
-import org.boon.Sets;
+import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Value;
@@ -102,7 +99,7 @@ public class MapObjectConversion {
                 if ( parameterTypes.length == size ) {
 
                     for ( int index = 0; index < size; index++ ) {
-                        if ( !matchAndConvertConstructorArg(fieldsAccessor, list, constructor, parameterTypes, index ) ) continue loop;
+                        if ( !matchAndConvertArgs( fieldsAccessor, list, constructor, parameterTypes, index ) ) continue loop;
                     }
                     match = constructor;
                 }
@@ -135,7 +132,7 @@ public class MapObjectConversion {
 
     }
 
-    private static boolean matchAndConvertConstructorArg( FieldsAccessor fieldsAccessor, List<Object> list, Constructor constructor, Class[] parameterTypes, int index ) {
+    public static boolean matchAndConvertArgs( FieldsAccessor fieldsAccessor, List<Object> list, Constructor constructor, Class[] parameterTypes, int index ) {
         try {
 
             Class paramType;
@@ -644,7 +641,7 @@ public class MapObjectConversion {
             } else {
                 /* The type was not compatible so create a new collection that is. */
                 Collection<Object> newCollection =
-                        Reflection.createCollection( field.type(), collection.size() );
+                        Conversions.createCollection( field.type(), collection.size() );
 
                 newCollection.addAll( collection );
                 field.setValue( newInstance, newCollection );
@@ -676,7 +673,7 @@ public class MapObjectConversion {
                                                 FieldAccess field, Collection<Map<String, Object>> collectionOfMaps,
                                                 final Set<String> ignoreSet ) {
 
-        Collection<Object> newCollection = Reflection.createCollection( field.type(), collectionOfMaps.size() );
+        Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfMaps.size() );
 
 
         Class<?> componentClass = field.getComponentClass();
@@ -700,7 +697,7 @@ public class MapObjectConversion {
                                                 FieldAccess field, Collection<Map<String, Object>> collectionOfMaps
     ) {
 
-        Collection<Object> newCollection = Reflection.createCollection( field.type(), collectionOfMaps.size() );
+        Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfMaps.size() );
 
 
         Class<?> componentClass = field.getComponentClass();
@@ -729,7 +726,7 @@ public class MapObjectConversion {
             collectionOfValues = ( ( ValueList ) collectionOfValues ).list();
         }
 
-        Collection<Object> newCollection = Reflection.createCollection( field.type(), collectionOfValues.size() );
+        Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfValues.size() );
 
 
 
@@ -873,7 +870,7 @@ public class MapObjectConversion {
             collectionOfValues = ( ( ValueList ) collectionOfValues ).list();
         }
 
-        Collection<Object> newCollection = Reflection.createCollection( field.type(), collectionOfValues.size() );
+        Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfValues.size() );
 
 
         Class<?> componentClass = field.getComponentClass();
@@ -954,11 +951,11 @@ public class MapObjectConversion {
             }
             if ( Typ.isBasicType( value ) ) {
                 map.put( key, entry.value() );
-            } else if ( Reflection.isArray( value )
+            } else if ( Boon.isArray( value )
                     && Typ.isBasicType( value.getClass().getComponentType() ) ) {
                 map.put( key, entry.value() );
-            } else if ( Reflection.isArray( value ) ) {
-                int length = Reflection.arrayLength( value );
+            } else if ( Boon.isArray( value ) ) {
+                int length = Boon.arrayLength( value );
                 List<Map<String, Object>> list = new ArrayList<>( length );
                 for ( int index = 0; index < length; index++ ) {
                     Object item = BeanUtils.idx( value, index );
@@ -1039,11 +1036,11 @@ public class MapObjectConversion {
             }
             if ( Typ.isBasicType( value ) ) {
                 map.put( entry.key(), entry.value() );
-            } else if ( Reflection.isArray( value )
+            } else if ( Boon.isArray( value )
                     && Typ.isBasicType( value.getClass().getComponentType() ) ) {
                 map.put( entry.key(), entry.value() );
-            } else if ( Reflection.isArray( value ) ) {
-                int length = Reflection.arrayLength( value );
+            } else if ( Boon.isArray( value ) ) {
+                int length = Boon.arrayLength( value );
                 List<Map<String, Object>> list = new ArrayList<>( length );
                 for ( int index = 0; index < length; index++ ) {
                     Object item = BeanUtils.idx( value, index );
@@ -1097,5 +1094,13 @@ public class MapObjectConversion {
             }
         }
         return ( List<T> ) newList;
+    }
+
+    public static List<Map<String, Object>> toListOfMaps( Collection<?> collection ) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for ( Object o : collection ) {
+            list.add( toMap( o ) );
+        }
+        return list;
     }
 }

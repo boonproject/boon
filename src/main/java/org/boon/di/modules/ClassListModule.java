@@ -5,7 +5,6 @@ import org.boon.Sets;
 import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
 import org.boon.core.reflection.Reflection;
-import org.boon.di.Module;
 import org.boon.di.ProviderInfo;
 
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassListModule extends BaseModule {
 
-    Map<Class, Class> classes = new ConcurrentHashMap<>();
+    private Map<Class, Class> classes = new ConcurrentHashMap<>();
 
     private MultiMap<String, Class> nameMap = new MultiMap<>();
 
@@ -108,8 +107,8 @@ public class ClassListModule extends BaseModule {
     }
 
     @Override
-    public Iterable values() {
-        return this.classes.values();
+    public Iterable<Object> values() {
+        return (Iterable<Object>) (Object)this.classes.values();
     }
 
     @Override

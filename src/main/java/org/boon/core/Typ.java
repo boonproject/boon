@@ -176,4 +176,5 @@ public class Typ {
     public static boolean isBasicTypeOrCollection( Class<?> type ) {
         return basicTypeOrCollection.contains( type );
     }
+
 }

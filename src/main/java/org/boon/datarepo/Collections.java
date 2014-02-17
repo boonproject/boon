@@ -17,7 +17,7 @@ package org.boon.datarepo;
 
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.Fields;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.internal.Criteria;
 import org.boon.datarepo.impl.decorators.FilterWithSimpleCache;
@@ -349,7 +349,7 @@ public class Collections {
             @Override
             public Object apply( Object o ) {
 
-                if ( Reflection.hasField( o.getClass(), field.getName() ) ) {
+                if ( Fields.hasField( o.getClass(), field.getName() ) ) {
                     return field.getValue( o );
                 } else {
                     return null;

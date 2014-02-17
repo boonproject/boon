@@ -104,7 +104,6 @@ public class CreatorTest {
 
         Bar bar = new Bar();
         bar.name = "baz";
-        Map myMap = map( "bar", bar );
 
         Foo foo = create( fooType, map( "bar", bar ) );
 

@@ -1,6 +1,6 @@
 package org.boon.collections;
 
-import org.boon.core.reflection.Reflection;
+import org.boon.core.Conversions;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,7 +61,7 @@ public class MultiMap<K, V> implements Iterable<Map.Entry<K, Collection<V>>> {
 
 
 
-    public Collection<V> getAll( K key ) {
+    public Iterable<V> getAll( K key ) {
         Collection<V> collection = map.get( key );
         if ( collection == null  ) {
             return Collections.EMPTY_LIST;
@@ -84,7 +84,7 @@ public class MultiMap<K, V> implements Iterable<Map.Entry<K, Collection<V>>> {
     }
 
     private Collection<V> createCollection( K key ) {
-        Collection<V> collection = ( Collection<V> ) Reflection.createCollection( collectionClass, initialSize );
+        Collection<V> collection = ( Collection<V> ) Conversions.createCollection( collectionClass, initialSize );
         map.put( key, collection );
         return collection;
     }
@@ -93,7 +93,7 @@ public class MultiMap<K, V> implements Iterable<Map.Entry<K, Collection<V>>> {
       return map.keySet();
     }
 
-    public Iterable<Object> values() {
+    public Iterable<V> values() {
 
         List list = new ArrayList(  );
         Collection<Collection<V>> values = map.values();

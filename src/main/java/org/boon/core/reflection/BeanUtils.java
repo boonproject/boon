@@ -1,9 +1,6 @@
 package org.boon.core.reflection;
 
-import org.boon.Exceptions;
-import org.boon.Lists;
-import org.boon.Sets;
-import org.boon.StringScanner;
+import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Type;
@@ -238,7 +235,7 @@ public class BeanUtils {
             String propName = path[ index ];
             if ( o == null ) {
                 return null;
-            } else if ( Reflection.isArray( o ) || o instanceof Collection ) {
+            } else if ( Boon.isArray( o ) || o instanceof Collection ) {
                 o = getCollecitonProp( o, propName, index, path );
                 break;
             } else {
@@ -703,9 +700,9 @@ public class BeanUtils {
         if ( object == null ) {
             return null;
         }
-        if ( Reflection.isArray( object ) || object instanceof Collection ) {
+        if ( Boon.isArray( object ) || object instanceof Collection ) {
             Iterator iter = Conversions.iterator( object );
-            List list = new ArrayList( Reflection.len( object ) );
+            List list = new ArrayList( Boon.len( object ) );
             while ( iter.hasNext() ) {
                 list.add( getFieldValues( iter.next(), key ) );
             }
@@ -930,7 +927,7 @@ public class BeanUtils {
     private static void handleCollectionFieldCopy( Object dst, FieldAccess dstField, Collection srcValue ) {
         if ( dstField.getComponentClass () != Typ.string )  {
 
-            Collection dstCollection = Reflection.createCollection ( dstField.type(), srcValue.size () );
+            Collection dstCollection = Conversions.createCollection( dstField.type(), srcValue.size() );
             for ( Object srcComponentValue : srcValue ) {
 
                 Object newInstance = Reflection.newInstance( dstField.getComponentClass() );
@@ -941,7 +938,7 @@ public class BeanUtils {
             dstField.setObject ( dst, dstCollection );
         } else {
 
-            Collection dstCollection = Reflection.createCollection( dstField.type(), srcValue.size() );
+            Collection dstCollection = Conversions.createCollection( dstField.type(), srcValue.size() );
             for ( Object srcComponentValue : srcValue ) {
 
                 if (srcComponentValue!=null) {
@@ -955,7 +952,7 @@ public class BeanUtils {
     }
 
     public static Object idx( Object object, int index ) {
-        if ( Reflection.isArray ( object ) ) {
+        if ( Boon.isArray( object ) ) {
             object = Array.get ( object, index );
         } else if ( object instanceof List ) {
             object = Lists.idx ( ( List ) object, index );
@@ -965,7 +962,7 @@ public class BeanUtils {
 
     public static void idx( Object object, int index, Object value ) {
         try {
-            if ( Reflection.isArray ( object ) ) {
+            if ( Boon.isArray( object ) ) {
                 Array.set( object, index, value );
             } else if ( object instanceof List ) {
                 Lists.idx( ( List ) object, index, value );

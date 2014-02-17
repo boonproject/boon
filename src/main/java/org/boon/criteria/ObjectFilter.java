@@ -1,16 +1,16 @@
 package org.boon.criteria;
 
 
+import org.boon.Boon;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.internal.*;
 
 import java.util.*;
 
-import static org.boon.core.reflection.Reflection.iterator;
+import static org.boon.Boon.iterator;
 
 
 public class ObjectFilter {
@@ -68,7 +68,7 @@ public class ObjectFilter {
     }
 
     public static Criterion eqNestedAdvanced( final Object value, final Object... path ) {
-        return new Criterion<Object>( Reflection.joinBy( '.', path ), Operator.EQUAL, value ) {
+        return new Criterion<Object>( Boon.joinBy( '.', path ), Operator.EQUAL, value ) {
             @Override
             public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
                 Object v = BeanUtils.getPropByPath( path );
@@ -90,7 +90,7 @@ public class ObjectFilter {
     }
 
     public static Criterion eqNested( final Object value, final String... path ) {
-        return new Criterion<Object>( Reflection.joinBy( '.', path ), Operator.EQUAL, value ) {
+        return new Criterion<Object>( Boon.joinBy( '.', path ), Operator.EQUAL, value ) {
             @Override
             public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
                 Object v = BeanUtils.getPropertyValue( owner, path );
@@ -423,10 +423,10 @@ public class ObjectFilter {
                     returnVal = collection == null || collection.isEmpty();
                 } else if ( field.type().isArray() ) {
                     Object array = ( Object ) field.getValue( owner );
-                    returnVal = array == null || Reflection.len( array ) == 0;
+                    returnVal = array == null || Boon.len( array ) == 0;
                 } else {
                     Object obj = ( Object ) field.getValue( owner );
-                    returnVal = obj == null || Reflection.len( obj ) == 0;
+                    returnVal = obj == null || Boon.len( obj ) == 0;
                 }
                 return not ? !returnVal : returnVal;
             }

@@ -5,7 +5,7 @@ import org.boon.Str;
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.Conversions;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.Fields;
 import org.boon.core.reflection.fields.FieldAccess;
 
 import java.text.Collator;
@@ -178,7 +178,7 @@ public class Ordering {
             Comparable c2 = comparable( value2 );
             return c1.compareTo( c2 );
         } else {
-            String name = Reflection.getSortableField( value1 );
+            String name = Fields.getSortableField( value1 );
             String sv1 = ( String ) BeanUtils.getPropByPath( value1, name );
             String sv2 = ( String ) BeanUtils.getPropByPath( value2, name );
             return Ordering.compare( sv1, sv2 );

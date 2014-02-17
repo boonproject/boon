@@ -1,5 +1,6 @@
 package org.boon.datarepo.impl;
 
+import org.boon.Boon;
 import org.boon.Exceptions;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -21,7 +22,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static org.boon.Lists.list;
-import static org.boon.core.reflection.Reflection.isArray;
+import static org.boon.Boon.isArray;
 import static org.boon.core.reflection.MapObjectConversion.toMap;
 
 public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollection<KEY, ITEM>, SearchableCollectionComposer {
@@ -422,7 +423,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
         if ( isArray( o ) || o instanceof Collection ) {
 
             int index = 0;
-            Iterator iterator = Reflection.iterator( o );
+            Iterator iterator = Boon.iterator( o );
             while ( iterator.hasNext() ) {
                 path.add( String.format( "[%s]", index ) );
                 Object objectItem = iterator.next();

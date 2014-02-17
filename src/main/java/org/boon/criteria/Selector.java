@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.boon.Lists.list;
-import static org.boon.core.reflection.Reflection.joinBy;
+import static org.boon.Boon.joinBy;
 
 public abstract class Selector {
     protected String name;

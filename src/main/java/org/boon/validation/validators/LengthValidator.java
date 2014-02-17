@@ -1,6 +1,6 @@
 package org.boon.validation.validators;
 
-import org.boon.core.reflection.Reflection;
+import org.boon.Boon;
 import org.boon.validation.ValidatorMessage;
 import org.boon.validation.ValidatorMessageHolder;
 
@@ -32,7 +32,7 @@ public class LengthValidator extends BaseValidator {
             return validatorMessage;
         }
 
-        int len = Reflection.len( fieldValue );
+        int len = Boon.len( fieldValue );
 
         if ( !( len >= min && len <= max ) ) {
             populateMessage( validatorMessage, fieldLabel, min, max );

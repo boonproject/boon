@@ -1,7 +1,7 @@
 package org.boon;
 
 
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.MapObjectConversion;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -253,7 +253,7 @@ public class Arrays {
 
 
     public static List<Map<String, Object>> toListOfMaps( Object... array ) {
-        return Reflection.toListOfMaps( Lists.list( array ) );
+        return MapObjectConversion.toListOfMaps( Lists.list( array ) );
     }
 
 }
