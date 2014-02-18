@@ -38,4 +38,11 @@ public class Mapper {
         return MapObjectConversion.fromValueMap( respectIgnore, view, this.fieldsAccessor,  map, cls, ignoreSet) ;
     }
 
+
+    public  <T> List<T> convertListOfMapsToObjects(Class<T> componentType, List<?> list) {
+         return MapObjectConversion.convertListOfMapsToObjects( respectIgnore, view, fieldsAccessor,
+                 componentType, list, ignoreSet );
+
+    }
+
 }
