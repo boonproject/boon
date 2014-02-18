@@ -30,17 +30,21 @@ public class MapObjectConversion {
 
     public static <T> T fromListUsingFields( List<Object> list, Class<T> clazz ) {
 
-        return fromListUsingFields( FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), list, Reflection.newInstance( clazz ) );
+        return fromListUsingFields( false, null, FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), list,  clazz, null );
 
     }
 
-    public static <T> T fromListUsingFields( FieldsAccessor fieldsAccessor, List<Object> list, T toObject ) {
+    public static <T> T fromListUsingFields( boolean respectIgnore, String view,
+                                             FieldsAccessor fieldsAccessor, List<Object> list, Class<T> clazz ,
+                                             Set<String> ignoreSet) {
 
-        Map<String, FieldAccess> fieldMap = fieldsAccessor.getFields( toObject.getClass() );
-        List<Field> fields = Reflection.getFields( toObject.getClass() );
+        Map<String, FieldAccess> fieldMap = fieldsAccessor.getFields( clazz );
+        List<Field> fields = Reflection.getFields( clazz );
         Object item;
         Class<?> paramType;
         Field field;
+
+        T toObject = Reflection.newInstance( clazz );
 
         loop:
         for ( int index = 0; index < fields.size(); index++ ) {
@@ -57,7 +61,7 @@ public class MapObjectConversion {
 
                     for ( Object o : itemList ) {
                         List fromList = ( List ) o;
-                        newList.add( fromList( fromList, componentType ) );
+                        newList.add( fromList(respectIgnore, view, fieldsAccessor,  fromList, componentType, ignoreSet ) );
                     }
                     fieldAccess.setValue( toObject, newList );
 
@@ -65,7 +69,11 @@ public class MapObjectConversion {
             } else if ( paramType.isInstance( item ) ) {
                 fieldAccess.setValue( toObject, item );
             }
-            else{
+            else if (item instanceof Map) {
+
+                setFieldValueFromMap( respectIgnore, view, fieldsAccessor, ignoreSet, toObject, fieldAccess, item );
+
+            } else {
                 fieldAccess.setValue( toObject, item );
             }
         }
@@ -73,6 +81,8 @@ public class MapObjectConversion {
         return toObject;
 
     }
+
+
 
     public static <T> T fromList( List<Object> argList, Class<T> clazz ) {
           return fromList( FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), argList, clazz );
@@ -111,7 +121,7 @@ public class MapObjectConversion {
             if ( match != null ) {
                 return ( T ) match.newInstance( list.toArray( new Object[list.size()] ) );
             } else {
-                return fromListUsingFields( list, clazz );
+                return fromListUsingFields( respectIgnore, view, fieldsAccessor, list, clazz, ignoreSet );
             }
 
         } catch ( Exception e ) {
@@ -161,8 +171,23 @@ public class MapObjectConversion {
                     list.set( index, o );
             }
             else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
-                list.set( index, fromMap(respectIgnore, view, fieldsAccessor,  ( Map<String, Object> ) item, paramType, ignoreSet  ) );
-            } else if ( item instanceof List && !Typ.isList( paramType ) ) {
+
+                if ( !paramType.isInterface() && !Typ.isAbstract( paramType ) ) {
+                     item = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) item, paramType, ignoreSet );
+                     list.set(index, item);
+                } else {
+
+                    String  className = (String) ((Map) item).get( "class" );
+                    if (className != null)  {
+                        item = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) item, Reflection.loadClass( className ), ignoreSet );
+                        list.set(index, item);
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
+            else if ( item instanceof List && !Typ.isList( paramType ) ) {
                 list.set( index, fromList(respectIgnore, view, fieldsAccessor,  ( List<Object> ) item, paramType, ignoreSet ) );
             } else if ( Typ.isList( paramType ) && item instanceof List ) {
                 List<Object> itemList = ( List<Object> ) item;
@@ -189,7 +214,7 @@ public class MapObjectConversion {
             } else if ( paramType == Typ.string  && item instanceof CharSequence ) {
                 list.set( index, item.toString() );
             } else if ( paramType.isEnum()  && (item instanceof CharSequence| item instanceof Number)  ) {
-                list.set( index, toEnum(paramType, item));
+                list.set( index, toEnum( paramType, item ));
             } else if ( !paramType.isInstance( item ) ) {
                 return false;
             }
@@ -294,20 +319,7 @@ public class MapObjectConversion {
             /* See if it is a map<string, object>, and if it is then process it. */
             //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
             else if ( value instanceof Map ) {
-                Class<?> clazz = field.type();
-                if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
-                    value = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) value, field.type(), ignoreSet );
-
-                } else {
-
-                    String  className = (String) ((Map) value).get( "class" );
-                    if (className != null)  {
-                        value = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) value, Reflection.loadClass( className ), ignoreSet );
-                    } else {
-                        value = null;
-                    }
-                }
-                field.setObject( toObject, value );
+                setFieldValueFromMap( respectIgnore, view, fieldsAccessor, ignoreSet, toObject, field, value );
             } else if ( value instanceof Collection ) {
                 /*It is a collection so process it that way. */
                 processCollectionFromMapUsingFields( respectIgnore, view, fieldsAccessor, toObject, field, ( Collection ) value, ignoreSet );
@@ -324,6 +336,53 @@ public class MapObjectConversion {
 
     }
 
+    private static <T> void setFieldValueFromMap( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor,
+                                                  Set<String> ignoreSet, T toObject, FieldAccess field, Object value ) {
+        Class<?> clazz = field.type();
+
+        Map mapInner = (Map)value;
+
+        if ( !Typ.isMap( clazz ) )  {
+
+            if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
+                value = fromMap( respectIgnore, view, fieldsAccessor, mapInner, field.type(), ignoreSet );
+
+            } else {
+                String  className = (String) ((Map) value).get( "class" );
+                if (className != null)  {
+                    value = fromMap( respectIgnore, view, fieldsAccessor, mapInner, Reflection.loadClass( className ), ignoreSet );
+                } else {
+                    value = null;
+                }
+            }
+        }  else if (Typ.isMap( clazz ))  {
+            Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
+            Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
+
+            Set<Map.Entry> set = mapInner.entrySet();
+            Map newMap = new LinkedHashMap(  );
+
+            for (Map.Entry entry : set) {
+                Object evalue = entry.getValue();
+
+                Object key = entry.getKey();
+
+                if (evalue instanceof ValueContainer) {
+                    evalue = ((ValueContainer) evalue).toValue();
+                }
+
+                key  = Conversions.coerce( keyType, key );
+                evalue = Conversions.coerce( valueType, evalue );
+                newMap.put( key, evalue );
+            }
+
+            value  = newMap;
+
+        }
+
+        field.setObject( toObject, value );
+
+    }
 
 
     @SuppressWarnings("unchecked")
