@@ -28,11 +28,16 @@ import static org.boon.Boon.sputs;
  */
 public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<>( );
-
+    private final String view;
 
 
     private CharBuf builder = CharBuf.create( 4000 );
 
+
+    public JsonSimpleSerializerImpl(String view) {
+
+        this.view = view;
+    }
 
     public final void serializeString( String str, CharBuf builder ) {
           builder.addJsonEscapedString ( str );
@@ -56,6 +61,17 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         final String fieldName = fieldAccess.getName ();
         final Type typeEnum = fieldAccess.typeEnum ();
+
+        if ( fieldAccess.ignore() ) {
+             return false;
+        }
+
+        if ( view!=null ){
+            if (!fieldAccess.isViewActive( view ) ) {
+                return false;
+            }
+        }
+
         switch ( typeEnum ) {
             case INT:
                 int value = fieldAccess.getInt ( parent );

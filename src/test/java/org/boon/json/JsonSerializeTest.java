@@ -35,7 +35,7 @@ public class JsonSerializeTest {
     public void test() {
 
         Employee rick = new Employee();
-        String sRick = new JsonSimpleSerializerImpl().serialize( rick ).toString();
+        String sRick = new JsonSimpleSerializerImpl(null).serialize( rick ).toString();
         boolean ok = sRick.equals( "{\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\"}" ) || die( sRick );
 
         rick = new JsonParserFactory ().create ().parse ( Employee.class, sRick );
@@ -80,7 +80,7 @@ public class JsonSerializeTest {
         AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType( foo2 );
         foo2.setString( "Hi Dad" );
-        foo.setAllTypes( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
+        foo.setAllTypeList( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
 
 
         String sFoo = serializer.serialize( foo ).toString();
@@ -114,7 +114,7 @@ public class JsonSerializeTest {
         AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType( foo2 );
         foo2.setString( "Hi Dad" );
-        foo.setAllTypes( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
+        foo.setAllTypeList( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
 
 
         String sFoo = serializer.serialize( foo ).toString();

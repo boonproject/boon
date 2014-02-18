@@ -38,7 +38,7 @@ public class JsonSerializerFactory {
                 !handleComplexBackReference && !includeDefault && filterProperties == null
                 && customFieldSerializers == null && customObjectSerializers == null &&
                 fieldAccessType == FieldAccessMode.FIELD) {
-            return new JsonSimpleSerializerImpl ();
+            return new JsonSimpleSerializerImpl (view);
         } else {
 
             InstanceSerializer instanceSerializer;

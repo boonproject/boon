@@ -231,6 +231,22 @@ public class Reflection {
 
 
 
+
+
+    public static Class<?> loadClass( String className ) {
+
+        try {
+            Class<?> clazz = Class.forName( className );
+
+
+            return clazz;
+
+
+        } catch ( Exception ex ) {
+            log.info( String.format( "Unable to create load class %s", className ) );
+            return null;
+        }
+    }
     public static Object newInstance( String className ) {
 
         try {

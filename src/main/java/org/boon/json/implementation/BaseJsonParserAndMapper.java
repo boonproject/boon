@@ -66,16 +66,17 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
             switch ( coerceFrom ) {
 
                 case VALUE_MAP:
-                    return MapObjectConversion.fromValueMap( fieldsAccessor, ( Map<String, Value> ) object, clz );
+                    return MapObjectConversion.fromValueMap( false, null, fieldsAccessor, ( Map<String, Value> ) object, clz, null );
 
                 case MAP:
-                    return MapObjectConversion.fromMap ( fieldsAccessor, ( Map<String, Object> ) object, clz );
+                    return MapObjectConversion.fromMap ( false, null, fieldsAccessor, ( Map<String, Object> ) object, clz, null );
 
                 case VALUE:
                     return (T)( (Value) object).toValue ();
 
                 case LIST:
-                    return (T)MapObjectConversion.convertListOfMapsToObjects(this.fieldsAccessor, clz, (List<Object>)object);
+                    return (T)MapObjectConversion.convertListOfMapsToObjects(false, null, this.fieldsAccessor,
+                            clz, (List<Object>)object, null);
 
                 default:
                     if ( Typ.isBasicTypeOrCollection( clz ) ) {
@@ -101,57 +102,61 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
     @Override
     public <T> List<T> parseList ( Class<T> componentType, String jsonString ) {
         List<Object> list =  parse ( List.class, jsonString );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
+    private <T> List<T> convertList( Class<T> componentType, List<Object> list ) {
+
+        return MapObjectConversion.convertListOfMapsToObjects(false, null, fieldsAccessor, componentType, list, null );
+    }
 
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, Reader reader ) {
         List<Object> list =  parse ( List.class, reader );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, InputStream input ) {
         List<Object> list =  parse ( List.class, input );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
     @Override
     public <T> List<T> parseList ( Class<T> componentType, InputStream input, Charset charset ) {
         List<Object> list =  parse ( List.class, input, charset );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, byte[] jsonBytes ) {
         List<Object> list =  parse ( List.class, jsonBytes );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, byte[] jsonBytes, Charset charset ) {
         List<Object> list =  parse ( List.class, jsonBytes, charset );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, char[] chars ) {
         List<Object> list =  parse ( List.class, chars );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseList ( Class<T> componentType, CharSequence jsonSeq ) {
         List<Object> list =  parse ( List.class, jsonSeq );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
     @Override
     public <T>  List<T> parseListFromFile ( Class<T> componentType, String fileName ) {
         List<Object> list =  parseFile ( List.class, fileName );
-        return MapObjectConversion.convertListOfMapsToObjects( fieldsAccessor, componentType, list );
+        return convertList( componentType, list );
     }
 
 

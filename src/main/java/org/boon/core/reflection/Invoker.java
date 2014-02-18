@@ -11,15 +11,13 @@ import org.boon.core.value.ValueContainer;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.toEnum;
 import static org.boon.core.reflection.MapObjectConversion.fromList;
+
 import static org.boon.core.reflection.MapObjectConversion.fromMap;
 
 /**
@@ -33,9 +31,14 @@ public class Invoker {
 
 
 
-        public static Object invokeOverloadedFromObject (Object object, String name, Object args){
+        public static Object invokeOverloadedFromObject ( Object object, String name, Object args ){
+            return invokeOverloadedFromObject( false, null, null, object, name, args );
+        }
+
+        public static Object invokeOverloadedFromObject (boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                                         Object object, String name, Object args){
             if (args instanceof Map) {
-                return invokeOverloadedFromList( object, name, Lists.list( args ) );
+                return invokeOverloadedFromList( respectIgnore, view, ignoreProperties, object, name, Lists.list( args ) );
             } else if (args instanceof List) {
                 List list = ( List ) args;
                 ClassMeta classMeta = ClassMeta.classMeta( object.getClass() );
@@ -44,26 +47,32 @@ public class Invoker {
 
                     Object firstArg = list.get(0);
                     if (firstArg instanceof Map || firstArg instanceof List) {
-                        return invokeOverloadedFromList( object, name, list );
+                        return invokeOverloadedFromList(  respectIgnore, view, ignoreProperties, object, name, list );
 
                     }  else {
-                        return invokeOverloadedFromList( object, name, Lists.list( args ) );
+                        return invokeOverloadedFromList(  respectIgnore, view, ignoreProperties, object, name, Lists.list( args ) );
                     }
                 } else {
 
-                    return invokeOverloadedFromList( object, name, list );
+                    return invokeOverloadedFromList(  respectIgnore, view, ignoreProperties, object, name, list );
 
                 }
             } else if (args == null) {
                 return invoke( object, name );
             } else {
-                return invokeOverloadedFromList( object, name, Lists.list( args ) );
+                return invokeOverloadedFromList(  respectIgnore, view, ignoreProperties, object, name, Lists.list( args ) );
             }
         }
 
-        public static Object invokeFromObject (Object object, String name, Object args){
+
+        public static Object invokeFromObject ( Object object, String name, Object args ){
+              return invokeFromObject( false, null, null, object, name, args );
+
+        }
+        public static Object invokeFromObject (boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                               Object object, String name, Object args){
             if (args instanceof Map) {
-                return invokeFromList( object, name, Lists.list( args ) );
+                return invokeFromList( respectIgnore, view, ignoreProperties, object, name, Lists.list( args ) );
             } else if (args instanceof List) {
                 List list = ( List ) args;
                 ClassMeta classMeta = ClassMeta.classMeta( object.getClass() );
@@ -72,25 +81,28 @@ public class Invoker {
 
                     Object firstArg = list.get(0);
                     if (firstArg instanceof Map || firstArg instanceof List) {
-                        return invokeFromList( object, name, list );
+                        return invokeFromList( respectIgnore, view, ignoreProperties, object, name, list );
 
                     }  else {
-                        return invokeFromList( object, name, Lists.list( args ) );
+                        return invokeFromList( respectIgnore, view, ignoreProperties, object, name, Lists.list( args ) );
                     }
                 } else {
 
-                    return invokeFromList( object, name, list );
+                    return invokeFromList( respectIgnore, view, ignoreProperties, object, name, list );
 
                 }
             } else if (args == null) {
                 return invoke( object, name );
             } else {
-                return invokeFromList( object, name, Lists.list( args ) );
+                return invokeFromList( respectIgnore, view, ignoreProperties, object, name, Lists.list( args ) );
             }
 
         }
 
-        public static Object invokeFromList (Object object, String name, List<?> args){
+        public static Object invokeFromList ( Object object, String name, List<?> args){
+            return invokeFromList(true, null, null, object, name, args);
+        }
+        public static Object invokeFromList (boolean respectIgnore, String view, Set<String> ignoreProperties, Object object, String name, List<?> args){
             List<Object> list = new ArrayList( args );
             ClassMeta classMeta = ClassMeta.classMeta( object.getClass() );
             MethodAccess m = classMeta.method( name );
@@ -103,7 +115,7 @@ public class Invoker {
 
             for (int index = 0; index < parameterTypes.length; index++) {
 
-                if ( !matchAndConvertArgs( fieldsAccessor, list, m, parameterTypes, index ) ) {
+                if ( !matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, m, parameterTypes, index ) ) {
                     return die(Object.class,"Unable to invoke method as argument types did not match",
                             name, "on object", object, "with arguments", list );
                 }
@@ -165,6 +177,12 @@ public class Invoker {
 
 
     public static Object invokeOverloadedFromList (Object object, String name, List<?> args){
+
+        return invokeOverloadedFromList( true, null, null, object, name, args );
+
+    }
+
+    public static Object invokeOverloadedFromList (boolean respectIgnore, String view, Set<String> ignoreProperties, Object object, String name, List<?> args){
         ClassMeta classMeta = ClassMeta.classMeta( object.getClass() );
         Iterable<MethodAccess> invokers =   classMeta.methods( name );
 
@@ -179,7 +197,7 @@ public class Invoker {
                 continue;
             }
             for (int index = 0; index < parameterTypes.length; index++) {
-                if ( !matchAndConvertArgs( fieldsAccessor, list, m, parameterTypes, index ) ) {
+                if ( !matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, m, parameterTypes, index ) ) {
                         continue loop;
                 }
             }
@@ -224,7 +242,7 @@ public class Invoker {
     }
 
 
-    public static boolean matchAndConvertArgs( FieldsAccessor fieldsAccessor, List<Object> list, MethodAccess method, Class[] parameterTypes, int index ) {
+    public static boolean matchAndConvertArgs(boolean respectIgnore, String view, Set<String> ignoreSet, FieldsAccessor fieldsAccessor, List<Object> list, MethodAccess method, Class[] parameterTypes, int index ) {
         try {
 
             Class paramType;
@@ -242,7 +260,7 @@ public class Invoker {
                 list.set( index, o );
             }
             else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
-                list.set( index, fromMap(fieldsAccessor,  ( Map<String, Object> ) item, paramType ) );
+                list.set( index, fromMap(respectIgnore, view, fieldsAccessor,  ( Map<String, Object> ) item, paramType, ignoreSet ) );
             } else if ( item instanceof List && !Typ.isList( paramType ) ) {
                 list.set( index, fromList(fieldsAccessor,  ( List<Object> ) item, paramType ) );
             } else if ( Typ.isList( paramType ) && item instanceof List ) {

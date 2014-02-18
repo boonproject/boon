@@ -174,7 +174,7 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
         if (object instanceof Map ) {
             Map<String, Value> objectMap = ( Map<String, Value> ) object;
-           return MapObjectConversion.fromValueMap( fields, objectMap, type );
+           return MapObjectConversion.fromValueMap( false, null, fields, objectMap, type, null );
         }
 
         if (object instanceof ValueContainer) {

@@ -293,7 +293,7 @@ public class JsonParserAndMapperBaseTest {
         AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType ( foo2 );
         foo2.setString ( "Hi Dad" );
-        foo.setAllTypes ( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 )) );
+        foo.setAllTypeList( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
 
         foo2.setString ( "HELLO DERE" );
         foo.setAllTypesSet ( Sets.set ( BeanUtils.copy ( foo2 ), BeanUtils.copy ( foo2 ) ) );
@@ -382,7 +382,7 @@ public class JsonParserAndMapperBaseTest {
         AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType ( foo2 );
         foo2.setString ( "Hi Dad" );
-        foo.setAllTypes ( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 )) );
+        foo.setAllTypeList( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
 
         final JsonSerializer serializer = new JsonSerializerFactory ().create ();
 
@@ -413,7 +413,7 @@ public class JsonParserAndMapperBaseTest {
         AllTypes foo2 = BeanUtils.copy( foo );
         foo.setAllType ( foo2 );
         foo2.setString ( "Hi Dad" );
-        foo.setAllTypes ( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 )) );
+        foo.setAllTypeList( Lists.list( BeanUtils.copy( foo2 ), BeanUtils.copy( foo2 ) ) );
 
         final JsonSerializer serializer = new JsonSerializerImpl (  );
 
@@ -481,9 +481,9 @@ public class JsonParserAndMapperBaseTest {
         ok |= types.getFoo ().toString().equals ( "FOO" ) || die();
         ok |= types.getBar ().toString().equals ( "BAR" ) || die();
 
-        ok |= types.getAllTypes ().size () == 3 || die ( "" + types.getAllTypes ().size () );
+        ok |= types.getAllTypeList().size () == 3 || die ( "" + types.getAllTypeList().size () );
 
-        for ( AllTypes allType : types.getAllTypes () ) {
+        for ( AllTypes allType : types.getAllTypeList() ) {
             validateAllTypes ( allType );
         }
 

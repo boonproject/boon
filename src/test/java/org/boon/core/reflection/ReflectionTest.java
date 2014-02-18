@@ -131,7 +131,7 @@ public class ReflectionTest {
          ok = dept.employees.get ( 0 ).id.equals ( "foo") || die();
 
 
-         dept = MapObjectConversion.fromMap ( department3, new Department (), "name", "id" );
+         dept = MapObjectConversion.fromMap ( department3, Department.class, "name", "id" );
          ok = dept.name == null || die();
          ok = dept.employees.get ( 0 ).firstName.equals ( "Rick") || die();
          ok = dept.employees.get ( 0 ).id.equals ( "foo") || die();

@@ -24,7 +24,7 @@
         "myByte" : 3
     },
 
-    "allTypes" : [
+    "allTypeList" : [
         {
             "myInt" : 1,
             "myFloat" : 1.1,

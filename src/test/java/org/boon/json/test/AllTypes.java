@@ -58,7 +58,7 @@ public class AllTypes {
 
     AllTypes allType;
 
-    List<AllTypes> allTypes = new ArrayList<> (  );
+    List<AllTypes> allTypeList = new ArrayList<> (  );
 
 
     Set<AllTypes> allTypesSet = new HashSet<> (  );
@@ -80,12 +80,12 @@ public class AllTypes {
         this.string2 = string2;
     }
 
-    public List<AllTypes> getAllTypes () {
-        return allTypes;
+    public List<AllTypes> getAllTypeList() {
+        return allTypeList;
     }
 
-    public void setAllTypes ( List<AllTypes> allTypes ) {
-        this.allTypes = allTypes;
+    public void setAllTypeList( List<AllTypes> allTypeList ) {
+        this.allTypeList = allTypeList;
     }
 
     public AllTypes getAllType () {
@@ -226,11 +226,22 @@ public class AllTypes {
         if ( string != null ? !string.equals ( allTypes1.string ) : allTypes1.string != null ) return false;
         if ( string2 != null ? !string2.equals ( allTypes1.string2 ) : allTypes1.string2 != null ) return false;
 
-        if (allTypes == null && allTypes1.allTypes.size () == 0) {
+        if ( allTypeList == null && allTypes1.allTypeList.size () == 0) {
             return true;
         } else {
 
-            if ( allTypes != null ? !allTypes.equals ( allTypes1.allTypes ) : allTypes1.allTypes != null ) return false;
+            if (allTypeList.size() == allTypes1.allTypeList.size()) {
+
+                for (int index = 0; index < allTypeList.size(); index++) {
+                    AllTypes theirs = allTypes1.allTypeList.get(index);
+                    AllTypes ours = allTypeList.get( index );
+                    if (!ours.equals( theirs ))  {
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
 
         }
 
@@ -274,7 +285,7 @@ public class AllTypes {
         result = 31 * result + ( foo != null ? foo.hashCode () : 0 );
         result = 31 * result + ( bar != null ? bar.hashCode () : 0 );
         result = 31 * result + ( allType != null ? allType.hashCode () : 0 );
-        result = 31 * result + ( allTypes != null ? allTypes.hashCode () : 0 );
+        result = 31 * result + ( allTypeList != null ? allTypeList.hashCode () : 0 );
         return result;
     }
 
@@ -296,7 +307,7 @@ public class AllTypes {
                 ", foo=" + foo +
                 ", bar=" + bar +
                 ", allType=" + allType +
-                ", allTypes=" + allTypes +
+                ", allTypeList=" + allTypeList +
                 '}';
     }
 }
