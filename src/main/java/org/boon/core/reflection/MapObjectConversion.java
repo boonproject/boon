@@ -217,13 +217,6 @@ public class MapObjectConversion {
     }
 
 
-    @SuppressWarnings( "unchecked" )
-    public static <T> T fromMap( FieldsAccessor fieldAccessor, Map<String, Object> map, Class<T> clazz ) {
-        return fromMap( false, null, fieldAccessor, map,  clazz , null );
-
-    }
-
-
 
     public static Object fromMap( Map<String, Object> map ) {
         String clazz = (String) map.get( "class" );
@@ -334,7 +327,7 @@ public class MapObjectConversion {
 
 
     @SuppressWarnings("unchecked")
-    public static Object fromValueMap(boolean respectIgnore, String view,
+    private static Object fromValueMap(boolean respectIgnore, String view,
             final FieldsAccessor fieldsAccessor,
             final Map<String, Value> map, Set<String> ignoreSet  ) {
 
@@ -812,6 +805,25 @@ public class MapObjectConversion {
 
     }
 
+
+    private static class FieldToEntryConverter implements
+            Conversions.Converter<Maps.Entry<String, Object>, FieldAccess> {
+
+        private final Object object;
+
+        FieldToEntryConverter(Object object) {
+            this.object = object;
+        }
+        @Override
+        public Maps.Entry<String, Object> convert( FieldAccess from ) {
+            if ( from.isReadOnly() ) {
+                return null;
+            }
+            Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.getName(),
+                    from.getValue( object ) );
+            return entry;
+        }
+    }
     public static Map<String, Object> toMap( final Object object ) {
 
         if ( object == null ) {
@@ -825,18 +837,6 @@ public class MapObjectConversion {
         Map<String, Object> map = new LinkedHashMap<>();
 
 
-        class FieldToEntryConverter implements
-                Conversions.Converter<Maps.Entry<String, Object>, FieldAccess> {
-            @Override
-            public Maps.Entry<String, Object> convert( FieldAccess from ) {
-                if ( from.isReadOnly() ) {
-                    return null;
-                }
-                Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.getName(),
-                        from.getValue( object ) );
-                return entry;
-            }
-        }
 
         final Map<String, FieldAccess> fieldMap = Reflection.getAllAccessorFields( object.getClass() );
         List<FieldAccess> fields = new ArrayList( fieldMap.values() );
@@ -847,7 +847,7 @@ public class MapObjectConversion {
         // subclass fields with the same name
 
         List<Maps.Entry<String, Object>> entries = Conversions.mapFilterNulls(
-                new FieldToEntryConverter(), new ArrayList( fields ) );
+                new FieldToEntryConverter(object), new ArrayList( fields ) );
 
         map.put( "class", object.getClass().getName() );
 
