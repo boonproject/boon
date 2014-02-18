@@ -135,7 +135,7 @@ public class ClassMeta <T> {
         Class<?> currentClass = cls;
         while (currentClass != Object.class) {
             classes.add( currentClass );
-            currentClass = cls.getSuperclass();
+            currentClass = currentClass.getSuperclass();
         }
         java.util.Collections.reverse( classes );
         return classes;
