@@ -31,12 +31,12 @@ public class CoffeeApp implements Runnable {
     Food newYorkFood;
 
 
-    @Inject
-    @Named( "rick's habit" )
-    Food rickDrinks;
-
-    @In( "rick's habit")
-    Food rickDrinks2;
+//    @Inject
+//    @Named( "rick's habit" )
+//    Food rickDrinks;
+//
+//    @In( "rick's habit")
+//    Food rickDrinks2;
 
     @Inject
     @Named( "rick's habit" )
@@ -208,16 +208,16 @@ public class CoffeeApp implements Runnable {
 
         ok = coffeeApp.newYorkFood instanceof Hotdogs || die( coffeeApp.newYorkFood.toString() );
 
-
-        ok = coffeeApp.rickDrinks == null || die();
-
-        ok = !( coffeeApp.rickDrinks instanceof Coffee ) || die( coffeeApp.rickDrinks.toString() );
-
-
-
-        ok = coffeeApp.rickDrinks2 == null || die();
-
-        ok = !( coffeeApp.rickDrinks2 instanceof Coffee ) || die( coffeeApp.rickDrinks.toString() );
+//
+//        ok = coffeeApp.rickDrinks != null || die();
+//
+//        ok = ( coffeeApp.rickDrinks instanceof Coffee ) || die( coffeeApp.rickDrinks.toString() );
+//
+//
+//
+//        ok = coffeeApp.rickDrinks2 != null || die();
+//
+//        ok = ( coffeeApp.rickDrinks2 instanceof Coffee ) || die( coffeeApp.rickDrinks.toString() );
 
         ok = coffeeApp.rickCoffee != null || die();
 

@@ -19,6 +19,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.core.Conversions.*;
@@ -385,6 +386,9 @@ public abstract class BaseField implements FieldAccess {
 
     @Override
     public final void setValue ( Object obj, Object value ) {
+//        if (this.name.equals("rickDrinks")) {
+//            puts("here");
+//        }
 
         switch ( typeEnum ) {
             case INT:
@@ -451,9 +455,7 @@ public abstract class BaseField implements FieldAccess {
                 if ( value != null ) {
                     if ( value.getClass () == this.type ) {
                         this.setObject ( obj, value );
-                    } else if ( Typ.implementsInterface ( value.getClass (), type ) ) {
-                        this.setObject ( obj, value );
-                    } else if (this.type.isAssignableFrom( value.getClass() )) {
+                    } else if ( type.isInstance( value)) {
                         this.setObject ( obj, value );
                     } else {
 
