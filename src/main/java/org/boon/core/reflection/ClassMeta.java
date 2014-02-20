@@ -30,7 +30,7 @@ public class ClassMeta <T> {
     final List<FieldAccess> fields;
     final List<FieldAccess> properties;
 
-    final static MethodAccess MANY_METHODS = new MethodAccess(){
+    final static MethodAccess MANY_METHODS = new MethodAccessImpl(){
         @Override
         public Object invoke( Object object, Object... args ) {
             return die(Object.class, "Unable to invoke method as there are more than one with that same name", object, args);
@@ -82,7 +82,10 @@ public class ClassMeta <T> {
                 if ( methodMap.containsKey( m.getName() )) {
                     /** Checking for duplicates */
                     MethodAccessImpl invoker = ( MethodAccessImpl ) methodMap.get( m.getName() );
-                    if (invoker.method.getParameterTypes().length != m.getParameterTypes().length) {
+                    if (invoker == MANY_METHODS) {
+                        //do nothing
+                    }
+                    else if (invoker.method.getParameterTypes().length != m.getParameterTypes().length) {
                         methodMap.put( m.getName(), MANY_METHODS );
                     } else {
                         boolean match = true;

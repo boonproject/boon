@@ -18,6 +18,12 @@ public class MethodAccessImpl implements MethodAccess {
     final List<AnnotationData> annotationData;
     final Map<String, AnnotationData> annotationMap;
 
+    MethodAccessImpl() {
+        method=null;
+        annotationData=null;
+        annotationMap=null;
+    }
+
     public MethodAccessImpl( Method method ) {
         this.method = method;
         this.method.setAccessible( true );

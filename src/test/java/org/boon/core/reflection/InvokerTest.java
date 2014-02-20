@@ -48,6 +48,8 @@ public class InvokerTest {
             return true;
         }
 
+
+
         @Override
         public int hashCode() {
             int result = i;
@@ -108,6 +110,8 @@ public class InvokerTest {
             initCalled = true;
 
         }
+
+
 
     }
 
