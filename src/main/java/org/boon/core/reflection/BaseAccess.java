@@ -6,15 +6,13 @@ import java.util.Iterator;
 /**
  * Created by Richard on 2/20/14.
  */
-public interface BaseAccess {
+public interface BaseAccess extends Annotated{
 
 
-    public Iterator<AnnotationData> annotationData();
-
-    boolean hasAnnotation(String annotationName) ;
-    AnnotationData getAnnotation(String annotationName) ;
 
     Class<?>[] parameterTypes() ;
+
+
 
     Type[] getGenericParameterTypes();
 }

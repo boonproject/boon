@@ -217,9 +217,8 @@ public class Invoker {
 
     public static void invokeMethodWithAnnotationWithReturnType( Class<?> type, Object object, String annotation, Class<?> returnType ) {
         ClassMeta classMeta = ClassMeta.classMeta( type );
-        Iterator<MethodAccess> iterator =  classMeta.methods();
-        while (iterator.hasNext()  ) {
-            MethodAccess m = iterator.next();
+        Iterable<MethodAccess> iterable =  classMeta.methods();
+        for (MethodAccess m : iterable  ) {
             if (m.hasAnnotation( annotation )) {
                 if (m instanceof MethodAccessImpl) {
                     Method method = ( ( MethodAccessImpl ) m ).method;

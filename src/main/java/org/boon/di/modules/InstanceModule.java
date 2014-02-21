@@ -4,7 +4,8 @@ import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
-import org.boon.di.ProviderInfo;
+import org.boon.core.reflection.ClassMeta;
+import org.boon.core.reflection.MethodAccess;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -22,10 +23,13 @@ public class InstanceModule extends BaseModule {
 
     public InstanceModule( Object object ) {
         module = object;
-        Method[] methods = object.getClass().getDeclaredMethods();
-        for ( Method method : methods ) {
 
-            if ( !Modifier.isStatic( method.getModifiers() ) && method.getName().startsWith( "provide" ) ) {
+        ClassMeta classMeta = ClassMeta.classMeta(object.getClass());
+        Iterable<MethodAccess> methods =  (Iterable<MethodAccess>)classMeta.methods();
+
+        for ( MethodAccess method : methods) {
+
+            if ( !method.isStatic() && method.name().startsWith( "provide" ) ) {
                 addCreationMethod( method );
             }
         }
@@ -37,9 +41,9 @@ public class InstanceModule extends BaseModule {
 
         private final Object module;
 
-        private final Method method;
+        private final MethodAccess method;
 
-        InternalSupplier( Method method, Object module ) {
+        InternalSupplier( MethodAccess method, Object module ) {
             this.method = method;
             this.module = module;
         }
@@ -54,8 +58,7 @@ public class InstanceModule extends BaseModule {
         }
     }
 
-    private Supplier<Object> createSupplier( final Method method ) {
-        method.setAccessible( true );
+    private Supplier<Object> createSupplier( final MethodAccess method ) {
         return new InternalSupplier( method, module );
     }
 
@@ -85,7 +88,7 @@ public class InstanceModule extends BaseModule {
             Set<Supplier<Object>> set = Sets.set( nameMap.getAll( name ) );
             for ( Supplier<Object> s : set ) {
                 InternalSupplier supplier = ( InternalSupplier ) s;
-                if ( type.isAssignableFrom( supplier.method.getReturnType() ) ) {
+                if ( type.isAssignableFrom( supplier.method.returnType() ) ) {
                     return (Supplier<T>)supplier;
                 }
             }
@@ -146,13 +149,13 @@ public class InstanceModule extends BaseModule {
     }
 
 
-    private void addCreationMethod( Method method ) {
+    private void addCreationMethod( MethodAccess method ) {
 
         /** See if the name is in the method and that one takes precedence if found. */
         String named = NamedUtils.namedValueForMethod( method );
         boolean foundName = named != null;
 
-        Class cls = method.getReturnType();
+        Class cls = method.returnType();
 
 
         /* Next see if named is in the class. */

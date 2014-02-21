@@ -46,8 +46,13 @@ public class ConstructorAccessImpl <T> implements ConstructorAccess {
 
 
     @Override
-    public Iterator<AnnotationData> annotationData() {
-        return annotationData.iterator();
+    public Iterable<AnnotationData> annotationData() {
+        return new Iterable<AnnotationData>() {
+            @Override
+            public Iterator<AnnotationData> iterator() {
+                return annotationData.iterator();
+            }
+        };
     }
 
     @Override
@@ -56,7 +61,7 @@ public class ConstructorAccessImpl <T> implements ConstructorAccess {
     }
 
     @Override
-    public AnnotationData getAnnotation( String annotationName ) {
+    public AnnotationData annotation(String annotationName) {
         return this.annotationMap.get(annotationName);
     }
 

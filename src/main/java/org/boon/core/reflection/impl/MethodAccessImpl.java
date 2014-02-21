@@ -5,6 +5,7 @@ import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.MethodAccess;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
@@ -53,8 +54,13 @@ public class MethodAccessImpl implements MethodAccess {
     }
 
     @Override
-    public Iterator<AnnotationData> annotationData() {
-        return annotationData.iterator();
+    public Iterable<AnnotationData> annotationData() {
+        return new Iterable<AnnotationData>() {
+            @Override
+            public Iterator<AnnotationData> iterator() {
+                return annotationData.iterator();
+            }
+        };
     }
 
     @Override
@@ -63,8 +69,28 @@ public class MethodAccessImpl implements MethodAccess {
     }
 
     @Override
-    public AnnotationData getAnnotation( String annotationName ) {
+    public AnnotationData annotation(String annotationName) {
         return this.annotationMap.get(annotationName);
+    }
+
+    @Override
+    public boolean isStatic() {
+        return Modifier.isStatic(method.getModifiers());
+    }
+
+    @Override
+    public String name() {
+        return method.getName();
+    }
+
+    @Override
+    public Class<?> declaringType() {
+        return method.getDeclaringClass();
+    }
+
+    @Override
+    public Class<?> returnType() {
+        return method.getReturnType();
     }
 
     @Override

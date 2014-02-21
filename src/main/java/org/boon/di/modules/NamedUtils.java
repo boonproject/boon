@@ -3,8 +3,7 @@ package org.boon.di.modules;
 import org.boon.Maps;
 import org.boon.Sets;
 import org.boon.Str;
-import org.boon.core.reflection.AnnotationData;
-import org.boon.core.reflection.Annotations;
+import org.boon.core.reflection.*;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -21,34 +20,33 @@ public class NamedUtils {
 
 
     public static String namedValueForClass( Class<?> type ) {
-        String named = null;
-        Map<String, AnnotationData> annotationMap = Annotations.getAnnotationDataForClassAsMap( type );
 
-        named = findNamed(  annotationMap, type );
+        ClassMeta cls = ClassMeta.classMeta(type);
+
+
+        String named = findNamed(  cls, type );
 
         return named;
     }
 
 
 
-    public static String namedValueForMethod( Method method ) {
-        String named = null;
+    public static String namedValueForMethod( MethodAccess method ) {
 
-        Map<String, AnnotationData> annotationMap = Maps.toMap( "name", Annotations.getAnnotationDataForMethod( method ));
-        named = findNamed(  annotationMap, method.getReturnType() );
+        String named = findNamed(  method, method.returnType() );
 
         /** If named is null for this method, then check the name of the return class type class. */
         if (named == null) {
-            named = namedValueForClass(method.getReturnType());
+            named = namedValueForClass(method.returnType());
         }
         return named;
     }
 
-    private static String findNamed(  Map<String, AnnotationData> annotationMap, Class<?> type ) {
+    private static String findNamed(  Annotated annotated, Class<?> type ) {
         String named = null;
 
         for (String annotationName : annotationsThatHaveNamed) {
-            named = getName(  annotationMap, annotationName, type );
+            named = getName(  annotated, annotationName, type );
             if (named != null) {
                 break;
             }
@@ -58,10 +56,10 @@ public class NamedUtils {
         return named;
     }
 
-    private static String getName(  Map<String, AnnotationData> annotationMap, String annotationName, Class<?> type ) {
+    private static String getName(  Annotated annotated, String annotationName, Class<?> type ) {
         String named = null;
-        if ( annotationMap.containsKey( annotationName ) ) {
-            named = ( String ) annotationMap.get( annotationName ).getValues().get( "value" );
+        if ( annotated.hasAnnotation(annotationName) ) {
+            named = ( String ) annotated.annotation( annotationName ).getValues().get( "value" );
             if ( Str.isEmpty( named )) {
                 named = uncapitalize( type.getSimpleName() );
             }

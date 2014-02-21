@@ -8,4 +8,12 @@ import java.util.Iterator;
  */
 public interface MethodAccess extends BaseAccess{
     public Object invoke(Object object, Object... args);
+    boolean isStatic();
+
+    String name();
+    Class<?> declaringType() ;
+
+
+    Class<?> returnType() ;
+
 }

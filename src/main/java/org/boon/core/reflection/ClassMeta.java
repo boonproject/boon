@@ -20,7 +20,7 @@ import static org.boon.Exceptions.die;
 /**
  * Created by Richard on 2/17/14.
  */
-public class ClassMeta <T> {
+public class ClassMeta <T> implements Annotated{
 
     final Class<T> cls;
 
@@ -48,8 +48,8 @@ public class ClassMeta <T> {
         }
 
         @Override
-        public Iterator<AnnotationData> annotationData() {
-            return die(Iterator.class, "Unable to use method as there are more than one with that same name");
+        public Iterable<AnnotationData> annotationData() {
+            return die(Iterable.class, "Unable to use method as there are more than one with that same name");
         }
 
         @Override
@@ -58,7 +58,7 @@ public class ClassMeta <T> {
         }
 
         @Override
-        public AnnotationData getAnnotation( String annotationName ) {
+        public AnnotationData annotation(String annotationName) {
             return die(AnnotationData.class, "Unable to invoke method as there are more than one with that same name");
         }
 
@@ -72,12 +72,21 @@ public class ClassMeta <T> {
             return die(Type[].class, "Unable to invoke method as there are more than one with that same name");
         }
     };
+    private final Map<String, AnnotationData> annotationMap;
+    private final List<AnnotationData> annotations;
+
 
 
     public ClassMeta( Class<T> cls ) {
         this.cls = cls;
-        fieldMap = Reflection.getAllAccessorFields( this.cls );
-        fields = Lists.list(fieldMap.values());
+
+        if (!cls.isInterface()) {
+            fieldMap = Reflection.getAllAccessorFields( this.cls );
+            fields = Lists.list(fieldMap.values());
+        } else {
+            fieldMap = Collections.EMPTY_MAP;
+            fields = Collections.EMPTY_LIST;
+        }
         propertyMap = Reflection.getPropertyFieldAccessors( this.cls );
         properties = Lists.list(propertyMap.values());
 
@@ -148,6 +157,10 @@ public class ClassMeta <T> {
         methods = Lists.list( methodsMulti.values() );
 
 
+
+        annotationMap = Annotations.getAnnotationDataForClassAsMap( cls );
+        annotations = Annotations.getAnnotationDataForClass(cls);
+
     }
 
     public static ClassMeta classMeta( Class<?> aClass ) {
@@ -169,14 +182,20 @@ public class ClassMeta <T> {
     }
 
     private List<Class<?>> getBaseClassesSuperFirst() {
-        List<Class<?>> classes = new ArrayList( 10 );
-        Class<?> currentClass = cls;
-        while (currentClass != Object.class) {
-            classes.add( currentClass );
-            currentClass = currentClass.getSuperclass();
+
+        if (!cls.isInterface()) {
+            List<Class<?>> classes = new ArrayList( 10 );
+            Class<?> currentClass = cls;
+            while (currentClass != Object.class) {
+                classes.add( currentClass );
+                currentClass = currentClass.getSuperclass();
+            }
+            java.util.Collections.reverse( classes );
+
+            return classes;
+        } else {
+           return Lists.list(cls.getInterfaces());
         }
-        java.util.Collections.reverse( classes );
-        return classes;
 
     }
 
@@ -195,8 +214,13 @@ public class ClassMeta <T> {
     }
 
 
-    public Iterator<MethodAccess> methods() {
-        return methods.iterator();
+    public Iterable<MethodAccess> methods() {
+        return new Iterable<MethodAccess>() {
+            @Override
+            public Iterator<MethodAccess> iterator() {
+                return methods.iterator();
+            }
+        };
     }
 
     public Iterator<FieldAccess> properties() {
@@ -228,4 +252,22 @@ public class ClassMeta <T> {
         }
         return null;
     }
+
+    public Iterable<AnnotationData> annotationData() {
+        return new Iterable<AnnotationData>() {
+            @Override
+            public Iterator<AnnotationData> iterator() {
+                return annotations.iterator();
+            }
+        };
+    }
+
+    public boolean hasAnnotation(String annotationName) {
+        return annotationMap.containsKey(annotationName);
+    }
+
+    public AnnotationData annotation(String annotationName) {
+        return annotationMap.get(annotationName);
+    }
+
 }
