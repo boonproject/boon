@@ -1,9 +1,9 @@
 package org.boon.core;
 
 /**
- * Place holder or JDK 1.8 Function
+ * Created by Richard on 2/20/14.
  */
-public interface Function<IN, OUT> {
+public interface AsyncFunction <IN, OUT> {
 
     /**
      * Compute the result of applying the function to the input argument
@@ -11,6 +11,6 @@ public interface Function<IN, OUT> {
      * @param in the input object
      * @return the function result
      */
-    OUT apply( IN in );
+    void apply( IN in, Handler<OUT> handler);
 
 }
