@@ -12,6 +12,7 @@ import static org.boon.json.JsonFactory.toJson;
 
 public class JsonBugReports {
 
+
     @Test
     public void testForIssue47() {
         Map<String, Object> map = (Map<String, Object>) fromJson("{\"empty\":\"\",\"docId\":111,\"serviceName\":\"cafe\"}");
