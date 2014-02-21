@@ -94,15 +94,15 @@ public class RespondsTo {
 
 
         for (Object object : list) {
-            if (respondsTo(object, "open", String.class) ) invoke(object, "open", "hi");
+            if ( respondsTo(object, "open", String.class) ) invoke(object, "open", "hi");
 
-            if (respondsTo(object, "add", int.class, int.class) ) puts ("add", invoke(object, "add", 1, 2));
+            if ( respondsTo(object, "add", int.class, int.class) ) puts ("add", invoke(object, "add", 1, 2));
 
-            if (respondsTo(object, "readLine") ) puts ( invoke(object, "readLine") );
+            if ( respondsTo(object, "readLine") ) puts ( invoke(object, "readLine") );
 
-            if (respondsTo(object, "readLine") ) puts ( invoke(object, "readLine") );
+            if ( respondsTo(object, "readLine") ) puts ( invoke(object, "readLine") );
 
-            if (respondsTo(object, "close" ) ) invoke(object, "close");
+            if ( respondsTo(object, "close" ) ) invoke(object, "close");
         }
 
         boolean ok = file.closeCalled && file.readLine && file.openCalled && file.addCalled || die();
