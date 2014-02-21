@@ -8,11 +8,44 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static org.boon.Exceptions.die;
 import static org.boon.Lists.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ListsTest {
+
+    static class Employee {
+        String name;
+
+        Employee(String name) {
+            this.name = name;
+        }
+    }
+
+
+    static class HRObject {
+
+        private final Employee employee;
+
+        HRObject(Employee employee) {
+            this.employee = employee;
+        }
+
+        public String name() {
+            return employee.name;
+        }
+    }
+
+    @Test
+    public void testWrapper() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        List<HRObject> wrap = Lists.wrap(HRObject.class, list);
+
+        boolean ok = wrap.get(0).name().equals("Bob") || die();
+
+        ok &= wrap.get(1).name().equals("Sally") || die();
+    }
 
 
     @Test

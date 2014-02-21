@@ -11,6 +11,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -144,6 +145,11 @@ public class Annotations {
 
 
     public static List<AnnotationData> getAnnotationDataForMethod( Method method ) {
+        List<AnnotationData> list = extractValidationAnnotationData( method.getDeclaredAnnotations(), Collections.EMPTY_SET );
+        return list;
+    }
+
+    public static List<AnnotationData> getAnnotationDataForMethod( Constructor method ) {
         List<AnnotationData> list = extractValidationAnnotationData( method.getDeclaredAnnotations(), Collections.EMPTY_SET );
         return list;
     }

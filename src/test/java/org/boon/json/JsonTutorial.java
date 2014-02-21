@@ -648,7 +648,6 @@ public class JsonTutorial {
         private String value2 = "abc";
         private transient int value3 = 3;
         BagOfPrimitives() {
-            // no-args constructor
         }
     }
 

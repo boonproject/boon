@@ -97,17 +97,20 @@ public class MapObjectConversion {
         int size = argList.size();
 
         List<Object> list = new ArrayList( argList );
-        Constructor<?>[] constructors = clazz.getConstructors();
-        Constructor match = null;
+
+        ClassMeta<T> classMeta = ClassMeta.classMeta( clazz );
+
+        ConstructorAccess<T> match = null;
+
+
 
 
         try {
 
 
             loop:
-            for ( Constructor constructor : constructors ) {
-                constructor.setAccessible( true );
-                Class[] parameterTypes = constructor.getParameterTypes();
+            for ( ConstructorAccess constructor : classMeta.constructors() ) {
+                Class[] parameterTypes = constructor.parameterTypes();
                 if ( parameterTypes.length == size ) {
 
                     for ( int index = 0; index < size; index++ ) {
@@ -119,7 +122,7 @@ public class MapObjectConversion {
             }
 
             if ( match != null ) {
-                return ( T ) match.newInstance( list.toArray( new Object[list.size()] ) );
+                return ( T ) match.create( list.toArray( new Object[list.size()] ) );
             } else {
                 return fromListUsingFields( respectIgnore, view, fieldsAccessor, list, clazz, ignoreSet );
             }
@@ -128,7 +131,7 @@ public class MapObjectConversion {
 
             if (match != null)  {
                 return ( T ) Exceptions.handle( Object.class, e,
-                        "\nconstructor parameter types", match.getParameterTypes(),
+                        "\nconstructor parameter types", match.parameterTypes(),
                         "\nlist args after conversion", list, "types",
                         gatherTypes( list ),
                         "\noriginal args", argList,
@@ -152,7 +155,7 @@ public class MapObjectConversion {
 
     public static boolean matchAndConvertArgs( boolean respectIgnore, String view,
                                                FieldsAccessor fieldsAccessor, List<Object> list,
-                                               Constructor constructor,
+                                               ConstructorAccess constructor,
                                                Class[] parameterTypes, int index, Set<String> ignoreSet  ) {
         try {
 

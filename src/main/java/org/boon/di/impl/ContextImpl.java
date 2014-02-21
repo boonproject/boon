@@ -174,12 +174,6 @@ public class ContextImpl implements Context, Module {
                 }
             }
 
-            if ( supplier!=null ) {
-                return supplier;
-            }
-
-
-
             final Supplier<T> s = supplier;
             final Context resolver = this;
 

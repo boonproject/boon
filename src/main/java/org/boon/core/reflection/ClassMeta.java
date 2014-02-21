@@ -1,9 +1,14 @@
 package org.boon.core.reflection;
 
 import org.boon.Lists;
+import org.boon.Sets;
+import org.boon.collections.ConcurrentHashSet;
 import org.boon.collections.MultiMap;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.core.reflection.impl.ConstructorAccessImpl;
+import org.boon.core.reflection.impl.MethodAccessImpl;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -20,6 +25,9 @@ public class ClassMeta <T> {
     final Class<T> cls;
 
     final Map<String, MethodAccess> methodMap;
+
+    final Set<ConstructorAccess<T>> constructorAccessSet;
+
     final MultiMap<String, MethodAccess> methodsMulti;
     final List <MethodAccess> methods;
 
@@ -29,6 +37,9 @@ public class ClassMeta <T> {
 
     final List<FieldAccess> fields;
     final List<FieldAccess> properties;
+
+
+    final ConstructorAccess<T> noArgConstructor;
 
     final static MethodAccess MANY_METHODS = new MethodAccessImpl(){
         @Override
@@ -69,7 +80,31 @@ public class ClassMeta <T> {
         fields = Lists.list(fieldMap.values());
         propertyMap = Reflection.getPropertyFieldAccessors( this.cls );
         properties = Lists.list(propertyMap.values());
+
+
+        Constructor<?>[] constructors = cls.getDeclaredConstructors();
+
+
+        ConstructorAccess noArg = null;
+
+        Set set = new HashSet();
+
+        for (Constructor constructor : constructors ) {
+            if (constructor.getParameterTypes().length == 0 ) {
+                noArg = new ConstructorAccessImpl<>(constructor);
+            }
+            set.add(new ConstructorAccessImpl(constructor));
+        }
+
+
+        this.noArgConstructor = noArg;
+
+        this.constructorAccessSet = (Set<ConstructorAccess<T>> ) Sets.safeSet(set);
+
         List<Class<?>> classes = getBaseClassesSuperFirst();
+
+
+
         methodMap = new ConcurrentHashMap<>(  );
         methodsMulti = new MultiMap<>(  );
 
@@ -166,5 +201,31 @@ public class ClassMeta <T> {
 
     public Iterator<FieldAccess> properties() {
         return properties.iterator();
+    }
+
+
+
+    public Iterable<ConstructorAccess<T>> constructors() {
+        return new Iterable<ConstructorAccess<T>>() {
+            @Override
+            public Iterator<ConstructorAccess<T>> iterator() {
+                return constructorAccessSet.iterator();
+            }
+        };
+    }
+
+    public  ConstructorAccess<T> noArgConstructor() {
+        return this.noArgConstructor;
+    }
+
+    public <T> ConstructorAccess<T> declaredConstructor(Class<? extends Object> singleArg) {
+        for (ConstructorAccess constructorAccess : constructorAccessSet) {
+            if (constructorAccess.parameterTypes().length==1) {
+                if (constructorAccess.parameterTypes()[0].isAssignableFrom(singleArg)) {
+                    return constructorAccess;
+                }
+            }
+        }
+        return null;
     }
 }

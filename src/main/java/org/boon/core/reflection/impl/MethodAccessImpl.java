@@ -1,4 +1,8 @@
-package org.boon.core.reflection;
+package org.boon.core.reflection.impl;
+
+import org.boon.core.reflection.AnnotationData;
+import org.boon.core.reflection.Annotations;
+import org.boon.core.reflection.MethodAccess;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -14,11 +18,11 @@ import static org.boon.Exceptions.handle;
  */
 public class MethodAccessImpl implements MethodAccess {
 
-    final Method method;
+    final public Method method;
     final List<AnnotationData> annotationData;
     final Map<String, AnnotationData> annotationMap;
 
-    MethodAccessImpl() {
+    public MethodAccessImpl() {
         method=null;
         annotationData=null;
         annotationMap=null;
@@ -27,7 +31,7 @@ public class MethodAccessImpl implements MethodAccess {
     public MethodAccessImpl( Method method ) {
         this.method = method;
         this.method.setAccessible( true );
-        this.annotationData = Annotations.getAnnotationDataForMethod( method );
+        this.annotationData = Annotations.getAnnotationDataForMethod(method);
 
         annotationMap = new ConcurrentHashMap<>(  );
         for (AnnotationData data : annotationData) {

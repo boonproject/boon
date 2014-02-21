@@ -6,14 +6,6 @@ import java.util.Iterator;
 /**
  * Created by Richard on 2/17/14.
  */
-public interface MethodAccess {
+public interface MethodAccess extends BaseAccess{
     public Object invoke(Object object, Object... args);
-    public Iterator<AnnotationData> annotationData();
-
-    boolean hasAnnotation(String annotationName) ;
-    AnnotationData getAnnotation(String annotationName) ;
-
-    Class<?>[] parameterTypes() ;
-
-    Type[] getGenericParameterTypes();
 }

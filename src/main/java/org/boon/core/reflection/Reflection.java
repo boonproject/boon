@@ -264,14 +264,14 @@ public class Reflection {
 
     public static <T> T newInstance( Class<T> clazz ) {
         T newInstance = null;
+        ClassMeta <T> cls = ClassMeta.classMeta(clazz);
 
         try {
             /* See if there is a no arg constructor. */
-            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor ( null );
+            ConstructorAccess<T> declaredConstructor = cls.noArgConstructor();
             if (declaredConstructor !=null ) {
-                declaredConstructor.setAccessible ( true );
                 /* If there was a no argument constructor, then use it. */
-                newInstance = declaredConstructor.newInstance (  );
+                newInstance = declaredConstructor.create();
             } else {
                 if ( _useUnsafe ) {
                     newInstance = ( T ) getUnsafe().allocateInstance( clazz );
@@ -300,13 +300,14 @@ public class Reflection {
     public static <T> T newInstance( Class<T> clazz, Object arg ) {
         T newInstance = null;
 
-        try {
+
+        ClassMeta <T> cls = ClassMeta.classMeta(clazz);
+         try {
             /* See if there is a no arg constructor. */
-            Constructor<T> declaredConstructor = clazz.getDeclaredConstructor ( arg.getClass() );
+            ConstructorAccess<T> declaredConstructor = cls.declaredConstructor(arg.getClass());
             if (declaredConstructor !=null ) {
-                declaredConstructor.setAccessible ( true );
                 /* If there was a no argument constructor, then use it. */
-                newInstance = declaredConstructor.newInstance ( arg );
+                newInstance = declaredConstructor.create(arg);
             }
         } catch ( Exception ex ) {
             handle( ex );

@@ -6,6 +6,7 @@ import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
+import org.boon.core.reflection.impl.MethodAccessImpl;
 import org.boon.core.value.ValueContainer;
 
 import java.lang.reflect.Method;
