@@ -48,6 +48,11 @@ public class ClassMeta <T> implements Annotated{
         }
 
         @Override
+        public boolean respondsTo(Class<?>[] parametersToMatch) {
+            return false;
+        }
+
+        @Override
         public Iterable<AnnotationData> annotationData() {
             return die(Iterable.class, "Unable to use method as there are more than one with that same name");
         }
@@ -268,6 +273,70 @@ public class ClassMeta <T> implements Annotated{
 
     public AnnotationData annotation(String annotationName) {
         return annotationMap.get(annotationName);
+    }
+
+
+    public boolean respondsTo(String methodName) {
+        return methodMap.containsKey(methodName);
+    }
+
+
+    public boolean respondsTo(String methodName, Class<?>... types) {
+
+        Iterable<MethodAccess> methods = this.methodsMulti.getAll(methodName);
+        for (MethodAccess methodAccess : methods) {
+           if (methodAccess.isStatic()) continue;
+           if (methodAccess.respondsTo(types) ) {
+              return true;
+           };
+        }
+        return false;
+
+    }
+
+
+    public boolean respondsTo(String methodName, Object... args) {
+
+        Iterable<MethodAccess> methods = this.methodsMulti.getAll(methodName);
+        for (MethodAccess methodAccess : methods) {
+            if (methodAccess.isStatic()) continue;
+            if (methodAccess.respondsTo(args) ) {
+                return true;
+            };
+        }
+        return false;
+
+    }
+
+
+
+    public boolean respondsTo(String methodName, List list) {
+
+        Object[] args = list.toArray(new Object[list.size()]);
+        return respondsTo(methodName, args);
+    }
+
+
+    public boolean handles(Class<?> interfaceMethods) {
+        Method[] declaredMethods = interfaceMethods.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            if (!respondsTo(method.getName(), method.getParameterTypes())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public Object invoke(T instance, String methodName,  Object... args) {
+        return methodMap.get(methodName).invoke(instance, args);
+    }
+
+
+    public Object invoke(T instance, String methodName,  List<?> args) {
+
+        Object[] array = args.toArray(new Object[args.size()]);
+        return methodMap.get(methodName).invoke(instance, array);
     }
 
 }

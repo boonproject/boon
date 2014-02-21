@@ -94,6 +94,98 @@ public class MethodAccessImpl implements MethodAccess {
     }
 
     @Override
+    public boolean respondsTo(Class<?>[] parametersToMatch) {
+        boolean match = true;
+
+        Class<?>[] parameterTypes = method.getParameterTypes();
+
+
+        if ( parameterTypes.length != parametersToMatch.length ) {
+            return false;
+        }
+
+
+        for (int index = 0; index < parameterTypes.length; index++) {
+            Class<?> type = parameterTypes[index];
+            Class<?> matchToType = parametersToMatch[index];
+            if (type.isPrimitive()) {
+
+                if (!(type == int.class &&  matchToType == Integer.class ||
+                        type == boolean.class &&  matchToType == Boolean.class ||
+                        type == long.class &&  matchToType == Long.class   ||
+                        type == float.class &&  matchToType == Float.class   ||
+                        type == double.class &&  matchToType == Double.class   ||
+                        type == short.class &&  matchToType == Short.class   ||
+                        type == byte.class &&  matchToType == Byte.class   ||
+                        type == char.class &&  matchToType == Character.class
+                ))
+                {
+                    match = false;
+                    break;
+                }
+
+
+            } else if (!type.isAssignableFrom( matchToType )) {
+                match = false;
+                break;
+            }
+        }
+
+        return match;
+    }
+
+    @Override
+    public boolean respondsTo(Object... args) {
+
+
+
+        boolean match = true;
+        Class<?>[] parameterTypes = method.getParameterTypes();
+
+
+
+        if ( parameterTypes.length != args.length ) {
+            return false;
+        }
+
+        for (int index = 0; index < parameterTypes.length; index++) {
+            Object arg = args[index];
+            Class<?> type = parameterTypes[index];
+            Class<?> matchToType = arg != null ? arg.getClass() : null;
+
+            if (type.isPrimitive()) {
+
+                if (arg == null) {
+                    match = false;
+                    break;
+                }
+                if (!(type == int.class &&  matchToType == Integer.class ||
+                        type == boolean.class &&  matchToType == Boolean.class ||
+                        type == long.class &&  matchToType == Long.class   ||
+                        type == float.class &&  matchToType == Float.class   ||
+                        type == double.class &&  matchToType == Double.class   ||
+                        type == short.class &&  matchToType == Short.class   ||
+                        type == byte.class &&  matchToType == Byte.class   ||
+                        type == char.class &&  matchToType == Character.class
+                ))
+                {
+                    match = false;
+                    break;
+                }
+
+
+            } else if (arg == null) {
+
+            } else if (!type.isInstance( arg )) {
+                match = false;
+                break;
+            }
+        }
+
+        return match;
+    }
+
+    @Override
     public Class<?>[] parameterTypes() {
         return method.getParameterTypes();
     }

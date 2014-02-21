@@ -480,4 +480,46 @@ public class Reflection {
     }
 
 
+    public static boolean respondsTo( Class<?> type, String methodName) {
+        return ClassMeta.classMeta(type).respondsTo(methodName);
+    }
+
+    public static boolean respondsTo( Class<?> type, String methodName, Class<?>... params) {
+        return ClassMeta.classMeta(type).respondsTo(methodName, params);
+    }
+
+
+    public static boolean respondsTo( Class<?> type, String methodName, Object... params) {
+        return ClassMeta.classMeta(type).respondsTo(methodName, params);
+    }
+
+
+    public static boolean respondsTo( Class<?> type, String methodName, List<?> params) {
+        return ClassMeta.classMeta(type).respondsTo(methodName, params);
+    }
+
+
+    public static boolean respondsTo( Object object, String methodName) {
+        return ClassMeta.classMeta(object.getClass()).respondsTo(methodName);
+    }
+
+    public static boolean respondsTo( Object object, String methodName, Class<?>... params) {
+        return ClassMeta.classMeta(object.getClass()).respondsTo(methodName, params);
+    }
+
+
+    public static boolean respondsTo( Object object, String methodName, Object... params) {
+        return ClassMeta.classMeta(object.getClass()).respondsTo(methodName, params);
+    }
+
+
+    public static boolean respondsTo( Object object, String methodName, List<?> params) {
+        return ClassMeta.classMeta(object.getClass()).respondsTo(methodName, params);
+    }
+
+
+
+    public static Object invoke (Object object, String name, Object... args){
+        return ClassMeta.classMeta( object.getClass() ).invoke(object, name, args );
+    }
 }
