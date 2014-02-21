@@ -110,15 +110,15 @@ public class MethodAccessImpl implements MethodAccess {
             Class<?> matchToType = parametersToMatch[index];
             if (type.isPrimitive()) {
 
-                if (!(type == int.class &&  matchToType == Integer.class ||
-                        type == boolean.class &&  matchToType == Boolean.class ||
-                        type == long.class &&  matchToType == Long.class   ||
-                        type == float.class &&  matchToType == Float.class   ||
-                        type == double.class &&  matchToType == Double.class   ||
-                        type == short.class &&  matchToType == Short.class   ||
-                        type == byte.class &&  matchToType == Byte.class   ||
-                        type == char.class &&  matchToType == Character.class
-                ))
+                if (!(type == int.class &&  ( matchToType == Integer.class || matchToType == int.class) ||
+                        type == boolean.class &&  ( matchToType == Boolean.class || matchToType == boolean.class) ||
+                        type == long.class &&  ( matchToType == Long.class  || matchToType == long.class) ||
+                        type == float.class &&  ( matchToType == Float.class   || matchToType == float.class) ||
+                        type == double.class &&  ( matchToType == Double.class   || matchToType == double.class) ||
+                        type == short.class &&  ( matchToType == Short.class   || matchToType == short.class) ||
+                        type == byte.class &&  ( matchToType == Byte.class   || matchToType == byte.class) ||
+                        type == char.class &&  ( matchToType == Character.class || matchToType == char.class) )
+                )
                 {
                     match = false;
                     break;

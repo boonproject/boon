@@ -518,8 +518,22 @@ public class Reflection {
     }
 
 
+    public static boolean handles( Object object, Class<?> interfaceCls) {
+        return ClassMeta.classMeta(object.getClass()).handles(interfaceCls);
+    }
+
+
+    public static boolean handles( Class cls, Class<?> interfaceCls) {
+        return ClassMeta.classMeta(cls).handles(interfaceCls);
+    }
+
 
     public static Object invoke (Object object, String name, Object... args){
+        return ClassMeta.classMeta( object.getClass() ).invoke(object, name, args );
+    }
+
+
+    public static Object invoke (Object object, String name, List<?> args){
         return ClassMeta.classMeta( object.getClass() ).invoke(object, name, args );
     }
 }

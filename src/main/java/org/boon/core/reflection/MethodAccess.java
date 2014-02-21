@@ -16,9 +16,9 @@ public interface MethodAccess extends BaseAccess{
 
     Class<?> returnType() ;
 
-    boolean respondsTo(Class<?>[] types);
+    boolean respondsTo(Class<?>... types);
 
-    boolean respondsTo(Object[] args);
+    boolean respondsTo(Object... args);
 
 
 }
