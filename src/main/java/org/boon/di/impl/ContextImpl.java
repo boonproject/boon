@@ -159,7 +159,7 @@ public class ContextImpl implements Context, Module {
     }
 
     @Override
-    public <T> Supplier<T> getSupplier( Class<T> type, String name ) {
+    public <T> Supplier<T> getSupplier( final Class<T> type, final String name ) {
 
 
         try {
@@ -173,11 +173,20 @@ public class ContextImpl implements Context, Module {
                     break;
                 }
             }
+
+            if ( supplier!=null ) {
+                return supplier;
+            }
+
+
+
             final Supplier<T> s = supplier;
-            final Context resolver = ( Context ) this;
+            final Context resolver = this;
 
 
             return new Supplier<T>() {
+                String supplierName = name;
+                Class<T> supplierType = type;
                 @Override
                 public T get() {
                     T o = s.get();
