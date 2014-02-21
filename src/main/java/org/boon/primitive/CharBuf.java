@@ -457,8 +457,7 @@ public class CharBuf extends Writer implements CharSequence {
 
 
     public final CharBuf addJsonEscapedString( final char[] charArray ) {
-        if (charArray.length == 0 ) return this;
-        if ( hasAnyJSONControlOrUnicodeChars( charArray )) {
+        if ( charArray.length > 0 && hasAnyJSONControlOrUnicodeChars( charArray )) {
             return doAddJsonEscapedString(charArray);
         } else {
             return this.addQuoted ( charArray );
