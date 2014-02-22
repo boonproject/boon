@@ -1,5 +1,6 @@
 package org.boon;
 
+import org.boon.core.reflection.FastStringUtils;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.Chr;
 
@@ -10,20 +11,48 @@ public class Str {
 
     public final static String EMPTY_STRING = "";
 
+
+
+    public static int lengthOf( String str ) {
+        return len(str);
+    }
+
+    public static String sliceOf( String str, int start ) {
+        return slc(str, start);
+    }
+
+    public static String sliceOf( String str, int start, int end ) {
+        return slc(str, start, end);
+    }
+
+    public static String endSliceOf( String str, int end ) {
+        return slcEnd(str, end);
+    }
+
+    public static char indexOf( String str, int index ) {
+        return idx(str, index);
+    }
+
+    public static String indexOf( String str, int index, char c ) {
+            return idx (str, index, c);
+    }
+
     public static int len( String str ) {
         return str.length();
     }
 
+
     public static String slc( String str, int start ) {
-        return new String( Chr.slc( str.toCharArray(), start ) );
+
+        return FastStringUtils.noCopyStringFromChars( Chr.slc( FastStringUtils.toCharArray(str), start ) );
     }
 
     public static String slc( String str, int start, int end ) {
-        return new String( Chr.slc( str.toCharArray(), start, end ) );
+        return FastStringUtils.noCopyStringFromChars(Chr.slc(FastStringUtils.toCharArray(str), start, end));
     }
 
     public static String slcEnd( String str, int end ) {
-        return new String( Chr.slcEnd( str.toCharArray(), end ) );
+        return FastStringUtils.noCopyStringFromChars( Chr.slcEnd( FastStringUtils.toCharArray(str), end ) );
     }
 
 
@@ -44,56 +73,28 @@ public class Str {
 
 
     public static boolean in( char c, String str ) {
-
-        for ( int index = 0; index < str.length(); index++ ) {
-            char current = str.charAt( index );
-            if ( c == current ) {
-                return true;
-            }
-        }
-
-        return false;
+        return Chr.in ( c, FastStringUtils.toCharArray(str) );
     }
 
 
     public static boolean in( char c, int offset, String str ) {
-        final int length = str.length();
-        int off = calculateIndex( length, offset );
-        for ( int index = off; index < length; index++ ) {
-            char current = str.charAt( index );
-            if ( c == current ) {
-                return true;
-            }
-        }
-
-        return false;
+        return Chr.in ( c, offset, FastStringUtils.toCharArray(str) );
     }
 
 
     public static boolean in( char c, int offset, int end, String str ) {
-        final int length = str.length();
-
-        int off = calculateIndex( length, offset );
-        int stop = calculateIndex( length, end );
-
-        for ( int index = off; index < stop; index++ ) {
-            char current = str.charAt( index );
-            if ( c == current ) {
-                return true;
-            }
-        }
-
-        return false;
+        return Chr.in ( c, offset, end, FastStringUtils.toCharArray(str) );
     }
 
 
     public static String add( String str, char c ) {
-        return new String( Chr.add( str.toCharArray(), c ) );
+        return FastStringUtils.noCopyStringFromChars( Chr.add( FastStringUtils.toCharArray(str), c ) );
     }
 
 
     public static String add( String str, String str2 ) {
-        return new String( Chr.add( str.toCharArray(), str2.toCharArray() ) );
+        return FastStringUtils.noCopyStringFromChars( Chr.add( FastStringUtils.toCharArray(str),
+                Chr.add( FastStringUtils.toCharArray(str2) ) ));
     }
 
     public static String add( String... strings ) {
@@ -115,7 +116,7 @@ public class Str {
     }
 
     public static String compact( String str ) {
-        return new String( Chr.compact( str.toCharArray() ) );
+        return FastStringUtils.noCopyStringFromChars( Chr.compact( FastStringUtils.toCharArray(str) ) );
     }
 
 
@@ -150,12 +151,12 @@ public class Str {
 
 
     public static String[] split( String str ) {
-        char[][] split = Chr.split( str.toCharArray() );
+        char[][] split = Chr.split( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
     public static String[] splitLines( String str ) {
-        char[][] split = Chr.splitLine( str.toCharArray() );
+        char[][] split = Chr.splitLine( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
@@ -197,17 +198,20 @@ public class Str {
     }
 
     public static String camelCase( String inStr, boolean upper ) {
-        char[] in = inStr.toCharArray();
+        char[] in = FastStringUtils.toCharArray(inStr);
         char[] out = Chr.camelCase( in, upper );
-        return new String( out );
+        return FastStringUtils.noCopyStringFromChars( out );
     }
 
 
     public static String underBarCase( String inStr ) {
-        char[] in = inStr.toCharArray();
+        char[] in = FastStringUtils.toCharArray(inStr);
         char[] out = Chr.underBarCase( in );
-        return new String( out );
+        return FastStringUtils.noCopyStringFromChars( out );
     }
+
+
+    /* Left off here. */
 
 
     public static String lpad( String inStr, int size, char fill ) {
