@@ -4,7 +4,7 @@ package org.boon.primitive;
 import org.boon.Arrays;
 import org.boon.Exceptions;
 import org.boon.Universal;
-
+import org.boon.core.reflection.FastStringUtils;
 
 
 public class Chr {
@@ -30,13 +30,18 @@ public class Chr {
      */
     @Universal
     public static char[] array( final char... array ) {
-        Exceptions.requireNonNull( array );
         return array;
     }
 
     @Universal
     public static char[] chars( final String array ) {
-        return array.toCharArray();
+        return FastStringUtils.toCharArray(array);
+    }
+
+
+    @Universal
+    public static int lengthOf( char[] array ) {
+        return len(array);
     }
 
     @Universal
@@ -44,6 +49,11 @@ public class Chr {
         return array.length;
     }
 
+
+    @Universal
+    public static char atIndex( final char[] array, final int index ) {
+        return idx(array, index);
+    }
 
     @Universal
     public static char idx( final char[] array, final int index ) {
@@ -54,12 +64,23 @@ public class Chr {
 
 
     @Universal
+    public static void atIndex( final char[] array, int index, char value ) {
+        idx(array, index, value);
+    }
+
+    @Universal
     public static void idx( final char[] array, int index, char value ) {
         final int i = calculateIndex( array, index );
 
         array[ i ] = value;
     }
 
+
+
+    @Universal
+    public static void atIndex( final char[] array, int index, char[] input ) {
+        idx(array, index, input);
+    }
 
     @Universal
     public static void idx( final char[] array, int index, char[] input ) {
@@ -69,8 +90,12 @@ public class Chr {
     }
 
     @Universal
+    public static char[] sliceOf( char[] array, int startIndex, int endIndex ) {
+           return slc(array, startIndex, endIndex);
+    }
+
+    @Universal
     public static char[] slc( char[] array, int startIndex, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -88,9 +113,14 @@ public class Chr {
         return newArray;
     }
 
+
+    @Universal
+    public static char[] sliceOf( char[] array, int startIndex ) {
+        return slc(array, startIndex);
+    }
+
     @Universal
     public static char[] slc( char[] array, int startIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -107,9 +137,14 @@ public class Chr {
         return newArray;
     }
 
+
+    @Universal
+    public static char[] endSliceOf( char[] array, int endIndex ) {
+        return slcEnd(array, endIndex);
+    }
+
     @Universal
     public static char[] slcEnd( char[] array, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
@@ -193,7 +228,6 @@ public class Chr {
 
 
     public static char[] compact( char[] array ) {
-        Exceptions.requireNonNull( array );
 
         int nullCount = 0;
         for ( char ch : array ) {

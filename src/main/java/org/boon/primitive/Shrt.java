@@ -95,6 +95,13 @@ public class Shrt {
 
 
     @Universal
+    public static int lengthOf( short[] array ) {
+        return array.length;
+    }
+
+
+
+    @Universal
     public static short idx( final short[] array, final int index ) {
         final int i = calculateIndex( array, index );
 
@@ -112,7 +119,26 @@ public class Shrt {
 
     @Universal
     public static short[] slc( short[] array, int startIndex, int endIndex ) {
-        Exceptions.requireNonNull( array );
+
+        final int start = calculateIndex( array, startIndex );
+        final int end = calculateIndex( array, endIndex );
+        final int newLength = end - start;
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, end index %d, length %d",
+                            startIndex, endIndex, array.length )
+            );
+        }
+
+        short[] newArray = new short[ newLength ];
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
+
+    @Universal
+    public static short[] sliceOf( short[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -132,7 +158,6 @@ public class Shrt {
 
     @Universal
     public static short[] slc( short[] array, int startIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -146,6 +171,43 @@ public class Shrt {
 
         short[] newArray = new short[ newLength ];
         System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
+    @Universal
+    public static short[] sliceOf( short[] array, int startIndex ) {
+
+        final int start = calculateIndex( array, startIndex );
+        final int newLength = array.length - start;
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            startIndex, array.length )
+            );
+        }
+
+        short[] newArray = new short[ newLength ];
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
+    @Universal
+    public static short[] endSliceOf( short[] array, int endIndex ) {
+        Exceptions.requireNonNull( array );
+
+        final int end = calculateIndex( array, endIndex );
+        final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            endIndex, array.length )
+            );
+        }
+
+        short[] newArray = new short[ newLength ];
+        System.arraycopy( array, 0, newArray, 0, newLength );
         return newArray;
     }
 

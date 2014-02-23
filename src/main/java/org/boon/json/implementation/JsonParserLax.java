@@ -11,6 +11,10 @@ import org.boon.json.JsonParserEvents;
 
 import java.util.*;
 
+import static org.boon.primitive.CharScanner.isDecimalChar;
+import static org.boon.primitive.CharScanner.isDelimiter;
+import static org.boon.primitive.CharScanner.isNumberDigit;
+
 /**
  * Created by rick on 12/12/13.
  */

@@ -95,7 +95,21 @@ public class Lng {
 
 
     @Universal
+    public static int lengthOf( long[] array ) {
+        return array.length;
+    }
+
+
+    @Universal
     public static long idx( final long[] array, final int index ) {
+        final int i = calculateIndex( array, index );
+
+        return array[ i ];
+    }
+
+
+    @Universal
+    public static long atIndex( final long[] array, final int index ) {
         final int i = calculateIndex( array, index );
 
         return array[ i ];
@@ -111,8 +125,15 @@ public class Lng {
 
 
     @Universal
+    public static void atIndex( final long[] array, int index, long value ) {
+        final int i = calculateIndex( array, index );
+
+        array[ i ] = value;
+    }
+
+
+    @Universal
     public static long[] slc( long[] array, int startIndex, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -130,9 +151,48 @@ public class Lng {
         return newArray;
     }
 
+
+    @Universal
+    public static long[] sliceOf( long[] array, int startIndex, int endIndex ) {
+
+        final int start = calculateIndex( array, startIndex );
+        final int end = calculateIndex( array, endIndex );
+        final int newLength = end - start;
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, end index %d, length %d",
+                            startIndex, endIndex, array.length )
+            );
+        }
+
+        long[] newArray = new long[ newLength ];
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
+
     @Universal
     public static long[] slc( long[] array, int startIndex ) {
-        Exceptions.requireNonNull( array );
+
+        final int start = calculateIndex( array, startIndex );
+        final int newLength = array.length - start;
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            startIndex, array.length )
+            );
+        }
+
+        long[] newArray = new long[ newLength ];
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
+
+    @Universal
+    public static long[] sliceOf( long[] array, int startIndex ) {
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -151,7 +211,25 @@ public class Lng {
 
     @Universal
     public static long[] slcEnd( long[] array, int endIndex ) {
-        Exceptions.requireNonNull( array );
+
+        final int end = calculateIndex( array, endIndex );
+        final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            endIndex, array.length )
+            );
+        }
+
+        long[] newArray = new long[ newLength ];
+        System.arraycopy( array, 0, newArray, 0, newLength );
+        return newArray;
+    }
+
+
+    @Universal
+    public static long[] endSliceOf( long[] array, int endIndex ) {
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);

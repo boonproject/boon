@@ -189,6 +189,12 @@ public class Lists {
         return list.size();
     }
 
+
+    @Universal
+    public static int lengthOf( List<?> list ) {
+        return len (list);
+    }
+
     public static boolean isEmpty( List<?> list ) {
         return list == null || list.size() == 0;
     }
@@ -212,6 +218,13 @@ public class Lists {
     }
 
     @Universal
+    public static <T> T atIndex( List<T> list, final int index ) {
+
+        return idx(list, index);
+
+    }
+
+    @Universal
     public static <T> T idx( List<T> list, final int index ) {
         int i = calculateIndex( list, index );
         if ( i > list.size() - 1 ) {
@@ -232,9 +245,20 @@ public class Lists {
 
 
     @Universal
+    public static <V> void atIndex( List<V> list, int index, V v ) {
+        idx (list, index, v);
+    }
+
+    @Universal
     public static <V> void idx( List<V> list, int index, V v ) {
         int i = calculateIndex( list, index );
         list.set( i, v );
+    }
+
+
+    @Universal
+    public static <V> List<V> sliceOf( List<V> list, int startIndex, int endIndex ) {
+        return slc(list, startIndex, endIndex);
     }
 
     @Universal
@@ -244,9 +268,20 @@ public class Lists {
         return list.subList( start, end );
     }
 
+
+    @Universal
+    public static <V> List<V> sliceOf( List<V> list, int startIndex ) {
+        return slc(list, startIndex);
+    }
+
     @Universal
     public static <V> List<V> slc( List<V> list, int startIndex ) {
         return slc( list, startIndex, list.size() );
+    }
+
+    @Universal
+    public static <V> List<V> endSliceOf( List<V> list, int endIndex ) {
+        return slcEnd( list, endIndex );
     }
 
 
@@ -269,19 +304,16 @@ public class Lists {
 
     @Universal
     public static <V> List<V> copy( CopyOnWriteArrayList<V> list ) {
-        requireNonNull( list, "listStream cannot be null" );
         return new CopyOnWriteArrayList<>( list );
     }
 
     @Universal
     public static <V> List<V> copy( ArrayList<V> list ) {
-        requireNonNull( list, "listStream cannot be null" );
         return new ArrayList<>( list );
     }
 
     @Universal
     public static <V> List<V> copy( LinkedList<V> list ) {
-        requireNonNull( list, "listStream cannot be null" );
         return new LinkedList<>( list );
     }
 
@@ -296,9 +328,6 @@ public class Lists {
     /* End universal methods. */
     private static <T> int calculateIndex( List<T> list, int originalIndex ) {
         final int length = list.size();
-
-        requireNonNull( list, "listStream cannot be null" );
-
 
         int index = originalIndex;
 
@@ -337,6 +366,17 @@ public class Lists {
     }
 
 
+    public static <T> List<T> listFromProperty( Class<T> propertyType, String propertyPath, Iterable<?> list ) {
+        List<T> newList = new ArrayList<>(  );
+
+        for ( Object item : list ) {
+            T newItem = ( T ) BeanUtils.idx( item, propertyPath );
+            newList.add( newItem );
+        }
+
+        return newList;
+
+    }
     public static List<Map<String, Object>> toListOfMaps( List<?> list ) {
         return MapObjectConversion.toListOfMaps( list );
     }

@@ -316,14 +316,14 @@ public class JsonParserCharArray extends BaseJsonParser  {
         final int startIndex = index;
 
 
-        boolean encoded = hasEscapeChar ( array, index, indexHolder );
+        boolean encoded = CharScanner.hasEscapeChar ( array, index, indexHolder );
         index = indexHolder[0];
 
 
 
         String value = null;
         if ( encoded ) {
-            index = findEndQuote ( array,  index);
+            index = CharScanner.findEndQuote ( array,  index);
             value = builder.decodeJsonString ( array, startIndex, index ).toString ();
             builder.recycle ();
         } else {
@@ -418,7 +418,7 @@ public class JsonParserCharArray extends BaseJsonParser  {
         }catch ( Exception ex ) {
             if (ex instanceof JsonException) {
                 JsonException jsonException = (JsonException) ex;
-                throw ex;
+                throw jsonException;
             }
             throw new JsonException ( exceptionDetails("issue parsing JSON array"), ex );
         }

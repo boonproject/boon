@@ -83,11 +83,22 @@ public class Flt {
     }
 
 
+
+    @Universal
+    public static int lengthOf( float[] array ) {
+        return len(array);
+    }
+
     @Universal
     public static int len( float[] array ) {
         return array.length;
     }
 
+
+    @Universal
+    public static float atIndex( final float[] array, final int index ) {
+        return idx(array, index);
+    }
 
     @Universal
     public static float idx( final float[] array, final int index ) {
@@ -97,6 +108,12 @@ public class Flt {
     }
 
 
+
+    @Universal
+    public static void atIndex( final float[] array, int index, float value ) {
+        idx (array, index, value);
+    }
+
     @Universal
     public static void idx( final float[] array, int index, float value ) {
         final int i = calculateIndex( array, index );
@@ -104,10 +121,14 @@ public class Flt {
         array[ i ] = value;
     }
 
+    @Universal
+    public static float[] sliceOf( float[] array, int startIndex, int endIndex ) {
+
+        return slc(array, startIndex, endIndex);
+    }
 
     @Universal
     public static float[] slc( float[] array, int startIndex, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -125,9 +146,15 @@ public class Flt {
         return newArray;
     }
 
+
+    @Universal
+    public static float[] sliceOf( float[] array, int startIndex ) {
+
+        return slc(array, startIndex);
+    }
+
     @Universal
     public static float[] slc( float[] array, int startIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -144,9 +171,15 @@ public class Flt {
         return newArray;
     }
 
+
+
+    @Universal
+    public static float[] endOfSlice( float[] array, int endIndex ) {
+        return slcEnd(array, endIndex);
+    }
+
     @Universal
     public static float[] slcEnd( float[] array, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
@@ -204,7 +237,6 @@ public class Flt {
 
     @Universal
     public static float[] insert( final float[] array, final int idx, final float v ) {
-        Exceptions.requireNonNull( array );
 
         if ( idx >= array.length ) {
             return add( array, v );
@@ -290,7 +322,6 @@ public class Flt {
     private static int calculateIndex( float[] array, int originalIndex ) {
         final int length = array.length;
 
-        Exceptions.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;

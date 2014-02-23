@@ -16,13 +16,36 @@ import static org.boon.Exceptions.requireNonNull;
 
 public class Maps {
 
-    /**
-     * Universal methods.
-     */
+
+    @Universal
+    public static int lengthOf( Map<?, ?> map ) {
+        return len ( map );
+    }
+
+    @Universal
+    public static <K, V> V atIndex( Map<K, V> map, K k ) {
+        return idx(map, k );
+    }
+
+    @Universal
+    public static <K, V> SortedMap<K, V> sliceOf( NavigableMap<K, V> map, K startIndex, K endIndex ) {
+        return slc(map, startIndex, endIndex);
+    }
+
+
+    @Universal
+    public static <K, V> SortedMap<K, V> endSliceOf( NavigableMap<K, V> map, K fromKey ) {
+        return slcEnd(map, fromKey);
+    }
+
+        /**
+         * Universal methods.
+         */
     @Universal
     public static int len( Map<?, ?> map ) {
         return map.size();
     }
+
 
     @Universal
     public static <K, V> boolean in( K key, Map<K, V> map ) {
@@ -392,6 +415,26 @@ public class Maps {
         map.put( k7, v7 );
         map.put( k8, v8 );
         map.put( k9, v9 );
+        return map;
+    }
+
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10 ) {
+        Map<K, V> map = new LinkedHashMap<>( 10 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+
         return map;
     }
 

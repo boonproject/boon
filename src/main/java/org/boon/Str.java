@@ -13,49 +13,69 @@ public class Str {
 
 
 
+    @Universal
     public static int lengthOf( String str ) {
         return len(str);
     }
 
+
+    @Universal
     public static String sliceOf( String str, int start ) {
         return slc(str, start);
     }
 
+
+    @Universal
     public static String sliceOf( String str, int start, int end ) {
         return slc(str, start, end);
     }
 
+
+    @Universal
     public static String endSliceOf( String str, int end ) {
         return slcEnd(str, end);
     }
 
-    public static char indexOf( String str, int index ) {
+
+    @Universal
+    public static char atIndex( String str, int index ) {
         return idx(str, index);
     }
 
-    public static String indexOf( String str, int index, char c ) {
+    @Universal
+    public static String atIndex( String str, int index, char c ) {
             return idx (str, index, c);
     }
 
+
+    @Universal
     public static int len( String str ) {
         return str.length();
     }
 
 
+
+    @Universal
     public static String slc( String str, int start ) {
 
         return FastStringUtils.noCopyStringFromChars( Chr.slc( FastStringUtils.toCharArray(str), start ) );
     }
 
+
+    @Universal
     public static String slc( String str, int start, int end ) {
         return FastStringUtils.noCopyStringFromChars(Chr.slc(FastStringUtils.toCharArray(str), start, end));
     }
 
+
+    @Universal
     public static String slcEnd( String str, int end ) {
         return FastStringUtils.noCopyStringFromChars( Chr.slcEnd( FastStringUtils.toCharArray(str), end ) );
     }
 
 
+
+    @Universal
     public static char idx( String str, int index ) {
         int i = calculateIndex( str.length(), index );
 
@@ -64,6 +84,7 @@ public class Str {
     }
 
 
+    @Universal
     public static String idx( String str, int index, char c ) {
 
         char[] chars = str.toCharArray();
@@ -72,31 +93,37 @@ public class Str {
     }
 
 
+    @Universal
     public static boolean in( char c, String str ) {
         return Chr.in ( c, FastStringUtils.toCharArray(str) );
     }
 
 
+    @Universal
     public static boolean in( char c, int offset, String str ) {
         return Chr.in ( c, offset, FastStringUtils.toCharArray(str) );
     }
 
 
+    @Universal
     public static boolean in( char c, int offset, int end, String str ) {
         return Chr.in ( c, offset, end, FastStringUtils.toCharArray(str) );
     }
 
 
+    @Universal
     public static String add( String str, char c ) {
         return FastStringUtils.noCopyStringFromChars( Chr.add( FastStringUtils.toCharArray(str), c ) );
     }
 
 
+    @Universal
     public static String add( String str, String str2 ) {
         return FastStringUtils.noCopyStringFromChars( Chr.add( FastStringUtils.toCharArray(str),
                 Chr.add( FastStringUtils.toCharArray(str2) ) ));
     }
 
+    @Universal
     public static String add( String... strings ) {
         int length = 0;
         for ( String str : strings ) {

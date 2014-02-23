@@ -131,91 +131,14 @@ public abstract class BaseJsonParser implements JsonParser {
 
         private CharBuf fileInputBuf;
 
-
-
-        protected static boolean isDecimalChar ( int currentChar ) {
-            switch ( currentChar ) {
-                case MINUS:
-                case PLUS:
-                case LETTER_E:
-                case LETTER_BIG_E:
-                case DECIMAL_POINT:
-                    return true;
-            }
-            return false;
-
-        }
-
-        protected static boolean isDelimiter ( int c ) {
-
-            return c == COMMA || c == CLOSED_CURLY || c == CLOSED_BRACKET;
-        }
+//
+//        protected static final boolean isNumberDigit (int c)  {
+//            return c >= ALPHA_0 && c <= ALPHA_9;
+//        }
 
 
 
-        protected static final boolean isNumberDigit (int c)  {
-            return c >= ALPHA_0 && c <= ALPHA_9;
-        }
-
-
-
-        protected static final boolean isDoubleQuote ( int c ) {
-            return c == DOUBLE_QUOTE;
-        }
-
-
-        protected static final boolean isEscape ( int c ) {
-            return c == ESCAPE;
-        }
-
-
-
-        protected static boolean hasEscapeChar (char []array, int index, int[] indexHolder) {
-            char currentChar;
-            for ( ; index < array.length; index++ ) {
-                currentChar = array[index];
-                if ( isDoubleQuote ( currentChar )) {
-                    indexHolder[0] = index;
-                    return false;
-                } else if ( isEscape (currentChar) ) {
-                    indexHolder[0] = index;
-                    return  true;
-                }
-
-            }
-
-            indexHolder[0] = index;
-            return false;
-        }
-
-        int[] indexHolder = new int[1];
-
-
-
-        protected static int findEndQuote (final char[] array,  int index) {
-            char currentChar;
-            boolean escape = false;
-
-            for ( ; index < array.length; index++ ) {
-                currentChar = array[index];
-                if ( isDoubleQuote (currentChar )) {
-                    if (!escape) {
-                        break;
-                    }
-                }
-                if ( isEscape (currentChar) ) {
-                    if (!escape) {
-                        escape = true;
-                    } else {
-                        escape = false;
-                    }
-                } else {
-                    escape = false;
-                }
-            }
-            return index;
-        }
-
+    int[] indexHolder = new int[1];
 
 
     }

@@ -5,6 +5,7 @@ import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
+import org.boon.primitive.CharScanner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -165,13 +166,13 @@ public class JsonFastParser extends JsonParserCharArray {
 
         while (true) {
             currentChar = array[index];
-            if ( isNumberDigit ( currentChar )) {
+            if (CharScanner.isNumberDigit ( currentChar )) {
                 //noop
             } else if ( currentChar <= 32 ) { //white
                 break;
-            } else if ( isDelimiter ( currentChar ) ) {
+            } else if ( CharScanner.isDelimiter ( currentChar ) ) {
                 break;
-            } else if ( isDecimalChar (currentChar) ) {
+            } else if ( CharScanner.isDecimalChar(currentChar) ) {
                 doubleFloat = true;
             }
             index++;
@@ -200,11 +201,11 @@ public class JsonFastParser extends JsonParserCharArray {
 
         final int startIndex = index;
 
-        boolean encoded = hasEscapeChar ( array, index, indexHolder );
+        boolean encoded = CharScanner.hasEscapeChar ( array, index, indexHolder );
         index = indexHolder[0];
 
         if (encoded)  {
-            index = findEndQuote ( array, index );
+            index = CharScanner.findEndQuote ( array, index );
         }
 
         Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, checkDates );

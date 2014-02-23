@@ -7,6 +7,8 @@ import org.boon.core.value.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.boon.primitive.CharScanner.*;
+
 /**
  * Created by rick on 12/21/13.
  */

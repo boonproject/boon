@@ -49,6 +49,7 @@ public class CharScanner {
 
 
 
+
     public static boolean isDigit( int c ) {
         return c >= ALPHA_0 && c <= ALPHA_9;
     }
@@ -377,7 +378,6 @@ public class CharScanner {
     }
 
     public static char[][] compact( char[][] array ) {
-        Exceptions.requireNonNull( array );
 
         int nullCount = 0;
         for ( char[] ch : array ) {
@@ -663,7 +663,7 @@ public class CharScanner {
 
 
 
-    protected static boolean isDelimiter ( int c ) {
+    public static boolean isDelimiter ( int c ) {
 
         return c == COMMA || c == CLOSED_CURLY || c == CLOSED_BRACKET;
     }
@@ -884,6 +884,7 @@ public class CharScanner {
         }
         return index;
     }
+
     public static char[] readNumber( char[] array, int idx ) {
         final int startIndex = idx;
 
@@ -1026,6 +1027,64 @@ public class CharScanner {
 
         charString = charString + " with an int value of " + ( ( int ) c );
         return charString;
+    }
+
+
+
+    public static final boolean isDoubleQuote ( int c ) {
+        return c == DOUBLE_QUOTE;
+    }
+
+
+    public static final boolean isEscape ( int c ) {
+        return c == ESCAPE;
+    }
+
+
+
+    public  static boolean hasEscapeChar (char []array, int index, int[] indexHolder) {
+        char currentChar;
+        for ( ; index < array.length; index++ ) {
+            currentChar = array[index];
+            if ( isDoubleQuote ( currentChar )) {
+                indexHolder[0] = index;
+                return false;
+            } else if ( isEscape (currentChar) ) {
+                indexHolder[0] = index;
+                return  true;
+            }
+
+        }
+
+        indexHolder[0] = index;
+        return false;
+    }
+
+
+
+
+    public static int findEndQuote (final char[] array,  int index) {
+        char currentChar;
+        boolean escape = false;
+
+        for ( ; index < array.length; index++ ) {
+            currentChar = array[index];
+            if ( isDoubleQuote (currentChar )) {
+                if (!escape) {
+                    break;
+                }
+            }
+            if ( isEscape (currentChar) ) {
+                if (!escape) {
+                    escape = true;
+                } else {
+                    escape = false;
+                }
+            } else {
+                escape = false;
+            }
+        }
+        return index;
     }
 
 

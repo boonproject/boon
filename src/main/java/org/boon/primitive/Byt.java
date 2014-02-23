@@ -118,10 +118,26 @@ public class Byt {
 
 
     @Universal
+    public static int lengthOf( byte[] array ) {
+        return array.length;
+    }
+
+    @Universal
+    public static byte atIndex( final byte[] array, final int index ) {
+           return idx(array, index);
+    }
+
+    @Universal
     public static byte idx( final byte[] array, final int index ) {
         final int i = calculateIndex( array, index );
 
         return array[ i ];
+    }
+
+
+    @Universal
+    public static void atIndex( final byte[] array, int index, byte value ) {
+         idx(array, index, value);
     }
 
 
@@ -132,6 +148,11 @@ public class Byt {
         array[ i ] = value;
     }
 
+
+    @Universal
+    public static byte[] sliceOf( byte[] array, int startIndex, int endIndex ) {
+        return slc (array, startIndex, endIndex);
+    }
 
     @Universal
     public static byte[] slc( byte[] array, int startIndex, int endIndex ) {
@@ -153,9 +174,14 @@ public class Byt {
         return newArray;
     }
 
+
+    @Universal
+    public static byte[] sliceOf( byte[] array, int startIndex ) {
+        return slc(array, startIndex);
+    }
+
     @Universal
     public static byte[] slc( byte[] array, int startIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -172,9 +198,14 @@ public class Byt {
         return newArray;
     }
 
+
+    @Universal
+    public static byte[] endSliceOf( byte[] array, int endIndex ) {
+        return slcEnd(array, endIndex);
+    }
+
     @Universal
     public static byte[] slcEnd( byte[] array, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
@@ -192,7 +223,7 @@ public class Byt {
     }
 
     @Universal
-    public static boolean in( int value, byte[] array ) {
+    public static boolean in( int value, byte... array ) {
         for ( int currentValue : array ) {
             if ( currentValue == value ) {
                 return true;

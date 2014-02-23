@@ -84,6 +84,11 @@ public class Int {
 
 
     @Universal
+    public static int lengthOf( int[] array ) {
+        return len(array);
+    }
+
+    @Universal
     public static int len( int[] array ) {
         return array.length;
     }
@@ -98,16 +103,48 @@ public class Int {
 
 
     @Universal
+    public static int atIndex( final int[] array, final int index ) {
+        final int i = calculateIndex( array, index );
+
+        return array[ i ];
+    }
+
+
+    @Universal
     public static void idx( final int[] array, int index, int value ) {
         final int i = calculateIndex( array, index );
 
         array[ i ] = value;
     }
 
+    @Universal
+    public static void atIndex( final int[] array, int index, int value ) {
+        final int i = calculateIndex( array, index );
+
+        array[ i ] = value;
+    }
 
     @Universal
     public static int[] slc( int[] array, int startIndex, int endIndex ) {
-        Exceptions.requireNonNull( array );
+
+        final int start = calculateIndex( array, startIndex );
+        final int end = calculateIndex( array, endIndex );
+        final int newLength = end - start;
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, end index %d, length %d",
+                            startIndex, endIndex, array.length )
+            );
+        }
+
+        int[] newArray = new int[ newLength ];
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
+    @Universal
+    public static int[] sliceOf( int[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
@@ -127,7 +164,24 @@ public class Int {
 
     @Universal
     public static int[] slc( int[] array, int startIndex ) {
-        Exceptions.requireNonNull( array );
+
+        final int start = calculateIndex( array, startIndex );
+        final int newLength = array.length - start;
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            startIndex, array.length )
+            );
+        }
+
+        int[] newArray = new int[ newLength ];
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
+    @Universal
+    public static int[] sliceOf( int[] array, int startIndex ) {
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -146,7 +200,24 @@ public class Int {
 
     @Universal
     public static int[] slcEnd( int[] array, int endIndex ) {
-        Exceptions.requireNonNull( array );
+
+        final int end = calculateIndex( array, endIndex );
+        final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
+
+        if ( newLength < 0 ) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format( "start index %d, length %d",
+                            endIndex, array.length )
+            );
+        }
+
+        int[] newArray = new int[ newLength ];
+        System.arraycopy( array, 0, newArray, 0, newLength );
+        return newArray;
+    }
+
+    @Universal
+    public static int[] endSliceOf( int[] array, int endIndex ) {
 
         final int end = calculateIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
@@ -176,7 +247,6 @@ public class Int {
 
     @Universal
     public static int[] copy( int[] array ) {
-        Exceptions.requireNonNull( array );
         int[] newArray = new int[ array.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
@@ -185,7 +255,6 @@ public class Int {
 
     @Universal
     public static int[] add( int[] array, int v ) {
-        Exceptions.requireNonNull( array );
         int[] newArray = new int[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
@@ -194,7 +263,6 @@ public class Int {
 
     @Universal
     public static int[] add( int[] array, int[] array2 ) {
-        Exceptions.requireNonNull( array );
         int[] newArray = new int[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         System.arraycopy( array2, 0, newArray, array.length, array2.length );
@@ -204,7 +272,6 @@ public class Int {
 
     @Universal
     public static int[] insert( final int[] array, final int idx, final int v ) {
-        Exceptions.requireNonNull( array );
 
         if ( idx >= array.length ) {
             return add( array, v );
@@ -244,7 +311,6 @@ public class Int {
 
     @Universal
     public static int[] insert( final int[] array, final int fromIndex, final int[] values ) {
-        Exceptions.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
             return add( array, values );

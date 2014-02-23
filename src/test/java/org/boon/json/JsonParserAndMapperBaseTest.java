@@ -1365,4 +1365,38 @@ public class JsonParserAndMapperBaseTest {
     }
 
 
+
+    @Test
+    public void parseNumber2 () {
+        int i = jsonParserAndMapper.parseInt ( "123" );
+        boolean ok = i == 123 || die ( "" + i );
+
+        i = jsonParserAndMapper.parseInt ( "123".getBytes ( StandardCharsets.UTF_8 ) );
+        ok = i == 123 || die ( "" + i );
+
+        i = jsonParserAndMapper.parseByte ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+
+
+        i = jsonParserAndMapper.parseShort ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+
+        i = (int) jsonParserAndMapper.parseDouble ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+
+        i = (int) jsonParserAndMapper.parseFloat ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+        i =  (int)jsonParserAndMapper.parseLong ( "123" );
+        ok = i == 123 || die ( "" + i );
+
+
+        puts ( ok );
+    }
+
+
+
 }

@@ -1,5 +1,8 @@
 package org.boon.json.implementation;
 
+import org.boon.primitive.ByteScanner;
+import org.boon.primitive.CharScanner;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -15,41 +18,27 @@ public class JsonAsciiParser extends JsonBaseByteArrayParser {
 
         byte[] array = charArray;
         int index = __index;
-        int currentChar = charArray[ index ];
+        int currentChar = array[index];
 
-        if ( index < array.length && currentChar == DOUBLE_QUOTE ) {
+        if ( index < array.length && currentChar == '"' ) {
             index++;
         }
 
         final int startIndex = index;
 
-        boolean escape = false;
 
-        boolean hasEscaped = false;
+        boolean encoded = ByteScanner.hasEscapeChar(array, index, indexHolder);
+        index = indexHolder[0];
 
-        while ( true ) {
-            currentChar = array[ index ];
-            if ( isDoubleQuote( currentChar ) ) {
-                if ( !escape ) {
-                    break;
-                }
-            }
-            if ( isEscape( currentChar ) ) {
-                hasEscaped = true;
-                escape = true;
-            } else {
-                escape = false;
-            }
-            index++;
-            if ( index >= array.length ) break;
-        }
 
-        String value;
-        if ( hasEscaped ) {
-            value = builder.decodeJsonStringAscii(array, startIndex, index).toStringAndRecycle();
 
+        String value = null;
+        if ( encoded ) {
+            index = ByteScanner.findEndQuote ( array,  index);
+            value = builder.decodeJsonString ( array, startIndex, index ).toString ();
+            builder.recycle ();
         } else {
-            value = new String( array, startIndex, ( index - startIndex ), StandardCharsets.US_ASCII );
+            value = new String( array, startIndex, ( index - startIndex ) );
         }
 
         if ( index < charArray.length ) {
