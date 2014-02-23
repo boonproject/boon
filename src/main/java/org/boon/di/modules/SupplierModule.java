@@ -4,6 +4,7 @@ import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.collections.MultiMap;
 import org.boon.core.Supplier;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.di.ProviderInfo;
@@ -21,12 +22,17 @@ import static org.boon.di.modules.NamedUtils.namedValueForClass;
  */
 public class SupplierModule extends BaseModule {
 
-    private Map<Class, Supplier<Object>> supplierTypeMap = new ConcurrentHashMap<>();
+    private Map<Class, ProviderInfo> supplierTypeMap = new ConcurrentHashMap<>();
 
     private MultiMap<String, ProviderInfo> supplierNameMap = new MultiMap<>();
 
     public SupplierModule( ProviderInfo... suppliers ) {
         supplierExtraction( suppliers );
+    }
+
+
+    public SupplierModule( List<ProviderInfo> suppliers ) {
+        supplierExtraction( suppliers.toArray(new ProviderInfo[suppliers.size()]) );
     }
 
 
@@ -93,21 +99,49 @@ public class SupplierModule extends BaseModule {
 
     @Override
     public <T> T get( Class<T> type ) {
-        return ( T ) supplierTypeMap.get( type ).get();
+        ProviderInfo pi = supplierTypeMap.get(type);
+        if (pi!=null) {
+            return (T) pi.supplier().get();
+        }
+        return null;
+
     }
 
     @Override
     public Object get( String name ) {
-        return supplierNameMap.get( name ).supplier().get();
+
+        ProviderInfo pi = supplierNameMap.get(name);
+        if (pi!=null) {
+            return pi.supplier().get();
+        }
+        return null;
+
 
     }
 
     @Override
     public <T> T get( Class<T> type, String name ) {
-
-        return getSupplier( type, name ).get();
+        ProviderInfo providerInfo = getProviderInfo(type, name);
+        if (providerInfo!=null) {
+            return (T)providerInfo.supplier().get();
+        }
+        return null;
     }
 
+    @Override
+    public ProviderInfo getProviderInfo(Class<?> type) {
+        return supplierTypeMap.get(type);
+    }
+
+    @Override
+    public ProviderInfo getProviderInfo(String name) {
+        return supplierNameMap.get(name);
+    }
+
+    @Override
+    public ProviderInfo getProviderInfo(Class<?> type, String name) {
+        return doGetProvider(type, name);
+    }
 
 
     @Override
@@ -144,6 +178,28 @@ public class SupplierModule extends BaseModule {
     }
 
 
+    private  ProviderInfo doGetProvider( final Class<?> type, final String name ) {
+
+
+        Set<ProviderInfo> set = Sets.set( supplierNameMap.getAll( name ) );
+
+
+        ProviderInfo nullTypeInfo = null;
+
+        for ( ProviderInfo info : set ) {
+
+                if ( info.type() == null ) {
+                    nullTypeInfo = info;
+
+                    continue;
+                }
+                if ( type.isAssignableFrom( info.type() ) ) {
+                    return info;
+                }
+         }
+        return nullTypeInfo;
+    }
+
 
     @Override
     public <T> Supplier<T> getSupplier( Class<T> type ) {
@@ -172,7 +228,7 @@ public class SupplierModule extends BaseModule {
     }
 
 
-    private void extractClassIntoMaps( Class type, boolean foundName, Supplier supplier ) {
+    private void extractClassIntoMaps( ProviderInfo info, Class type, boolean foundName, Supplier supplier ) {
 
         if ( type == null ) {
             return;
@@ -186,11 +242,11 @@ public class SupplierModule extends BaseModule {
         Class[] superTypes = type.getInterfaces();
 
         for ( Class superType : superTypes ) {
-            this.supplierTypeMap.put( superType, supplier );
+            this.supplierTypeMap.put( superType, info );
         }
 
         while ( superClass != Object.class ) {
-            this.supplierTypeMap.put( superClass, supplier );
+            this.supplierTypeMap.put( superClass, info );
 
             if ( !foundName ) {
                 named = NamedUtils.namedValueForClass( superClass );
@@ -202,7 +258,7 @@ public class SupplierModule extends BaseModule {
 
             superTypes = type.getInterfaces();
             for ( Class superType : superTypes ) {
-                this.supplierTypeMap.put( superType, supplier );
+                this.supplierTypeMap.put( superType, info );
             }
             superClass = superClass.getSuperclass();
         }
@@ -224,12 +280,13 @@ public class SupplierModule extends BaseModule {
             Supplier supplier = providerInfo.supplier();
 
             if ( supplier == null ) {
-                supplier = createSupplier( type, providerInfo.value() );
+                supplier = createSupplier( providerInfo.prototype(), type, providerInfo.value() );
+                providerInfo = new ProviderInfo(named, type, supplier, providerInfo.value());
             }
 
             if ( type != null ) {
 
-                supplierTypeMap.put( type, supplier );
+                supplierTypeMap.put( type, providerInfo );
 
 
                 /* Named passed in overrides name in class annotation @Named. */
@@ -239,20 +296,27 @@ public class SupplierModule extends BaseModule {
                 }
             }
 
-            extractClassIntoMaps( type, named != null, supplier );
+            extractClassIntoMaps( providerInfo, type, named != null, supplier );
             if ( named != null ) {
-                supplierNameMap.put( named, new ProviderInfo( named, type, supplier, null ) );
+                supplierNameMap.put( named, new ProviderInfo( named, type, supplier, providerInfo.value() ) );
             }
         }
     }
 
 
-    private Supplier createSupplier( final Class<?> type, final Object value ) {
-        if ( value != null ) {
+    private Supplier createSupplier( final boolean prototype, final Class<?> type, final Object value ) {
+        if ( value != null && !prototype) {
             return new Supplier() {
                 @Override
                 public Object get() {
                     return value;
+                }
+            };
+        } else if (value!=null && prototype) {
+            return new Supplier() {
+                @Override
+                public Object get() {
+                    return BeanUtils.copy(value);
                 }
             };
         } else if ( type != null ) {

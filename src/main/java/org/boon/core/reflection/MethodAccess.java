@@ -21,4 +21,5 @@ public interface MethodAccess extends BaseAccess{
     boolean respondsTo(Object... args);
 
 
+    Object invokeStatic(Object... args);
 }

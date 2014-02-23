@@ -1,11 +1,11 @@
 package org.boon.di;
 
+import org.boon.Lists;
 import org.boon.di.impl.ContextImpl;
-import org.boon.di.modules.ClassListModule;
 import org.boon.di.modules.InstanceModule;
-import org.boon.di.modules.ObjectListModule;
 import org.boon.di.modules.SupplierModule;
 
+import java.util.List;
 import java.util.Map;
 
 public class ContextFactory {
@@ -16,25 +16,26 @@ public class ContextFactory {
     }
 
     public static Module classes( Class... classes ) {
-
-        return new ClassListModule( classes );
+        List<ProviderInfo> wrap = Lists.wrap(ProviderInfo.class, classes);
+        return new SupplierModule(wrap);
     }
 
 
-    public static Module classes( ProviderInfo... classes ) {
-
-        return new ClassListModule( classes );
-    }
 
     public static Module objects( Object... objects ) {
 
-        return new ObjectListModule( false, objects );
+
+        List<ProviderInfo> wrap = (List<ProviderInfo>) Lists.mapTo(ProviderInfo.class, "objectProviderOf", objects);
+
+        return new SupplierModule( wrap );
     }
 
 
     public static Module prototypes( Object... objects ) {
 
-        return new ObjectListModule( true, objects );
+        List<ProviderInfo> wrap = (List<ProviderInfo>) Lists.mapTo(ProviderInfo.class, "prototypeProviderOf", objects);
+
+        return new SupplierModule( wrap );
     }
 
     public static Module module( Object module ) {
@@ -45,17 +46,6 @@ public class ContextFactory {
     public static Module suppliers( ProviderInfo... suppliers ) {
 
         return new SupplierModule( suppliers );
-    }
-
-    public static Module objects( ProviderInfo... suppliers ) {
-
-        return new ObjectListModule( false, suppliers );
-    }
-
-
-    public static Module prototypes( ProviderInfo... suppliers ) {
-
-        return new ObjectListModule( true, suppliers );
     }
 
     public static Context fromMap( Map<?, ?> map ) {

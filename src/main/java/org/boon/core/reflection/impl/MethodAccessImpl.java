@@ -54,6 +54,18 @@ public class MethodAccessImpl implements MethodAccess {
     }
 
     @Override
+    public Object invokeStatic(Object... args) {
+        try {
+            return method.invoke( null, args );
+        } catch ( Exception ex ) {
+            return handle( Object.class, ex,  "unable to invoke method", method,
+                    " with arguments", args );
+
+        }
+    }
+
+
+    @Override
     public Iterable<AnnotationData> annotationData() {
         return new Iterable<AnnotationData>() {
             @Override
@@ -184,6 +196,7 @@ public class MethodAccessImpl implements MethodAccess {
 
         return match;
     }
+
 
     @Override
     public Class<?>[] parameterTypes() {

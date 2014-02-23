@@ -90,21 +90,23 @@ public class CoffeeApp implements Runnable {
         prototypeBacon.crispy = true;
     }
 
-    public static void main( String... args ) {
-        Module m1 = ContextFactory.classes( CoffeeApp.class, CoffeeMaker.class, FoodImpl.class );
-        Module m2 = ContextFactory.module( new DripCoffeeModule() );
-        Module m3 = ContextFactory.module( new PumpModule() );
-        Module m4 = ContextFactory.suppliers( ProviderInfo.providerOf( Coffee.class, new Supplier<Coffee>() {
+    static Module m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12;
+
+    public static void createModules() {
+         m1 = ContextFactory.classes( CoffeeApp.class, CoffeeMaker.class, FoodImpl.class );
+         m2 = ContextFactory.module( new DripCoffeeModule() );
+         m3 = ContextFactory.module( new PumpModule() );
+         m4 = ContextFactory.suppliers( ProviderInfo.providerOf( Coffee.class, new Supplier<Coffee>() {
             @Override
             public Coffee get() {
                 return new Coffee();
             }
         } ) );
 
-        Module m5 = ContextFactory.objects( staticSugar );
-        Module m6 = ContextFactory.prototypes( prototypeBacon );
+         m5 = ContextFactory.objects( staticSugar );
+         m6 = ContextFactory.prototypes( prototypeBacon );
 
-        Module m7 = ContextFactory.suppliers(
+         m7 = ContextFactory.suppliers(
                 ProviderInfo.providerOf( Bacon.class ),
                 ProviderInfo.providerOf( "orange", Bacon.class ),
                 ProviderInfo.providerOf( "red", new Bacon() ),
@@ -118,7 +120,7 @@ public class CoffeeApp implements Runnable {
                 } ) );
 
 
-        Module m0 = ContextFactory.suppliers( ProviderInfo.providerOf( "blue", new Supplier<Bacon>() {
+         m0 = ContextFactory.suppliers( ProviderInfo.providerOf( "blue", new Supplier<Bacon>() {
             @Override
             public Bacon get() {
                 Bacon bacon = new Bacon();
@@ -128,14 +130,19 @@ public class CoffeeApp implements Runnable {
         } ) );
 
 
-        Module m8 = ContextFactory.classes( Cheese.class );
-        Module m9 = ContextFactory.objects( new FrenchFries() );
+         m8 = ContextFactory.classes( Cheese.class );
+         m9 = ContextFactory.objects( new FrenchFries() );
 
-        Module m10 = ContextFactory.objects( ProviderInfo.providerOf( "new york", new Hotdogs() ) );
+         m10 = ContextFactory.suppliers( ProviderInfo.providerOf( "new york", new Hotdogs() ) );
 
 
-        Module m11 = ContextFactory.classes( ProviderInfo.providerOf( "rick's habit", Coffee.class ) );
+         m11 = ContextFactory.suppliers( ProviderInfo.providerOf( "rick's habit", Coffee.class ) );
 
+    }
+
+
+    public static void main( String... args ) {
+        createModules();
         Context context = ContextFactory.context( m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m0 );
         Heater heater = context.get( Heater.class );
         boolean ok = heater instanceof ElectricHeater || die();
@@ -144,7 +151,7 @@ public class CoffeeApp implements Runnable {
 
         validateApp( coffeeApp );
 
-
+        createModules();
         context = ContextFactory.context( m0, m8, m9, m10, m11, m1, m2, m3, m4, m5, m6, m7 );
         coffeeApp = context.get( CoffeeApp.class );
         validateApp( coffeeApp );
@@ -169,8 +176,15 @@ public class CoffeeApp implements Runnable {
         context.remove( m0 );
         context.add( m11 );
         context.addFirst( m0 );
+
         coffeeApp = context.get( CoffeeApp.class );
         validateApp( coffeeApp );
+
+        context.get(FrenchFries.class);
+        context.get(FrenchFries.class);
+        context.get(FrenchFries.class);
+        context.get(FrenchFries.class);
+        context.get(FrenchFries.class, "american");
 
     }
 

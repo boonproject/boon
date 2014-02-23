@@ -12,6 +12,18 @@ public interface Module {
 
     public <T> T get( Class<T> type, String name );
 
+
+
+    public ProviderInfo getProviderInfo( Class<?> type );
+
+
+    public ProviderInfo getProviderInfo( String name );
+
+
+    public ProviderInfo getProviderInfo( Class<?> type, String name );
+
+
+
     public boolean has( Class type );
 
     public boolean has( String name );

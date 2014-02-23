@@ -13,11 +13,34 @@ public class ProviderInfo<T> {
     private T object;
 
 
+    private boolean postConstructCalled;
+
+
+    boolean prototype;
+
+
+    public ProviderInfo( Class<T> type) {
+        this.type = type;
+    }
+
+//    public ProviderInfo( T object) {
+//        this.object = object;
+//    }
+
     public ProviderInfo( String name, Class<T> type, Supplier<T> supplier, T object ) {
         this.name = name;
         this.type = type;
         this.supplier = supplier;
         this.object = object;
+    }
+
+
+    public ProviderInfo( String name, Class<T> type, Supplier<T> supplier, T object, boolean prototype ) {
+        this.name = name;
+        this.type = type;
+        this.supplier = supplier;
+        this.object = object;
+        this.prototype = prototype;
     }
 
     public static <T> ProviderInfo<T> providerOf( Class<T> type, Supplier<T> supplier ) {
@@ -54,6 +77,15 @@ public class ProviderInfo<T> {
         return new ProviderInfo<>( null, null, null, object );
     }
 
+
+    public static <T> ProviderInfo<T> objectProviderOf( T object ) {
+        return new ProviderInfo<>( null, null, null, object );
+    }
+
+
+    public static <T> ProviderInfo<T> prototypeProviderOf( T object ) {
+        return new ProviderInfo<>( null, null, null, object, true );
+    }
 
     public static <T> ProviderInfo<T> provider( Object name, Object value ) {
 
@@ -92,4 +124,17 @@ public class ProviderInfo<T> {
         return object;
     }
 
+
+    public boolean isPostConstructCalled() {
+        return postConstructCalled;
+    }
+
+    public void setPostConstructCalled(boolean postConstructCalled) {
+        this.postConstructCalled = postConstructCalled;
+    }
+
+
+    public boolean prototype() {
+        return prototype;
+    }
 }

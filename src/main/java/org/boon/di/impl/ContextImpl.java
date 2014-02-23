@@ -9,6 +9,7 @@ import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.di.Context;
 import org.boon.di.Module;
+import org.boon.di.ProviderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,7 @@ public class ContextImpl implements Context, Module {
                 }
             }
 
-            resolveProperties( object );
+            resolveProperties( object, getProviderInfo(type) );
 
             return ( T ) object;
         } finally {
@@ -126,10 +127,60 @@ public class ContextImpl implements Context, Module {
                 }
             }
 
+            resolveProperties( object, getProviderInfo(type, name) );
+
             return object;
 
         } finally {
         }
+    }
+
+    @Override
+    public ProviderInfo getProviderInfo(Class<?> type) {
+
+        ProviderInfo pi = null;
+        for ( Module module : modules ) {
+
+            if ( module.has( type ) ) {
+                pi = module.getProviderInfo(type);
+                break;
+            }
+        }
+
+        return pi;
+
+    }
+
+    @Override
+    public ProviderInfo getProviderInfo(String name) {
+
+        ProviderInfo pi = null;
+        for ( Module module : modules ) {
+
+            if ( module.has( name ) ) {
+                pi = module.getProviderInfo( name );
+                break;
+            }
+        }
+
+        return pi;
+
+    }
+
+    @Override
+    public ProviderInfo getProviderInfo(Class<?> type, String name) {
+
+        ProviderInfo pi = null;
+        for ( Module module : modules ) {
+
+            if ( module.has( name ) ) {
+                pi = module.getProviderInfo( type, name );
+                break;
+            }
+        }
+
+        return pi;
+
     }
 
     @Override
@@ -230,7 +281,8 @@ public class ContextImpl implements Context, Module {
 
 
 
-    public void resolveProperties( Object object ) {
+
+    private void resolveProperties( Object object, ProviderInfo info ) {
 
 
         if ( object != null ) {
@@ -244,6 +296,10 @@ public class ContextImpl implements Context, Module {
                 }
             }
 
+            if (info != null && info.isPostConstructCalled() && info.value()!=null && !info.prototype()) {
+                return;
+            }
+
             Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( object.getClass(), true );
             for ( FieldAccess field : fields.values() ) {
 
@@ -254,7 +310,17 @@ public class ContextImpl implements Context, Module {
 
             }
             Invoker.invokeMethodWithAnnotationNoReturn( object, "postConstruct" );
+            if (info!=null && info.value() != null && !info.prototype()) {
+                info.setPostConstructCalled(true);
+            }
         }
+
+
+    }
+
+     public void resolveProperties( Object object ) {
+
+         resolveProperties(object, null);
 
     }
 
@@ -363,7 +429,7 @@ public class ContextImpl implements Context, Module {
             }
         }
 
-        resolveProperties( object );
+        resolveProperties( object, getProviderInfo(name) );
 
         return object;
     }

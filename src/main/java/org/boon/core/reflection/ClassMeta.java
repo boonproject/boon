@@ -333,6 +333,11 @@ public class ClassMeta <T> implements Annotated{
     }
 
 
+    public Object invokeStatic(String methodName,  Object... args) {
+        return methodMap.get(methodName).invokeStatic(args);
+    }
+
+
     public Object invoke(T instance, String methodName,  List<?> args) {
 
         Object[] array = args.toArray(new Object[args.size()]);

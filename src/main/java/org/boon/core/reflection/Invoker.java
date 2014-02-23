@@ -134,6 +134,11 @@ public class Invoker {
     }
 
 
+    public static Object invoke(Class cls, String name, Object... args) {
+        return ClassMeta.classMeta(cls).invokeStatic(name, args);
+    }
+
+
     public static Object invokeOverloaded(Object object, String name, Object... args) {
         ClassMeta classMeta = ClassMeta.classMeta(object.getClass());
         Iterable<MethodAccess> invokers = classMeta.methods(name);

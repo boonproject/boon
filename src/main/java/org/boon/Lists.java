@@ -2,9 +2,11 @@ package org.boon;
 
 
 import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.Function;
+import org.boon.di.ProviderInfo;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -92,6 +94,17 @@ public class Lists {
 
     public static <V, WRAP> List<WRAP> wrap(Class<WRAP> wrapper, Collection<V> collection ) {
         List<WRAP> list = new ArrayList<>( collection.size () );
+
+        for (V v : collection) {
+            WRAP wrap = Reflection.newInstance ( wrapper, v );
+            list.add ( wrap );
+        }
+        return list;
+    }
+
+
+    public static <V, WRAP> List<WRAP> wrap(Class<WRAP> wrapper, V[] collection ) {
+        List<WRAP> list = new ArrayList<>( collection.length );
 
         for (V v : collection) {
             WRAP wrap = Reflection.newInstance ( wrapper, v );
@@ -381,4 +394,39 @@ public class Lists {
         return MapObjectConversion.toListOfMaps( list );
     }
 
+    public static void setProperty(List<?> list, String propertyName, Object value) {
+        for (Object object : list) {
+            BeanUtils.idx(object, propertyName, value);
+        }
+    }
+
+    public static List<?> mapTo(Class<?> cls, String methodName, Object[] objects) {
+
+        List list = new ArrayList(objects.length);
+        for (Object o : objects) {
+            list.add( Invoker.invoke(cls,methodName, o ));
+        }
+        return list;
+    }
+
+
+
+    public static List<?> mapTo(Class<?> cls, String methodName, Iterable<?> objects) {
+
+        List list = new ArrayList();
+        for (Object o : objects) {
+            list.add( Invoker.invoke(cls,methodName, o ));
+        }
+        return list;
+    }
+
+
+    public static List<?> mapTo(Class<?> cls, String methodName, Collection<?> objects) {
+
+        List list = new ArrayList(objects.size());
+        for (Object o : objects) {
+            list.add( Invoker.invoke(cls,methodName, o ));
+        }
+        return list;
+    }
 }
