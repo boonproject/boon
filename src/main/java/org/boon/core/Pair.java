@@ -5,7 +5,6 @@ public class Pair<T> {
 
     private T first;
     private T second;
-    private T[] both = ( T[] ) new Object[ 2 ];
 
     public Pair() {
     }
@@ -13,10 +12,7 @@ public class Pair<T> {
     public Pair( T f, T s ) {
         this.first = f;
         this.second = s;
-        both[ 0 ] = f;
-        both[ 1 ] = s;
     }
-
 
     public T getFirst() {
         return first;
@@ -26,29 +22,12 @@ public class Pair<T> {
         return second;
     }
 
-
-    public T[] getBoth() {
-        return both;
-    }
-
     public void setFirst( T first ) {
         this.first = first;
-        both[ 0 ] = first;
-
     }
 
     public void setSecond( T second ) {
         this.second = second;
-        both[ 1 ] = second;
-
     }
-
-    public void setBoth( T[] both ) {
-        this.both = both;
-        this.first = both[ 0 ];
-        this.second = both[ 1 ];
-
-    }
-
 
 }
