@@ -405,7 +405,7 @@ Or even this (2.5x faster and even less GC overhead):
         return i;
 ```
 
-Boon is not fast. Boon is a flame throwing, turbo-charged, get-out-of-the-way-I-am-coming-in, speed-demon that sips GC, and makes
+Boon is not just fast. Boon is a flame throwing, turbo-charged, get-out-of-the-way-I-am-coming-in, speed-demon that sips GC, and makes
 CPUs and virtual cores wish they went into dentistry.
 
 
