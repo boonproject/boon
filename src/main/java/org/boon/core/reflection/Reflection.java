@@ -333,7 +333,7 @@ public class Reflection {
         }
     }
 
-    private static class FieldConverter implements Conversions.Converter<FieldAccess, Field> {
+    private static class FieldConverter implements Function<Field, FieldAccess> {
 
         boolean thisUseUnsafe;
 
@@ -342,7 +342,7 @@ public class Reflection {
         }
 
         @Override
-        public FieldAccess convert( Field from ) {
+        public FieldAccess apply( Field from ) {
             if ( useUnsafe && thisUseUnsafe ) {
                 return UnsafeField.createUnsafeField( from );
             } else {
@@ -360,7 +360,7 @@ public class Reflection {
             Class<? extends Object> theClass, boolean useUnsafe ) {
         Map<String, FieldAccess> map = getAccesorFieldFromCache( theClass, useUnsafe );
         if ( map == null ) {
-            List<FieldAccess> list = Conversions.map( new FieldConverter( useUnsafe ), getAllFields( theClass ) );
+            List<FieldAccess> list = Lists.mapBy( getAllFields( theClass ), new FieldConverter( useUnsafe ) );
             map = new LinkedHashMap<>( list.size() );
             for ( FieldAccess fieldAccess : list ) {
                 map.put( fieldAccess.getName(), fieldAccess );

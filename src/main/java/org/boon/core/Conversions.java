@@ -1106,31 +1106,15 @@ public class Conversions {
 
     }
 
-    public interface Converter<TO, FROM> {
-        TO convert( FROM from );
-    }
 
 
-    public static <TO, FROM> List<TO> map( Converter<TO, FROM> converter,
-                                           List<FROM> fromList ) {
-
-        ArrayList<TO> toList = new ArrayList<TO>( fromList.size() );
-
-        for ( FROM from : fromList ) {
-            toList.add( converter.convert( from ) );
-        }
-
-        return toList;
-    }
-
-
-    public static <TO, FROM> List<TO> mapFilterNulls( Converter<TO, FROM> converter,
+    public static <TO, FROM> List<TO> mapFilterNulls( Function<FROM, TO> converter,
                                                       List<FROM> fromList ) {
 
         ArrayList<TO> toList = new ArrayList<TO>( fromList.size() );
 
         for ( FROM from : fromList ) {
-            TO converted = converter.convert( from );
+            TO converted = converter.apply( from );
             if ( converted != null ) {
                 toList.add( converted );
             }

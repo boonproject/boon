@@ -25,7 +25,7 @@ public class ContextFactory {
     public static Module objects( Object... objects ) {
 
 
-        List<ProviderInfo> wrap = (List<ProviderInfo>) Lists.mapTo(ProviderInfo.class, "objectProviderOf", objects);
+        List<ProviderInfo> wrap = (List<ProviderInfo>) Lists.mapBy(objects, ProviderInfo.class, "objectProviderOf");
 
         return new SupplierModule( wrap );
     }
@@ -33,7 +33,7 @@ public class ContextFactory {
 
     public static Module prototypes( Object... objects ) {
 
-        List<ProviderInfo> wrap = (List<ProviderInfo>) Lists.mapTo(ProviderInfo.class, "prototypeProviderOf", objects);
+        List<ProviderInfo> wrap = (List<ProviderInfo>) Lists.mapBy(objects, ProviderInfo.class, "prototypeProviderOf");
 
         return new SupplierModule( wrap );
     }

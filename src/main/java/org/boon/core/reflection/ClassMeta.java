@@ -4,6 +4,7 @@ import org.boon.Lists;
 import org.boon.Sets;
 import org.boon.collections.ConcurrentHashSet;
 import org.boon.collections.MultiMap;
+import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.impl.ConstructorAccessImpl;
 import org.boon.core.reflection.impl.MethodAccessImpl;
@@ -344,4 +345,43 @@ public class ClassMeta <T> implements Annotated{
         return methodMap.get(methodName).invoke(instance, array);
     }
 
+
+    public  boolean invokeSingleBoolean(Object instance, Object arg) {
+        MethodAccess methodAccess = null;
+
+        if (methods.size()==1) {
+            methodAccess = methods.get(0);
+        } else  {
+            methodAccess = methodMap.get("test");
+        }
+
+        return (boolean) methodAccess.invoke(instance, arg);
+    }
+
+    public Object invokeReducer(Object instance, Object sum, Object value) {
+
+        MethodAccess methodAccess;
+
+        if (methods.size()==1) {
+            methodAccess = methods.get(0);
+        } else  {
+            methodAccess = methodMap.get("test");
+        }
+
+        Class<?> arg1 = methodAccess.parameterTypes()[0];
+        if (Typ.isPrimitiveNumber(arg1) && sum == null) {
+            return methodAccess.invoke(instance, 0, value);
+        } else {
+            return methodAccess.invoke(instance, sum, value);
+        }
+    }
+
+    public Object invokeFunction(Object instance, Object arg) {
+
+        if (methods.size()==1) {
+            return  methods.get(0).invoke(instance, arg);
+        } else  {
+            return  methodMap.get("apply").invoke(instance, arg);
+        }
+    }
 }

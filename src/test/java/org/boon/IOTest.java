@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static javax.xml.bind.DatatypeConverter.parseInt;
+import static java.lang.Integer.parseInt;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
 import static org.boon.Lists.len;

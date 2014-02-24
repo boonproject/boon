@@ -1,6 +1,7 @@
 package org.boon;
 
 
+import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MapObjectConversion;
 
 import java.lang.reflect.Array;
@@ -254,6 +255,16 @@ public class Arrays {
 
     public static List<Map<String, Object>> toListOfMaps( Object... array ) {
         return MapObjectConversion.toListOfMaps( Lists.list( array ) );
+    }
+
+
+    public static Object reduceBy( final Object[] array, Object object ) {
+
+        Object sum = null;
+        for ( Object v : array ) {
+            sum = Invoker.invokeReducer(object, sum, v);
+        }
+        return sum;
     }
 
 }

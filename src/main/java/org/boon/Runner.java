@@ -43,7 +43,7 @@ public class Runner {
     public static List<Path> path() {
 
         final String[] paths = StringScanner.splitByDelimiters( System.getenv().get( "PATH" ), ":;" );
-        return Lists.list( IO.convertToPathFunction, paths );
+        return Lists.mapBy( paths, IO.convertToPathFunction );
 
     }
 

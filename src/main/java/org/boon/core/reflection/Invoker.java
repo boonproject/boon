@@ -129,6 +129,16 @@ public class Invoker {
 
     }
 
+
+
+    public static Object invokeEither(Object object, String name, Object... args) {
+        if (object instanceof Class) {
+            return invoke((Class<?>)object, name, args);
+        } else {
+            return invoke(object, name, args);
+        }
+    }
+
     public static Object invoke(Object object, String name, Object... args) {
         return ClassMeta.classMeta(object.getClass()).invoke(object, name, args);
     }
@@ -259,4 +269,43 @@ public class Invoker {
         return true;
     }
 
+    public static <T> boolean invokeBooleanReturn(Object object, T v) {
+        Class cls;
+        Object instance = null;
+        if (object instanceof  Class) {
+            cls = (Class) object;
+        } else {
+            cls = object.getClass();
+            instance = object;
+        }
+
+        ClassMeta meta = ClassMeta.classMeta(cls);
+        return meta.invokeSingleBoolean(instance, v);
+
+    }
+
+    public static Object invokeReducer(Object object, Object sum, Object value) {
+        if (object instanceof  Class) {
+            ClassMeta meta = ClassMeta.classMeta((Class<?>)object);
+            return meta.invokeReducer(null, sum, value);
+        } else {
+            ClassMeta meta = ClassMeta.classMeta(object.getClass());
+
+            return meta.invokeReducer(object, sum, value);
+
+        }
+    }
+
+    public static Object invokeFunction(Object object, Object arg) {
+
+        if (object instanceof  Class) {
+            ClassMeta meta = ClassMeta.classMeta((Class<?>)object);
+            return meta.invokeFunction(null, arg);
+        } else {
+            ClassMeta meta = ClassMeta.classMeta(object.getClass());
+
+            return meta.invokeFunction(object, arg);
+
+        }
+    }
 }

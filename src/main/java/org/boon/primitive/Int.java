@@ -2,7 +2,7 @@ package org.boon.primitive;
 
 import org.boon.Exceptions;
 import org.boon.Universal;
-
+import org.boon.core.reflection.Invoker;
 
 
 public class Int {
@@ -383,6 +383,17 @@ public class Int {
             index = length - 1;
         }
         return index;
+    }
+
+
+
+    public static int reduceBy( final int[] array, Object object ) {
+
+        int sum = 0;
+        for ( int v : array ) {
+            sum = (int)Invoker.invokeReducer(object, sum, v);
+        }
+        return sum;
     }
 
 

@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+
+
+import static org.boon.Lists.reduceBy;
+import static org.boon.Arrays.reduceBy;
+import static org.boon.primitive.Int.reduceBy;
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.*;
 import static org.junit.Assert.assertEquals;
@@ -35,6 +41,81 @@ public class ListsTest {
         public String name() {
             return employee.name;
         }
+    }
+
+
+    @Test
+    public void testMapBy() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        List<HRObject> wrap = (List<HRObject>) Lists.mapBy(list, new Object() {
+           HRObject hr(Employee e) {return new HRObject(e);}
+        });
+
+        boolean ok = wrap.get(0).name().equals("Bob") || die();
+
+        ok &= wrap.get(1).name().equals("Sally") || die();
+
+    }
+
+    static HRObject createHRO(Employee e) {
+        return new HRObject(e);
+    }
+
+
+
+    HRObject createHROMethod(Employee e) {
+        return new HRObject(e);
+    }
+
+
+    @Test
+    public void reduce() {
+      int sum =  (int) reduceBy(Lists.list(1,2,3,4,5,6,7,8), new Object() {
+          int sum(int s, int b) {return s+b;}
+      });
+
+      boolean ok = sum == 36 || die();
+      puts (sum);
+
+
+
+      sum =  (int) reduceBy(new Integer[]{1,2,3,4,5,6,7,8}, new Object() {
+            int sum(int s, int b) {return s+b;}
+      });
+
+      ok &= sum == 36 || die();
+
+
+
+      sum =  (int) reduceBy(new int[]{1,2,3,4,5,6,7,8}, new Object() {
+            int sum(int s, int b) {return s+b;}
+      });
+
+      ok &= sum == 36 || die();
+
+    }
+
+    @Test
+    public void testMapByStaticFunc() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        List<HRObject> wrap = (List<HRObject>) Lists.mapBy(list, ListsTest.class, "createHRO" );
+
+        boolean ok = wrap.get(0).name().equals("Bob") || die();
+
+        ok &= wrap.get(1).name().equals("Sally") || die();
+
+    }
+
+
+    @Test
+    public void testMapByMethod() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        List<HRObject> wrap = (List<HRObject>) Lists.mapBy(list, this, "createHROMethod" );
+
+        boolean ok = wrap.get(0).name().equals("Bob") || die();
+
+        ok &= wrap.get(1).name().equals("Sally") || die();
+
     }
 
     @Test

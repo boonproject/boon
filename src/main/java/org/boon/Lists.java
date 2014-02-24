@@ -1,6 +1,8 @@
 package org.boon;
 
 
+import org.boon.core.Predicate;
+import org.boon.core.Reducer;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MapObjectConversion;
@@ -147,17 +149,6 @@ public class Lists {
         return list;
     }
 
-    public static <V, N> List<N> list( Function<V, N> function, final V... array ) {
-        if ( array == null ) {
-            return new ArrayList<>();
-        }
-        List<N> list = new ArrayList<>( array.length );
-
-        for ( V v : array ) {
-            list.add( function.apply( v ) );
-        }
-        return list;
-    }
 
 
     @SafeVarargs
@@ -394,13 +385,24 @@ public class Lists {
         return MapObjectConversion.toListOfMaps( list );
     }
 
-    public static void setProperty(List<?> list, String propertyName, Object value) {
+    public static void setListProperty(List<?> list, String propertyName, Object value) {
         for (Object object : list) {
             BeanUtils.idx(object, propertyName, value);
         }
     }
 
-    public static List<?> mapTo(Class<?> cls, String methodName, Object[] objects) {
+
+    public static List<?> mapBy( Object[] objects, Object instance, String methodName) {
+
+        List list = new ArrayList(objects.length);
+        for (Object o : objects) {
+            list.add( Invoker.invoke(instance, methodName, o ));
+        }
+        return list;
+    }
+
+
+    public static List<?> mapBy(Object[] objects, Class<?> cls, String methodName) {
 
         List list = new ArrayList(objects.length);
         for (Object o : objects) {
@@ -411,21 +413,231 @@ public class Lists {
 
 
 
-    public static List<?> mapTo(Class<?> cls, String methodName, Iterable<?> objects) {
+    public static List<?> mapBy(Iterable<?> objects, Class<?> cls, String methodName) {
 
         List list = new ArrayList();
+        for (Object o : objects) {
+            list.add( Invoker.invoke(cls, methodName, o ));
+        }
+        return list;
+    }
+
+
+    public static List<?> mapBy(Iterable<?> objects, Object instance, String methodName) {
+
+        List list = new ArrayList();
+        for (Object o : objects) {
+            list.add( Invoker.invoke(instance, methodName, o ));
+        }
+        return list;
+    }
+
+
+    public static List<?> mapBy(Collection<?> objects, Class<?> cls, String methodName) {
+
+        List list = new ArrayList(objects.size());
         for (Object o : objects) {
             list.add( Invoker.invoke(cls,methodName, o ));
         }
         return list;
     }
 
-
-    public static List<?> mapTo(Class<?> cls, String methodName, Collection<?> objects) {
+    public static List<?> mapBy(Collection<?> objects, Object object) {
 
         List list = new ArrayList(objects.size());
         for (Object o : objects) {
-            list.add( Invoker.invoke(cls,methodName, o ));
+            list.add( Invoker.invokeFunction(object, o));
+        }
+        return list;
+    }
+
+
+    public static List<?> mapBy(Iterable<?> objects, Object object) {
+
+        List list = new ArrayList();
+        for (Object o : objects) {
+            list.add( Invoker.invokeFunction(object, o));
+        }
+        return list;
+    }
+
+
+    public static List<?> mapBy(Object[] objects, Object object) {
+
+        List list = new ArrayList(objects.length);
+        for (Object o : objects) {
+            list.add( Invoker.invokeFunction(object, o));
+        }
+        return list;
+    }
+
+
+
+     public static List<?> mapBy(Collection<?> objects, Object object, String methodName) {
+
+        List list = new ArrayList(objects.size());
+        for (Object o : objects) {
+            list.add( Invoker.invoke(object, methodName, o ));
+        }
+        return list;
+    }
+
+
+    public static <V, N> List<N> mapBy(  final V[] array, Function<V, N> function ) {
+        List<N> list = new ArrayList<>( array.length );
+
+        for ( V v : array ) {
+            list.add( function.apply( v ) );
+        }
+        return list;
+    }
+
+    public static <V, N> List<N> mapBy( final Collection<V> array, Function<V, N> function ) {
+        List<N> list = new ArrayList<>( array.size() );
+
+        for ( V v : array ) {
+            list.add( function.apply( v ) );
+        }
+        return list;
+    }
+
+    public static <V, N> List<N> mapBy( final Iterable<V> array, Function<V, N> function ) {
+        List<N> list = new ArrayList<>(  );
+
+        for ( V v : array ) {
+            list.add( function.apply( v ) );
+        }
+        return list;
+    }
+
+
+    public static <V, SUM> SUM reduceBy( final Iterable<V> array, Reducer<V, SUM> function ) {
+
+        SUM sum = null;
+        for ( V v : array ) {
+            sum = function.apply( sum, v ) ;
+        }
+        return sum;
+    }
+
+
+    public static Object reduceBy( final Iterable<?> array, Object object ) {
+
+        Object sum = null;
+        for ( Object v : array ) {
+            sum = Invoker.invokeReducer(object, sum, v);
+        }
+        return sum;
+    }
+
+
+
+    public static <T> List<T> filterBy( final Iterable<T> array, Predicate<T> predicate ) {
+        List<T> list = new ArrayList<>(  );
+
+        for ( T v : array ) {
+            if ( predicate.test(v)) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+    public static <T> List<T> filterBy(  final Collection<T> array, Predicate<T> predicate ) {
+        List<T> list = new ArrayList<>( array.size()  );
+
+        for ( T v : array ) {
+            if ( predicate.test(v)) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+    public static <T> List<T> filterBy( Predicate<T> predicate, final T[] array ) {
+        List<T> list = new ArrayList<>( array.length  );
+
+        for ( T v : array ) {
+            if ( predicate.test(v)) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+
+    public static <T> List<T> filterBy(  final Iterable<T> array, Object object ) {
+        List<T> list = new ArrayList<>(  );
+
+        for ( T v : array ) {
+            if ( Invoker.invokeBooleanReturn(object, v) ) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+    public static <T> List<T> filterBy( final Collection<T> array, Object object ) {
+        List<T> list = new ArrayList<>( array.size()  );
+
+        for ( T v : array ) {
+            if ( Invoker.invokeBooleanReturn(object, v) ) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+    public static <T> List<T> filterBy(  final T[] array, Object object ) {
+        List<T> list = new ArrayList<>( array.length  );
+
+        for ( T v : array ) {
+            if ( Invoker.invokeBooleanReturn(object, v) ) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+
+
+    public static <T> List<T> filterBy(  final Iterable<T> array, Object object, String methodName ) {
+        List<T> list = new ArrayList<>(  );
+
+        for ( T v : array ) {
+            if ( (boolean) Invoker.invokeEither(object, methodName, v) ) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+    public static <T> List<T> filterBy( final Collection<T> array, Object object, String methodName ) {
+        List<T> list = new ArrayList<>( array.size()  );
+
+        for ( T v : array ) {
+            if ( (boolean) Invoker.invokeEither(object, methodName, v) ) {
+                list.add(  v  );
+            }
+        }
+        return list;
+    }
+
+
+    public static <T> List<T> filterBy(  final T[] array, Object object, String methodName ) {
+        List<T> list = new ArrayList<>( array.length  );
+
+        for ( T v : array ) {
+            if ( (boolean) Invoker.invokeEither(object, methodName, v) ) {
+                list.add(  v  );
+            }
         }
         return list;
     }

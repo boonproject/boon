@@ -173,8 +173,15 @@ public class Typ {
             StringBuilder.class, Integer.class, Float.class, Double.class, Short.class, Byte.class, Character.class,
             BigInteger.class, BigDecimal.class, boolean.class, Boolean.class);
 
+
+    private static Set<Class> primitiveNumber = Sets.safeSet((Class)int.class, float.class, short.class,
+            char.class, byte.class, double.class, long.class);
+
     public static boolean isBasicTypeOrCollection( Class<?> type ) {
         return basicTypeOrCollection.contains( type );
     }
 
+    public static boolean isPrimitiveNumber(Class<?> arg1) {
+        return primitiveNumber.contains(arg1);
+    }
 }

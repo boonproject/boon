@@ -2,6 +2,7 @@ package org.boon.core.reflection;
 
 import org.boon.*;
 import org.boon.core.Conversions;
+import org.boon.core.Function;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -779,6 +780,28 @@ public class MapObjectConversion {
         return toMap( object, Sets.set( ignore ) );
     }
 
+    public static class FieldToEntryConverter implements
+            Function<FieldAccess, Maps.Entry<String, Object>> {
+
+        final Object object;
+
+        public FieldToEntryConverter(Object object) {
+            this.object = object;
+        }
+
+        @Override
+        public Maps.Entry<String, Object> apply( FieldAccess from ) {
+            if ( from.isReadOnly() ) {
+                return null;
+            }
+            Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.getName(),
+                    from.getValue( object ) );
+            return entry;
+        }
+    }
+
+
+
     public static Map<String, Object> toMap( final Object object, Set<String> ignore ) {
 
         if ( object == null ) {
@@ -788,18 +811,6 @@ public class MapObjectConversion {
         Map<String, Object> map = new LinkedHashMap<>();
 
 
-        class FieldToEntryConverter implements
-                Conversions.Converter<Maps.Entry<String, Object>, FieldAccess> {
-            @Override
-            public Maps.Entry<String, Object> convert( FieldAccess from ) {
-                if ( from.isReadOnly() ) {
-                    return null;
-                }
-                Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.getName(),
-                        from.getValue( object ) );
-                return entry;
-            }
-        }
 
         final Map<String, FieldAccess> fieldMap = Reflection.getAllAccessorFields( object.getClass() );
         List<FieldAccess> fields = new ArrayList( fieldMap.values() );
@@ -810,7 +821,7 @@ public class MapObjectConversion {
         // subclass fields with the same name
 
         List<Maps.Entry<String, Object>> entries = Conversions.mapFilterNulls(
-                new FieldToEntryConverter(), new ArrayList( fields ) );
+                new FieldToEntryConverter(object), new ArrayList( fields ) );
 
         map.put( "class", object.getClass().getName() );
 
@@ -868,24 +879,6 @@ public class MapObjectConversion {
     }
 
 
-    private static class FieldToEntryConverter implements
-            Conversions.Converter<Maps.Entry<String, Object>, FieldAccess> {
-
-        private final Object object;
-
-        FieldToEntryConverter(Object object) {
-            this.object = object;
-        }
-        @Override
-        public Maps.Entry<String, Object> convert( FieldAccess from ) {
-            if ( from.isReadOnly() ) {
-                return null;
-            }
-            Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.getName(),
-                    from.getValue( object ) );
-            return entry;
-        }
-    }
     public static Map<String, Object> toMap( final Object object ) {
 
         if ( object == null ) {
