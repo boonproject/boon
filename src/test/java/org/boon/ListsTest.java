@@ -1,7 +1,9 @@
 package org.boon;
 
 import org.boon.core.Fn;
+import org.boon.core.Function;
 import org.boon.core.Predicate;
+import org.boon.core.Reducer;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -188,6 +190,15 @@ public class ListsTest {
 
       ok &= sum == 36 || die();
 
+
+       sum =   (long) reduceBy(Lists.list(1,2,3,4,5,6,7,8), new Reducer<Integer, Integer>() {
+            @Override
+            public Integer apply(Integer sum, Integer v) {
+                return sum == null ? v : sum + v;
+            }
+        }).longValue();
+
+
     }
 
     @Test
@@ -206,6 +217,23 @@ public class ListsTest {
     public void testMapByMethod() {
         List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
         List<HRObject> wrap = (List<HRObject>) Lists.mapBy(list, this, "createHROMethod" );
+
+        boolean ok = wrap.get(0).name().equals("Bob") || die();
+
+        ok &= wrap.get(1).name().equals("Sally") || die();
+
+    }
+
+
+    @Test
+    public void testMapByFunction() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        List<HRObject> wrap =  Lists.mapBy(list, new Function<Employee, HRObject>() {
+            @Override
+            public HRObject apply(Employee employee) {
+                return new HRObject(employee);
+            }
+        });
 
         boolean ok = wrap.get(0).name().equals("Bob") || die();
 

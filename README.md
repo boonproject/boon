@@ -189,7 +189,224 @@ The readLines and read methods can read from URIs as well:
 
 
 
+News in Boon
+===
 
+Boon 0.11 is out. Thanks Stephane Landelle!
+Boon JSON parser still faster than GSON and Jackson. Up to 3x faster.
+
+See and fork:
+https://github.com/RichardHightower/json-parsers-benchmark
+
+Added lightweight JSON DI container that supports @Inject, @PostConstruct, @Required, @Autowire, and more.
+
+```
+
+public class CoffeeApp implements Runnable {
+    @Inject
+    CoffeeMaker coffeeMaker;
+    @Inject
+    Coffee coffee;
+    @Inject
+    Sugar sugar;
+    @Inject
+    Bacon bacon;
+    @Inject
+    @Named( "brown" )
+    Bacon brownBacon;
+```
+
+JSON support now support @JsonProperty, @JsonView, and more.
+Learn more here:
+http://rick-hightower.blogspot.com/2014/01/boon-json-in-five-minutes-faster-json.html
+
+Wrote invoker library to work JSON posts. It is a better way to do REST and WebSocket with Boon.
+
+Wrote functional library based on work that I did with EasyJava.
+
+
+You can do reflection based filters or regular Predicate filters.
+```
+
+        List<Employee> list = list( new Employee("Bob"), new Employee("Sally") );
+        setListProperty( list, "salary", 200 );
+        list.addAll(Lists.list(new Employee("Rick"), new Employee("Joe")));
+
+        //Reflection
+        List<Employee> filtered = filterBy(list, new Object() {
+            boolean t(Employee e) { return e.salary>150; }
+        });
+
+
+        ...
+
+         //Predicate based
+         List<Employee> filtered = filterBy(list, new Predicate<Employee>() {
+                    @Override
+                    public boolean test(Employee input) {
+                        return input.salary > 150;
+                    }
+         });
+
+```
+
+My goal is take some previous work that I did with invoke dynamic and make the reflection based predicate faster than
+ the Predicate interface.
+
+
+You can also filter with static or non-static methods
+```
+
+        List<Employee> filtered = filterBy(list, ListsTest.class, "filterBySalary");
+        ...
+
+        List<Employee> filtered = filterBy(list, this, "filterBySalaryMethod");
+```
+
+Also don't forget that Boon ships with a full in-memory query engine that is actually faster than the predicate based filters.
+
+```
+      List<Employee> filtered = query( list, gt("salary", 150) );
+```
+
+Learn more about the Boon data repo here:
+
+http://rick-hightower.blogspot.com/2013/11/what-if-java-collections-and-java.html
+
+
+But I digress back to functional framework:
+
+The usual suspects are here:
+
+```
+        ...
+
+        //Reflection Mapper -- Convert Employee object into HRObject
+        List<HRObject> wrap = (List<HRObject>) mapBy(list, new Object() {
+           HRObject hr(Employee e) {return new HRObject(e);}
+        });
+
+        ...
+        //Reflection static or non-static methods
+        List<HRObject> wrap = (List<HRObject>) mapBy(list, ListsTest.class, "createHRO" );
+
+        List<HRObject> wrap = (List<HRObject>) mapBy(list, this, "createHROMethod" );
+
+        ...
+        //Constructor mapping
+        List<Employee> list = list(new Employee("Bob"), new Employee("Sally"));
+        List<HRObject> wrap = wrap(HRObject.class, list);
+        ...
+
+
+        //
+        List<Employee> list =  list(  new Employee("Bob"), new Employee("Sally"));
+        List<HRObject> wrap =  mapBy( list, new Function<Employee, HRObject>() {
+            @Override
+            public HRObject apply(Employee employee) {
+                return new HRObject(employee);
+            }
+        });
+
+
+```
+
+Here is one you don't see much:
+
+```
+
+    @Test
+    public void reduce() {
+      long sum =  (int) reduceBy(Lists.list(1,2,3,4,5,6,7,8), new Object() {
+          int sum(int s, int b) {return s+b;}
+      });
+
+      boolean ok = sum == 36 || die();
+      puts (sum);
+
+
+
+      sum =  (long) reduceBy(new Integer[]{1,2,3,4,5,6,7,8}, new Object() {
+            long sum(long s, int b) {return s+b;}
+      });
+
+      ok &= sum == 36 || die();
+
+
+
+      sum =  (long) reduceBy(new int[]{1,2,3,4,5,6,7,8}, new Object() {
+            long sum(long s, int b) {return s+b;}
+      });
+
+      ok &= sum == 36 || die();
+
+
+       sum =   (long) reduceBy(Lists.list(1,2,3,4,5,6,7,8), new Reducer<Integer, Integer>() {
+            @Override
+            public Integer apply(Integer sum, Integer v) {
+                return sum == null ? v : sum + v;
+            }
+        }).longValue();
+
+
+    }
+
+```
+
+EasyJava had currying and all sorts of wild stuff, so I might port some of that here.
+I might not. Let me know.
+
+String Parsing.... Boon has really fast String parsing about 2x speed what you could do with JDK readily,
+ and a smaller GC foot print so instead of this:
+
+```
+
+    static Pattern newLine = Pattern.compile("(\n|\r)");
+    ...
+        int i=0;
+        String[] splitLines = newLine.split(str);
+        String[] stats;
+
+        for (String line : splitLines) {
+            stats = line.split( ",");
+            i += Integer.parseInt(stats[1]);
+        }
+        return i;
+```
+
+
+
+You can do this (for 2x speed and a lot less GC overhead):
+
+```
+        int i=0;
+        String[] splitLines = splitLines(str);
+        String[] stats;
+
+        for (String line : splitLines) {
+            stats = splitComma(line);
+            i += Integer.parseInt(stats[1]);
+        }
+        return i;
+```
+
+Or even this (2.5x faster and even less GC overhead):
+
+```
+        char[] chars = toCharArray(csv);
+        int i=0;
+        char[][] splitLines = splitLines(chars);
+        char[][] stats;
+
+        for (char[] line : splitLines) {
+            stats = splitComma(line);
+            i += parseInt(stats[1]);
+        }
+        return i;
+```
+
+Boon is not fast. Boon is a flame throwing, turbo-charged, get-out-of-the-way-I-am-coming-in, speed-demon that sips GC, and makes
+CPUs and virtual cores wish they went into dentistry.
 
 
 Thoughts
