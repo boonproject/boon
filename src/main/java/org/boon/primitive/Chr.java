@@ -324,7 +324,6 @@ public class Chr {
 
     @Universal
     public static char[] copy( char[] array, int offset, int length ) {
-        Exceptions.requireNonNull( array );
         char[] newArray = new char[ length ];
         arraycopy ( array, offset, newArray, 0, length );
         return newArray;
@@ -788,5 +787,14 @@ public class Chr {
             builder.add( str );
         }
         return builder.toCharArray ();
+    }
+
+    public static char[][] splitLines(char[] chars) {
+        return CharScanner.splitLines(chars);
+    }
+
+    public static char[][] splitComma(char[] chars) {
+        return CharScanner.splitComma(chars);
+
     }
 }

@@ -183,7 +183,13 @@ public class Str {
     }
 
     public static String[] splitLines( String str ) {
-        char[][] split = Chr.splitLine( FastStringUtils.toCharArray(str) );
+        char[][] split = Chr.splitLines( FastStringUtils.toCharArray(str) );
+        return fromCharArrayOfArrayToStringArray( split );
+    }
+
+
+    public static String[] splitComma( String str ) {
+        char[][] split = Chr.splitComma( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
@@ -196,7 +202,7 @@ public class Str {
             array = split[ index ];
 
             results[ index ] = array.length == 0 ?
-                    EMPTY_STRING : new String( array );
+                    EMPTY_STRING : FastStringUtils.noCopyStringFromChars( array );
         }
         return results;
     }

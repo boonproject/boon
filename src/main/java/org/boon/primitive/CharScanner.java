@@ -25,6 +25,11 @@ public class CharScanner {
 
     protected static final int DECIMAL_POINT = '.';
 
+    private static int NEWLINE= '\n';
+
+    private static int CARRIAGE_RETURN= '\r';
+
+
 
     protected static final int ALPHA_0 = '0';
     protected static final int ALPHA_1 = '1';
@@ -192,6 +197,54 @@ public class CharScanner {
         int actualLength = resultIndex;
         if ( actualLength < resultsArrayLength ) {
             final int newSize = resultsArrayLength - actualLength;
+            results = __shrink( results, newSize );
+        }
+        return results;
+    }
+
+
+
+    public static char[][] splitLines( final char[] inputArray) {
+        /** Holds the results. */
+        char[][] results = new char[ 16 ][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex = 0;
+        int currentLineLength = 1;
+
+
+        int c = '\u0000';
+        int index = 0;
+
+        for (; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[ index ];
+            if ( c == NEWLINE || c == CARRIAGE_RETURN ) {
+
+                if ( resultIndex == results.length ) {
+
+                    results = _grow( results );
+                }
+
+
+                results[ resultIndex ] = Chr.copy(
+                        inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                startCurrentLineIndex = index + 1; //skip the char
+
+                currentLineLength = 0;
+                resultIndex++;
+            }
+        }
+
+        if ( c != NEWLINE || c != CARRIAGE_RETURN ) {
+
+            results[ resultIndex ] = Chr.copy(
+                    inputArray, startCurrentLineIndex, currentLineLength - 1 );
+            resultIndex++;
+        }
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length ) {
+            final int newSize = results.length - actualLength;
             results = __shrink( results, newSize );
         }
         return results;
@@ -403,7 +456,6 @@ public class CharScanner {
 
 
     private static char[][] _grow( char[][] array ) {
-        Exceptions.requireNonNull( array );
 
         char[][] newArray = new char[ array.length * 2 ][];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -411,7 +463,6 @@ public class CharScanner {
     }
 
     private static char[][] __shrink( char[][] array, int size ) {
-        Exceptions.requireNonNull( array );
         char[][] newArray = new char[ array.length - size ][];
 
         System.arraycopy( array, 0, ( char[][] ) newArray, 0, array.length - size );
@@ -1088,4 +1139,51 @@ public class CharScanner {
     }
 
 
+    public static char[][] splitComma(char[] inputArray) {
+
+        /** Holds the results. */
+        char[][] results = new char[ 16 ][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex = 0;
+        int currentLineLength = 1;
+
+
+        int c = '\u0000';
+        int index = 0;
+
+        for (; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[ index ];
+            if ( c == COMMA ) {
+
+                if ( resultIndex == results.length ) {
+
+                    results = _grow( results );
+                }
+
+
+                results[ resultIndex ] = Chr.copy(
+                        inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                startCurrentLineIndex = index + 1; //skip the char
+
+                currentLineLength = 0;
+                resultIndex++;
+            }
+        }
+
+        if ( c != COMMA  ) {
+
+            results[ resultIndex ] = Chr.copy(
+                    inputArray, startCurrentLineIndex, currentLineLength - 1 );
+            resultIndex++;
+        }
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length ) {
+            final int newSize = results.length - actualLength;
+            results = __shrink( results, newSize );
+        }
+        return results;
+
+    }
 }
