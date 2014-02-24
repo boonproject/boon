@@ -387,11 +387,11 @@ public class Int {
 
 
 
-    public static int reduceBy( final int[] array, Object object ) {
+    public static long reduceBy( final int[] array, Object object ) {
 
-        int sum = 0;
+        long sum = 0;
         for ( int v : array ) {
-            sum = (int)Invoker.invokeReducer(object, sum, v);
+            sum = (long)Invoker.invokeReducer(object, sum, v);
         }
         return sum;
     }

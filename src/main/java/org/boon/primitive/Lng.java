@@ -2,7 +2,7 @@ package org.boon.primitive;
 
 import org.boon.Exceptions;
 import org.boon.Universal;
-
+import org.boon.core.reflection.Invoker;
 
 
 public class Lng {
@@ -400,6 +400,16 @@ public class Lng {
             index = length - 1;
         }
         return index;
+    }
+
+
+    public static long reduceBy( final long[] array, Object object ) {
+
+        long sum = 0;
+        for ( long v : array ) {
+            sum = (long) Invoker.invokeReducer(object, sum, v);
+        }
+        return sum;
     }
 
 }

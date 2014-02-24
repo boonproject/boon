@@ -1,5 +1,7 @@
 package org.boon;
 
+import org.boon.core.Fn;
+import org.boon.core.Predicate;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -23,8 +25,15 @@ public class ListsTest {
 
     static class Employee {
         String name;
+        int salary = 100;
 
         Employee(String name) {
+            this.name = name;
+        }
+
+
+        Employee(int salary, String name) {
+            this.salary = salary;
             this.name = name;
         }
     }
@@ -43,6 +52,92 @@ public class ListsTest {
         }
     }
 
+
+    @Test
+    public void testFilter0() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        Lists.setListProperty(list, "salary", 200);
+        list.addAll(Lists.list(new Employee("Rick"), new Employee("Joe")));
+
+        List<Employee> filtered = Lists.filterBy(list, new Fn() {
+            boolean t(Employee e) { return e.salary>150;}
+        });
+
+        boolean ok = filtered.size() == 2 || die();
+        ok &= filtered.get(0).name.equals("Bob") || die();
+        ok &= filtered.get(1).name.equals("Sally") || die();
+    }
+
+
+    @Test
+    public void testFilter() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        Lists.setListProperty(list, "salary", 200);
+        list.addAll(Lists.list(new Employee("Rick"), new Employee("Joe")));
+
+        List<Employee> filtered = Lists.filterBy(list, new Object() {
+            boolean t(Employee e) { return e.salary>150;}
+        });
+
+        boolean ok = filtered.size() == 2 || die();
+        ok &= filtered.get(0).name.equals("Bob") || die();
+        ok &= filtered.get(1).name.equals("Sally") || die();
+    }
+
+
+    @Test
+    public void testFilter2() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        Lists.setListProperty(list, "salary", 200);
+        list.addAll(Lists.list(new Employee("Rick"), new Employee("Joe")));
+
+        List<Employee> filtered = Lists.filterBy(list, new Predicate<Employee>() {
+            @Override
+            public boolean test(Employee input) {
+                return input.salary > 150;
+            }
+        });
+
+        boolean ok = filtered.size() == 2 || die();
+        ok &= filtered.get(0).name.equals("Bob") || die();
+        ok &= filtered.get(1).name.equals("Sally") || die();
+    }
+
+    static boolean filterBySalary(Employee emp) {
+        return emp.salary > 150;
+    }
+
+
+
+    @Test
+    public void testFilter3() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        Lists.setListProperty(list, "salary", 200);
+        list.addAll(Lists.list(new Employee("Rick"), new Employee("Joe")));
+
+        List<Employee> filtered = Lists.filterBy(list, ListsTest.class, "filterBySalary");
+
+        boolean ok = filtered.size() == 2 || die();
+        ok &= filtered.get(0).name.equals("Bob") || die();
+        ok &= filtered.get(1).name.equals("Sally") || die();
+    }
+
+    boolean filterBySalaryMethod(Employee emp) {
+        return emp.salary > 150;
+    }
+
+    @Test
+    public void testFilter4() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        Lists.setListProperty(list, "salary", 200);
+        list.addAll(Lists.list(new Employee("Rick"), new Employee("Joe")));
+
+        List<Employee> filtered = Lists.filterBy(list, this, "filterBySalaryMethod");
+
+        boolean ok = filtered.size() == 2 || die();
+        ok &= filtered.get(0).name.equals("Bob") || die();
+        ok &= filtered.get(1).name.equals("Sally") || die();
+    }
 
     @Test
     public void testMapBy() {
@@ -70,7 +165,7 @@ public class ListsTest {
 
     @Test
     public void reduce() {
-      int sum =  (int) reduceBy(Lists.list(1,2,3,4,5,6,7,8), new Object() {
+      long sum =  (int) reduceBy(Lists.list(1,2,3,4,5,6,7,8), new Object() {
           int sum(int s, int b) {return s+b;}
       });
 
@@ -79,16 +174,16 @@ public class ListsTest {
 
 
 
-      sum =  (int) reduceBy(new Integer[]{1,2,3,4,5,6,7,8}, new Object() {
-            int sum(int s, int b) {return s+b;}
+      sum =  (long) reduceBy(new Integer[]{1,2,3,4,5,6,7,8}, new Object() {
+            long sum(long s, int b) {return s+b;}
       });
 
       ok &= sum == 36 || die();
 
 
 
-      sum =  (int) reduceBy(new int[]{1,2,3,4,5,6,7,8}, new Object() {
-            int sum(int s, int b) {return s+b;}
+      sum =  (long) reduceBy(new int[]{1,2,3,4,5,6,7,8}, new Object() {
+            long sum(long s, int b) {return s+b;}
       });
 
       ok &= sum == 36 || die();

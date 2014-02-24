@@ -2,7 +2,7 @@ package org.boon.primitive;
 
 import org.boon.Exceptions;
 import org.boon.Universal;
-
+import org.boon.core.reflection.Invoker;
 
 
 public class Shrt {
@@ -384,6 +384,17 @@ public class Shrt {
             index = length - 1;
         }
         return index;
+    }
+
+
+
+    public static int reduceBy( final short[] array, Object object ) {
+
+        int sum = 0;
+        for ( short v : array ) {
+            sum = (short) Invoker.invokeReducer(object, sum, v);
+        }
+        return sum;
     }
 
 }
