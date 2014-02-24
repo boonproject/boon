@@ -200,7 +200,7 @@ https://github.com/RichardHightower/json-parsers-benchmark
 
 Added lightweight JSON DI container that supports @Inject, @PostConstruct, @Required, @Autowire, and more.
 
-```
+```java
 
 public class CoffeeApp implements Runnable {
     @Inject
@@ -226,7 +226,7 @@ Wrote functional library based on work that I did with EasyJava.
 
 
 You can do reflection based filters or regular Predicate filters.
-```
+```java
 
         List<Employee> list = list( new Employee("Bob"), new Employee("Sally") );
         setListProperty( list, "salary", 200 );
@@ -255,7 +255,7 @@ My goal is take some previous work that I did with invoke dynamic and make the r
 
 
 You can also filter with static or non-static methods
-```
+```java
 
         List<Employee> filtered = filterBy(list, ListsTest.class, "filterBySalary");
         ...
@@ -265,7 +265,7 @@ You can also filter with static or non-static methods
 
 Also don't forget that Boon ships with a full in-memory query engine that is actually faster than the predicate based filters.
 
-```
+```java
       List<Employee> filtered = query( list, gt("salary", 150) );
 ```
 
@@ -278,7 +278,7 @@ But I digress back to functional framework:
 
 The usual suspects are here:
 
-```
+```java
         ...
 
         //Reflection Mapper -- Convert Employee object into HRObject
@@ -313,7 +313,7 @@ The usual suspects are here:
 
 Here is one you don't see much:
 
-```
+```java
 
     @Test
     public void reduce() {
@@ -359,7 +359,7 @@ I might not. Let me know.
 String Parsing.... Boon has really fast String parsing about 2x speed what you could do with JDK readily,
  and a smaller GC foot print so instead of this:
 
-```
+```java
 
     static Pattern newLine = Pattern.compile("(\n|\r)");
     ...
@@ -378,7 +378,7 @@ String Parsing.... Boon has really fast String parsing about 2x speed what you c
 
 You can do this (for 2x speed and a lot less GC overhead):
 
-```
+```java
         int i=0;
         String[] splitLines = splitLines(str);
         String[] stats;
@@ -392,7 +392,7 @@ You can do this (for 2x speed and a lot less GC overhead):
 
 Or even this (2.5x faster and even less GC overhead):
 
-```
+```java
         char[] chars = toCharArray(csv);
         int i=0;
         char[][] splitLines = splitLines(chars);
