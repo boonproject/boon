@@ -664,15 +664,6 @@ public class JsonMappingParser implements JsonParserAndMapper {
         return basicParser.parse( jsonString );
     }
 
-    @Override
-    public Object parse( byte[] bytes ) {
-        return basicParser.parse( bytes );
-    }
-
-    @Override
-    public Object parse ( byte[] bytes, Charset charset ) {
-        return basicParser.parse(bytes, charset);
-    }
 
     @Override
     public Object parse( CharSequence charSequence ) {
@@ -698,6 +689,23 @@ public class JsonMappingParser implements JsonParserAndMapper {
     @Override
     public Object parse( InputStream input, Charset charset ) {
         return basicParser.parse ( input, charset );
+    }
+
+
+
+    @Override
+    public Object parse( byte[] bytes ) {
+        return parse(bytes, charset);
+    }
+
+    @Override
+    public Object parse ( byte[] bytes, Charset charset ) {
+
+        if (bytes.length > 100_000) {
+            return parse(new ByteArrayInputStream(bytes), charset);
+        } else {
+            return basicParser.parse(bytes, charset);
+        }
     }
 
     @Override
