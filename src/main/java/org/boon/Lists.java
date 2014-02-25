@@ -63,9 +63,7 @@ public class Lists {
 
 
     public static List<?> toList( Object item ) {
-        if ( item == null ) {
-            return new ArrayList<>();
-        } else if ( item.getClass().isArray() ) {
+       if ( item!= null && item.getClass().isArray() ) {
             final int length = Array.getLength( item );
             List<Object> list = new ArrayList<>();
             for ( int index = 0; index < length; index++ ) {
@@ -81,13 +79,11 @@ public class Lists {
         } else if ( item instanceof Iterable ) {
             return list( ( Iterable ) item );
         } else {
-            //return MapObjectConversion.toList( item );
-            List<Object> list = new ArrayList<>();
-            list.add( item );
-            return list;
-
+            return MapObjectConversion.toList( item );
         }
     }
+
+
     public static <V> List<V> list( Collection<V> collection ) {
         return new ArrayList<>( collection );
     }

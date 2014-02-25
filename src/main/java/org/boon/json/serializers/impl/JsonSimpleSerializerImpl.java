@@ -496,8 +496,13 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         builder.addChar( '[' );
         for ( Object o : collection ) {
-            serializeObject( o, builder );
+            if (o == null) {
+                builder.addNull();
+            } else {
+                serializeObject(o, builder);
+            }
             builder.addChar ( ',' );
+
         }
         builder.removeLastChar ();
         builder.addChar( ']' );

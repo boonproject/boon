@@ -168,6 +168,14 @@ public class MapObjectConversion {
                 item = ( ( ValueContainer ) item ).toValue();
             }
 
+//            if (paramType.isPrimitive() && item == null) {
+//                return false;
+//            }
+//
+//            if (item == null) {
+//                return true;
+//            }
+
             if ( Typ.isPrimitiveOrWrapper( paramType ) &&
                     ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {
 
@@ -271,6 +279,25 @@ public class MapObjectConversion {
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
         return fromMap( false, null, FieldAccessMode.FIELD_THEN_PROPERTY.create( true ), map, clazz, null );
 
+    }
+
+
+    public static List<Object> toList( Object object) {
+
+        org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(object);
+
+        switch (instanceType) {
+            case NULL:
+                return Lists.list(null);
+            case ARRAY:
+                return Conversions.toList(object);
+            case INSTANCE:
+                if (Reflection.respondsTo(object, "toList")) {
+                    return (List<Object>) Reflection.invoke(object, "toList");
+                }
+                break;
+        }
+        return Lists.list(object);
     }
 
 
