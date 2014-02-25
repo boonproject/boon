@@ -259,6 +259,21 @@ public class ClassMeta <T> implements Annotated{
         return null;
     }
 
+
+
+    public List<ConstructorAccess> oneArgumentConstructors() {
+        List <ConstructorAccess> constructors = new ArrayList<>();
+        for (ConstructorAccess constructorAccess : constructorAccessSet) {
+            if (constructorAccess.parameterTypes().length==1) {
+
+                constructors.add(constructorAccess);
+            }
+        }
+
+        return constructors;
+
+    }
+
     public Iterable<AnnotationData> annotationData() {
         return new Iterable<AnnotationData>() {
             @Override
@@ -384,4 +399,5 @@ public class ClassMeta <T> implements Annotated{
             return  methodMap.get("apply").invoke(instance, arg);
         }
     }
+
 }

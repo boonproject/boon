@@ -3,6 +3,7 @@ package org.boon.json;
 import org.boon.json.implementation.ObjectMapperImpl;
 
 import java.io.Reader;
+import java.util.List;
 
 /**
  * Created by rick on 1/4/14.
@@ -26,6 +27,11 @@ public class JsonFactory {
 
     public static <T> T fromJson(String str, Class<T> clazz) {
         return json.fromJson(str, clazz);
+    }
+
+
+    public static <T> List<T> fromJsonArray(String str, Class<T> clazz) {
+        return json.parser().parseList(clazz, str);
     }
 
     public static Object fromJson(String str) {

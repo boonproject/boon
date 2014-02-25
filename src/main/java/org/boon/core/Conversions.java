@@ -3,10 +3,7 @@ package org.boon.core;
 import org.boon.Boon;
 import org.boon.Sets;
 import org.boon.StringScanner;
-import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.FastStringUtils;
-import org.boon.core.reflection.MapObjectConversion;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.*;
 import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
@@ -429,7 +426,35 @@ public class Conversions {
                 } else if (clz.isInstance( value )){
                     return (T) value;
                 } else {
-                    return null;
+                    ClassMeta meta = ClassMeta.classMeta(clz);
+                    List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
+
+                    if (constructors.size() == 0) {
+                        return null;
+                    } else if (constructors.size()==1) {
+                        ConstructorAccess constructorAccess = constructors.get(0);
+                        Class<?> arg1Type = constructorAccess.parameterTypes()[0];
+                        if (arg1Type.isInstance(value)) {
+                            return (T) constructorAccess.create(value);
+                        } else {
+                            return  (T) constructorAccess.create( coerce( arg1Type, value ) );
+                        }
+                    } else {
+                        for ( ConstructorAccess c : constructors ) {
+                            Class<?> arg1Type = c.parameterTypes()[0];
+                            if (arg1Type.isInstance(value)) {
+                                return (T) c.create(value);
+                            }
+                        }
+
+
+                        for ( ConstructorAccess c : constructors ) {
+                            Class<?> arg1Type = c.parameterTypes()[0];
+                            if (arg1Type.isAssignableFrom(value.getClass())) {
+                                return (T) c.create(value);
+                            }
+                        }
+                    }
                 }
 
             case ENUM:
@@ -556,8 +581,40 @@ public class Conversions {
                 } else if (clz.isInstance( value )){
                     return (T) value;
                 } else {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                    ClassMeta meta = ClassMeta.classMeta(clz);
+                    List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
+
+                    if (constructors.size() == 0) {
+                        return null;
+                    } else if (constructors.size()==1) {
+                        ConstructorAccess constructorAccess = constructors.get(0);
+                        Class<?> arg1Type = constructorAccess.parameterTypes()[0];
+                        if (arg1Type.isInstance(value)) {
+                            return (T) constructorAccess.create(value);
+                        } else {
+                            return  (T) constructorAccess.create( coerce( arg1Type, value ) );
+                        }
+                    } else {
+                        for ( ConstructorAccess c : constructors ) {
+                            Class<?> arg1Type = c.parameterTypes()[0];
+                            if (arg1Type.isInstance(value)) {
+                                return (T) c.create(value);
+                            }
+                        }
+
+
+                        for ( ConstructorAccess c : constructors ) {
+                            Class<?> arg1Type = c.parameterTypes()[0];
+                            if (arg1Type.isAssignableFrom(value.getClass())) {
+                                return (T) c.create(value);
+                            }
+                        }
+
+                        return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+
+                    }
                 }
+
 
             case ENUM:
                 return (T) toEnum( (Class<? extends Enum>)clz, value );

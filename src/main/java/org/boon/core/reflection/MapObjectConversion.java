@@ -1,10 +1,7 @@
 package org.boon.core.reflection;
 
 import org.boon.*;
-import org.boon.core.Conversions;
-import org.boon.core.Function;
-import org.boon.core.Typ;
-import org.boon.core.Value;
+import org.boon.core.*;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
@@ -14,12 +11,14 @@ import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
 
 import java.lang.reflect.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
+import static org.boon.core.Conversions.coerce;
 import static org.boon.core.Conversions.toEnum;
 import static org.boon.core.Type.gatherTypes;
 
@@ -215,13 +214,50 @@ public class MapObjectConversion {
                         list.set( index, newList );
 
                     }
+                } else {
+
+                    Type type = constructor.getGenericParameterTypes()[index];
+                    if ( type instanceof ParameterizedType ) {
+                        ParameterizedType pType = ( ParameterizedType ) type;
+                        Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
+                        List newList = new ArrayList( itemList.size() );
+
+                        for ( Object o : itemList ) {
+                            if ( o instanceof ValueContainer ) {
+                                o = ( ( ValueContainer ) o ).toValue();
+                            }
+                            if (o instanceof List) {
+                                List fromList = ( List ) o;
+                                o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
+                                newList.add( o );
+                            } else if (o instanceof Map) {
+                                Map fromMap = ( Map ) o;
+                                o = fromMap(respectIgnore, view, fieldsAccessor, fromMap, componentType, ignoreSet);
+                                newList.add( o );
+
+                            } else {
+                                newList.add( Conversions.coerce(componentType, o));
+                            }
+                        }
+                        list.set( index, newList );
+
+                    }
+
                 }
             } else if ( paramType == Typ.string  && item instanceof CharSequence ) {
                 list.set( index, item.toString() );
             } else if ( paramType.isEnum()  && (item instanceof CharSequence| item instanceof Number)  ) {
                 list.set( index, toEnum( paramType, item ));
-            } else if ( !paramType.isInstance( item ) ) {
-                return false;
+            } else if ( paramType.isInstance( item ) ) {
+                return true;
+            } else {
+                org.boon.core.Type type = org.boon.core.Type.getType(paramType);
+
+                if ( type == org.boon.core.Type.INSTANCE ) {
+                    list.set(index, coerce(paramType, item));
+                } else {
+                    return false;
+                }
             }
         } catch (Exception ex) {
             return false;
