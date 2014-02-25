@@ -19,6 +19,7 @@ import java.util.*;
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.toEnum;
 import static org.boon.core.Type.gatherTypes;
 
@@ -131,18 +132,18 @@ public class MapObjectConversion {
         } catch ( Exception e ) {
 
             if (match != null)  {
-                return ( T ) Exceptions.handle( Object.class, e,
+                return ( T ) handle(Object.class, e,
                         "\nconstructor parameter types", match.parameterTypes(),
                         "\nlist args after conversion", list, "types",
-                        gatherTypes( list ),
+                        gatherTypes(list),
                         "\noriginal args", argList,
-                        "original types", gatherTypes( argList ) );
+                        "original types", gatherTypes(argList));
             } else {
-                return ( T ) Exceptions.handle( Object.class, e,
+                return ( T ) handle(Object.class, e,
                         "\nlist args after conversion", list, "types",
-                        gatherTypes( list ),
+                        gatherTypes(list),
                         "\noriginal args", argList,
-                        "original types", gatherTypes( argList ) );
+                        "original types", gatherTypes(argList));
 
             }
         }
@@ -399,7 +400,7 @@ public class MapObjectConversion {
             Class<?> cls = Reflection.loadClass( className );
             return fromValueMap( respectIgnore, view, fieldsAccessor, map, cls, ignoreSet );
         } catch ( Exception ex ) {
-            return Exceptions.handle( Object.class, sputs( "fromValueMap", "map", map, "fieldAccessor", fieldsAccessor ), ex );
+            return handle(Object.class, sputs("fromValueMap", "map", map, "fieldAccessor", fieldsAccessor), ex);
         }
     }
 
@@ -431,45 +432,56 @@ public class MapObjectConversion {
         }
 
 
+        FieldAccess field = null;
+        String fieldName = null;
+        Map.Entry<String, Object> entry;
+
         for ( int index = 0; index < size; index++ ) {
-            Map.Entry<String, Object> entry = entries[index];
+            Object value = null;
+            try {
 
-            String key = entry.getKey();
+                entry    = entries[index];
+
+                fieldName = entry.getKey();
 
 
-            if ( ignoreSet != null ) {
-                if ( ignoreSet.contains( key ) ) {
+                if ( ignoreSet != null ) {
+                    if ( ignoreSet.contains( fieldName ) ) {
+                        continue;
+                    }
+                }
+
+                field = fields.get( fieldName );
+
+
+                if ( field == null ) {
                     continue;
                 }
-            }
-            FieldAccess field = fields.get( key );
 
-
-            if ( field == null ) {
-                continue;
-            }
-
-            if ( view != null ) {
-                if ( !field.isViewActive( view ) ) {
-                    continue;
+                if ( view != null ) {
+                    if ( !field.isViewActive( view ) ) {
+                        continue;
+                    }
                 }
-            }
 
 
-            if ( respectIgnore ) {
-                if ( field.ignore() ) {
-                    continue;
+                if ( respectIgnore ) {
+                    if ( field.ignore() ) {
+                        continue;
+                    }
                 }
-            }
 
 
-            Object ovalue = entry.getValue();
+                value = entry.getValue();
 
 
-            if ( ovalue instanceof Value ) {
-                fromValueMapHandleValueCase( respectIgnore, view, fieldsAccessor, newInstance, field, ( Value ) ovalue, ignoreSet );
-            } else {
-                fromMapHandleNonValueCase( respectIgnore, view, fieldsAccessor, newInstance, field, ovalue, ignoreSet );
+                if ( value instanceof Value ) {
+                    fromValueMapHandleValueCase( respectIgnore, view, fieldsAccessor, newInstance, field, ( Value ) value, ignoreSet );
+                } else {
+                    fromMapHandleNonValueCase( respectIgnore, view, fieldsAccessor, newInstance, field, value, ignoreSet );
+                }
+            }catch (Exception ex) {
+                return (T) handle(Object.class, ex, "fieldName", fieldName, "of class", cls, "had issues for value", value, "for field", field);
             }
 
         }
@@ -496,8 +508,8 @@ public class MapObjectConversion {
                 field.setValue( newInstance, ovalue );
             }
         } catch ( Exception ex ) {
-            Exceptions.handle( sputs( "Problem handling non value case of fromValueMap", "field", field.getName(),
-                    "fieldType", field.type().getName(), "object from map", ovalue ), ex );
+            handle(sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
+                    "fieldType", field.type().getName(), "object from map", ovalue), ex);
         }
     }
 
@@ -552,8 +564,8 @@ public class MapObjectConversion {
                 field.setFromValue( newInstance, value );
             }
         } catch ( Exception ex ) {
-            Exceptions.handle( sputs( "Problem handling non value case of fromValueMap", "field", field.getName(),
-                    "fieldType", field.type().getName(), "object from map", "objValue", objValue, "value", value ), ex );
+            handle(sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
+                    "fieldType", field.type().getName(), "object from map", "objValue", objValue, "value", value), ex);
 
         }
     }

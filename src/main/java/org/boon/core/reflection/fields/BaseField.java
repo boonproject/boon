@@ -9,6 +9,7 @@ import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
+import org.boon.core.value.ValueContainer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -481,6 +482,13 @@ public abstract class BaseField implements FieldAccess {
 
 
     public final void setFromValue ( Object obj, Value value ) {
+
+
+        if (value == ValueContainer.NULL) {
+            this.setObject ( obj, null );
+            return;
+        }
+
 
         switch ( typeEnum ) {
             case INT:

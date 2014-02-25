@@ -159,6 +159,10 @@ public class BeanUtils {
 
         for ( String property : properties ) {
 
+            if (object == null) {
+                return null;
+            }
+
             Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
             FieldAccess field = fields.get( property );
@@ -256,7 +260,7 @@ public class BeanUtils {
     public static Object idx( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = StringScanner.splitByCharsNoneEmpty( path, '.', '[', ']' );
 
         return getPropertyValue( object, properties );
     }
