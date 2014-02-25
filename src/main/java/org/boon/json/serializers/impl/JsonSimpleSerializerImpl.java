@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
 
 /**
  * This is a simple fast serializer.
@@ -59,193 +60,205 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     public final boolean serializeField ( Object parent, FieldAccess fieldAccess, CharBuf builder ) {
 
+
+
         final String fieldName = fieldAccess.getName ();
         final Type typeEnum = fieldAccess.typeEnum ();
 
-        if ( fieldAccess.ignore() ) {
-             return false;
-        }
 
-        if ( view!=null ){
-            if (!fieldAccess.isViewActive( view ) ) {
+        try {
+
+            if ( fieldAccess.ignore() ) {
+                 return false;
+            }
+
+            if ( view!=null ){
+                if (!fieldAccess.isViewActive( view ) ) {
+                    return false;
+                }
+            }
+
+            switch ( typeEnum ) {
+                case INT:
+                    int value = fieldAccess.getInt ( parent );
+                    if (value !=0) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addInt ( value  );
+                        return true;
+                    }
+                    return false;
+                case BOOLEAN:
+                    boolean bvalue = fieldAccess.getBoolean ( parent );
+                    if ( bvalue ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addBoolean ( bvalue  );
+                        return true;
+                    }
+                    return false;
+
+                case BYTE:
+                    byte byvalue = fieldAccess.getByte ( parent );
+                    if ( byvalue != 0 ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addByte ( byvalue  );
+                        return true;
+                    }
+                    return false;
+                case LONG:
+                    long lvalue = fieldAccess.getLong ( parent );
+                    if ( lvalue != 0 ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addLong ( lvalue  );
+                        return true;
+                    }
+                    return false;
+                case DOUBLE:
+                    double dvalue = fieldAccess.getDouble ( parent );
+                    if ( dvalue != 0 ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addDouble ( dvalue  );
+                        return true;
+                    }
+                    return false;
+                case FLOAT:
+                    float fvalue = fieldAccess.getFloat ( parent );
+                    if ( fvalue != 0 ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addFloat ( fvalue  );
+                        return true;
+                    }
+                    return false;
+                case SHORT:
+                    short svalue = fieldAccess.getShort( parent );
+                    if ( svalue != 0 ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addShort ( svalue  );
+                        return true;
+                    }
+                    return false;
+                case CHAR:
+                    char cvalue = fieldAccess.getChar( parent );
+                    if ( cvalue != 0 ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addChar( cvalue  );
+                        return true;
+                    }
+                    return false;
+
+            }
+
+            Object value = fieldAccess.getObject ( parent );
+
+            if ( value == null ) {
                 return false;
             }
-        }
 
-        switch ( typeEnum ) {
-            case INT:
-                int value = fieldAccess.getInt ( parent );
-                if (value !=0) {
-                    serializeFieldName ( fieldName, builder );
-                    builder.addInt ( value  );
-                    return true;
-                }
+            /* Avoid back reference and infinite loops. */
+            if ( value == parent ) {
                 return false;
-            case BOOLEAN:
-                boolean bvalue = fieldAccess.getBoolean ( parent );
-                if ( bvalue ) {
-                    serializeFieldName ( fieldName, builder );
-                    builder.addBoolean ( bvalue  );
-                    return true;
-                }
-                return false;
+            }
 
-            case BYTE:
-                byte byvalue = fieldAccess.getByte ( parent );
-                if ( byvalue != 0 ) {
+            switch ( typeEnum )  {
+                case BIG_DECIMAL:
                     serializeFieldName ( fieldName, builder );
-                    builder.addByte ( byvalue  );
+                    builder.addBigDecimal ( (BigDecimal) value );
                     return true;
-                }
-                return false;
-            case LONG:
-                long lvalue = fieldAccess.getLong ( parent );
-                if ( lvalue != 0 ) {
+                case BIG_INT:
                     serializeFieldName ( fieldName, builder );
-                    builder.addLong ( lvalue  );
+                    builder.addBigInteger ( ( BigInteger ) value );
                     return true;
-                }
-                return false;
-            case DOUBLE:
-                double dvalue = fieldAccess.getDouble ( parent );
-                if ( dvalue != 0 ) {
+                case DATE:
                     serializeFieldName ( fieldName, builder );
-                    builder.addDouble ( dvalue  );
+                    serializeDate ( ( Date ) value, builder );
                     return true;
-                }
-                return false;
-            case FLOAT:
-                float fvalue = fieldAccess.getFloat ( parent );
-                if ( fvalue != 0 ) {
+                case STRING:
                     serializeFieldName ( fieldName, builder );
-                    builder.addFloat ( fvalue  );
+                    serializeString ( ( String ) value, builder );
                     return true;
-                }
-                return false;
-            case SHORT:
-                short svalue = fieldAccess.getShort( parent );
-                if ( svalue != 0 ) {
+                case CHAR_SEQUENCE:
                     serializeFieldName ( fieldName, builder );
-                    builder.addShort ( svalue  );
+                    serializeString ( value.toString (), builder );
                     return true;
-                }
-                return false;
-            case CHAR:
-                char cvalue = fieldAccess.getChar( parent );
-                if ( cvalue != 0 ) {
+                case INTEGER_WRAPPER:
                     serializeFieldName ( fieldName, builder );
-                    builder.addChar( cvalue  );
+                    builder.addInt ( ( Integer ) value );
                     return true;
-                }
-                return false;
+                case LONG_WRAPPER:
+                    serializeFieldName ( fieldName, builder );
+                    builder.addLong ( ( Long ) value );
+                    return true;
+                case FLOAT_WRAPPER:
+                    serializeFieldName ( fieldName, builder );
+                    builder.addFloat ( ( Float ) value );
+                    return true;
+                case DOUBLE_WRAPPER:
+                    serializeFieldName ( fieldName, builder );
+                    builder.addDouble ( ( Double ) value );
+                    return true;
+                case SHORT_WRAPPER:
+                    serializeFieldName ( fieldName, builder );
+                    builder.addShort ( ( Short ) value );
+                    return true;
+                case BYTE_WRAPPER:
+                    serializeFieldName ( fieldName, builder );
+                    builder.addByte ( ( Byte ) value );
+                    return true;
+                case CHAR_WRAPPER:
+                    serializeFieldName ( fieldName, builder );
+                    builder.addChar ( ( Character ) value );
+                    return true;
+                case ENUM:
+                    serializeFieldName ( fieldName, builder );
+                    builder.addQuoted ( value.toString () );
+                    return true;
+                case COLLECTION:
+                case LIST:
+                case SET:
+                    Collection collection = (Collection) value;
+                    if ( collection.size () > 0) {
+                        serializeFieldName ( fieldName, builder );
+                        this.serializeCollection ( collection, builder );
+                        return true;
+                    }
+                    return false;
+                case MAP:
+                    Map map = (Map) value;
+                    if ( map.size () > 0) {
+                        serializeFieldName ( fieldName, builder );
+                        this.serializeMap ( map, builder );
+                        return true;
+                    }
+                    return false;
+                case ARRAY:
+                    if (value.getClass().isArray()) {
+                        if ( Array.getLength (value) > 0) {
+                            serializeFieldName ( fieldName, builder );
+                            this.serializeArray (  value, builder );
+                            return true;
+                        }
+                    }
+                    return false;
 
-        }
-
-        Object value = fieldAccess.getObject ( parent );
-
-        if ( value == null ) {
-            return false;
-        }
-
-        /* Avoid back reference and infinite loops. */
-        if ( value == parent ) {
-            return false;
-        }
-
-        switch ( typeEnum )  {
-            case BIG_DECIMAL:
-                serializeFieldName ( fieldName, builder );
-                builder.addBigDecimal ( (BigDecimal) value );
-                return true;
-            case BIG_INT:
-                serializeFieldName ( fieldName, builder );
-                builder.addBigInteger ( ( BigInteger ) value );
-                return true;
-            case DATE:
-                serializeFieldName ( fieldName, builder );
-                serializeDate ( ( Date ) value, builder );
-                return true;
-            case STRING:
-                serializeFieldName ( fieldName, builder );
-                serializeString ( ( String ) value, builder );
-                return true;
-            case CHAR_SEQUENCE:
-                serializeFieldName ( fieldName, builder );
-                serializeString ( value.toString (), builder );
-                return true;
-            case INTEGER_WRAPPER:
-                serializeFieldName ( fieldName, builder );
-                builder.addInt ( ( Integer ) value );
-                return true;
-            case LONG_WRAPPER:
-                serializeFieldName ( fieldName, builder );
-                builder.addLong ( ( Long ) value );
-                return true;
-            case FLOAT_WRAPPER:
-                serializeFieldName ( fieldName, builder );
-                builder.addFloat ( ( Float ) value );
-                return true;
-            case DOUBLE_WRAPPER:
-                serializeFieldName ( fieldName, builder );
-                builder.addDouble ( ( Double ) value );
-                return true;
-            case SHORT_WRAPPER:
-                serializeFieldName ( fieldName, builder );
-                builder.addShort ( ( Short ) value );
-                return true;
-            case BYTE_WRAPPER:
-                serializeFieldName ( fieldName, builder );
-                builder.addByte ( ( Byte ) value );
-                return true;
-            case CHAR_WRAPPER:
-                serializeFieldName ( fieldName, builder );
-                builder.addChar ( ( Character ) value );
-                return true;
-            case ENUM:
-                serializeFieldName ( fieldName, builder );
-                builder.addQuoted ( value.toString () );
-                return true;
-            case COLLECTION:
-            case LIST:
-            case SET:
-                Collection collection = (Collection) value;
-                if ( collection.size () > 0) {
+                case INTERFACE:
+                case ABSTRACT:
                     serializeFieldName ( fieldName, builder );
-                    this.serializeCollection ( collection, builder );
+                    serializeSubtypeInstance ( value, builder );
                     return true;
-                }
-                return false;
-            case MAP:
-                Map map = (Map) value;
-                if ( map.size () > 0) {
+
+                case INSTANCE:
                     serializeFieldName ( fieldName, builder );
-                    this.serializeMap ( map, builder );
+                    serializeInstance ( value, builder );
                     return true;
-                }
-                return false;
-            case ARRAY:
-                if ( Array.getLength (value) > 0) {
+
+                default:
                     serializeFieldName ( fieldName, builder );
-                    this.serializeArray (  value, builder );
+                    serializeInstance ( value, builder );
                     return true;
-                }
-                return false;
+            }
 
-            case INTERFACE:
-            case ABSTRACT:
-                serializeFieldName ( fieldName, builder );
-                serializeSubtypeInstance ( value, builder );
-                return true;
-
-            case INSTANCE:
-                serializeFieldName ( fieldName, builder );
-                serializeInstance ( value, builder );
-                return true;
-
-            default:
-                serializeFieldName ( fieldName, builder );
-                serializeInstance ( value, builder );
-                return true;
+        } catch (Exception ex) {
+            return die(Boolean.class, ex, "Unable to serialize field", fieldName, "from parent object", parent,
+                    "type enum", typeEnum);
         }
 
     }

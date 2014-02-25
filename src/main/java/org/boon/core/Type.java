@@ -55,6 +55,8 @@ public enum Type {
             type = ARRAY;
         } else if (Typ.isAbstract ( clazz )) {
             type = ABSTRACT;
+        } else if (className.startsWith("com.sun") || className.startsWith("sun.")) {
+            type = SYSTEM;
         }
         return type;
 
