@@ -125,7 +125,7 @@ public class MapObjectConversion {
             if ( match != null ) {
                 return ( T ) match.create( list.toArray( new Object[list.size()] ) );
             } else {
-                return fromListUsingFields( respectIgnore, view, fieldsAccessor, list, clazz, ignoreSet );
+                return (T) die(Object.class, "Unable to convert list", list, "into", clazz);
             }
 
         } catch ( Exception e ) {
@@ -168,13 +168,13 @@ public class MapObjectConversion {
                 item = ( ( ValueContainer ) item ).toValue();
             }
 
-//            if (paramType.isPrimitive() && item == null) {
-//                return false;
-//            }
-//
-//            if (item == null) {
-//                return true;
-//            }
+            if (paramType.isPrimitive() && item == null) {
+                return false;
+            }
+
+            if (item == null) {
+                return true;
+            }
 
             if ( Typ.isPrimitiveOrWrapper( paramType ) &&
                     ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {

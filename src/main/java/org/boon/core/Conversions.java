@@ -338,8 +338,16 @@ public class Conversions {
         return coerce( Type.getType( clz ), clz, value);
     }
     public static <T> T coerce( Type coerceTo, Class<T> clz, Object value ) {
-        if ( value == null ) {
-            return null;
+        if ( value == null)  {
+            if ( coerceTo!=Type.INSTANCE && !clz.isPrimitive()) {
+
+                return null;
+            } else if (clz.isPrimitive()) {
+                if (clz == boolean.class) {
+                    return (T)(Boolean)false;
+                }
+                return (T) (Number)0;
+            }
         }
 
         switch (coerceTo) {
@@ -426,6 +434,9 @@ public class Conversions {
                 } else if (clz.isInstance( value )){
                     return (T) value;
                 } else {
+                    if (value==null) {
+                        return Reflection.newInstance(clz);
+                    }
                     ClassMeta meta = ClassMeta.classMeta(clz);
                     List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
 
@@ -455,6 +466,7 @@ public class Conversions {
                             }
                         }
                     }
+
                 }
 
             case ENUM:

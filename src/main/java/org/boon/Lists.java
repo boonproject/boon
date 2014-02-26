@@ -1,6 +1,7 @@
 package org.boon;
 
 
+import org.boon.core.Conversions;
 import org.boon.core.Predicate;
 import org.boon.core.Reducer;
 import org.boon.core.reflection.BeanUtils;
@@ -89,6 +90,48 @@ public class Lists {
     }
 
 
+
+    public static <V, WRAP> List<WRAP> convert(Class<WRAP> wrapper, Iterable<V> collection ) {
+        List<WRAP> list = new ArrayList<>(  );
+
+        for (V v : collection) {
+
+            list.add ( Conversions.coerce(wrapper, v) );
+        }
+        return list;
+    }
+
+    public static <V, WRAP> List<WRAP> convert(Class<WRAP> wrapper, Collection<V> collection ) {
+        List<WRAP> list = new ArrayList<>( collection.size() );
+
+        for (V v : collection) {
+
+            list.add ( Conversions.coerce(wrapper, v) );
+        }
+        return list;
+    }
+
+
+    public static <V, WRAP> List<WRAP> convert(Class<WRAP> wrapper, V[] collection ) {
+        List<WRAP> list = new ArrayList<>( collection.length );
+
+        for (V v : collection) {
+
+            list.add ( Conversions.coerce(wrapper, v) );
+        }
+        return list;
+    }
+
+
+    public static <V, WRAP> List<WRAP> wrap(Class<WRAP> wrapper, Iterable<V> collection ) {
+        List<WRAP> list = new ArrayList<>(  );
+
+        for (V v : collection) {
+            WRAP wrap = Reflection.newInstance ( wrapper, v );
+            list.add ( wrap );
+        }
+        return list;
+    }
 
     public static <V, WRAP> List<WRAP> wrap(Class<WRAP> wrapper, Collection<V> collection ) {
         List<WRAP> list = new ArrayList<>( collection.size () );
