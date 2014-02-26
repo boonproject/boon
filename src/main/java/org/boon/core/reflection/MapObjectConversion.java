@@ -674,7 +674,17 @@ public class MapObjectConversion {
         }
 
         if (!field.typeEnum().isCollection()) {
-            field.setValue(newInstance, coerce(field.typeEnum(), field.type(), collection));
+            if (collection instanceof List) {
+                try {
+                    Object value = fromList(respectIgnore, view, fieldsAccessor, (List) collection, field.getComponentClass(), ignoreSet);
+                    field.setObject(newInstance, value);
+                } catch  (Exception ex) {
+                    //There is an edge case that needs this. We need a coerce that takes respectIngore, etc.
+                    field.setObject(newInstance, coerce(field.typeEnum(), field.type(), collection));
+                }
+            } else {
+                field.setObject(newInstance, coerce(field.typeEnum(), field.type(), collection));
+            }
             return;
         }
 
