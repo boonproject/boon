@@ -638,35 +638,61 @@ public class MapObjectConversion {
             final FieldsAccessor fieldsAccessor, final Object newInstance,
             final FieldAccess field,
             final Collection<?> collection, final Set<String> ignoreSet ) {
-        final Class<?> componentType = Reflection.getComponentType( collection );
+        final Class<?> fieldComponentClass = field.getComponentClass();
+
+        final Class<?> valueComponentClass = Reflection.getComponentType(collection);
+
+
         /** See if we have a collection of maps because if we do, then we have some
          * recursive processing to do.
          */
-        if ( Typ.isMap( componentType ) ) {
+        if ( Typ.isMap( valueComponentClass ) ) {
                 handleCollectionOfMaps( respectIgnore, view, fieldsAccessor, newInstance, field,
                         ( Collection<Map<String, Object>> ) collection, ignoreSet );
+            return;
 
-        } else if ( Typ.isValue( componentType ) ) {
+        }
+
+        if ( Typ.isValue( valueComponentClass ) ) {
                  handleCollectionOfValues( respectIgnore, view,  fieldsAccessor, newInstance, field,
                         ( Collection<Value> ) collection, ignoreSet );
-        } else {
+            return;
+        }
 
-            /* It might be a collection of regular types. */
 
-            /*If it is a compatible type just inject it. */
-            if ( field.type().isInterface() &&
-                    Typ.implementsInterface( collection.getClass(), field.type() ) ) {
 
-                field.setValue( newInstance, collection );
 
-            } else {
-                /* The type was not compatible so create a new collection that is. */
-                Collection<Object> newCollection =
-                        Conversions.createCollection( field.type(), collection.size() );
 
-                newCollection.addAll( collection );
-                field.setValue( newInstance, newCollection );
+        if (Typ.implementsInterface( collection.getClass(), field.type() )) {
+
+            if (fieldComponentClass!=null && fieldComponentClass.isAssignableFrom(valueComponentClass)) {
+                    field.setValue(newInstance, collection);
+
+                return;
             }
+
+        }
+
+        if (!field.typeEnum().isCollection()) {
+            field.setValue(newInstance, coerce(field.typeEnum(), field.type(), collection));
+            return;
+        }
+
+
+
+        Collection<Object> newCollection = Conversions.createCollection( field.type(), collection.size() );
+
+        if ( fieldComponentClass == null || fieldComponentClass.isAssignableFrom(valueComponentClass)) {
+
+            newCollection.addAll(collection);
+            field.setValue( newInstance, newCollection );
+            return;
+        }
+
+
+        for (Object itemValue : collection) {
+            newCollection.add(Conversions.coerce(fieldComponentClass, itemValue));
+            field.setValue(newInstance, newCollection);
         }
     }
 

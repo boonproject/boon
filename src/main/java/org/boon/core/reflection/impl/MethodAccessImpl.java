@@ -1,5 +1,6 @@
 package org.boon.core.reflection.impl;
 
+import org.boon.Lists;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.MethodAccess;
@@ -47,8 +48,15 @@ public class MethodAccessImpl implements MethodAccess {
         try {
             return method.invoke( object, args );
         } catch ( Exception ex ) {
+
+            List argTypes = Lists.mapBy(args, new Object() {
+                    Class<?> apply(Object arg) {
+                       return arg == null ? null : arg.getClass();
+                    }
+            });
             return handle( Object.class, ex,  "unable to invoke method", method,
-                    " on object ", object, "with arguments", args );
+                    " on object ", object, "with arguments", args,
+                    "\nparameter types", parameterTypes(), "\nargument types are", argTypes );
 
         }
     }
