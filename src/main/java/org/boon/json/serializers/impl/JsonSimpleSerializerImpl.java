@@ -5,6 +5,7 @@ import org.boon.Exceptions;
 import org.boon.Maps;
 import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.serializers.JsonSerializerInternal;
@@ -383,8 +384,16 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     public final void serializeInstance ( Object obj, CharBuf builder )  {
 
+        if (Reflection.respondsTo(obj, "serializeAs")) {
+            serializeObject(Invoker.invoke(obj, "serializeAs"), builder);
+            return;
+        }
+
         final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
         final Collection<FieldAccess> values = fieldAccessors.values ();
+
+
+
 
 
 

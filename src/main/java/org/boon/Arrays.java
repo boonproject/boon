@@ -83,6 +83,11 @@ public class Arrays {
     }
 
     @Universal
+    public static <V> int lengthOf( V[] array ) {
+        return array.length;
+    }
+
+    @Universal
     public static <V> V idx( final V[] array, int index ) {
         final int i = calculateIndex( array, index );
 
@@ -91,12 +96,32 @@ public class Arrays {
 
 
     @Universal
+    public static <V> V atIndex( final V[] array, int index ) {
+        final int i = calculateIndex( array, index );
+
+        return array[ i ];
+    }
+
+    @Universal
     public static <V> void idx( final V[] array, int index, V value ) {
         final int i = calculateIndex( array, index );
 
         array[ i ] = value;
     }
 
+    @Universal
+    public static <V> void atIndex( final V[] array, int index, V value ) {
+        final int i = calculateIndex( array, index );
+
+        array[ i ] = value;
+    }
+
+
+    @Universal
+    public static <V> V[] sliceOf( V[] array, int startIndex, int endIndex ) {
+
+        return slc(array, startIndex, endIndex);
+    }
 
     @Universal
     public static <V> V[] slc( V[] array, int startIndex, int endIndex ) {
@@ -124,6 +149,12 @@ public class Arrays {
             }
         }
         return false;
+    }
+
+
+    @Universal
+    public static <V> V[] sliceOf( V[] array, int startIndex ) {
+        return slc(array, startIndex);
     }
 
     @Universal
@@ -193,6 +224,12 @@ public class Arrays {
 
         Array.set( newArray, index, v );
         return ( V[] ) newArray;
+    }
+
+
+    @Universal
+    public static <V> V[] endSliceOf( V[] array, int endIndex ) {
+        return slcEnd(array, endIndex);
     }
 
     @Universal

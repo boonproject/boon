@@ -67,6 +67,50 @@ public class Invoker {
 
     }
 
+
+    /**
+     * Invokes method from list or map depending on what the Object arg is.
+     * @param object
+     * @param method
+     * @param args
+     * @return
+     */
+    public static Object invokeMethodFromObjectArg(Object object, MethodAccess method, Object args) {
+        return invokeMethodFromObjectArg(false, null, null, object, method, args);
+
+    }
+
+
+    public static Object invokeMethodFromObjectArg(boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                          Object object, MethodAccess method, Object args) {
+        if (args instanceof Map) {
+            return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, Lists.list(args));
+        } else if (args instanceof List) {
+            List list = (List) args;
+
+            if (method.parameterTypes().length == 1 && list.size() > 0) {
+
+                Object firstArg = list.get(0);
+                if (firstArg instanceof Map || firstArg instanceof List) {
+                    return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, list);
+
+                } else {
+                    return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, Lists.list(args));
+                }
+            } else {
+
+                return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, list);
+
+            }
+        } else if (args == null) {
+            return method.invoke(object);
+        } else {
+            return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, Lists.list(args));
+        }
+
+    }
+
+
     public static Object invokeFromObject(boolean respectIgnore, String view, Set<String> ignoreProperties,
                                           Object object, String name, Object args) {
         if (args instanceof Map) {
@@ -129,6 +173,34 @@ public class Invoker {
 
     }
 
+
+
+    public static Object invokeMethodFromList(boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                              Object object, MethodAccess method, List<?> args) {
+        List<Object> list = new ArrayList(args);
+        Class<?>[] parameterTypes = method.parameterTypes();
+        if (list.size() != parameterTypes.length) {
+            return die(Object.class, "Unable to invoke method", method.name(), "on object", object, "with arguments", list);
+        }
+
+        FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);
+
+        for (int index = 0; index < parameterTypes.length; index++) {
+
+            if (!matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, method, parameterTypes, index)) {
+                return die(Object.class, "Unable to invoke method as argument types did not match",
+                        method.name(), "on object", object, "with arguments", list);
+            }
+
+        }
+
+        if (args == null && method.parameterTypes().length == 0) {
+            return method.invoke(object);
+        } else {
+            return method.invoke(object, list.toArray(new Object[list.size()]));
+        }
+
+    }
 
 
     public static Object invokeEither(Object object, String name, Object... args) {
