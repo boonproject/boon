@@ -5,6 +5,7 @@ import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.MethodAccess;
 
+import java.lang.invoke.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 
 /**
@@ -24,16 +26,37 @@ public class MethodAccessImpl implements MethodAccess {
     final List<AnnotationData> annotationData;
     final Map<String, AnnotationData> annotationMap;
 
+
+    CallSite callSiteMethod;
+
+    final MethodHandles.Lookup lookup = MethodHandles.lookup();
+    final MethodHandle methodHandle;
+
     public MethodAccessImpl() {
         method=null;
         annotationData=null;
         annotationMap=null;
+        methodHandle = null;
     }
 
     public MethodAccessImpl( Method method ) {
         this.method = method;
         this.method.setAccessible( true );
         this.annotationData = Annotations.getAnnotationDataForMethod(method);
+
+
+        MethodHandle m;
+         try {
+
+                    m = lookup.unreflect(method);
+
+        } catch (Exception e) {
+            m = null;
+            handle(e);
+        }
+
+
+        methodHandle = m;
 
         annotationMap = new ConcurrentHashMap<>(  );
         for (AnnotationData data : annotationData) {
@@ -44,10 +67,11 @@ public class MethodAccessImpl implements MethodAccess {
 
     }
 
+
     public Object invoke(Object object, Object... args) {
         try {
             return method.invoke( object, args );
-        } catch ( Exception ex ) {
+        } catch ( Throwable ex ) {
 
             List argTypes = Lists.mapBy(args, new Object() {
                     Class<?> apply(Object arg) {
@@ -64,12 +88,47 @@ public class MethodAccessImpl implements MethodAccess {
     @Override
     public Object invokeStatic(Object... args) {
         try {
-            return method.invoke( null, args );
-        } catch ( Exception ex ) {
+
+            return method.invoke(null, args);
+        } catch ( Throwable ex ) {
             return handle( Object.class, ex,  "unable to invoke method", method,
                     " with arguments", args );
 
         }
+    }
+
+    @Override
+    public void bind(Object instance) {
+        die("Bind does not work for cached methodAccess make a copy with methodAccsess() first");
+    }
+
+    @Override
+    public MethodHandle methodHandle() {
+
+
+        MethodHandle m;
+        try {
+            m = lookup.unreflect(method);
+
+        } catch (Exception e) {
+            m = null;
+            handle(e);
+        }
+
+        return  m;
+    }
+
+    @Override
+    public MethodAccess methodAccess() {
+        return new MethodAccessImpl(this.method){
+
+
+            @Override
+            public void bind(Object instance) {
+                methodHandle.bindTo(instance);
+            }
+
+        };
     }
 
 

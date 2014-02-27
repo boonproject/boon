@@ -4,10 +4,7 @@ package org.boon;
 import org.boon.core.Conversions;
 import org.boon.core.Predicate;
 import org.boon.core.Reducer;
-import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Invoker;
-import org.boon.core.reflection.MapObjectConversion;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.*;
 import org.boon.core.Function;
 import org.boon.di.ProviderInfo;
 
@@ -134,10 +131,20 @@ public class Lists {
     }
 
     public static <V, WRAP> List<WRAP> wrap(Class<WRAP> wrapper, Collection<V> collection ) {
+
+        if (collection.size()==0) {
+            return Collections.EMPTY_LIST;
+        }
+
         List<WRAP> list = new ArrayList<>( collection.size () );
 
+
+
+        ClassMeta <WRAP> cls = ClassMeta.classMeta(wrapper);
+        ConstructorAccess<WRAP> declaredConstructor = cls.declaredConstructor(collection.iterator().next().getClass());
+
         for (V v : collection) {
-            WRAP wrap = Reflection.newInstance ( wrapper, v );
+            WRAP wrap = declaredConstructor.create (  v );
             list.add ( wrap );
         }
         return list;
@@ -475,37 +482,49 @@ public class Lists {
     public static List<?> mapBy(Collection<?> objects, Class<?> cls, String methodName) {
 
         List list = new ArrayList(objects.size());
+
+        MethodAccess methodAccess = Invoker.invokeMethodAccess(cls, methodName);
+
         for (Object o : objects) {
-            list.add( Invoker.invoke(cls,methodName, o ));
+            list.add( methodAccess.invokeStatic(o));
         }
         return list;
     }
 
-    public static List<?> mapBy(Collection<?> objects, Object object) {
+    public static List<?> mapBy(Collection<?> objects, Object function) {
 
-        List list = new ArrayList(objects.size());
-        for (Object o : objects) {
-            list.add( Invoker.invokeFunction(object, o));
-        }
-        return list;
+
+            MethodAccess methodAccess = Invoker.invokeFunctionMethodAccess(function);
+
+            List list = new ArrayList();
+            for (Object o : objects) {
+                list.add( methodAccess.invoke(function, o));
+            }
+
+            return list;
     }
 
 
-    public static List<?> mapBy(Iterable<?> objects, Object object) {
+    public static List<?> mapBy(Iterable<?> objects, Object function) {
+
+
+        MethodAccess methodAccess = Invoker.invokeFunctionMethodAccess(function);
 
         List list = new ArrayList();
         for (Object o : objects) {
-            list.add( Invoker.invokeFunction(object, o));
+            list.add( methodAccess.invoke(o));
         }
         return list;
     }
 
 
-    public static List<?> mapBy(Object[] objects, Object object) {
+    public static List<?> mapBy(Object[] objects, Object function) {
+
+        MethodAccess methodAccess = Invoker.invokeFunctionMethodAccess(function);
 
         List list = new ArrayList(objects.length);
         for (Object o : objects) {
-            list.add( Invoker.invokeFunction(object, o));
+            list.add( methodAccess.invoke(o));
         }
         return list;
     }
@@ -514,9 +533,12 @@ public class Lists {
 
      public static List<?> mapBy(Collection<?> objects, Object object, String methodName) {
 
+
+         MethodAccess methodAccess = Invoker.invokeMethodAccess(object.getClass(), methodName);
+
         List list = new ArrayList(objects.size());
         for (Object o : objects) {
-            list.add( Invoker.invoke(object, methodName, o ));
+            list.add( methodAccess.invoke(object, o));
         }
         return list;
     }

@@ -349,6 +349,10 @@ public class ClassMeta <T> implements Annotated{
     }
 
 
+    public MethodAccess invokeMethodAccess(String methodName) {
+        return methodMap.get(methodName);
+    }
+
     public Object invokeStatic(String methodName,  Object... args) {
         return methodMap.get(methodName).invokeStatic(args);
     }
@@ -361,7 +365,7 @@ public class ClassMeta <T> implements Annotated{
     }
 
 
-    public  boolean invokeSingleBoolean(Object instance, Object arg) {
+    public  boolean invokePredicate(Object instance, Object arg) {
         MethodAccess methodAccess = null;
 
         if (methods.size()==1) {
@@ -393,10 +397,17 @@ public class ClassMeta <T> implements Annotated{
 
     public Object invokeFunction(Object instance, Object arg) {
 
+        MethodAccess methodAccess = invokeFunctionMethodAccess();
+        return methodAccess.invoke(instance, arg);
+    }
+
+
+    public MethodAccess invokeFunctionMethodAccess() {
+
         if (methods.size()==1) {
-            return  methods.get(0).invoke(instance, arg);
+            return  methods.get(0).methodAccess();
         } else  {
-            return  methodMap.get("apply").invoke(instance, arg);
+            return  methodMap.get("apply").methodAccess();
         }
     }
 

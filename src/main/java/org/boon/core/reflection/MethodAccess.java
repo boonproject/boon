@@ -1,7 +1,6 @@
 package org.boon.core.reflection;
 
-import java.lang.reflect.Type;
-import java.util.Iterator;
+import java.lang.invoke.MethodHandle;
 
 /**
  * Created by Richard on 2/17/14.
@@ -22,4 +21,11 @@ public interface MethodAccess extends BaseAccess{
 
 
     Object invokeStatic(Object... args);
+
+    void bind(Object instance);
+
+    MethodHandle methodHandle();
+
+    MethodAccess methodAccess();
+
 }

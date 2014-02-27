@@ -159,6 +159,123 @@ public class ListsTest {
     }
 
 
+    public static void main (String... args) {
+
+        long start;
+        long stop;
+        List<HRObject> wrap;
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        ListsTest obj = new ListsTest();
+
+        for (int index = 0; index < 20_000_000; index++) {
+
+            list.add(new Employee("TEST" + index));
+        }
+
+
+        Object function = new Object() {
+            final HRObject hr(Employee e) {return new HRObject(e);}
+        };
+
+
+        for (int index = 0; index < 100; index++) {
+            wrap = (List<HRObject>) Lists.mapBy(list, function);
+            fakeCall(wrap);
+        }
+
+        for (int index = 0; index < 100; index++) {
+            wrap = (List<HRObject>) Lists.mapBy(list, ListsTest.class, "createHRO" );
+            fakeCall(wrap);
+        }
+
+        for (int index = 0; index < 100; index++) {
+            wrap = (List<HRObject>) Lists.mapBy(list, obj, "createHROMethod" );
+            fakeCall(wrap);
+        }
+
+        for (int index = 0; index < 100; index++) {
+            wrap = (List<HRObject>) Lists.mapBy(list, function);
+            fakeCall(wrap);
+        }
+
+
+
+
+
+
+
+        start = System.currentTimeMillis();
+        for (int index = 0; index < 100; index++) {
+             wrap = (List<HRObject>) Lists.mapBy(list, ListsTest.class, "createHRO" );
+            fakeCall(wrap);
+        }
+        stop = System.currentTimeMillis();
+        puts ("Static reflection", (stop - start));
+
+
+        start = System.currentTimeMillis();
+        for (int index = 0; index < 100; index++) {
+            wrap = (List<HRObject>) Lists.mapBy(list, obj, "createHROMethod" );
+            fakeCall(wrap);
+        }
+        stop = System.currentTimeMillis();
+        puts ("reflection", (stop - start));
+
+
+        start = System.currentTimeMillis();
+        for (int index = 0; index < 100; index++) {
+            wrap = Lists.wrap(HRObject.class, list );
+            fakeCall(wrap);
+        }
+        stop = System.currentTimeMillis();
+        puts ("wrap", (stop - start));
+
+
+        start = System.currentTimeMillis();
+        for (int index = 0; index < 100; index++) {
+            wrap = new ArrayList(20);
+
+            for (Employee employee : list) {
+
+                wrap.add(new HRObject(employee));
+            }
+            fakeCall(wrap);
+        }
+        stop = System.currentTimeMillis();
+        puts ("java for loop", (stop - start) );
+
+
+        start = System.currentTimeMillis();
+        for (int index = 0; index < 100; index++) {
+            wrap = (List<HRObject>) Lists.mapBy(list, function);
+            fakeCall(wrap);
+        }
+        stop = System.currentTimeMillis();
+        puts ("anon reflection", (stop - start) );
+
+
+
+        start = System.currentTimeMillis();
+        for (int index = 0; index < 100; index++) {
+            wrap =  Lists.mapBy(list, new Function<Employee, HRObject>() {
+                @Override
+                public HRObject apply(Employee employee) {
+                    return new HRObject(employee);
+                }
+            });
+            fakeCall(wrap);
+        }
+        stop = System.currentTimeMillis();
+        puts ("Function", (stop - start) );
+
+
+
+    }
+
+    private static void fakeCall(List<HRObject> wrap) {
+        wrap.size();
+    }
+
 
     HRObject createHROMethod(Employee e) {
         return new HRObject(e);

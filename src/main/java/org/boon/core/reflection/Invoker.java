@@ -6,10 +6,8 @@ import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.reflection.impl.MethodAccessImpl;
 import org.boon.core.value.ValueContainer;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -216,6 +214,15 @@ public class Invoker {
     }
 
 
+    public static MethodAccess invokeMethodAccess( Object object, String name ) {
+        return ClassMeta.classMeta(object.getClass()).invokeMethodAccess(name);
+    }
+
+
+    public static MethodAccess invokeMethodAccess(Class<?> cls, String name) {
+        return ClassMeta.classMeta(cls).invokeMethodAccess(name);
+    }
+
     public static Object invoke(Class cls, String name, Object... args) {
         return ClassMeta.classMeta(cls).invokeStatic(name, args);
     }
@@ -352,7 +359,7 @@ public class Invoker {
         }
 
         ClassMeta meta = ClassMeta.classMeta(cls);
-        return meta.invokeSingleBoolean(instance, v);
+        return meta.invokePredicate(instance, v);
 
     }
 
@@ -377,6 +384,21 @@ public class Invoker {
             ClassMeta meta = ClassMeta.classMeta(object.getClass());
 
             return meta.invokeFunction(object, arg);
+
+        }
+    }
+
+
+
+    public static MethodAccess invokeFunctionMethodAccess(Object object) {
+
+        if (object instanceof  Class) {
+            ClassMeta meta = ClassMeta.classMeta((Class<?>)object);
+            return meta.invokeFunctionMethodAccess();
+        } else {
+            ClassMeta meta = ClassMeta.classMeta(object.getClass());
+
+            return meta.invokeFunctionMethodAccess();
 
         }
     }
