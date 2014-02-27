@@ -168,7 +168,7 @@ public class ListsTest {
         List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
         ListsTest obj = new ListsTest();
 
-        for (int index = 0; index < 20_000_000; index++) {
+        for (int index = 0; index < 2_000_000; index++) {
 
             list.add(new Employee("TEST" + index));
         }
