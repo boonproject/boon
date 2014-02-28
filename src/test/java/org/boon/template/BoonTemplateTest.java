@@ -282,11 +282,11 @@ public class BoonTemplateTest {
                     }
 
                     String hiMom(String hi) {
-                        return "Say hi mom " + hi;
+                        return "Say hi mom " + hi + "\n";
                     }
                 }
         ).replace("" +
-                //"{{hiMom(mom)}}" +
+                "{{hiMom(mom)}}" +
                 "{{#if name}}\n" +
                 "Hello {{name}}!\n" +
                 "How are you {{name}}? more text here\n" +

@@ -3,6 +3,7 @@ package org.boon.template;
 import org.boon.Boon;
 import org.boon.Lists;
 import org.boon.Str;
+import org.boon.StringScanner;
 import org.boon.core.Conversions;
 
 import static java.util.Arrays.copyOfRange;
@@ -480,7 +481,7 @@ public class BoonTemplate {
 
     private void handleFunction(CharBuf output, String command) {
 
-        String[] split = Str.split(command, '(');
+        String[] split = StringScanner.splitByChars(command, '(', ')');
         String methodName = split[0];
         MethodAccess method = this.functionMap.get(methodName);
         if (method==null) {
@@ -490,19 +491,22 @@ public class BoonTemplate {
         String arguments = split[1];
         Object args = getObjectFromArguments(arguments);
 
-        Invoker.invokeMethodFromObjectArg(method.bound(), method, args);
+        Object out = Invoker.invokeMethodFromObjectArg(method.bound(), method, args);
 
+        if ( out != null ) {
+            output.add(out.toString());
+        }
 
     }
 
-    private Object lookup(String command) {
-        Object value =  findProperty(context, command);
+    private Object lookup(String objectName) {
+        Object value =  findProperty(context, objectName);
         if (value == null) {
             if (parentTemplate!=null) {
-                value = parentTemplate.lookup(command);
+                value = parentTemplate.lookup(objectName);
             }
         }
-        return value;
+        return value == null ? objectName : value;
     }
 
     private void processEach(CharBuf output, String arguments, CharSequence block) {
