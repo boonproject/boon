@@ -140,14 +140,141 @@ public class BoonTemplateTest {
 
     }
 
+    @Test
+    public void ifTest() {
+
+
+        replace = template().replace("{{#if name}}\n" +
+                "Hello {{name}}!\n" +
+                "How are you {{name}}?\n" +
+                "{{/if}}\n Glad to hear it", map("name", "Rick"));
+        puts (replace);
+
+
+
+        replace = template().replace("{{#if name}}\n" +
+                "{{name}}\n" +
+                "{{/if}}", map("name", "Rick"));
+        puts (replace);
+
+        ok = replace.equals("Rick") || die(replace);
+
+    }
 
     @Test
-    public void test() {
-        BoonTemplateTest.main();
+    public void ifElseTest() {
+
+
+
+        replace = template().replace("{{#if name}}\n" +
+                "{{name}}\n" +
+                "{{else}}\n" +
+                "duck\n" +
+                "{{/if}}", map("name", "Rick"));
+        puts (replace);
+
+        ok = replace.equals("Rick") || die(replace);
+
+
+        replace = template().replace("{{#if name}}\n" +
+                "{{name}}\n" +
+                "{{else}}\n" +
+                "duck\n" +
+                "{{/if}}", map("duck", "Rick"));
+
+        ok = replace.equals("duck") || die(replace);
+
+    }
+
+    @Test
+    public void testMultiArgs() {
+        replace = template().replace("{{#if name flea}}\n" +
+                "{{name}}\n" +
+                "{{else}}\n" +
+                "duck\n" +
+                "{{/if}}", map("name", "Rick", "flea", "bee"));
+
+        ok = replace.equals("Rick") || die(replace);
+
+
     }
 
 
-    public static void main (String... args) {
+    @Test
+    public void testMultiArgsFalse() {
+        replace = template().replace("{{#if name flea}}\n" +
+                "{{name}}\n" +
+                "{{else}}\n" +
+                "duck\n" +
+                "{{/if}}", map("name", "Rick", "flea", ""));
+
+        ok = replace.equals("duck") || die(replace);
+
+
+    }
+
+    @Test
+    public void testMultiArgsExpression() {
+        replace = template().replace("{{#if name ${flea} }}\n" +
+                "{{name}}\n" +
+                "{{else}}\n" +
+                "duck\n" +
+                "{{/if}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
+
+        ok = replace.equals("Rick") || die(replace);
+
+
+    }
+
+
+    @Test
+    public void testMultiArgsExpression3() {
+        replace = template().replace("{{#if name gt ${flea} }}\n" +
+                "{{name}} {{test}}\n" +
+                "{{else}}\n" +
+                "duck {{test}}\n" +
+                "{{/if}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
+
+        //puts (replace);
+        ok = replace.toString().startsWith("duck") || die(replace);
+
+
+    }
+
+    @Test
+    public void testMultiArgsExpression2() {
+        replace = template().replace("{{#if ['name', '${flea}'] }}\n" +
+                "{{name}} {{test}}\n" +
+                "{{else}}\n" +
+                "duck\n" +
+                "{{/if}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
+
+        ok = replace.equals("Rick [name, boo]") || die(replace);
+
+
+    }
+
+
+    //TODO left off here. looks like I broke each
+    @Test
+    public void eachFromJSON() {
+        replace = template().replace("{{#each ['name', '${flea}'] }}\n" +
+                "\n{{item}}\n" +
+
+                "{{/each}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
+
+        //ok = replace.equals("Rick [name, boo]") || die(replace);
+
+
+    }
+
+    @Test
+    public void test() {
+        BoonTemplateTest.stmain();
+    }
+
+
+    public static void stmain (String... args) {
         CharSequence replace;
 
         replace = template().replace("Hello {{name}}! \n How are you {{name}}?", map("name", "Rick"));
@@ -166,13 +293,6 @@ public class BoonTemplateTest {
 
         replace = template().replace("Hello {{{name}}}! \n How are you {{{name}}}?", map("name", "Rick"));
         puts(replace);
-
-
-        replace = template().replace("{{#if name}}\n" +
-                "Hello {{name}}!\n" +
-                "How are you {{name}}?\n" +
-                "{{/if}}\n Glad to hear it", map("name", "Rick"));
-        puts (replace);
 
 
 

@@ -16,6 +16,7 @@ import org.boon.primitive.CharScanner;
 
 import java.util.*;
 
+import static org.boon.Lists.in;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.*;
@@ -150,6 +151,7 @@ public class BoonTemplate {
     char expressionStart1stChar = expressionStart[0];
     char unescapedExpressionStartChar = unescapedExpressionStart[0];
     String commandMarker = "#";
+    String elseBlock = "{{else}}";
 
     //State
     int lineIndex;
@@ -159,6 +161,33 @@ public class BoonTemplate {
 
     Map<String, Command> commandMap;
 
+
+    Command command(String cmdStr) {
+
+
+        if (this.commandMap == null) {
+
+            if ( parentTemplate != null) {
+                return parentTemplate.command(cmdStr);
+            }
+            return null;
+        } else {
+            Command command = this.commandMap.get(cmdStr);
+            if (command ==  null) {
+
+                if ( parentTemplate != null) {
+                    command = parentTemplate.command(cmdStr);
+                }
+            }
+            if (command == null ) {
+                command = this.commandMap.get("missingCommand");
+            }
+
+            return command;
+        }
+
+
+    }
 
     public BoonTemplate(char[] expressionStart, char[] expressionEnd, Object functions) {
         this.expressionStart = expressionStart;
@@ -380,40 +409,50 @@ public class BoonTemplate {
         String cmd = Str.slc(command, commandMarker.length(), command.indexOf(' '));
         String arguments = Str.slc(command, commandMarker.length() + cmd.length() +1 );
         CharSequence block;
+        CharSequence[] blocks;
+        String endOfBlock;
+        endOfBlock = Str.add(endBlockStart, cmd, endBlockEnd);
 
-        String endOfBlock = Str.add(endBlockStart, cmd, endBlockEnd);
-        block = readBlock( endOfBlock );
 
         switch (Commands.command(cmd)) {
 
-            case IF:
-                processIf(output, arguments, block);
+            case UNLESS:
+                blocks = readBlock( elseBlock, endOfBlock);
+                processUnless(output, arguments, blocks);
                 break;
+
+
+            case LENGTH:
+                blocks = readBlock( elseBlock, endOfBlock);
+                processLength(output, arguments, blocks);
+                break;
+
+            case IF:
+                blocks = readBlock( elseBlock, endOfBlock);
+                processIf(output, arguments, blocks);
+                break;
+
             case EACH:
+                block = readBlock( endOfBlock );
                 processEach(output, arguments, block);
                 break;
 
             case WITH:
-                  processWith(output, arguments, block);
-                  break;
+                block = readBlock( endOfBlock );
+                processWith(output, arguments, block);
+                break;
 
             default:
-                if (commandMap!=null) {
-                    Command commandObject = commandMap.get(cmd);
-                    if (commandObject!=null) {
+
+                block = readBlock( endOfBlock );
+                Command commandObject = commandMap.get(cmd);
+                if (commandObject!=null) {
                         commandObject.processCommand(output, arguments, block, context);
-                    } else {
-                        commandObject = commandMap.get("missingCommand");
-                        if (commandObject!=null) {
-                            commandObject.processCommand(output, arguments, block, Lists.list(
-                                    map("command", cmd),
-                                    context));
-                        }
-                    }
                 }
 
           }
     }
+
 
     private void handleExpression(CharBuf output, String command) {
         Object object;
@@ -424,12 +463,20 @@ public class BoonTemplate {
     }
 
     private Object lookup(String command) {
-        return findProperty(context, command);
+        Object value =  findProperty(context, command);
+        if (value == null) {
+            if (parentTemplate!=null) {
+                value = parentTemplate.lookup(command);
+            }
+        }
+        return value;
     }
 
     private void processEach(CharBuf output, String arguments, CharSequence block) {
 
-        Object object = lookup(arguments);
+
+        Object object = getObjectFromArguments(arguments);
+
 
         if (object instanceof Map) {
             eachMapProperty(output, block, object);
@@ -501,26 +548,143 @@ public class BoonTemplate {
 
 
     private void processWith(CharBuf output, String arguments, CharSequence block) {
-        Object object = idx(context, arguments);
+
+        Object object = getObjectFromArguments(arguments);
+
         CharSequence blockOutput = template(this.expressionStart, this.expressionEnd)
-                    .replace(block, list(object, context));
+                    .replace(block, list(map("@this", object, "this", object), context));
         output.add(blockOutput);
     }
 
 
-    private void processIf(CharBuf output, String arguments, CharSequence block) {
 
-        Object oTest = lookup(arguments);
-        boolean test;
-        test = Conversions.toBoolean(oTest);
+    private void processIf(CharBuf output, String arguments, CharSequence[] blocks) {
+        doProcessIf(output, arguments, blocks, false);
+    }
+
+    private void processUnless(CharBuf output, String arguments, CharSequence[] blocks) {
+        doProcessIf(output, arguments, blocks, true);
+    }
+
+    private void processLength(CharBuf output, String arguments, CharSequence[] blocks) {
+        Object object = getObjectFromArguments(arguments);
+
+    }
+
+
+    private void doProcessIf(CharBuf output, String arguments, CharSequence[] blocks, boolean negate) {
+
+        boolean test = true;
+        Object oTest;
+
+        if (arguments.startsWith("[") || arguments.startsWith("\"") || arguments.startsWith("{")) {
+            arguments = createJSTL().replace(arguments, context).toString();
+
+            oTest = fromJson(arguments.replace('\'', '"'));
+            test = Conversions.toBoolean(oTest);
+        } else if(arguments.contains(" ")) {
+            arguments = createJSTL().replace(arguments, context).toString();
+            String[] strings = Str.splitBySpace(arguments);
+            List list = Lists.list(strings);
+
+            for (String string : strings) {
+                oTest = lookup(string);
+                if (test) test = Conversions.toBoolean(oTest);
+                if (oTest != null) {
+                    list.add(oTest);
+
+                } else {
+                    list.add(string);
+                }
+             }
+            oTest = list;
+
+        }
+        else  {
+            oTest = lookup(arguments);
+            test = Conversions.toBoolean(oTest);
+        }
+
+        CharSequence ifBody = blocks[0];
+        CharSequence elseBody = blocks.length == 2 ? blocks[1] : null;
+
+        if (negate) {
+            test = !test;
+        }
 
         if (test) {
-
-            CharSequence blockOutput = template(this.expressionStart, this.expressionEnd).replace(block, context);
+            CharSequence blockOutput = createTemplate().replace(ifBody, list(map("test", oTest, "this", oTest), context));
             output.add(blockOutput);
+        } else {
+            if (elseBody!=null) {
+                CharSequence blockOutput = createTemplate().replace(elseBody, list(map("test", oTest, "this", oTest), context));
+                output.add(blockOutput);
+            }
         }
         output.removeLastChar();
     }
+
+    BoonTemplate parentTemplate;
+
+    private BoonTemplate createTemplate() {
+        BoonTemplate boonTemplate = template(this.expressionStart, this.expressionEnd);
+        boonTemplate.parentTemplate = this;
+        boonTemplate.elseBlock = this.elseBlock;
+        boonTemplate.endBlockEnd = this.endBlockEnd;
+        boonTemplate.endBlockStart = this.endBlockStart;
+        boonTemplate.commandMarker = this.commandMarker;
+        boonTemplate.expressionEnd = this.expressionEnd;
+        boonTemplate.expressionStart = this.expressionStart;
+        boonTemplate.unescapedExpressionStart = this.unescapedExpressionEnd;
+        boonTemplate.unescapedExpressionEnd = this.unescapedExpressionEnd;
+
+
+        return boonTemplate;
+    }
+
+
+    private CharSequence[] readBlock(String endBlock1, String endBlock2) {
+        CharBuf buf = CharBuf.create(80);
+        CharBuf buf1 = null;
+        CharBuf buf2 = null;
+        int index;
+        lineIndex++;
+
+        for (; lineIndex<lines.length; lineIndex++) {
+
+            index = findString(endBlock1, lines[lineIndex]);
+            if (index != -1) {
+                buf1 = buf;
+                buf = CharBuf.create(80);
+                continue;
+            }
+
+            index = findString(endBlock2, lines[lineIndex]);
+            if (index != -1) {
+
+                if (buf1 != null) {
+                   buf2 = buf;
+                };
+                break;
+            }
+
+
+            buf.addLine(lines[lineIndex]);
+
+
+        }
+
+        lineIndex++;
+
+
+        if (buf2 == null) {
+            return new CharBuf[]{buf};
+        } else {
+            return new CharBuf[]{buf1, buf2};
+        }
+
+    }
+
 
     private CharSequence readBlock(String endBlock) {
         CharBuf buf = CharBuf.create(80);
@@ -541,6 +705,40 @@ public class BoonTemplate {
         return buf;
     }
 
+
+    private Object getObjectFromArguments(String arguments) {
+        Object object;
+        if (arguments.startsWith("[") || arguments.startsWith("\"") || arguments.startsWith("{")) {
+            arguments = createJSTL().replace(arguments, context).toString();
+
+            object = fromJson(arguments.replace('\'', '"'));
+        } else if(arguments.contains(" ")) {
+            arguments = createJSTL().replace(arguments, context).toString();
+            String[] strings = Str.splitBySpace(arguments);
+            List list = Lists.list(strings);
+
+            for (String string : strings) {
+                object = lookup(string);
+                if (object != null) {
+                    list.add(object);
+                } else {
+                    list.add(string);
+                }
+            }
+            object = list;
+
+        }
+        else  {
+            object = lookup(arguments);
+        }
+        return object;
+    }
+
+    private BoonTemplate createJSTL() {
+        BoonTemplate jstl = jstl();
+        jstl.parentTemplate = this;
+        return jstl;
+    }
 
 
 }
