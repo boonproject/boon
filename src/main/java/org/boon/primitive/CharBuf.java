@@ -100,6 +100,11 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
+    public final CharBuf add( CharSequence str ) {
+        add( FastStringUtils.toCharArray( str ) );
+        return this;
+    }
+
     public final CharBuf addString( String str ) {
         add( FastStringUtils.toCharArray( str ) );
         return this;
@@ -311,6 +316,13 @@ public class CharBuf extends Writer implements CharSequence {
 
     public CharBuf addLine( String str ) {
         add( str.toCharArray() );
+        add( '\n' );
+        return this;
+    }
+
+
+    public CharBuf addLine( char[] chars ) {
+        add( chars );
         add( '\n' );
         return this;
     }

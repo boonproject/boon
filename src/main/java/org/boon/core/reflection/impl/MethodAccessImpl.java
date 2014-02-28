@@ -73,14 +73,9 @@ public class MethodAccessImpl implements MethodAccess {
             return method.invoke( object, args );
         } catch ( Throwable ex ) {
 
-            List argTypes = Lists.mapBy(args, new Object() {
-                    Class<?> apply(Object arg) {
-                       return arg == null ? null : arg.getClass();
-                    }
-            });
             return handle( Object.class, ex,  "unable to invoke method", method,
                     " on object ", object, "with arguments", args,
-                    "\nparameter types", parameterTypes(), "\nargument types are", argTypes );
+                    "\nparameter types", parameterTypes(), "\nargument types are" );
 
         }
     }

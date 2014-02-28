@@ -119,8 +119,11 @@ public class Str {
 
     @Universal
     public static String add( String str, String str2 ) {
-        return FastStringUtils.noCopyStringFromChars( Chr.add( FastStringUtils.toCharArray(str),
-                Chr.add( FastStringUtils.toCharArray(str2) ) ));
+        return FastStringUtils.noCopyStringFromChars(
+                Chr.add(
+                 FastStringUtils.toCharArray(str),
+                 FastStringUtils.toCharArray(str2) )
+        );
     }
 
     @Universal
@@ -368,5 +371,22 @@ public class Str {
             }
         }
         return rv.toString();
+    }
+
+    public static String toString(Object object, String defaultString) {
+        if (object == null) {
+            return defaultString;
+        } else {
+            return object.toString();
+        }
+    }
+
+
+    public static String toString(Object object) {
+        if (object == null) {
+            return "";
+        } else {
+            return object.toString();
+        }
     }
 }

@@ -15,6 +15,53 @@ import static org.junit.Assert.assertEquals;
 public class CharScannerTest {
 
 
+    @Test
+    public void findString() {
+        String findString = "456";
+        String string = "0123456789101112";
+        int index = CharScanner.findString(findString, string.toCharArray());
+
+        boolean ok = index == 4 || die(index);
+    }
+
+    @Test
+    public void findString2() {
+        String findString = "{{{";
+        String string = "0123{567{{0123{{{789";
+        int index = CharScanner.findString(findString, string.toCharArray());
+
+        boolean ok = index == 14 || die(index);
+    }
+
+
+    @Test
+    public void findString3() {
+        String findString = "{{{";
+        String string = "0123{567{{0123{{6789{{{";
+        int index = CharScanner.findString(findString, string.toCharArray());
+
+        boolean ok = index == 20 || die(index);
+    }
+
+    @Test
+    public void findString4() {
+        String findString = "{{{";
+        String string = "{{{0123{567{{0123{{6789{{{";
+        int index = CharScanner.findString(findString, string.toCharArray());
+
+        boolean ok = index == 0 || die(index);
+    }
+
+
+    @Test
+    public void findString5() {
+        String findString = "[[[";
+        String string = "{{{012[3{5[67{{01[[23{{67[[8[9{{{";
+        int index = CharScanner.findString(findString, string.toCharArray());
+
+        boolean ok = index == -1 || die(index);
+    }
+
 
     @Test
     public void parseInt() {

@@ -2,6 +2,8 @@ package org.boon.primitive;
 
 
 import org.boon.Exceptions;
+import org.boon.core.reflection.FastStringUtils;
+import org.boon.di.ProviderInfo;
 
 import java.util.Arrays;
 
@@ -1185,5 +1187,73 @@ public class CharScanner {
         }
         return results;
 
+    }
+
+    public static int findChar(char c, char[] line) {
+        int idx = -1;
+        for ( int index = 0;  index < line.length; index++) {
+            if ( line[index] == c ) {idx = index; break;}
+        }
+        return idx;
+    }
+
+
+
+    public static int findChar(char c, int startIndex, char[] line) {
+        int idx = -1;
+        for ( int index = startIndex;  index < line.length; index++) {
+            if ( line[index] == c ) {idx = index; break;}
+        }
+        return idx;
+    }
+
+
+    public static int findString(String matchString, int startIndex, char[] line) {
+        return findChars(FastStringUtils.toCharArray(matchString), startIndex, line);
+    }
+
+    public static int findString(String matchString, char[] line) {
+        return findChars(FastStringUtils.toCharArray(matchString), 0, line);
+    }
+
+
+    public static int findChars(char[] matchChars, char[] line) {
+        return findChars(matchChars, 0, line);
+    }
+
+    public static int findChars(char[] matchChars, int startIndex, char[] line) {
+
+        if ((line.length - startIndex) < matchChars.length) {
+            return -1;
+        }
+
+        int index = findChar(matchChars[0], startIndex, line);
+
+        if (index == -1) {
+            return -1;
+        }
+
+
+        int i= index;
+
+        loop:
+        for (; i < line.length; i++) {
+            for (int j = 0; j < matchChars.length; j++) {
+                char c = matchChars[j];
+                if (c == line[i]) {
+
+                    if (j+1 == matchChars.length) {
+                        return index;
+                    }
+                    i++;
+                    continue;
+                } else {
+                    i++;
+                    break loop;
+                }
+            }
+        }
+
+        return findChars(matchChars, i, line);
     }
 }

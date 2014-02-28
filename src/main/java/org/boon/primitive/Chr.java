@@ -214,7 +214,7 @@ public class Chr {
 
 
     public static char[] grow( char[] array ) {
-        char[] newArray = new char[ array.length * 2 ];
+        char[] newArray = new char[ (array.length+1) * 2 ];
         arraycopy ( array, 0, newArray, 0, array.length );
         return newArray;
     }

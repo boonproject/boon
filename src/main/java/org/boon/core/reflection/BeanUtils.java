@@ -174,13 +174,7 @@ public class BeanUtils {
             } else {
 
                 if ( field == null ) {
-                    die( sputs(
-                            "We were unable to access property=", property,
-                            "\nThe properties passed were=", properties,
-                            "\nThe root object is =", root.getClass().getName(),
-                            "\nThe current object is =", object.getClass().getName()
-                    )
-                    );
+                    return null;
                 }
 
                 object = field.getObject( object );
@@ -359,7 +353,8 @@ public class BeanUtils {
 
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
+
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
@@ -427,6 +422,41 @@ public class BeanUtils {
         return getPropertyInt( object, properties );
     }
 
+    /**
+     * Get property value
+     *
+     * @param object
+     * @param path   in dotted notation
+     * @return
+     */
+    public static String idxStr( Object object, String path ) {
+
+
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+
+        return getPropertyString(object, properties);
+    }
+
+    private static String getPropertyString(Object root, String[] properties) {
+
+
+
+        Object object = baseForGetProperty( root, properties );
+
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
+
+        final String lastProperty = properties[ properties.length - 1 ];
+        FieldAccess field = fields.get( lastProperty );
+
+        if ( field.type() == Typ.string ) {
+            return (String) field.getObject( object );
+        } else {
+            return Conversions.toString( field.getValue( object ) );
+        }
+
+
+    }
+
 
     /**
      * @param root
@@ -467,7 +497,7 @@ public class BeanUtils {
     public static float getPropertyFloat( final Object root, final String... properties ) {
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
@@ -579,7 +609,8 @@ public class BeanUtils {
 
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
+
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
@@ -618,7 +649,8 @@ public class BeanUtils {
 
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
+
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
@@ -657,7 +689,7 @@ public class BeanUtils {
 
         Object object = baseForGetProperty( root, properties );
 
-        Map<String, FieldAccess> fields = getPropertyFieldAccessMap( object.getClass() );
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
         final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 

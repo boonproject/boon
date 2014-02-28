@@ -2,6 +2,7 @@ package org.boon.core;
 
 import org.boon.Boon;
 import org.boon.Sets;
+import org.boon.Str;
 import org.boon.StringScanner;
 import org.boon.core.reflection.*;
 import org.boon.primitive.CharBuf;
@@ -241,10 +242,11 @@ public class Conversions {
 
     }
 
-    final static Set<String> TRUE_SET = Sets.set( "t", "true", "True", "y", "yes", "1", "aye",
-            "T", "TRUE", "ok" );
-
     public static boolean toBoolean( Object obj ) {
+
+        if (obj == null) {
+            return false;
+        }
 
         if ( obj.getClass() == boolean.class ) {
             return boolean.class.cast( obj );
@@ -253,13 +255,14 @@ public class Conversions {
         } else if ( obj instanceof Number || obj.getClass().isPrimitive() ) {
             int value = toInt( obj );
             return value != 0 ? true : false;
-        } else if ( obj instanceof String || obj instanceof CharSequence
-                || obj.getClass() == char[].class ) {
+        } else if ( obj instanceof String || obj instanceof CharSequence ) {
             String str = Conversions.toString( obj );
             if ( str.length() == 0 ) {
                 return false;
+            } if (str.equals("false")) {
+                return false;
             } else {
-                return Sets.in( str, TRUE_SET );
+                return true;
             }
         } else if ( Boon.isArray( obj ) || obj instanceof Collection ) {
             return Boon.len( obj ) > 0;
@@ -698,7 +701,7 @@ public class Conversions {
         }
     }
 
-    public static <T extends Enum> T toEnum( Class<T> cls, String value ) {
+    public static <T extends Enum> T toEnumOld( Class<T> cls, String value ) {
         try {
             return  (T) Enum.valueOf( cls, value );
         } catch ( Exception ex ) {
@@ -706,6 +709,38 @@ public class Conversions {
         }
     }
 
+    public static <T extends Enum> T toEnum( Class<T> cls, String value ) {
+
+        return toEnum(cls, value, null);
+    }
+
+    public static <T extends Enum> T toEnum( Class<T> cls, String value, Enum defaultEnum ) {
+
+        T[] enumConstants = cls.getEnumConstants();
+        for ( T e : enumConstants ) {
+            if ( e.name().equals(value) ) {
+                return e;
+            }
+        }
+
+
+        value = value.toUpperCase().replace( '-', '_' );
+        for ( T e : enumConstants ) {
+            if ( e.name().equals(value) ) {
+                return e;
+            }
+        }
+
+        value = Str.underBarCase(value);
+        for ( T e : enumConstants ) {
+            if ( e.name().equals(value) ) {
+                return e;
+            }
+        }
+
+
+        return (T)defaultEnum;
+    }
 
     public static <T extends Enum> T toEnum( Class<T> cls, int value ) {
 
@@ -879,6 +914,9 @@ public class Conversions {
 
     public static <T> Iterator<T> iterator( Class<T> class1, final Object value ) {
 
+        if (value == null) {
+            return Collections.EMPTY_LIST.iterator();
+        }
 
         if ( Boon.isArray( value ) ) {
             final int length = Boon.arrayLength( value );
@@ -904,9 +942,6 @@ public class Conversions {
             };
         } else if ( Typ.isCollection( value.getClass() ) ) {
             return ( ( Collection<T> ) value ).iterator();
-        } else if ( Typ.isMap( value.getClass() ) ) {
-            Iterator<T> iterator = ( ( Map<String, T> ) value ).values().iterator();
-            return iterator;
         } else {
             return ( Iterator<T> ) Collections.singleton( value ).iterator();
         }

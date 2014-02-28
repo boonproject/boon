@@ -178,6 +178,15 @@ public class ClassMeta <T> implements Annotated{
         return meta;
     }
 
+
+    public static ClassMeta classMetaEither(Object obj) {
+        if (obj instanceof Class) {
+            return classMeta((Class<?>) obj);
+        } else {
+            return classMeta(obj.getClass());
+        }
+    }
+
     public MethodAccess method(String name) {
         return methodMap.get( name );
     }
