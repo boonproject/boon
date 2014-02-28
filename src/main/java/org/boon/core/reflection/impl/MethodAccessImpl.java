@@ -80,6 +80,19 @@ public class MethodAccessImpl implements MethodAccess {
         }
     }
 
+
+    public Object invokeBound(Object... args) {
+        try {
+            return method.invoke( instance, args );
+        } catch ( Throwable ex ) {
+
+            return handle( Object.class, ex,  "unable to invoke method", method,
+                    " on object with arguments", args,
+                    "\nparameter types", parameterTypes(), "\nargument types are" );
+
+        }
+    }
+
     @Override
     public Object invokeStatic(Object... args) {
         try {
@@ -93,8 +106,9 @@ public class MethodAccessImpl implements MethodAccess {
     }
 
     @Override
-    public void bind(Object instance) {
+    public MethodAccess bind(Object instance) {
         die("Bind does not work for cached methodAccess make a copy with methodAccsess() first");
+        return null;
     }
 
     @Override
@@ -113,17 +127,32 @@ public class MethodAccessImpl implements MethodAccess {
         return  m;
     }
 
+    Object instance;
     @Override
     public MethodAccess methodAccess() {
         return new MethodAccessImpl(this.method){
 
 
             @Override
-            public void bind(Object instance) {
+            public MethodAccess bind(Object instance) {
                 methodHandle.bindTo(instance);
+                this.instance = instance;
+                return this;
             }
 
+
+            @Override
+            public Object bound() {
+                return instance;
+            }
+
+
         };
+    }
+
+    @Override
+    public Object bound() {
+        return null;
     }
 
 

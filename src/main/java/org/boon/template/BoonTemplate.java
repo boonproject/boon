@@ -10,6 +10,7 @@ import static java.util.Arrays.copyOfRange;
 
 import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MethodAccess;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
@@ -162,6 +163,9 @@ public class BoonTemplate {
     Map<String, Command> commandMap;
 
 
+    Map<String, MethodAccess> functionMap;
+
+
     Command command(String cmdStr) {
 
 
@@ -206,10 +210,15 @@ public class BoonTemplate {
 
     private void extractFunctions(Object functions, boolean all) {
         commandMap = new HashMap<>();
+        functionMap = new HashMap<>();
 
         ClassMeta<?> classMeta = ClassMeta.classMetaEither(functions);
 
         Iterable<MethodAccess> methods = classMeta.methods();
+
+        for (MethodAccess methodAccess : methods) {
+            functionMap.put(methodAccess.name(), methodAccess.methodAccess().bind(functions));
+        }
 
         if (!all) {
             for (MethodAccess methodAccess : methods) {
@@ -219,6 +228,8 @@ public class BoonTemplate {
                     commandMap.put(methodAccess.name(), new InvokeCommand(functions, methodAccess));
                 }
             }
+
+
         } else {
             for (MethodAccess methodAccess : methods) {
                 commandMap.put(methodAccess.name(), new InvokeCommand(functions, methodAccess));
@@ -455,11 +466,33 @@ public class BoonTemplate {
 
 
     private void handleExpression(CharBuf output, String command) {
-        Object object;
 
-        object = lookup(command);
-        String str = Str.toString(object, command);
-        output.add( escape(str) );
+        if (command.contains("(")) {
+            handleFunction(output, command);
+        } else {
+            Object object;
+            object = lookup(command);
+            String str = Str.toString(object, command);
+            output.add( escape(str) );
+        }
+    }
+
+
+    private void handleFunction(CharBuf output, String command) {
+
+        String[] split = Str.split(command, '(');
+        String methodName = split[0];
+        MethodAccess method = this.functionMap.get(methodName);
+        if (method==null) {
+            return;
+        }
+
+        String arguments = split[1];
+        Object args = getObjectFromArguments(arguments);
+
+        Invoker.invokeMethodFromObjectArg(method.bound(), method, args);
+
+
     }
 
     private Object lookup(String command) {

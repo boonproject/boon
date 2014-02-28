@@ -22,10 +22,11 @@ public interface MethodAccess extends BaseAccess{
 
     Object invokeStatic(Object... args);
 
-    void bind(Object instance);
+    MethodAccess bind(Object instance);
 
     MethodHandle methodHandle();
 
     MethodAccess methodAccess();
 
+    Object bound();
 }

@@ -269,6 +269,53 @@ public class BoonTemplateTest {
     }
 
     @Test
+    public void hiMom() {
+
+        replace = templateWithDynamicFunctions(
+                new Object() {
+
+                    String add(int a, int b, String var, CharSequence block, Object context) {
+                        CharSequence blockOutput = template()
+                                .replace(block, list(map(var, a + b), context));
+                        return blockOutput.toString();
+
+                    }
+
+                    String hiMom(String hi) {
+                        return "Say hi mom " + hi;
+                    }
+                }
+        ).replace("" +
+                //"{{hiMom(mom)}}" +
+                "{{#if name}}\n" +
+                "Hello {{name}}!\n" +
+                "How are you {{name}}? more text here\n" +
+                "{{/if}}\n" +
+                "<ol>\n" +
+                "{{#each foods}}\n" +
+                "       <li>{{name}}</li>\n" +
+                "{{/each}}\n" +
+                "</o>\n" +
+                "{{#add [1,2,'out']}}\n" +
+                "By: {{out}}\n" +
+                "{{/add}}"
+                ,
+
+                map("name", "Rick", "foods",
+                        list(
+                                map("name", "pizza"),
+                                map("name", "fish"),
+                                map("name", "fruit")
+                        ),
+                        "rick", map("name", "Rick Hightower")
+                ));
+
+
+        puts(replace);
+
+    }
+
+    @Test
     public void test() {
         BoonTemplateTest.stmain();
     }
@@ -471,42 +518,6 @@ public class BoonTemplateTest {
         puts("----");
 
 
-        replace = templateWithDynamicFunctions(
-                new Object() {
-
-                    String add(int a, int b, String var, CharSequence block, Object context) {
-                        CharSequence blockOutput = template()
-                                .replace(block, list(map(var, a + b), context));
-                        return blockOutput.toString();
-
-                    }
-                }
-        ).replace("{{#if name}}\n" +
-                "Hello {{name}}!\n" +
-                "How are you {{name}}? more text here\n" +
-                "{{/if}}\n" +
-                "<ol>\n" +
-                "{{#each foods}}\n" +
-                "       <li>{{name}}</li>\n" +
-                "{{/each}}\n" +
-                "</o>\n" +
-                "{{#add [1,2,'out']}}\n" +
-                "By: {{out}}\n" +
-                "{{/add}}"
-                ,
-
-                map("name", "Rick", "foods",
-                        list(
-                                map("name", "pizza"),
-                                map("name", "fish"),
-                                map("name", "fruit")
-                        ),
-                        "rick", map("name", "Rick Hightower")
-                ));
-
-
-        puts(replace);
-
         puts("----");
 
 
@@ -524,7 +535,9 @@ public class BoonTemplateTest {
                         return blockOutput.toString();
 
                     }
+
                 }
+
         ).replace("{{#if name}}\n" +
                 "Hello {{name}}!\n" +
                 "How are you {{name}}? more text here\n" +
