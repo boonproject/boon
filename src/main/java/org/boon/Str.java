@@ -2,6 +2,7 @@ package org.boon;
 
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
 import java.util.List;
@@ -193,6 +194,12 @@ public class Str {
 
     public static String[] splitComma( String str ) {
         char[][] split = Chr.splitComma( FastStringUtils.toCharArray(str) );
+        return fromCharArrayOfArrayToStringArray( split );
+    }
+
+
+    public static String[] splitBySpace( String str ) {
+        char[][] split = CharScanner.splitBySpace( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 

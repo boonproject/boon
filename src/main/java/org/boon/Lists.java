@@ -512,7 +512,7 @@ public class Lists {
 
         List list = new ArrayList();
         for (Object o : objects) {
-            list.add( methodAccess.invoke(o));
+            list.add( methodAccess.invoke(function, o));
         }
         return list;
     }
@@ -524,7 +524,7 @@ public class Lists {
 
         List list = new ArrayList(objects.length);
         for (Object o : objects) {
-            list.add( methodAccess.invoke(o));
+            list.add( methodAccess.invoke(function, o));
         }
         return list;
     }

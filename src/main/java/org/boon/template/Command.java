@@ -1,4 +1,4 @@
-package org.boon.handlebars;
+package org.boon.template;
 
 import org.boon.primitive.CharBuf;
 

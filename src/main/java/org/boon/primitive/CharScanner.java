@@ -26,6 +26,7 @@ public class CharScanner {
 
 
     protected static final int DECIMAL_POINT = '.';
+    private static final int SPACE =  ' ';
 
     private static int NEWLINE= '\n';
 
@@ -239,9 +240,11 @@ public class CharScanner {
 
         if ( c != NEWLINE || c != CARRIAGE_RETURN ) {
 
-            results[ resultIndex ] = Chr.copy(
+            if (resultIndex < results.length) {
+                results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );
-            resultIndex++;
+                resultIndex++;
+            }
         }
 
         int actualLength = resultIndex;
@@ -1174,6 +1177,60 @@ public class CharScanner {
         }
 
         if ( c != COMMA  ) {
+
+            results[ resultIndex ] = Chr.copy(
+                    inputArray, startCurrentLineIndex, currentLineLength - 1 );
+            resultIndex++;
+        }
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length ) {
+            final int newSize = results.length - actualLength;
+            results = __shrink( results, newSize );
+        }
+        return results;
+
+    }
+
+
+    public static char[][] splitBySpace( char[] inputArray) {
+        return splitByChar(SPACE, inputArray);
+    }
+
+    public static char[][] splitByChar(int splitChar, char[] inputArray) {
+
+        /** Holds the results. */
+        char[][] results = new char[ 16 ][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex = 0;
+        int currentLineLength = 1;
+
+        final int SPLIT_CHAR = splitChar;
+
+        int c = '\u0000';
+        int index = 0;
+
+        for (; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[ index ];
+            if ( c == SPLIT_CHAR ) {
+
+                if ( resultIndex == results.length ) {
+
+                    results = _grow( results );
+                }
+
+
+                results[ resultIndex ] = Chr.copy(
+                        inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                startCurrentLineIndex = index + 1; //skip the char
+
+                currentLineLength = 0;
+                resultIndex++;
+            }
+        }
+
+        if ( c != SPLIT_CHAR  ) {
 
             results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1 );

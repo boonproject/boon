@@ -259,6 +259,27 @@ public class BeanUtils {
         return getPropertyValue( object, properties );
     }
 
+
+    public static Object findProperty(Object context, String propertyPath) {
+        Object object = null;
+        Iterator iterator = Conversions.iterator(context);
+
+        if (propertyPath.equals("this")) {
+            object = iterator.next();
+        } else {
+            while (iterator.hasNext()) {
+                Object ctx = iterator.next();
+                object = idx(ctx, propertyPath);
+                if (object != null) {
+                    break;
+                }
+            }
+        }
+
+        return object;
+
+    }
+
     /**
      * Get property value
      *
@@ -451,7 +472,7 @@ public class BeanUtils {
         if ( field.type() == Typ.string ) {
             return (String) field.getObject( object );
         } else {
-            return Conversions.toString( field.getValue( object ) );
+            return Conversions.toString(field.getValue(object));
         }
 
 

@@ -1,9 +1,8 @@
-package org.boon.handlebars;
+package org.boon.template;
 
 
 import org.boon.Lists;
 import org.boon.core.Typ;
-import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MethodAccess;
 import org.boon.primitive.CharBuf;
@@ -53,9 +52,11 @@ public class InvokeCommand implements Command{
     @Override
     public void processCommand(CharBuf output, String args, CharSequence block, Object context) {
 
+        block = block.toString();
+
         if (args.trim().startsWith("[") || args.startsWith("{") || args.startsWith("'")) {
 
-            String arguments = HandleBarTemplateParser.template("${", "}").replace(args, context).toString();
+            String arguments = BoonTemplate.template("${", "}").replace(args, context).toString();
 
             Object o = fromJson(arguments.replace('\'', '"'));
 
@@ -74,7 +75,7 @@ public class InvokeCommand implements Command{
             }
         } else {
             if (methodAccess.returnType() == Typ.string || methodAccess.returnType() == Typ.chars) {
-                CharSequence out = (CharSequence) methodAccess.invoke(function, args, block, context);
+                CharSequence out = (CharSequence)methodAccess.invoke(function, args, block.toString(), context);
                 output.add(out);
             } else {
                 methodAccess.invoke(function, output, args, block, context);

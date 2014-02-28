@@ -318,7 +318,7 @@ public class ChrTest {
 
         assertEquals(
                 len( letters ),
-                10
+                12
         );
 
 
