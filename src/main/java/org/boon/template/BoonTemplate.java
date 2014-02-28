@@ -18,6 +18,7 @@ import org.boon.primitive.CharScanner;
 
 import java.util.*;
 
+import static org.boon.Boon.puts;
 import static org.boon.Lists.in;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
@@ -286,15 +287,7 @@ public class BoonTemplate {
 
     public CharSequence replace (CharSequence template, Object context) {
 
-        if (context instanceof CharSequence) {
-            try {
-                this.context = fromJson(context.toString());
-            } catch (Exception ex) {
-                this.context = context;
-            }
-        } else {
-            this.context = context;
-        }
+        initContext(context);
         char[] chars = FastStringUtils.toCharArray(template);
         CharBuf output = CharBuf.create(template.length());
 
@@ -302,6 +295,7 @@ public class BoonTemplate {
 
         for ( lineIndex = 0; lineIndex < lines.length; lineIndex++ ) {
             char [] line = lines[lineIndex];
+            //puts("LINE", new String(line));
 
             if (lineHasCommand()) {
                 processLineCommand(output, line); //for JSTL like commands
@@ -319,6 +313,18 @@ public class BoonTemplate {
 
         output.removeLastChar();
         return output;
+    }
+
+    private void initContext(Object context) {
+        if (context instanceof CharSequence) {
+            try {
+                this.context = fromJson(context.toString());
+            } catch (Exception ex) {
+                this.context = context;
+            }
+        } else {
+            this.context = context;
+        }
     }
 
 
@@ -499,14 +505,19 @@ public class BoonTemplate {
 
     }
 
+
     private Object lookup(String objectName) {
+        return lookup(objectName, objectName);
+    }
+
+    private Object lookup(String objectName, String defaultValue) {
         Object value =  findProperty(context, objectName);
         if (value == null) {
             if (parentTemplate!=null) {
                 value = parentTemplate.lookup(objectName);
             }
         }
-        return value == null ? objectName : value;
+        return value == null ? defaultValue : value;
     }
 
     private void processEach(CharBuf output, String arguments, CharSequence block) {
@@ -638,7 +649,7 @@ public class BoonTemplate {
 
         }
         else  {
-            oTest = lookup(arguments);
+            oTest = lookup(arguments, null);
             test = Conversions.toBoolean(oTest);
         }
 
@@ -711,8 +722,6 @@ public class BoonTemplate {
 
         }
 
-        lineIndex++;
-
 
         if (buf2 == null) {
             return new CharBuf[]{buf};
@@ -738,7 +747,6 @@ public class BoonTemplate {
             }
         }
 
-        lineIndex++;
         return buf;
     }
 
