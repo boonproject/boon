@@ -203,6 +203,11 @@ public class Str {
         return fromCharArrayOfArrayToStringArray( split );
     }
 
+    public static String[] splitByPipe( String str ) {
+        char[][] split = CharScanner.splitByPipe( FastStringUtils.toCharArray(str) );
+        return fromCharArrayOfArrayToStringArray( split );
+    }
+
     public static String[] fromCharArrayOfArrayToStringArray( char[][] split ) {
         String[] results = new String[ split.length ];
 

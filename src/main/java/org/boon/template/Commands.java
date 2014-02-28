@@ -15,7 +15,8 @@ public enum Commands {
     EMPTY, //like if but checks if a list is empty
     LENGTH, //like if but checks to see if a list has a certain length
     JSON, //converts java object into json for pages that have JSON content
-    FUNC //calls a function if return type is not void, outputs to screen, hmmmm.... 
+    FUNC, //calls a function if return type is not void, outputs to screen, hmmmm....
+    INCLUDE //INCLUDE ANOTHER TEMPLATE has a name gets mapped in.. used like function if found in namespace
     ;
 
     public static Commands command(String value) {

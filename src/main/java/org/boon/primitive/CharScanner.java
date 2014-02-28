@@ -27,6 +27,7 @@ public class CharScanner {
 
     protected static final int DECIMAL_POINT = '.';
     private static final int SPACE =  ' ';
+    private static final int PIPE = '|';
 
     private static int NEWLINE= '\n';
 
@@ -1312,5 +1313,10 @@ public class CharScanner {
         }
 
         return findChars(matchChars, i, line);
+    }
+
+    public static char[][] splitByPipe(char[] inputArray) {
+        return splitByChar(PIPE, inputArray);
+
     }
 }

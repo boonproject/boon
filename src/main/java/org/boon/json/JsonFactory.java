@@ -79,4 +79,7 @@ public class JsonFactory {
         return new ObjectMapperImpl(jpf, jsf);
     }
 
+    public static String niceJson(String str) {
+        return str.replace('\'', '\"');
+    }
 }

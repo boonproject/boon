@@ -1375,6 +1375,23 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null ) {
+            return false;
+        }
 
+        if (o instanceof CharSequence) {
+            return this.toString().equals(o.toString());
+        } else {
+            return false;
+        }
+
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
 }
 

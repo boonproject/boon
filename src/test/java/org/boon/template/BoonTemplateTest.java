@@ -2,6 +2,7 @@ package org.boon.template;
 
 import org.boon.Str;
 import org.boon.core.Fn;
+import org.boon.json.JsonFactory;
 import org.junit.Test;
 
 import java.util.List;
@@ -9,12 +10,14 @@ import java.util.List;
 import static org.boon.Arrays.slc;
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Lists.mapBy;
 import static org.boon.Maps.map;
 import static org.boon.Str.joinCollection;
 import static org.boon.core.reflection.BeanUtils.getPropertyValue;
 import static org.boon.core.reflection.BeanUtils.idx;
+import static org.boon.json.JsonFactory.niceJson;
 import static org.boon.json.JsonFactory.toJson;
 import static org.boon.template.BoonTemplate.*;
 
@@ -22,6 +25,120 @@ import static org.boon.template.BoonTemplate.*;
  * Created by Richard on 2/27/14.
  */
 public class BoonTemplateTest {
+
+    String listTemplate = "{{#each items}}\n" +
+            "\n" +
+            " this {{this}}, index {{@index}}, key {{@key}}, first {{@first}}, last {{@last}}\n" +
+            "\n" +
+            "{{/each}}";
+    CharSequence replace;
+
+    boolean ok = true;
+
+    public static class Name {
+        String firstName;
+        String lastName;
+
+        public Name(String firstName, String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+    }
+
+    public static class Person {
+        Name name;
+
+        public Person(Name name) {
+            this.name = name;
+        }
+    }
+
+    @Test
+    public void testDefault() {
+
+
+        replace = template().replace("{{name|Rick}}", null);
+        ok  = replace.equals("Rick") || die(replace);
+
+        replace = template().replace("{{name|Bob}}", map("name", "Rick"));
+        ok &= replace.equals("Rick") || die(replace);
+
+
+
+        replace = template().replace("{{name|Bob}}", niceJson("{'name':'Rick'}"));
+        ok &= replace.equals("Rick") || die(replace);
+
+    }
+
+    @Test
+    public void testDefault2() {
+
+
+        replace = template().replace("{{this.name.firstName|Bob}}",
+                                 new Person(new Name("Rick", "Hightower")));
+
+        ok &= replace.equals("Rick") || die(replace);
+
+
+        replace = template().replace("{{this/name/firstName|Bob}}",
+                                 new Person(new Name("Sam", "Hightower")));
+
+        ok &= replace.equals("Sam") || die(replace);
+
+
+        replace = template().replace("{{name/firstName|Bob}}",
+                new Person(new Name("RickyBobby", "Hightower")));
+
+        ok &= replace.equals("RickyBobby") || die(replace);
+
+
+
+        replace = template().replace("{{name/firstName|Bob}}",
+                niceJson("{ 'name': { 'firstName':'RickyBobby', 'lastName':'Hightower' } }"));
+
+        ok &= replace.equals("RickyBobby") || die(replace);
+
+    }
+
+
+    @Test
+    public void testDefault3() {
+
+
+        replace = template().replace("{{[1]/name/firstName|Bob}}",
+                list(map("a", 1), list(
+                        new Person(new Name("Diana", "Hightower")),
+                        new Person(new Name("Rick", "Hightower"))
+
+                ))
+        );
+
+        ok &= replace.equals("Rick") || die(replace);
+
+    }
+
+    @Test
+    public void testIteration() {
+
+
+        replace = template().replace(listTemplate, map("items", list("apple", "oranges", "pears")));
+
+        puts (replace);
+
+        replace = template().replace(listTemplate, map("items", map("apple", 1, "oranges", 2, "pears", 4)));
+
+        puts (replace);
+
+
+        replace = template().replace(listTemplate, niceJson("{'items' : ['apple', 'oranges', 'pears']}"));
+
+        puts (replace);
+
+        replace = template().replace(listTemplate, niceJson("{'items' : {'apple': 1, 'oranges': 2, 'pears': 4)}}"));
+
+        puts (replace);
+
+    }
 
 
     @Test

@@ -163,6 +163,25 @@ public class BeanUtils {
                 return null;
             }
 
+            if (property.equals("this")) {
+                if (!(object instanceof Map)) {
+                    continue;
+                } else {
+                    Object aThis = ((Map) object).get("this");
+                    if (aThis!=null) {
+                        object = aThis;
+                        continue;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+
+            if (object instanceof Map) {
+                object = ((Map) object).get(property);
+                continue;
+            }
+
             Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
             FieldAccess field = fields.get( property );
@@ -254,29 +273,40 @@ public class BeanUtils {
     public static Object idx( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByCharsNoneEmpty( path, '.', '[', ']' );
+        String[] properties = StringScanner.splitByCharsNoneEmpty( path, '.', '[', ']', '/' );
 
         return getPropertyValue( object, properties );
     }
 
 
     public static Object findProperty(Object context, String propertyPath) {
+
+
+        int index = propertyPath.indexOf('|');
+
+        Object defaultValue = null;
+
+        if (index!=-1) {
+
+            String[] splitByPipe = Str.splitByPipe(propertyPath);
+            defaultValue = splitByPipe[1];
+            propertyPath = splitByPipe[0];
+
+        } else {
+            defaultValue = null;
+        }
+
         Object object = null;
         Iterator iterator = Conversions.iterator(context);
-
-        if (propertyPath.equals("this")) {
-            object = iterator.next();
-        } else {
-            while (iterator.hasNext()) {
+        while (iterator.hasNext()) {
                 Object ctx = iterator.next();
                 object = idx(ctx, propertyPath);
                 if (object != null) {
-                    break;
+                    return object;
                 }
-            }
         }
 
-        return object;
+        return defaultValue;
 
     }
 

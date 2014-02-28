@@ -1,16 +1,13 @@
 package org.boon.template;
 
+import org.boon.Boon;
 import org.boon.Lists;
 import org.boon.Str;
 import org.boon.core.Conversions;
 
 import static java.util.Arrays.copyOfRange;
-import static org.boon.Arrays.slc;
-import static org.boon.Boon.sputs;
-import static org.boon.Lists.mapBy;
-import static org.boon.Str.joinCollection;
 
-import org.boon.core.Fn;
+
 import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.MethodAccess;
@@ -19,13 +16,11 @@ import org.boon.primitive.CharScanner;
 
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.*;
 import static org.boon.core.reflection.FastStringUtils.noCopyStringFromChars;
 import static org.boon.json.JsonFactory.fromJson;
-import static org.boon.json.JsonFactory.toJson;
 import static org.boon.primitive.CharScanner.findChar;
 import static org.boon.primitive.CharScanner.findChars;
 import static org.boon.primitive.CharScanner.findString;
@@ -92,6 +87,54 @@ using functions
  TODO
  If you find a "function" (Provider or Function), call it instead of evaluating it and converting it toString.
  Function gets passed context as argument to apply.
+
+ TODO loading templates by name
+
+ template.setPrefix("/templates");
+ template.setSuffix(".html");
+
+ always search classpath first
+
+ TODO
+ https://github.com/jknack/handlebars.java
+
+ block and partial
+
+ Block and partial helpers work together to provide you Template Inheritance.
+
+ Usage:
+
+ {{#block "title"}}
+ ...
+ {{/block}}
+ context: A string literal which define the region's name.
+
+ Usage:
+
+ {{#partial "title"}}
+ ...
+ {{/partial}}
+ context: A string literal which define the region's name.
+
+ //
+
+ he uses embedded for include {{embedded "user"}}
+ I think I will stick with include but support embedded
+
+ TODO
+ //i18n ??? maybe
+
+ Might implement some of these
+
+ //https://github.com/jknack/handlebars.java/blob/master/handlebars/src/main/java/com/github/jknack/handlebars/helper/StringHelpers.java
+ I have some too. :) //lower, upper, rpad, etc. https://github.com/jknack/handlebars.java/blob/master/handlebars/src/main/java/com/github/jknack/handlebars/helper/StringHelpers.java
+
+
+
+ TODO implement default value
+
+ TODO
+ https://github.com/elving/swag
  </p>
  */
 public class BoonTemplate {
@@ -388,18 +431,73 @@ public class BoonTemplate {
 
         Object object = lookup(arguments);
 
-        Iterator iterator = Conversions.iterator(object);
-        while (iterator.hasNext()) {
-            CharSequence blockOutput = template(this.expressionStart, this.expressionEnd)
-                    .replace(block, list(iterator.next(), context));
-            output.add(blockOutput);
+        if (object instanceof Map) {
+            eachMapProperty(output, block, object);
+        } else {
 
+            eachListItem(output, block, object);
         }
-        output.removeLastChar();
 
     }
 
+    private void eachListItem(CharBuf output, CharSequence block, Object object) {
+        Iterator iterator = Conversions.iterator(object);
+        int len = Boon.len(object);
+        int index = 0;
+        CharSequence blockOutput;
 
+        Map<String, Object> map = map("@length", len, "@array", object);
+
+
+        while (iterator.hasNext()) {
+
+            Object item = iterator.next();
+            map.put("@index", index );
+            map.put("@first", index == 0 );
+            map.put("@last",  index == len-1 );
+            map.put("@even",  index % 2 == 0 );
+            map.put("@odd",   index % 2 != 0 );
+            map.put("@this",   item );
+            map.put("this",   item );
+            blockOutput = template(expressionStart, expressionEnd)
+                    .replace(block, list(item, map, context));
+            output.add(blockOutput);
+            index++;
+        }
+        output.removeLastChar();
+    }
+
+    private void eachMapProperty(CharBuf output, CharSequence block, Object object) {
+        Map<Object, Object> objectMap = (Map<Object, Object>) object;
+        Set<Map.Entry<Object, Object>> entries = objectMap.entrySet();
+        int len = objectMap.size();
+        int index = 0;
+        CharSequence blockOutput;
+
+
+        Map <String, Object> map = map("@length", len, "@array", object);
+
+
+        for (Map.Entry<Object, Object> entry : entries) {
+            map.put("@index", index );
+            map.put("@first", index == 0 );
+            map.put("@last",  index == len-1 );
+            map.put("@even",  index % 2 == 0 );
+            map.put("@odd",   index % 2 != 0 );
+            map.put("@value",  entry.getValue() );
+            map.put("@this",  entry.getValue() );
+            map.put("@key",  entry.getKey() );
+            map.put("this",  entry.getValue() );
+
+            blockOutput = template(expressionStart, expressionEnd)
+                    .replace(block, list(entry.getValue(), map, context));
+            output.add(blockOutput);
+
+
+
+            index++;
+        }
+    }
 
 
     private void processWith(CharBuf output, String arguments, CharSequence block) {
