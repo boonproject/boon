@@ -591,7 +591,7 @@ public class Chr {
                 secondIndex++;
             }
 
-            if ( ch == ' ' || ch == '-' || ch == '\t' ) {
+            if ( ch == ' ' || ch == '-' || ch == '\t' || ch == '.' ) {
                 out[ secondIndex ] = '_';
             } else {
                 out[ secondIndex ] = Character.toUpperCase( ch );

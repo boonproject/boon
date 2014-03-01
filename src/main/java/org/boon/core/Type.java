@@ -1,5 +1,6 @@
 package org.boon.core;
 
+import java.security.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +10,17 @@ public enum Type {
     DATE, NUMBER, LONG_WRAPPER, INTEGER_WRAPPER, SHORT_WRAPPER, CHAR_WRAPPER, BOOLEAN_WRAPPER,
     BYTE_WRAPPER, FLOAT_WRAPPER, DOUBLE_WRAPPER,
     INTEGER, STRING, DOUBLE, TRUE, FALSE, NULL, MAP, LIST, SET, CHAR_SEQUENCE,
-    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE;
+    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI;
 
 
 
     public  static Type getInstanceType ( Object object ) {
+
+
              if (object == null) {
                  return NULL;
+             } else if (object instanceof Class) {
+                 return CLASS;
              } else {
                  return getType(object.getClass ());
              }
@@ -30,35 +35,38 @@ public enum Type {
             return type;
         }
 
-        if ( className.startsWith ( "java" )) {
-              if ( Typ.isCharSequence ( clazz ) ) {
-                      type = CHAR_SEQUENCE;
-               } else if (Typ.isCollection ( clazz )) {
-                     if (Typ.isList ( clazz )) {
-                         type = LIST;
-                     } else if (Typ.isSet ( clazz )) {
-                         type = SET;
-                     } else {
-                         type = COLLECTION;
-                     }
-               } else if (Typ.isMap ( clazz )) {
-                      type = MAP;
-               }
-               else {
-                    type = SYSTEM;
-               }
-        } else if ( clazz.isInterface () ) {
+
+
+        if ( clazz.isInterface() ) {
             type = INTERFACE;
         } else if (clazz.isEnum()) {
             type = ENUM;
-        } else if (clazz.isArray ()) {
+        } else if (clazz.isArray()) {
             type = ARRAY;
-        } else if (Typ.isAbstract ( clazz )) {
+        } else if (Typ.isAbstract(clazz)) {
             type = ABSTRACT;
+        } else if ( className.startsWith("java")) {
+            if ( Typ.isCharSequence ( clazz ) ) {
+                type = CHAR_SEQUENCE;
+            } else if (Typ.isCollection ( clazz )) {
+                if (Typ.isList ( clazz )) {
+                    type = LIST;
+                } else if (Typ.isSet ( clazz )) {
+                    type = SET;
+                } else {
+                    type = COLLECTION;
+                }
+            } else if (Typ.isMap ( clazz )) {
+                type = MAP;
+            }
+            else {
+                type = SYSTEM;
+            }
         } else if (className.startsWith("com.sun") || className.startsWith("sun.")) {
             type = SYSTEM;
         }
         return type;
+
 
     }
 
@@ -98,6 +106,17 @@ public enum Type {
                     return Type.FLOAT_WRAPPER;
                 case "java.lang.Character":
                     return Type.CHAR_WRAPPER;
+
+                case "java.lang.Class":
+                    return Type.CLASS;
+
+
+                case "java.net.URL":
+                    return Type.URL;
+
+
+                case "java.net.URI":
+                    return Type.URL;
 
                 case "java.lang.Long":
                     return Type.LONG_WRAPPER;

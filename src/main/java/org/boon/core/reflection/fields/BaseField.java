@@ -749,4 +749,10 @@ public abstract class BaseField implements FieldAccess {
         return this.parentType;
     }
 
+
+    @Override
+    public Class<?> declaringParent() {
+        return this.parentType;
+    }
+
 }

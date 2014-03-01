@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.FileSystem;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.boon.Exceptions.die;
@@ -47,9 +48,18 @@ public class IO {
 
     public static ConvertToPathFunction convertToPathFunction = new ConvertToPathFunction();
 
+    public static boolean exists (Path path ) {
+        return Files.exists(path);
+    }
+
     public static List<String> list( final Path path ) {
 
+        if ( !exists (path) ) {
+            return Collections.EMPTY_LIST;
+        }
+
         List<String> result = new ArrayList<>();
+
 
         try {
             try ( DirectoryStream<Path> directoryStream = Files.newDirectoryStream( path ) ) {

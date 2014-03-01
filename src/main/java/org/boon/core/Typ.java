@@ -184,4 +184,9 @@ public class Typ {
     public static boolean isPrimitiveNumber(Class<?> arg1) {
         return primitiveNumber.contains(arg1);
     }
+
+    public static boolean isArray(Object obj) {
+        if ( obj == null ) return false;
+        return obj.getClass().isArray();
+    }
 }

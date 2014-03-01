@@ -1,6 +1,7 @@
 package org.boon.core;
 
 import org.boon.*;
+import org.boon.Arrays;
 import org.boon.core.reflection.*;
 import org.boon.primitive.CharBuf;
 
@@ -12,7 +13,10 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static org.boon.Arrays.len;
+import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
+import static org.boon.core.Typ.isArray;
 
 
 public class Conversions {
@@ -923,7 +927,7 @@ public class Conversions {
         }
 
         if ( Boon.isArray( value ) ) {
-            final int length = Boon.arrayLength( value );
+            final int length = Arrays.len(value);
 
             return new Iterator<T>() {
                 int i = 0;
@@ -1282,4 +1286,25 @@ public class Conversions {
     }
 
 
+    public static int lengthOf(Object obj) {
+        return len(obj);
+    }
+
+    public static int len(Object obj) {
+        if ( isArray( obj ) ) {
+            return Arrays.len(obj);
+        } else if ( obj instanceof CharSequence ) {
+            return ( ( CharSequence ) obj ).length();
+        } else if ( obj instanceof Collection ) {
+            return ( ( Collection<?> ) obj ).size();
+        } else if ( obj instanceof Map ) {
+            return ( ( Map<?, ?> ) obj ).size();
+        } else if ( obj == null ) {
+            return 0;
+        } else {
+            die( sputs("Not an array like object", obj, obj.getClass()) );
+            return 0; //will never get here.
+        }
+
+    }
 }

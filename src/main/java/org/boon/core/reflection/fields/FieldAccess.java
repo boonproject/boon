@@ -72,6 +72,9 @@ public interface FieldAccess {
 
     Class<?> type();
 
+
+    Class<?> declaringParent();
+
     Object parent();
     Field getField();
 

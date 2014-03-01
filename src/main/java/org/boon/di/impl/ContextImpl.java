@@ -1,7 +1,9 @@
 package org.boon.di.impl;
 
+import org.boon.Boon;
 import org.boon.collections.ConcurrentLinkedHashSet;
 import org.boon.core.Supplier;
+import org.boon.core.Typ;
 import org.boon.core.reflection.Fields;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MapObjectConversion;
@@ -102,7 +104,7 @@ public class ContextImpl implements Context, Module {
                 }
             }
 
-            resolveProperties( object, getProviderInfo(type) );
+            resolveProperties( true, object, getProviderInfo(type) );
 
             return ( T ) object;
         } finally {
@@ -127,7 +129,7 @@ public class ContextImpl implements Context, Module {
                 }
             }
 
-            resolveProperties( object, getProviderInfo(type, name) );
+            resolveProperties( true, object, getProviderInfo(type, name) );
 
             return object;
 
@@ -282,7 +284,8 @@ public class ContextImpl implements Context, Module {
 
 
 
-    private void resolveProperties( Object object, ProviderInfo info ) {
+
+    private void resolveProperties( boolean enforce, Object object, ProviderInfo info ) {
 
 
         if ( object != null ) {
@@ -304,7 +307,7 @@ public class ContextImpl implements Context, Module {
             for ( FieldAccess field : fields.values() ) {
 
                 if ( ( field.injectable() ) ) {
-                    handleInjectionOfField( object, field );
+                    handleInjectionOfField(enforce, object, field );
                 }
 
 
@@ -320,13 +323,25 @@ public class ContextImpl implements Context, Module {
 
      public void resolveProperties( Object object ) {
 
-         resolveProperties(object, null);
+         resolveProperties(true, object, null);
 
     }
 
-    private void handleInjectionOfField( Object object, FieldAccess field ) {
+
+    public void resolvePropertiesIgnoreRequired( Object object ) {
+
+        resolveProperties(false, object, null);
+
+    }
+
+    private void handleInjectionOfField( boolean enforce, Object object, FieldAccess field ) {
 
         Object value = null;
+
+        if (field.type().isPrimitive() || Typ.isBasicType(field.type())) {
+           handleInjectionOfBasicField(enforce, object, field);
+           return;
+        }
 
 
         boolean fieldNamed = field.isNamed();
@@ -345,7 +360,7 @@ public class ContextImpl implements Context, Module {
             }
         }
 
-        if ( field.requiresInjection() ) {
+        if ( enforce && field.requiresInjection()  ) {
             if ( value == null ) {
 
                 debug();
@@ -358,6 +373,42 @@ public class ContextImpl implements Context, Module {
         }
 
         field.setValue( object, value );
+    }
+
+    private void handleInjectionOfBasicField(boolean enforce, Object object, FieldAccess field) {
+        String name = null;
+        if (field.isNamed()) {
+            name = field.getAlias();
+        }
+
+        if (name == null) {
+            name = field.getName();
+        }
+
+        Object value = this.get(name);
+
+        if (value == null) {
+            name = Boon.add(field.declaringParent().getName(), ".", field.getAlias());
+        }
+
+        value = this.get(name);
+
+        if (value == null) {
+            name = Boon.add(field.declaringParent().getPackage().getName(), ".", field.getAlias());
+        }
+
+
+        value = this.get(name);
+
+        if (enforce && value == null && field.requiresInjection()) {
+            die ("Basic field", field.getName(), "needs injection for class", field.declaringParent());
+        }
+
+
+
+        field.setValue(object, value);
+
+
     }
 
     public void debug() {
@@ -429,7 +480,7 @@ public class ContextImpl implements Context, Module {
             }
         }
 
-        resolveProperties( object, getProviderInfo(name) );
+        resolveProperties( true, object, getProviderInfo(name) );
 
         return object;
     }

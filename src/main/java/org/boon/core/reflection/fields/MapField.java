@@ -337,6 +337,11 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+    public Class<?> declaringParent() {
+        return null;
+    }
+
+    @Override
     public Object parent() {
         return null;
     }

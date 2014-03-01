@@ -1,6 +1,7 @@
 package org.boon.core.reflection;
 
 import org.boon.*;
+import org.boon.Arrays;
 import org.boon.core.*;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
@@ -954,7 +955,7 @@ public class MapObjectConversion {
                     && Typ.isBasicType( value.getClass().getComponentType() ) ) {
                 map.put( key, entry.value() );
             } else if ( Boon.isArray( value ) ) {
-                int length = Boon.arrayLength( value );
+                int length = Arrays.len(value);
                 List<Map<String, Object>> list = new ArrayList<>( length );
                 for ( int index = 0; index < length; index++ ) {
                     Object item = BeanUtils.idx( value, index );
@@ -1028,7 +1029,7 @@ public class MapObjectConversion {
                     && Typ.isBasicType( value.getClass().getComponentType() ) ) {
                 map.put( entry.key(), entry.value() );
             } else if ( Boon.isArray( value ) ) {
-                int length = Boon.arrayLength( value );
+                int length = Arrays.len( value );
                 List<Map<String, Object>> list = new ArrayList<>( length );
                 for ( int index = 0; index < length; index++ ) {
                     Object item = BeanUtils.idx( value, index );

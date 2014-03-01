@@ -11,6 +11,9 @@ import java.util.Map;
 
 public class ContextConfigReader {
 
+
+    private static final String CONFIG_CLASSPATH_RESOURCE = System.getProperty( "BOON_CONFIG_CLASSPATH_RESOURCE", "classpath://etc/boon/");
+
     private static final String CONFIG_DIR = System.getProperty( "BOON_CONFIG_DIR", "/etc/boon/");
 
     private static final String RUNTIME_MODULE_NAME = System.getProperty( "BOON_RUNTIME_MODULE_NAME", "boon");
@@ -42,6 +45,7 @@ public class ContextConfigReader {
 
         if (resources.size() == 0 ) {
             resources.add( MODULE_CONFIG_DIR );
+            resources.add( CONFIG_CLASSPATH_RESOURCE );
         }
 
         MetaConfigEvents metaConfigEvents = null;

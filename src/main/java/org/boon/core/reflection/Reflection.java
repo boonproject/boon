@@ -414,14 +414,34 @@ public class Reflection {
     public static Map<String, Pair<Method>> getPropertySetterGetterMethods(
             Class<? extends Object> theClass ) {
 
-        Method[] methods = theClass.getMethods();
+        try {
+            Method[] methods = theClass.getMethods();
 
-        Map<String, Pair<Method>> methodMap = new LinkedHashMap<>( methods.length );
-        List<Method> getterMethodList = new ArrayList<>( methods.length );
+            Map<String, Pair<Method>> methodMap = new LinkedHashMap<>( methods.length );
+            List<Method> getterMethodList = new ArrayList<>( methods.length );
 
-        for ( int index = 0; index < methods.length; index++ ) {
-            Method method = methods[ index ];
-            String name = method.getName();
+            for ( int index = 0; index < methods.length; index++ ) {
+                Method method = methods[ index ];
+                if (extractPropertyInfoFromMethodPair(methodMap, getterMethodList, method)) continue;
+            }
+
+            for ( Method method : getterMethodList ) {
+                extractProperty(methodMap, method);
+
+            }
+            return methodMap;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Exceptions.handle(Map.class, ex, theClass);
+        }
+    }
+
+    private static boolean extractPropertyInfoFromMethodPair(Map<String, Pair<Method>> methodMap,
+                                                             List<Method> getterMethodList,
+                                                             Method method) {
+        String name = method.getName();
+
+        try {
 
             if ( method.getParameterTypes().length == 1
                     && method.getReturnType() == void.class
@@ -437,32 +457,38 @@ public class Reflection {
             if ( method.getParameterTypes().length > 0
                     || method.getReturnType() == void.class
                     || !( name.startsWith( "get" ) || name.startsWith( "is" ) )
-                    || name.equals( "getClass" ) ) {
-                continue;
+                    || name.equals( "getClass" ) || name.equals("get") || name.equals("is") ) {
+                return true;
             }
             getterMethodList.add( method );
+            return false;
+
+        } catch (Exception ex) {
+            return Exceptions.handle(Boolean.class, ex, name, method);
+        }
+    }
+
+    private static void extractProperty(Map<String, Pair<Method>> methodMap, Method method) {
+        try {
+        String name = method.getName();
+        String propertyName = null;
+        if ( name.startsWith( "is" ) ) {
+            propertyName = name.substring( 2 );
+        } else if ( name.startsWith( "get" ) ) {
+            propertyName = name.substring( 3 );
         }
 
-        for ( Method method : getterMethodList ) {
-            String name = method.getName();
-            String propertyName = null;
-            if ( name.startsWith( "is" ) ) {
-                propertyName = name.substring( 2 );
-            } else if ( name.startsWith( "get" ) ) {
-                propertyName = name.substring( 3 );
-            }
+        propertyName = lower( propertyName.substring( 0, 1 ) ) + propertyName.substring( 1 );
 
-            propertyName = lower( propertyName.substring( 0, 1 ) ) + propertyName.substring( 1 );
-
-            Pair<Method> pair = methodMap.get( propertyName );
-            if ( pair == null ) {
-                pair = new Pair<>();
-                methodMap.put( propertyName, pair );
-            }
-            pair.setSecond( method );
-
+        Pair<Method> pair = methodMap.get( propertyName );
+        if ( pair == null ) {
+            pair = new Pair<>();
+            methodMap.put( propertyName, pair );
         }
-        return methodMap;
+        pair.setSecond( method );
+        } catch (Exception ex) {
+            Exceptions.handle(null, ex, "extractProperty property extract of getPropertySetterGetterMethods", method);
+        }
     }
 
     public static void getFields( Class<? extends Object> theClass,

@@ -304,4 +304,7 @@ public class Arrays {
         return sum;
     }
 
+    public static int len(Object obj) {
+        return Array.getLength( obj );
+    }
 }

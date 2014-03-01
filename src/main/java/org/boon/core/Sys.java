@@ -2,6 +2,7 @@ package org.boon.core;
 
 
 import org.boon.Lists;
+import org.boon.Str;
 import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.timer.TimeKeeper;
@@ -170,5 +171,34 @@ public class Sys {
         return Lists.list ( Reflection.contextToHold (), Annotations.contextToHold () );
     }
 
+    public static String sysProp(String key) {
+            return sysProp(key, null);
+    }
 
+    public static String sysProp(String key, Object defaultValue) {
+        String property = System.getProperty(key, null);
+        if (property == null) {
+            property = System.getenv(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = System.getenv(newKey);
+        }
+
+        if (property == null) {
+            return Conversions.toString(defaultValue);
+        }
+
+        return property;
+    }
+
+
+    public static String putSysProp(String key, Object value) {
+        return System.setProperty(key, Conversions.toString(value));
+    }
+
+    public static boolean hasSysProp(String propertyName) {
+        return System.getProperties().containsKey(propertyName);
+    }
 }

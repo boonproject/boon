@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.sputs;
-import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.handle;
 
 /**
  * This is a simple fast serializer.
@@ -53,7 +53,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         try {
             serializeObject( obj, builder );
         } catch ( Exception ex ) {
-            return Exceptions.handle ( CharBuf.class, "unable to serializeObject", ex );
+            return handle(CharBuf.class, "unable to serializeObject", ex);
         }
         return builder;
     }
@@ -166,16 +166,21 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
                 case BIG_INT:
                     serializeFieldName ( fieldName, builder );
-                    builder.addBigInteger ( ( BigInteger ) value );
+                    builder.addBigInteger((BigInteger) value);
                     return true;
                 case DATE:
                     serializeFieldName ( fieldName, builder );
-                    serializeDate ( ( Date ) value, builder );
+                    serializeDate((Date) value, builder);
                     return true;
                 case STRING:
                     serializeFieldName ( fieldName, builder );
-                    serializeString ( ( String ) value, builder );
+                    serializeString((String) value, builder);
                     return true;
+                case CLASS:
+                    serializeFieldName ( fieldName, builder );
+                    serializeString ( (( Class ) value).getName(), builder );
+                    return true;
+
                 case CHAR_SEQUENCE:
                     serializeFieldName ( fieldName, builder );
                     serializeString ( value.toString (), builder );
@@ -250,15 +255,17 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     serializeFieldName ( fieldName, builder );
                     serializeInstance ( value, builder );
                     return true;
+                 case SYSTEM:
+                    return false;
 
                 default:
                     serializeFieldName ( fieldName, builder );
-                    serializeInstance ( value, builder );
+                    serializeUnknown(value, builder);
                     return true;
             }
 
         } catch (Exception ex) {
-            return die(Boolean.class, ex, "Unable to serialize field", fieldName, "from parent object", parent,
+            return handle(Boolean.class, ex, "Unable to serialize field", fieldName, "from parent object", parent,
                     "type enum", typeEnum);
         }
 
@@ -314,6 +321,10 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             case DATE:
                 serializeDate ( ( Date ) obj, builder );
                 return;
+            case CLASS:
+                serializeString ( (( Class ) obj).getName(), builder );
+                return;
+
             case STRING:
                 serializeString ( ( String ) obj, builder );
                 return;
@@ -377,7 +388,12 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
     public void serializeUnknown ( Object obj, CharBuf builder ) {
-        builder.addQuoted ( obj.toString () );
+        try {
+            builder.addQuoted ( obj.toString () );
+        } catch (Exception ex) {
+           //unknown so...
+           //
+        }
     }
 
 
@@ -489,7 +505,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         try {
             builder.addJsonFieldName ( FastStringUtils.toCharArray ( name ) );
         } catch (Exception ex) {
-            Exceptions.handle ( sputs("Unable to serialize field name", name), ex );
+            handle(sputs("Unable to serialize field name", name), ex);
         }
     }
 

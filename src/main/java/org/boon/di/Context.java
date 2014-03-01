@@ -26,5 +26,7 @@ public interface Context extends Module {
 
     void resolveProperties( Object o );
 
+    void resolvePropertiesIgnoreRequired( Object o );
+
     void debug(  );
 }
