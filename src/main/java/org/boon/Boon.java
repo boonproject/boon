@@ -334,7 +334,6 @@ public class Boon {
         String str = IO.read(path);
         if (str!=null) {
             str = Boon.template(str, context);
-            puts(str);
             return fromJson(str);
         }
         return null;
