@@ -798,9 +798,9 @@ public class Chr {
 
     }
 
-    public static void charsCompareOrDie(char[] ac, char[] bc) {
-        char a;
-        char b;
+    public static void equalsOrDie(char[] ac, char[] bc) {
+        char a = 0;
+        char b = 0;
 
         int indexOfDiff = -1;
         int indexOfLine = 0;
@@ -819,37 +819,50 @@ public class Chr {
         }
 
 
-        if (indexOfDiff!=-1) {
+        if (ac.length!=bc.length) {
+            indexOfDiff = ac.length < bc.length ? ac.length : bc.length;
+        }
+
+        if (indexOfDiff!=-1 ) {
             CharBuf charBuf = CharBuf.create(ac.length + bc.length + 128);
             charBuf.add("Strings are different. Problem at line ").add(indexOfLine).addLine(".");
-            charBuf.add("String a length = ").add(ac.length).addLine().addLine(ac).addLine("--- end a ---");
-            charBuf.add("String b length = ").add(bc.length).addLine().addLine(bc).addLine("--- end b ---");
+            charBuf.add("String A length = ").add(ac.length).addLine()
+                    .add("<START>").add(ac).add("<END>").addLine().addLine("--- end a ---");
+            charBuf.add("String B length = ").add(bc.length).addLine()
+                    .add("<START>").add(bc).add("<END>").addLine().addLine("--- end b ---");
 
 
-            char [] ac1 = sliceOf(ac, indexOfDiff - 5, indexOfDiff + 20);
+            char [] ac1 = sliceOf(ac, indexOfDiff - 20, (ac.length - indexOfDiff) > 40 ?  indexOfDiff + 10: ac.length+1 );
 
-            char [] bc1 = sliceOf(bc, indexOfDiff - 5, indexOfDiff + 20);
+            char [] bc1 = sliceOf(bc, indexOfDiff - 20, (bc.length - indexOfDiff) > 40 ?  indexOfDiff + 10: bc.length+1 );
 
             CharBuf charBufA = CharBuf.create(ac1.length+20);
             CharBuf charBufB = CharBuf.create(bc1.length+20);
 
             boolean found = false;
             indexOfDiff = 0;
-            for (int index = 0; index < ac1.length && index < bc1.length; index++) {
-                a = ac1[index];
-                b = bc1[index];
+            for (int index = 0; index < ac1.length || index < bc1.length; index++) {
+
+                if (index < ac1.length) {
+                    a = ac1[index];
+
+                    charDescription(a, charBufA);
+                }
+                if (index < bc1.length) {
+                    b = bc1[index];
+
+                    charDescription(b, charBufB);
+                }
 
                 if (a!=b && !found) {
                     found = true;
                     indexOfDiff = charBufA.len();
                 }
 
-                charDescription(a, charBufA);
-                charDescription(b, charBufB);
 
             }
 
-            charBuf.puts(multiply('-', 10), "area of concern", multiply('-', 10));
+            charBuf.puts(multiply('-', 10), "area of concern, line=", indexOfLine, multiply('-', 10));
             charBuf.addLine(charBufA);
             charBuf.multiply('-', indexOfDiff).addLine("^");
             charBuf.addLine(charBufB);
@@ -860,6 +873,10 @@ public class Chr {
             die(charBuf);
 
         }
+
+
+
+
     }
 
     private static void charDescription(char a, CharBuf charBufA) {

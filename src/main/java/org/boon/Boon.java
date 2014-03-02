@@ -6,10 +6,7 @@ import org.boon.core.Conversions;
 import org.boon.core.Function;
 import org.boon.core.Sys;
 import org.boon.core.Typ;
-import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.Invoker;
-import org.boon.core.reflection.MethodAccess;
-import org.boon.core.reflection.Reflection;
+import org.boon.core.reflection.*;
 import org.boon.di.Context;
 import org.boon.json.JsonFactory;
 import org.boon.primitive.CharBuf;
@@ -54,7 +51,10 @@ public class Boon {
 
         if ( message == null ) {
             print( "<NULL>" );
-        } else if ( message.getClass().isArray() ) {
+        } else if (message instanceof  char[]) {
+            print(FastStringUtils.noCopyStringFromChars((char[]) message));
+        }
+        else if ( message.getClass().isArray() ) {
             print( toListOrSingletonList( message ).toString() );
         } else {
             print( message.toString() );

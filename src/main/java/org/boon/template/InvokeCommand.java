@@ -20,6 +20,8 @@ public class InvokeCommand implements Command{
     private String methodName;
     private MethodAccess methodAccess;
 
+    private String commandName;
+
 
 
     public InvokeCommand(Object function, MethodAccess methodAccess) {
@@ -63,9 +65,14 @@ public class InvokeCommand implements Command{
             if (o instanceof List) {
                 List<Object> argList = Lists.copy((List)o);
 
+                if (commandName!=null) {
+                    argList.add(0, commandName);
+                }
+
                 addArgs(block, context, argList);
                 addArgs(block, context, argList);
 
+                /** If it returns a java.lang.String or chars[] then don't pass the output buffer as the first arg. */
                 if (methodAccess.returnType() == Typ.string || methodAccess.returnType() == Typ.chars) {
                     CharSequence out = (CharSequence) Invoker.invokeFromList(function, methodAccess.name(), argList);
                     output.add(out);
@@ -74,11 +81,25 @@ public class InvokeCommand implements Command{
                 }
             }
         } else {
+
+
+            /** If it returns a java.lang.String or chars[] then don't pass the output buffer as the first arg. */
             if (methodAccess.returnType() == Typ.string || methodAccess.returnType() == Typ.chars) {
-                CharSequence out = (CharSequence)methodAccess.invoke(function, args, block.toString(), context);
+
+                CharSequence out;
+                if (commandName!=null) {
+                    out = (CharSequence)methodAccess.invoke(commandName, function, args, block.toString(), context);
+                } else {
+                    out = (CharSequence)methodAccess.invoke(function, args, block.toString(), context);
+                }
                 output.add(out);
             } else {
-                methodAccess.invoke(function, output, args, block, context);
+                if (commandName!=null) {
+                    methodAccess.invoke(commandName, function, output, args, block.toString(), context);
+                } else {
+                    methodAccess.invoke(function, output, args, block.toString(), context);
+                }
+
             }
         }
 

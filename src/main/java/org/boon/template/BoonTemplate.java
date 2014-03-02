@@ -20,7 +20,6 @@ import org.boon.primitive.Chr;
 import java.util.*;
 
 import static org.boon.Boon.puts;
-import static org.boon.Lists.in;
 import static org.boon.Lists.list;
 import static org.boon.Lists.sliceOf;
 import static org.boon.Maps.map;
@@ -145,34 +144,123 @@ using functions
  */
 public class BoonTemplate {
 
-    //Config
+    /** Set the start of expression demarcation. As in {{Hello}}
+     *  {{Hello}}
+     *  ^
+     *  |
+     *  |
+     * */
     char[] expressionStart = "{{".toCharArray();
+
+    /** Sets how the beginning of the end block start should look .
+     *
+     *  {{if}}
+     *
+     *  {{/if}}
+     *  ^
+     *  |
+     *  |
+     * */
     String endBlockStart = "{{/";
+
+    /**
+     * Three {{{Text in here will not get escaped so you can have <ol/> }}}
+     *
+     * BoonTemplate does not always support HTML output or rather Boon template does not only support
+     * HTML so you have to enable HTML escaping for {{HTML ESCAPED}} and {{{HTML UNESCAPED TO WORK}}}
+     * By default everything is unescaped.
+     */
     char[] unescapedExpressionStart = "{{{".toCharArray();
     char[] unescapedExpressionEnd = "}}}".toCharArray();
+
+    /**
+     * It detects if the escaped and unescaped start with the same char.
+     */
     final boolean sameStart;
+
+    /**
+     * The end of an end block.
+     *
+     *
+     *  {{#if}}
+     *
+     *  {{/if}}
+     *       ^
+     *       |
+     *       |
+     *
+     */
     String endBlockEnd = "}}";
+
+    /**
+     * The end of an end expression.
+     *
+     *
+     *  {{helloMom}}
+     *           ^
+     *           |
+     *           |
+     *
+     */
     char[] expressionEnd = "}}".toCharArray();
+
+    /**
+     * First char used to search strings quickly for expressions or commands.
+     */
     char expressionStart1stChar = expressionStart[0];
+
+    /**
+     * First char used to search strings quickly for expressions or commands.
+     */
     char unescapedExpressionStartChar = unescapedExpressionStart[0];
+
+    /**
+     * Command marker.
+     *
+     * {{#if}}
+     *  ^
+     *  |
+     */
     String commandMarker = "#";
+
+    /**
+     * I was not sure how to handle this so I punted.
+     */
     String elseBlock = "{{else}}";
 
     //State
+    /** Current line number. */
     int lineIndex;
+    /** List of lines we are processing. */
     char[][] lines;
+    /** Context object that we are getting expressions from. */
     Object context;
+
+    /** Whether we support escaped mode or not for HTML output. */
     boolean escaped;
 
-    Map<String, Command> commandMap;
+    /** Commands that we support. A command is more or less like a tag handler in JSP. */
+    protected Map<String, Command> commandMap;
 
 
-    Map<String, MethodAccess> functionMap;
+    /** Functions can be used anywhere where expressions can be used. */
+    protected Map<String, MethodAccess> functionMap;
 
 
-    Command command(String cmdStr) {
+    /** Lookup a command.
+     *
+     * If the commandMap is null and this template has a parent template then
+     * it will look for the command in the parent template.
+     *
+     * Also if a command is not found in the this template's commandMap then it will be searched
+     * in the parent commandMap.
+     *
+     * This is how {{#if}}, {{#with}}, and {{#each}} use commands from their parent templates.
+     * Every block is its own template with a parent template.
+     * */
+    protected Command command(String cmdStr) {
 
-
+        /* if the command is null user the parent templates command map if present. */
         if (this.commandMap == null) {
 
             if ( parentTemplate != null) {
@@ -180,6 +268,7 @@ public class BoonTemplate {
             }
             return null;
         } else {
+
             Command command = this.commandMap.get(cmdStr);
             if (command ==  null) {
 
@@ -187,8 +276,13 @@ public class BoonTemplate {
                     command = parentTemplate.command(cmdStr);
                 }
             }
-            if (command == null ) {
-                command = this.commandMap.get("missingCommand");
+            if (command == null && !command.equals("missingCommand")) {
+                command = command("missingCommand");
+
+                if (command!=null) {
+                    //Set the command name if the object supports it.
+                    idx(command, "commandName", cmdStr);
+                }
             }
 
             return command;
@@ -342,16 +436,22 @@ public class BoonTemplate {
             }
         }
 
-        int index;
-        index =  findChars(expressionStart, startIndex, line);
+        int indexEscaped = findChars(expressionStart, startIndex, line);
+        int indexUnEscaped =  findChars(unescapedExpressionStart, startIndex, line);
 
-        if (index != -1) {
-                escaped =  true;
-        } else {
-                escaped =  false;
-                index =  findChars(unescapedExpressionStart, startIndex, line);
+
+        if (indexUnEscaped != -1) {
+            this.escaped = false;
+            return indexUnEscaped;
         }
-        return index;
+
+        if (indexEscaped != -1) {
+            this.escaped = true;
+            return indexEscaped;
+        }
+
+
+        return -1;
 
     }
 
@@ -366,6 +466,10 @@ public class BoonTemplate {
 
 
     protected String escape(String charSequence ){
+
+        if (sameStart && charSequence.charAt(0) == '{' ) {
+            charSequence = Str.sliceOf(charSequence, 1);
+        }
         if (escaped) {
             return charSequence; //No op
         } else {
@@ -445,18 +549,18 @@ public class BoonTemplate {
         switch (Commands.command(cmd)) {
 
             case UNLESS:
-                blocks = readBlock( index, elseBlock, endOfBlock);
+                blocks = readBlocks(index, elseBlock, endOfBlock);
                 processUnless(output, arguments, blocks);
                 break;
 
 
             case LENGTH:
-                blocks = readBlock( index, elseBlock, endOfBlock);
+                blocks = readBlocks(index, elseBlock, endOfBlock);
                 processLength(output, arguments, blocks);
                 break;
 
             case IF:
-                blocks = readBlock( index, elseBlock, endOfBlock);
+                blocks = readBlocks(index, elseBlock, endOfBlock);
                 processIf(output, arguments, blocks);
                 break;
 
@@ -562,8 +666,8 @@ public class BoonTemplate {
             map.put("@last",  index == len-1 );
             map.put("@even",  index % 2 == 0 );
             map.put("@odd",   index % 2 != 0 );
-            map.put("@this",   item );
             map.put("this",   item );
+            map.put("item",   item );
             blockOutput = template(expressionStart, expressionEnd)
                     .replace(block, list(item, map, context));
             output.add(blockOutput);
@@ -678,7 +782,6 @@ public class BoonTemplate {
                 output.add(blockOutput);
             }
         }
-        output.removeLastChar();
     }
 
     BoonTemplate parentTemplate;
@@ -700,16 +803,20 @@ public class BoonTemplate {
     }
 
 
-    private CharSequence[] readBlock(int startLine, String endBlock1, String endBlock2) {
+    private CharSequence[] readBlocks(int startLine, String elseBlock, String endBlock2) {
         CharBuf buf = CharBuf.create(80);
+
+
+
+        if (readBlockFindFirstLine(startLine, endBlock2, buf)) return new CharSequence[]{buf};
+
         CharBuf buf1 = null;
         CharBuf buf2 = null;
         int index;
-        lineIndex++;
 
         for (; lineIndex<lines.length; lineIndex++) {
 
-            index = findString(endBlock1, lines[lineIndex]);
+            index = findString(elseBlock, lines[lineIndex]);
             if (index != -1) {
                 buf1 = buf;
                 buf = CharBuf.create(80);
@@ -744,23 +851,7 @@ public class BoonTemplate {
     private CharSequence readBlock(int startIndexOfFirstLine, String endBlock) {
         CharBuf buf = CharBuf.create(80);
 
-        char[] line = lines[lineIndex];
-
-        int endIndexOfFirstLineCommandBody = findString(endBlock, lines[lineIndex]);
-
-        if (endIndexOfFirstLineCommandBody == -1) {
-            line = Chr.sliceOf(line, startIndexOfFirstLine); //FIX ME.. can't use sliceOf... have to do some real logic here.
-        } else {
-
-            line = Chr.sliceOf(line, startIndexOfFirstLine, endIndexOfFirstLineCommandBody);
-
-            buf.add(line);
-            lineIndex++;
-            return buf;
-        }
-
-        //buf.add(line); //DIRTY HACK.. you have to fix the line index above
-        lineIndex++;
+        if (readBlockFindFirstLine(startIndexOfFirstLine, endBlock, buf)) return buf;
 
         for (; lineIndex<lines.length; lineIndex++) {
 
@@ -773,6 +864,27 @@ public class BoonTemplate {
         }
 
         return buf;
+    }
+
+    private boolean readBlockFindFirstLine(int startIndexOfFirstLine, String endBlock, CharBuf buf) {
+        char[] line = lines[lineIndex];
+
+        int endIndexOfFirstLineCommandBody = findString(endBlock, lines[lineIndex]);
+
+        if (endIndexOfFirstLineCommandBody == -1) {
+            line = Chr.sliceOf(line, startIndexOfFirstLine); //FIX ME.. can't use sliceOf... have to do some real logic here.
+        } else {
+
+            line = Chr.sliceOf(line, startIndexOfFirstLine, endIndexOfFirstLineCommandBody);
+
+            buf.add(line);
+            lineIndex++;
+            return true;
+        }
+
+        //buf.add(line); //DIRTY HACK.. you have to fix the line index above
+        lineIndex++;
+        return false;
     }
 
 

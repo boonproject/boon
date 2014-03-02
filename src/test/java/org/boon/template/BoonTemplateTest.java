@@ -2,20 +2,18 @@ package org.boon.template;
 
 import org.boon.Str;
 import org.boon.core.Fn;
-import org.boon.json.JsonFactory;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.boon.Arrays.slc;
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Lists.mapBy;
 import static org.boon.Maps.map;
+import static org.boon.Str.equalsOrDie;
 import static org.boon.Str.joinCollection;
-import static org.boon.Str.stringCompareOrDie;
 import static org.boon.core.reflection.BeanUtils.getPropertyValue;
 import static org.boon.core.reflection.BeanUtils.idx;
 import static org.boon.json.JsonFactory.niceJson;
@@ -59,15 +57,13 @@ public class BoonTemplateTest {
 
 
         replace = template().replace("{{name|Rick}}", null);
+        equalsOrDie("Rick", replace.toString());
 
-        stringCompareOrDie("Rick", replace.toString());
         replace = template().replace("{{name|Bob}}", map("name", "Rick"));
-
-        stringCompareOrDie("Rick", replace);
-
+        equalsOrDie("Rick", replace);
 
         replace = template().replace("{{name|Bob}}", niceJson("{'name':'Rick'}"));
-        stringCompareOrDie("Rick", replace);
+        equalsOrDie("Rick", replace);
 
     }
 
@@ -78,26 +74,26 @@ public class BoonTemplateTest {
         replace = template().replace("{{this.name.firstName|Bob}}",
                                  new Person(new Name("Rick", "Hightower")));
 
-        stringCompareOrDie("Rick", replace);
+        equalsOrDie("Rick", replace);
 
 
         replace = template().replace("{{this/name/firstName|Bob}}",
                                  new Person(new Name("Sam", "Hightower")));
 
-        stringCompareOrDie("Sam", replace);
+        equalsOrDie("Sam", replace);
 
 
         replace = template().replace("{{name/firstName|Bob}}",
                 new Person(new Name("RickyBobby", "Hightower")));
 
-        stringCompareOrDie("RickyBobby", replace);
+        equalsOrDie("RickyBobby", replace);
 
 
 
         replace = template().replace("{{name/firstName|Bob}}",
                 niceJson("{ 'name': { 'firstName':'RickyBobby', 'lastName':'Hightower' } }"));
 
-        stringCompareOrDie("RickyBobby", replace);
+        equalsOrDie("RickyBobby", replace);
 
     }
 
@@ -115,7 +111,7 @@ public class BoonTemplateTest {
         );
 
 
-        stringCompareOrDie("Rick", replace);
+        equalsOrDie("Rick", replace);
 
     }
 
@@ -125,42 +121,79 @@ public class BoonTemplateTest {
 
         replace = template().replace(listTemplate, map("items", list("apple", "oranges", "pears")));
 
-        puts (replace);
+        equalsOrDie("\n" +
+                " this apple, index 0, key @key, first true, last false\n" +
+                "\n" +
+                "\n" +
+                " this oranges, index 1, key @key, first false, last false\n" +
+                "\n" +
+                "\n" +
+                " this pears, index 2, key @key, first false, last true\n" +
+                "\n", replace);
 
         replace = template().replace(listTemplate, map("items", map("apple", 1, "oranges", 2, "pears", 4)));
-
-        puts (replace);
-
+        String test = "\n" +
+                " this 1, index 0, key apple, first true, last false\n" +
+                "\n" +
+                "\n" +
+                " this 2, index 1, key oranges, first false, last false\n" +
+                "\n" +
+                "\n" +
+                " this 4, index 2, key pears, first false, last true\n" +
+                "\n";
+        equalsOrDie(test, replace);
 
         replace = template().replace(listTemplate, niceJson("{'items' : ['apple', 'oranges', 'pears']}"));
-
-        puts (replace);
+        test = "\n" +
+                " this apple, index 0, key @key, first true, last false\n" +
+                "\n" +
+                "\n" +
+                " this oranges, index 1, key @key, first false, last false\n" +
+                "\n" +
+                "\n" +
+                " this pears, index 2, key @key, first false, last true\n" +
+                "\n";
+        equalsOrDie(test, replace);
 
         replace = template().replace(listTemplate, niceJson("{'items' : {'apple': 1, 'oranges': 2, 'pears': 4)}}"));
-
-        puts (replace);
+        test = "\n" +
+                " this 33, index 0, key pears, first true, last false\n" +
+                "\n" +
+                "\n" +
+                " this 2, index 1, key oranges, first false, last false\n" +
+                "\n" +
+                "\n" +
+                " this 1, index 2, key apple, first false, last true\n" +
+                "\n";
+        equalsOrDie(test, replace);
 
     }
 
     @Test
-    public void ifTest() {
+    public void simpleIf() {
+
+
+        replace = template().replace("{{#if name}}\n" +
+                "{{name}}\n" +
+                "{{/if}}", map("name", "Rick"));
+
+
+        equalsOrDie("Rick\n", replace);
+
+    }
+
+    @Test
+    public void ifTestTextAfterCloseIf() {
 
 
         replace = template().replace("{{#if name}}\n" +
                 "Hello {{name}}!\n" +
                 "How are you {{name}}?\n" +
                 "{{/if}}\n Glad to hear it", map("name", "Rick"));
-        puts (replace);
 
-
-
-        replace = template().replace("{{#if name}}\n" +
-                "{{name}}\n" +
-                "{{/if}}", map("name", "Rick"));
-        puts (replace);
-
-
-        stringCompareOrDie("Rick", replace);
+        equalsOrDie("Hello Rick!\n" +
+                "How are you Rick?\n" +
+                " Glad to hear it", replace);
 
     }
 
@@ -175,10 +208,9 @@ public class BoonTemplateTest {
                 "{{else}}\n" +
                 "duck\n" +
                 "{{/if}}", map("name", "Rick"));
-        puts (replace);
 
 
-        stringCompareOrDie(replace, "\nRick" );
+        equalsOrDie(replace, "\nRick\n");
 
     }
 
@@ -196,7 +228,7 @@ public class BoonTemplateTest {
                 "duck\n" +
                 "{{/if}}", map("duck", "Rick"));
 
-        stringCompareOrDie("\nduck", replace);
+        equalsOrDie("\nduck\n", replace);
 
     }
 
@@ -208,7 +240,7 @@ public class BoonTemplateTest {
                 "duck\n" +
                 "{{/if}}", map("name", "Rick", "flea", "bee"));
 
-        ok = replace.equals("Rick") || die(replace);
+        equalsOrDie("Rick\n", replace);
 
 
     }
@@ -222,7 +254,7 @@ public class BoonTemplateTest {
                 "duck\n" +
                 "{{/if}}", map("name", "Rick", "flea", ""));
 
-        ok = replace.equals("duck") || die(replace);
+        equalsOrDie("duck\n", replace);
 
 
     }
@@ -235,8 +267,8 @@ public class BoonTemplateTest {
                 "duck\n" +
                 "{{/if}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
 
-        ok = replace.equals("Rick") || die(replace);
 
+        equalsOrDie("Rick\n", replace);
 
     }
 
@@ -247,10 +279,9 @@ public class BoonTemplateTest {
                 "{{name}} {{test}}\n" +
                 "{{else}}\n" +
                 "duck {{test}}\n" +
-                "{{/if}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
+                "{{/if}}", map("name", "Rick", "flea", "boo"));
 
-        //puts (replace);
-        //ok = replace.toString().startsWith("duck") || die(replace);
+        equalsOrDie("Rick [name, gt, boo, Rick, gt, boo]\n", replace);
 
 
     }
@@ -263,14 +294,12 @@ public class BoonTemplateTest {
                 "duck\n" +
                 "{{/if}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
 
-        //TODO fix this
-        //ok = replace.equals("Rick [name, boo]") || die(replace);
+        equalsOrDie("Rick [name, boo]\n", replace);
 
 
     }
 
 
-    //TODO left off here. looks like I broke each
     @Test
     public void eachFromJSON() {
         replace = template().replace("{{#each ['name', '${flea}'] }}\n" +
@@ -278,7 +307,7 @@ public class BoonTemplateTest {
 
                 "{{/each}}", map("name", "Rick", "flea", "boo", "boo", "baz"));
 
-        //ok = replace.equals("Rick [name, boo]") || die(replace);
+        equalsOrDie("\nname\n\nboo\n", replace);
 
 
     }
@@ -297,7 +326,7 @@ public class BoonTemplateTest {
                     }
 
                     String hiMom(String hi) {
-                        return "Say hi mom " + hi + "\n";
+                        return "Say hi " + hi + "\n";
                     }
                 }
         ).replace("" +
@@ -312,7 +341,7 @@ public class BoonTemplateTest {
                 "{{/each}}\n" +
                 "</o>\n" +
                 "{{#add [1,2,'out']}}\n" +
-                "By: {{out}}\n" +
+                "Add Output: {{out}}\n" +
                 "{{/add}}"
                 ,
 
@@ -326,32 +355,34 @@ public class BoonTemplateTest {
                 ));
 
 
-        puts(replace);
+        equalsOrDie(replace, "Say hi mom\n" +
+                "Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
+                "<ol>\n" +
+                "       <li>pizza</li>\n" +
+                "       <li>fish</li>\n" +
+                "       <li>fruit</li>\n" +
+                "</o>\n" +
+                "Add Output: 3\n");
 
     }
 
-    @Test
-    public void test() {
-        BoonTemplateTest.stmain();
-    }
 
     @Test
     public void changeDelimiters() {
         replace = template("[[", "]]").replace("Hello [[name]]! \n How are you [[name]]?", map("name", "Rick"));
-        puts(replace);
 
-        ok = replace.equals("Hello Rick! \n" +
-                " How are you Rick?") || die(replace);
+        equalsOrDie("Hello Rick! \n" +
+                " How are you Rick?", replace);
 
     }
 
     @Test
     public void happyDay() {
         replace = template().replace("Hello {{name}}! \n How are you {{name}}?", map("name", "Rick"));
-        puts(replace);
 
-        ok = replace.equals("Hello Rick! \n" +
-                " How are you Rick?") || die(replace);
+        equalsOrDie("Hello Rick! \n" +
+                " How are you Rick?", replace);
 
 
     }
@@ -359,12 +390,10 @@ public class BoonTemplateTest {
     @Test
     public void moreBasicTest() {
         replace = template("${", "}").replace("Hello ${name}! \n How are you ${name}?", map("name", "Rick"));
-        puts(replace);
         ok = replace.equals("Hello Rick! \n" +
                 " How are you Rick?") || die(replace);
 
         replace = template("$", " ").replace("Hello $name ! \n How are you $name ?", map("name", "Rick"));
-        puts(replace);
 
         ok = replace.equals("Hello Rick! \n" +
                 " How are you Rick?") || die(replace);
@@ -372,12 +401,16 @@ public class BoonTemplateTest {
     }
 
     @Test //BROKEN
-    public void tripleThread() {
+    public void tripleThreat() {
 
         replace = template().replace("Hello {{{name}}}! \n How are you {{{name}}}?", map("name", "Rick"));
-        puts(replace);
+
+        ok = replace.equals("Hello Rick! \n" +
+                " How are you Rick?") || die(replace);
 
     }
+
+
 
     @Test
     public void eachAfterIf() {
@@ -394,7 +427,16 @@ public class BoonTemplateTest {
 
                 map("name", "Rick", "fruits", list("apples", "pairs", "tangerines")));
 
-        puts(replace);
+        String test = "Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
+                "\n" +
+                "       apples\n" +
+                "       pairs\n" +
+                "       tangerines\n";
+
+        equalsOrDie(test, replace);
+
+
     }
 
 
@@ -409,9 +451,9 @@ public class BoonTemplateTest {
 
                 map("name", "Rick", "fruits", list("apples", "pairs", "tangerines")));
 
-        stringCompareOrDie(replace.toString(), "       apples\n" +
+        equalsOrDie("       apples\n" +
                 "       pairs\n" +
-                "       tangerines");
+                "       tangerines\n", replace.toString());
 
     }
 
@@ -423,7 +465,7 @@ public class BoonTemplateTest {
                 "{{#each fruits}} {{this}} {{/each}}",
                  map("name", "Rick", "fruits", list("apples", "pairs", "tangerines")));
 
-        stringCompareOrDie(replace.toString(), " apples " +
+        equalsOrDie(replace.toString(), " apples " +
                 " pairs " +
                 " tangerines ");
 
@@ -451,24 +493,25 @@ public class BoonTemplateTest {
                 )));
 
 
-        puts(replace);
 
         String str = "Hello Rick!\n" +
-                "How are you Rick? more text here \n" +
+                "How are you Rick? more text here\n" +
                 "<ol>\n" +
                 "       <li>pizza</li>\n" +
                 "       <li>fish</li>\n" +
                 "       <li>fruit</li>\n" +
                 "</o>";
 
-        puts("----");
 
 
 
-        //stringCompareOrDie(str, replace); fix if like you did each TODO
+        equalsOrDie(str, replace);
     }
-    public static void stmain (String... args) {
-        CharSequence replace;
+
+
+
+    @Test
+    public void someTestEachExspressionNotInContext() {
 
         replace = template().replace("{{#if name}}\n" +
                 "Hello {{name}}!\n" +
@@ -488,13 +531,17 @@ public class BoonTemplateTest {
                 )));
 
 
-        puts(replace);
+        equalsOrDie("Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
+                "<ol>\n" +
+                "       <li>Rick</li>\n" +
+                "</o>", replace);
 
-        puts("----");
+    }
 
 
-
-
+    @Test
+    public void ifFollowedByEachFollowedByWith() {
         replace = template().replace("{{#if name}}\n" +
                 "Hello {{name}}!\n" +
                 "How are you {{name}}? more text here\n" +
@@ -519,9 +566,20 @@ public class BoonTemplateTest {
                 ));
 
 
-        puts(replace);
+        equalsOrDie("Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
+                "<ol>\n" +
+                "       <li>pizza</li>\n" +
+                "       <li>fish</li>\n" +
+                "       <li>fruit</li>\n" +
+                "</o>\n" +
+                "Rick\n", replace);
 
-        puts("----");
+
+    }
+
+    @Test
+    public void createAndUseCustomCommandHandler() {
 
 
 
@@ -559,59 +617,29 @@ public class BoonTemplateTest {
                         "rick", map("name", "Rick Hightower")
                 ));
 
-
-        puts(replace);
-
-        puts("----");
-
-        replace = templateWithFunctions(
-                new Object() {
-
-                    String by(String arguments, CharSequence block, Object context) {
-                        Object object = idx(context, arguments);
-                        CharSequence blockOutput = template()
-                                .replace(block, list(object, context));
-                        return blockOutput.toString();
-
-                    }
-                }
-        ).replace("{{#if name}}\n" +
-                "Hello {{name}}!\n" +
-                "How are you {{name}}? more text here\n" +
-                "{{/if}}\n" +
+        equalsOrDie("Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
                 "<ol>\n" +
-                "{{#each foods}}\n" +
-                "       <li>{{name}}</li>\n" +
-                "{{/each}}\n" +
+                "       <li>pizza</li>\n" +
+                "       <li>fish</li>\n" +
+                "       <li>fruit</li>\n" +
                 "</o>\n" +
-                "{{#by rick}}\n" +
-                "By: {{name}}\n" +
-                "{{/by}}"
-                ,
-
-                map("name", "Rick", "foods",
-                        list(
-                                map("name", "pizza"),
-                                map("name", "fish"),
-                                map("name", "fruit")
-                        ),
-                        "rick", map("name", "Rick Hightower")
-                ));
+                "By: Rick Hightower\n", replace);
 
 
-        puts(replace);
+    }
 
-        puts("----");
-
-
-        puts("----");
-
-
+    @Test
+    public void processingMethodArgs() {
         String arguments = template("${", "}").replace("[${a},${b}]", map("a", 1, "b", 2)).toString();
 
-        puts (arguments);
+        equalsOrDie("[1,2]", arguments);
+
+    }
 
 
+    @Test
+    public void creatingACommandBodyTagThatTakesABody() {
         replace = templateWithDynamicFunctions(
                 new Object() {
 
@@ -650,50 +678,22 @@ public class BoonTemplateTest {
                 ));
 
 
-        puts(replace);
-
-        puts("----");
-
-
-        replace = templateWithDynamicFunctions(
-                new Object() {
-
-                    String add(int a, int b, String var, String block, Object context) {
-                        CharSequence blockOutput = template()
-                                .replace(block, list(map(var, a + b), context));
-                        return blockOutput.toString();
-
-                    }
-                }
-        ).replace("{{#if name}}\n" +
-                "Hello {{name}}!\n" +
-                "How are you {{name}}? more text here\n" +
-                "{{/if}}\n" +
+        equalsOrDie("Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
                 "<ol>\n" +
-                "{{#each foods}}\n" +
-                "       <li>{{name}}</li>\n" +
-                "{{/each}}\n" +
+                "       <li>pizza</li>\n" +
+                "       <li>fish</li>\n" +
+                "       <li>fruit</li>\n" +
                 "</o>\n" +
-                "{{#add [${a} ,${b} ,'out']}}\n" +
-                "ADD: {{out}}\n" +
-                "{{/add}}",
-
-                map(    "name", "Rick",
-                        "a", 1,
-                        "b", 5,
-                        "foods",
-                        list(
-                                map("name", "pizza"),
-                                map("name", "fish"),
-                                map("name", "fruit")
-                        ),
-                        "rick", map("name", "Rick Hightower")
-                ));
+                "ADD: 6\n", replace);
 
 
-        puts(replace);
+    }
 
-        puts("----");
+
+    @Test
+    public void simpleCommandBodyHandler() {
+
 
 
         replace = templateWithDynamicFunctions(
@@ -715,7 +715,14 @@ public class BoonTemplateTest {
                 "</o>\n" +
                 "{{#add [${a} ,${b} ,'out']}}\n" +
                 "ADD: {{out}}\n" +
-                "{{/add}}",
+                "{{/add}}" +
+                "<ol>\n" +
+                        "{{#each foods}}\n" +
+                        "       <li>{{name}}</li>\n" +
+                        "{{/each}}\n" +
+                        "</o>\n"
+
+                ,
 
                 map(    "name", "Rick",
                         "a", 1,
@@ -730,12 +737,24 @@ public class BoonTemplateTest {
                 ));
 
 
-        puts(replace);
 
-        puts("----");
+        equalsOrDie("Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
+                "<ol>\n" +
+                "       <li>pizza</li>\n" +
+                "       <li>fish</li>\n" +
+                "       <li>fruit</li>\n" +
+                "</o>\n" +
+                "out = 6\n" +
+                "       <li>pizza</li>\n" +
+                "       <li>fish</li>\n" +
+                "       <li>fruit</li>\n" +
+                "</o>\n", replace);
 
+    }
 
-
+    @Test
+    public void workingWithJsonAsContext() {
         String json = toJson(map(    "name", "Rick",
                 "a", 50,
                 "b", 5,
@@ -748,7 +767,6 @@ public class BoonTemplateTest {
                 "rick", map("name", "Rick Hightower")
         ));
 
-        puts (json);
 
         replace = templateWithDynamicFunctions(
                 new Object() {
@@ -777,10 +795,22 @@ public class BoonTemplateTest {
 
 
 
-        puts(replace);
+        String test = "Hello Rick!\n" +
+                "How are you Rick? more text here\n" +
+                "<ol>\n" +
+                "       <li>pizza</li>\n" +
+                "       <li>fish</li>\n" +
+                "       <li>fruit</li>\n" +
+                "</o>\n" +
+                "out = 55\n";
 
-        puts("----");
 
+
+        equalsOrDie(test, replace);
+
+    }
+
+    @Test public void fuckBobLeeMyJsonParserIsCorrectYouFuck(){
 
         String contextJson =
                 "{                                                     \n" +
@@ -792,7 +822,6 @@ public class BoonTemplateTest {
                         "}                                                     ";
 
         contextJson = contextJson.replace('\'', '"');
-        puts (contextJson);
 
         String mainTemplate = "HELLO HOW ARE YOU!                  \n" +
                 "     {{#table people firstName lastName }}        \n" +
@@ -800,7 +829,7 @@ public class BoonTemplateTest {
                 "     {{/table}}                                   \n";
 
         final String listTemplate =
-                "<table>                                              \n" +
+                "<table>                                                      \n" +
                         "{{#each items}}                                      \n" +
                         "     <tr>                                            \n" +
                         "     ${body}                                         \n" +
@@ -856,11 +885,47 @@ public class BoonTemplateTest {
                 contextJson
         );
 
+        String test = "HELLO HOW ARE YOU!                  \n" +
+                "     <table>                                                      \n" +
+                "     <tr>                                            \n" +
+                "     \n" +
+                "           <td>                                             \n" +
+                "                Yehuda                                     \n" +
+                "           </td>                                            \n" +
+                "\n" +
+                "\n" +
+                "           <td>                                             \n" +
+                "                Katz                                     \n" +
+                "           </td>                                            \n" +
+                "                                         \n" +
+                "      </tr>                                          \n" +
+                "     <tr>                                            \n" +
+                "     \n" +
+                "           <td>                                             \n" +
+                "                Carl                                     \n" +
+                "           </td>                                            \n" +
+                "\n" +
+                "\n" +
+                "           <td>                                             \n" +
+                "                Lerche                                     \n" +
+                "           </td>                                            \n" +
+                "                                         \n" +
+                "      </tr>                                          \n" +
+                "     <tr>                                            \n" +
+                "     \n" +
+                "           <td>                                             \n" +
+                "                Alan                                     \n" +
+                "           </td>                                            \n" +
+                "\n" +
+                "\n" +
+                "           <td>                                             \n" +
+                "                Johnson                                     \n" +
+                "           </td>                                            \n" +
+                "                                         \n" +
+                "      </tr>                                          \n" +
+                "</table>                                             \n";
 
-        puts(replace);
-
-        puts("----");
+        equalsOrDie(test, replace.toString());
 
     }
-
 }
