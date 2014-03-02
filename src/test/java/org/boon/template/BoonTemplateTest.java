@@ -315,7 +315,7 @@ public class BoonTemplateTest {
     @Test
     public void hiMom() {
 
-        replace = templateWithDynamicFunctions(
+        replace = templateWithFunctions(
                 new Object() {
 
                     String add(int a, int b, String var, CharSequence block, Object context) {
@@ -583,7 +583,7 @@ public class BoonTemplateTest {
 
 
 
-        replace = templateWithFunctions(
+        replace = templateWithCommandHandlers(
                 new Object() {
 
                     String by(String arguments, CharSequence block, Object context) {
@@ -640,7 +640,7 @@ public class BoonTemplateTest {
 
     @Test
     public void creatingACommandBodyTagThatTakesABody() {
-        replace = templateWithDynamicFunctions(
+        replace = templateWithFunctions(
                 new Object() {
 
                     String add(int a, int b, String var, CharSequence block, Object context) {
@@ -696,12 +696,12 @@ public class BoonTemplateTest {
 
 
 
-        replace = templateWithDynamicFunctions(
+        replace = templateWithFunctions(
                 new Object() {
 
                     String add(int a, int b, String var, String block) {
 
-                        return sputs(var, "=", (a+b));
+                        return sputs(var, "=", (a + b));
                     }
                 }
         ).replace("{{#if name}}\n" +
@@ -768,12 +768,12 @@ public class BoonTemplateTest {
         ));
 
 
-        replace = templateWithDynamicFunctions(
+        replace = templateWithFunctions(
                 new Object() {
 
                     String add(int a, int b, String var, String block) {
 
-                        return sputs(var, "=", (a+b));
+                        return sputs(var, "=", (a + b));
                     }
                 }
         ).replace("{{#if name}}\n" +
@@ -844,7 +844,7 @@ public class BoonTemplateTest {
                         "           </td>                                            \n";
 
 
-        replace = templateWithDynamicFunctions(
+        replace = templateWithFunctions(
                 new Object() {
 
                     String table(String arguments, String block, final Object context) {
@@ -857,9 +857,9 @@ public class BoonTemplateTest {
 
                         List listOfTemplates;
 
-                        args =          Str.splitBySpace(arguments);
-                        itemsNameInContext =      args[0];
-                        itemProperties =    slc(args, 1);
+                        args = Str.splitBySpace(arguments);
+                        itemsNameInContext = args[0];
+                        itemProperties = slc(args, 1);
 
                         listOfTemplates = mapBy(itemProperties, new Fn() {
                             String function(String property) {

@@ -9,6 +9,7 @@ import org.boon.core.Conversions;
 import static java.util.Arrays.copyOfRange;
 
 
+import org.boon.core.Function;
 import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Invoker;
@@ -19,37 +20,24 @@ import org.boon.primitive.Chr;
 
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Lists.list;
-import static org.boon.Lists.sliceOf;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.*;
 import static org.boon.core.reflection.FastStringUtils.noCopyStringFromChars;
 import static org.boon.json.JsonFactory.fromJson;
-import static org.boon.primitive.CharScanner.findChar;
-import static org.boon.primitive.CharScanner.findChars;
-import static org.boon.primitive.CharScanner.findString;
+import static org.boon.primitive.CharScanner.*;
 
 /**
  * Created by Richard on 2/27/14.
- *
- * TODO
- * Improve error handling and tests.
- * Improve toJson, fromJson support
- *
- * TODO add this:
- *
- * Helpers receive the current context as the this context of the function.
- <ul>
- {{#each items}}
- <li>{{agree_button}}</li>
- {{/each}}
- </ul>
- when using this context and helpers:
-using functions
 
  TODO
- add factory or make template more factory like, add helper.
+ finish making properties configurable
+
+ TODO
+ add a way to add a single command or function
+
+ TODO
+ make command object's properties exposed to the template... ? (Maybe)
 
  TODO
  implement handlebar templates
@@ -57,41 +45,18 @@ using functions
 
  TODO
  handle different forms of this
-
  Handlebars also allows for name conflict resolution between helpers and data fields via a this reference:
- <p>{{./name}} or {{this/name}} or {{this.name}}</p>
+ <p> {{this.name}}</p>
  Any of the above would cause the name field on the current context to be used rather than a helper of the same name.
 
- TODO improve path support
- Nested handlebars paths can also include ../ segments, which evaluate their paths against a parent context.
- <h1>Comments</h1>
-
- <div id="comments">
- {{#each comments}}
- <h2><a href="/posts/{{../permalink}}#{{id}}">{{title}}</a></h2>
- <div>{{body}}</div>
- {{/each}}
- </div>
-
- * <pre>
- * TODO add this
- * When looping through items in each, you can optionally reference the current loop index via {{@index}}
- {{#each array}}
- {{@index}}: {{this}}
- {{/each}}
- Additionally for object iteration, {{@key}} references the current key name:
- {{#each object}}
- {{@key}}: {{this}}
- {{/each}}
- </pre>
- <p>
- The first and last steps of iteration are noted via the @first and @last
- variables then iterating over an array. When iterating over an object only the @first is available.
- </p>
  <p>
  TODO
  If you find a "function" (Provider or Function), call it instead of evaluating it and converting it toString.
  Function gets passed context as argument to apply.
+
+ TODO
+ Need ability to add Function<> interface implementations as well.
+
 
  TODO loading templates by name
 
@@ -121,24 +86,19 @@ using functions
  {{/partial}}
  context: A string literal which define the region's name.
 
+ NOTE need a way to invoke templates from a template
  //
 
+ TODO implement include
  he uses embedded for include {{embedded "user"}}
  I think I will stick with include but support embedded
-
- TODO
- //i18n ??? maybe
-
- Might implement some of these
 
  //https://github.com/jknack/handlebars.java/blob/master/handlebars/src/main/java/com/github/jknack/handlebars/helper/StringHelpers.java
  I have some too. :) //lower, upper, rpad, etc. https://github.com/jknack/handlebars.java/blob/master/handlebars/src/main/java/com/github/jknack/handlebars/helper/StringHelpers.java
 
 
 
- TODO implement default value
-
- TODO
+ TODO look at functions here
  https://github.com/elving/swag
  </p>
  */
@@ -150,7 +110,7 @@ public class BoonTemplate {
      *  |
      *  |
      * */
-    char[] expressionStart = "{{".toCharArray();
+    protected char[] expressionStart = "{{".toCharArray();
 
     /** Sets how the beginning of the end block start should look .
      *
@@ -161,7 +121,7 @@ public class BoonTemplate {
      *  |
      *  |
      * */
-    String endBlockStart = "{{/";
+    protected String endBlockStart = "{{/";
 
     /**
      * Three {{{Text in here will not get escaped so you can have <ol/> }}}
@@ -170,13 +130,13 @@ public class BoonTemplate {
      * HTML so you have to enable HTML escaping for {{HTML ESCAPED}} and {{{HTML UNESCAPED TO WORK}}}
      * By default everything is unescaped.
      */
-    char[] unescapedExpressionStart = "{{{".toCharArray();
-    char[] unescapedExpressionEnd = "}}}".toCharArray();
+    protected char[] unescapedExpressionStart = "{{{".toCharArray();
+    protected char[] unescapedExpressionEnd = "}}}".toCharArray();
 
     /**
      * It detects if the escaped and unescaped start with the same char.
      */
-    final boolean sameStart;
+    protected final boolean sameStart;
 
     /**
      * The end of an end block.
@@ -190,7 +150,7 @@ public class BoonTemplate {
      *       |
      *
      */
-    String endBlockEnd = "}}";
+    protected String endBlockEnd = "}}";
 
     /**
      * The end of an end expression.
@@ -202,17 +162,17 @@ public class BoonTemplate {
      *           |
      *
      */
-    char[] expressionEnd = "}}".toCharArray();
+    protected char[] expressionEnd = "}}".toCharArray();
 
     /**
      * First char used to search strings quickly for expressions or commands.
      */
-    char expressionStart1stChar = expressionStart[0];
+    protected char expressionStart1stChar = expressionStart[0];
 
     /**
      * First char used to search strings quickly for expressions or commands.
      */
-    char unescapedExpressionStartChar = unescapedExpressionStart[0];
+    protected char unescapedExpressionStartChar = unescapedExpressionStart[0];
 
     /**
      * Command marker.
@@ -221,20 +181,20 @@ public class BoonTemplate {
      *  ^
      *  |
      */
-    String commandMarker = "#";
+    protected String commandMarker = "#";
 
     /**
      * I was not sure how to handle this so I punted.
      */
-    String elseBlock = "{{else}}";
+    protected String elseBlock = "{{else}}";
 
     //State
     /** Current line number. */
-    int lineIndex;
+    protected int lineIndex;
     /** List of lines we are processing. */
-    char[][] lines;
+    protected char[][] lines;
     /** Context object that we are getting expressions from. */
-    Object context;
+    protected Object context;
 
     /** Whether we support escaped mode or not for HTML output. */
     boolean escaped;
@@ -245,6 +205,28 @@ public class BoonTemplate {
 
     /** Functions can be used anywhere where expressions can be used. */
     protected Map<String, MethodAccess> functionMap;
+
+
+    /**
+     * Plug-able String escaping. e.g., you can plug in an HTML string escaper if you want.
+     */
+    Function<String, String> stringEscaper = null;
+
+
+
+    public BoonTemplate(char[] expressionStart, char[] expressionEnd, Object functions) {
+        this.expressionStart = expressionStart;
+        this.expressionEnd = expressionEnd;
+        this.expressionStart1stChar = expressionStart[0];
+
+        this.unescapedExpressionStartChar = unescapedExpressionStart[0];
+
+        sameStart = expressionStart1stChar == unescapedExpressionStartChar;
+
+        if (functions!=null) {
+            extractFunctions(functions, false);
+        }
+    }
 
 
     /** Lookup a command.
@@ -291,24 +273,107 @@ public class BoonTemplate {
 
     }
 
-    public BoonTemplate(char[] expressionStart, char[] expressionEnd, Object functions) {
-        this.expressionStart = expressionStart;
-        this.expressionEnd = expressionEnd;
-        this.expressionStart1stChar = expressionStart[0];
+    /** Adds functions from class (static methods) or instance (regular methods)).
+     * Every method in this object becomes a command handler.
+     * */
+    public BoonTemplate addFunctions(Object object) {
+        extractFunctions(object, true);
+        return this;
+    }
 
-        this.unescapedExpressionStartChar = unescapedExpressionStart[0];
+    /** Adds functions from class (static methods) or instance (regular methods)).
+     * Every method in this object becomes a command handler.
+     * */
+//    public BoonTemplate addTemplateAsFunctions() {
+//        extractFunctions(this, true);
+//        return this;
+//    }
 
-        sameStart = expressionStart1stChar == unescapedExpressionStartChar;
 
-        if (functions!=null) {
-            extractFunctions(functions, false);
-        }
+    /** Adds commandHandlers from class (static methods) or instance (regular methods)).
+     * Every method in this object becomes a command handler.
+     **/
+    public BoonTemplate addCommandHandlers(Object object) {
+        extractFunctions(object, false);
+        return this;
+    }
+
+    public String expressionStart() {
+        return FastStringUtils.noCopyStringFromChars(expressionStart);
+    }
+
+    public String endBlockStart() {
+        return endBlockStart;
+    }
+
+    public String unescapedExpressionStart() {
+        return  FastStringUtils.noCopyStringFromChars(unescapedExpressionStart);
+    }
+
+    public String unescapedExpressionEnd() {
+
+        return  FastStringUtils.noCopyStringFromChars(unescapedExpressionEnd);
     }
 
 
+    public String endBlockEnd() {
+        return endBlockEnd;
+    }
+
+    public String expressionEnd() {
+        return  FastStringUtils.noCopyStringFromChars(expressionEnd);
+    }
+
+    public String commandMarker() {
+        return commandMarker;
+    }
+
+    public String elseBlock() {
+        return elseBlock;
+    }
+
+    public int lineIndex() {
+        return lineIndex;
+    }
+
+
+    public String line() {
+        return FastStringUtils.noCopyStringFromChars(lines[lineIndex]);
+    }
+
+
+    public Object context() {
+        return context;
+    }
+
+
+    public Object getThis() {
+        return context;
+    }
+
+
+    public Map<String, Command> commandMap() {
+        return commandMap;
+    }
+
+    public Map<String, MethodAccess> functionMap() {
+        return functionMap;
+    }
+
+    public BoonTemplate parentTemplate() {
+        return parentTemplate;
+    }
+
     private void extractFunctions(Object functions, boolean all) {
-        commandMap = new HashMap<>();
-        functionMap = new HashMap<>();
+
+        if (commandMap == null) {
+            commandMap = new HashMap<>();
+
+        }
+
+        if (functionMap == null) {
+            functionMap = new HashMap<>();
+        }
 
         ClassMeta<?> classMeta = ClassMeta.classMetaEither(functions);
 
@@ -333,6 +398,24 @@ public class BoonTemplate {
                 commandMap.put(methodAccess.name(), new InvokeCommand(functions, methodAccess));
             }
         }
+
+
+
+        if (!all) {
+            for (MethodAccess methodAccess : methods) {
+                if (methodAccess.respondsTo(CharBuf.class, String.class, CharSequence.class, Object.class)) {
+                    commandMap.put(Str.add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
+                } else if (methodAccess.respondsTo(String.class, CharSequence.class, Object.class)) {
+                    commandMap.put(Str.add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
+                }
+            }
+
+
+        } else {
+            for (MethodAccess methodAccess : methods) {
+                commandMap.put(Str.add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
+            }
+        }
     }
 
     public BoonTemplate() {
@@ -341,39 +424,75 @@ public class BoonTemplate {
 
     }
 
+    /**
+     * Creates a new template.
+     * @return
+     */
     public static BoonTemplate template() {
         return new BoonTemplate();
     }
 
 
+    /**
+     * Creates a new JSTL template.
+     * @return
+     */
     public static BoonTemplate jstl() {
         return template("${", "}");
     }
 
 
+    /**
+     * Creates a new template and allows you to define the start expression and the end expression.
+     * @param expStart
+     * @param expEnd
+     * @return
+     */
     public static BoonTemplate template(String expStart, String expEnd) {
         return new BoonTemplate(expStart.toCharArray(), expEnd.toCharArray(), null);
     }
 
 
+    /**
+     * Creates a new template and allows you to define the start expression and the end expression.
+     * @param expStart
+     * @param expEnd
+     * @return
+     */
     public static BoonTemplate template(char[] expStart, char[] expEnd) {
         return new BoonTemplate(expStart, expEnd, null);
     }
 
 
+    /**
+     * Creates a new template and allows you to define the start expression and the end expression.
+     * @param expStart
+     * @param expEnd
+     * @return
+     */
     public static BoonTemplate template(char[] expStart, char[] expEnd, Object functions) {
         return new BoonTemplate(expStart, expEnd, functions);
     }
 
 
-    public static BoonTemplate templateWithFunctions(Object functions) {
+    /**
+     * BoonTemplate with functions
+     * @param functions
+     * @return
+     */
+    public static BoonTemplate templateWithCommandHandlers(Object functions) {
         BoonTemplate boonTemplate = new BoonTemplate();
-        boonTemplate.extractFunctions(functions, false);
+        boonTemplate.extractFunctions(functions, true);
         return boonTemplate;
     }
 
 
-    public static BoonTemplate templateWithDynamicFunctions(Object functions) {
+    /**
+     * Template with functions
+     * @param functions
+     * @return
+     */
+    public static BoonTemplate templateWithFunctions(Object functions) {
         BoonTemplate boonTemplate = new BoonTemplate();
         boonTemplate.extractFunctions(functions, true);
         return boonTemplate;
@@ -381,6 +500,15 @@ public class BoonTemplate {
     }
 
 
+    /**
+     * Replace template with properties from context.
+     * The context can be a Java Bean, a hash map or a list of JavaBeans or HashMaps.
+     * The search order of the objects is determine by their order in the list.
+     *
+     * @param template the template (a string or char sequence that constitutes the template)
+     * @param context instance, map or list of maps/instances or a JSON string which can be a list or a list of objects(maps)
+     * @return char sequence of applied results of context to sequence.
+     */
     public CharSequence replace (CharSequence template, Object context) {
 
         initContext(context);
@@ -410,7 +538,12 @@ public class BoonTemplate {
         return output;
     }
 
-    private void initContext(Object context) {
+
+    /**
+     * Initialize the context object.
+     * @param context
+     */
+    protected void initContext(Object context) {
         if (context instanceof CharSequence) {
             try {
                 this.context = fromJson(context.toString());
@@ -423,11 +556,13 @@ public class BoonTemplate {
     }
 
 
+    /** Searches the line for an expression. */
     private int findExpression(char[] line) {
 
         return findExpressionFromIndex(line, 0);
     }
 
+    /** Searches from the startIndex for expressions. */
     private int findExpressionFromIndex(char[] line, int startIndex) {
 
         if (sameStart) {
@@ -455,28 +590,54 @@ public class BoonTemplate {
 
     }
 
-    /** These two are here so I can add JSTL style support later. */
+    /** These two are here so I can add JSTL style support later for <c:if and <c:each, etc. */
     protected boolean lineHasCommand() {
         return false;
     }
 
+
+    /** These two are here so I can add JSTL style support later for <c:if and <c:each, etc. */
     protected void processLineCommand(CharBuf output, char[] line ){
 
     }
 
 
+    /** Handles string escaping. */
     protected String escape(String charSequence ){
 
         if (sameStart && charSequence.charAt(0) == '{' ) {
             charSequence = Str.sliceOf(charSequence, 1);
         }
-        if (escaped) {
-            return charSequence; //No op
+        if (escaped && stringEscaper!=null) {
+            return stringEscaper.apply(charSequence);
         } else {
             return charSequence;
         }
     }
 
+    /**
+     * Pluggable String escaper
+     * @return
+     */
+    public Function<String, String> stringEscaper() {
+        return stringEscaper;
+    }
+
+    public BoonTemplate setStringEscaper(Function<String, String> stringEscaper) {
+        this.stringEscaper = stringEscaper;
+        return this;
+    }
+
+
+    /**
+     * Processes a command or an expression.
+     *
+     * Commands are like {{#if}}
+     * An Expression is like {{Rick}}
+     * @param output
+     * @param line
+     * @param index
+     */
     private void processCommandOrExpression(CharBuf output, char[] line, int index) {
         int startIndex;
 
@@ -527,16 +688,27 @@ public class BoonTemplate {
     }
 
 
-
+    /**
+     * Processes a command or an expression.
+     * @param index
+     * @param output
+     * @param command
+     */
     private void processCommand(int index, CharBuf output, String command ) {
 
         if (!command.startsWith(commandMarker)) {
-            handleExpression(output, command);
+            handleExpressionOrFunction(output, command);
         } else {
             handleCommand(index, output, command);
         }
     }
 
+    /**
+     * Handle a command like {{#if}}, {{#each}}, {{#myCommand}}
+     * @param index
+     * @param output
+     * @param command
+     */
     private void handleCommand(int index, CharBuf output, String command) {
         String cmd = Str.slc(command, commandMarker.length(), command.indexOf(' '));
         String arguments = Str.slc(command, commandMarker.length() + cmd.length() +1 );
@@ -586,19 +758,41 @@ public class BoonTemplate {
     }
 
 
-    private void handleExpression(CharBuf output, String command) {
+    /**
+     * Handles an expression like {{name}} or function call like {{doIt( 1, 2, ${name} ) }}.
+     * You can override this and change the way that expressions and function calls are handled.
+     * @param output output char buffer
+     * @param command name of the command.
+     */
+    protected void handleExpressionOrFunction(CharBuf output, String command) {
 
         if (command.contains("(")) {
             handleFunction(output, command);
         } else {
-            Object object;
-            object = lookup(command);
-            String str = Str.toString(object, command);
-            output.add( escape(str) );
+            handleExpression(output, command);
         }
     }
 
+    /**
+     * Handle an expression
+     * @param output
+     * @param command
+     */
+    protected void handleExpression(CharBuf output, String command) {
 
+        Object object;
+        object = lookup(command);
+        String str = Str.toString(object, command);
+        output.add( escape(str) );
+    }
+
+
+    /**
+     * Handles an expression that results in a function call.
+     * You can override this and change the way that expressions are handled.
+     * @param output output char buffer
+     * @param command name of the command.
+     */
     private void handleFunction(CharBuf output, String command) {
 
         String[] split = StringScanner.splitByChars(command, '(', ')');
@@ -620,11 +814,23 @@ public class BoonTemplate {
     }
 
 
-    private Object lookup(String objectName) {
+    /**
+     * Lookup an object and use its name as the default value if not found.
+     *
+     * @param objectName
+     * @return
+     */
+    public Object lookup(String objectName) {
         return lookup(objectName, objectName);
     }
 
-    private Object lookup(String objectName, String defaultValue) {
+    /**
+     * Lookup an object and supply a default value.
+     * @param objectName
+     * @param defaultValue
+     * @return
+     */
+    public Object lookup(String objectName, String defaultValue) {
         Object value =  findProperty(context, objectName);
         if (value == null) {
             if (parentTemplate!=null) {
@@ -634,7 +840,15 @@ public class BoonTemplate {
         return value == null ? defaultValue : value;
     }
 
-    private void processEach(CharBuf output, String arguments, CharSequence block) {
+    /**
+     * Handles the for each operation, i.e., handles the {{#each}} command.
+     * You can override this.
+     *
+     * @param output
+     * @param arguments
+     * @param block
+     */
+    protected void processEach(CharBuf output, String arguments, CharSequence block) {
 
 
         Object object = getObjectFromArguments(arguments);
@@ -649,7 +863,15 @@ public class BoonTemplate {
 
     }
 
-    private void eachListItem(CharBuf output, CharSequence block, Object object) {
+    /**
+     * Handles the for each case in the case of collections and arrays.
+     * You can override this.
+     *
+     * @param output the output buffer
+     * @param block the template block for the each
+     * @param object the actual List or Array like object
+     */
+    protected void eachListItem(CharBuf output, CharSequence block, Object object) {
         Iterator iterator = Conversions.iterator(object);
         int len = Boon.len(object);
         int index = 0;
@@ -675,6 +897,14 @@ public class BoonTemplate {
         }
     }
 
+    /**
+     * Handles the for each operation fo Maps.
+     * You can override this.
+     *
+     * @param output the output buffer
+     * @param block the template block for the each
+     * @param object the output object, i.e., the Map or map like thing.
+     */
     private void eachMapProperty(CharBuf output, CharSequence block, Object object) {
         Map<Object, Object> objectMap = (Map<Object, Object>) object;
         Set<Map.Entry<Object, Object>> entries = objectMap.entrySet();
@@ -708,7 +938,14 @@ public class BoonTemplate {
     }
 
 
-    private void processWith(CharBuf output, String arguments, CharSequence block) {
+    /**
+     * Handles the {{#with}}. You can override this.
+     *
+     * @param output the output buffer
+     * @param arguments arguments to the with handler
+     * @param block the actual template block
+     */
+    protected void processWith(CharBuf output, String arguments, CharSequence block) {
 
         Object object = getObjectFromArguments(arguments);
 
@@ -719,17 +956,48 @@ public class BoonTemplate {
 
 
 
-    private void processIf(CharBuf output, String arguments, CharSequence[] blocks) {
+    /**
+     * Handles the {{#if}} command. You can override this.
+     *
+     * @param output the output buffer
+     * @param arguments arguments to the with handler
+     * @param blocks the actual template blocks, the first item is the if, the second item is the else if present
+     */
+    protected void processIf(CharBuf output, String arguments, CharSequence[] blocks) {
         doProcessIf(output, arguments, blocks, false);
     }
 
+
+    /**
+     * Handles the {{#unless}} command. You can override this.
+     *
+     * @param output the output buffer
+     * @param arguments arguments to the with handler
+     * @param blocks the actual template blocks, the first item is the if, the second item is the else if present
+     */
     private void processUnless(CharBuf output, String arguments, CharSequence[] blocks) {
         doProcessIf(output, arguments, blocks, true);
     }
 
+    /**
+     * Handles the {{length}} command. You can override this.
+     * @param output the output buffer
+     * @param arguments arguments to the length handler.
+     * @param blocks the actual template blocks, the first item is the if, the second item is the else if present
+     */
     private void processLength(CharBuf output, String arguments, CharSequence[] blocks) {
-        Object object = getObjectFromArguments(arguments);
 
+        String[] strings = Str.splitBySpace(arguments);
+        if (strings.length > 1) {
+            String len = strings[0];
+
+            int length = (int) getObjectFromArguments( len );
+
+            Collection collection = (Collection) getObjectFromArguments(Str.join(' ', org.boon.Arrays.sliceOf(strings, 1)));
+
+            //NOT DONE TODO
+
+        }
     }
 
 

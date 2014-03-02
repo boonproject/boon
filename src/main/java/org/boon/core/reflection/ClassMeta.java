@@ -420,4 +420,8 @@ public class ClassMeta <T> implements Annotated{
         }
     }
 
+    public String name() {
+        return this.cls.getSimpleName();
+    }
+
 }
