@@ -810,7 +810,7 @@ public class BoonTemplateTest {
 
     }
 
-    @Test public void fuckBobLeeMyJsonParserIsCorrectYouFuck(){
+    @Test public void complexTestThatShowsJSONNestedMapsCustomBodyHandlersAndOtherFunStuff(){
 
         String contextJson =
                 "{                                                     \n" +
