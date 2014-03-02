@@ -231,7 +231,7 @@ public class CharScanner {
 
 
                 results[ resultIndex ] = Chr.copy(
-                        inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                        inputArray, startCurrentLineIndex, currentLineLength  );
                 startCurrentLineIndex = index + 1; //skip the char
 
                 currentLineLength = 0;

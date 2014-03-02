@@ -15,14 +15,12 @@ import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MethodAccess;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
-import org.boon.primitive.Chr;
 
 import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Lists.in;
 import static org.boon.Lists.list;
-import static org.boon.Lists.sliceOf;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.*;
 import static org.boon.core.reflection.FastStringUtils.noCopyStringFromChars;
@@ -47,7 +45,7 @@ import static org.boon.primitive.CharScanner.findString;
  {{/each}}
  </ul>
  when using this context and helpers:
-using functions
+ using functions
 
  TODO
  add factory or make template more factory like, add helper.
@@ -143,7 +141,7 @@ using functions
  https://github.com/elving/swag
  </p>
  */
-public class BoonTemplate {
+public class BoonTemplateOld {
 
     //Config
     char[] expressionStart = "{{".toCharArray();
@@ -197,7 +195,7 @@ public class BoonTemplate {
 
     }
 
-    public BoonTemplate(char[] expressionStart, char[] expressionEnd, Object functions) {
+    public BoonTemplateOld(char[] expressionStart, char[] expressionEnd, Object functions) {
         this.expressionStart = expressionStart;
         this.expressionEnd = expressionEnd;
         this.expressionStart1stChar = expressionStart[0];
@@ -241,7 +239,7 @@ public class BoonTemplate {
         }
     }
 
-    public BoonTemplate() {
+    public BoonTemplateOld() {
 
         sameStart = expressionStart1stChar == unescapedExpressionStartChar;
 
@@ -252,35 +250,35 @@ public class BoonTemplate {
     }
 
 
-    public static BoonTemplate jstl() {
+    public static BoonTemplateOld jstl() {
         return template("${", "}");
     }
 
 
-    public static BoonTemplate template(String expStart, String expEnd) {
-        return new BoonTemplate(expStart.toCharArray(), expEnd.toCharArray(), null);
+    public static BoonTemplateOld template(String expStart, String expEnd) {
+        return new BoonTemplateOld(expStart.toCharArray(), expEnd.toCharArray(), null);
     }
 
 
-    public static BoonTemplate template(char[] expStart, char[] expEnd) {
-        return new BoonTemplate(expStart, expEnd, null);
+    public static BoonTemplateOld template(char[] expStart, char[] expEnd) {
+        return new BoonTemplateOld(expStart, expEnd, null);
     }
 
 
-    public static BoonTemplate template(char[] expStart, char[] expEnd, Object functions) {
-        return new BoonTemplate(expStart, expEnd, functions);
+    public static BoonTemplateOld template(char[] expStart, char[] expEnd, Object functions) {
+        return new BoonTemplateOld(expStart, expEnd, functions);
     }
 
 
-    public static BoonTemplate templateWithFunctions(Object functions) {
-        BoonTemplate boonTemplate = new BoonTemplate();
+    public static BoonTemplateOld templateWithFunctions(Object functions) {
+        BoonTemplateOld boonTemplate = new BoonTemplateOld();
         boonTemplate.extractFunctions(functions, false);
         return boonTemplate;
     }
 
 
-    public static BoonTemplate templateWithDynamicFunctions(Object functions) {
-        BoonTemplate boonTemplate = new BoonTemplate();
+    public static BoonTemplateOld templateWithDynamicFunctions(Object functions) {
+        BoonTemplateOld boonTemplate = new BoonTemplateOld();
         boonTemplate.extractFunctions(functions, true);
         return boonTemplate;
 
@@ -305,7 +303,7 @@ public class BoonTemplate {
 
             int index = findExpression(line);
             if (index == -1) {
-                output.add(line);
+                output.addLine(line);
             } else {
 
                 output.add(copyOfRange(line, 0, index));
@@ -313,6 +311,7 @@ public class BoonTemplate {
             }
         }
 
+        output.removeLastChar();
         return output;
     }
 
@@ -346,10 +345,10 @@ public class BoonTemplate {
         index =  findChars(expressionStart, startIndex, line);
 
         if (index != -1) {
-                escaped =  true;
+            escaped =  true;
         } else {
-                escaped =  false;
-                index =  findChars(unescapedExpressionStart, startIndex, line);
+            escaped =  false;
+            index =  findChars(unescapedExpressionStart, startIndex, line);
         }
         return index;
 
@@ -393,47 +392,38 @@ public class BoonTemplate {
         index = findChars(expressionEnd, startIndex, line);
 
         if (index == -1) {
-            output.add(line);
+            output.addLine(line);
             return;
         }
 
         String command = noCopyStringFromChars( copyOfRange(line, startIndex, index) );
-
+        processCommand(output, command);
 
         index = index + expressionEnd.length;
 
-        int lineNumber = this.lineIndex;
-        processCommand(index, output, command); //processCommand can advance line number so be careful
-
-
 
         int findIndex = findExpressionFromIndex(line, index);
+        if (findIndex == -1) {
+            output.addLine(copyOfRange(line, index, line.length));
+        } else {
 
-
-        if (lineNumber == lineIndex) {
-            if (findIndex == -1) {
-                output.add(copyOfRange(line, index, line.length));
-            } else {
-
-                output.add(copyOfRange(line, index, findIndex));
-
-                processCommandOrExpression(output, line, findIndex);
-            }
+            output.add(copyOfRange(line, index, findIndex));
+            processCommandOrExpression(output, line, findIndex);
         }
     }
 
 
 
-    private void processCommand(int index, CharBuf output, String command ) {
+    private void processCommand(CharBuf output, String command ) {
 
         if (!command.startsWith(commandMarker)) {
             handleExpression(output, command);
         } else {
-            handleCommand(index, output, command);
+            handleCommand(output, command);
         }
     }
 
-    private void handleCommand(int index, CharBuf output, String command) {
+    private void handleCommand(CharBuf output, String command) {
         String cmd = Str.slc(command, commandMarker.length(), command.indexOf(' '));
         String arguments = Str.slc(command, commandMarker.length() + cmd.length() +1 );
         CharSequence block;
@@ -445,40 +435,40 @@ public class BoonTemplate {
         switch (Commands.command(cmd)) {
 
             case UNLESS:
-                blocks = readBlock( index, elseBlock, endOfBlock);
+                blocks = readBlock( elseBlock, endOfBlock);
                 processUnless(output, arguments, blocks);
                 break;
 
 
             case LENGTH:
-                blocks = readBlock( index, elseBlock, endOfBlock);
+                blocks = readBlock( elseBlock, endOfBlock);
                 processLength(output, arguments, blocks);
                 break;
 
             case IF:
-                blocks = readBlock( index, elseBlock, endOfBlock);
+                blocks = readBlock( elseBlock, endOfBlock);
                 processIf(output, arguments, blocks);
                 break;
 
             case EACH:
-                block = readBlock( index, endOfBlock );
+                block = readBlock( endOfBlock );
                 processEach(output, arguments, block);
                 break;
 
             case WITH:
-                block = readBlock( index, endOfBlock );
+                block = readBlock( endOfBlock );
                 processWith(output, arguments, block);
                 break;
 
             default:
 
-                block = readBlock(index,  endOfBlock );
+                block = readBlock( endOfBlock );
                 Command commandObject = commandMap.get(cmd);
                 if (commandObject!=null) {
-                        commandObject.processCommand(output, arguments, block, context);
+                    commandObject.processCommand(output, arguments, block, context);
                 }
 
-          }
+        }
     }
 
 
@@ -569,6 +559,7 @@ public class BoonTemplate {
             output.add(blockOutput);
             index++;
         }
+        output.removeLastChar();
     }
 
     private void eachMapProperty(CharBuf output, CharSequence block, Object object) {
@@ -609,7 +600,7 @@ public class BoonTemplate {
         Object object = getObjectFromArguments(arguments);
 
         CharSequence blockOutput = template(this.expressionStart, this.expressionEnd)
-                    .replace(block, list(map("@this", object, "this", object), context));
+                .replace(block, list(map("@this", object, "this", object), context));
         output.add(blockOutput);
     }
 
@@ -653,7 +644,7 @@ public class BoonTemplate {
                 } else {
                     list.add(string);
                 }
-             }
+            }
             oTest = list;
 
         }
@@ -681,10 +672,10 @@ public class BoonTemplate {
         output.removeLastChar();
     }
 
-    BoonTemplate parentTemplate;
+    BoonTemplateOld parentTemplate;
 
-    private BoonTemplate createTemplate() {
-        BoonTemplate boonTemplate = template(this.expressionStart, this.expressionEnd);
+    private BoonTemplateOld createTemplate() {
+        BoonTemplateOld boonTemplate = template(this.expressionStart, this.expressionEnd);
         boonTemplate.parentTemplate = this;
         boonTemplate.elseBlock = this.elseBlock;
         boonTemplate.endBlockEnd = this.endBlockEnd;
@@ -700,7 +691,7 @@ public class BoonTemplate {
     }
 
 
-    private CharSequence[] readBlock(int startLine, String endBlock1, String endBlock2) {
+    private CharSequence[] readBlock(String endBlock1, String endBlock2) {
         CharBuf buf = CharBuf.create(80);
         CharBuf buf1 = null;
         CharBuf buf2 = null;
@@ -720,13 +711,13 @@ public class BoonTemplate {
             if (index != -1) {
 
                 if (buf1 != null) {
-                   buf2 = buf;
+                    buf2 = buf;
                 };
                 break;
             }
 
 
-            buf.add(lines[lineIndex]);
+            buf.addLine(lines[lineIndex]);
 
 
         }
@@ -741,25 +732,9 @@ public class BoonTemplate {
     }
 
 
-    private CharSequence readBlock(int startIndexOfFirstLine, String endBlock) {
+    private CharSequence readBlock(String endBlock) {
         CharBuf buf = CharBuf.create(80);
 
-        char[] line = lines[lineIndex];
-
-        int endIndexOfFirstLineCommandBody = findString(endBlock, lines[lineIndex]);
-
-        if (endIndexOfFirstLineCommandBody == -1) {
-            line = Chr.sliceOf(line, startIndexOfFirstLine); //FIX ME.. can't use sliceOf... have to do some real logic here.
-        } else {
-
-            line = Chr.sliceOf(line, startIndexOfFirstLine, endIndexOfFirstLineCommandBody);
-
-            buf.add(line);
-            lineIndex++;
-            return buf;
-        }
-
-        //buf.add(line); //DIRTY HACK.. you have to fix the line index above
         lineIndex++;
 
         for (; lineIndex<lines.length; lineIndex++) {
@@ -768,7 +743,7 @@ public class BoonTemplate {
             if (index != -1) {
                 return buf;
             } else {
-                buf.add(lines[lineIndex]);
+                buf.addLine(lines[lineIndex]);
             }
         }
 
@@ -804,8 +779,8 @@ public class BoonTemplate {
         return object;
     }
 
-    private BoonTemplate createJSTL() {
-        BoonTemplate jstl = jstl();
+    private BoonTemplateOld createJSTL() {
+        BoonTemplateOld jstl = jstl();
         jstl.parentTemplate = this;
         return jstl;
     }

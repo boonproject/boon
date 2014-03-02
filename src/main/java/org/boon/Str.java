@@ -259,6 +259,19 @@ public class Str {
     }
 
 
+    public static void stringCompareOrDie( String a, String b ) {
+        char[] ac = FastStringUtils.toCharArray(a);
+        char[] bc = FastStringUtils.toCharArray(b);
+        Chr.charsCompareOrDie(ac, bc);
+    }
+
+    public static void stringCompareOrDie( CharSequence a, CharSequence b ) {
+        char[] ac = FastStringUtils.toCharArray(a);
+        char[] bc = FastStringUtils.toCharArray(b);
+        Chr.charsCompareOrDie(ac, bc);
+    }
+
+
     /* Left off here. */
 
 

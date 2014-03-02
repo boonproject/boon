@@ -6,12 +6,16 @@ import org.boon.Exceptions;
 import org.boon.Universal;
 import org.boon.core.reflection.FastStringUtils;
 
+import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
+
 
 public class Chr {
 
 
     public static final char[] DEFAULT_SPLIT = { ' ', '\t', ',', ':', ';' };
     public static final char[] NEWLINE_CHARS = { '\n', '\r' };
+    private static final char[] EMPTY_CHARS = new char[0];
 
     /**
      * Creates an array of chars
@@ -99,13 +103,10 @@ public class Chr {
 
         final int start = calculateIndex( array, startIndex );
         final int end = calculateIndex( array, endIndex );
-        final int newLength = end - start;
+        int newLength = end - start;
 
         if ( newLength < 0 ) {
-            throw new ArrayIndexOutOfBoundsException(
-                    String.format( "start index %d, end index %d, length %d",
-                            startIndex, endIndex, array.length )
-            );
+            return EMPTY_CHARS;
         }
 
         char[] newArray = new char[ newLength ];
@@ -470,7 +471,6 @@ public class Chr {
     private static int calculateIndex( char[] array, int originalIndex ) {
         final int length = array.length;
 
-        Exceptions.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;
@@ -796,5 +796,90 @@ public class Chr {
     public static char[][] splitComma(char[] chars) {
         return CharScanner.splitComma(chars);
 
+    }
+
+    public static void charsCompareOrDie(char[] ac, char[] bc) {
+        char a;
+        char b;
+
+        int indexOfDiff = -1;
+        int indexOfLine = 0;
+
+        for (int index = 0; index < ac.length && index < bc.length; index++) {
+            a = ac[index];
+            b = bc[index];
+
+            if (a == '\n' || b == '\n') {
+                indexOfLine++;
+            }
+            if (a!=b) {
+                indexOfDiff = index;
+                break;
+            }
+        }
+
+
+        if (indexOfDiff!=-1) {
+            CharBuf charBuf = CharBuf.create(ac.length + bc.length + 128);
+            charBuf.add("Strings are different. Problem at line ").add(indexOfLine).addLine(".");
+            charBuf.add("String a length = ").add(ac.length).addLine().addLine(ac).addLine("--- end a ---");
+            charBuf.add("String b length = ").add(bc.length).addLine().addLine(bc).addLine("--- end b ---");
+
+
+            char [] ac1 = sliceOf(ac, indexOfDiff - 5, indexOfDiff + 20);
+
+            char [] bc1 = sliceOf(bc, indexOfDiff - 5, indexOfDiff + 20);
+
+            CharBuf charBufA = CharBuf.create(ac1.length+20);
+            CharBuf charBufB = CharBuf.create(bc1.length+20);
+
+            boolean found = false;
+            indexOfDiff = 0;
+            for (int index = 0; index < ac1.length && index < bc1.length; index++) {
+                a = ac1[index];
+                b = bc1[index];
+
+                if (a!=b && !found) {
+                    found = true;
+                    indexOfDiff = charBufA.len();
+                }
+
+                charDescription(a, charBufA);
+                charDescription(b, charBufB);
+
+            }
+
+            charBuf.puts(multiply('-', 10), "area of concern", multiply('-', 10));
+            charBuf.addLine(charBufA);
+            charBuf.multiply('-', indexOfDiff).addLine("^");
+            charBuf.addLine(charBufB);
+            charBuf.multiply('-', indexOfDiff).addLine("^");
+
+
+            puts (charBuf);
+            die(charBuf);
+
+        }
+    }
+
+    private static void charDescription(char a, CharBuf charBufA) {
+        if (a == '\n') {
+            charBufA.add(" <NEWLINE> ");
+        } else if (a == '\r') {
+            charBufA.add(" <CARRIAGE_RETURN> ");
+        } else if (a == '\t') {
+            charBufA.add(" <TAB> ");
+        } else {
+            charBufA.add(a);
+        }
+    }
+
+
+    public static char [] multiply (char c, int len) {
+        char [] out = new char[len];
+        for (int index =0; index < len; index++) {
+            out[index] = c;
+        }
+        return out;
     }
 }

@@ -19,6 +19,7 @@ import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
+import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.primitive.CharScanner.*;
 
 public class CharBuf extends Writer implements CharSequence {
@@ -315,7 +316,14 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
     public CharBuf addLine( String str ) {
-        add( str.toCharArray() );
+        add( FastStringUtils.toCharArray(str));
+        add( '\n' );
+        return this;
+    }
+
+
+
+    public CharBuf addLine(  ) {
         add( '\n' );
         return this;
     }
@@ -393,24 +401,6 @@ public class CharBuf extends Writer implements CharSequence {
 
     }
 
-
-    public static void main (String... args) {
-        puts ((int) '\b', "bell");
-        puts ((int) '\t', "tab");
-        puts ((int) '\n', "newline");
-        puts ((int) '\f', "feed");
-        puts ((int) '\r', "return");
-
-        puts ((int) '"', "quote");
-        puts ((int) '/', "fslash");
-        puts ((int) '\\', "slash");
-
-
-
-        puts ((int) ' ', "space");
-        puts ((int) 'z', "z");
-
-    }
 
 
     private static  boolean isJSONControlOrUnicode( int c ) {
@@ -1392,6 +1382,30 @@ public class CharBuf extends Writer implements CharSequence {
     @Override
     public int hashCode() {
         return this.toString().hashCode();
+    }
+
+    public CharBuf  multiply(char c, int len) {
+        this.add(Chr.multiply(c, len));
+        return this;
+    }
+
+    public void puts(Object... messages) {
+
+        for ( Object message : messages ) {
+
+
+            if ( message == null ) {
+                add( "<NULL>" );
+            } else if (message instanceof char[]) {
+                add((char[])message);
+            } else if ( message.getClass().isArray() ) {
+                add( toListOrSingletonList( message ).toString() );
+            } else {
+                add( message.toString() );
+            }
+            add( ' ' );
+        }
+        addLine();
     }
 }
 
