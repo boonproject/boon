@@ -220,6 +220,10 @@ public abstract class BoonTemplate {
 
 
                     String arguments = FastStringUtils.noCopyStringFromChars(Arrays.copyOfRange(line, index+1, endIndex));
+
+
+
+                    index = findChar('>', index+1, line);
                     block = readBlock(index, "</c:if>");
 
                     processIf(output, arguments, new CharSequence[]{block});
@@ -254,7 +258,7 @@ public abstract class BoonTemplate {
                         String arguments = FastStringUtils.noCopyStringFromChars(Arrays.copyOfRange(line, index+1, endIndex));
 
 
-                        index = findChar('>', index, line);
+                        index = findChar('>', index+1, line);
                         block = readBlock(index, "</c:forEach>");
 
                         processEach(output, arguments, block);
@@ -1167,6 +1171,8 @@ public abstract class BoonTemplate {
      * @return
      */
     public Object lookup(String objectName, String defaultValue) {
+
+
         Object value =  findProperty(context, objectName);
         if (value == null) {
             if (parentTemplate!=null) {
@@ -1187,7 +1193,14 @@ public abstract class BoonTemplate {
     protected void processEach(CharBuf output, String arguments, CharSequence block) {
 
 
-        Object object = getObjectFromArguments(arguments);
+        Object object;
+
+        if (parentTemplate==null && context instanceof List && (arguments.equals("this") || arguments.equals("."))) {
+            object = context;
+        } else {
+            object = getObjectFromArguments(arguments);
+        }
+
 
 
         if (object instanceof Map) {

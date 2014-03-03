@@ -198,6 +198,26 @@ public class BoonTemplateTest {
 
 
     @Test
+    public void forloopNoSpaces() {
+
+
+        replace = template().replace("{{#each items}}{{this}}{{/each}}", map("items", list(1,2,3,4,5)));
+        equalsOrDie("12345", replace);
+
+    }
+
+
+
+    @Test
+    public void forloopNoSpaceDoubleThis() {
+
+
+        replace = template().replace("{{#each this}}{{this}}{{/each}}", list(1, 2, 3, 4, 5));
+        equalsOrDie("12345", replace);
+
+    }
+
+    @Test
     public void simpleIf() {
 
 

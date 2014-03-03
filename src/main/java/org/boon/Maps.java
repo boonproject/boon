@@ -17,6 +17,69 @@ import static org.boon.Exceptions.requireNonNull;
 public class Maps {
 
 
+
+    public static <V> List<V> lazyCreate( List<V> lazy ) {
+        if (lazy == null) {
+
+            lazy = new ArrayList<>();
+        }
+        return lazy;
+    }
+
+    public static <K,V> Map<K,V> lazyCreate( Map<K,V> lazy ) {
+        if (lazy == null) {
+
+            lazy = new LinkedHashMap();
+        }
+        return lazy;
+    }
+
+
+    public static <K,V> Map<K,V> lazyCreate( HashMap<K,V> lazy ) {
+        if (lazy == null) {
+
+            lazy = new HashMap();
+        }
+        return lazy;
+    }
+
+
+    public static <K,V> Map<K,V> lazyCreate( LinkedHashMap<K,V> lazy ) {
+        if (lazy == null) {
+
+            lazy = new LinkedHashMap();
+        }
+        return lazy;
+    }
+
+
+    public static <K,V> Map<K,V> lazyCreateLinked( Map<K,V> lazy ) {
+        if (lazy == null) {
+
+            lazy = new LinkedHashMap();
+        }
+        return lazy;
+    }
+
+
+
+    public static <K,V> Map<K,V> lazyCreate( ConcurrentHashMap<K,V> lazy ) {
+        if (lazy == null) {
+
+            lazy = new ConcurrentHashMap();
+        }
+        return lazy;
+    }
+
+    public static <K,V> Map<K,V> lazyCreateSafe( Map<K,V> lazy ) {
+        if (lazy == null) {
+
+            lazy = new ConcurrentHashMap();
+        }
+        return lazy;
+    }
+
+
     @Universal
     public static int lengthOf( Map<?, ?> map ) {
         return len ( map );

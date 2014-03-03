@@ -6,16 +6,33 @@ import org.boon.core.Predicate;
 import org.boon.core.Reducer;
 import org.boon.core.reflection.*;
 import org.boon.core.Function;
-import org.boon.di.ProviderInfo;
 
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.boon.Exceptions.requireNonNull;
 
 public class Lists {
 
+    public static <T> List<T> lazyCreate(List<T> list) {
+        return list == null ? new ArrayList<T>() : list;
+    }
+
+
+
+    public static <T> List<T> lazyCreate(ArrayList<T> list) {
+        return list == null ? new ArrayList<T>() : list;
+    }
+
+
+    public static <T> List<T> lazyCreate(CopyOnWriteArrayList<T> list) {
+        return list == null ? new CopyOnWriteArrayList<T>() : list;
+    }
+
+
+    public static <T> List<T> safeLazyCreate(CopyOnWriteArrayList<T> list) {
+        return list == null ? new CopyOnWriteArrayList<T>() : list;
+    }
 
     public static <T> T fromList( List<Object> list, Class<T> clazz ) {
         return MapObjectConversion.fromList( list, clazz );
@@ -24,6 +41,21 @@ public class Lists {
     public static <V> List<V> list( Class<V> clazz ) {
         return new ArrayList<>();
     }
+
+
+    public static <V> List<V> copy( Collection<V> collection ) {
+        return new ArrayList<>( collection );
+    }
+
+    public static <V> List<List<V>> lists( Collection<V>... collections ) {
+        List<List<V>> lists = new ArrayList<>(collections.length);
+        for (Collection<V> collection : collections) {
+            lists.add(new ArrayList<V>(collection));
+        }
+        return lists;
+    }
+
+
 
     public static <V> List<V> list( Iterable<V> iterable ) {
         List<V> list = new ArrayList<>();
@@ -79,11 +111,6 @@ public class Lists {
         } else {
             return MapObjectConversion.toList( item );
         }
-    }
-
-
-    public static <V> List<V> list( Collection<V> collection ) {
-        return new ArrayList<>( collection );
     }
 
 
