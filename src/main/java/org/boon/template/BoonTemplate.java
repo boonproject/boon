@@ -20,6 +20,7 @@ import org.boon.primitive.Chr;
 
 import java.util.*;
 
+import static org.boon.Boon.puts;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.*;
@@ -97,12 +98,179 @@ import static org.boon.primitive.CharScanner.*;
  I have some too. :) //lower, upper, rpad, etc. https://github.com/jknack/handlebars.java/blob/master/handlebars/src/main/java/com/github/jknack/handlebars/helper/StringHelpers.java
 
 
+ TODO implement all standard JSTL functions
 
+ <pre>
+ fn:contains()	Tests if an input string contains the specified substring.
+ fn:containsIgnoreCase()	Tests if an input string contains the specified substring in a case insensitive way.
+ fn:endsWith()	Tests if an input string ends with the specified suffix.
+ fn:escapeXml()	Escapes characters that could be interpreted as XML markup.
+ fn:indexOf()	Returns the index withing a string of the first occurrence of a specified substring.
+ fn:join()	Joins all elements of an array into a string.
+ fn:length()	Returns the number of items in a collection, or the number of characters in a string.
+ fn:replace()	Returns a string resulting from replacing in an input string all occurrences with a given string.
+ fn:split()	Splits a string into an array of substrings.
+ fn:startsWith()	Tests if an input string starts with the specified prefix.
+ fn:substring()	Returns a subset of a string.
+ fn:substringAfter()	Returns a subset of a string following a specific substring.
+ fn:substringBefore()	Returns a subset of a string before a specific substring.
+ fn:toLowerCase()	Converts all of the characters of a string to lower case.
+ fn:toUpperCase()	Converts all of the characters of a string to upper case.
+ fn:trim()	Removes white spaces from both ends of a string.
+ </pre>
  TODO look at functions here
  https://github.com/elving/swag
  </p>
  */
-public class BoonTemplate {
+public abstract class BoonTemplate {
+
+    /** These two are here so I can add JSTL style support later for <c:if and <c:each, etc. */
+    protected abstract boolean lineHasCommand();
+
+
+    /** These two are here so I can add JSTL style support later for <c:if and <c:each, etc. */
+    protected abstract boolean processLineCommand(CharBuf output, char[] line );
+
+    static class BoonTemplateMustacheLike extends BoonTemplate {
+
+        BoonTemplateMustacheLike() {
+        }
+
+        BoonTemplateMustacheLike(char[] expressionStart, char[] expressionEnd, Object functions) {
+            super(expressionStart, expressionEnd, functions);
+        }
+
+        @Override
+        protected final boolean lineHasCommand() {
+            return false;
+        }
+
+        @Override
+        protected final boolean processLineCommand(CharBuf output, char[] line) {
+            return true;
+        }
+    }
+
+
+    private static char[] startOfJSTLCommand = "<c:".toCharArray();
+
+
+    private static char[] ifCommand = "if".toCharArray();
+
+    private static char[] ifCommandTestAttribute = "test".toCharArray();
+
+    private static char[] forEachCommand = "forEach".toCharArray();
+
+
+    private static char[] forEachCommandItemsAttribute = "items".toCharArray();
+
+    static class BoonTemplateJSTLLike extends BoonTemplate {
+
+        BoonTemplateJSTLLike () {
+            this.expressionStart = FastStringUtils.toCharArray("${");
+            this.expressionEnd = FastStringUtils.toCharArray("}");
+            this.unescapedExpressionStart = FastStringUtils.toCharArray("${fn:escapeXml(");
+            this.unescapedExpressionEnd = FastStringUtils.toCharArray("}");
+            this.expressionStart1stChar = '$';
+            this.unescapedExpressionStartChar = '$';
+
+
+
+        }
+
+        @Override
+        protected final boolean lineHasCommand() {
+            return true;
+        }
+
+        @Override
+        protected final boolean processLineCommand(CharBuf output, char[] line) {
+            int index = 0;
+            int indexOfIf = 0;
+            int indexOfEach = 0;
+            CharSequence block;
+
+
+            /** See if the line has <c: */
+            if ( (index = (findChars(startOfJSTLCommand, line) )) != -1 ) {
+
+                /** See if if follows <c: as in <c:if */
+                if ( (indexOfIf = findChars(ifCommand, index, line)) != -1 ) {
+
+                    index = findChars(ifCommandTestAttribute, indexOfIf, line);
+
+                    if (index == -1) {
+                        return false;
+                    }
+
+                    index = findChar('=', index + ifCommandTestAttribute.length, line);
+
+                    if (index == -1) {
+                        return false;
+                    }
+
+                    index = findChar('"', index, line);
+
+
+                    if (index == -1) {
+                        return false;
+                    }
+
+                    int endIndex = CharScanner.findEndQuote(line, index+1);
+
+
+                    String arguments = FastStringUtils.noCopyStringFromChars(Arrays.copyOfRange(line, index+1, endIndex));
+                    block = readBlock(index, "</c:if>");
+
+                    processIf(output, arguments, new CharSequence[]{block});
+
+                    return true;
+
+                }else if ( (indexOfEach = findChars(forEachCommand, index, line)) != -1 )  {
+
+
+                        index = findChars(forEachCommandItemsAttribute, indexOfEach, line);
+
+                        if (index == -1) {
+                            return false;
+                        }
+
+                        index = findChar('=', index + forEachCommandItemsAttribute.length, line);
+
+                        if (index == -1) {
+                            return false;
+                        }
+
+                        index = findChar('"', index, line);
+
+
+                        if (index == -1) {
+                            return false;
+                        }
+
+                        int endIndex = CharScanner.findEndQuote(line, index+1);
+
+
+                        String arguments = FastStringUtils.noCopyStringFromChars(Arrays.copyOfRange(line, index+1, endIndex));
+
+
+                        index = findChar('>', index, line);
+                        block = readBlock(index, "</c:forEach>");
+
+                        processEach(output, arguments, block);
+
+                        return true;
+
+
+                }
+            }
+
+            return false;
+        }
+    }
+
+
+    protected boolean strictChecking;
 
     /** Set the start of expression demarcation. As in {{Hello}}
      *  {{Hello}}
@@ -204,7 +372,11 @@ public class BoonTemplate {
 
 
     /** Functions can be used anywhere where expressions can be used. */
-    protected Map<String, MethodAccess> functionMap;
+    protected Map<String, MethodAccess> methodMap;
+
+
+    /** Functions can be used anywhere where expressions can be used. */
+    protected Map<String, Function> functionMap;
 
 
     /**
@@ -273,6 +445,15 @@ public class BoonTemplate {
 
     }
 
+    public boolean strictChecking() {
+        return strictChecking;
+    }
+
+    public BoonTemplate strictChecking(boolean strictChecking) {
+        this.strictChecking = strictChecking;
+        return this;
+    }
+
     /** Adds functions from class (static methods) or instance (regular methods)).
      * Every method in this object becomes a command handler.
      * */
@@ -281,13 +462,62 @@ public class BoonTemplate {
         return this;
     }
 
+
+    /** Adds function with a give name.
+     * */
+    public BoonTemplate addFunction(String name, Function function) {
+
+        if  (this.functionMap == null) {
+            this.functionMap = new HashMap<>();
+        }
+
+        functionMap.put(name, function);
+        return this;
+    }
+
+
+    /** Adds function with a give name.
+     * */
+    public BoonTemplate addFunction(String methodName, Object functions) {
+
+        if  (this.methodMap == null) {
+            this.methodMap = new HashMap<>();
+        }
+
+
+        ClassMeta<?> classMeta = ClassMeta.classMetaEither(functions);
+        MethodAccess method = classMeta.method(methodName);
+
+
+        return this;
+    }
+
     /** Adds functions from class (static methods) or instance (regular methods)).
      * Every method in this object becomes a command handler.
-     * */
-//    public BoonTemplate addTemplateAsFunctions() {
-//        extractFunctions(this, true);
-//        return this;
-//    }
+     *
+     /*
+     *  functionMap()
+     *  commandMap()
+     *  methodMap()
+     *  lineIndex()
+     *  line()
+     *  context()
+     *  parentTemplate()
+     *  getThis()
+     */
+    public BoonTemplate addTemplateAsFunctions() {
+
+        this.addFunction("functionMap", this);
+        this.addFunction("commandMap", this);
+        this.addFunction("methodMap", this);
+        this.addFunction("lineIndex", this);
+        this.addFunction("line", this);
+        this.addFunction("parentTemplate", this);
+        this.addFunction("context", this);
+        this.addFunction("getThis", this);
+
+        return this;
+    }
 
 
     /** Adds commandHandlers from class (static methods) or instance (regular methods)).
@@ -298,67 +528,181 @@ public class BoonTemplate {
         return this;
     }
 
+    /**
+     *
+     * @return returns the start of the expression, ie., the '{{' of {{name}}
+     */
     public String expressionStart() {
         return FastStringUtils.noCopyStringFromChars(expressionStart);
     }
 
+    /**
+     *
+     * @param v sets the '{{' of {{name}} and the '{{' of '{{#if}}
+     * @return template
+     */
+    public BoonTemplate expressionStart(String v) {
+        this.expressionStart = FastStringUtils.toCharArray(v);
+        return this;
+
+    }
+
+    /**
+     *
+     * @return returns the end of the block start, i.e., the '}}' of {{#if}}
+     */
     public String endBlockStart() {
         return endBlockStart;
     }
 
+
+    /**
+     *
+     /**
+     *
+     * sets the end of the block start, i.e., the '}}' of {{#if}}
+     *
+     * @param v
+     * @return
+     */
+    public BoonTemplate endBlockStart(String v) {
+        this.endBlockStart = v;
+        return this;
+    }
+
+    /**
+     * Returns the start of an unescaped expression, i.e., "{{{"
+     * @return
+     */
     public String unescapedExpressionStart() {
         return  FastStringUtils.noCopyStringFromChars(unescapedExpressionStart);
     }
 
+
+    /**
+     * Sets the start of an unescaped expression, i.e., "{{{"
+     * @param v
+     * @return
+     */
+    public BoonTemplate unescapedExpressionStart(String v) {
+        this.unescapedExpressionStart = FastStringUtils.toCharArray(v);
+        return this;
+    }
+
+
+    /**
+     * Returns the end of an unescaped expression, i.e., the "}}}" of value.
+     *
+     * @return
+     */
     public String unescapedExpressionEnd() {
 
         return  FastStringUtils.noCopyStringFromChars(unescapedExpressionEnd);
     }
 
+    /**
+     * Sets the end of an unescaped expression, i.e., the "}}}" of value.
+    */
+    public BoonTemplate unescapedExpressionEnd(String v) {
+        this.unescapedExpressionEnd = FastStringUtils.toCharArray(v);
+        return this;
+    }
 
+
+    /**
+     * returns the '}}' or {{/if}}
+     * @return
+     */
     public String endBlockEnd() {
         return endBlockEnd;
     }
 
+
+
+
+    /**
+     * returns the '}}' or {{/if}}
+     * @return
+     */
+    public BoonTemplate endBlockEnd(String v) {
+        this.endBlockEnd = v;
+        return this;
+    }
+
+
+    /**
+     * returns the '}}' of {{value}}
+     * @return
+     */
     public String expressionEnd() {
         return  FastStringUtils.noCopyStringFromChars(expressionEnd);
     }
 
+
+    /**
+     * Sets the '}}' of {{value}}
+     * @return
+     */
+    public BoonTemplate expressionEnd(String v) {
+        this.expressionEnd = FastStringUtils.toCharArray(v);
+        return this;
+
+    }
+
+
+    /**
+     * Sets the '#' of {{#if}}
+     * @return
+     */
     public String commandMarker() {
         return commandMarker;
     }
 
+
+    /**
+     * Sets else block marker in total. "{{else}}"
+     * @return
+     */
     public String elseBlock() {
         return elseBlock;
     }
 
+    /** Returns the current line index */
     public int lineIndex() {
         return lineIndex;
     }
 
 
+
+
+    /** Returns the current line. */
     public String line() {
         return FastStringUtils.noCopyStringFromChars(lines[lineIndex]);
     }
 
 
+    /** Returns the current context. */
     public Object context() {
         return context;
     }
 
 
+    /** Returns the current context. */
     public Object getThis() {
         return context;
     }
 
 
+    /** returns the current command map. */
     public Map<String, Command> commandMap() {
         return commandMap;
     }
 
+    /** returns the current function map. */
     public Map<String, MethodAccess> functionMap() {
-        return functionMap;
+        return methodMap;
     }
+
 
     public BoonTemplate parentTemplate() {
         return parentTemplate;
@@ -371,8 +715,8 @@ public class BoonTemplate {
 
         }
 
-        if (functionMap == null) {
-            functionMap = new HashMap<>();
+        if (methodMap == null) {
+            methodMap = new HashMap<>();
         }
 
         ClassMeta<?> classMeta = ClassMeta.classMetaEither(functions);
@@ -380,7 +724,7 @@ public class BoonTemplate {
         Iterable<MethodAccess> methods = classMeta.methods();
 
         for (MethodAccess methodAccess : methods) {
-            functionMap.put(methodAccess.name(), methodAccess.methodAccess().bind(functions));
+            methodMap.put(methodAccess.name(), methodAccess.methodAccess().bind(functions));
         }
 
         if (!all) {
@@ -418,6 +762,9 @@ public class BoonTemplate {
         }
     }
 
+    /**
+     * Constructor
+     */
     public BoonTemplate() {
 
         sameStart = expressionStart1stChar == unescapedExpressionStartChar;
@@ -429,7 +776,7 @@ public class BoonTemplate {
      * @return
      */
     public static BoonTemplate template() {
-        return new BoonTemplate();
+        return new BoonTemplateMustacheLike();
     }
 
 
@@ -438,7 +785,7 @@ public class BoonTemplate {
      * @return
      */
     public static BoonTemplate jstl() {
-        return template("${", "}");
+        return new BoonTemplateJSTLLike();
     }
 
 
@@ -449,7 +796,7 @@ public class BoonTemplate {
      * @return
      */
     public static BoonTemplate template(String expStart, String expEnd) {
-        return new BoonTemplate(expStart.toCharArray(), expEnd.toCharArray(), null);
+        return new BoonTemplateMustacheLike(expStart.toCharArray(), expEnd.toCharArray(), null);
     }
 
 
@@ -459,8 +806,8 @@ public class BoonTemplate {
      * @param expEnd
      * @return
      */
-    public static BoonTemplate template(char[] expStart, char[] expEnd) {
-        return new BoonTemplate(expStart, expEnd, null);
+    private static BoonTemplate template(char[] expStart, char[] expEnd) {
+        return new BoonTemplateMustacheLike(expStart, expEnd, null);
     }
 
 
@@ -471,7 +818,7 @@ public class BoonTemplate {
      * @return
      */
     public static BoonTemplate template(char[] expStart, char[] expEnd, Object functions) {
-        return new BoonTemplate(expStart, expEnd, functions);
+        return new BoonTemplateMustacheLike(expStart, expEnd, functions);
     }
 
 
@@ -481,7 +828,7 @@ public class BoonTemplate {
      * @return
      */
     public static BoonTemplate templateWithCommandHandlers(Object functions) {
-        BoonTemplate boonTemplate = new BoonTemplate();
+        BoonTemplate boonTemplate = new BoonTemplateMustacheLike();
         boonTemplate.extractFunctions(functions, true);
         return boonTemplate;
     }
@@ -493,7 +840,7 @@ public class BoonTemplate {
      * @return
      */
     public static BoonTemplate templateWithFunctions(Object functions) {
-        BoonTemplate boonTemplate = new BoonTemplate();
+        BoonTemplate boonTemplate = new BoonTemplateMustacheLike();
         boonTemplate.extractFunctions(functions, true);
         return boonTemplate;
 
@@ -522,7 +869,7 @@ public class BoonTemplate {
             //puts("LINE", new String(line));
 
             if (lineHasCommand()) {
-                processLineCommand(output, line); //for JSTL like commands
+                if (processLineCommand(output, line) ) continue;
             }
 
             int index = findExpression(line);
@@ -587,17 +934,6 @@ public class BoonTemplate {
 
 
         return -1;
-
-    }
-
-    /** These two are here so I can add JSTL style support later for <c:if and <c:each, etc. */
-    protected boolean lineHasCommand() {
-        return false;
-    }
-
-
-    /** These two are here so I can add JSTL style support later for <c:if and <c:each, etc. */
-    protected void processLineCommand(CharBuf output, char[] line ){
 
     }
 
@@ -797,7 +1133,7 @@ public class BoonTemplate {
 
         String[] split = StringScanner.splitByChars(command, '(', ')');
         String methodName = split[0];
-        MethodAccess method = this.functionMap.get(methodName);
+        MethodAccess method = this.methodMap.get(methodName);
         if (method==null) {
             return;
         }
@@ -1055,7 +1391,16 @@ public class BoonTemplate {
     BoonTemplate parentTemplate;
 
     private BoonTemplate createTemplate() {
-        BoonTemplate boonTemplate = template(this.expressionStart, this.expressionEnd);
+
+        BoonTemplate boonTemplate;
+
+        if (this instanceof BoonTemplateMustacheLike) {
+            boonTemplate = template(this.expressionStart, this.expressionEnd);
+        } else if (this instanceof BoonTemplateJSTLLike) {
+            boonTemplate = jstl();
+        } else {
+            boonTemplate = template(this.expressionStart, this.expressionEnd);
+        }
         boonTemplate.parentTemplate = this;
         boonTemplate.elseBlock = this.elseBlock;
         boonTemplate.endBlockEnd = this.endBlockEnd;
@@ -1063,7 +1408,7 @@ public class BoonTemplate {
         boonTemplate.commandMarker = this.commandMarker;
         boonTemplate.expressionEnd = this.expressionEnd;
         boonTemplate.expressionStart = this.expressionStart;
-        boonTemplate.unescapedExpressionStart = this.unescapedExpressionEnd;
+        boonTemplate.unescapedExpressionStart = this.unescapedExpressionStart;
         boonTemplate.unescapedExpressionEnd = this.unescapedExpressionEnd;
 
 
@@ -1071,12 +1416,19 @@ public class BoonTemplate {
     }
 
 
-    private CharSequence[] readBlocks(int startLine, String elseBlock, String endBlock2) {
+    /**
+     * reads a block that has an else and an if.
+     * @param startLine
+     * @param elseBlock
+     * @param endBlock
+     * @return
+     */
+    protected CharSequence[] readBlocks(int startLine, String elseBlock, String endBlock) {
         CharBuf buf = CharBuf.create(80);
 
 
 
-        if (readBlockFindFirstLine(startLine, endBlock2, buf)) return new CharSequence[]{buf};
+        if (readBlockFindFirstLine(startLine, endBlock, buf)) return new CharSequence[]{buf};
 
         CharBuf buf1 = null;
         CharBuf buf2 = null;
@@ -1091,7 +1443,7 @@ public class BoonTemplate {
                 continue;
             }
 
-            index = findString(endBlock2, lines[lineIndex]);
+            index = findString(endBlock, lines[lineIndex]);
             if (index != -1) {
 
                 if (buf1 != null) {
@@ -1116,7 +1468,24 @@ public class BoonTemplate {
     }
 
 
-    private CharSequence readBlock(int startIndexOfFirstLine, String endBlock) {
+    /**
+     * Reads the guts of a block so
+     *
+     * Given this if block:
+     *
+     * {{#if}}
+     *
+     *   THIS TEXT WILL BE PART OF THE BLOCK
+     *   EVERYTHING IN THE IF, INCLUDING SPACES and \n
+     *
+     * {{/if}}
+     *
+     *
+     * @param startIndexOfFirstLine
+     * @param endBlock
+     * @return
+     */
+    protected CharSequence readBlock(int startIndexOfFirstLine, String endBlock) {
         CharBuf buf = CharBuf.create(80);
 
         if (readBlockFindFirstLine(startIndexOfFirstLine, endBlock, buf)) return buf;
@@ -1124,6 +1493,8 @@ public class BoonTemplate {
         for (; lineIndex<lines.length; lineIndex++) {
 
             int index = findString(endBlock, lines[lineIndex]);
+            String line = line();
+
             if (index != -1) {
                 return buf;
             } else {
@@ -1134,6 +1505,13 @@ public class BoonTemplate {
         return buf;
     }
 
+    /**
+     * Internal helper method.
+     * @param startIndexOfFirstLine
+     * @param endBlock
+     * @param buf
+     * @return
+     */
     private boolean readBlockFindFirstLine(int startIndexOfFirstLine, String endBlock, CharBuf buf) {
         char[] line = lines[lineIndex];
 
@@ -1156,9 +1534,23 @@ public class BoonTemplate {
     }
 
 
-    private Object getObjectFromArguments(String arguments) {
+    /** This method parses the arguments for {{with}}, {{line}}, and {{each}}.
+     *
+     * It does not do the ones for {{if}} but the one for {{if}} works the same way.
+     * If arguments are JSON, then the JSON object is parsed.
+     * JSON is a special type where we use single quotes or double quotes, other than
+     * that it is plain JSON.
+     * If arguments are not JSON but has " ", then the arguments are split using a String split function.
+     *
+     * If the arguments contain a ${foo}, then foo is replaced with the foo property out of the context.
+     */
+    protected Object getObjectFromArguments(String arguments) {
         Object object;
-        if (arguments.startsWith("[") || arguments.startsWith("\"") || arguments.startsWith("{")) {
+
+        /**
+         * If arguments starts with '[' or '{' or '"'  or "'" then we think it JSON.
+         */
+        if (arguments.startsWith("[") || arguments.startsWith("\"") || arguments.startsWith("{") || arguments.startsWith("'")) {
             arguments = createJSTL().replace(arguments, context).toString();
 
             object = fromJson(arguments.replace('\'', '"'));
@@ -1184,6 +1576,10 @@ public class BoonTemplate {
         return object;
     }
 
+    /**
+     * Create a JSTL style template.. internally.
+     * @return
+     */
     private BoonTemplate createJSTL() {
         BoonTemplate jstl = jstl();
         jstl.parentTemplate = this;

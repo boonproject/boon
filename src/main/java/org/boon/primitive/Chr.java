@@ -832,9 +832,21 @@ public class Chr {
                     .add("<START>").add(bc).add("<END>").addLine().addLine("--- end b ---");
 
 
-            char [] ac1 = sliceOf(ac, indexOfDiff - 20, (ac.length - indexOfDiff) > 40 ?  indexOfDiff + 10: ac.length+1 );
+            char [] ac1 = null;
+            try {
+                ac1 = sliceOf(ac, indexOfDiff - 20, (ac.length - indexOfDiff) > 40 ?  indexOfDiff + 10: ac.length+1 );
+            } catch (Exception ex) {
+                ac1 = ac;
+            }
 
-            char [] bc1 = sliceOf(bc, indexOfDiff - 20, (bc.length - indexOfDiff) > 40 ?  indexOfDiff + 10: bc.length+1 );
+
+            char [] bc1 = null;
+            try {
+                bc1 = sliceOf(bc, indexOfDiff - 20, (bc.length - indexOfDiff) > 40 ?  indexOfDiff + 10: bc.length+1 );
+            } catch (Exception ex) {
+                ac1 = bc;
+            }
+
 
             CharBuf charBufA = CharBuf.create(ac1.length+20);
             CharBuf charBufB = CharBuf.create(bc1.length+20);
