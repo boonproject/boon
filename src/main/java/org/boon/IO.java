@@ -8,16 +8,19 @@ import org.boon.primitive.CharBuf;
 
 import java.io.*;
 import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.FileSystem;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.nio.file.spi.FileSystemProvider;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
+import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.requireNonNull;
+import static org.boon.Lists.add;
 import static org.boon.Lists.len;
 import static org.boon.Str.slc;
 
@@ -33,9 +36,90 @@ public class IO {
     public final static String JAR_SCHEMA = "jar";
     public final static String CLASSPATH_SCHEMA = "classpath";
 
+    public final static String JAR_FILE_SCHEMA = "jar:file";
+
+
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
     private static final int EOF = -1;
+
+
+    private static ConcurrentHashMap <String, FileSystem> pathToZipFileSystems = new ConcurrentHashMap<>();
+
+    private static Path convertJarFileSystemURIToPath( String resourceURL ) {
+
+        String str = resourceURL;
+
+        final String[] strings = StringScanner.split( str, '!' );
+
+        URI fileJarURI = URI.create( strings[ 0 ] );
+        String resourcePath = strings[ 1 ];
+
+        String key = slc(strings[ 0 ], JAR_FILE_SCHEMA.length()+1);
+        if ( !pathToZipFileSystems.containsKey( fileJarURI ) ) {
+            pathToZipFileSystems.put( key, IO.zipFileSystem(fileJarURI) );
+
+            cleanPathToZipFileSystemMap();
+        }
+
+        FileSystem fileSystem = pathToZipFileSystems.get( key );
+
+        Path path = fileSystem.getPath(resourcePath);
+
+        return path;
+    }
+
+    private static void cleanPathToZipFileSystemMap() {
+
+        Set<String> paths = pathToZipFileSystems.keySet();
+        for (String path : paths) {
+            if (!Files.exists( IO.path(path) )) {
+                pathToZipFileSystems.remove(path);
+            }
+        }
+    }
+
+    public static FileSystem zipFileSystem( URI fileJarURI ) {
+
+
+
+        final Map<String, Object> env = Maps.map( "create", ( Object ) "true" );
+
+        FileSystemProvider provider = loadFileSystemProvider("jar");
+
+        requireNonNull( provider, "Zip file provider not found" );
+
+        FileSystem fs = null;
+
+        try {
+            fs = provider.getFileSystem( fileJarURI );
+        } catch ( Exception ex ) {
+            if ( provider != null ) {
+                try {
+                    fs = provider.newFileSystem( fileJarURI, env );
+                } catch ( IOException ex2 ) {
+                    Exceptions.handle( FileSystem.class,
+                            sputs( "unable to load", fileJarURI, "as zip file system" ),
+                            ex2 );
+                }
+            }
+        }
+
+        requireNonNull( provider, "Zip file system was not found" );
+
+        return fs;
+    }
+
+    private static FileSystemProvider loadFileSystemProvider(String providerType) {
+        FileSystemProvider provider = null;
+        for ( FileSystemProvider p : FileSystemProvider.installedProviders() ) {
+            if ( providerType.equals(p.getScheme()) ) {
+                provider = p;
+                break;
+            }
+        }
+        return provider;
+    }
 
 
     public static class ConvertToPathFunction implements Function<String, Path> {
@@ -891,11 +975,13 @@ public class IO {
     }
 
     public static String readFromClasspath( Class<?> clazz, String location ) {
-        List<Path> resources = Classpaths.resources( clazz, location );
+        List<String> resources = Classpaths.resources( clazz, location );
+
+
 
         if ( len( resources ) > 0 ) {
             try {
-                return read( Files.newBufferedReader( resources.get( 0 ), DEFAULT_CHARSET ) );
+                return read( Files.newBufferedReader( IO.path(resources.get(0)), DEFAULT_CHARSET ) );
             } catch ( IOException e ) {
                 return Exceptions.handle( String.class, "unable to read classpath resource " + location, e );
             }
@@ -909,40 +995,43 @@ public class IO {
 
         String newPath = s;
 
-        final List<Path> resources = Classpaths.resources(
+        final List<String> resources = Classpaths.resources(
                 IO.class, newPath );
 
 
-        for ( Path resourcePath : resources ) {
-            if ( Files.isDirectory( resourcePath ) ) {
+        for ( String resourcePath : resources ) {
+            Path path = IO.path(resourcePath);
+            if ( Files.isDirectory( path ) ) {
                 result.addAll( IO.list( resourcePath ) );
             } else {
                 result.add( resourcePath.toString() );
             }
         }
 
-//        for ( int index = 0; index < result.size(); index++ ) {
-//            result.set( index, "classpath:" + result.get( index ) );
-//        }
 
         return result;
     }
 
 
+
+
     public static Path path( String location ) {
-        if ( !location.startsWith( CLASSPATH_SCHEMA + ":" ) ) {
-            return Paths.get( location );
-        } else {
+        if ( location.startsWith( CLASSPATH_SCHEMA + ":" ) ) {
             String path = StringScanner.split( location, ':' )[ 1 ];
 
-            final List<Path> resources = Classpaths.resources(
+            final List<String> resources = Classpaths.resources(
                     IO.class, path );
 
-            Path result = Lists.idx( resources, 0 );
+            String result = Lists.idx( resources, 0 );
             if ( result == null ) {
                 return path( path );
             }
-            return result;
+            return IO.path(result);
+
+        } else if (location.startsWith( JAR_FILE_SCHEMA + ":" )) {
+            return convertJarFileSystemURIToPath(location);
+        } else {
+            return Paths.get( location );
         }
     }
 
@@ -994,6 +1083,9 @@ public class IO {
             return list( pathFromFileSystem );
         }
     }
+
+
+
 
     public static List<String> listByExt( final String path, String ext ) {
 

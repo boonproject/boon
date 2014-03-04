@@ -4,14 +4,12 @@ package org.boon;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 public class ClasspathsTest {
@@ -67,9 +65,9 @@ public class ClasspathsTest {
 
     @Test
     public void testResourcesFromPath() throws Exception {
-        final List<Path> paths = Classpaths.resources( this.getClass(), "/org/node/file1.txt" );
+        final List<String> paths = Classpaths.resources( this.getClass(), "/org/node/file1.txt" );
 
-        Path path = paths.get( 0 );
+        String path = paths.get( 0 );
 
         boolean ok = true;
 
@@ -79,9 +77,9 @@ public class ClasspathsTest {
 
     @Test   //not root
     public void testResourcesFromPathNoRoot() throws Exception {
-        final List<Path> paths = Classpaths.resources( this.getClass(), "org/node/file1.txt" );
+        final List<String> paths = Classpaths.resources( this.getClass(), "org/node/file1.txt" );
 
-        Path path = paths.get( 0 );
+        String path = paths.get( 0 );
 
         boolean ok = true;
 
@@ -100,11 +98,11 @@ public class ClasspathsTest {
 
         URLClassLoader loader = new URLClassLoader( new URL[]{ url1, url2 } );
 
-        final List<Path> resourcePaths = Classpaths.resources( loader, someResource );
+        final List<String> resourcePaths = Classpaths.pathsFromClassLoader(loader, someResource);
 
         int directoryCount = 0;
-        for ( Path path : resourcePaths ) {
-            if ( !Files.isDirectory( path ) ) {
+        for ( String path : resourcePaths ) {
+            if ( !Files.isDirectory( IO.path(path) ) ) {
                 die();
             } else {
                 directoryCount++;
@@ -131,12 +129,12 @@ public class ClasspathsTest {
 
         URLClassLoader loader = new URLClassLoader( new URL[]{ url1, url2 } );
 
-        final List<Path> resourcePaths = Classpaths.resources( loader, someResource );
+        final List<String> resourcePaths = Classpaths.pathsFromClassLoader(loader, someResource);
 
         int fileCount = 0;
         int dirCount = 0;
-        for ( Path path : resourcePaths ) {
-            if ( !Files.isDirectory( path ) ) {
+        for ( String path : resourcePaths ) {
+            if ( !Files.isDirectory( IO.path(path) ) ) {
                 fileCount++;
             } else {
                 dirCount++;

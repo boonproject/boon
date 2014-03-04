@@ -66,13 +66,13 @@ public class MessageSpecification implements Serializable {
      */
     public void init() {
         /* If the parent and name are equal to null,
-         * use the classname to load resources.
+         * use the classname to load pathsFromClassLoader.
     	 * */
         if ( name == null && parent == null ) {
             this.setDetailMessage( "{" + this.getClass().getName() + DETAIL_KEY + "}" );
             this.setSummaryMessage( "{" + this.getClass().getName() + SUMMARY_KEY + "}" );
         /* If the parent is null and the name is not,
-         * use the name to load resources.
+         * use the name to load pathsFromClassLoader.
          */
         } else if ( name != null && parent == null ) {
             this.setDetailMessage( "{" + "message." + getName() + DETAIL_KEY + "}" );

@@ -31,9 +31,9 @@ public class IOTest {
         //move testFile and testDir up here for all of the other tests
 
         if ( Sys.isWindows() ) {
-            testDir = new File( "src\\test\\resources" );
+            testDir = new File( "src\\test\\resources\\" );
         } else {
-            testDir = new File( "src/test/resources" );
+            testDir = new File( "src/test/resources/" );
         }
         testFile = new File( testDir, "testfile.txt" );
 
@@ -62,7 +62,7 @@ public class IOTest {
 
     //    @Test //TODO Test breaks under windows, probably an issue with split line.
     //public void testReadFromFileAsInputStreamCharSet() throws Exception {
-    //    File testDir = new File("src/test/resources");
+    //    File testDir = new File("src/test/pathsFromClassLoader");
     //    File testFile = new File(testDir, "testfile.txt");
 
 
@@ -74,7 +74,7 @@ public class IOTest {
 
     @Test
     public void testReadLines() {
-        File testDir = new File( "src/test/resources" );
+        File testDir = new File( "src/test/resources/" );
         File testFile = new File( testDir, "testfile.txt" );
 
 
@@ -204,7 +204,7 @@ public class IOTest {
 
     @Test
     public void testReadEachLineReader() throws Exception {
-        File testDir = new File( "src/test/resources" );
+        File testDir = new File( "src/test/resources/" );
         File testFile = new File( testDir, "testfile.txt" );
 
 
@@ -302,7 +302,7 @@ public class IOTest {
 
     @Test
     public void testReadLinesFromPath() {
-        //changed "src/test/resources/testfile.txt" to testFile.toString
+        //changed "src/test/pathsFromClassLoader/testfile.txt" to testFile.toString
         List<String> lines = IO.readLines( testFile.toString() );
         assertLines( lines );
     }
@@ -356,7 +356,7 @@ public class IOTest {
 
 
         System.out.println( uri );
-        //"file:///....src/test/resources/testfile.txt"
+        //"file:///....src/test/pathsFromClassLoader/testfile.txt"
         List<String> lines = IO.readLines( uri.toString() );
         assertLines( lines );
 
@@ -605,9 +605,9 @@ public class IOTest {
 //
 //        This allows you to easily search a classpath (which is not included with the JDK).
 //
-//        Reading resources from the classpath is included in the JDK, but treating it like a file system (listing directories, etc.) is not.
+//        Reading pathsFromClassLoader from the classpath is included in the JDK, but treating it like a file system (listing directories, etc.) is not.
 //
-//        Also a common problem with loading resources is that the resource path has different  rules so if you are reading from a jar file, you need to specify clz.getResource("org/foo/foo.txt") where org is in the root, but if you are reading from the actual classpath you can specify clz.getResource("/org/foo/foo.txt");. IO utils don't care, it finds it either way.
+//        Also a common problem with loading pathsFromClassLoader is that the resource path has different  rules so if you are reading from a jar file, you need to specify clz.getResource("org/foo/foo.txt") where org is in the root, but if you are reading from the actual classpath you can specify clz.getResource("/org/foo/foo.txt");. IO utils don't care, it finds it either way.
 //
 //        (I have run into this one about 1 million times, and it throws me for a loop each time. It is on stackoverflow a lot).
 //
