@@ -5,6 +5,7 @@ import org.boon.primitive.CharBuf;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 
 import static org.boon.Boon.sputs;
 
@@ -136,19 +137,6 @@ public class Exceptions {
         }
 
 
-        @Override
-        public void printStackTrace( PrintStream s ) {
-
-            s.println( this.getMessage() );
-            if ( getCause() != null ) {
-                s.println( "This Exception was wrapped, the original exception\n" +
-                        "stack trace is:\n" );
-                getCause().printStackTrace( s );
-            } else {
-                super.printStackTrace( s );
-            }
-
-        }
 
         @Override
         public String getMessage() {
@@ -181,29 +169,98 @@ public class Exceptions {
             return super.getCause();
         }
 
+
+        public Throwable getRootCause() {
+
+            Throwable cause = super.getCause();
+
+            Throwable lastCause = super.getCause();
+
+            while (cause != null) {
+               lastCause = cause;
+               cause = cause.getCause();
+
+            }
+            return lastCause;
+        }
+
+
+        @Override
+        public void printStackTrace( PrintStream s ) {
+
+            s.println( this.getMessage() );
+
+
+            if ( getRootCause() != null ) {
+
+
+
+                s.println( getRootCause().getMessage() );
+
+                s.println( "Original exception stack trace is:\n" );
+
+                StackTraceElement[] stackTrace = this.getRootCause().getStackTrace();
+                for (StackTraceElement st : stackTrace) {
+                    if (st.getClassName().contains("org.boon.Exceptions")) {
+                        continue;
+                    }
+                    s.println(st);
+                }
+
+            } else {
+                super.printStackTrace( s );
+            }
+
+        }
         @Override
         public void printStackTrace( PrintWriter s ) {
 
             s.println( this.getMessage() );
 
-            if ( getCause() != null ) {
-                s.println( "This Exception was wrapped, the original exception\n" +
+            if ( getRootCause() != null ) {
+
+
+
+                s.println( getRootCause().getMessage() );
+
+
+                s.println( "Original exception\n" +
                         "stack trace is:\n" );
-                getCause().printStackTrace( s );
+
+                StackTraceElement[] stackTrace = this.getRootCause().getStackTrace();
+                for (StackTraceElement st : stackTrace) {
+                    if (st.getClassName().contains("org.boon.Exceptions")) {
+                        continue;
+                    }
+                    s.println(st);
+                }
+
             } else {
-                super.printStackTrace( s );
+                super.printStackTrace(s);
             }
         }
 
         @Override
         public void printStackTrace() {
 
+
             System.err.println( this.getMessage() );
 
-            if ( getCause() != null ) {
-                System.err.println( "This Exception was wrapped, the original exception\n" +
-                        "stack trace is:\n" );
-                getCause().printStackTrace();
+
+            if ( getRootCause() != null ) {
+
+                System.err.println(getRootCause().getMessage());
+                System.err.println("Original exception\n" +
+                        "stack trace is:\n");
+
+                StackTraceElement[] stackTrace = this.getRootCause().getStackTrace();
+                for (StackTraceElement st : stackTrace) {
+                    if (st.getClassName().contains("org.boon.Exceptions")) {
+                        continue;
+                    }
+                    System.err.println(st);
+                }
+
             } else {
                 super.printStackTrace();
             }
@@ -248,8 +305,11 @@ public class Exceptions {
                 buffer.addByte( ',' );
                 buffer.addByte( '\n' );
             }
-            index++;
-            buffer.add( "           { " );
+
+            if (element.getClassName().contains("org.boon.Exceptions")) {
+                continue;
+            }
+            buffer.add("           { ");
             buffer.add( "             " ).addJSONEncodedString( "className" ).add( " : " )
                     .addJSONEncodedString( element.getClassName() ).add( ",\n" );
 

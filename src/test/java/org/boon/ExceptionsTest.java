@@ -19,12 +19,60 @@ public class ExceptionsTest {
     }
 
 
+
+    public void methodThatThrowsException0() throws IOException {
+
+       IOException ioe =  new IOException( "ROOT Bad stuff happens to good people" );
+       ioe.fillInStackTrace();
+       throw ioe;
+
+    }
+
+
+    public void methodThatThrowsException1() throws IOException {
+
+        try {
+            methodThatThrowsException0();
+        } catch ( IOException e ) {
+
+            Exceptions.handle( "LEVEL 1", e );
+        }
+
+    }
+
+
+
+    public void methodThatThrowsException2() throws IOException {
+
+        try {
+            methodThatThrowsException1();
+        } catch ( IOException e ) {
+
+            Exceptions.handle( "LEVEL 2", e );
+        }
+    }
+
+
+
+
+    public void methodThatThrowsException3() throws IOException {
+
+        try {
+            methodThatThrowsException2();
+        } catch ( IOException e ) {
+
+            Exceptions.handle( "LEVEL 3", e );
+        }
+    }
+
+
     @Test (expected = Exceptions.SoftenedException.class)
     public void testException() {
 
         try {
             methodThatThrowsException();
         } catch ( IOException e ) {
+            e.printStackTrace();
             Exceptions.handle( e );
         }
 
@@ -48,10 +96,27 @@ public class ExceptionsTest {
         try {
             methodThatThrowsException();
         } catch ( IOException e ) {
+            e.printStackTrace();
             Exceptions.handle( "well that did not work very well", e );
         }
 
     }
+
+
+
+    @Test (expected = Exceptions.SoftenedException.class)
+    public void deepNestTest() {
+
+        try {
+
+            methodThatThrowsException3();
+        } catch ( Exception e ) {
+            e.printStackTrace();
+            Exceptions.handle( "well that did not work very well", e );
+        }
+
+    }
+
 
     @Test (expected = Exceptions.SoftenedException.class)
     public void testTryIt() {
