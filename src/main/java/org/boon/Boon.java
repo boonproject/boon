@@ -3,7 +3,6 @@ package org.boon;
 
 import org.boon.config.ContextConfigReader;
 import org.boon.core.Conversions;
-import org.boon.core.Function;
 import org.boon.core.Sys;
 import org.boon.core.Typ;
 import org.boon.core.reflection.*;
@@ -12,14 +11,11 @@ import org.boon.json.JsonFactory;
 import org.boon.primitive.CharBuf;
 import org.boon.template.BoonTemplate;
 
-import java.lang.reflect.Array;
-import java.nio.file.Files;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.Maps.fromMap;
-import static org.boon.criteria.ObjectFilter.gte;
 import static org.boon.json.JsonFactory.toJson;
 
 public class Boon {
@@ -217,8 +213,13 @@ public class Boon {
         return input.trim();
     }
 
-    public static String template(String template, Object context) {
+    public static String jstl(String template, Object context) {
         return BoonTemplate.jstl().replace(template, context).toString();
+    }
+
+
+    public static String handlebars(String template, Object context) {
+        return BoonTemplate.template().replace(template, context).toString();
     }
 
 
@@ -314,6 +315,45 @@ public class Boon {
         }
     }
 
+
+    public static String resource(String path) {
+        if (!IO.exists(IO.path(path))) {
+            path = add ("classpath:/", path);
+        }
+
+        String str = IO.read(path);
+        return str;
+    }
+
+
+    public static String resourceFromHandleBarsTemplate(String path, Object context) {
+        if (!IO.exists(IO.path(path))) {
+            path = add ("classpath:/", path);
+        }
+
+        String str = IO.read(path);
+
+        if (str!=null) {
+            str = Boon.handlebars(str, context);
+        }
+
+        return str;
+    }
+
+    public static String resourceFromTemplate(String path, Object context) {
+        if (!IO.exists(IO.path(path))) {
+            path = add ("classpath:/", path);
+        }
+
+        String str = IO.read(path);
+
+        if (str!=null) {
+            str = Boon.jstl(str, context);
+        }
+
+        return str;
+    }
+
     public static Object jsonResource(String path) {
         if (!IO.exists(IO.path(path))) {
              path = add ("classpath:/", path);
@@ -333,7 +373,7 @@ public class Boon {
 
         String str = IO.read(path);
         if (str!=null) {
-            str = Boon.template(str, context);
+            str = Boon.jstl(str, context);
             return fromJson(str);
         }
         return null;

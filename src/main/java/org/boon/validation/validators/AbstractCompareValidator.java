@@ -59,7 +59,7 @@ public abstract class AbstractCompareValidator extends BaseValidator {
 
     /**
      * Check Validity of the value compared to the property value.
-     * This class uses the template design pattern. Subclasses are suppose
+     * This class uses the jstl design pattern. Subclasses are suppose
      * to override this method and this class uses IoC to delegate
      * validity checking to the subclass.
      *

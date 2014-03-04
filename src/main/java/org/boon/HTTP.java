@@ -2,6 +2,7 @@ package org.boon;
 
 
 import org.boon.primitive.ByteBuf;
+import org.boon.service.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ public class HTTP {
 
     public static final int DEFAULT_TIMEOUT_SECONDS =
             Integer.parseInt( System.getProperty( "org.boon.HTTP.timeout.seconds", "5" ) );
+    public static final String APPLICATION_JSON = "application/json";
 
     public static String get(
             final String url ) {
@@ -34,6 +37,36 @@ public class HTTP {
                 return extractResponseString( connection );
             }
         } );
+
+    }
+
+
+    public static String post(
+            final String url,
+            final String body ) {
+
+        return postBodyTextWithContentType( url, "text/plain", body );
+    }
+
+
+    public static Response getResponse(
+            final String url ) {
+
+        return Exceptions.tryIt( Response.class, new Exceptions.TrialWithReturn<Response>() {
+            @Override
+            public Response tryIt() throws Exception {
+                URLConnection connection;
+
+                final Map<String, String> accept = Maps.map(
+                        "Accept", "text/html,application/xhtml+xml,application/xml,application/json,text/plain;"
+                );
+
+                connection = doGet( url, accept, null, null );
+                return extractResponseObject(connection);
+            }
+        }
+
+        );
 
     }
 
@@ -137,36 +170,88 @@ public class HTTP {
 
     }
 
-    public static String post(
-            final String url,
-            final String body ) {
-
-        return postBodyTextWithContentType( url, "text/plain", body );
-    }
 
     public static String postJSON(
             final String url,
             final String jsonString ) {
 
-        return postBodyTextWithContentType( url, "application/json", jsonString );
+        return postBodyTextWithContentType( url, APPLICATION_JSON, jsonString );
+    }
+
+    public static Response jsonRestCallViaPOST(
+            final String url,
+            final String jsonString ) {
+
+        return postBodyTextWithContentTypeReturnResponse(url, APPLICATION_JSON, jsonString);
     }
 
 
     public static String getJSON(
             final String url,
             final Map<String, ?> headers
-            ) {
+    ) {
 
         return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doGet( url, headers, "application/json", null );
+                connection = doGet( url, headers, APPLICATION_JSON, null );
                 return extractResponseString( connection );
             }
         } );
 
     }
+
+
+    public static Response jsonRestCallWithHeaders(
+            final String url,
+            final Map<String, ?> headers
+    ) {
+
+        return Exceptions.tryIt( Response.class, new Exceptions.TrialWithReturn<Response>() {
+            @Override
+            public Response tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet( url, headers, APPLICATION_JSON, null );
+                return extractResponseObject(connection);
+            }
+        } );
+
+    }
+
+    public static Response jsonRestCall(
+            final String url
+    ) {
+
+        return Exceptions.tryIt( Response.class, new Exceptions.TrialWithReturn<Response>() {
+            @Override
+            public Response tryIt() throws Exception {
+                URLConnection connection;
+                connection = doGet( url, null, APPLICATION_JSON, null );
+                return extractResponseObject( connection );
+            }
+        } );
+
+    }
+
+
+
+    public static Response postBodyTextWithContentTypeReturnResponse(    final String url,
+            final String contentType,
+            final String body ) {
+
+
+        return Exceptions.tryIt( Response.class, new Exceptions.TrialWithReturn<Response>() {
+            @Override
+            public Response tryIt() throws Exception {
+                URLConnection connection;
+                connection = doPost( url, null, contentType, null, body );
+                return extractResponseObject( connection );
+            }
+        } );
+
+    }
+
 
 
     public static String getJSONWithParams(
@@ -178,7 +263,7 @@ public class HTTP {
             @Override
             public String tryIt() throws Exception {
                 URLConnection connection;
-                connection = doGet( url, headers, "application/json", null, params );
+                connection = doGet( url, headers, APPLICATION_JSON, null, params );
                 return extractResponseString( connection );
             }
         } );
@@ -376,6 +461,26 @@ public class HTTP {
         }
     }
 
+
+    private static Response extractResponseObject( URLConnection connection ) throws IOException {
+
+        /* Handle input. */
+        HttpURLConnection http = ( HttpURLConnection ) connection;
+        int status = http.getResponseCode();
+
+        String charset = getCharset( connection.getHeaderField( "Content-Type" ) );
+
+        String body;
+
+        if ( status == 200 ) {
+            body = readResponseBody( http, charset );
+        } else {
+            body = readErrorResponseBodyDoNotDie( http, status, charset );
+        }
+
+        return Response.response(status, Collections.EMPTY_MAP, http.getResponseMessage(), body);
+    }
+
     private static byte[] extractResponseBytes( URLConnection connection ) throws IOException {
 
         /* Handle input. */
@@ -412,6 +517,18 @@ public class HTTP {
             return Exceptions.die( String.class, "STATUS CODE =" + status + "\n\n" + error );
         } else {
             return Exceptions.die( String.class, "STATUS CODE =" + status );
+        }
+    }
+
+
+    private static String readErrorResponseBodyDoNotDie( HttpURLConnection http, int status, String charset ) {
+        InputStream errorStream = http.getErrorStream();
+        if ( errorStream != null ) {
+            String error = charset == null ? IO.read( errorStream ) :
+                    IO.read( errorStream, charset );
+            return error;
+        } else {
+            return "";
         }
     }
 

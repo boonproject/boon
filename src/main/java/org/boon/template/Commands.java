@@ -19,8 +19,8 @@ public enum Commands {
     /*
     TODO Think about tiles inheritance structure
 
-    templates can have JSON snippet definition associated with the template
-    <definition name="myapp.homepage.body" template="/layouts/three_rows.jsp">
+    templates can have JSON snippet definition associated with the jstl
+    <definition name="myapp.homepage.body" jstl="/layouts/three_rows.jsp">
         <put-attribute name="one" value="/tiles/headlines.jsp" />
         <put-attribute name="two" value="/tiles/topics.jsp" />
         <put-attribute name="one" value="/tiles/comments.jsp" />
@@ -30,15 +30,15 @@ public enum Commands {
     {
         "definitions": [
                 { "name":"myapp.homepage.body",
-                "template":"three_row",
+                "jstl":"three_row",
                  children : [
-                    {name:one, template:"topics"}
+                    {name:one, jstl:"topics"}
                  ]},
                 { "name":"myapp.backend.body",
                  "ex
-                "template":"three_row",
+                "jstl":"three_row",
                  children : [
-                    {name:one, template:"topics"}
+                    {name:one, jstl:"topics"}
                  ]},
 
         ]

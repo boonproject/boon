@@ -3,13 +3,11 @@ package org.boon.json.implementation;
 import org.boon.IO;
 import org.boon.core.Typ;
 import org.boon.core.reflection.MapObjectConversion;
-import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonException;
-import org.boon.core.LazyMap;
+import org.boon.collections.LazyMap;
 import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
-import org.boon.primitive.CharScanner;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

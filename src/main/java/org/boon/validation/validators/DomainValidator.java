@@ -55,7 +55,7 @@ public class DomainValidator extends BaseValidator {
     public ValidatorMessageHolder validate( Object fieldValue, String fieldLabel ) {
         // So, we already know that this field has been decorated with @DomainValidation annotation.
         // That's why we're here. We need to read the validation attributes to find the appropriate
-        // template method (parent or child) to invoke for validation.
+        // jstl method (parent or child) to invoke for validation.
 
         String detailMessage = "";
         String summaryMessage = "";

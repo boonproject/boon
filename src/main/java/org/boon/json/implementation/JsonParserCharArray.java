@@ -2,7 +2,7 @@ package org.boon.json.implementation;
 
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
-import org.boon.core.LazyMap;
+import org.boon.collections.LazyMap;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;

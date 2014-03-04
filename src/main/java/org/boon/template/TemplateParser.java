@@ -3,7 +3,7 @@ package org.boon.template;
 /**
  * @author Rick Hightower
  *
- * This supports handlebar templates, freemarker-like template and JSTL-like templates.
+ * This supports handlebar templates, freemarker-like jstl and JSTL-like templates.
  *
  * <pre>
  *     {{#if foo}}
@@ -88,7 +88,7 @@ package org.boon.template;
  * </pre>
  *
  * Freemarker has an expression language for if and such.
- * There are no plans to add a full expression langauge to this template.
+ * There are no plans to add a full expression langauge to this jstl.
  * The same goes for JSTL-like. Simple boolean expressions and calls to functions but no logic.
  *
  * Velocity-like
@@ -115,7 +115,7 @@ package org.boon.template;
  * You have property paths that are either true or false only, and you can call functions
  * that return true or false. Or rather true-y or falsey (null = false, empty list = false, etc.).
  * Python style true or false which is more ore less what handlebars/mustache do.
- * So this will be a stupid template, i.e., no logic other than true/false.
+ * So this will be a stupid jstl, i.e., no logic other than true/false.
  *
  * Start of block characters
  * <pre>

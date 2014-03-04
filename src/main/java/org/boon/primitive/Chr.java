@@ -911,4 +911,58 @@ public class Chr {
         }
         return out;
     }
+
+    public static boolean insideOf(char[] startsWith, char[] chars, char[] endsWith) {
+
+        if (startsWith.length + endsWith.length  > chars.length) {
+            return false;
+        }
+
+
+
+        int index=0;
+
+        if (startsWith.length > 0 ) {
+            if ( !(startsWith[startsWith.length-1] == chars[startsWith.length-1]) ) {
+                return false;
+            }
+            if ((startsWith[index] == chars[index]) ) {
+                index ++;
+            } else {
+                return false;
+            }
+        }
+
+
+        int endIndex=chars.length-1;
+
+
+        if (endsWith.length > 0) {
+
+            if ( endsWith[startsWith.length-1] == chars[endIndex] ) {
+                endIndex--;
+            } else {
+                return false;
+            }
+
+        }
+
+
+
+        for (; index<startsWith.length-2; index++) {
+            if (chars[index] != startsWith[index]) {
+                return false;
+            }
+        }
+
+
+
+        for (int i = endsWith.length-2; i > 0; endIndex--, i--) {
+            if (chars[endIndex] != endsWith[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

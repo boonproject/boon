@@ -130,10 +130,11 @@ public enum Type {
                 case "java.util.List":
                 case "java.util.ArrayList":
                 case "java.util.LinkedList":
+                case "org.boon.core.value.ValueList":
                     return Type.LIST;
 
                 case "java.util.Map":
-                case "org.boon.core.LazyMap":
+                case "org.boon.collections.LazyMap":
                 case "java.util.HashMap":
                 case "java.util.LinkedHashMap":
                 case "java.util.TreeMap":
@@ -141,6 +142,7 @@ public enum Type {
                     return Type.MAP;
 
                 case "java.lang.CharSequence":
+                //case "org.boon.core.value.CharSequenceValue":
                     return Type.CHAR_SEQUENCE;
 
                 case "java.math.BigDecimal":

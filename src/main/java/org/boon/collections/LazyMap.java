@@ -1,4 +1,4 @@
-package org.boon.core;
+package org.boon.collections;
 
 import org.boon.Maps;
 

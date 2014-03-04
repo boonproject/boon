@@ -1,7 +1,6 @@
 package org.boon;
 
 
-import org.boon.Str;
 import org.junit.Test;
 
 import static org.boon.Exceptions.die;
@@ -9,6 +8,66 @@ import static org.boon.Str.*;
 import static org.junit.Assert.*;
 
 public class StrTest {
+
+
+    boolean ok;
+
+    @Test
+    public void insideOfString() {
+
+        String test = "bacon HotDog Onion Pickle Donut";
+
+        ok &= insideOf("bacon", test, "Donut") || die();
+    }
+
+    @Test
+    public void insideOfString2() {
+
+        String test = "bacon HotDog Onion Pickle bacon";
+
+        ok &= insideOf("bacon", test, "bacon") || die();
+    }
+
+    @Test
+    public void insideOfString3() {
+
+        String test = "bacon HotDog Onion Pickle bacon";
+
+        ok &= !insideOf("bacon", test, "Donut") || die();
+    }
+
+    @Test
+    public void insideOfString4() {
+
+        String test = "bacon HotDog Onion Pickle ";
+
+        ok &= insideOf("bacon", test, "") || die();
+    }
+
+    @Test
+    public void insideOfString5() {
+
+        String test = "1234567890";
+
+        ok &= insideOf("123", test, "890") || die();
+    }
+
+
+    @Test
+    public void insideOfString6() {
+
+        String test = "";
+
+        ok &= !insideOf("123", test, "890") || die();
+    }
+
+    @Test
+    public void insideOfString7() {
+
+        String test = "123";
+
+        ok &= insideOf("", test, "") || die();
+    }
 
     @Test
     public void index() {

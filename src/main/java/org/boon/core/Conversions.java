@@ -758,6 +758,17 @@ public class Conversions {
                 return e;
             }
         }
+        return null;
+    }
+
+    public static <T extends Enum> T toEnumOrDie( Class<T> cls, int value ) {
+
+        T[] enumConstants = cls.getEnumConstants();
+        for ( T e : enumConstants ) {
+            if ( e.ordinal() == value ) {
+                return e;
+            }
+        }
         die( "Can't convert ordinal value " + value + " into enum of type " + cls );
         return null;
     }

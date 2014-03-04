@@ -196,7 +196,7 @@ public class BeanUtils {
                     return null;
                 }
 
-                object = field.getObject( object );
+                object = field.getValue( object );
             }
         }
         return object;

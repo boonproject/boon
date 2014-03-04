@@ -38,7 +38,7 @@ import static org.boon.primitive.CharScanner.*;
  add a way to add a single command or function
 
  TODO
- make command object's properties exposed to the template... ? (Maybe)
+ make command object's properties exposed to the jstl... ? (Maybe)
 
  TODO
  implement handlebar templates
@@ -61,8 +61,8 @@ import static org.boon.primitive.CharScanner.*;
 
  TODO loading templates by name
 
- template.setPrefix("/templates");
- template.setSuffix(".html");
+ jstl.setPrefix("/templates");
+ jstl.setSuffix(".html");
 
  always search classpath first
 
@@ -87,7 +87,7 @@ import static org.boon.primitive.CharScanner.*;
  {{/partial}}
  context: A string literal which define the region's name.
 
- NOTE need a way to invoke templates from a template
+ NOTE need a way to invoke templates from a jstl
  //
 
  TODO implement include
@@ -298,7 +298,7 @@ public abstract class BoonTemplate {
     /**
      * Three {{{Text in here will not get escaped so you can have <ol/> }}}
      *
-     * BoonTemplate does not always support HTML output or rather Boon template does not only support
+     * BoonTemplate does not always support HTML output or rather Boon jstl does not only support
      * HTML so you have to enable HTML escaping for {{HTML ESCAPED}} and {{{HTML UNESCAPED TO WORK}}}
      * By default everything is unescaped.
      */
@@ -407,14 +407,14 @@ public abstract class BoonTemplate {
 
     /** Lookup a command.
      *
-     * If the commandMap is null and this template has a parent template then
-     * it will look for the command in the parent template.
+     * If the commandMap is null and this jstl has a parent jstl then
+     * it will look for the command in the parent jstl.
      *
-     * Also if a command is not found in the this template's commandMap then it will be searched
+     * Also if a command is not found in the this jstl's commandMap then it will be searched
      * in the parent commandMap.
      *
      * This is how {{#if}}, {{#with}}, and {{#each}} use commands from their parent templates.
-     * Every block is its own template with a parent template.
+     * Every block is its own jstl with a parent jstl.
      * */
     protected Command command(String cmdStr) {
 
@@ -543,7 +543,7 @@ public abstract class BoonTemplate {
     /**
      *
      * @param v sets the '{{' of {{name}} and the '{{' of '{{#if}}
-     * @return template
+     * @return jstl
      */
     public BoonTemplate expressionStart(String v) {
         this.expressionStart = FastStringUtils.toCharArray(v);
@@ -776,7 +776,7 @@ public abstract class BoonTemplate {
     }
 
     /**
-     * Creates a new template.
+     * Creates a new jstl.
      * @return
      */
     public static BoonTemplate template() {
@@ -785,7 +785,7 @@ public abstract class BoonTemplate {
 
 
     /**
-     * Creates a new JSTL template.
+     * Creates a new JSTL jstl.
      * @return
      */
     public static BoonTemplate jstl() {
@@ -794,7 +794,7 @@ public abstract class BoonTemplate {
 
 
     /**
-     * Creates a new template and allows you to define the start expression and the end expression.
+     * Creates a new jstl and allows you to define the start expression and the end expression.
      * @param expStart
      * @param expEnd
      * @return
@@ -805,7 +805,7 @@ public abstract class BoonTemplate {
 
 
     /**
-     * Creates a new template and allows you to define the start expression and the end expression.
+     * Creates a new jstl and allows you to define the start expression and the end expression.
      * @param expStart
      * @param expEnd
      * @return
@@ -816,7 +816,7 @@ public abstract class BoonTemplate {
 
 
     /**
-     * Creates a new template and allows you to define the start expression and the end expression.
+     * Creates a new jstl and allows you to define the start expression and the end expression.
      * @param expStart
      * @param expEnd
      * @return
@@ -852,11 +852,11 @@ public abstract class BoonTemplate {
 
 
     /**
-     * Replace template with properties from context.
+     * Replace jstl with properties from context.
      * The context can be a Java Bean, a hash map or a list of JavaBeans or HashMaps.
      * The search order of the objects is determine by their order in the list.
      *
-     * @param template the template (a string or char sequence that constitutes the template)
+     * @param template the jstl (a string or char sequence that constitutes the jstl)
      * @param context instance, map or list of maps/instances or a JSON string which can be a list or a list of objects(maps)
      * @return char sequence of applied results of context to sequence.
      */
@@ -1217,7 +1217,7 @@ public abstract class BoonTemplate {
      * You can override this.
      *
      * @param output the output buffer
-     * @param block the template block for the each
+     * @param block the jstl block for the each
      * @param object the actual List or Array like object
      */
     protected void eachListItem(CharBuf output, CharSequence block, Object object) {
@@ -1251,7 +1251,7 @@ public abstract class BoonTemplate {
      * You can override this.
      *
      * @param output the output buffer
-     * @param block the template block for the each
+     * @param block the jstl block for the each
      * @param object the output object, i.e., the Map or map like thing.
      */
     private void eachMapProperty(CharBuf output, CharSequence block, Object object) {
@@ -1292,7 +1292,7 @@ public abstract class BoonTemplate {
      *
      * @param output the output buffer
      * @param arguments arguments to the with handler
-     * @param block the actual template block
+     * @param block the actual jstl block
      */
     protected void processWith(CharBuf output, String arguments, CharSequence block) {
 
@@ -1310,7 +1310,7 @@ public abstract class BoonTemplate {
      *
      * @param output the output buffer
      * @param arguments arguments to the with handler
-     * @param blocks the actual template blocks, the first item is the if, the second item is the else if present
+     * @param blocks the actual jstl blocks, the first item is the if, the second item is the else if present
      */
     protected void processIf(CharBuf output, String arguments, CharSequence[] blocks) {
         doProcessIf(output, arguments, blocks, false);
@@ -1322,7 +1322,7 @@ public abstract class BoonTemplate {
      *
      * @param output the output buffer
      * @param arguments arguments to the with handler
-     * @param blocks the actual template blocks, the first item is the if, the second item is the else if present
+     * @param blocks the actual jstl blocks, the first item is the if, the second item is the else if present
      */
     private void processUnless(CharBuf output, String arguments, CharSequence[] blocks) {
         doProcessIf(output, arguments, blocks, true);
@@ -1332,7 +1332,7 @@ public abstract class BoonTemplate {
      * Handles the {{length}} command. You can override this.
      * @param output the output buffer
      * @param arguments arguments to the length handler.
-     * @param blocks the actual template blocks, the first item is the if, the second item is the else if present
+     * @param blocks the actual jstl blocks, the first item is the if, the second item is the else if present
      */
     private void processLength(CharBuf output, String arguments, CharSequence[] blocks) {
 
@@ -1590,7 +1590,7 @@ public abstract class BoonTemplate {
     }
 
     /**
-     * Create a JSTL style template.. internally.
+     * Create a JSTL style jstl.. internally.
      * @return
      */
     private BoonTemplate createJSTL() {

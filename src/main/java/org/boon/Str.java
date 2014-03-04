@@ -252,6 +252,10 @@ public class Str {
     }
 
 
+    public static boolean insideOf(String start, String inStr, String end) {
+        return Chr.insideOf(FastStringUtils.toCharArray(start), FastStringUtils.toCharArray(inStr), FastStringUtils.toCharArray(end));
+    }
+
     public static String underBarCase( String inStr ) {
         char[] in = FastStringUtils.toCharArray(inStr);
         char[] out = Chr.underBarCase( in );

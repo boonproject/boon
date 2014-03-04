@@ -1,6 +1,6 @@
 package org.boon.json.implementation;
 
-import org.boon.core.LazyMap;
+import org.boon.collections.LazyMap;
 import org.boon.json.JsonException;
 import org.boon.primitive.*;
 
