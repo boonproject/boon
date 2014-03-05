@@ -6,6 +6,7 @@ import org.boon.Str;
 import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
+import org.boon.core.Dates;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
 import sun.nio.cs.Surrogate;
@@ -15,6 +16,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
@@ -1433,6 +1435,20 @@ public class CharBuf extends Writer implements CharSequence {
 
     public CharBuf indent(int i) {
         return multiply(' ', i);
+    }
+
+    public void jsonDate(long millis) {
+        Dates.jsonDateChars(new Date(millis), this);
+    }
+
+
+
+    public Writer append(CharSequence csq)  {
+        try {
+            return super.append(csq);
+        } catch (IOException ex) {
+            return handle(Writer.class, ex);
+        }
     }
 }
 

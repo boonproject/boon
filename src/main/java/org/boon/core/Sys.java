@@ -7,6 +7,7 @@ import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.timer.TimeKeeper;
 import org.boon.core.timer.TimeKeeperBasic;
+import org.boon.logging.Logging;
 
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicReference;
@@ -165,10 +166,10 @@ public class Sys {
 
 
     /* Everything that has a cache you need to hold on to, should use this so they can
-     * all be stuffed into application context. */
+     * all be stuffed into application context of web-app or ear if you use Java EE. */
     public static Object contextToHold () {
 
-        return Lists.list ( Reflection.contextToHold (), Annotations.contextToHold () );
+        return Lists.list ( Reflection.contextToHold (), Annotations.contextToHold (), Logging.contextToHold() );
     }
 
     public static String sysProp(String key) {

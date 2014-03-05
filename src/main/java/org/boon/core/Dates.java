@@ -498,17 +498,28 @@ public class Dates {
     public static void jsonDateChars( Date date, CharBuf buf ) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
-
-          jsonDateChars( calendar, date, buf );
+        jsonDateChars( calendar, date, buf );
     }
+
+
+    public static void jsonDateChars( long milis, CharBuf buf ) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
+        jsonDateChars( calendar, milis, buf );
+    }
+
     public static void jsonDateChars( Calendar calendar, Date date, CharBuf buf ) {
+        jsonDateChars(calendar, date.getTime(), buf);
+    }
+
+    public static void jsonDateChars( Calendar calendar, long milis, CharBuf buf ) {
         if (isGMT) {
             /* For the Unix admins of the world who avoid it all and just GMT it. */
-            fastJsonDateChars ( date, buf );
+            fastJsonDateChars ( new Date(milis), buf );
             return;
         }
 
-        calendar.setTimeInMillis( date.getTime () );
+        calendar.setTimeInMillis( milis );
 
 
         int day = calendar.get( Calendar.DAY_OF_MONTH );
