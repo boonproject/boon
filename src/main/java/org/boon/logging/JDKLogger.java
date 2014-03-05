@@ -1,13 +1,15 @@
 package org.boon.logging;
 
+
 import java.util.logging.Level;
 
 import static org.boon.Boon.sputs;
+import static org.boon.Str.str;
 
-public class JDKLogWrapper implements Logger {
+public class JDKLogger implements LoggerDelegate {
     private final java.util.logging.Logger logger;
 
-    JDKLogWrapper(final String name) {
+    JDKLogger(final String name) {
         logger = java.util.logging.Logger.getLogger(name);
     }
 
@@ -179,5 +181,56 @@ public class JDKLogWrapper implements Logger {
 
     public void turnOff() {
         logger.setLevel(Level.OFF);
+    }
+
+
+    public void fatal(final Object message) {
+        logger.log(Level.SEVERE, str(message));
+    }
+
+    public void fatal(final Object message, final Throwable t) {
+        logger.log(Level.SEVERE, str(message) , t);
+    }
+
+    public void error(final Object message) {
+        logger.log(Level.SEVERE, str(message));
+    }
+
+    public void error(final Object message, final Throwable t) {
+        logger.log(Level.SEVERE, str(message), t);
+
+        logger.log(Level.SEVERE, str(message), t);
+    }
+
+    public void warn(final Object message) {
+        logger.log(Level.WARNING, str(message));
+    }
+
+    public void warn(final Object message, final Throwable t) {
+        logger.log(Level.WARNING, str(message), t);
+    }
+
+    public void info(final Object message) {
+        logger.log(Level.INFO, str(message));
+    }
+
+    public void info(final Object message, final Throwable t) {
+        logger.log(Level.INFO, str(message), t);
+    }
+
+    public void debug(final Object message) {
+        logger.log(Level.FINE, str(message));
+    }
+
+    public void debug(final Object message, final Throwable t) {
+        logger.log(Level.FINE, str(message), t);
+    }
+
+    public void trace(final Object message) {
+        logger.log(Level.FINEST, str(message));
+    }
+
+    public void trace(final Object message, final Throwable t) {
+        logger.log(Level.FINEST, str(message), t);
     }
 }

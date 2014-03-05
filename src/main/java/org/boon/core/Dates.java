@@ -13,7 +13,8 @@ import java.util.*;
 
 public class Dates {
 
-    private static TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone( "UTC" );
+    public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+    private static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone( "UTC" );
     private static volatile long lastNow;
     private static long MILLI_SECOND = 1;
     private static long SECOND = MILLI_SECOND * 1000;
@@ -384,7 +385,7 @@ public class Dates {
 
     public static Date year( int year ) {
         Calendar c = Calendar.getInstance();
-        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.setTimeZone(GMT);
         c.set( 1970, Calendar.JANUARY, 2, 0, 0, 0 );
         c.set( Calendar.YEAR, year );
         return c.getTime();
@@ -392,7 +393,7 @@ public class Dates {
 
     public static Date getUSDate( int month, int day, int year ) {
         Calendar c = Calendar.getInstance();
-        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, 0, 0, 0 );
         return c.getTime();
     }
@@ -400,21 +401,21 @@ public class Dates {
 
     public static Date getUSDate( int month, int day, int year, int hour, int minute, int second ) {
         Calendar c = Calendar.getInstance();
-        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, hour, minute, second );
         return c.getTime();
     }
 
     public static Date getEuroDate( int day, int month, int year ) {
         Calendar c = Calendar.getInstance();
-        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, 0, 0, 0 );
         return c.getTime();
     }
 
     public static Date getEuroDate( int day, int month, int year, int hour, int minute, int second ) {
         Calendar c = Calendar.getInstance();
-        c.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+        c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, hour, minute, second );
         return c.getTime();
     }
@@ -487,7 +488,7 @@ public class Dates {
 
     private final static boolean  isGMT;
     static {
-        if (TimeZone.getDefault () == TimeZone.getTimeZone ( "GMT" )) {
+        if (TimeZone.getDefault () == GMT) {
             isGMT = true;
         } else {
             isGMT = false;
@@ -497,14 +498,14 @@ public class Dates {
 
     public static void jsonDateChars( Date date, CharBuf buf ) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
+        calendar.setTimeZone (GMT);
         jsonDateChars( calendar, date, buf );
     }
 
 
     public static void jsonDateChars( long milis, CharBuf buf ) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone ( TimeZone.getTimeZone ( "GMT" ) );
+        calendar.setTimeZone (GMT);
         jsonDateChars( calendar, milis, buf );
     }
 
@@ -646,7 +647,7 @@ public class Dates {
 
             if ( charArray[ from + 19 ] == 'Z' ) {
 
-                tz = TimeZone.getTimeZone( "GMT" );
+                tz = GMT;
 
             } else {
 
@@ -682,7 +683,7 @@ public class Dates {
 
             int miliseconds = CharScanner.parseIntFromTo( charArray, from + 20, from + 23 );
 
-            TimeZone tz = TimeZone.getTimeZone( "GMT" );
+            TimeZone tz = GMT;
 
 
             return toDate( tz, year, month, day, hour, minute, second, miliseconds );

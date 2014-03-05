@@ -422,12 +422,8 @@ public class Str {
     }
 
 
-    public static String str(Object object) {
-        if (object == null) {
-            return "<NULL>";
-        } else {
-            return object.toString();
-        }
+    public static String str(Object str) {
+        return str == null ? "<NULL>" : str.toString();
     }
 
     public static boolean startsWithItemInCollection(String name, Collection<String> startsWithList) {

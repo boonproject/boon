@@ -20,9 +20,13 @@ public class Logging {
     private static class Context {
 
 
-        private static volatile LogWrapperFactory factory;
+        private static volatile LoggerFactory factory;
 
-        private static final ConcurrentMap<String, Logger> loggers = new ConcurrentHashMap<>();
+        private static final ConcurrentMap<String, LoggerDelegate> loggers = new ConcurrentHashMap<>();
+
+
+        private static final ConcurrentMap<String, ConfigurableLogger> configurableLoggers
+                            = new ConcurrentHashMap<>();
 
 
     }
@@ -58,7 +62,7 @@ public class Logging {
     }
 
 
-    public static final String LOGGER_FACTORY_CLASS_NAME = "org.boon.logger-delegate-factory-class-name";
+    public static final String LOGGER_FACTORY_CLASS_NAME = "org.boon.logger-logger-factory-class-name";
 
 
     static {
@@ -66,9 +70,9 @@ public class Logging {
     }
 
     public static synchronized void init() {
-        LogWrapperFactory factory;
+        LoggerFactory factory;
 
-        String className = JDKLogWrapperFactory.class.getName();
+        String className = JDKLoggerFactory.class.getName();
         try {
             className = System.getProperty(LOGGER_FACTORY_CLASS_NAME);
         } catch (Exception e) {
@@ -78,46 +82,90 @@ public class Logging {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             try {
                 Class<?> clz = loader.loadClass(className);
-                factory = (LogWrapperFactory) clz.newInstance();
+                factory = (LoggerFactory) clz.newInstance();
             } catch (Exception e) {
                 throw new IllegalArgumentException("Error instantiating transformer class \"" +
                         className + "\"", e);
             }
         } else {
-            factory = new JDKLogWrapperFactory();
+            factory = new JDKLoggerFactory();
         }
 
         context().factory = factory;
     }
 
-    public static Logger logger(final Class<?> clazz) {
-        return logger(clazz.getName());
+
+    public static ConfigurableLogger configurableLogger(final Class<?> clazz) {
+        return configurableLogger(clazz.getName());
     }
 
-    public static Logger logger(final String name) {
-        Logger logger = context().loggers.get(name);
 
-        if (logger == null) {
+    public static ConfigurableLogger configurableLogger(final String name) {
+        ConfigurableLogger loggerDelegate = context().configurableLoggers.get(name);
 
-            logger = new JDKLogWrapper(name);
+        if (loggerDelegate == null) {
 
-            Logger oldLogger = context().loggers.putIfAbsent(name, logger);
+            loggerDelegate = new ConfigurableLogger(logger(name));
 
-            if (oldLogger != null) {
-                logger = oldLogger;
+            ConfigurableLogger oldLoggerDelegate = context().configurableLoggers.putIfAbsent(name, loggerDelegate);
+
+            if (oldLoggerDelegate != null) {
+                loggerDelegate = oldLoggerDelegate;
             }
         }
 
-        return logger;
+        return loggerDelegate;
+    }
+
+
+    public static LoggerDelegate logger(final Class<?> clazz) {
+        return logger(clazz.getName());
+    }
+
+    public static LoggerDelegate logger(final String name) {
+        LoggerDelegate loggerDelegate = context().loggers.get(name);
+
+        if (loggerDelegate == null) {
+
+            loggerDelegate = context().factory.logger(name);
+
+            LoggerDelegate oldLoggerDelegate = context().loggers.putIfAbsent(name, loggerDelegate);
+
+            if (oldLoggerDelegate != null) {
+                loggerDelegate = oldLoggerDelegate;
+            }
+        }
+
+        return loggerDelegate;
+    }
+
+    public static void setLevel(String name, LogLevel level) {
+        logger(name).level(level);
+    }
+
+
+    public static void turnOnInMemoryConfigLoggerAll(String name) {
+
+        ConfigurableLogger configurableLogger = configurableLogger(name);
+        configurableLogger.tee(new InMemoryThreadLocalLogger(LogLevel.ALL));
+    }
+
+
+    public static void turnOffInMemoryConfigLoggerAll(String name) {
+
+        ConfigurableLogger configurableLogger = configurableLogger(name);
+        configurableLogger.unwrap();
     }
 
     public static void removeLogger(String name) {
         context().loggers.remove(name);
+        context().configurableLoggers.remove(name);
     }
 
 
     public static void removeLogger(final Class<?> clazz) {
         context().loggers.remove(clazz.getName());
+        context().configurableLoggers.remove(clazz.getName());
     }
 
 

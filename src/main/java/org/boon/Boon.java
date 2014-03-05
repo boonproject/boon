@@ -9,6 +9,8 @@ import org.boon.core.reflection.*;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.di.Context;
 import org.boon.json.JsonFactory;
+import org.boon.logging.LoggerDelegate;
+import org.boon.logging.Logging;
 import org.boon.primitive.CharBuf;
 import org.boon.template.BoonTemplate;
 
@@ -432,6 +434,16 @@ public class Boon {
 
     public static String simpleName(Object object) {
         return object == null ? "CLASS<NULL>" : object.getClass().getSimpleName();
+    }
+
+
+
+    public static Logger logger(final Class<?> clazz) {
+        return new Logger(Logging.logger( clazz ));
+    }
+
+    public static Logger logger(String name) {
+        return new Logger(Logging.logger( name ));
     }
 
 
