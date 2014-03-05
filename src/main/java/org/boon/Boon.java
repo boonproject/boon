@@ -6,6 +6,7 @@ import org.boon.core.Conversions;
 import org.boon.core.Sys;
 import org.boon.core.Typ;
 import org.boon.core.reflection.*;
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.di.Context;
 import org.boon.json.JsonFactory;
 import org.boon.primitive.CharBuf;
@@ -16,6 +17,7 @@ import java.util.*;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.Maps.fromMap;
+import static org.boon.core.reflection.MapObjectConversion.fromList;
 import static org.boon.json.JsonFactory.toJson;
 
 public class Boon {
@@ -398,15 +400,31 @@ public class Boon {
     }
 
 
-    public static List<Object> resourceList(String path) {
-        return (List<Object>)jsonResource(path);
+    public static List<?> resourceList(String path) {
+        return (List<?>)jsonResource(path);
     }
 
 
-    public static List<Object> resourceListFromTemplate(String path, Object context) {
-        return (List<Object>)jsonResourceFromTemplate(path, context);
+    public static <T> List<T> resourceListFromTemplate(String path,  Class<T> listOf, Object context) {
+        List<Object> list = (List)jsonResourceFromTemplate(path, context);
+
+        return MapObjectConversion.convertListOfMapsToObjects(true, null,
+                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
     }
 
+    public static <T> List<T> resourceList(String path, Class<T> listOf) {
+
+        List<Object> list = (List)jsonResource(path);
+
+        return MapObjectConversion.convertListOfMapsToObjects(true, null,
+                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
+
+    }
+
+
+    public static List<?> resourceListFromTemplate(String path, Object context) {
+        return (List<?>)jsonResourceFromTemplate(path, context);
+    }
 
     public static String className(Object object) {
         return object == null ? "CLASS<NULL>" : object.getClass().getName();
