@@ -24,7 +24,7 @@ public interface MethodAccess extends BaseAccess{
 
     MethodAccess bind(Object instance);
 
-    MethodHandle methodHandle();
+    //MethodHandle methodHandle();
 
     MethodAccess methodAccess();
 

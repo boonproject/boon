@@ -17,42 +17,42 @@ public class CharBufTest {
 
     @Test
     public void unicodeAndControl() {
-        String str =  CharBuf.create(0).addJsonEscapedString("\u0001").toString();
+        String str =  CharBuf.create(0).asJsonString("\u0001").toString();
 
         boolean ok = str.equals( "\"\\u0001\"") || die(str);
-        str =  CharBuf.create(0).addJsonEscapedString("\u00ff").toString();
+        str =  CharBuf.create(0).asJsonString("\u00ff").toString();
         ok = str.equals( "\"\\u00ff\"") || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString("\u0fff").toString();
+        str =  CharBuf.create(0).asJsonString("\u0fff").toString();
         ok = str.equals( "\"\\u0fff\"") || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString("\uffff").toString();
+        str =  CharBuf.create(0).asJsonString("\uffff").toString();
         ok = str.equals( "\"\\uffff\"") || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString("\uefef").toString();
+        str =  CharBuf.create(0).asJsonString("\uefef").toString();
         ok = str.equals( "\"\\uefef\"") || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString(" \b ").toString();
+        str =  CharBuf.create(0).asJsonString(" \b ").toString();
         ok = str.equals( "\" \\b \"" ) || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString(" \r ").toString();
+        str =  CharBuf.create(0).asJsonString(" \r ").toString();
         ok = str.equals( "\" \\r \"" ) || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString(" \n ").toString();
+        str =  CharBuf.create(0).asJsonString(" \n ").toString();
         ok = str.equals( "\" \\n \"" ) || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString(" \n ").toString();
+        str =  CharBuf.create(0).asJsonString(" \n ").toString();
         ok = str.equals( "\" \\n \"" ) || die(str);
 
 
-        str =  CharBuf.create(0).addJsonEscapedString(" \f ").toString();
+        str =  CharBuf.create(0).asJsonString(" \f ").toString();
         ok = str.equals( "\" \\f \"" ) || die(str);
 
-        str =  CharBuf.create(0).addJsonEscapedString(" \" Hi mom \" ").toString();
+        str =  CharBuf.create(0).asJsonString(" \" Hi mom \" ").toString();
         ok = str.equals( "\" \\\" Hi mom \\\" \"" ) || die(str);
 
 
-        str =  CharBuf.create(0).addJsonEscapedString(" \\ ").toString();
+        str =  CharBuf.create(0).asJsonString(" \\ ").toString();
         ok = str.equals( "\" \\\\ \"" ) || die(str);
 
     }

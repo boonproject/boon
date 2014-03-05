@@ -2,6 +2,7 @@ package org.boon.primitive;
 
 
 import org.boon.Exceptions;
+import org.boon.Str;
 import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
@@ -93,6 +94,12 @@ public class CharBuf extends Writer implements CharSequence {
 
     public void init() {
         buffer = new char[ capacity ];
+    }
+
+
+    public final CharBuf add( Object str ) {
+        add( FastStringUtils.toCharArray( Str.str(str) ) );
+        return this;
     }
 
     public final CharBuf add( String str ) {
@@ -321,6 +328,13 @@ public class CharBuf extends Writer implements CharSequence {
         return this;
     }
 
+    public CharBuf addLine( Object str ) {
+        add( FastStringUtils.toCharArray(
+                Str.str(str)));
+        add( '\n' );
+        return this;
+    }
+
 
 
     public CharBuf addLine(  ) {
@@ -395,7 +409,7 @@ public class CharBuf extends Writer implements CharSequence {
 
 
 
-    public final CharBuf addJsonEscapedString( String jsonString ) {
+    public final CharBuf asJsonString(String jsonString) {
         char[] charArray = FastStringUtils.toCharArray ( jsonString );
         return addJsonEscapedString ( charArray );
 
@@ -425,7 +439,7 @@ public class CharBuf extends Writer implements CharSequence {
             c = charArray[ index ];
 
             if (c < 30) {
-                //less than space double quote or tab add 1 for each
+                //less than space double quote or indent add 1 for each
                 if (   c == 7 || c == 12 || c == 15) {
                     controlCount++;
                 } else {
@@ -1406,6 +1420,19 @@ public class CharBuf extends Writer implements CharSequence {
             add( ' ' );
         }
         addLine();
+    }
+
+    public void println(String message) {
+        this.addLine(message);
+    }
+
+
+    public void println(Object object) {
+        this.addLine(Str.toString(object));
+    }
+
+    public CharBuf indent(int i) {
+        return multiply(' ', i);
     }
 }
 

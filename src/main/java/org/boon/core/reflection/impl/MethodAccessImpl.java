@@ -27,16 +27,16 @@ public class MethodAccessImpl implements MethodAccess {
     final Map<String, AnnotationData> annotationMap;
 
 
-    CallSite callSiteMethod;
+    //CallSite callSiteMethod;
 
-    final MethodHandles.Lookup lookup = MethodHandles.lookup();
-    final MethodHandle methodHandle;
+    //final MethodHandles.Lookup lookup = MethodHandles.lookup();
+    //final MethodHandle methodHandle;
 
     public MethodAccessImpl() {
         method=null;
         annotationData=null;
         annotationMap=null;
-        methodHandle = null;
+        //methodHandle = null;
     }
 
     public MethodAccessImpl( Method method ) {
@@ -45,18 +45,18 @@ public class MethodAccessImpl implements MethodAccess {
         this.annotationData = Annotations.getAnnotationDataForMethod(method);
 
 
-        MethodHandle m;
-         try {
-
-                    m = lookup.unreflect(method);
-
-        } catch (Exception e) {
-            m = null;
-            handle(e);
-        }
-
-
-        methodHandle = m;
+//        MethodHandle m;
+//         try {
+//
+//                    m = lookup.unreflect(method);
+//
+//        } catch (Exception e) {
+//            m = null;
+//            handle(e);
+//        }
+//
+//
+//        methodHandle = m;
 
         annotationMap = new ConcurrentHashMap<>(  );
         for (AnnotationData data : annotationData) {
@@ -111,21 +111,21 @@ public class MethodAccessImpl implements MethodAccess {
         return null;
     }
 
-    @Override
-    public MethodHandle methodHandle() {
-
-
-        MethodHandle m;
-        try {
-            m = lookup.unreflect(method);
-
-        } catch (Exception e) {
-            m = null;
-            handle(e);
-        }
-
-        return  m;
-    }
+//    @Override
+//    public MethodHandle methodHandle() {
+//
+//
+//        MethodHandle m;
+//        try {
+//            m = lookup.unreflect(method);
+//
+//        } catch (Exception e) {
+//            m = null;
+//            handle(e);
+//        }
+//
+//        return  m;
+//    }
 
     Object instance;
     @Override
@@ -135,7 +135,7 @@ public class MethodAccessImpl implements MethodAccess {
 
             @Override
             public MethodAccess bind(Object instance) {
-                methodHandle.bindTo(instance);
+                //methodHandle.bindTo(instance);
                 this.instance = instance;
                 return this;
             }
@@ -299,4 +299,39 @@ public class MethodAccessImpl implements MethodAccess {
         return method.getGenericParameterTypes();
     }
 
+
+    @Override
+    public String toString() {
+        return "MethodAccessImpl{" +
+                "method=" + method +
+                ", annotationData=" + annotationData +
+                ", instance=" + instance +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MethodAccessImpl that = (MethodAccessImpl) o;
+
+        if (annotationData != null ? !annotationData.equals(that.annotationData) : that.annotationData != null)
+            return false;
+        if (annotationMap != null ? !annotationMap.equals(that.annotationMap) : that.annotationMap != null)
+            return false;
+        if (instance != null ? !instance.equals(that.instance) : that.instance != null) return false;
+        if (method != null ? !method.equals(that.method) : that.method != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = method != null ? method.hashCode() : 0;
+        result = 31 * result + (annotationData != null ? annotationData.hashCode() : 0);
+        result = 31 * result + (annotationMap != null ? annotationMap.hashCode() : 0);
+        result = 31 * result + (instance != null ? instance.hashCode() : 0);
+        return result;
+    }
 }

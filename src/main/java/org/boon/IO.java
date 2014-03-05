@@ -158,6 +158,28 @@ public class IO {
 
     }
 
+
+    public static List<Path> listPath( final Path path ) {
+
+        if ( !exists (path) ) {
+            return Collections.EMPTY_LIST;
+        }
+
+        List<Path> result = new ArrayList<>();
+
+
+        try {
+            try ( DirectoryStream<Path> directoryStream = Files.newDirectoryStream( path ) ) {
+                for ( Path entry : directoryStream ) {
+                    result.add( entry.toAbsolutePath() );
+                }
+            }
+            return result;
+        } catch ( IOException ex ) {
+            return Exceptions.handle( List.class, ex );
+        }
+
+    }
     public static List<String> listByGlob( final String path, final String glob ) {
         final Path pathFromFileSystem = path( path );
         return listByGlob( pathFromFileSystem, glob );
@@ -259,15 +281,6 @@ public class IO {
         }
     }
 
-    public static String read( Path path ) {
-        try {
-
-            return read( Files.newBufferedReader( path, DEFAULT_CHARSET ) );
-
-        } catch ( IOException ex ) {
-            return Exceptions.handle( String.class, ex );
-        }
-    }
 
     public static char[] readCharBuffer( Path path ) {
         try {
@@ -750,6 +763,29 @@ public class IO {
         return path;
     }
 
+
+
+    public static String read( final Path path ) {
+        return readPath(path);
+    }
+
+    public static String readPath( final Path path ) {
+
+        return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
+
+            @Override
+            public String tryIt() throws Exception {
+
+                return read( Files.newBufferedReader( path, DEFAULT_CHARSET ) );
+
+            }
+        } );
+
+    }
+
+
+
+
     public static String read( final String location ) {
         final URI uri = createURI( location );
 
@@ -785,6 +821,56 @@ public class IO {
         } );
 
     }
+
+
+
+
+    public static String readResource( final String location ) {
+        final URI uri = createURI( location );
+
+        return Exceptions.tryIt( String.class, new Exceptions.TrialWithReturn<String>() {
+
+            @Override
+            public String tryIt() throws Exception {
+
+                String path = location;
+
+                path = getWindowsPathIfNeeded( path );
+
+                if ( uri.getScheme() == null ) {
+
+                    Path thePath = FileSystems.getDefault().getPath( path );
+                    if (IO.exists(thePath)) {
+                        return read( Files.newBufferedReader( thePath, DEFAULT_CHARSET ) );
+                    } else {
+                        path = CLASSPATH_SCHEMA + ":/" + location;
+                        thePath = IO.path(path);
+                        if (IO.exists(thePath)) {
+                            return read( Files.newBufferedReader( thePath, DEFAULT_CHARSET ) );
+                        } else {
+                            return null;
+                        }
+                    }
+
+                } else if ( uri.getScheme().equals( FILE_SCHEMA ) ) {
+
+                    return readFromFileSchema( uri );
+
+                } else if ( uri.getScheme().equals( CLASSPATH_SCHEMA )
+                        || uri.getScheme().equals( JAR_SCHEMA ) ) {
+
+                    return readFromClasspath( uri.toString() );
+
+                } else {
+                    return read( location, uri );
+                }
+
+
+            }
+        } );
+
+    }
+
 
     private static String readFromFileSchema( URI uri ) {
         Path thePath = uriToPath( uri );
@@ -1013,6 +1099,27 @@ public class IO {
     }
 
 
+    private static List<Path> pathsFromDefaultClassLoader( String s ) {
+        List<Path> result = new ArrayList<>();
+
+        String newPath = s;
+
+        final List<Path> resources = Classpaths.paths(
+                IO.class, newPath );
+
+
+        for ( Path resourcePath : resources ) {
+            if ( Files.isDirectory( resourcePath ) ) {
+                result.addAll( IO.paths( resourcePath ) );
+            } else {
+                result.add( resourcePath);
+            }
+        }
+
+
+        return result;
+    }
+
 
 
     public static Path path( String location ) {
@@ -1082,6 +1189,46 @@ public class IO {
             final Path pathFromFileSystem = path( path );
             return list( pathFromFileSystem );
         }
+    }
+
+
+
+    public static List<Path> paths( final String path ) {
+
+        URI uri = URI.create( path );
+        if ( uri.getScheme() == null ) {
+            final Path pathFromFileSystem = path( path );
+            return listPath(pathFromFileSystem);
+        } else if ( uri.getScheme().equals( CLASSPATH_SCHEMA ) ) {
+
+            return pathsFromDefaultClassLoader( StringScanner.split( path, ':' )[ 1 ] );
+
+        } else {
+            final Path pathFromFileSystem = path( path );
+            return listPath(pathFromFileSystem);
+        }
+    }
+
+    public static List<Path> pathsByExt( final String path, String ext ) {
+
+        List<Path> list = paths(path);
+
+
+        final List<Path> newList = new ArrayList<>();
+
+        for ( Path file : list ) {
+            if ( file.toString().endsWith( ext ) ) {
+                newList.add( file );
+            }
+        }
+
+        return newList;
+    }
+
+
+
+    public static List<Path> paths( final Path path ) {
+            return listPath(path);
     }
 
 

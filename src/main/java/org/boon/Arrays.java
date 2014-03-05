@@ -277,17 +277,6 @@ public class Arrays {
     }
 
 
-    @SuppressWarnings ( "unchecked" )
-    public static <V> V[] array( Collection<V> collection ) {
-        if ( collection.size() > 0 ) {
-            Object newInstance = Array.newInstance( collection.iterator().next().getClass(),
-                    collection.size() );
-            return collection.toArray( ( V[] ) newInstance );
-        } else {
-            die( "array(listStream): The collection has to have at least one item in it" );
-            return null;
-        }
-    }
 
 
     public static List<Map<String, Object>> toListOfMaps( Object... array ) {
@@ -306,5 +295,22 @@ public class Arrays {
 
     public static int len(Object obj) {
         return Array.getLength( obj );
+    }
+
+    @SuppressWarnings ( "unchecked" )
+    public static <V> V[] array( Collection<V> collection ) {
+        if ( collection.size() > 0 ) {
+            Object newInstance = Array.newInstance( collection.iterator().next().getClass(),
+                    collection.size() );
+            return collection.toArray( ( V[] ) newInstance );
+        } else {
+            die( "array(listStream): The collection has to have at least one item in it" );
+            return null;
+        }
+    }
+
+    public static <V> V[] array(Class<V> cls,  Collection<V> collection) {
+        Object newInstance = Array.newInstance( cls, collection.size() );
+        return collection.toArray( ( V[] ) newInstance );
     }
 }

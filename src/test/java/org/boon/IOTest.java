@@ -62,7 +62,7 @@ public class IOTest {
 
     //    @Test //TODO Test breaks under windows, probably an issue with split line.
     //public void testReadFromFileAsInputStreamCharSet() throws Exception {
-    //    File testDir = new File("src/test/pathsFromClassLoader");
+    //    File testDir = new File("src/test/listFromClassLoader");
     //    File testFile = new File(testDir, "testfile.txt");
 
 
@@ -302,7 +302,7 @@ public class IOTest {
 
     @Test
     public void testReadLinesFromPath() {
-        //changed "src/test/pathsFromClassLoader/testfile.txt" to testFile.toString
+        //changed "src/test/listFromClassLoader/testfile.txt" to testFile.toString
         List<String> lines = IO.readLines( testFile.toString() );
         assertLines( lines );
     }
@@ -356,7 +356,7 @@ public class IOTest {
 
 
         System.out.println( uri );
-        //"file:///....src/test/pathsFromClassLoader/testfile.txt"
+        //"file:///....src/test/listFromClassLoader/testfile.txt"
         List<String> lines = IO.readLines( uri.toString() );
         assertLines( lines );
 
@@ -605,9 +605,9 @@ public class IOTest {
 //
 //        This allows you to easily search a classpath (which is not included with the JDK).
 //
-//        Reading pathsFromClassLoader from the classpath is included in the JDK, but treating it like a file system (listing directories, etc.) is not.
+//        Reading listFromClassLoader from the classpath is included in the JDK, but treating it like a file system (listing directories, etc.) is not.
 //
-//        Also a common problem with loading pathsFromClassLoader is that the resource path has different  rules so if you are reading from a jar file, you need to specify clz.getResource("org/foo/foo.txt") where org is in the root, but if you are reading from the actual classpath you can specify clz.getResource("/org/foo/foo.txt");. IO utils don't care, it finds it either way.
+//        Also a common problem with loading listFromClassLoader is that the resource path has different  rules so if you are reading from a jar file, you need to specify clz.getResource("org/foo/foo.txt") where org is in the root, but if you are reading from the actual classpath you can specify clz.getResource("/org/foo/foo.txt");. IO utils don't care, it finds it either way.
 //
 //        (I have run into this one about 1 million times, and it throws me for a loop each time. It is on stackoverflow a lot).
 //

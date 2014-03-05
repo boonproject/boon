@@ -1,6 +1,7 @@
 package org.boon.json.serializers.impl;
 
 
+import org.boon.Boon;
 import org.boon.Exceptions;
 import org.boon.Maps;
 import org.boon.core.Type;
@@ -42,7 +43,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
     public final void serializeString( String str, CharBuf builder ) {
-          builder.addJsonEscapedString ( str );
+          builder.asJsonString(str);
 
     }
 
@@ -391,41 +392,44 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         try {
             builder.addQuoted ( obj.toString () );
         } catch (Exception ex) {
-           //unknown so...
+           //unknown so... TODO log
            //
         }
     }
 
 
 
-    public final void serializeInstance ( Object obj, CharBuf builder )  {
+    public final void serializeInstance ( Object instance, CharBuf builder )  {
 
-        if (Reflection.respondsTo(obj, "serializeAs")) {
-            serializeObject(Invoker.invoke(obj, "serializeAs"), builder);
-            return;
+        try {
+
+            if (Reflection.respondsTo(instance, "serializeAs")) {
+                serializeObject(Invoker.invoke(instance, "serializeAs"), builder);
+                return;
+            }
+
+            final Collection<FieldAccess> fields = getFields(instance.getClass()).values();
+
+
+            builder.addChar( '{' );
+
+            int index = 0;
+            for ( FieldAccess fieldAccess : fields ) {
+                 if (serializeField ( instance, fieldAccess, builder ) ) {
+                     builder.addChar ( ',' );
+                     index++;
+                 }
+            }
+            if ( index > 0 ) {
+                builder.removeLastChar();
+            }
+            builder.addChar( '}' );
+
+        } catch (Exception ex) {
+            Exceptions.handle(ex, "serialize instance", instance,
+                    "class name of instance", Boon.className(instance),
+                    "obj", instance);
         }
-
-        final Map<String, FieldAccess> fieldAccessors = getFields(obj.getClass ());
-        final Collection<FieldAccess> values = fieldAccessors.values ();
-
-
-
-
-
-
-        builder.addChar( '{' );
-
-        int index = 0;
-        for ( FieldAccess fieldAccess : values ) {
-             if (serializeField ( obj, fieldAccess, builder ) ) {
-                 builder.addChar ( ',' );
-                 index++;
-             }
-        }
-        if ( index > 0 ) {
-            builder.removeLastChar();
-        }
-        builder.addChar( '}' );
 
     }
 

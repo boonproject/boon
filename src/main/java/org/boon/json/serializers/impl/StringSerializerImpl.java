@@ -10,7 +10,7 @@ import org.boon.primitive.CharBuf;
 public class StringSerializerImpl implements StringSerializer {
     @Override
     public final void serializeString ( JsonSerializerInternal serializer, String string, CharBuf builder )  {
-        builder.addJsonEscapedString ( string );
+        builder.asJsonString(string);
 
     }
 }

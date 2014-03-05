@@ -7,9 +7,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.tryIt;
 
-public class ExceptionsTest {
+public class TestForExceptions {
 
 
     public void methodThatThrowsException() throws IOException {
@@ -65,6 +66,31 @@ public class ExceptionsTest {
         }
     }
 
+    @Test (expected = Exceptions.SoftenedException.class)
+    public void deepNestTest() {
+
+        try {
+
+            methodThatThrowsException3();
+        } catch ( Exception e ) {
+            e.printStackTrace();
+            Exceptions.handle( "well that did not work very well", e );
+        }
+
+    }
+
+
+    @Test
+    public void deepNestTestJSON() {
+
+        try {
+
+            methodThatThrowsException3();
+        } catch ( Exception e ) {
+            puts(Exceptions.asJson(e));
+        }
+
+    }
 
     @Test (expected = Exceptions.SoftenedException.class)
     public void testException() {
@@ -104,18 +130,6 @@ public class ExceptionsTest {
 
 
 
-    @Test (expected = Exceptions.SoftenedException.class)
-    public void deepNestTest() {
-
-        try {
-
-            methodThatThrowsException3();
-        } catch ( Exception e ) {
-            e.printStackTrace();
-            Exceptions.handle( "well that did not work very well", e );
-        }
-
-    }
 
 
     @Test (expected = Exceptions.SoftenedException.class)

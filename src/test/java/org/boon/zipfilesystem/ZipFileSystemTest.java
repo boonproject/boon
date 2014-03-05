@@ -7,7 +7,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.boon.Boon.puts;
@@ -41,7 +40,7 @@ public class ZipFileSystemTest {
         URLClassLoader loader = new URLClassLoader( new URL[]{ url,
                 new File( "files/invoke-1.0-SNAPSHOT.jar" ).getAbsoluteFile().toURI().toURL() } );
 
-        final List<String> resourcePaths = Classpaths.pathsFromClassLoader(loader, someResource);
+        final List<String> resourcePaths = Classpaths.listFromClassLoader(loader, someResource);
 
 
         for ( String path : resourcePaths ) {

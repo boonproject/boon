@@ -6,6 +6,7 @@ import org.boon.di.ContextFactory;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 
+import java.nio.file.Path;
 import java.util.*;
 
 
@@ -70,7 +71,7 @@ public enum ContextConfig {
                     child = createMapFromDir( namespace, startsWith, events, resource );
                     all.putAll( child );
                 } else if ( resource.endsWith( ".json" ) ) {
-                    child = createMapFromFile( namespace, startsWith, events, resource );
+                    child = createMapFromFile( namespace, startsWith, events, IO.path(resource) );
                     all.putAll( child );
                 }
 
@@ -78,7 +79,7 @@ public enum ContextConfig {
             return all;
         }
 
-        private Map<String,Object> createMapFromFile( String namespace, boolean startsWith, MetaConfigEvents events, String resource ) {
+        private Map<String,Object> createMapFromFile( String namespace, boolean startsWith, MetaConfigEvents events, Path resource ) {
             NamespaceEventHandler jsonCreatorEventHandler = new NamespaceEventHandler( namespace, events );
             JsonParserAndMapper laxParser = new JsonParserFactory().createParserWithEvents( jsonCreatorEventHandler );
 
@@ -107,8 +108,8 @@ public enum ContextConfig {
 
             Map<String, Object> child;
 
-            List<String> jsonFiles = IO.listByExt( resource, ".json" );
-            for ( String jsonFile : jsonFiles ) {
+            List<Path> jsonFiles = IO.pathsByExt(resource, ".json");
+            for ( Path jsonFile : jsonFiles ) {
                 child = createMapFromFile( namespace, startWith, events, jsonFile );
                 all.putAll( child );
             }

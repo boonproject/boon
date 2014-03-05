@@ -487,7 +487,7 @@ public class Reflection {
         }
         pair.setSecond( method );
         } catch (Exception ex) {
-            Exceptions.handle(null, ex, "extractProperty property extract of getPropertySetterGetterMethods", method);
+            Exceptions.handle(ex, "extractProperty property extract of getPropertySetterGetterMethods", method);
         }
     }
 
@@ -526,6 +526,9 @@ public class Reflection {
 
 
     public static boolean respondsTo( Object object, String methodName) {
+        if (object == null || methodName == null) {
+            return false;
+        }
         return ClassMeta.classMeta(object.getClass()).respondsTo(methodName);
     }
 

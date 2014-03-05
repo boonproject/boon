@@ -83,7 +83,7 @@ public class Boon {
     }
 
     public static String sputs( Object... messages ) {
-        StringBuilder buf = new StringBuilder(  );
+        CharBuf buf = CharBuf.create(80);
         return sputs( buf, messages );
     }
 
@@ -407,6 +407,14 @@ public class Boon {
         return (List<Object>)jsonResourceFromTemplate(path, context);
     }
 
+
+    public static String className(Object object) {
+        return object == null ? "CLASS<NULL>" : object.getClass().getName();
+    }
+
+    public static String simpleName(Object object) {
+        return object == null ? "CLASS<NULL>" : object.getClass().getSimpleName();
+    }
 
 
 }

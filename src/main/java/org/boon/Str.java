@@ -5,7 +5,9 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class Str {
 
@@ -417,5 +419,23 @@ public class Str {
         } else {
             return object.toString();
         }
+    }
+
+
+    public static String str(Object object) {
+        if (object == null) {
+            return "<NULL>";
+        } else {
+            return object.toString();
+        }
+    }
+
+    public static boolean startsWithItemInCollection(String name, Collection<String> startsWithList) {
+        for (String startsWith : startsWithList) {
+            if (name.startsWith(startsWith)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

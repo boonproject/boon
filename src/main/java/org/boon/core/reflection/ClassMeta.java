@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.requireNonNull;
+import static org.boon.Lists.list;
 
 
 /**
@@ -84,17 +86,21 @@ public class ClassMeta <T> implements Annotated{
 
 
     public ClassMeta( Class<T> cls ) {
+
+        requireNonNull(cls);
+
         this.cls = cls;
 
         if (!cls.isInterface()) {
+
             fieldMap = Reflection.getAllAccessorFields( this.cls );
-            fields = Lists.list(fieldMap.values());
+            fields = list(fieldMap.values());
         } else {
             fieldMap = Collections.EMPTY_MAP;
             fields = Collections.EMPTY_LIST;
         }
         propertyMap = Reflection.getPropertyFieldAccessors( this.cls );
-        properties = Lists.list(propertyMap.values());
+        properties = list(propertyMap.values());
 
 
         Constructor<?>[] constructors = cls.getDeclaredConstructors();
@@ -160,7 +166,7 @@ public class ClassMeta <T> implements Annotated{
             }
         }
 
-        methods = Lists.list( methodsMulti.values() );
+        methods = list(methodsMulti.values());
 
 
 
@@ -209,7 +215,7 @@ public class ClassMeta <T> implements Annotated{
 
             return classes;
         } else {
-           return Lists.list(cls.getInterfaces());
+           return list(cls.getInterfaces());
         }
 
     }

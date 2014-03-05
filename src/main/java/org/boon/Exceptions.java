@@ -1,16 +1,25 @@
 package org.boon;
 
-import org.boon.primitive.ByteBuf;
 import org.boon.primitive.CharBuf;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
+import java.io.StringWriter;
+import java.util.*;
 
+import static org.boon.Arrays.add;
+import static org.boon.Arrays.array;
 import static org.boon.Boon.sputs;
+import static org.boon.Sets.set;
+import static org.boon.Str.startsWithItemInCollection;
 
 public class Exceptions {
 
+
+
+    private static final Set<String> ignorePackages = set("sun.", "com.sun.",
+            "javax.java", "java.",  "oracle.", "com.oracle.", "org.junit", "org.boon.",
+            "com.intellij");
 
 
     public static void requireNonNull(Object obj) {
@@ -20,13 +29,20 @@ public class Exceptions {
 
     public static void  requireNonNulls(String message, Object... array) {
 
+        int index = 0;
         for (Object obj : array) {
             if (obj == null)
-               die("Required object assertion exception");
+               die(message, index);
+
+            index++;
 
         }
     }
 
+    public static void  dieIfAnyParametersAreNull(String methodName, Object... parameters) {
+
+        requireNonNull(sputs("METHOD", methodName, "Parameter at index was null: index="));
+    }
 
     public static void requireNonNull(Object obj, String message) {
         if (obj == null)
@@ -83,6 +99,20 @@ public class Exceptions {
         throw new SoftenedException( sputs(messages), e );
     }
 
+    public static void handle( Throwable e, Object... messages ) {
+
+        throw new SoftenedException( sputs(messages), e );
+    }
+
+
+    public static void printStackTrace(CharBuf charBuf, StackTraceElement[] stackTrace) {
+        for (StackTraceElement st : stackTrace) {
+            if (st.getClassName().contains("org.boon.Exceptions")) {
+                continue;
+            }
+            charBuf.indent(10).println(st);
+        }
+    }
 
     public static <T> T tryIt( Class<T> clazz, TrialWithReturn<T> tryIt ) {
         try {
@@ -122,6 +152,39 @@ public class Exceptions {
         T tryIt() throws java.lang.Exception;
     }
 
+
+
+
+    public static StackTraceElement[] getFilteredStackTrace(StackTraceElement[] stackTrace) {
+
+
+        if (stackTrace == null || stackTrace.length == 0) {
+            return new StackTraceElement[0];
+        }
+        List<StackTraceElement> list = new ArrayList<>();
+        Set<String> seenThisBefore = new HashSet<>();
+
+        for (StackTraceElement st : stackTrace) {
+            if ( startsWithItemInCollection( st.getClassName(), ignorePackages ) ) {
+
+                continue;
+            }
+
+            String key =   Boon.sputs(st.getClassName(), st.getFileName(), st.getMethodName(), st.getLineNumber());
+            if (seenThisBefore.contains(key)) {
+                continue;
+            } else {
+                seenThisBefore.add(key);
+            }
+
+            list.add(st);
+        }
+
+        return array( StackTraceElement.class, list );
+
+    }
+
+
     public static class SoftenedException extends RuntimeException {
 
         public SoftenedException( String message ) {
@@ -156,12 +219,11 @@ public class Exceptions {
 
         @Override
         public StackTraceElement[] getStackTrace() {
-            if ( getCause() != null ) {
-                return getCause().getStackTrace();
+            if ( getRootCause() != null ) {
+                return add(getRootCause().getStackTrace(), super.getStackTrace());
             } else {
                 return super.getStackTrace();
             }
-
         }
 
         @Override
@@ -185,85 +247,94 @@ public class Exceptions {
         }
 
 
-        @Override
-        public void printStackTrace( PrintStream s ) {
 
-            s.println( this.getMessage() );
+        public void printStackTrace( CharBuf charBuf) {
+
+
+            charBuf.puts("MESSAGE:", this.getMessage());
+            if (this.getRootCause() !=null) {
+                charBuf.puts("ROOT CAUSE MESSAGE:", this.getRootCause().getMessage());
+            } else if (this.getCause()!=null) {
+                charBuf.puts("CAUSE MESSAGE:", this.getCause().getMessage());
+            }
+
+
+            StackTraceElement[] stackTrace = this.getFilteredStackTrace();
+
+            if (stackTrace.length > 0) {
+                charBuf.indent(5).addLine("This happens around this area in your code.");
+                Exceptions.printStackTrace(charBuf, stackTrace);
+            }
+
 
 
             if ( getRootCause() != null ) {
-
-
-
-                s.println( getRootCause().getMessage() );
-
-                s.println( "Original exception stack trace is:\n" );
-
-                StackTraceElement[] stackTrace = this.getRootCause().getStackTrace();
-                for (StackTraceElement st : stackTrace) {
-                    if (st.getClassName().contains("org.boon.Exceptions")) {
-                        continue;
-                    }
-                    s.println(st);
-                }
-
-            } else {
-                super.printStackTrace( s );
+                charBuf.addLine().puts("Caused by:", "message:", this.getRootCause().getMessage(), "type", this.getRootCause().getClass().getName());
+                stackTrace = this.getRootCause().getStackTrace();
+                Exceptions.printStackTrace(charBuf, stackTrace);
             }
+
+            charBuf.addLine().multiply('-', 50).addLine().multiply('-', 50).addLine();
+
+            StringWriter writer = new StringWriter();
+
+            super.printStackTrace( new PrintWriter(writer) );
+
+            charBuf.add(writer);
+
+            charBuf.addLine().multiply('-', 50).addLine();
+
 
         }
+
+
+        public StackTraceElement[] getFilteredStackTrace() {
+
+
+            StackTraceElement[] filteredStackTrace = Exceptions.getFilteredStackTrace(super.getStackTrace());
+            if ( filteredStackTrace.length > 0 ) {
+
+                if (super.getCause() !=  null) {
+                    StackTraceElement[] cause = Exceptions.getFilteredStackTrace(super.getCause().getStackTrace());
+
+                    if (cause.length > 0) {
+                        filteredStackTrace= add(cause, filteredStackTrace);
+                    }
+                }
+            } else {
+                if (super.getCause() !=  null) {
+
+                    filteredStackTrace =  Exceptions.getFilteredStackTrace(super.getCause().getStackTrace());
+                }
+            }
+
+            return Exceptions.getFilteredStackTrace(super.getStackTrace());
+
+        }
+
+
+        public CharBuf printStackTraceIntoCharBuf(  ) {
+
+            CharBuf out = CharBuf.create(100);
+            printStackTrace(out);
+            return out;
+
+        }
+
+        @Override
+        public void printStackTrace( PrintStream s ) {
+            s.print(printStackTraceIntoCharBuf().toString());
+        }
+
+
         @Override
         public void printStackTrace( PrintWriter s ) {
-
-            s.println( this.getMessage() );
-
-            if ( getRootCause() != null ) {
-
-
-
-                s.println( getRootCause().getMessage() );
-
-
-                s.println( "Original exception\n" +
-                        "stack trace is:\n" );
-
-                StackTraceElement[] stackTrace = this.getRootCause().getStackTrace();
-                for (StackTraceElement st : stackTrace) {
-                    if (st.getClassName().contains("org.boon.Exceptions")) {
-                        continue;
-                    }
-                    s.println(st);
-                }
-
-            } else {
-                super.printStackTrace(s);
-            }
+            s.print(printStackTraceIntoCharBuf().toString());
         }
 
         @Override
         public void printStackTrace() {
-
-
-            System.err.println( this.getMessage() );
-
-
-            if ( getRootCause() != null ) {
-
-                System.err.println(getRootCause().getMessage());
-                System.err.println("Original exception\n" +
-                        "stack trace is:\n");
-
-                StackTraceElement[] stackTrace = this.getRootCause().getStackTrace();
-                for (StackTraceElement st : stackTrace) {
-                    if (st.getClassName().contains("org.boon.Exceptions")) {
-                        continue;
-                    }
-                    System.err.println(st);
-                }
-
-            } else {
-                super.printStackTrace();
-            }
+            System.err.print(printStackTraceIntoCharBuf().toString());
         }
     }
 
@@ -275,7 +346,7 @@ public class Exceptions {
         final StackTraceElement[] stackTrace = ex.getStackTrace();
         for ( StackTraceElement element : stackTrace ) {
             buffer.add( element.getClassName() );
-            sputs( buffer, "class", element.getClassName(),
+            sputs( "      ", buffer, "class", element.getClassName(),
                     "method", element.getMethodName(), "line", element.getLineNumber() );
         }
 
@@ -284,46 +355,73 @@ public class Exceptions {
     }
 
 
-    public static String toJSON( Exception ex ) {
-        ByteBuf buffer = ByteBuf.create( 255 );
-        buffer.addByte( '{' );
+    public static String asJson(Exception ex) {
+        CharBuf buffer = CharBuf.create( 255 );
 
-        buffer.add( "\n    " ).addJSONEncodedString( "message" ).add( " : " )
-                .addJSONEncodedString( ex.getMessage() ).add( ",\n" );
+        buffer.add('{');
 
-        buffer.add( "    " ).addJSONEncodedString( "localizedMessage" ).add( " : " )
-                .addJSONEncodedString( ex.getLocalizedMessage() ).add( ",\n" );
+        buffer.addLine().indent(5).addJsonFieldName("message")
+                .asJsonString(ex.getMessage()).addLine(',');
 
-        buffer.add( "    " ).addJSONEncodedString( "stackTrace" ).add( " : " )
-                .addByte( '[' ).addByte( '\n' );
 
-        final StackTraceElement[] stackTrace = ex.getStackTrace();
 
-        for ( int index = 0; index < ( stackTrace.length > 10 ? 10 : stackTrace.length ); index++ ) {
+        StackTraceElement[] stackTrace = getFilteredStackTrace(ex.getStackTrace());
+
+        if ( stackTrace!=null && stackTrace.length > 0 ) {
+
+            buffer.addLine().indent(5).addJsonFieldName("stackTrace").addLine();
+
+            stackTraceToJson(buffer, stackTrace);
+
+            buffer.add(',');
+        }
+
+        buffer.addLine().indent(5).addJsonFieldName("fullStackTrace").addLine();
+        stackTrace = ex.getStackTrace();
+        stackTraceToJson(buffer, stackTrace);
+
+        buffer.add( '}' );
+        return buffer.toString();
+
+    }
+
+    public static void stackTraceToJson(CharBuf buffer, StackTraceElement[] stackTrace) {
+
+        if (stackTrace.length==0) {
+            buffer.addLine("[]");
+            return;
+        }
+
+
+        buffer.multiply(' ', 16).addLine('[');
+
+        for ( int index = 0; index <  stackTrace.length; index++ ) {
             StackTraceElement element = stackTrace[ index ];
-            if ( index != 0 ) {
-                buffer.addByte( ',' );
-                buffer.addByte( '\n' );
-            }
 
             if (element.getClassName().contains("org.boon.Exceptions")) {
                 continue;
             }
-            buffer.add("           { ");
-            buffer.add( "             " ).addJSONEncodedString( "className" ).add( " : " )
-                    .addJSONEncodedString( element.getClassName() ).add( ",\n" );
+            buffer.indent(17).add("[  ").asJsonString(element.getMethodName())
+                    .add(',');
 
-            buffer.add( "             " ).addJSONEncodedString( "methodName" ).add( " : " )
-                    .addJSONEncodedString( element.getMethodName() ).add( ",\n" );
 
-            buffer.add( "             " ).addJSONEncodedString( "lineNumber" ).add( " : " )
-                    .add( "" + element.getLineNumber() ).add( "}\n" );
+            buffer.indent(3).asJsonString(element.getClassName());
+
+
+            if (element.getLineNumber()>0) {
+                buffer.add(",");
+                buffer.indent(3).asJsonString(""+element.getLineNumber())
+                    .addLine("   ],");
+            } else {
+                buffer.addLine(" ],");
+            }
 
         }
+        buffer.removeLastChar(); //trailing \n
+        buffer.removeLastChar(); //trailing ,
 
-        buffer.add( "\n    ]\n}" );
-        return buffer.toString();
-
+        buffer.addLine().multiply(' ', 15).add(']');
     }
+
 
 }

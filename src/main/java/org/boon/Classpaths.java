@@ -30,7 +30,7 @@ public class Classpaths {
 
         } catch ( Exception ex ) {
 
-            return Exceptions.handle( List.class, sputs( "Unable to load pathsFromClassLoader for", resource ),
+            return Exceptions.handle( List.class, sputs( "Unable to load listFromClassLoader for", resource ),
                     ex );
         }
 
@@ -58,10 +58,10 @@ public class Classpaths {
     public static List<String> resources( Class<?> clazz, String resource ) {
 
 
-        List<String> list = pathsFromClassLoader(Thread.currentThread().getContextClassLoader(), resource);
+        List<String> list = listFromClassLoader(Thread.currentThread().getContextClassLoader(), resource);
 
         if ( isEmpty( list ) ) {
-            list = pathsFromClassLoader(clazz.getClassLoader(), resource);
+            list = listFromClassLoader(clazz.getClassLoader(), resource);
         }
 
 
@@ -74,13 +74,31 @@ public class Classpaths {
     }
 
 
+    public static List<Path> paths( Class<?> clazz, String resource ) {
+
+
+        List<Path> list = pathsFromClassLoader(Thread.currentThread().getContextClassLoader(), resource);
+
+        if ( isEmpty( list ) ) {
+            list = pathsFromClassLoader(clazz.getClassLoader(), resource);
+        }
+
+
+        if ( isEmpty( list ) && resource.startsWith( "/" ) ) {
+            resource = resource.substring( 1 );
+            return paths( clazz, resource );
+        }
+
+        return list;
+    }
+
     /**
-     * Load the pathsFromClassLoader
+     * Load the listFromClassLoader
      * @param loader
      * @param resource
      * @return
      */
-    public static List<String> pathsFromClassLoader(ClassLoader loader, String resource) {
+    public static List<String> listFromClassLoader(ClassLoader loader, String resource) {
         final List<URL> resourceURLs = Classpaths.classpathResources( loader, resource );
         final List<String> resourcePaths = Lists.list( String.class );
         final Map<URI, FileSystem> pathToZipFileSystems = new HashMap<>(); //So you don't have to keep loading the same jar/zip file.
@@ -97,6 +115,29 @@ public class Classpaths {
     }
 
 
+    /**
+     * Load the listFromClassLoader
+     * @param loader
+     * @param resource
+     * @return
+     */
+    public static List<Path> pathsFromClassLoader(ClassLoader loader, String resource) {
+        final List<URL> resourceURLs = Classpaths.classpathResources( loader, resource );
+        final List<Path> resourcePaths = Lists.list( Path.class );
+        final Map<URI, FileSystem> pathToZipFileSystems = new HashMap<>(); //So you don't have to keep loading the same jar/zip file.
+        for ( URL resourceURL : resourceURLs ) {
+
+            if ( resourceURL.getProtocol().equals( "jar" ) ) {
+                pathsFromJar( resourcePaths, resourceURL, pathToZipFileSystems );
+
+            } else {
+                pathsFromFileSystem( resourcePaths, resourceURL );
+            }
+        }
+        return resourcePaths;
+    }
+
+
 
     private static void resourcesFromFileSystem( List<String> resourcePaths, URL u ) {
         URI fileURI = IO.createURI( u.toString() );
@@ -105,6 +146,14 @@ public class Classpaths {
         add( resourcePaths, IO.uriToPath( fileURI ).toString() );
     }
 
+
+
+    private static void pathsFromFileSystem( List<Path> resourcePaths, URL u ) {
+        URI fileURI = IO.createURI( u.toString() );
+
+
+        add( resourcePaths, IO.uriToPath( fileURI ) );
+    }
 
     private static void resourcesFromJar( List<String> resourcePaths, URL resourceURL, Map<URI, FileSystem> pathToZipFileSystems ) {
 
@@ -125,6 +174,28 @@ public class Classpaths {
 
         if (path != null) {
             add( resourcePaths, str);
+        }
+    }
+
+    private static void pathsFromJar( List<Path> resourcePaths, URL resourceURL, Map<URI, FileSystem> pathToZipFileSystems ) {
+
+        String str = resourceURL.toString();
+
+        final String[] strings = StringScanner.split( str, '!' );
+
+        URI fileJarURI = URI.create( strings[ 0 ] );
+        String resourcePath = strings[ 1 ];
+
+        if ( !pathToZipFileSystems.containsKey( fileJarURI ) ) {
+            pathToZipFileSystems.put( fileJarURI, IO.zipFileSystem(fileJarURI) );
+        }
+
+        FileSystem fileSystem = pathToZipFileSystems.get( fileJarURI );
+
+        Path path = fileSystem.getPath(resourcePath);
+
+        if (path != null) {
+            add( resourcePaths, path);
         }
     }
 
