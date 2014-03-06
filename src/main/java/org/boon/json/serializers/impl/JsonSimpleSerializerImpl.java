@@ -64,7 +64,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
 
-        final String fieldName = fieldAccess.getName ();
+        final String fieldName = fieldAccess.name();
         final Type typeEnum = fieldAccess.typeEnum ();
 
 
@@ -450,7 +450,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         Map<String, FieldAccess> fields =  Maps.copy ( Reflection.getPropertyFieldAccessMapFieldFirst ( aClass ) );
         for (FieldAccess field : fields.values()) {
             if (field.isWriteOnly ())  {
-                fields.remove ( field.getName ()  );
+                fields.remove ( field.name()  );
             }
         }
         return fields;

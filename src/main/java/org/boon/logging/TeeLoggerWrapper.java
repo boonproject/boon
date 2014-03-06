@@ -122,17 +122,18 @@ public final class TeeLoggerWrapper extends ConfigurableLogger {
     }
 
     @Override
-    public void level(LogLevel level) {
+    public LoggerDelegate level(LogLevel level) {
         super.level(level);
         logger.level(level);
+        return this;
 
     }
 
     @Override
-    public void turnOff() {
+    public LoggerDelegate turnOff() {
         super.turnOff();
         logger.turnOff();
-
+        return this;
     }
 
     @Override

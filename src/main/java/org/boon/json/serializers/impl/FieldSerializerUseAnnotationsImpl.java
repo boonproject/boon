@@ -67,7 +67,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
     @Override
     public final boolean serializeField ( JsonSerializerInternal serializer, Object parent, FieldAccess fieldAccess, CharBuf builder ) {
 
-        final String fieldName = fieldAccess.getAlias();
+        final String fieldName = fieldAccess.alias();
         final Type typeEnum = fieldAccess.typeEnum();
         if ( useAnnotations && fieldAccess.ignore() )  {
             return false;
@@ -92,7 +92,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
 
         if ( customFieldSerializerMap != null ) {
 
-            final CustomFieldSerializer customFieldSerializer = customFieldSerializerMap.get ( fieldAccess.getName () );
+            final CustomFieldSerializer customFieldSerializer = customFieldSerializerMap.get ( fieldAccess.name() );
             if ( customFieldSerializer.serializeField (serializer, parent, fieldAccess, builder) ) {
                 return true;
             }

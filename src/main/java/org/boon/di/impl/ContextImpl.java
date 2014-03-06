@@ -1,6 +1,7 @@
 package org.boon.di.impl;
 
 import org.boon.Boon;
+import org.boon.Logger;
 import org.boon.collections.ConcurrentLinkedHashSet;
 import org.boon.core.Supplier;
 import org.boon.core.Typ;
@@ -12,14 +13,15 @@ import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.di.Context;
 import org.boon.di.Module;
 import org.boon.di.ProviderInfo;
+import org.boon.logging.LogLevel;
+import org.boon.logging.TerminalLogger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.boon.Boon.puts;
-import static org.boon.Boon.sputs;
+import static org.boon.Boon.*;
 import static org.boon.Exceptions.die;
 import static org.boon.core.reflection.BeanUtils.idxBoolean;
 import static org.boon.json.JsonFactory.fromJson;
@@ -30,13 +32,37 @@ public class ContextImpl implements Context, Module {
     private String name;
     private AtomicReference <Context> parent = new AtomicReference<>(  );
 
+    private Class<ContextImpl> contextImpl = ContextImpl.class;
+    private Logger logger = configurableLogger(contextImpl);
+
+    private boolean debug;
+
+    public ContextImpl () {
+
+        if ( Boon.debugOn() ) {
+            logger.level(LogLevel.DEBUG);
+            logger.tee(new TerminalLogger());
+        }
+
+        if ( logger.debugOn() ) {
+            debug = true;
+        }
+
+
+
+    }
+
     @Override
-    public void setParent( Context context ) {
+    public void parent(Context context) {
+        if ( debug ) logger.debug(contextImpl, "parent");
         this.parent.set( context );
     }
 
     @Override
     public Iterable<Object> values() {
+
+
+        if ( debug ) logger.debug(contextImpl, "values()", "IN");
 
         List list = new ArrayList();
         for ( Module m : modules ) {
@@ -45,11 +71,17 @@ public class ContextImpl implements Context, Module {
                 list.add( o );
             }
         }
+
+
+        if ( debug ) logger.debug(contextImpl, "values()", "OUT", list);
         return list;
     }
 
     @Override
     public Iterable<String> names() {
+        if ( debug ) logger.debug(contextImpl, "names()", "IN");
+
+
         List list = new ArrayList();
         for ( Module m : modules ) {
 
@@ -57,11 +89,15 @@ public class ContextImpl implements Context, Module {
                 list.add( n );
             }
         }
+
+        if ( debug ) logger.debug(contextImpl, "names()", "OUT", list);
         return list;
     }
 
     @Override
     public Iterable<Class<?>> types() {
+
+        if ( debug ) logger.debug(contextImpl, "types()", "IN");
         List list = new ArrayList();
         for ( Module m : modules ) {
 
@@ -69,6 +105,8 @@ public class ContextImpl implements Context, Module {
                 list.add( c );
             }
         }
+
+        if ( debug ) logger.debug(contextImpl, "types()", "OUT", list);
         return list;
     }
 
@@ -85,13 +123,16 @@ public class ContextImpl implements Context, Module {
 
     public ContextImpl( Module... modules ) {
         for ( Module module : modules ) {
-            module.setParent( this );
+            module.parent(this);
             this.modules.add( module );
         }
     }
 
     @Override
     public <T> T get( Class<T> type ) {
+
+
+        if ( debug ) logger.debug(contextImpl, "get(type)", "IN", type);
 
         try {
 
@@ -106,6 +147,8 @@ public class ContextImpl implements Context, Module {
 
             resolveProperties( true, object, getProviderInfo(type) );
 
+
+            if ( debug ) logger.debug(contextImpl, "get(type)", "OUT", object);
             return ( T ) object;
         } finally {
         }
@@ -116,6 +159,8 @@ public class ContextImpl implements Context, Module {
 
     @Override
     public <T> T get( Class<T> type, String name ) {
+
+        if ( debug ) logger.debug(contextImpl, "get(type, name)", "IN", type, name);
 
         try {
 
@@ -131,6 +176,9 @@ public class ContextImpl implements Context, Module {
 
             resolveProperties( true, object, getProviderInfo(type, name) );
 
+
+            if ( debug ) logger.debug(contextImpl, "get(type, name)", "IN", type, name, "OUT", object);
+
             return object;
 
         } finally {
@@ -139,6 +187,8 @@ public class ContextImpl implements Context, Module {
 
     @Override
     public ProviderInfo getProviderInfo(Class<?> type) {
+
+        if ( debug ) logger.debug(contextImpl, "getProviderInfo(type)", "IN", type);
 
         ProviderInfo pi = null;
         for ( Module module : modules ) {
@@ -149,12 +199,17 @@ public class ContextImpl implements Context, Module {
             }
         }
 
+
+        if ( debug ) logger.debug(contextImpl, "getProviderInfo(type)", "IN", type, "OUT", pi);
         return pi;
 
     }
 
     @Override
     public ProviderInfo getProviderInfo(String name) {
+
+
+        if ( debug ) logger.debug(contextImpl, "getProviderInfo(name)", "IN", name);
 
         ProviderInfo pi = null;
         for ( Module module : modules ) {
@@ -165,12 +220,17 @@ public class ContextImpl implements Context, Module {
             }
         }
 
+
+        if ( debug ) logger.debug(contextImpl, "getProviderInfo(name)", "IN", name, "OUT", pi);
         return pi;
 
     }
 
     @Override
     public ProviderInfo getProviderInfo(Class<?> type, String name) {
+
+
+        if ( debug ) logger.debug(contextImpl, "getProviderInfo( type, name )", "IN", type, name);
 
         ProviderInfo pi = null;
         for ( Module module : modules ) {
@@ -181,6 +241,8 @@ public class ContextImpl implements Context, Module {
             }
         }
 
+
+        if ( debug ) logger.debug(contextImpl, "getProviderInfo( type, name )", "IN", type, name, "OUT", pi);
         return pi;
 
     }
@@ -188,13 +250,24 @@ public class ContextImpl implements Context, Module {
     @Override
     public boolean has( Class type ) {
 
+
+        if ( debug ) logger.debug(contextImpl, "has( type )", "IN", type );
+
+
+
+        if ( debug ) logger.debug(contextImpl, "has( type )", "IN", type );
+
         for ( Module module : modules ) {
 
             if ( module.has( type ) ) {
+
+                if ( debug ) logger.debug(contextImpl, "has( type )", "IN", type, "OUT", true );
                 return true;
             }
         }
 
+
+        if ( debug ) logger.debug(contextImpl, "has( type )", "IN", type, "OUT", false );
         return false;
     }
 
@@ -204,10 +277,14 @@ public class ContextImpl implements Context, Module {
         for ( Module module : modules ) {
 
             if ( module.has( name ) ) {
+
+                if ( debug ) logger.debug(contextImpl, "has( name )", "IN", name, "OUT", true );
                 return true;
             }
         }
 
+
+        if ( debug ) logger.debug(contextImpl, "has( name )", "IN", name, "OUT", false );
         return false;
     }
 
@@ -287,6 +364,9 @@ public class ContextImpl implements Context, Module {
 
     private void resolveProperties( boolean enforce, Object object, ProviderInfo info ) {
 
+        if ( debug ) logger.debug(contextImpl, "resolveProperties(enforce, object, info )", "IN",
+                enforce, object, info );
+
 
         if ( object != null ) {
 
@@ -295,6 +375,10 @@ public class ContextImpl implements Context, Module {
              */
             if ( Fields.hasField( object, "__init__" ) ) {
                 if ( idxBoolean( object, "__init__" ) ) {
+
+
+                    if ( debug ) logger.debug(contextImpl, "Object was initialized already" );
+
                     return;
                 }
             }
@@ -307,16 +391,28 @@ public class ContextImpl implements Context, Module {
             for ( FieldAccess field : fields.values() ) {
 
                 if ( ( field.injectable() ) ) {
+
                     handleInjectionOfField(enforce, object, field );
                 }
 
 
             }
+
+
+            if ( debug ) logger.debug(contextImpl, "Invoking post construct start...", object );
             Invoker.invokeMethodWithAnnotationNoReturn( object, "postConstruct" );
+            if ( debug ) logger.debug(contextImpl, "Invoking post construct done...", object );
+
             if (info!=null && info.value() != null && !info.prototype()) {
+
+                if ( debug ) logger.debug(contextImpl, "Setting post construct property on provider info...",
+                        object );
                 info.setPostConstructCalled(true);
             }
         }
+
+        if ( debug ) logger.debug(contextImpl, "resolveProperties(enforce, object, info )", "OUT",
+                enforce, object, info );
 
 
     }
@@ -335,6 +431,10 @@ public class ContextImpl implements Context, Module {
     }
 
     private void handleInjectionOfField( boolean enforce, Object object, FieldAccess field ) {
+
+        if ( debug ) logger.debug(contextImpl, "handleInjectionOfField(enforce, object, field )", "IN",
+                enforce, object, field );
+
 
         Object value = null;
 
@@ -365,48 +465,80 @@ public class ContextImpl implements Context, Module {
 
                 debug();
                 die( sputs(
-                        "Unable to inject into", field.getName(), " of ", field.parent(), "with alias\n",
+                        "Unable to inject into", field.name(), " of ", field.parent(), "with alias\n",
                         field.named(), "was named", field.isNamed(), "field info",
                         field, "\n"
                 ) );
             }
         }
 
+        if ( debug ) logger.debug(contextImpl, "handleInjectionOfField(enforce, object, field )", "IN",
+                enforce, object, field, "\n", "FIELD INJECTION", "into", object, field.name(), "with value", value,
+                "VALUE TYPE", className(value), field.type());
+
         field.setValue( object, value );
     }
 
     private void handleInjectionOfBasicField(boolean enforce, Object object, FieldAccess field) {
+
+        if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField(enforce, object, field )", "IN",
+                enforce, object, field );
+
         String name = null;
         if (field.isNamed()) {
-            name = field.getAlias();
+            if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField", "FIELD IS NAMED");
+
+            name = field.alias();
+
+            if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField", "FIELD IS NAMED", "name", name);
         }
 
         if (name == null) {
-            name = field.getName();
+
+            name = field.name();
+            if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField", "USING FIELD NAME AS NAME", "name", name);
+
         }
 
         Object value = this.get(name);
 
         if (value == null) {
-            name = Boon.add(field.declaringParent().getName(), ".", field.getAlias());
+            if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField", "NAME NOT FOUND IN CONTEXT", "name", name);
+
+            name = Boon.add(field.declaringParent().getName(), ".", field.alias());
         }
 
         value = this.get(name);
 
         if (value == null) {
-            name = Boon.add(field.declaringParent().getPackage().getName(), ".", field.getAlias());
+            if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField", "NAME NOT FOUND IN CONTEXT", "name", name);
+
+            name = Boon.add(field.declaringParent().getPackage().getName(), ".", field.alias());
         }
 
 
         value = this.get(name);
 
+        if (debug && value == null) {
+            logger.debug(contextImpl, "handleInjectionOfBasicField", "NAME NOT FOUND IN CONTEXT", "name", name);
+        }
+
         if (enforce && value == null && field.requiresInjection()) {
-            die ("Basic field", field.getName(), "needs injection for class", field.declaringParent());
+            die ("Basic field", field.name(), "needs injection for class", field.declaringParent());
         }
 
 
+        if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField(enforce, object, field )", "IN",
+                enforce, object, field, "\n", "FIELD INJECTION", "into", object, field.name(), "with value", value,
+                "VALUE TYPE", className(value), field.type());
 
-        field.setValue(object, value);
+
+
+       field.setValue(object, value);
+
+
+        if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField(enforce, object, field )", "OUT",
+                enforce, object, field );
 
 
     }
@@ -509,21 +641,21 @@ public class ContextImpl implements Context, Module {
 
     @Override
     public Context add( Module module ) {
-        module.setParent( this );
+        module.parent(this);
         this.modules.add( module );
         return this;
     }
 
     @Override
     public Context remove( Module module ) {
-        module.setParent( null );
+        module.parent(null);
         this.modules.remove( module );
         return this;
     }
 
     @Override
     public Context addFirst( Module module ) {
-        module.setParent( this );
+        module.parent(this);
         this.modules.addFirst( module );
         return this;
     }

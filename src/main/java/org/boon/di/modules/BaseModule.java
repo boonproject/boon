@@ -14,7 +14,7 @@ public abstract class BaseModule implements Module{
     private AtomicReference<Context> parent = new AtomicReference<>(  );
 
     @Override
-    public void setParent( Context context ) {
+    public void parent(Context context) {
         this.parent.set( context );
     }
 

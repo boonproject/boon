@@ -303,7 +303,7 @@ public class JsonParserAndMapperBaseTest {
                 .addFilter ( new FieldFilter () {
                     @Override
                     public boolean include ( Object parent, FieldAccess fieldAccess ) {
-                        if ( fieldAccess.getName().equals( "ignoreMe3" ) ) {
+                        if ( fieldAccess.name().equals( "ignoreMe3" ) ) {
                             return false;
                         } else {
                             return true;
@@ -315,9 +315,9 @@ public class JsonParserAndMapperBaseTest {
                     public boolean serializeField ( JsonSerializerInternal serializer, Object parent,
                                                     FieldAccess fieldAccess, CharBuf builder ) {
                         if ( fieldAccess.type().equals ( long.class ) &&
-                                fieldAccess.getName ().endsWith ( "Date" ) ) {
+                                fieldAccess.name().endsWith ( "Date" ) ) {
 
-                            builder.addJsonFieldName ( fieldAccess.getName () );
+                            builder.addJsonFieldName ( fieldAccess.name() );
                             Date date = Conversions.toDate ( fieldAccess.getLong ( parent ) );
 
                             final String jsonDateString = Dates.jsonDate ( date );

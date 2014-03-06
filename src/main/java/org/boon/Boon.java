@@ -9,18 +9,21 @@ import org.boon.core.reflection.*;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.di.Context;
 import org.boon.json.JsonFactory;
-import org.boon.logging.LoggerDelegate;
+import org.boon.logging.LogLevel;
 import org.boon.logging.Logging;
+import org.boon.logging.TeeLoggerWrapper;
+import org.boon.logging.TerminalLogger;
 import org.boon.primitive.CharBuf;
 import org.boon.template.BoonTemplate;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.boon.Exceptions.die;
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.Maps.fromMap;
-import static org.boon.core.reflection.MapObjectConversion.fromList;
-import static org.boon.json.JsonFactory.toJson;
+import static org.boon.Str.camelCase;
+import static org.boon.Str.camelCaseLower;
+import static org.boon.Str.underBarCase;
 
 public class Boon {
 
@@ -262,9 +265,25 @@ public class Boon {
 
 
     public static Context readConfig(String namespace, String path) {
+        String localConfigDir =
+                add( System.getProperty("user.home"), ".",
+                        camelCaseLower( underBarCase( namespace) ) );
+
+
+        return readConfig(namespace, path,
+                "/etc/",  //look in /etc/{path}
+                localConfigDir, //look in local dir
+                "classpath:/"); //look in classpath
+    }
+
+
+    public static Context readConfig(String namespace, String path, String... roots) {
+
+        trace("readConfig(namespace, path, roots)", "IN", namespace, path, roots);
 
         if (path.startsWith("/")) {
             path = sliceOf(path, 1);
+
         }
 
         if (!path.endsWith(".json")) {
@@ -272,10 +291,23 @@ public class Boon {
                 path = add(path, "/");
             }
         }
-        return ContextConfigReader.config().namespace(namespace)
-                .resource("classpath://" + path)
-                .resource("/etc/" + path)
-                .read();
+        ContextConfigReader contextConfigReader = ContextConfigReader.config().namespace(namespace);
+
+        for (String root : roots) {
+
+            if (!root.endsWith("/")) {
+                root = add(root, "/");
+            }
+
+
+            debug("readConfig", "adding root", root);
+            contextConfigReader.resource( add (root, path) );
+        }
+
+        trace("readConfig(namespace, path, roots)", "OUT", namespace, path, roots);
+
+        return contextConfigReader.read();
+
     }
 
 
@@ -443,8 +475,139 @@ public class Boon {
     }
 
     public static Logger logger(String name) {
-        return new Logger(Logging.logger( name ));
+        return new Logger(Logging.logger(name));
     }
+
+
+    public static Logger configurableLogger(String name) {
+        return new Logger(Logging.configurableLogger(name));
+    }
+
+
+    public static Logger configurableLogger(final Class<?> clazz) {
+        return new Logger(Logging.configurableLogger( clazz.getName() ));
+    }
+
+
+    private static AtomicBoolean debug = new AtomicBoolean(false);
+
+    public static boolean debugOn() {
+        return debug.get();
+    }
+
+
+
+    public static void turnDebugOn() {
+         debug.set(true);
+    }
+
+
+    public static void turnDebugOff() {
+        debug.set(false);
+    }
+
+
+    final static Logger logger;
+
+    static  //we do this so it runs in a container like tomcat, resin or jboss.
+    {
+        if (Sys.inContainer()) {
+            logger = null;
+        } else {
+            logger = configurableLogger(Boon.class);
+        }
+    }
+
+    private static Logger _log() {
+           if (debugOn()) {
+               return new Logger(new TerminalLogger().level(LogLevel.DEBUG));
+           } else {
+               return logger == null ? configurableLogger("BOON.SYSTEM") : logger;
+           }
+    }
+
+
+    public static boolean logInfoOn() {
+        return _log().infoOn();
+    }
+
+    public static boolean logTraceOne() {
+        return _log().traceOn();
+    }
+
+
+    public static boolean logDebugOn() {
+        return _log().debugOn();
+    }
+
+
+
+    public static void fatal(Object... messages) {
+        _log().fatal(messages);
+    }
+
+    public static void error(Object... messages) {
+        _log().error(messages);
+    }
+
+    public static void warn(Object... messages) {
+        _log().warn(messages);
+    }
+
+    public static void info(Object... messages) {
+        _log().info(messages);
+    }
+
+
+    public static void debug(Object... messages) {
+        _log().debug(messages);
+    }
+
+    public static void trace(Object... messages) {
+        _log().trace(messages);
+    }
+
+
+    public static void config(Object... messages) {
+        _log().config(messages);
+    }
+
+
+
+
+    public static void fatal(Throwable t, Object... messages) {
+        _log().fatal(t, messages);
+    }
+
+    public static void error(Throwable t, Object... messages) {
+        _log().error(t, messages);
+    }
+
+    public static void warn(Throwable t, Object... messages) {
+        _log().warn(t, messages);
+    }
+
+    public static void info(Throwable t, Object... messages) {
+        _log().info(t, messages);
+    }
+
+
+    public static void config(Throwable t, Object... messages) {
+        _log().config(t, messages);
+    }
+
+
+    public static void debug(Throwable t, Object... messages) {
+        _log().debug(t, messages);
+    }
+
+
+    public static void trace(Throwable t, Object... messages) {
+        _log().trace(t, messages);
+    }
+
+
+
 
 
 }

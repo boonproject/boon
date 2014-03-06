@@ -902,17 +902,17 @@ public class BeanUtils {
 
         for ( FieldAccess srcField : srcFields.values() ) {
 
-            if (ignore.contains ( srcField.getName () )) {
+            if (ignore.contains ( srcField.name() )) {
                 continue;
             }
 
-            FieldAccess dstField = dstFields.get ( srcField.getName() );
+            FieldAccess dstField = dstFields.get ( srcField.name() );
             try {
 
                 copySrcFieldToDestField ( src, dst, dstField, srcField, ignore );
 
             }catch (Exception ex) {
-                Exceptions.handle( sputs("copying field", srcField.getName (), srcClass, " to ", dstField.getName(), dstClass), ex );
+                Exceptions.handle( sputs("copying field", srcField.name(), srcClass, " to ", dstField.name(), dstClass), ex );
             }
         }
     }
@@ -928,13 +928,13 @@ public class BeanUtils {
 
         for ( FieldAccess srcField : srcFields.values() ) {
 
-            FieldAccess dstField = dstFields.get ( srcField.getName() );
+            FieldAccess dstField = dstFields.get ( srcField.name() );
             try {
 
                 copySrcFieldToDestField ( src, dst, dstField, srcField, null );
 
             }catch (Exception ex) {
-                 Exceptions.handle( sputs("copying field", srcField.getName (), srcClass, " to ", dstField.getName(), dstClass), ex );
+                 Exceptions.handle( sputs("copying field", srcField.name(), srcClass, " to ", dstField.name(), dstClass), ex );
             }
         }
     }

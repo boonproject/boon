@@ -14,11 +14,11 @@ public interface FieldAccess {
     boolean isNamed();
     boolean hasAlias();
 
-    String getAlias();
+    String alias();
 
     String named();
 
-    String getName();
+    String name();
     Object getValue( Object obj );
 
     void setValue( Object obj, Object value );

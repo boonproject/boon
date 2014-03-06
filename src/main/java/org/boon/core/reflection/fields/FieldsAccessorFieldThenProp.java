@@ -1,8 +1,6 @@
 package org.boon.core.reflection.fields;
 
 import org.boon.core.reflection.Reflection;
-import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.core.reflection.fields.FieldsAccessor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,7 +36,7 @@ public class FieldsAccessorFieldThenProp implements FieldsAccessor {
             Map<String, FieldAccess> fieldAccessMap2 = new LinkedHashMap<> ( fieldAccessMap.size () );
 
             for (FieldAccess fa : fieldAccessMap.values ()) {
-                fieldAccessMap2.put ( fa.getAlias (), fa );
+                fieldAccessMap2.put ( fa.alias(), fa );
             }
             return fieldAccessMap2;
         } else {

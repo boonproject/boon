@@ -35,7 +35,7 @@ public interface Module {
 
     public <T> Supplier<T>  getSupplier( Class<T> type );
 
-    public void setParent(Context context);
+    public void parent(Context context);
 
 
 

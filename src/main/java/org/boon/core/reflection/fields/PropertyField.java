@@ -29,7 +29,7 @@ public class PropertyField extends BaseField {
 //
 //        if ( parentType != null && getter != null ) {
 //            try {
-//                methodHandle = lookup.findVirtual ( this.parentType, getter.getName (), methodType );
+//                methodHandle = lookup.findVirtual ( this.parentType, getter.name (), methodType );
 //            } catch ( NoSuchMethodException e ) {
 //               Exceptions.handle ( e );
 //            } catch ( IllegalAccessException e ) {
@@ -50,7 +50,7 @@ public class PropertyField extends BaseField {
 //
 //
 //            try {
-//                methodHandle = lookup.findVirtual ( this.parentType, setter.getName(), methodType );
+//                methodHandle = lookup.findVirtual ( this.parentType, setter.name(), methodType );
 //            } catch ( NoSuchMethodException e ) {
 //                Exceptions.handle ( e );
 //            } catch ( IllegalAccessException e ) {
@@ -84,7 +84,7 @@ public class PropertyField extends BaseField {
         } catch ( Throwable e ) {
             Exceptions.handle( String.format( "You tried to modify property %s of %s for instance %s " +
                     "with set %s using %s, and this property read only status is %s",
-                    name, obj.getClass().getSimpleName(), obj, value, getName (), isReadOnly () ), e );
+                    name, obj.getClass().getSimpleName(), obj, value, name(), isReadOnly () ), e );
 
         }
 

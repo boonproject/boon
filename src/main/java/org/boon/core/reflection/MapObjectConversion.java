@@ -15,7 +15,6 @@ import java.lang.reflect.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
@@ -572,7 +571,7 @@ public class MapObjectConversion {
                 field.setValue( newInstance, ovalue );
             }
         } catch ( Exception ex ) {
-            handle(sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
+            handle(sputs("Problem handling non value case of fromValueMap", "field", field.name(),
                     "fieldType", field.type().getName(), "object from map", ovalue), ex);
         }
     }
@@ -628,7 +627,7 @@ public class MapObjectConversion {
                 field.setFromValue( newInstance, value );
             }
         } catch ( Exception ex ) {
-            handle(sputs("Problem handling non value case of fromValueMap", "field", field.getName(),
+            handle(sputs("Problem handling non value case of fromValueMap", "field", field.name(),
                     "fieldType", field.type().getName(), "object from map", "objValue", objValue, "value", value), ex);
 
         }
@@ -906,7 +905,7 @@ public class MapObjectConversion {
             if ( from.isReadOnly() ) {
                 return null;
             }
-            Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.getName(),
+            Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.name(),
                     from.getValue( object ) );
             return entry;
         }

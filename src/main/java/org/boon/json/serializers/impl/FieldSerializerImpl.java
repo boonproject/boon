@@ -26,7 +26,7 @@ public class FieldSerializerImpl implements FieldSerializer {
     @Override
     public final boolean serializeField ( JsonSerializerInternal serializer, Object parent, FieldAccess fieldAccess, CharBuf builder ) {
 
-        final String fieldName = fieldAccess.getName ();
+        final String fieldName = fieldAccess.name();
         final Type typeEnum = fieldAccess.typeEnum ();
         switch ( typeEnum ) {
             case INT:

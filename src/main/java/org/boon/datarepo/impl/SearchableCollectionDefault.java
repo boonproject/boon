@@ -440,7 +440,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
             if ( field.isStatic() ) {
                 continue;
             }
-            path.add( field.getName() );
+            path.add( field.name() );
             visit( key, item, visitor, field.getValue( o ), path, levels );
             path.remove( path.size() - 1 );
 

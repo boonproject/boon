@@ -227,7 +227,7 @@ public class FilterDefault implements Filter, FilterComposer {
 //                    //Don't allow non-index Criterion to avoid too many scans
 //                    if (innerExpression instanceof Criterion) {
 //                        Criterion c = (Criterion) innerExpression;
-//                        if (!this.isIndexed(c.getName())) {
+//                        if (!this.isIndexed(c.name())) {
 //                            continue outer;
 //                        }
 //                    }

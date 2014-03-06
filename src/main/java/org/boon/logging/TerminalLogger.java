@@ -63,13 +63,15 @@ public class TerminalLogger implements LoggerDelegate {
     }
 
     @Override
-    public void level(LogLevel level) {
+    public TerminalLogger level(LogLevel level) {
         this.level = level;
+        return this;
     }
 
     @Override
-    public void turnOff() {
-
+    public LoggerDelegate turnOff() {
+        this.level = OFF;
+        return this;
     }
 
     @Override

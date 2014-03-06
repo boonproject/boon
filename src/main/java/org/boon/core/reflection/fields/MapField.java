@@ -40,17 +40,17 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public String getAlias() {
+    public String alias() {
         return name;
     }
 
     @Override
     public String named() {
-        return getAlias();
+        return alias();
     }
 
     @Override
-    public final String getName() {
+    public final String name() {
         return name;
     }
 

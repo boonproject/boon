@@ -4,7 +4,6 @@ import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.Str;
 import org.boon.core.Conversions;
-import org.boon.core.Typ;
 import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.AnnotationData;
@@ -20,7 +19,6 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.core.Conversions.*;
@@ -387,9 +385,11 @@ public abstract class BaseField implements FieldAccess {
 
     @Override
     public final void setValue ( Object obj, Object value ) {
-//        if (this.name.equals("rickDrinks")) {
-//            puts("here");
-//        }
+
+        if (this.isPrimitive() && value == null) {
+            //TODO log this as debug
+            return;
+        }
 
         switch ( typeEnum ) {
             case INT:
@@ -579,7 +579,7 @@ public abstract class BaseField implements FieldAccess {
         Exceptions.handle( Str.lines (
                 e.getClass ().getName (),
                 String.format ( "cause %s", e.getCause () ),
-                String.format ( "Field info name %s, type %s, class that declared field %s", this.getName (), this.type(), this.getField ().getDeclaringClass () ),
+                String.format ( "Field info name %s, type %s, class that declared field %s", this.name(), this.type(), this.getField ().getDeclaringClass () ),
                 String.format ( "Type of object passed %s", obj.getClass ().getName () )
         ), e );
 
@@ -657,14 +657,14 @@ public abstract class BaseField implements FieldAccess {
     }
 
     @Override
-    public final String getName() {
+    public final String name() {
         return name;
     }
 
 
 
     @Override
-    public final String getAlias() {
+    public final String alias() {
         return alias;
     }
 

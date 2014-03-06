@@ -240,11 +240,11 @@ public class Collections {
 
 
         for ( FieldAccess f : fields.values() ) {
-            if ( f.getName().equals( primaryKey ) ) {
+            if ( f.name().equals( primaryKey ) ) {
                 continue;
             }
             if ( Typ.isBasicType( f.type() ) ) {
-                configIndexes( ( SearchableCollection ) query, f.getName(), fields );
+                configIndexes( ( SearchableCollection ) query, f.name(), fields );
             }
         }
 
@@ -349,7 +349,7 @@ public class Collections {
             @Override
             public Object apply( Object o ) {
 
-                if ( Fields.hasField( o.getClass(), field.getName() ) ) {
+                if ( Fields.hasField( o.getClass(), field.name() ) ) {
                     return field.getValue( o );
                 } else {
                     return null;

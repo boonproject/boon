@@ -11,9 +11,9 @@ public interface LoggerDelegate {
 
     boolean traceOn();
 
-    public void level(LogLevel level);
+    LoggerDelegate level(LogLevel level);
 
-    public void turnOff();
+    LoggerDelegate turnOff();
 
     void fatal(Object... messages);
 
@@ -43,29 +43,29 @@ public interface LoggerDelegate {
 
     void trace(Throwable t, Object... messages);
 
-    public void fatal(final Object message);
+    void fatal(final Object message);
 
-    public void fatal(final Object message, final Throwable t);
+    void fatal(final Object message, final Throwable t);
 
-    public void error(final Object message);
+    void error(final Object message);
 
-    public void error(final Object message, final Throwable t);
+    void error(final Object message, final Throwable t);
 
-    public void warn(final Object message);
+    void warn(final Object message);
 
-    public void warn(final Object message, final Throwable t);
+    void warn(final Object message, final Throwable t);
 
-    public void info(final Object message);
+    void info(final Object message);
 
-    public void info(final Object message, final Throwable t);
+    void info(final Object message, final Throwable t);
 
-    public void debug(final Object message);
+    void debug(final Object message);
 
-    public void debug(final Object message, final Throwable t);
+    void debug(final Object message, final Throwable t);
 
-    public void trace(final Object message);
+    void trace(final Object message);
 
-    public void trace(final Object message, final Throwable t);
+    void trace(final Object message, final Throwable t);
 
 
 

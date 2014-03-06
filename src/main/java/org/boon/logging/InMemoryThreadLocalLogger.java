@@ -93,13 +93,15 @@ public class InMemoryThreadLocalLogger implements LoggerDelegate{
     }
 
     @Override
-    public void level(LogLevel level) {
+    public LoggerDelegate level(LogLevel level) {
         this.level = level;
+        return this;
     }
 
     @Override
-    public void turnOff() {
-
+    public LoggerDelegate turnOff() {
+        this.level = OFF;
+        return this;
     }
 
     @Override

@@ -159,14 +159,16 @@ public class ConfigurableLogger implements LoggerDelegate{
     }
 
 
-    public void level(LogLevel level) {
+    public LoggerDelegate level(LogLevel level) {
         logger.level(level);
+        return this;
     }
 
 
 
-    public void turnOff() {
+    public LoggerDelegate turnOff() {
         logger.turnOff();
+        return this;
     }
 
     public void fatal(Object... messages) {

@@ -144,7 +144,7 @@ public class JDKLogger implements LoggerDelegate {
         return LogLevel.ERROR;
     }
 
-    public void level(LogLevel level) {
+    public LoggerDelegate level(LogLevel level) {
         switch (level) {
             case DEBUG:
                 logger.setLevel( Level.FINE );
@@ -176,11 +176,13 @@ public class JDKLogger implements LoggerDelegate {
                 break;
 
         }
+        return this;
     }
 
 
-    public void turnOff() {
+    public LoggerDelegate turnOff() {
         logger.setLevel(Level.OFF);
+        return this;
     }
 
 
