@@ -37,19 +37,30 @@ public class ContextImpl implements Context, Module {
 
     private boolean debug;
 
-    public ContextImpl () {
 
+    public void initDebug() {
         if ( Boon.debugOn() ) {
             logger.level(LogLevel.DEBUG);
             logger.tee(new TerminalLogger());
+            this.debug = true;
         }
 
         if ( logger.debugOn() ) {
             debug = true;
         }
+    }
+
+    public ContextImpl () {
+        initDebug();
+    }
 
 
-
+    public ContextImpl( Module... modules ) {
+        initDebug();
+        for ( Module module : modules ) {
+            module.parent(this);
+            this.modules.add( module );
+        }
     }
 
     @Override
@@ -121,12 +132,6 @@ public class ContextImpl implements Context, Module {
     }
 
 
-    public ContextImpl( Module... modules ) {
-        for ( Module module : modules ) {
-            module.parent(this);
-            this.modules.add( module );
-        }
-    }
 
     @Override
     public <T> T get( Class<T> type ) {

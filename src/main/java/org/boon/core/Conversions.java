@@ -2,6 +2,7 @@ package org.boon.core;
 
 import org.boon.*;
 import org.boon.Arrays;
+import org.boon.collections.ConcurrentHashSet;
 import org.boon.core.reflection.*;
 import org.boon.primitive.CharBuf;
 
@@ -11,6 +12,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import static org.boon.Arrays.len;
@@ -1225,6 +1227,23 @@ public class Conversions {
             return new LinkedHashSet<>( size );
         } else {
             return new ArrayList( size );
+        }
+
+    }
+
+
+    public static Map<?,?> createMap( Class<?> type, int size ) {
+
+        if ( type == HashMap.class ) {
+            return new HashMap<>( size );
+        } else if ( type == TreeMap.class ) {
+            return new TreeMap<>();
+        } else if ( type == SortedMap.class ) {
+            return new TreeMap<>();
+        } else if ( type == ConcurrentHashMap.class) {
+            return new ConcurrentHashMap<>();
+        }  else {
+            return new HashMap( size );
         }
 
     }

@@ -86,4 +86,9 @@ public class ConstructorAccessImpl <T> implements ConstructorAccess {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return constructor.toString();
+    }
 }

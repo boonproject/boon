@@ -8,7 +8,7 @@ import org.boon.di.modules.SupplierModule;
 import java.util.List;
 import java.util.Map;
 
-public class ContextFactory {
+public class DependencyInjection {
 
 
     public static Context context( final Module... modules ) {

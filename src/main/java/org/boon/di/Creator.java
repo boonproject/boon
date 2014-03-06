@@ -10,22 +10,22 @@ import java.util.Map;
 public class Creator {
 
     public static <T> T create(Class<T> type, Map<?, ?> map) {
-      Context context = ContextFactory.fromMap(map);
-      context.add( ContextFactory.classes( type ) );
+      Context context = DependencyInjection.fromMap(map);
+      context.add( DependencyInjection.classes(type) );
       return context.get( type );
     }
 
 
     public static <T> T create(Class<T> type, Context context) {
-        context.add( ContextFactory.classes( type ) );
+        context.add( DependencyInjection.classes(type) );
         return context.get( type );
     }
 
 
     public static <T> T newOf( Class<T> type, Object... args ) {
         Map<?, ?> map = Maps.mapFromArray( args );
-        Context context = ContextFactory.fromMap(map);
-        context.add( ContextFactory.classes( type ) );
+        Context context = DependencyInjection.fromMap(map);
+        context.add( DependencyInjection.classes(type) );
         return context.get( type );
     }  
 }

@@ -8,7 +8,7 @@ import static org.boon.logging.LogLevel.*;
  */
 public class InMemoryLogger implements LoggerDelegate {
 
-    private LogLevel level;
+    private LogLevel level = DEBUG;
 
     private CharBuf buf = CharBuf.create(100);
 

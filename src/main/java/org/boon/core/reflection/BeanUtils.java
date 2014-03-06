@@ -12,8 +12,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static org.boon.Boon.className;
 import static org.boon.Boon.sputs;
-import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.*;
 import static org.boon.Str.lines;
 import static org.boon.StringScanner.isDigits;
 
@@ -63,19 +64,25 @@ public class BeanUtils {
      * Get fields from object or Map.
      * Allows maps to act like they have fields.
      *
-     * @param item
+     * @param object
      * @return
      */
-    public static Map<String, FieldAccess> getFieldsFromObject( Object item ) {
-        Map<String, FieldAccess> fields;
+    public static Map<String, FieldAccess> getFieldsFromObject( Object object ) {
+
+        try {
+           Map<String, FieldAccess> fields;
 
 
 
-       fields = getPropertyFieldAccessMap( item.getClass() );
-       if ( item instanceof Map ) {
-           fields = getFieldsFromMap( fields, ( Map<String, Object> ) item );
+           fields = getPropertyFieldAccessMap( object.getClass() );
+           if ( object instanceof Map ) {
+               fields = getFieldsFromMap( fields, ( Map<String, Object> ) object );
+           }
+           return fields;
+        } catch (Exception ex) {
+           requireNonNull(object, "Item cannot be null" );
+           return handle(Map.class, ex, "Unable to get fields from object", className(object));
         }
-        return fields;
 
     }
 
@@ -107,40 +114,50 @@ public class BeanUtils {
     public static void setPropertyValue( final Object root, final Object newValue, final String... properties ) {
 
         Object object = root;
-        Object parent = root;
 
         int index = 0;
-        for ( String property : properties ) {
-            Map<String, FieldAccess> fields = getFieldsFromObject( object );
-
-            FieldAccess field = fields.get( property );
 
 
-            if ( isDigits( property ) ) {
-                /* We can index numbers and names. */
-                object = idx ( object, Integer.parseInt ( property ) );
+        try {
 
-            } else {
+            for ( String property : properties ) {
+                Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
-                if ( field == null ) {
-                    die( sputs(
-                            "We were unable to access property=", property,
-                            "\nThe properties passed were=", properties,
-                            "\nThe root object is =", root.getClass().getName(),
-                            "\nThe current object is =", object.getClass().getName()
-                    )
-                    );
-                }
+                FieldAccess field = fields.get( property );
 
 
-                if ( index == properties.length - 1 ) {
-                    field.setValue( object, newValue );
+                if ( isDigits( property ) ) {
+                    /* We can index numbers and names. */
+                    object = idx ( object, Integer.parseInt ( property ) );
+
                 } else {
-                    object = field.getObject( object );
-                }
-            }
 
-            index++;
+                    if ( field == null ) {
+                        die( sputs(
+                                "We were unable to access property=", property,
+                                "\nThe properties passed were=", properties,
+                                "\nThe root object is =", root.getClass().getName(),
+                                "\nThe current object is =", object.getClass().getName()
+                        )
+                        );
+                    }
+
+
+                    if ( index == properties.length - 1 ) {
+                        field.setValue( object, newValue );
+                    } else {
+                        object = field.getObject( object );
+                    }
+                }
+
+                index++;
+            }
+        } catch (Exception ex) {
+            requireNonNull(root, "Root cannot be null");
+            handle(ex, "Unable to set property for root object", className(root),
+                    "for property path", properties, "with new value", newValue,
+                    "last object in the tree was",
+                    className(object), "current property index", index);
         }
 
     }

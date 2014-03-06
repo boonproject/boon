@@ -13,7 +13,7 @@ public class TerminalLogger implements LoggerDelegate {
 
 
 
-    private LogLevel level;
+    private LogLevel level = DEBUG;
 
 
     /**

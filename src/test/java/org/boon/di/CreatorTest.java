@@ -8,7 +8,7 @@ import static org.boon.di.Creator.newOf;
 
 import static org.boon.json.JsonCreator.*;
 
-import static org.boon.di.ContextFactory.*;
+import static org.boon.di.DependencyInjection.*;
 
 import org.boon.config.ContextConfig;
 import org.boon.config.ContextConfigReader;

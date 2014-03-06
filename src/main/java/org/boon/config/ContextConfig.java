@@ -2,7 +2,7 @@ package org.boon.config;
 
 import org.boon.IO;
 import org.boon.di.Context;
-import org.boon.di.ContextFactory;
+import org.boon.di.DependencyInjection;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 
@@ -42,7 +42,7 @@ public enum ContextConfig {
         }
 
         public Context createContext( String namespace, boolean startsWith, MetaConfigEvents events, String... resources ) {
-            return ContextFactory.fromMap( createConfigMap( namespace, startsWith, events, resources )  );
+            return DependencyInjection.fromMap(createConfigMap(namespace, startsWith, events, resources));
         }
 
 

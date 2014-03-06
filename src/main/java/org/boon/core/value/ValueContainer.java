@@ -27,6 +27,14 @@ public class ValueContainer implements CharSequence, Value {
 
     public boolean decodeStrings;
 
+    public static Object toObject(Object o) {
+        if ( o instanceof ValueContainer ) {
+            o = ( ( ValueContainer ) o ).toValue();
+        }
+        return o;
+
+    }
+
     public ValueContainer(  Object value, Type type, boolean decodeStrings ) {
         this.value = value;
         this.type = type;
