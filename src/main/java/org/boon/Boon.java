@@ -11,17 +11,16 @@ import org.boon.di.Context;
 import org.boon.json.JsonFactory;
 import org.boon.logging.LogLevel;
 import org.boon.logging.Logging;
-import org.boon.logging.TeeLoggerWrapper;
 import org.boon.logging.TerminalLogger;
 import org.boon.primitive.CharBuf;
 import org.boon.template.BoonTemplate;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.Maps.fromMap;
-import static org.boon.Str.camelCase;
 import static org.boon.Str.camelCaseLower;
 import static org.boon.Str.underBarCase;
 
@@ -361,12 +360,28 @@ public class Boon {
         return str;
     }
 
+    public static String resource(Path path) {
+        String str = IO.read(path);
+        return str;
+    }
+
 
     public static String resourceFromHandleBarsTemplate(String path, Object context) {
         if (!IO.exists(IO.path(path))) {
             path = add ("classpath:/", path);
         }
 
+        String str = IO.read(path);
+
+        if (str!=null) {
+            str = Boon.handlebars(str, context);
+        }
+
+        return str;
+    }
+
+
+    public static String resourceFromHandleBarsTemplate(Path path, Object context) {
         String str = IO.read(path);
 
         if (str!=null) {
@@ -390,6 +405,20 @@ public class Boon {
         return str;
     }
 
+
+
+    public static String resourceFromTemplate(Path path, Object context) {
+
+        String str = IO.read(path);
+
+        if (str!=null) {
+            str = Boon.jstl(str, context);
+        }
+
+        return str;
+    }
+
+
     public static Object jsonResource(String path) {
         if (!IO.exists(IO.path(path))) {
              path = add ("classpath:/", path);
@@ -401,6 +430,16 @@ public class Boon {
         }
         return null;
     }
+
+    public static Object jsonResource(Path path) {
+
+        String str = IO.read(path);
+        if (str!=null) {
+            return fromJson(str);
+        }
+        return null;
+    }
+
 
     public static Object jsonResourceFromTemplate(String path, Object context) {
         if (!IO.exists(IO.path(path))) {
@@ -415,11 +454,31 @@ public class Boon {
         return null;
     }
 
+
+    public static Object jsonResourceFromTemplate(Path path, Object context) {
+
+        String str = IO.read(path);
+        if (str!=null) {
+            str = Boon.jstl(str, context);
+            return fromJson(str);
+        }
+        return null;
+    }
+
     public static Map<String, Object> resourceMap(String path) {
         return (Map<String, Object>)jsonResource(path);
     }
 
+    public static Map<String, Object> resourceMap(Path path) {
+        return (Map<String, Object>)jsonResource(path);
+    }
+
     public static Map<String, Object> resourceMapFromTemplate(String path, Object context) {
+        return (Map<String, Object>)jsonResourceFromTemplate(path, context);
+    }
+
+
+    public static Map<String, Object> resourceMapFromTemplate(Path path, Object context) {
         return (Map<String, Object>)jsonResourceFromTemplate(path, context);
     }
 
@@ -429,17 +488,35 @@ public class Boon {
     }
 
 
+    public static <T> T resourceObject(Path path, Class<T> type) {
+        return fromMap(resourceMap(path), type);
+    }
+
     public static <T> T resourceObjectFromTemplate(String path, Class<T> type, Object context) {
         return fromMap(resourceMapFromTemplate(path, context), type);
     }
 
 
+    public static <T> T resourceObjectFromTemplate(Path path, Class<T> type, Object context) {
+        return fromMap(resourceMapFromTemplate(path, context), type);
+    }
+
     public static List<?> resourceList(String path) {
         return (List<?>)jsonResource(path);
     }
 
+    public static List<?> resourceList(Path path) {
+        return (List<?>)jsonResource(path);
+    }
 
     public static <T> List<T> resourceListFromTemplate(String path,  Class<T> listOf, Object context) {
+        List<Object> list = (List)jsonResourceFromTemplate(path, context);
+
+        return MapObjectConversion.convertListOfMapsToObjects(true, null,
+                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
+    }
+
+    public static <T> List<T> resourceListFromTemplate(Path path,  Class<T> listOf, Object context) {
         List<Object> list = (List)jsonResourceFromTemplate(path, context);
 
         return MapObjectConversion.convertListOfMapsToObjects(true, null,
@@ -455,8 +532,23 @@ public class Boon {
 
     }
 
+    public static <T> List<T> resourceList(Path path, Class<T> listOf) {
+
+        List<Object> list = (List)jsonResource(path);
+
+        return MapObjectConversion.convertListOfMapsToObjects(true, null,
+                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
+
+    }
+
+
 
     public static List<?> resourceListFromTemplate(String path, Object context) {
+        return (List<?>)jsonResourceFromTemplate(path, context);
+    }
+
+
+    public static List<?> resourceListFromTemplate(Path path, Object context) {
         return (List<?>)jsonResourceFromTemplate(path, context);
     }
 

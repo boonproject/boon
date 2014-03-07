@@ -7,6 +7,7 @@ import org.boon.core.reflection.MethodAccess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Richard on 2/28/14.
@@ -68,6 +69,19 @@ public class Functional {
     }
 
 
+    public static void each(Map<?,?> map, Object object) {
+
+
+        MethodAccess methodAccess = Invoker.invokeFunctionMethodAccess(object);
+
+        for (Object o : map.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+
+            methodAccess.invoke(object, ((Map.Entry) o).getKey(), ((Map.Entry) o).getValue());
+        }
+    }
+
+
     public static void each(Iterable<?> objects, Object function) {
 
 
@@ -97,6 +111,19 @@ public class Functional {
 
         for (Object o : objects) {
             methodAccess.invoke(object, o);
+        }
+    }
+
+
+    public static void each(Map<?,?> map, Object object, String methodName) {
+
+
+        MethodAccess methodAccess = Invoker.invokeMethodAccess(object.getClass(), methodName);
+
+        for (Object o : map.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+
+            methodAccess.invoke(object, ((Map.Entry) o).getKey(), ((Map.Entry) o).getValue());
         }
     }
 
