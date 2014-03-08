@@ -372,13 +372,18 @@ public class Reflection {
 
 
     public static List<Field> getAllFields( Class<? extends Object> theClass ) {
-        List<Field> list = getFields( theClass );
-        while ( theClass != Typ.object ) {
 
-            theClass = theClass.getSuperclass();
-            getFields( theClass, list );
+        try {
+            List<Field> list = getFields( theClass );
+            while ( theClass != Typ.object ) {
+
+                theClass = theClass.getSuperclass();
+                getFields( theClass, list );
+            }
+            return list;
+        } catch (Exception ex) {
+            return  Exceptions.handle(List.class, ex, "getAllFields the class", theClass);
         }
-        return list;
     }
 
 
@@ -493,8 +498,14 @@ public class Reflection {
 
     public static void getFields( Class<? extends Object> theClass,
                                   List<Field> list ) {
-        List<Field> more = getFields( theClass );
-        list.addAll( more );
+
+        try {
+            List<Field> more = getFields( theClass );
+            list.addAll( more );
+
+        }catch (Exception ex) {
+            Exceptions.handle(ex, "getFields", theClass, list);
+        }
     }
 
     public static List<Field> getFields( Class<? extends Object> theClass ) {

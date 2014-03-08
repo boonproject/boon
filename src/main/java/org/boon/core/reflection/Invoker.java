@@ -97,14 +97,27 @@ public class Invoker {
             } else if (args instanceof List) {
                 List list = (List) args;
 
-                if (method.parameterTypes().length == 1 && list.size() > 0) {
+                Class<?>[] paramTypes = method.parameterTypes();
 
+                if (paramTypes.length == 1 && list.size() > 0) {
+
+                    Class<?> firstParamType = paramTypes[0];
                     Object firstArg = list.get(0);
-                    if (firstArg instanceof Map || firstArg instanceof List) {
+
+
+                    if ( firstArg instanceof Map ) {
                         return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, list);
 
-                    } else {
-                        return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, Lists.list(args));
+                    }
+
+                    else if (firstArg instanceof List &&
+                            !Typ.isCollection(firstParamType)
+                            && !firstParamType.isArray()) {
+                        return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method, list);
+                    }
+                    else {
+                        return invokeMethodFromList(respectIgnore, view, ignoreProperties, object, method,
+                                Lists.list(args));
                     }
                 } else {
 
@@ -207,8 +220,9 @@ public class Invoker {
 
             List<Object> list = new ArrayList(args);
             Class<?>[] parameterTypes = method.parameterTypes();
+
             if (list.size() != parameterTypes.length) {
-                return die(Object.class, "Unable to invoke method", method.name(), "on object", object, "with arguments", list);
+               return die(Object.class, "Unable to invoke method", method.name(), "on object", object, "with arguments", list);
             }
 
             FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);

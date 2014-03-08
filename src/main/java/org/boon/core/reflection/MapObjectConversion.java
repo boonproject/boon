@@ -286,7 +286,7 @@ public class MapObjectConversion {
 
 
             /* It is some sort of instance parameters (user defined instance of a class) and the item is a list. */
-            else if ( item instanceof List && !Typ.isCollection(paramType) ) {
+            else if ( item instanceof List && !Typ.isCollection(paramType) && !paramType.isEnum()) {
 
                 List<Object> listItem = null;
                 Object convertedItem = null;

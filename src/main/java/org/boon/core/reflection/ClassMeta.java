@@ -42,6 +42,12 @@ public class ClassMeta <T> implements Annotated{
     final List<FieldAccess> properties;
 
 
+    final Set<String> instanceMethods;
+
+
+    final Set<String> classMethods;
+
+
     final ConstructorAccess<T> noArgConstructor;
 
     final static MethodAccess MANY_METHODS = new MethodAccessImpl(){
@@ -84,6 +90,14 @@ public class ClassMeta <T> implements Annotated{
     private final List<AnnotationData> annotations;
 
 
+    public Set<String> instanceMethods() {
+        return new LinkedHashSet<>(instanceMethods);
+    }
+
+
+    public Set<String> classMethods() {
+        return  new LinkedHashSet<>(classMethods);
+    }
 
     public ClassMeta( Class<T> cls ) {
 
@@ -122,12 +136,14 @@ public class ClassMeta <T> implements Annotated{
 
         this.constructorAccessSet = (Set<ConstructorAccess<T>> ) Sets.safeSet(set);
 
-        List<Class<?>> classes = getBaseClassesSuperFirst();
+        List<Class<?>> classes = getBaseClassesSuperFirst(cls);
 
 
 
         methodMap = new ConcurrentHashMap<>(  );
         methodsMulti = new MultiMap<>(  );
+        instanceMethods = new LinkedHashSet<>();
+        classMethods = new LinkedHashSet<>();
 
 
 
@@ -136,6 +152,7 @@ public class ClassMeta <T> implements Annotated{
 
             for (Method m : methods_) {
                 if ( methodMap.containsKey( m.getName() )) {
+
                     /** Checking for duplicates */
                     MethodAccessImpl invoker = ( MethodAccessImpl ) methodMap.get( m.getName() );
                     if (invoker == MANY_METHODS) {
@@ -162,7 +179,18 @@ public class ClassMeta <T> implements Annotated{
                 } else {
                     methodMap.put( m.getName(), new MethodAccessImpl( m ));
                 }
-                methodsMulti.put( m.getName(), new MethodAccessImpl( m ) );
+
+                MethodAccessImpl mai = new MethodAccessImpl( m );
+
+                if (!mai.isStatic()) {
+
+                    instanceMethods.add(mai.name());
+
+                } else {
+                    classMethods.add(mai.name());
+                }
+
+                methodsMulti.put( m.getName(), mai);
             }
         }
 
@@ -202,7 +230,7 @@ public class ClassMeta <T> implements Annotated{
         return methodsMulti.getAll( name );
     }
 
-    private List<Class<?>> getBaseClassesSuperFirst() {
+    private List<Class<?>> getBaseClassesSuperFirst(Class<?> cls) {
 
         if (!cls.isInterface()) {
             List<Class<?>> classes = new ArrayList( 10 );
@@ -215,7 +243,9 @@ public class ClassMeta <T> implements Annotated{
 
             return classes;
         } else {
-           return list(cls.getInterfaces());
+           List<Class<?>> classes = list(cls.getInterfaces());
+           classes.add(cls);
+           return classes;
         }
 
     }
