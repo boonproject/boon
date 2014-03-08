@@ -1,11 +1,15 @@
 package com.examples;
 
 
+import org.junit.Test;
+
 import java.util.List;
+import java.util.Map;
 
 import static org.boon.Boon.*;
 import static org.boon.Lists.*;
 import static org.boon.Maps.map;
+import static org.boon.Ok.okOrDie;
 import static org.boon.core.reflection.BeanUtils.*;
 import static org.boon.primitive.Chr.multiply;
 
@@ -14,6 +18,11 @@ import static org.boon.primitive.Chr.multiply;
  */
 public class PathExpressions {
 
+    @Test
+    public void test() {
+        PathExpressions.main();
+
+    }
 
     public static class ContactInfo {
         String address;
@@ -192,7 +201,7 @@ public class PathExpressions {
         );
 
 
-        showDepartmentInfo(departments);
+        showDepartmentInfoEmp(departments);
 
 
 
@@ -253,21 +262,41 @@ public class PathExpressions {
 
     }
 
+    static boolean ok;
 
 
-    private static void showDepartmentInfo(List<?> departments) {
+    private static void showDepartmentInfoEmp(List<?> departments) {
         puts ( "get the name of the first department",
                 indexOf( departments, "[0].name") );
+
+        okOrDie("indexOf [0].name is Engineering", indexOf( departments, "[0].name"));
+
 
 
         putl("get the employees from the second department",
                 indexOf(departments, "[1].employees"));
+
+
+
+        okOrDie("indexOf [1].employees returns list of employees",
+                indexOf( departments, "[1].employees") instanceof List &&
+                        iterator(indexOf(departments, "[1].employees")).next() instanceof Employee &&
+                len(indexOf( departments, "[1].employees")) == 4
+        );
+
 
         puts();
 
 
         putl("get all employees in all departments",
                 indexOf(departments, "this.employees"));
+
+
+        okOrDie("indexOf employees returns list of employees",
+                indexOf( departments, "employees") instanceof List &&
+                        iterator(indexOf(departments, "employees")).next() instanceof Employee &&
+                        len(indexOf( departments, "employees")) == 8
+        );
 
         puts();
 
@@ -280,6 +309,79 @@ public class PathExpressions {
 
         puts ( "get the first name of every employee",
                 indexOf(departments, "employees.firstName") );
+
+
+
+        okOrDie("indexOf employees.firstName returns list of employees' names",
+                indexOf( departments, "employees.firstName") instanceof List &&
+                        iterator(indexOf(departments, "employees.firstName")).next() instanceof String &&
+                        len(indexOf( departments, "employees.firstName")) == 8
+        );
+
+        puts();
+
+
+        putl("get the all of the phone numbers of all of the employees",
+                indexOf(departments, "employees.contactInfo.phoneNumbers"));
+    }
+
+
+    private static void showDepartmentInfo(List<?> departments) {
+        puts ( "get the name of the first department",
+                indexOf( departments, "[0].name") );
+
+        okOrDie("indexOf [0].name is Engineering", indexOf(departments, "[0].name"));
+
+
+
+        putl("get the employees from the second department",
+                indexOf(departments, "[1].employees"));
+
+
+
+        okOrDie("indexOf [1].employees returns list of employees",
+                indexOf( departments, "[1].employees") instanceof List &&
+                        iterator(indexOf(departments, "[1].employees")).next() instanceof Map &&
+                        len(indexOf( departments, "[1].employees")) == 4
+        );
+
+
+
+
+
+
+        puts();
+
+
+        putl("get all employees in all departments",
+                indexOf(departments, "this.employees"));
+
+
+
+        okOrDie("indexOf employees returns list of employees",
+                indexOf( departments, "employees") instanceof List &&
+                        iterator(indexOf(departments, "employees")).next() instanceof Map &&
+                        len(indexOf( departments, "employees")) == 8
+        );
+
+        puts();
+
+
+        puts ( "Get the name of every department",
+                indexOf(departments, "name") );
+
+        puts();
+
+
+        puts ( "get the first name of every employee",
+                indexOf(departments, "employees.firstName") );
+
+
+        okOrDie("indexOf employees.firstName returns list of employees' names",
+                indexOf( departments, "employees.firstName") instanceof List &&
+                        iterator(indexOf(departments, "employees.firstName")).next() instanceof String &&
+                        len(indexOf( departments, "employees.firstName")) == 8
+        );
 
         puts();
 
