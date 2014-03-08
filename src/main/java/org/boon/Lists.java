@@ -14,6 +14,44 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Lists {
 
+
+    public static <T> List<T> lazyAdd(List<T> list, T... items) {
+        list = list == null ? new ArrayList<T>() : list;
+
+        for (T item : items) {
+            list.add(item);
+        }
+        return list;
+    }
+
+
+    public static <T> List<T> lazyAdd(ArrayList<T> list, T... items) {
+        list = list == null ? new ArrayList<T>() : list;
+
+        for (T item : items) {
+            list.add(item);
+        }
+        return list;    }
+
+    public static <T> List<T> safeLazyAdd(CopyOnWriteArrayList<T> list, T... items) {
+        list = list == null ? new CopyOnWriteArrayList<T>() : list;
+        for (T item : items) {
+            list.add(item);
+        }
+        return list;
+    }
+
+    public static <T> List<T> lazyAdd(CopyOnWriteArrayList<T> list, T... items) {
+        list = list == null ? new CopyOnWriteArrayList<T>() : list;
+        for (T item : items) {
+            list.add(item);
+        }
+        return list;
+    }
+
+
+
+
     public static <T> List<T> lazyCreate(List<T> list) {
         return list == null ? new ArrayList<T>() : list;
     }

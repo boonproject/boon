@@ -22,5 +22,6 @@
         null,
         {"id": "Help"},
         {"id": "About", "label": "About Adobe CVG Viewer..."}
+
     ]
 }}

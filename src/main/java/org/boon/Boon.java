@@ -15,6 +15,7 @@ import org.boon.logging.TerminalLogger;
 import org.boon.primitive.CharBuf;
 import org.boon.template.BoonTemplate;
 
+import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -76,7 +77,15 @@ public class Boon {
     public static void putl( Object... messages ) {
 
         for ( Object message : messages ) {
-            print( message );
+
+            if (message instanceof Collection || Typ.isArray(message)) {
+                Iterator iterator = Conversions.iterator(message);
+                while (iterator.hasNext()) {
+                    puts(iterator.next());
+                }
+                continue;
+            }
+            print(message);
             println();
         }
         println();

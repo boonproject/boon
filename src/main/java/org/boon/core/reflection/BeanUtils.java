@@ -199,15 +199,23 @@ public class BeanUtils {
                 continue;
             }
 
-            Map<String, FieldAccess> fields = getFieldsFromObject( object );
-
-            FieldAccess field = fields.get( property );
 
             if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
                 object = idx ( object, Integer.parseInt ( property ) );
 
             } else {
+
+
+                if (object instanceof Collection) {
+                    object = byPath(object, property);
+                    continue;
+                }
+
+
+                Map<String, FieldAccess> fields = getFieldsFromObject( object );
+
+                FieldAccess field = fields.get( property );
 
                 if ( field == null ) {
                     return null;
@@ -295,6 +303,21 @@ public class BeanUtils {
         return getPropertyValue( object, properties );
     }
 
+    /**
+     * Get property value
+     *
+     * @param object
+     * @param path   in dotted notation
+     * @return
+     */
+    public static Object indexOf( Object object, String path ) {
+
+
+        String[] properties = StringScanner.splitByCharsNoneEmpty( path, '.', '[', ']', '/' );
+
+        return getPropertyValue( object, properties );
+    }
+
 
     public static Object findProperty(Object context, String propertyPath) {
 
@@ -347,13 +370,19 @@ public class BeanUtils {
      * @param path
      * @return
      */
-    public static Object idxRelax( Object object, final String path ) {
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
+    public static Object byPath(Object object, final String path) {
 
+        try {
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
         return getPropByPath( object, properties );
+
+        } catch (Exception ex) {
+            Exceptions.requireNonNull( object );
+            Exceptions.requireNonNull( path );
+
+            return Exceptions.handle(Object.class, ex, object, path);
+        }
     }
 
 
@@ -812,27 +841,27 @@ public class BeanUtils {
             }
             return list;
         } else {
-            return getFieldValue ( object, key );
+            return indexOf( object, key );
         }
     }
 
 
-
-    private static Object getFieldValue( Object object, final String key ) {
-        if ( object == null ) {
-            return null;
-        }
-
-        Class<?> cls = object.getClass();
-
-        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMapFieldFirst( cls );
-
-        if ( !fields.containsKey( key ) ) {
-            return null;
-        } else {
-            return fields.get( key ).getValue( object );
-        }
-    }
+//
+//    private static Object getFieldValue( Object object, final String key ) {
+//        if ( object == null ) {
+//            return null;
+//        }
+//
+//        Class<?> cls = object.getClass();
+//
+//        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMapFieldFirst( cls );
+//
+//        if ( !fields.containsKey( key ) ) {
+//            return null;
+//        } else {
+//            return fields.get( key ).getValue( object );
+//        }
+//    }
 
 
     public static <T> T copy( T item ) {
