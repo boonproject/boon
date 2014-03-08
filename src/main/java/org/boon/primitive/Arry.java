@@ -1,6 +1,8 @@
-package org.boon;
+package org.boon.primitive;
 
 
+import org.boon.Lists;
+import org.boon.Universal;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MapObjectConversion;
 
@@ -12,7 +14,7 @@ import java.util.Map;
 import static org.boon.Exceptions.die;
 
 @SuppressWarnings ( { "unchecked", "SuspiciousSystemArraycopy" } )
-public class Arrays {
+public class Arry {
 
 
     @Universal
@@ -280,7 +282,7 @@ public class Arrays {
 
 
     public static List<Map<String, Object>> toListOfMaps( Object... array ) {
-        return MapObjectConversion.toListOfMaps( Lists.list( array ) );
+        return MapObjectConversion.toListOfMaps( Lists.list(array) );
     }
 
 

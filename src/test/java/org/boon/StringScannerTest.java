@@ -2,9 +2,8 @@ package org.boon;
 
 import org.junit.Test;
 
-import static org.boon.Arrays.idx;
-import static org.boon.Arrays.len;
-import static org.boon.Boon.puts;
+import static org.boon.primitive.Arry.idx;
+import static org.boon.primitive.Arry.len;
 import static org.boon.Exceptions.die;
 import static org.junit.Assert.assertEquals;
 

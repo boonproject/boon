@@ -73,7 +73,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * org.boon.primitive.Chr
      * org.boon.primitive.Int (in progress)
      * org.boon.primitive.Lng (in progress)
-     * org.boon.Arrays
+     * org.boon.primitive.Arry
      * org.boon.core.Strings (planned)
      * org.boon.core.StrBuf (planned)
      * org.boon.Lists
@@ -208,14 +208,14 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int
-     * @see Arrays
+     * @see org.boon.primitive.Arry
      * @see Lists
      * @see Maps
      * @see Sets#idx(java.util.NavigableSet, Object)
      * @see org.boon.primitive.Byt#idx(byte[], int)
      * @see org.boon.primitive.Chr#idx(char[], int)
      * @see org.boon.primitive.Int
-     * @see Arrays#idx(Object[], int)
+     * @see org.boon.primitive.Arry#idx(Object[], int)
      * @see Lists
      * @see Maps
      * @see Sets
@@ -261,7 +261,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * org.boon.primitive.Chr
      * org.boon.primitive.Int (in progress)
      * org.boon.primitive.Lng (in progress)
-     * org.boon.Arrays
+     * org.boon.primitive.Arry
      * org.boon.core.Strings (planned)
      * org.boon.core.StrBuf (planned)
      * org.boon.Lists
@@ -273,7 +273,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int
-     * @see Arrays
+     * @see org.boon.primitive.Arry
      * @see Lists
      * @see Maps
      * @see Sets
@@ -293,7 +293,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * org.boon.primitive.Chr
      * org.boon.primitive.Int (in progress)
      * org.boon.primitive.Lng (in progress)
-     * org.boon.Arrays
+     * org.boon.primitive.Arry
      * org.boon.core.Strings (planned)
      * org.boon.core.StrBuf (planned)
      * org.boon.Lists
@@ -306,7 +306,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int
-     * @see Arrays
+     * @see org.boon.primitive.Arry
      * @see Lists
      * @see Maps
      * @see Sets
@@ -327,7 +327,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * org.boon.primitive.Chr
      * org.boon.primitive.Int (in progress)
      * org.boon.primitive.Lng (in progress)
-     * org.boon.Arrays
+     * org.boon.primitive.Arry
      * org.boon.core.Strings (planned)
      * org.boon.core.StrBuf (planned)
      * org.boon.Lists
@@ -339,7 +339,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int
-     * @see Arrays
+     * @see org.boon.primitive.Arry
      * @see Lists
      * @see Maps
      * @see Sets
@@ -359,7 +359,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * org.boon.primitive.Chr
      * org.boon.primitive.Int (in progress)
      * org.boon.primitive.Lng (in progress)
-     * org.boon.Arrays
+     * org.boon.primitive.Arry
      * org.boon.core.Strings (planned)
      * org.boon.core.StrBuf (planned)
      * org.boon.Lists
@@ -371,7 +371,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int
-     * @see Arrays
+     * @see org.boon.primitive.Arry
      * @see Lists
      * @see Maps
      * @see Sets
@@ -388,7 +388,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * org.boon.primitive.Chr
      * org.boon.primitive.Int (in progress)
      * org.boon.primitive.Lng (in progress)
-     * org.boon.Arrays
+     * org.boon.primitive.Arry
      * org.boon.core.Strings (planned)
      * org.boon.core.StrBuf (planned)
      * org.boon.Lists
@@ -397,14 +397,14 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int
-     * @see Arrays
+     * @see org.boon.primitive.Arry
      * @see Lists
      * @see Maps
      * @see Sets
      * @see org.boon.primitive.Byt#insert
      * @see org.boon.primitive.Chr#insert
      * @see org.boon.primitive.Int
-     * @see Arrays#insert
+     * @see org.boon.primitive.Arry#insert
      * @see Lists#insert
      */
     void insert( ITEM item );
@@ -500,7 +500,7 @@ public interface UniversalOperations<ITEM, INDEX> {
      * org.boon.primitive.Chr
      * org.boon.primitive.Int (in progress)
      * org.boon.primitive.Lng (in progress)
-     * org.boon.Arrays
+     * org.boon.primitive.Arry
      * org.boon.core.Strings (planned)
      * org.boon.core.StrBuf (planned)
      * org.boon.Lists
@@ -509,14 +509,14 @@ public interface UniversalOperations<ITEM, INDEX> {
      * @see org.boon.primitive.Byt
      * @see org.boon.primitive.Chr
      * @see org.boon.primitive.Int
-     * @see Arrays
+     * @see org.boon.primitive.Arry
      * @see Lists
      * @see Maps
      * @see Sets
      * @see org.boon.primitive.Byt#slc
      * @see org.boon.primitive.Chr#slc
      * @see org.boon.primitive.Int
-     * @see Arrays#slc
+     * @see org.boon.primitive.Arry#slc
      * @see Lists#slc
      * @see Maps#slc
      * @see Sets#slc

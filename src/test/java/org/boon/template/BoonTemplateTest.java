@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.boon.Arrays.slc;
+import static org.boon.primitive.Arry.slc;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;

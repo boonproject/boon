@@ -28,14 +28,17 @@ public class IntListTest extends TestCase {
 
         if (list.size() != 3) die();
 
-        int[] values = list.toValueArray();
 
-        int sum = 0;
-        for (int index = 0; index < values.length; index++ ) {
-            sum+= values[index];
-        }
+        if (list.sum() != 6) die();
 
-        if (sum != 6) die();
+
+        list.addArray(2, 3, 5);
+
+
+        if (list.sum() != 16) die();
+
+        if (list.size() != 6) die();
+
 
     }
 

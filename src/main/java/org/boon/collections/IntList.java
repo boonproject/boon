@@ -1,9 +1,8 @@
 package org.boon.collections;
 
-import org.boon.Arrays;
-
 import java.util.AbstractList;
 
+import static org.boon.Exceptions.die;
 import static org.boon.primitive.Int.grow;
 
 /**
@@ -53,6 +52,17 @@ public class IntList extends AbstractList<Integer> {
         return true;
     }
 
+
+    public boolean addArray(int... integers) {
+        if (end + integers.length >= values.length) {
+            values = grow(values, (values.length + integers.length) * 2);
+        }
+
+        System.arraycopy(integers, 0, values, end, integers.length);
+        end+=integers.length;
+        return true;
+    }
+
     @Override
     public Integer set(int index, Integer element) {
         int oldValue = values[index];
@@ -70,6 +80,28 @@ public class IntList extends AbstractList<Integer> {
     @Override
     public int size() {
         return end;
+    }
+
+
+
+    public int sum() {
+        long sum = 0;
+        for (int index = 0; index < end; index++ ) {
+            sum+= values[index];
+        }
+
+        if (sum < Integer.MIN_VALUE) {
+            die ("overflow the sum is too small", sum);
+        }
+
+
+        if (sum > Integer.MAX_VALUE) {
+            die ("overflow the sum is too big", sum);
+        }
+
+        return (int) sum;
+
+
     }
 
 

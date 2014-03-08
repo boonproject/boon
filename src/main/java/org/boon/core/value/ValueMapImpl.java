@@ -1,6 +1,7 @@
 package org.boon.core.value;
 
 
+import org.boon.primitive.Arry;
 import org.boon.core.Value;
 
 import java.util.*;
@@ -31,7 +32,7 @@ public class ValueMapImpl extends AbstractMap<String, Value> implements ValueMap
     @Override
     public void add( MapItemValue miv ) {
         if ( len >= items.length ) {
-            items = org.boon.Arrays.grow( items );
+            items = Arry.grow(items);
         }
         items[ len ] = miv;
         len++;

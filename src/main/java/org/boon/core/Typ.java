@@ -54,7 +54,7 @@ public class Typ {
     public static final Class<Path> path = Path.class;
 
 
-    /* Arrays. */
+    /* Arry. */
     public static final Class<String[]> stringArray = String[].class;
     public static final Class<int[]> intArray = int[].class;
     public static final Class<byte[]> byteArray = byte[].class;

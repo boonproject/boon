@@ -1,9 +1,6 @@
 package org.boon.template;
 
-import org.boon.Boon;
-import org.boon.Lists;
-import org.boon.Str;
-import org.boon.StringScanner;
+import org.boon.*;
 import org.boon.core.Conversions;
 
 import static java.util.Arrays.copyOfRange;
@@ -14,13 +11,13 @@ import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MethodAccess;
+import org.boon.primitive.Arry;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
 import java.util.*;
 
-import static org.boon.Boon.puts;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.*;
@@ -1342,7 +1339,7 @@ public abstract class BoonTemplate {
 
             int length = (int) getObjectFromArguments( len );
 
-            Collection collection = (Collection) getObjectFromArguments(Str.join(' ', org.boon.Arrays.sliceOf(strings, 1)));
+            Collection collection = (Collection) getObjectFromArguments(Str.join(' ', Arry.sliceOf(strings, 1)));
 
             //NOT DONE TODO
 

@@ -9,7 +9,7 @@ import java.util.*;
 
 
 import static org.boon.Exceptions.die;
-import static org.boon.Arrays.*;
+import static org.boon.primitive.Arry.*;
 import static org.boon.primitive.Byt.*;
 import static org.boon.primitive.Chr.*;
 

@@ -2,7 +2,7 @@ package org.boon.logging;
 
 import org.boon.core.Handler;
 
-import static org.boon.Arrays.array;
+import static org.boon.primitive.Arry.array;
 import static org.boon.logging.LogRecord.after;
 import static org.boon.logging.LogRecord.before;
 

@@ -1,5 +1,6 @@
 package org.boon.collections;
 
+import org.boon.primitive.Arry;
 import org.boon.Maps;
 
 import java.util.*;
@@ -39,8 +40,8 @@ public class LazyMap extends AbstractMap<String, Object> {
             values[ size ] = value;
             size++;
             if ( size == keys.length ) {
-                keys = org.boon.Arrays.grow( keys );
-                values = org.boon.Arrays.grow( values );
+                keys = Arry.grow(keys);
+                values = Arry.grow(values);
             }
             return null;
         } else {

@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 import static org.boon.Lists.reduceBy;
-import static org.boon.Arrays.reduceBy;
+import static org.boon.primitive.Arry.reduceBy;
 import static org.boon.primitive.Int.reduceBy;
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
