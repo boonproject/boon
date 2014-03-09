@@ -172,6 +172,20 @@ public class Chr {
     }
 
 
+    @Universal
+    public static boolean in( char[] values, char[] array ) {
+        for ( char currentValue : array ) {
+
+            for (char value : values) {
+                if ( currentValue == value ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
 
     @Universal
     public static boolean in( int value, char[] array ) {

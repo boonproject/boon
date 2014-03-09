@@ -1,9 +1,11 @@
 package org.boon.core;
 
 import org.boon.*;
+import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Arry;
 import org.boon.core.reflection.*;
 import org.boon.primitive.CharBuf;
+import org.boon.sort.Sorting;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -1295,6 +1297,15 @@ public class Conversions {
         return list;
 
 
+    }
+
+    /**
+     * Cast an object to a comparable object.
+     * @param comparable
+     * @return
+     */
+    public static Comparable comparable( Object comparable ) {
+        return ( Comparable ) comparable;
     }
 
 

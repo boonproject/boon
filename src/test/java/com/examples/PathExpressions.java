@@ -288,7 +288,7 @@ public class PathExpressions {
         puts();
 
 
-        putl("get all employees in all departments",
+        putl("get all employees in all departmentsList",
                 indexOf(departments, "this.employees"));
 
 
@@ -353,7 +353,7 @@ public class PathExpressions {
         puts();
 
 
-        putl("get all employees in all departments",
+        putl("get all employees in all departmentsList",
                 indexOf(departments, "this.employees"));
 
 

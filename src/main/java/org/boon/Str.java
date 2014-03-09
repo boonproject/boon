@@ -95,6 +95,11 @@ public class Str {
         return new String( chars );
     }
 
+    @Universal
+    public static boolean in( char[] chars, String str ) {
+        return Chr.in ( chars, FastStringUtils.toCharArray(str) );
+    }
+
 
     @Universal
     public static boolean in( char c, String str ) {

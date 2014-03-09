@@ -1,6 +1,7 @@
 package org.boon.core.reflection;
 
 import org.boon.Sets;
+import org.boon.Str;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 
@@ -167,7 +168,53 @@ public class Fields {
      * @return sortable field
      */
     public static String getSortableField( Object value1 ) {
-        return getSortableFieldFromClass( value1.getClass() );
+
+        if (value1 instanceof Map) {
+            return getSortableFieldFromMap( (Map<String, ?>) value1);
+        } else {
+            return getSortableFieldFromClass( value1.getClass() );
+        }
+    }
+
+    private static String getSortableFieldFromMap(Map<String, ?> map) {
+
+
+
+            /* See if we have this sortable field and look for string first. */
+        for (String name : fieldSortNames) {
+            if (map.containsKey(name)) {
+                return name;
+            }
+        }
+
+            /*
+             Now see if we can find one of our predefined suffixes.
+             */
+        for (String suffix : fieldSortNamesSuffixes) {
+            for (String key : map.keySet()) {
+                if (key.endsWith(suffix)) {
+                    return key;
+                }
+            }
+        }
+
+
+        for (Object object : map.entrySet()) {
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) object;
+            if (Typ.isBasicType(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+
+
+        for (Object object : map.entrySet()) {
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) object;
+            if (entry.getValue() instanceof Comparable) {
+                return entry.getKey();
+            }
+        }
+
+        return die(String.class, "No suitable sort key was found");
     }
 
     /**
@@ -179,7 +226,7 @@ public class Fields {
     public static String getSortableFieldFromClass( Class<?> clazz ) {
 
         /** See if the fieldName is in the field listStream already.
-         * We keep a hashmap cache.
+         * We keep a hash-map cache.
          * */
         String fieldName = getSortableField( clazz );
 
@@ -188,7 +235,7 @@ public class Fields {
          */
         if ( fieldName == null ) {
 
-            /* See if we have this sortale field and look for string first. */
+            /* See if we have this sortable field and look for string first. */
             for ( String name : fieldSortNames ) {
                 if ( classHasStringField( clazz, name ) ) {
                     fieldName = name;
@@ -209,7 +256,7 @@ public class Fields {
             }
 
             /**
-             * Ok. We still did not find it so give us the first
+             * Ok. We still did not find it so give us the first comparable or
              * primitive that we can find.
              */
             if ( fieldName == null ) {

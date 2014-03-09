@@ -2,10 +2,7 @@ package org.boon.core.value;
 
 import org.boon.core.Value;
 
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ValueList extends AbstractList<Object> implements List<Object> {
 
@@ -114,6 +111,13 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
             ValueList list = ( ValueList ) obj;
             list.chopList();
         }
+    }
+
+
+
+    public ListIterator<Object> listIterator() {
+        convertAllIfNeeded();
+        return list.listIterator();
     }
 
     public List<Object> list () {
