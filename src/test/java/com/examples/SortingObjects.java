@@ -1,14 +1,19 @@
 package com.examples;
 
+import static org.boon.core.Conversions.toArray;
 import static org.boon.sort.Sort.sortBy;
 import static org.boon.sort.Sort.sortByDescending;
 import static org.boon.sort.Sorting.*;
 
 import static org.boon.sort.Ordering.*;
+
+import org.boon.core.Conversions;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.boon.Boon.*;
 import static org.boon.Boon.puts;
@@ -298,6 +303,8 @@ public class SortingObjects {
 
 
 
+        //Using Search
+        sort(employees);
         Employee employee = employees.get(5);
 
 
@@ -306,12 +313,25 @@ public class SortingObjects {
 
         putl("This employee was found at ", index, employee2, employee, '\n', employees);
 
+        //Using a Set instead of a list
+
+        Set<Employee> employeesSet = new LinkedHashSet<>(employees);
+
+        employeesSet = (Set<Employee>) sort(Employee.class, employeesSet, "id");
+
+        putl("Sort Employee SET by id", employeesSet);
+
+
+        Employee[] employeesArray = toArray(Employee.class, employees);
+
+        sort(employeesArray, "firstName");
+
+        putl("Sort Employee ARRAY by firstName", employeesArray);
 
 
     }
 
     private static void sorting(List<?> employees, List<?> departmentList) {
-
 
 
 
@@ -350,7 +370,7 @@ public class SortingObjects {
 
 
 
-        sort( employees );
+        sort(employees);
 
 
         sort( employees, "lastName");

@@ -8,10 +8,9 @@ import org.boon.core.reflection.Fields;
 import org.boon.core.reflection.fields.FieldAccess;
 
 import java.text.Collator;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static org.boon.core.Conversions.toArray;
 
 public class Sorting {
 
@@ -19,6 +18,17 @@ public class Sorting {
      * Gets the logger.
      */
     private static final Logger log = Boon.configurableLogger(Sorting.class.getName());
+
+
+    /** Takes a list an an array or sorts
+     *
+     * @param list list to sorts
+     * @param sorts what you want to sore the list by
+     */
+    public static void sort(List list, Sort... sorts) {
+        Sort.sorts(sorts).sort(list);
+    }
+
 
 
     /**
@@ -34,7 +44,9 @@ public class Sorting {
         }
 
         if (sortBy.equals("this")) {
-            SortingInternal.sort(list, sortBy, null, ascending, nullsFirst);
+
+            Collections.sort(list, thisUniversalComparator(ascending, nullsFirst));
+            return;
         }
         Iterator iterator = list.iterator();
         Object object = iterator.next();
@@ -56,9 +68,112 @@ public class Sorting {
         }
 
 
-        if (fields!=null) SortingInternal.sort(list, sortBy, fields, ascending, nullsFirst);
+        if (fields!=null) {
+
+            final FieldAccess field = fields.get( sortBy );
+
+            if ( field != null ) {
+
+                Collections.sort( list, Sorting.universalComparator(field, ascending, nullsFirst) );
+
+            }
+        }
     }
 
+
+    /**
+     * Sort collection.
+     * @param collection the collection you want to sort
+     * @param sortBy what you want to sort the list by
+     * @param ascending do you want ascending order
+     * @param nullsFirst do you want nulls first
+     */
+    public static <V> Collection<V>  sort( Class<V> componentType, Collection<V> collection, String sortBy, boolean ascending, boolean nullsFirst ) {
+
+        if (collection instanceof List) {
+            sort ((List) collection, sortBy, ascending, nullsFirst);
+            return collection;
+        } else {
+            V[] array = toArray(componentType, collection);
+            sort(array, sortBy, ascending, nullsFirst);
+            if (collection instanceof LinkedHashSet) {
+                return new LinkedHashSet<>(Lists.list(array));
+            } else {
+                return Lists.list(array);
+            }
+        }
+    }
+
+
+    /**
+     * Sort collection.
+     * @param iterable the iterable you want to sort
+     * @param sortBy what you want to sort the list by
+     * @param ascending do you want ascending order
+     * @param nullsFirst do you want nulls first
+     */
+    public static <V> Iterable<V> sort( Class<V> componentType, Iterable<V> iterable, String sortBy, boolean ascending, boolean nullsFirst ) {
+
+        if (iterable instanceof List) {
+            sort ((List) iterable, sortBy, ascending, nullsFirst);
+            return iterable;
+        } else if (iterable instanceof  Collection) {
+            return sort (componentType, (Collection<V>) iterable, sortBy, ascending, nullsFirst);
+        } else {
+            List<V> list = Lists.list(iterable);
+            sort ( list, sortBy, ascending, nullsFirst);
+            return list;
+        }
+    }
+
+    /**
+     * Sort an array.
+     * @param array the list you want to sort
+     * @param sortBy what you want to sort the list by
+     * @param ascending do you want ascending order
+     * @param nullsFirst do you want nulls first
+     */
+    public static <T> void  sort( T[] array, String sortBy, boolean ascending, boolean nullsFirst ) {
+        if ( array == null || array.length == 0 ) {
+            return;
+        }
+
+        if (sortBy.equals("this")) {
+
+            Arrays.sort(array, thisUniversalComparator(ascending, nullsFirst));
+            return;
+        }
+
+        Object object = array[0];
+
+        Map<String, FieldAccess> fields = null;
+
+        if (object != null) {
+            fields = BeanUtils.getFieldsFromObject( object );
+        } else {
+            for (int index=1; index< array.length; index++) {
+
+                object = array[index];
+                if (object!=null) {
+                    fields = BeanUtils.getFieldsFromObject( object );
+                    break;
+                }
+            }
+
+        }
+
+
+        if (fields!=null) {
+
+            final FieldAccess field = fields.get( sortBy );
+
+            if ( field != null ) {
+
+                Arrays.sort( array, Sorting.universalComparator(field, ascending, nullsFirst) );
+
+            }
+        }
+    }
 
 
     /**
@@ -71,23 +186,73 @@ public class Sorting {
     }
 
     /**
+     * Sorts a array based on the natural ascending order.
+     * This puts null values last.
+     * @param array the list you want to sort.
+     */
+    public static <T> void sort( T[] array ) {
+        sort( array, "this", true, false);
+    }
+
+    /**
+     * Sorts a collection based on the natural ascending order.
+     * This puts null values last.
+     * @param collection the list you want to sort.
+     */
+    public static <T> Collection<T> sort( Class<T> componentType, Collection<T> collection ) {
+        return sort( componentType, collection, "this", true, false);
+    }
+
+    /**
+     * Sorts a iterable based on the natural ascending order.
+     * This puts null values last.
+     * @param iterable the list you want to sort.
+     */
+    public static <T> Iterable<T> sort( Class<T> componentType, Iterable<T> iterable ) {
+        return sort( componentType, iterable, "this", true, false);
+    }
+
+
+
+
+    /**
      * Sorts a list based on the natural ascending order and puts null values first.
      * @param list the list you want to sort.
      */
     public static void sortNullsFirst( List list ) {
 
-        sort(list, "this", true, false);
+        sort(list, "this", true, true);
     }
 
-
-    /** Takes a list an an array or sorts
-     *
-     * @param list list to sorts
-     * @param sorts what you want to sore the list by
+    /**
+     * Sorts an array based on the natural ascending order and puts null values first.
+     * @param array the list you want to sort.
      */
-    public static void sort(List list, Sort... sorts) {
-        Sort.sorts(sorts).sort(list);
+    public static <T> void sortNullsFirst( T[] array ) {
+
+        sort(array, "this", true, true);
     }
+
+    /**
+     * Sorts a collection based on the natural ascending order.
+     * This puts null values first.
+     * @param collection the collection you want to sort.
+     */
+    public static <T> Collection<T> sortNullsFirst( Class<T> componentType, Collection<T> collection ) {
+        return sort( componentType, collection, "this", true, true);
+    }
+
+
+    /**
+     * Sorts an iterable based on the natural ascending order.
+     * This puts null values first.
+     * @param iterable the list you want to sort.
+     */
+    public static <T> Iterable<T> sortNullsFirst( Class<T> componentType, Iterable<T> iterable ) {
+        return sort( componentType, iterable, "this", true, true);
+    }
+
+
 
 
 
@@ -101,10 +266,41 @@ public class Sorting {
 
     }
 
+    /**
+     * Sorts a array based on the natural order descending order.
+     * This puts null values last.
+     * @param array the list you want to sort.
+     */
+    public static <T> void sortDesc( T[] array ) {
+        sort( array, "this", false, false);
+
+    }
+
+    /**
+     * Sorts a iterable based on the natural descending order.
+     * This puts null values last.
+     * @param iterable the iterable you want to sort.
+     */
+    public static <T> Iterable<T> sortDesc( Class<T> componentType, Iterable<T> iterable ) {
+        return sort( componentType, iterable, "this", false, false);
+    }
+
+    /**
+     * Sorts a collection based on the natural descending order.
+     * This puts null values last.
+     * @param collection the collection you want to sort.
+     */
+    public static <T> Collection<T> sortDesc( Class<T> componentType, Collection<T> collection ) {
+        return sort( componentType, collection, "this", false, false);
+    }
+
+
+
+
 
     /**
      * Sorts a list based on the natural order descending order.
-     * This puts null values last.
+     * This puts null values first.
      * @param list the list you want to sort.
      */
     public static void sortDescNullsFirst( List list ) {
@@ -112,11 +308,42 @@ public class Sorting {
 
     }
 
+
+
+    /**
+     * Sorts a array based on the natural order descending order.
+     * This puts null values first.
+     * @param array the list you want to sort.
+     */
+    public static <T> void sortDescNullsFirst( T[] array ) {
+        sort( array, "this", false, true);
+
+    }
+
+    /**
+     * Sorts a iterable based on the natural descending order.
+     * This puts null values first.
+     * @param iterable the iterable you want to sort.
+     */
+    public static <T> Iterable<T> sortDescNullsFirst( Class<T> componentType, Iterable<T> iterable ) {
+        return sort( componentType, iterable, "this", false, true);
+    }
+
+    /**
+     * Sorts a collection based on the natural descending order.
+     * This puts null values first.
+     * @param collection the collection you want to sort.
+     */
+    public static <T> Collection<T> sortDescNullsFirst( Class<T> componentType, Collection<T> collection ) {
+        return sort( componentType, collection, "this", false, true);
+    }
+
+
     /**
      *
-     * Sorts lists Descending
+     * Sorts lists ascending
      * Nulls last.
-     *      * @param list the list you want to sort
+     * @param list the list you want to sort
      * @param sortBy what you want to sort the list by
      */
     public static void sort( List list, String sortBy ) {
@@ -124,9 +351,48 @@ public class Sorting {
     }
 
 
+
+
     /**
      *
-     * Sorts lists Descending
+     * Sorts array ascending
+     * Nulls last.
+     * @param array the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> void sort( T[] array, String sortBy ) {
+        sort( array, sortBy, true, false);
+
+    }
+
+    /**
+     *
+     * Sorts iterable ascending
+     * Nulls last.
+     * @param iterable the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Iterable<T> sort( Class<T> componentType, Iterable<T> iterable, String sortBy  ) {
+        return sort( componentType, iterable, sortBy, true, false);
+    }
+
+
+    /**
+     *
+     * Sorts collection ascending
+     * Nulls last.
+     * @param collection the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Collection<T> sort( Class<T> componentType, Collection<T> collection, String sortBy ) {
+        return sort( componentType, collection, sortBy, true, false);
+    }
+
+
+
+    /**
+     *
+     * Sorts lists Ascending Null first
      * Nulls first.
      *
      * @param list the list you want to sort
@@ -135,6 +401,44 @@ public class Sorting {
     public static void sortNullsFirst( List list, String sortBy ) {
         sort( list, sortBy, true, true);
     }
+
+
+
+    /**
+     *
+     * Sorts array ascending
+     * Nulls first.
+     * @param array the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> void sortNullsFirst( T[] array, String sortBy ) {
+        sort( array, sortBy, true, true);
+
+    }
+
+    /**
+     *
+     * Sorts iterable ascending
+     * Nulls first.
+     * @param iterable the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Iterable<T> sortNullsFirst( Class<T> componentType, Iterable<T> iterable, String sortBy  ) {
+        return sort( componentType, iterable, sortBy, true, true);
+    }
+
+
+    /**
+     *
+     * Sorts collection ascending
+     * Nulls first.
+     * @param collection the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Collection<T> sortNullsFirst( Class<T> componentType, Collection<T> collection, String sortBy ) {
+        return sort( componentType, collection, sortBy, true, true);
+    }
+
 
     /**
      *
@@ -147,6 +451,45 @@ public class Sorting {
     }
 
 
+
+
+    /**
+     *
+     * Sorts array Descending
+     * Nulls last.
+     * @param array the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> void sortDesc( T[] array, String sortBy ) {
+        sort( array, sortBy, false, false);
+
+    }
+
+    /**
+     *
+     * Sorts iterable ascending
+     * Nulls last.
+     * @param iterable the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Iterable<T> sortDesc( Class<T> componentType, Iterable<T> iterable, String sortBy  ) {
+        return sort( componentType, iterable, sortBy, false, false);
+    }
+
+
+    /**
+     *
+     * Sorts collection ascending
+     * Nulls last.
+     * @param collection the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Collection<T> sortDesc( Class<T> componentType, Collection<T> collection, String sortBy ) {
+        return sort( componentType, collection, sortBy, false, false);
+    }
+
+
+
     /**
      *
      * Sorts lists Descending
@@ -156,6 +499,43 @@ public class Sorting {
     public static void sortDescNullsFirst( List list, String sortBy ) {
         sort( list, sortBy, false, true);
     }
+
+
+    /**
+     *
+     * Sorts array Descending
+     * Nulls first.
+     * @param array the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> void sortDescNullsFirst( T[] array, String sortBy ) {
+        sort( array, sortBy, false, true);
+
+    }
+
+    /**
+     *
+     * Sorts iterable ascending
+     * Nulls first.
+     * @param iterable the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Iterable<T> sortDescNullsFirst( Class<T> componentType, Iterable<T> iterable, String sortBy  ) {
+        return sort( componentType, iterable, sortBy, false, true);
+    }
+
+
+    /**
+     *
+     * Sorts collection ascending
+     * Nulls first.
+     * @param collection the list you want to sort
+     * @param sortBy what you want to sort the array by
+     */
+    public static <T> Collection<T> sortDescNullsFirst( Class<T> componentType, Collection<T> collection, String sortBy ) {
+        return sort( componentType, collection, sortBy, false, true);
+    }
+
 
 
     /**

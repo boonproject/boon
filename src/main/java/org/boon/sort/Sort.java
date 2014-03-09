@@ -1,11 +1,13 @@
 package org.boon.sort;
 
 
+import org.boon.Lists;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 
 import java.util.*;
 
+import static org.boon.core.Conversions.toArray;
 import static org.boon.sort.UniversalComparator.universalComparator;
 
 /**
@@ -182,6 +184,77 @@ public class Sort {
         Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject( item );
         Collections.sort( list, this.comparator( fields ) );
     }
+
+
+    /**
+     * Sort and you look up the reflection fields.
+     * @param collection the collection to sort
+     */
+    public <T> Collection<T> sort( Class<T> componentClass, Collection<T> collection ) {
+
+        if (collection instanceof List) {
+            sort((List) collection);
+            return collection;
+        }
+
+        if ( collection == null || collection.size() == 0 ) {
+            return Collections.EMPTY_LIST;
+        }
+
+
+        Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject( componentClass );
+        T[] array = toArray(componentClass, collection);
+        Arrays.sort( array, this.comparator( fields ) );
+
+        if (collection instanceof Set){
+            return new LinkedHashSet<>( Lists.list(array));
+        } else {
+            return Lists.list(array);
+        }
+    }
+
+
+
+    /**
+     * Sort and you look up the reflection fields.
+     * @param iterable the collection to sort
+     */
+    public <T> Iterable<T> sort( Class<T> componentClass, Iterable<T> iterable ) {
+
+        if (iterable instanceof List) {
+            sort((List) iterable);
+            return iterable;
+        }
+
+        if (iterable instanceof Collection) {
+            return  sort(componentClass, (Collection) iterable);
+        }
+
+        if ( iterable == null  ) {
+            return Collections.EMPTY_LIST;
+        }
+
+        List<T> list = Lists.list(iterable);
+        sort(list);
+        return list;
+
+    }
+
+    /**
+     * Sort and you look up the reflection fields.
+     * @param array
+     */
+    public <T> void sort( T[] array ) {
+        if ( array == null || array.length == 0 ) {
+            return;
+        }
+
+        Object item = array[0];
+
+        Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject( item );
+        Arrays.sort( array, this.comparator( fields ) );
+    }
+
 
     /** This is what really does the magic. This is the comparator creator. */
     public Comparator comparator( Map<String, FieldAccess> fields ) {

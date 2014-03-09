@@ -1103,22 +1103,31 @@ public class Conversions {
     }
 
 
-    public static Object toArray( Class<?> componentType, Collection<?> value ) {
-        Object array = Array.newInstance( componentType, value.size() );
-        @SuppressWarnings ( "unchecked" )
-        Iterator<Object> iterator = ( Iterator<Object> ) value.iterator();
-        int index = 0;
-        while ( iterator.hasNext() ) {
-            BeanUtils.idx ( array, index, iterator.next () );
-            index++;
-        }
-        return array;
+//    public static Object toArray( Class<?> componentType, Collection<?> value ) {
+//        Object array = Array.newInstance( componentType, value.size() );
+//        @SuppressWarnings ( "unchecked" )
+//        Iterator<Object> iterator = ( Iterator<Object> ) value.iterator();
+//        int index = 0;
+//        while ( iterator.hasNext() ) {
+//            BeanUtils.idx ( array, index, iterator.next () );
+//            index++;
+//        }
+//        return array;
+//    }
+
+
+    public static <T> T[] toArray( Class<T> componentType, Collection<T> collection ) {
+        T[] array = (T[]) Array.newInstance(componentType, collection.size());
+        return collection.toArray(array);
     }
+
+//    public static <V> V[] array( Class<V> type, final Collection<V> array ) {
+//        return ( V[] ) Conversions.toArray( type, array );
+//    }
 
     public static <V> V[] array( Class<V> type, final Collection<V> array ) {
-        return ( V[] ) Conversions.toArray( type, array );
+        return Conversions.toArray( type, array );
     }
-
 
     public static Date toDate( Object object ) {
 

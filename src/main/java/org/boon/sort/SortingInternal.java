@@ -2,7 +2,6 @@ package org.boon.sort;
 
 import org.boon.Exceptions;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.core.value.ValueList;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +59,7 @@ public class SortingInternal {
                 return;
             }
 
-            /* If you did sort by this, then sort by the field. */
+            /* If you did not sort by "this", then sort by the field. */
 
             final FieldAccess field = fields.get( sortBy );
 
