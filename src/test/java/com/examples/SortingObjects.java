@@ -7,7 +7,6 @@ import static org.boon.sort.Sorting.*;
 
 import static org.boon.sort.Ordering.*;
 
-import org.boon.core.Conversions;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -273,21 +272,9 @@ public class SortingObjects {
 
         puts(multiply('_', 30), "From LIST MAPS", multiply('_', 30), "\n");
 
-        List<?> employeeObjects = (List<Employee>) indexOf(departmentObjects, "employees");
+        List<?> employeeObjects = (List<?>) indexOf(departmentObjects, "employees");
 
         sorting(employeeObjects, departmentObjects);
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         puts(multiply('_', 30), "From JSON", multiply('_', 30), "\n");
