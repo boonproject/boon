@@ -1,9 +1,6 @@
 package org.boon.sort;
 
-import org.boon.Boon;
-import org.boon.Exceptions;
-import org.boon.Logger;
-import org.boon.Str;
+import org.boon.*;
 import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.Conversions;
@@ -146,7 +143,7 @@ public class Sorting {
      * @param sortBy what you want to sort the list by
      */
     public static void sortDesc( List list, String sortBy ) {
-        sort(list, "this", false, false);
+        sort(list, sortBy, false, false);
     }
 
 
@@ -157,7 +154,7 @@ public class Sorting {
      * @param sortBy what you want to sort the list by
      */
     public static void sortDescNullsFirst( List list, String sortBy ) {
-        sort( list, "this", false, true);
+        sort( list, sortBy, false, true);
     }
 
 

@@ -2,12 +2,12 @@ package com.examples;
 
 import static org.boon.sort.Sort.sortBy;
 import static org.boon.sort.Sort.sortByDescending;
-import static org.boon.sort.Sort.sorts;
 import static org.boon.sort.Sorting.*;
 
-import org.boon.Lists;
+import static org.boon.sort.Ordering.*;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.boon.Boon.*;
@@ -249,9 +249,11 @@ public class SortingObjects {
                             "contactInfo", map("phoneNumbers", list("555-555-9999")))
 
             )
-            )
-
-    );
+            ),
+            map("name", "Manufacturing", "employees", Collections.EMPTY_LIST),
+            map("name", "Sales", "employees", Collections.EMPTY_LIST),
+            map("name", "Marketing", "employees", Collections.EMPTY_LIST)
+            );
     static boolean ok;
 
 
@@ -263,8 +265,6 @@ public class SortingObjects {
         List<Employee> employees = (List<Employee>) indexOf(departmentsList, "employees");
 
         sorting(employees, departmentsList);
-
-
 
         puts(multiply('_', 30), "From LIST MAPS", multiply('_', 30), "\n");
 
@@ -294,16 +294,60 @@ public class SortingObjects {
         List<?> jsonDepartments = (List<?>) jsonObject;
         List<?> jsonEmployees = (List<Employee>) indexOf(jsonDepartments, "employees");
 
-        sorting(jsonDepartments, departmentObjects);
+        sorting(jsonEmployees, jsonDepartments);
 
 
 
+        Employee employee = employees.get(5);
+
+
+        Employee employee2 = search(employees, employee);
+        int index = searchForIndex(employees, employee);
+
+        putl("This employee was found at ", index, employee2, employee, '\n', employees);
 
 
 
     }
 
     private static void sorting(List<?> employees, List<?> departmentList) {
+
+
+
+
+        putl ( "Max employee by natural order",
+                max(employees) );
+
+
+        putl ( "Greatest top 5 employee by natural order",
+                greatest(employees, 5) );
+
+
+        putl ( "Min employee by natural order",
+                min(employees) );
+
+
+        putl ( "Least top 5 employee by natural order",
+                least(employees, 5) );
+
+
+        putl ( "Who makes the most?",
+                max(employees, "salary") );
+
+
+        putl ( "Who are the top five earners?",
+                greatest(employees, "salary", 5) );
+
+
+        putl ( "Who makes the least?",
+                min(employees, "salary") );
+
+
+        putl ( "Who are the lowest paid?",
+                least(employees, "salary", 5) );
+
+
+
 
 
         sort( employees );
@@ -314,20 +358,21 @@ public class SortingObjects {
         putl( "Sorted employees by lastName", employees);
 
 
-        sort( departmentsList );
+        sort( departmentList );
 
-        putl( "Sorted department in natural order", departmentsList);
+        putl( "Sorted department in natural order", departmentList);
 
 
         sort( employees, sortBy( "department.name" ),
                          sortByDescending( "lastName" ),
                          sortBy( "firstName" ) );
 
-        putl("Sort employees by department Name, lastName and firstName", employees);
+        putl("Sort employees by department name, descending lastName and" +
+                " ascending firstName", employees);
 
 
-        sort( employees,
-                sortBy("contactInfo.phoneNumbers[0]") );
+        sort(employees,
+                sortBy("contactInfo.phoneNumbers[0]"));
 
 
         putl("Sort by phone numbers", employees);
