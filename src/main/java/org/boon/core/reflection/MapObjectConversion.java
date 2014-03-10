@@ -503,6 +503,7 @@ public class MapObjectConversion {
                 continue;
             }
 
+            /** Check the view if it is active. */
             if ( view != null ) {
                 if ( !field.isViewActive( view ) ) {
                     continue;
@@ -510,6 +511,9 @@ public class MapObjectConversion {
             }
 
 
+            /** Check respects ignore it is active.
+             * Then needs to be a chain of responsibilities.
+             * */
             if ( respectIgnore ) {
                 if ( field.ignore() ) {
                     continue;
@@ -533,18 +537,18 @@ public class MapObjectConversion {
                 continue;
             }
 
-            if ( value.getClass() == field.type() ) {
+            if ( value.getClass() == field.type() || field.type() == Object.class) {
                 field.setObject( toObject, value );
             } else if ( Typ.isBasicType( value ) ) {
 
-                field.setValue( toObject, value );
+                field.setValue(toObject, value);
             } else if ( value instanceof Value ) {
-                field.setValue( toObject, value );
+                field.setValue(toObject, value);
             }
             /* See if it is a map<string, object>, and if it is then process it. */
             //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
             else if ( value instanceof Map ) {
-                setFieldValueFromMap( respectIgnore, view, fieldsAccessor, ignoreSet, toObject, field, value );
+                setFieldValueFromMap(respectIgnore, view, fieldsAccessor, ignoreSet, toObject, field, value);
             } else if ( value instanceof Collection ) {
                 /*It is a collection so process it that way. */
                 processCollectionFromMapUsingFields( respectIgnore, view, fieldsAccessor, toObject, field, ( Collection ) value, ignoreSet );
