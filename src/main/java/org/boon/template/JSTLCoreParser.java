@@ -27,6 +27,42 @@
  */
 
 package org.boon.template;
+/*
+ * Copyright 2013-2014 Richard M. Hightower
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  		http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * __________                              _____          __   .__
+ * \______   \ ____   ____   ____   /\    /     \ _____  |  | _|__| ____    ____
+ *  |    |  _//  _ \ /  _ \ /    \  \/   /  \ /  \\__  \ |  |/ /  |/    \  / ___\
+ *  |    |   (  <_> |  <_> )   |  \ /\  /    Y    \/ __ \|    <|  |   |  \/ /_/  >
+ *  |______  /\____/ \____/|___|  / \/  \____|__  (____  /__|_ \__|___|  /\___  /
+ *         \/                   \/              \/     \/     \/       \//_____/
+ *      ____.                     ___________   _____    ______________.___.
+ *     |    |____ ___  _______    \_   _____/  /  _  \  /   _____/\__  |   |
+ *     |    \__  \\  \/ /\__  \    |    __)_  /  /_\  \ \_____  \  /   |   |
+ * /\__|    |/ __ \\   /  / __ \_  |        \/    |    \/        \ \____   |
+ * \________(____  /\_/  (____  / /_______  /\____|__  /_______  / / ______|
+ *               \/           \/          \/         \/        \/  \/
+ */
+
+import org.boon.core.reflection.FastStringUtils;
+import org.boon.primitive.CharScanner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.boon.Boon.putl;
+
 
 /**
  * @author Rick Hightower
@@ -318,7 +354,249 @@ package org.boon.template;
  * There is no logic in this parser. Just an array of token positions.
  * It is up to BoonTemplate on how to interpret those tokens.
  */
-public class TemplateParser {
+public class JSTLCoreParser {
+
+
+    char charArray[];
+
+    int index;
+    int ch;
+
+
+
+    private List<Token> tokenList;
+
+
+    public static class Token {
+
+        int start;
+        int stop;
+        TokenTypes type;
+
+        public Token(int start, int stop, TokenTypes type) {
+            this.start = start;
+            this.stop = stop;
+            this.type = type;
+        }
+
+        public Token() {
+        }
+
+        public static Token text(int start, int stop) {
+            Token token = new Token();
+            token.start = start;
+            token.stop = stop;
+            token.type = TokenTypes.TEXT;
+            return token;
+        }
+
+
+        public static Token commandStart(int start, int stop) {
+            Token token = new Token();
+            token.start = start;
+            token.stop = stop;
+            token.type = TokenTypes.COMMAND;
+            return token;
+        }
+
+        public static Token commandBody(int start, int stop) {
+            Token token = new Token();
+            token.start = start;
+            token.stop = stop;
+            token.type = TokenTypes.COMMAND_BODY;
+            return token;
+        }
+
+        public static Token expression(int start, int stop) {
+            Token token = new Token();
+            token.start = start;
+            token.stop = stop;
+            token.type = TokenTypes.EXPRESSION;
+            return token;
+        }
+
+        @Override
+        public String toString() {
+            return "Token{" +
+                    "start=" + start +
+                    ", stop=" + stop +
+                    ", type=" + type +
+                    '}';
+        }
+    }
+
+    public static enum  TokenTypes {
+        COMMAND(""),
+        COMMAND_BODY(""),
+        EXPRESSION(""),
+        COMMAND_START("<c:"),
+
+        COMMAND_END_START(">"),
+        COMMAND_START_END("</c:"),
+        EXPRESSION_START("${"),
+        EXPRESSION_END("}"),
+        TEXT("");
+
+        TokenTypes(String str) {
+            this.chars = FastStringUtils.toCharArray(str);
+        }
+
+        char[] chars;
+    }
+
+
+
+    public void TemplateParser() {
+
+    }
+
+    public void parse(String string) {
+
+        this.charArray = FastStringUtils.toCharArray(string);
+        this.index = 0;
+
+        tokenList = new ArrayList();
+
+
+        processLoop();
+    }
+
+    private void processLoop() {
+
+        int startIndex = 0;
+
+
+        for (; index< charArray.length; index++) {
+            ch = charArray[index];
+
+            if (ch=='<') {
+                index++;
+                ch = charArray[index];
+                if (ch=='c') {
+                    index++;
+                    ch = charArray[index];
+                    if (ch==':') {
+                        index++;
+                        handleCommand();
+                    }
+                }
+            }else if (ch=='$') {
+                index++;
+                ch = charArray[index];
+                if (ch=='{'){
+                    index++;
+                    handleExpression();
+                }
+            }
+        }
+    }
+
+
+    private void handleExpression() {
+
+        int startIndex = index;
+        index = CharScanner.findChars(TokenTypes.EXPRESSION_END.chars, index, charArray);
+        if (index > 0 ) {
+            this.tokenList.add(Token.expression(startIndex, index));
+            index += TokenTypes.EXPRESSION_END.chars.length;
+        }
+    }
+
+
+
+    private void handleCommand() {
+
+
+        int startIndex = index + 1;
+        index = CharScanner.findChars(TokenTypes.COMMAND_END_START.chars, index, charArray);
+        if (index == -1 ) {
+            return;
+        }
+
+        //Add this command start to the token list.
+        this.tokenList.add(Token.commandStart(startIndex, index));
+
+
+        index += TokenTypes.COMMAND_END_START.chars.length;
+
+
+        Token commandBody = Token.commandBody(index, -1);
+        tokenList.add(commandBody);
+
+
+
+        for (; index< charArray.length; index++) {
+            ch = charArray[index];
+
+            if (ch=='<') {
+                index++;
+                ch = charArray[index];
+                if (ch=='c') {
+                    index++;
+                    ch = charArray[index];
+                    if (ch==':') {
+                        index++;
+                        handleCommand();
+                    }
+                } else if (ch=='/') {
+                    index++;
+                    ch = charArray[index];
+                    if (ch=='c') {
+                        index++;
+                        ch = charArray[index];
+                        if (ch==':') {
+                            index++;
+                            index = CharScanner.findChar('>', charArray);
+                        }
+
+                    }
+                }
+            }else if (ch=='$') {
+                index++;
+                ch = charArray[index];
+                if (ch=='{'){
+                    index++;
+                    handleExpression();
+                }
+            }
+        }
+
+    }
+
+    public static void main (String... args) {
+
+//        JSTLCoreParser parser = new JSTLCoreParser();
+        //            01234567890123456789012345678
+        //parser.parse("Hi Mom {{fine}} How are you?");
+
+//        putl(parser.tokenList);
+
+
+
+
+        //            01234567890123456789012345678
+//        parser.parse(
+              /*
+ 0123456789012345678901234567890123456789
+                */
+//                "Hi Mom <c:if test>${fine}}</c:if> How are you?");
+//
+//        putl(parser.tokenList);
+//
+//
+//
+//
+//        //            01234567890123456789012345678
+//        parser.parse(
+//              /*
+// 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+//                */
+//                "Hi Mom {{#if test}} Good {{fine}} Good {{#if}}boyyah{{/if}} {{/if}} How are you?");
+//
+//
+//        putl(parser.tokenList);
+    }
 
 
 }
+

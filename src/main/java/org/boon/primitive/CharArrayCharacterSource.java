@@ -97,6 +97,7 @@ public class CharArrayCharacterSource implements CharacterSource {
        return EMPTY_CHARS;
     }
 
+
     @Override
     public boolean hadEscape() {
         return foundEscape;
