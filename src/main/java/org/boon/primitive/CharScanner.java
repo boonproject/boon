@@ -29,13 +29,12 @@
 package org.boon.primitive;
 
 
-import org.boon.Exceptions;
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.di.ProviderInfo;
 
 import java.util.Arrays;
 
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 
@@ -1354,6 +1353,40 @@ public class CharScanner {
 
     public static int findChars(char[] matchChars, char[] line) {
         return findChars(matchChars, 0, line);
+    }
+
+    public static boolean matchChars(char[] matchChars, int startIndex, char[] line) {
+
+        if ((line.length - startIndex) < matchChars.length) {
+            return false;
+        }
+
+        int i = findChar(matchChars[0], startIndex, line);
+
+        if (i == -1) {
+            return false;
+        }
+
+
+
+        loop:
+        for (; i < line.length; i++) {
+            for (int j = 0; j < matchChars.length; j++) {
+                char c = matchChars[j];
+                if (c == line[i]) {
+                    if (j+1 == matchChars.length) {
+                        return true;
+                    }
+                    i++;
+                    continue;
+                } else {
+                    i++;
+                    break loop;
+                }
+            }
+        }
+
+        return false;
     }
 
     public static int findChars(char[] matchChars, int startIndex, char[] line) {

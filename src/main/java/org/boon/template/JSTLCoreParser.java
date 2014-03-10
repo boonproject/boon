@@ -463,31 +463,44 @@ public class JSTLCoreParser {
 
     private void processLoop() {
 
-        int startIndex = 0;
+
+        Token text = Token.text(index, -1);
 
 
         for (; index< charArray.length; index++) {
             ch = charArray[index];
 
-            if (ch=='<') {
-                index++;
-                ch = charArray[index];
-                if (ch=='c') {
-                    index++;
-                    ch = charArray[index];
-                    if (ch==':') {
-                        index++;
-                        handleCommand();
-                    }
-                }
-            }else if (ch=='$') {
-                index++;
-                ch = charArray[index];
-                if (ch=='{'){
-                    index++;
+            if ( ch == '<' ) {
+                   if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
+
+
+                       text = textToken(text);
+
+                       index+=TokenTypes.COMMAND_START.chars.length;
+                       handleCommand();
+                   }
+            }  else if (ch=='$') {
+                if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
+
+
+                    text = textToken(text);
+
+
+                    index += TokenTypes.EXPRESSION_START.chars.length;
                     handleExpression();
+
+                }
+            } else {
+                if (text == null) {
+
+                    text = Token.text(index, -1);
                 }
             }
+        }
+
+        if (text!=null) {
+            text.stop = charArray.length;
+            this.tokenList.add( text );
         }
     }
 
@@ -507,7 +520,7 @@ public class JSTLCoreParser {
     private void handleCommand() {
 
 
-        int startIndex = index + 1;
+        int startIndex = index;
         index = CharScanner.findChars(TokenTypes.COMMAND_END_START.chars, index, charArray);
         if (index == -1 ) {
             return;
@@ -524,62 +537,87 @@ public class JSTLCoreParser {
         tokenList.add(commandBody);
 
 
+        Token text = Token.text(index, -1);
+
+
 
         for (; index< charArray.length; index++) {
             ch = charArray[index];
 
             if (ch=='<') {
-                index++;
-                ch = charArray[index];
-                if (ch=='c') {
-                    index++;
-                    ch = charArray[index];
-                    if (ch==':') {
-                        index++;
-                        handleCommand();
-                    }
-                } else if (ch=='/') {
-                    index++;
-                    ch = charArray[index];
-                    if (ch=='c') {
-                        index++;
-                        ch = charArray[index];
-                        if (ch==':') {
-                            index++;
-                            index = CharScanner.findChar('>', charArray);
-                        }
 
-                    }
-                }
-            }else if (ch=='$') {
-                index++;
-                ch = charArray[index];
-                if (ch=='{'){
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
+
+
+                    text = textToken(text);
+
+                    index+=TokenTypes.COMMAND_START.chars.length;
+                    handleCommand();
+
+                } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.chars, index, this.charArray)) {
+
+
+                    text = textToken(text);
+
+                    commandBody.stop = index;
                     index++;
+                    index = CharScanner.findChar('>', index, charArray);
+                    break;
+
+                }
+
+            } else if (ch=='$') {
+                if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
+
+                    text = textToken(text);
+                    index += TokenTypes.EXPRESSION_START.chars.length;
                     handleExpression();
+
+                }
+            }
+            else {
+                if (text == null) {
+
+                    text = Token.text(index, -1);
                 }
             }
         }
 
+
+
+    }
+
+    private Token textToken(Token text) {
+        if (text!=null) {
+            text.stop = index;
+            if (text.start!=text.stop) {
+                this.tokenList.add(text);
+            }
+            text = null;
+        }
+        return text;
     }
 
     public static void main (String... args) {
 
-//        JSTLCoreParser parser = new JSTLCoreParser();
-        //            01234567890123456789012345678
-        //parser.parse("Hi Mom {{fine}} How are you?");
+        JSTLCoreParser parser = new JSTLCoreParser();
 
-//        putl(parser.tokenList);
-
-
-
-
-        //            01234567890123456789012345678
 //        parser.parse(
-              /*
- 0123456789012345678901234567890123456789
-                */
-//                "Hi Mom <c:if test>${fine}}</c:if> How are you?");
+///*
+// 01234567890123456789012345678 */
+//"Hi Mom ${fine} How are you?");
+//
+//        putl(parser.tokenList);
+//
+//
+//
+//
+//        parser.parse(
+//              /*
+//          10        20        30        40       50         60
+// 0123456789012345678901234567890123456789012345678901234567890
+//                */
+//"Hi Mom <c:if test>abc ${fine} abc </c:if> How are you?");
 //
 //        putl(parser.tokenList);
 //
@@ -589,12 +627,29 @@ public class JSTLCoreParser {
 //        //            01234567890123456789012345678
 //        parser.parse(
 //              /*
-// 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+//
+//          10        20        30        40       50         60         70       80
+// 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
 //                */
-//                "Hi Mom {{#if test}} Good {{fine}} Good {{#if}}boyyah{{/if}} {{/if}} How are you?");
+//"Hi Mom <c:if test> Good <c:if test> Good ${fine} good </c:if> boyyah <c:/if> How are you?");
+//
 //
 //
 //        putl(parser.tokenList);
+
+
+        //            01234567890123456789012345678
+        parser.parse(
+              /*
+
+           10        20        30        40       50         60         70       80
+  012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+                */
+ "<c:if test>         <c:if test>    g    ${fine}   </c:if>   g         </c:if>   How are you?");
+
+        putl(parser.tokenList);
+
+
     }
 
 
