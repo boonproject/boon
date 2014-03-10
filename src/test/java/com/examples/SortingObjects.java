@@ -20,7 +20,7 @@ import static org.boon.Lists.lazyAdd;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.Ok.okOrDie;
-import static org.boon.core.reflection.BeanUtils.indexOf;
+import static org.boon.core.reflection.BeanUtils.atIndex;
 import static org.boon.primitive.Chr.multiply;
 
 public class SortingObjects {
@@ -125,7 +125,7 @@ public class SortingObjects {
                     "id=" + id +
                     ", salary=" + salary +
                     ", department=" + (department == null ? "NONE" : department.getName()) +
-                    ", phone number=" + indexOf (this, "contactInfo.phoneNumbers[0]") +
+                    ", phone number=" + atIndex(this, "contactInfo.phoneNumbers[0]") +
                     ", firstName='" + firstName + '\'' +
                     ", lastName='" + lastName + '\'' +
                     "}";
@@ -195,7 +195,7 @@ public class SortingObjects {
         public String toString() {
             return "Department{" +
                     "name='" + name + '\'' +
-                    ", employees=" + indexOf(employees, "id") +
+                    ", employees=" + atIndex(employees, "id") +
                     '}';
         }
     }
@@ -266,13 +266,13 @@ public class SortingObjects {
 
         puts(multiply('_', 30), "From JAVA Objects", multiply('_', 30), "\n");
 
-        List<Employee> employees = (List<Employee>) indexOf(departmentsList, "employees");
+        List<Employee> employees = (List<Employee>) atIndex(departmentsList, "employees");
 
         sorting(employees, departmentsList);
 
         puts(multiply('_', 30), "From LIST MAPS", multiply('_', 30), "\n");
 
-        List<?> employeeObjects = (List<?>) indexOf(departmentObjects, "employees");
+        List<?> employeeObjects = (List<?>) atIndex(departmentObjects, "employees");
 
         sorting(employeeObjects, departmentObjects);
 
@@ -284,7 +284,7 @@ public class SortingObjects {
         puts(json);
         Object jsonObject = fromJson(json);
         List<?> jsonDepartments = (List<?>) jsonObject;
-        List<?> jsonEmployees = (List<Employee>) indexOf(jsonDepartments, "employees");
+        List<?> jsonEmployees = (List<Employee>) atIndex(jsonDepartments, "employees");
 
         sorting(jsonEmployees, jsonDepartments);
 

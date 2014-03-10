@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import static org.boon.core.reflection.BeanUtils.indexOf;
+import static org.boon.core.reflection.BeanUtils.atIndex;
 
 /**
  * Created by Richard on 3/8/14.
@@ -47,11 +47,11 @@ public final class UniversalComparator implements Comparator<Object> {
         if (byPath || o1 instanceof Map) {
                         /* Grab the values of the sort field. */
             if ( sortType == SortType.ASCENDING ) {
-                value1 = indexOf(o1, sortBy);
-                value2 = indexOf(o2, sortBy);
+                value1 = atIndex(o1, sortBy);
+                value2 = atIndex(o2, sortBy);
             } else {
-                value1 = indexOf(o2, sortBy);
-                value2 = indexOf(o1, sortBy);
+                value1 = atIndex(o2, sortBy);
+                value2 = atIndex(o1, sortBy);
             }
         }
 

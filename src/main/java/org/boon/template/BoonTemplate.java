@@ -102,7 +102,7 @@ import static org.boon.primitive.CharScanner.*;
  fn:containsIgnoreCase()	Tests if an input string contains the specified substring in a case insensitive way.
  fn:endsWith()	Tests if an input string ends with the specified suffix.
  fn:escapeXml()	Escapes characters that could be interpreted as XML markup.
- fn:indexOf()	Returns the index withing a string of the first occurrence of a specified substring.
+ fn:atIndex()	Returns the index withing a string of the first occurrence of a specified substring.
  fn:join()	Joins all elements of an array into a string.
  fn:length()	Returns the number of items in a collection, or the number of characters in a string.
  fn:replace()	Returns a string resulting from replacing in an input string all occurrences with a given string.

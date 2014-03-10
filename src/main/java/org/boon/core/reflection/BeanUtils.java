@@ -303,6 +303,19 @@ public class BeanUtils {
         return getPropertyValue( object, properties );
     }
 
+
+    /**
+     * Get property value
+     *
+     * @deprecated use atIndex or idx.
+     * @param object
+     * @param path   in dotted notation
+     * @return
+     */
+    public static Object indexOf(Object object, String path) {
+        return atIndex(object, path);
+    }
+
     /**
      * Get property value
      *
@@ -310,7 +323,7 @@ public class BeanUtils {
      * @param path   in dotted notation
      * @return
      */
-    public static Object indexOf( Object object, String path ) {
+    public static Object atIndex(Object object, String path) {
 
 
         String[] properties = StringScanner.splitByCharsNoneEmpty( path, '.', '[', ']', '/' );
@@ -841,7 +854,7 @@ public class BeanUtils {
             }
             return list;
         } else {
-            return indexOf( object, key );
+            return atIndex(object, key);
         }
     }
 
