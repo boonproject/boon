@@ -16,7 +16,7 @@
   ~ __________                              _____          __   .__
   ~ \______   \ ____   ____   ____   /\    /     \ _____  |  | _|__| ____    ____
   ~  |    |  _//  _ \ /  _ \ /    \  \/   /  \ /  \\__  \ |  |/ /  |/    \  / ___\
-  ~  |    |   (  <_> |  <_> )   |  \ /\  /    Y    \/ __ \|    <| |   |  \/ /_/  >
+  ~  |    |   (  <_> |  <_> )   |  \ /\  /    Y    \/ __ \|    <| | |  \/ /_/  >
   ~  |______  /\____/ \____/|___|  / \/  \____|__  (____  /__|_ \__|___|  /\___  /
   ~         \/                   \/              \/     \/     \/       \//_____/
   ~      ____.                     ___________   _____    ______________.___.
@@ -39,7 +39,7 @@
 	<!-- boon.io, json.io was taken. -->
 	<groupId>io.fastjson</groupId>
 	<artifactId>boon</artifactId>
-	<version>0.12</version>
+	<version>0.13-SNAPSHOT</version>
 	<name>boon</name>
 	<description>Simple opinionated Java for the novice to expert level Java Programmer. 
                  Low Ceremony. High Productivity. A real boon to Java to developers!</description>
