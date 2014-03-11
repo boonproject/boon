@@ -31,21 +31,27 @@ package org.boon.criteria;
 import org.boon.Exceptions;
 import org.boon.core.Typ;
 import org.boon.core.Conversions;
+import org.boon.core.Type;
+import org.boon.core.Value;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.internal.Criteria;
 import org.boon.criteria.internal.Operator;
 import org.boon.primitive.CharBuf;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 import static org.boon.Boon.sputl;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.*;
 
 
+
 public abstract class Criterion<VALUE> extends Criteria {
+    
+    
 
     private String name;
     private Operator operator;
@@ -63,6 +69,7 @@ public abstract class Criterion<VALUE> extends Criteria {
     private Object objectUnderTest;
 
     private Map<String, FieldAccess> fields;
+    private ThisMap thisFields;
 
     public Criterion( String name, Operator operator, VALUE... values ) {
         requireNonNull( name, "name cannot be null" );
@@ -190,6 +197,8 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     }
 
+
+
     @Override
     public boolean test( Object o ) {
 
@@ -204,16 +213,17 @@ public abstract class Criterion<VALUE> extends Criteria {
             if ( this.useDelegate ) {
 
                 return this.nativeDelegate.resolve( fields, o );
+
             }
 
-
-            FieldAccess field = fields.get(name);
+            FieldAccess field = fields().get(name);
 
             if (field == null && o instanceof Map)  {
-                return false;
+                    return false;
             }
 
-            boolean result = resolve( fields, o );
+            boolean result = resolve( fields(), o );
+
 
             return result;
 
@@ -248,6 +258,11 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
     private Map<String, FieldAccess> fields() {
+
+        if (this.thisFields !=null) {
+            this.thisFields.thisField.thisObject = this.objectUnderTest;
+            return this.thisFields;
+        }
 
         if ( fields == null ) {
             fields = getFieldsInternal( this.objectUnderTest );
@@ -326,6 +341,14 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         if ( initialized ) return;
         initialized = true;
+
+
+
+        if (name.equals("this") || name.contains(".") || name.contains("[")) {
+
+            this.thisFields = new ThisMap(name, this.objectUnderTest);
+            return;
+        }
 
         FieldAccess field = field();
         if ( field == null ) {
@@ -728,4 +751,335 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
+
+    static class ThisMap implements Map<String, FieldAccess> {
+
+        ThisField thisField;
+        private final String name;
+
+
+        ThisMap (String name, Object thisObject) {
+            this.name = name;
+            this.thisField = new ThisField(name, thisObject);
+        }
+
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public boolean containsKey(Object key) {
+            return false;
+        }
+
+        @Override
+        public boolean containsValue(Object value) {
+            return false;
+        }
+
+        @Override
+        public FieldAccess get(Object key) {
+                return thisField;
+
+        }
+
+        @Override
+        public FieldAccess put(String key, FieldAccess value) {
+            return null;
+        }
+
+        @Override
+        public FieldAccess remove(Object key) {
+            return null;
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends FieldAccess> m) {
+
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
+        @Override
+        public Set<String> keySet() {
+            return null;
+        }
+
+        @Override
+        public Collection<FieldAccess> values() {
+            return null;
+        }
+
+        @Override
+        public Set<Entry<String, FieldAccess>> entrySet() {
+            return null;
+        }
+    }
+
+    static class ThisField implements FieldAccess {
+
+
+        Object thisObject;
+        private final String name;
+
+        ThisField(String name, Object thisObject) {
+            this.name = name;
+            this.thisObject = thisObject;
+
+
+        }
+
+        @Override
+        public boolean injectable() {
+            return false;
+        }
+
+        @Override
+        public boolean requiresInjection() {
+            return false;
+        }
+
+        @Override
+        public boolean isNamed() {
+            return false;
+        }
+
+        @Override
+        public boolean hasAlias() {
+            return false;
+        }
+
+        @Override
+        public String alias() {
+            return null;
+        }
+
+        @Override
+        public String named() {
+            return null;
+        }
+
+        @Override
+        public String name() {
+            return null;
+        }
+
+        @Override
+        public Object getValue(Object obj) {
+            if (name.equals("this")) {
+                return thisObject;
+            } else {
+                return BeanUtils.atIndex(thisObject, name);
+            }
+        }
+
+        @Override
+        public void setValue(Object obj, Object value) {
+
+        }
+
+        @Override
+        public void setFromValue(Object obj, Value value) {
+
+        }
+
+        @Override
+        public boolean getBoolean(Object obj) {
+            return false;
+        }
+
+        @Override
+        public void setBoolean(Object obj, boolean value) {
+
+        }
+
+        @Override
+        public int getInt(Object obj) {
+            return 0;
+        }
+
+        @Override
+        public void setInt(Object obj, int value) {
+
+        }
+
+        @Override
+        public short getShort(Object obj) {
+            return 0;
+        }
+
+        @Override
+        public void setShort(Object obj, short value) {
+
+        }
+
+        @Override
+        public char getChar(Object obj) {
+            return 0;
+        }
+
+        @Override
+        public void setChar(Object obj, char value) {
+
+        }
+
+        @Override
+        public long getLong(Object obj) {
+            return 0;
+        }
+
+        @Override
+        public void setLong(Object obj, long value) {
+
+        }
+
+        @Override
+        public double getDouble(Object obj) {
+            return 0;
+        }
+
+        @Override
+        public void setDouble(Object obj, double value) {
+
+        }
+
+        @Override
+        public float getFloat(Object obj) {
+            return 0;
+        }
+
+        @Override
+        public void setFloat(Object obj, float value) {
+
+        }
+
+        @Override
+        public byte getByte(Object obj) {
+            return 0;
+        }
+
+        @Override
+        public void setByte(Object obj, byte value) {
+
+        }
+
+        @Override
+        public Object getObject(Object obj) {
+            return thisObject;
+        }
+
+        @Override
+        public void setObject(Object obj, Object value) {
+
+        }
+
+        @Override
+        public Type typeEnum() {
+            return null;
+        }
+
+        @Override
+        public boolean isPrimitive() {
+            return false;
+        }
+
+        @Override
+        public boolean isFinal() {
+            return false;
+        }
+
+        @Override
+        public boolean isStatic() {
+            return false;
+        }
+
+        @Override
+        public boolean isVolatile() {
+            return false;
+        }
+
+        @Override
+        public boolean isQualified() {
+            return false;
+        }
+
+        @Override
+        public boolean isReadOnly() {
+            return false;
+        }
+
+        @Override
+        public boolean isWriteOnly() {
+            return false;
+        }
+
+        @Override
+        public Class<?> type() {
+            if (this.name.equals("this")) {
+                return this.thisObject != null ? this.thisObject.getClass() : Object.class;
+            } else {
+                return Object.class;
+            }
+        }
+
+        @Override
+        public Class<?> declaringParent() {
+            return null;
+        }
+
+        @Override
+        public Object parent() {
+            return null;
+        }
+
+        @Override
+        public Field getField() {
+            return null;
+        }
+
+        @Override
+        public boolean include() {
+            return false;
+        }
+
+        @Override
+        public boolean ignore() {
+            return false;
+        }
+
+        @Override
+        public ParameterizedType getParameterizedType() {
+            return null;
+        }
+
+        @Override
+        public Class<?> getComponentClass() {
+            return null;
+        }
+
+        @Override
+        public boolean hasAnnotation(String annotationName) {
+            return false;
+        }
+
+        @Override
+        public Map<String, Object> getAnnotationData(String annotationName) {
+            return null;
+        }
+
+        @Override
+        public boolean isViewActive(String activeView) {
+            return false;
+        }
+    }
 }

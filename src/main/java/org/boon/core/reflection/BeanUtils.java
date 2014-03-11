@@ -344,6 +344,9 @@ public class BeanUtils {
         return atIndex(object, path);
     }
 
+
+
+
     /**
      * Get property value
      *
@@ -392,7 +395,22 @@ public class BeanUtils {
     }
 
     /**
-     * Get property value
+     * Set property value to simulate dependency injection.
+     *
+     * @param object
+     * @param path   in dotted notation
+     * @return
+     */
+    public static void injectIntoProperty( Object object, String path, Object value ) {
+
+
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+
+        setPropertyValue( object, value, properties );
+    }
+
+    /**
+     * Set property value
      *
      * @param object
      * @param path   in dotted notation

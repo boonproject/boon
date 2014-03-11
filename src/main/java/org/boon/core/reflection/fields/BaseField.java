@@ -276,6 +276,7 @@ public abstract class BaseField implements FieldAccess {
                     }
                 }
 
+                getter.setAccessible(true);
 
                 initAnnotationData ( getter.getDeclaringClass () );
 

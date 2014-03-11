@@ -367,6 +367,7 @@ public class ObjectFilter {
 
             @Override
             public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
+
                 FieldAccess field = fields.get( name );
                 Object itemValue = field.getValue( owner );
                 String sItemvalue = itemValue instanceof String ? ( String ) itemValue : itemValue.toString();
