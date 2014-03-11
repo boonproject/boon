@@ -43,10 +43,7 @@ import org.boon.primitive.CharBuf;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.sputs;
@@ -476,10 +473,17 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
         Map<String, FieldAccess> fields =  Maps.copy ( Reflection.getPropertyFieldAccessMapFieldFirst ( aClass ) );
+
+        List<FieldAccess> removeFields = new ArrayList<>();
+
         for (FieldAccess field : fields.values()) {
             if (field.isWriteOnly ())  {
-                fields.remove ( field.name()  );
+                removeFields.add(field);
             }
+        }
+
+        for (FieldAccess fieldAccess : removeFields) {
+            fields.remove(fieldAccess.name());
         }
         return fields;
     }

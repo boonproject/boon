@@ -160,9 +160,6 @@ public class IO {
 
     public static ConvertToPathFunction convertToPathFunction = new ConvertToPathFunction();
 
-    public static boolean exists (Path path ) {
-        return Files.exists(path);
-    }
 
     public static List<String> list( final Path path ) {
 
@@ -1055,8 +1052,22 @@ public class IO {
         write( file, contents.getBytes( DEFAULT_CHARSET ) );
     }
 
+    public static void write( String file, String contents ) {
+        write( IO.path(file), contents.getBytes( DEFAULT_CHARSET ) );
+    }
+
+
+    public static void output( String file, byte[] bytes ) {
+        IO.write( IO.path(file), bytes );
+    }
+
     public static void output( Path file, byte[] bytes ) {
         IO.write( file, bytes );
+    }
+
+
+    public static void write( String file, byte[] contents ) {
+        write (IO.path(file), contents);
     }
 
     public static void write( Path file, byte[] contents ) {
@@ -1277,4 +1288,49 @@ public class IO {
 
     }
 
+
+
+    public static void delete(Path path) {
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            Exceptions.handle(e);
+        }
+    }
+
+    public static void createDirectories(Path path) {
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            Exceptions.handle(e);
+        }
+    }
+
+
+    public static void delete(String path) {
+        try {
+            Files.delete(IO.path(path));
+        } catch (IOException e) {
+            Exceptions.handle(e);
+        }
+    }
+
+    public static void createDirectories(String path) {
+        try {
+            Files.createDirectories(IO.path(path));
+        } catch (IOException e) {
+            Exceptions.handle(e);
+        }
+    }
+
+
+
+    public static boolean exists (Path path ) {
+        return Files.exists(path);
+    }
+
+
+    public static boolean exists (String path ) {
+        return Files.exists(IO.path(path));
+    }
 }

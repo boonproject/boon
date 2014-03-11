@@ -108,6 +108,7 @@ public class PropertyField extends BaseField {
     @Override
     public final void setObject( Object obj, Object value ) {
         try {
+            if (!isReadOnly())
             setter.invoke ( obj, value );
         } catch ( Throwable e ) {
             Exceptions.handle( String.format( "You tried to modify property %s of %s for instance %s " +
