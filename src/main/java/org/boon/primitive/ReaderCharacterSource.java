@@ -304,7 +304,7 @@ public class ReaderCharacterSource implements CharacterSource {
                         /** Seems we have some awfully large strings so let's help out a bit by allowing
                          * for larger reads.
                          */
-                        this.readAheadSize =  (this.readAheadSize * 4);
+                        this.readAheadSize =  (this.readAheadSize * 2);
                         this.readBuf =  new char[readAheadSize + MAX_TOKEN_SIZE];
                         /*If we have more to read then read it. */
                         ensureBuffer();
