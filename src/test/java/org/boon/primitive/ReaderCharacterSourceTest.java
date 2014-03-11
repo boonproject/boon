@@ -28,10 +28,15 @@
 
 package org.boon.primitive;
 
+import org.boon.Str;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.StringReader;
+
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
+import static org.boon.Ok.okOrDie;
 
 public class ReaderCharacterSourceTest {
 
@@ -162,6 +167,27 @@ public class ReaderCharacterSourceTest {
 
     }
 
+
+    @Test public void testEscapeOnBorder() {
+        String hellString = "'1\\'a\\'b\\'c\\'\\'' '123' ".replace('\'', '\"');
+        puts(hellString);
+        String output;
+        source = new ReaderCharacterSource(new StringReader(hellString), 10);
+
+
+        output = new String(source.findNextChar('\"', '\\'));
+        puts("output", '\n', output, '\n', "1\\\"a\\\"b\\\"c\\\"\\\"");
+
+        Str.equalsOrDie(output, "1\\\"a\\\"b\\\"c\\\"\\\"");
+
+
+        source = new ReaderCharacterSource(new StringReader(hellString), 3);
+
+        output = new String(source.findNextChar('\"', '\\'));
+        puts("output", '\n', output, '\n', "1\\\"a\\\"b\\\"c\\\"\\\"");
+
+        Str.equalsOrDie(output, "1\\\"a\\\"b\\\"c\\\"\\\"");
+     }
 
     @Test public void findStringWithFindNextCharWithEscape() {
 

@@ -1156,18 +1156,26 @@ public class CharBuf extends Writer implements CharSequence {
     public final CharBuf decodeJsonString ( char[] chars, int start, int to ) {
         int len = to - start;
 
+//        if (len > 33000) {
+//           puts ("here");
+//        }
+
         char [] buffer = this.buffer;
         int location = this.location;
 
+
+
         if (len > capacity) {
-            buffer =  Chr.grow ( buffer, buffer.length * 2 + len );
+            buffer =  Chr.grow ( buffer, (buffer.length * 4) + len );
             capacity = buffer.length;
+            this.buffer = buffer;
         }
 
+        try {
         for ( int index = start; index < to; index++ ) {
             char c = chars[ index ];
             if ( c == '\\' ) {
-                if ( index < to ) {
+                if ( index < to -1  ) {
                     index++;
                     c = chars[ index ];
                     switch ( c ) {
@@ -1220,6 +1228,15 @@ public class CharBuf extends Writer implements CharSequence {
             } else {
                 buffer[location++]=c;
             }
+        }
+        }
+        catch (ArrayIndexOutOfBoundsException axe) {
+
+            handle(axe, "Got ARRAY INDEX OUT OF BOUNDS \n",
+                    "the buffer is this big", this.buffer.length,
+                    "\nwe are at this location ", location,
+                    "\nthe length of the span is ", len, "input buffer length", chars.length);
+
         }
 
 

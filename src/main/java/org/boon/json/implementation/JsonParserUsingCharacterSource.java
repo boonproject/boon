@@ -64,6 +64,7 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
     }
 
 
+    String lastFrom = "";
     protected final Object decodeJsonObject() {
         LazyMap map = new LazyMap ();
 
@@ -109,8 +110,6 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
                 Object value = decodeValue();
 
 
-                //puts ("key", key, "value", value);
-
 
                 characterSource.skipWhiteSpace();
 
@@ -133,6 +132,9 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
             }
         }
         } catch (Exception ex) {
+            if (ex instanceof JsonException) {
+                throw ex;
+            }
             throw new JsonException ( exceptionDetails ( "Unable to parse JSON object" ), ex );
         }
 
@@ -315,6 +317,8 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
         list = new ArrayList();
 
+
+
         do {
 
             characterSource.skipWhiteSpace ();
@@ -323,7 +327,6 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
             list.add( arrayItem );
 
-            //puts("list", list) ;
 
 
             characterSource.skipWhiteSpace ();
@@ -352,6 +355,10 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
 
         } catch (Exception ex) {
+            if (ex instanceof JsonException) {
+                throw ex;
+            }
+
             throw new JsonException (exceptionDetails("Unexpected issue"),  ex );
         }
 

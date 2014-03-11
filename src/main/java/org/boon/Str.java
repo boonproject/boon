@@ -467,4 +467,8 @@ public class Str {
         }
         return false;
     }
+
+    public static String readable(String s) {
+        return s.replace("\\n", "\n");
+    }
 }
