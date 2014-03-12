@@ -32,6 +32,7 @@ import org.boon.IO;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonParser;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.IOInputStream;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -148,25 +149,23 @@ public abstract class BaseJsonParser implements JsonParser {
             return parse ( input, charset );
         }
 
-        @Override
-        public Object parse ( InputStream input, Charset charset ) {
-            return parse ( new InputStreamReader ( input, charset ) );
-        }
 
-        private final CharBuf builder = CharBuf.create( 20 );
+
+        @Override
+        public Object parse ( InputStream inputStream, Charset charset ) {
+
+
+
+            return parse ( new InputStreamReader ( inputStream, charset ) );
+        }
 
 
 
         private CharBuf fileInputBuf;
 
-//
-//        protected static final boolean isNumberDigit (int c)  {
-//            return c >= ALPHA_0 && c <= ALPHA_9;
-//        }
 
 
+        int[] indexHolder = new int[1];
 
-    int[] indexHolder = new int[1];
 
-
-    }
+}

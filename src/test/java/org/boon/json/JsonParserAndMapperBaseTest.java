@@ -538,7 +538,9 @@ public class JsonParserAndMapperBaseTest {
             //puts ( "testing", file );
 
             try {
-                Object object =  jsonParserAndMapper.parse ( Files.newBufferedReader ( IO.path ( file), StandardCharsets.UTF_8 ) );
+                Object object =  jsonParserAndMapper.parse ( Files.newInputStream ( IO.path ( file) ) );
+
+
                 //puts ( "FILE _________\n\n\n", file, object.getClass (), object);
 
 

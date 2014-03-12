@@ -37,6 +37,7 @@ import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueContainer;
 import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.InMemoryInputStream;
 
 
 import java.io.*;
@@ -730,7 +731,7 @@ public class JsonMappingParser implements JsonParserAndMapper {
     public Object parse ( byte[] bytes, Charset charset ) {
 
         if (bytes.length > 100_000) {
-            return parse(new ByteArrayInputStream(bytes), charset);
+            return parse(new InMemoryInputStream(bytes), charset);
         } else {
             return basicParser.parse(bytes, charset);
         }
@@ -742,7 +743,7 @@ public class JsonMappingParser implements JsonParserAndMapper {
             CharBuf builder = CharBuf.createFromUTF8Bytes( value );
             return parse( builder.toCharArray() );
         } else {
-            return this.parse( new ByteArrayInputStream( value ) );
+            return this.parse( new InMemoryInputStream( value ) );
         }
     }
 
@@ -806,13 +807,13 @@ public class JsonMappingParser implements JsonParserAndMapper {
             CharBuf builder = CharBuf.createFromUTF8Bytes( value );
             return parse( type, builder.toCharArray() );
         } else {
-            return this.parse( type, new ByteArrayInputStream( value ) );
+            return this.parse( type, new InMemoryInputStream( value ) );
         }
     }
 
     @Override
     public final <T> T parseAsStream( Class<T> type, byte[] value ) {
-        charBuf = IO.read( new InputStreamReader ( new ByteArrayInputStream(value), charset ), charBuf, value.length );
+        charBuf = IO.read( new InputStreamReader ( new InMemoryInputStream(value), charset ), charBuf, value.length );
         return this.basicParser.parse ( type, charBuf.readForRecycle () );
     }
 

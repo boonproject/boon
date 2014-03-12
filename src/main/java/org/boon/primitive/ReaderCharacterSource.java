@@ -30,9 +30,7 @@ package org.boon.primitive;
 
 import org.boon.Exceptions;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Arrays;
 
 import static org.boon.Exceptions.die;
@@ -44,12 +42,14 @@ public class ReaderCharacterSource implements CharacterSource {
 
     private final Reader reader;
     private int readAheadSize;
+
     private int ch = -2;
 
     private boolean foundEscape;
 
 
     private char[] readBuf;
+
 
     private int index;
 
@@ -59,15 +59,18 @@ public class ReaderCharacterSource implements CharacterSource {
     boolean more = true;
     private boolean done = false;
 
-    public ReaderCharacterSource( final Reader reader, final int readAheadSize ) {
+
+
+    public ReaderCharacterSource( final Reader reader, final int readAheadSize) {
         this.reader = reader;
         this.readBuf =  new char[readAheadSize + MAX_TOKEN_SIZE];
         this.readAheadSize = readAheadSize;
     }
 
+
     public ReaderCharacterSource( final Reader reader ) {
         this.reader = reader;
-        this.readAheadSize = 1024;
+        this.readAheadSize = 10_000;
         this.readBuf =  new char[ readAheadSize + MAX_TOKEN_SIZE ];
     }
 
@@ -101,7 +104,10 @@ public class ReaderCharacterSource implements CharacterSource {
     }
 
     private void readNextBuffer() throws IOException {
+
+
         length = reader.read ( readBuf, 0, readAheadSize );
+
 
         index = 0;
         if (length == -1) {
@@ -183,7 +189,7 @@ public class ReaderCharacterSource implements CharacterSource {
 
 
     @Override
-    public char[] findNextChar( int match, int esc ) {
+    public final char[] findNextChar( int match, int esc ) {
         return findNextChar(false, false, match, esc);
     }
 
@@ -199,7 +205,7 @@ public class ReaderCharacterSource implements CharacterSource {
      * @param esc    The escape char is usually '\'
      * @return the string from the next char.
      */
-    public char[] findNextChar( boolean inMiddleOfString, boolean wasEscapeChar, int match, int esc ) {
+    public final char[] findNextChar( boolean inMiddleOfString, boolean wasEscapeChar, int match, int esc ) {
         try{
             ensureBuffer(); //grow the buffer and read in if needed
 
@@ -207,14 +213,14 @@ public class ReaderCharacterSource implements CharacterSource {
             int idx = index;
             char[] _chars = readBuf;
 
+            int length = this.length;
 
-            if (!inMiddleOfString) {
-
-                foundEscape=false;
-            }
 
             int ch = this.ch;
+
             if ( !inMiddleOfString ) {
+                foundEscape=false;
+
                 if ( ch == match ) { //we can start with a match but we
                                      // ignore it if we are not in the middle of a string.
 
@@ -247,9 +253,10 @@ public class ReaderCharacterSource implements CharacterSource {
             boolean foundEnd = false; //Have we actually found the end of the string?
             char [] results ; //The results so far might be the whole thing if we found the end.
 
+            boolean _foundEscape = false;
 
             /* Iterate through the buffer looking for the match which is the close quote most likely. */
-            for (; idx < length; idx++) {
+            while  (true) {
                     ch  = _chars[idx];
 
 
@@ -260,7 +267,8 @@ public class ReaderCharacterSource implements CharacterSource {
                             break;
                         } else if ( ch == esc ) {
                             wasEscapeChar = true;
-                            foundEscape=true;
+                            _foundEscape = true;
+
                             /** if we are dealing with an escape then see if the escaped char is a match
                              *  if so, skip it.
                              */
@@ -272,9 +280,14 @@ public class ReaderCharacterSource implements CharacterSource {
                             }
                         }
                     }
+
+
+                if ( idx >= length) break;
+                idx++;
             }
 
 
+            foundEscape = _foundEscape;
 
             /* After all that, we still might have an empty string! */
             if (idx == 0 ) {
@@ -301,11 +314,6 @@ public class ReaderCharacterSource implements CharacterSource {
                     /* Detect if we have more buffers to read. */
                     if (index >= length && !done) {
 
-                        /** Seems we have some awfully large strings so let's help out a bit by allowing
-                         * for larger reads.
-                         */
-                        this.readAheadSize =  (this.readAheadSize * 2);
-                        this.readBuf =  new char[readAheadSize + MAX_TOKEN_SIZE];
                         /*If we have more to read then read it. */
                         ensureBuffer();
                         /* Recursively call this method. */
@@ -340,8 +348,11 @@ public class ReaderCharacterSource implements CharacterSource {
                 skipWhiteSpace();
             }
         } catch ( Exception ex ) {
-            String str = CharScanner.errorDetails ( "skipWhiteSpaceIfNeeded issue", readBuf, index, ch );
-             Exceptions.handle (  str, ex );
+
+
+             ex.printStackTrace();
+             String str = CharScanner.errorDetails ( "skipWhiteSpaceIfNeeded issue", readBuf, index, ch );
+             Exceptions.handle (  ex, str, "\n\nLENGTH", length, "INDEX", index  );
         }
     }
 

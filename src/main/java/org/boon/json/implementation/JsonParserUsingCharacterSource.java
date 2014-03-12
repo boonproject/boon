@@ -28,11 +28,13 @@
 
 package org.boon.json.implementation;
 
+import org.boon.Boon;
 import org.boon.collections.LazyMap;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.json.JsonException;
 import org.boon.primitive.*;
 
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +66,6 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
     }
 
 
-    String lastFrom = "";
     protected final Object decodeJsonObject() {
         LazyMap map = new LazyMap ();
 
@@ -383,21 +384,62 @@ public class JsonParserUsingCharacterSource extends BaseJsonParser {
 
 
 
-    @Override
-    public Object parse ( byte[] value, Charset charset ) {
-        characterSource = new CharArrayCharacterSource ( new String ( value, charset )  );
-        return  this.decodeValue ();
-    }
 
 
     @Override
     public  Object parse(  Reader reader ) {
+
+        if (reader instanceof StringReader) {
+            try {
+                String str = BeanUtils.idxStr(reader, "str");
+                int length = BeanUtils.idxInt(reader, "length");
+                int next = BeanUtils.idxInt(reader, "next");
+
+                if (str!= null && next == 0 && length == str.length()) {
+                    return parse(str);
+                }
+            } catch (Exception ex) {
+                Boon.logger("JSON PARSER").fatal(ex);
+            }
+        }
+
 
         characterSource = new ReaderCharacterSource ( reader );
         return  this.decodeValue ();
 
     }
 
+
+    @Override
+    public Object parse ( byte[] value, Charset charset ) {
+        if (value.length < 20_000) {
+            characterSource = new CharArrayCharacterSource ( new String ( value, charset )  );
+            return  this.decodeValue ();
+
+        } else {
+            return parse(new InMemoryInputStream(value), charset);
+        }
+    }
+
+
+    IOInputStream ioInputStream;
+
+    @Override
+    public Object parse ( InputStream inputStream, Charset charset ) {
+
+        if (inputStream instanceof ByteArrayInputStream ) {
+
+            return parse ( new InputStreamReader( inputStream, charset ) );
+
+        } else {
+            ioInputStream =  IOInputStream.input(ioInputStream, 50_000).input(inputStream);
+            return parse ( new InputStreamReader( ioInputStream, charset ) );
+
+        }
+
+
+
+    }
 
 
 

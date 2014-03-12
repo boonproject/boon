@@ -36,13 +36,12 @@ import org.boon.collections.LazyMap;
 import org.boon.primitive.Byt;
 import org.boon.primitive.ByteScanner;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.InMemoryInputStream;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
 
-import static org.boon.Exceptions.die;
 import static org.boon.primitive.ByteScanner.skipWhiteSpaceFast;
 
 /**
@@ -602,7 +601,7 @@ public abstract class JsonBaseByteArrayParser extends BaseJsonParser {
     }
 
     public <T> T parseAsStream( Class<T> type, byte[] value ) {
-        return this.parse( type, new ByteArrayInputStream( value ) );
+        return this.parse( type, new InMemoryInputStream( value ) );
     }
 
 

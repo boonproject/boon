@@ -39,6 +39,7 @@ import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonParser;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.InMemoryInputStream;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -620,7 +621,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
     @Override
     public  <T> T parseAsStream( Class<T> type, byte[] value ) {
-        return this.parse ( type, new ByteArrayInputStream ( value ) );
+        return this.parse ( type, new InMemoryInputStream( value ) );
     }
 
 
@@ -636,7 +637,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
     @Override
     public Object parseAsStream ( byte[] value ) {
-        return this.parse(  new ByteArrayInputStream( value ) );
+        return this.parse(  new InMemoryInputStream( value ) );
     }
 
     @Override

@@ -32,7 +32,10 @@ import org.boon.Str;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
@@ -46,7 +49,40 @@ public class ReaderCharacterSourceTest {
 
     @Before
     public void setup() {
-        source = new ReaderCharacterSource ( testString  );
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(testString.getBytes(StandardCharsets.UTF_8));
+
+        //IOInputStream stream = IOInputStream.input(null, 10).input(inputStream);
+
+         source = new ReaderCharacterSource (
+                new InputStreamReader(inputStream)
+          );
+    }
+
+
+    private void initSourceWithString(String testString) {
+
+        ByteArrayInputStream inputStream = new InMemoryInputStream(testString.getBytes(StandardCharsets.UTF_8));
+
+
+        source = new ReaderCharacterSource (
+                new InputStreamReader(inputStream)
+        );
+    }
+
+
+    private void initSourceWithString(String testString, int size) {
+
+        ByteArrayInputStream inputStream = new InMemoryInputStream(testString.getBytes(StandardCharsets.UTF_8));
+
+
+        source = new ReaderCharacterSource (
+                new InputStreamReader(inputStream), size
+        );
+    }
+    @Test
+    public void reader2() {
+
     }
 
 
@@ -95,7 +131,8 @@ public class ReaderCharacterSourceTest {
     @Test public void consumeIfMatchTest() {
 
         String testString = "abc true abc";
-        source = new ReaderCharacterSource ( testString );
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -118,7 +155,8 @@ public class ReaderCharacterSourceTest {
     @Test public void consumeIfMatchNotMatchingTest() {
 
         String testString = "abc train abc";
-        source = new ReaderCharacterSource ( testString );
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -141,7 +179,9 @@ public class ReaderCharacterSourceTest {
     @Test public void findStringWithFindNextChar() {
 
         String testString = "abc \"train\" abc";
-        source = new ReaderCharacterSource ( testString );
+
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -170,9 +210,11 @@ public class ReaderCharacterSourceTest {
 
     @Test public void testEscapeOnBorder() {
         String hellString = "'1\\'a\\'b\\'c\\'\\'' '123' ".replace('\'', '\"');
+
+        initSourceWithString(hellString, 10);
+
         puts(hellString);
         String output;
-        source = new ReaderCharacterSource(new StringReader(hellString), 10);
 
 
         output = new String(source.findNextChar('\"', '\\'));
@@ -181,7 +223,7 @@ public class ReaderCharacterSourceTest {
         Str.equalsOrDie(output, "1\\\"a\\\"b\\\"c\\\"\\\"");
 
 
-        source = new ReaderCharacterSource(new StringReader(hellString), 3);
+        initSourceWithString(hellString, 3);
 
         output = new String(source.findNextChar('\"', '\\'));
         puts("output", '\n', output, '\n', "1\\\"a\\\"b\\\"c\\\"\\\"");
@@ -192,7 +234,10 @@ public class ReaderCharacterSourceTest {
     @Test public void findStringWithFindNextCharWithEscape() {
 
         String testString = "abc \"train  a\\b\" abc";
-        source = new ReaderCharacterSource ( testString );
+
+
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -219,7 +264,10 @@ public class ReaderCharacterSourceTest {
     @Test public void stringBug() {
 
         String testString = " \"file\"";
-        source = new ReaderCharacterSource ( testString );
+
+
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -247,7 +295,11 @@ public class ReaderCharacterSourceTest {
     @Test public void stringBug2() {
 
         String testString = "\"\"";
-        source = new ReaderCharacterSource ( testString );
+
+
+
+        initSourceWithString(testString);
+
         boolean found = false;
 
 
@@ -275,7 +327,11 @@ public class ReaderCharacterSourceTest {
     @Test public void findStringWithFindNextCharWithEscape2() {
 
         String testString = "0123\"dog    bog\" z";
-        source = new ReaderCharacterSource ( testString );
+
+
+
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -301,7 +357,11 @@ public class ReaderCharacterSourceTest {
     @Test public void findStringWithFindNextCharWithEscapeOfQuote() {
 
         String testString = "abc \"train\\\"\" abc0123456789";
-        source = new ReaderCharacterSource( testString );
+
+
+
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -327,7 +387,11 @@ public class ReaderCharacterSourceTest {
     @Test public void findString2() {
 
         String testString = "\"train\"";
-        source = new ReaderCharacterSource( testString );
+
+
+
+        initSourceWithString(testString);
+
         boolean found = false;
 
         loop:
@@ -352,7 +416,11 @@ public class ReaderCharacterSourceTest {
     @Test public void findString3() {
 
         String testString = "12345 \"train brain stain fain\" 678910";
-        source = new ReaderCharacterSource( testString );
+
+
+        initSourceWithString(testString);
+
+
         boolean found = false;
 
         loop:
@@ -378,8 +446,9 @@ public class ReaderCharacterSourceTest {
     @Test public void skipWhiteSpace() {
 
         String testString = "a   b c";
-        source = new ReaderCharacterSource( testString );
 
+
+        initSourceWithString(testString);
 
 
         boolean ok = source.nextChar() == 'a' || die("" + (char)source.currentChar());
@@ -402,7 +471,10 @@ public class ReaderCharacterSourceTest {
     @Test public void readNumberTest() {
 
         String testString = "123";
-        source = new ReaderCharacterSource ( testString );
+
+
+
+        initSourceWithString(testString);
 
         char [] numberChars = source.readNumber();
         boolean ok = Chr.equals ( "123".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
@@ -412,7 +484,9 @@ public class ReaderCharacterSourceTest {
     @Test public void readNumberTest3() {
 
         String testString = "123456789";
-        source = new ReaderCharacterSource ( testString );
+
+
+        initSourceWithString(testString);
 
         char [] numberChars = source.readNumber();
         boolean ok = Chr.equals ( "123456789".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
@@ -423,7 +497,9 @@ public class ReaderCharacterSourceTest {
     @Test public void readNumberTest2() {
 
         String testString = "123 456";
-        source = new ReaderCharacterSource( testString );
+
+
+        initSourceWithString(testString);
 
         char [] numberChars = source.readNumber();
         boolean ok = Chr.equals ( "123".toCharArray (), numberChars ) || die( new String(numberChars) ) ;
@@ -443,8 +519,8 @@ public class ReaderCharacterSourceTest {
                 "0123456789\n" +
                 "abcdefghijklmnopqrstuvwxyz";
 
-        source = new ReaderCharacterSource( testString );
 
+        initSourceWithString(testString);
 
         for (int index =0; index<28; index++) {
             source.nextChar();

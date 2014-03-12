@@ -32,6 +32,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.boon.core.Sys;
+import org.boon.primitive.InMemoryInputStream;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -94,9 +95,9 @@ public class IOTest {
     //    File testFile = new File(testDir, "testfile.txt");
 
 
-    //    String buf = IO.read(new FileInputStream(testFile), "UTF-8");
+    //    String buffer = IO.read(new FileInputStream(testFile), "UTF-8");
 
-    //    assertLines( list ( Str.splitLines(buf) ) );
+    //    assertLines( list ( Str.splitLines(buffer) ) );
 
     //}
 
@@ -353,7 +354,7 @@ public class IOTest {
         IO.write( bos, "pear\n" );
         IO.write( bos, "grapes\n" );
 
-        List<String> lines = IO.readLines( new ByteArrayInputStream( bos.toByteArray() ) );
+        List<String> lines = IO.readLines( new InMemoryInputStream( bos.toByteArray() ) );
 
         assertLines( lines );
 
@@ -370,7 +371,7 @@ public class IOTest {
         IO.write( bos, "pear\n", IO.DEFAULT_CHARSET );
         IO.write( bos, "grapes\n", IO.DEFAULT_CHARSET );
 
-        List<String> lines = IO.readLines( new ByteArrayInputStream( bos.toByteArray() ) );
+        List<String> lines = IO.readLines( new InMemoryInputStream( bos.toByteArray() ) );
 
         assertLines( lines );
 
