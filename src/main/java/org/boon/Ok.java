@@ -138,11 +138,11 @@ public class Ok {
 
 
     public static boolean okOrDie(String message, boolean value) {
-        return value || die();
+        return value || die(message);
     }
 
     public static boolean okOrDie(String message, Number i) {
-        return (i!=null && i!=0) || die();
+        return (i!=null && i!=0) || die(message);
     }
 
 

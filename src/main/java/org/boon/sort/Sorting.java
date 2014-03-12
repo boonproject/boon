@@ -134,6 +134,53 @@ public class Sorting {
 
 
     /**
+     * Sort map entries.
+     * @param map  the map entries you want to sort
+     * @param sortBy what you want to sort the list by
+     * @param ascending do you want ascending order
+     * @param nullsFirst do you want nulls first
+     */
+    public static <K, V> Collection<Map.Entry<K, V>>  sortEntries( Class<V> componentType, Map<K, V> map,
+                                                            String sortBy, boolean ascending, boolean nullsFirst ) {
+
+        return sort ((Class) componentType, (Collection) map.entrySet() , sortBy, ascending, nullsFirst);
+
+    }
+
+    /**
+     * Sort map values.
+     * @param map  the map entries you want to sort
+     * @param sortBy what you want to sort the list by
+     * @param ascending do you want ascending order
+     * @param nullsFirst do you want nulls first
+     */
+    public static <K, V> Collection<Map.Entry<K, V>>  sortValues( Class<V> componentType, Map<K, V> map,
+                                                                   String sortBy, boolean ascending, boolean nullsFirst ) {
+
+        return sort ((Class) componentType, (Collection) map.values() , sortBy, ascending, nullsFirst);
+
+    }
+
+
+    /**
+     * Sort map keys.
+     * @param map  the map entries you want to sort
+     * @param sortBy what you want to sort the list by
+     * @param ascending do you want ascending order
+     * @param nullsFirst do you want nulls first
+     */
+    public static <K, V> Collection<Map.Entry<K, V>>  sortKeys( Class<V> componentType, Map<K, V> map,
+                                                                  String sortBy, boolean ascending, boolean nullsFirst ) {
+
+        return sort ((Class) componentType, (Collection) map.keySet() , sortBy, ascending, nullsFirst);
+
+    }
+
+
+
+
+
+    /**
      * Sort collection.
      * @param iterable the iterable you want to sort
      * @param sortBy what you want to sort the list by

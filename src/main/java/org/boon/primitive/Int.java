@@ -32,6 +32,8 @@ import org.boon.Exceptions;
 import org.boon.Universal;
 import org.boon.core.reflection.Invoker;
 
+import static org.boon.Exceptions.die;
+
 
 public class Int {
 
@@ -424,5 +426,16 @@ public class Int {
         return sum;
     }
 
+    public static boolean equalsOrDie(int expected, int got) {
+        if (expected != got) {
+            return die(Boolean.class, "Expected was", expected, "but we got ", got);
+        }
+        return true;
+    }
 
+
+    public static boolean equals(int expected, int got) {
+
+        return expected == got;
+    }
 }

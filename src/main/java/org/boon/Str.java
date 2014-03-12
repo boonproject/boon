@@ -471,4 +471,20 @@ public class Str {
     public static String readable(String s) {
         return s.replace("\\n", "\n");
     }
+
+
+    public static String quote(String s) {
+        return add("\"", s, "\"");
+    }
+
+
+    public static String singleQuote(String s) {
+        return add("\'", s, "\'");
+    }
+
+
+    public static String doubleQuote(String s) {
+        return add("\"", s, "\"");
+    }
+
 }

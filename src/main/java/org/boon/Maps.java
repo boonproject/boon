@@ -229,12 +229,29 @@ public class Maps {
     }
 
 
+    /** Grabs the first value from a tree map (Navigable map). */
+    @Universal
+    public static <K, V> V first( NavigableMap<K, V> map ) {
+        return map.firstEntry().getValue();
+    }
+
+
+
+    /** Grabs the last value from a tree map (Navigable map). */
+    @Universal
+    public static <K, V> V last( NavigableMap<K, V> map ) {
+        return map.lastEntry().getValue()   ;
+    }
+
+
+
+    /** Grabs the value after this key from a tree map (Navigable map). */
     @Universal
     public static <K, V> V after( NavigableMap<K, V> map, final K index ) {
         return map.get( map.higherKey( index ) );
     }
 
-
+    /** Grabs the value before this key from a tree map (Navigable map). */
     @Universal
     public static <K, V> V before( NavigableMap<K, V> map, final K index ) {
         return map.get( map.lowerKey( index ) );
