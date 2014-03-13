@@ -64,6 +64,26 @@ public class Dates {
         return utcNow;
     }
 
+    public static long now() {
+        return System.currentTimeMillis();
+    }
+
+
+    public static long timeZoneNow(TimeZone timeZone) {
+        Calendar calendar = Calendar.getInstance();
+        return timeZoneNow(timeZone);
+    }
+
+
+    public static long timeZoneNow(TimeZone timeZone, Calendar calendar) {
+        long now = System.currentTimeMillis();
+        calendar.setTimeInMillis( now );
+        calendar.setTimeZone( timeZone );
+        long timeZoneNow = calendar.getTime().getTime();
+        return timeZoneNow;
+    }
+
+
 
     public static Calendar utcCalendar() {
         Calendar calendar = Calendar.getInstance();
@@ -709,12 +729,12 @@ public class Dates {
 
             int second = CharScanner.parseIntFromTo( charArray, from + 17, from + 19 );
 
-            int miliseconds = CharScanner.parseIntFromTo( charArray, from + 20, from + 23 );
+            int milliseconds = CharScanner.parseIntFromTo( charArray, from + 20, from + 23 );
 
             TimeZone tz = GMT;
 
 
-            return toDate( tz, year, month, day, hour, minute, second, miliseconds );
+            return toDate( tz, year, month, day, hour, minute, second, milliseconds );
 
         } else {
             return null;
