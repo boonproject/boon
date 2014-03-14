@@ -366,6 +366,11 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     }
 
     @Override
+    public List<ITEM> query(List<Criteria> expressions) {
+        return query.query(expressions);
+    }
+
+    @Override
     public List<ITEM> sortedQuery( String sortBy, Criteria... expressions ) {
         return query.sortedQuery( sortBy, expressions );
     }

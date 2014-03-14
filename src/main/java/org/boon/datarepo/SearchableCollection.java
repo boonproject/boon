@@ -94,6 +94,9 @@ public interface SearchableCollection<KEY, ITEM> extends Collection<ITEM> {
 
     List<ITEM> query( Criteria... expressions );
 
+
+    List<ITEM> query( List<Criteria> expressions );
+
     List<ITEM> sortedQuery( String sortBy, Criteria... expressions );
 
     List<ITEM> sortedQuery( Sort sortBy, Criteria... expressions );

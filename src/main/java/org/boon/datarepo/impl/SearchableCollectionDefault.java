@@ -30,6 +30,7 @@ package org.boon.datarepo.impl;
 
 import org.boon.Boon;
 import org.boon.Exceptions;
+import org.boon.core.Conversions;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.criteria.internal.Criteria;
@@ -391,6 +392,11 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     }
 
     @Override
+    public List<ITEM> query(List<Criteria> expressions) {
+        return this.query(Conversions.toArray(Criteria.class, expressions));
+    }
+
+    @Override
     public List<ITEM> sortedQuery( final String sortBy, Criteria... expressions ) {
         Sort asc = Sort.asc( sortBy );
         return sortedQuery( asc, expressions );
@@ -642,13 +648,8 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     public boolean remove( Object o ) {
         KEY key = null;
         ITEM item = null;
-        try {
-            key = ( KEY ) o;
-            removeByKey( key );
-        } catch ( ClassCastException ex ) {
-            item = ( ITEM ) o;
-            delete( item );
-        }
+        item = ( ITEM ) o;
+        delete( item );
         return true;
     }
 

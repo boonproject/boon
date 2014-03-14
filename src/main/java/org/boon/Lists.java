@@ -113,10 +113,32 @@ public class Lists {
         return new ArrayList<>( collection );
     }
 
+
+    public static <V> List<V> deepCopy( Collection<V> collection ) {
+        List<V> list = new ArrayList<>(collection.size());
+
+        for (V v : collection) {
+            list.add( BeanUtils.copy( v ));
+        }
+        return list;
+    }
+
+    @Universal
+    public static <V> List<V> deepCopy( List<V> list ) {
+        if ( list instanceof LinkedList ) {
+            return deepCopy( new LinkedList<>( list ) );
+        } else if ( list instanceof CopyOnWriteArrayList ) {
+            return deepCopy(new CopyOnWriteArrayList<>( list ));
+        } else {
+            return deepCopy((Collection)list);
+        }
+    }
+
+
     public static <V> List<List<V>> lists( Collection<V>... collections ) {
         List<List<V>> lists = new ArrayList<>(collections.length);
         for (Collection<V> collection : collections) {
-            lists.add(new ArrayList<V>(collection));
+            lists.add(new ArrayList<>(collection));
         }
         return lists;
     }
@@ -444,6 +466,7 @@ public class Lists {
             return new ArrayList<>( list );
         }
     }
+
 
     @Universal
     public static <V> List<V> copy( CopyOnWriteArrayList<V> list ) {
