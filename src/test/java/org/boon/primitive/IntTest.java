@@ -26,37 +26,51 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.core.reflection;
+package org.boon.primitive;
 
-import java.lang.invoke.MethodHandle;
+import org.boon.core.Fn;
+import org.junit.Test;
+
+import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
+import static org.boon.Ok.okOrDie;
+import static org.boon.primitive.Int.reduceBy;
 
 /**
- * Created by Richard on 2/17/14.
+ * Created by Richard on 3/15/14.
  */
-public interface MethodAccess extends BaseAccess{
-    public Object invoke(Object object, Object... args);
-    boolean isStatic();
+public class IntTest {
 
-    String name();
-    Class<?> declaringType() ;
+    public long reduce(long s, int b) {return s+b;}
 
+    public long sum(long s, int b) {return s+b;}
 
-    Class<?> returnType() ;
+    boolean ok;
 
-    boolean respondsTo(Class<?>... types);
-
-    boolean respondsTo(Object... args);
+    @Test
+    public void test() {
 
 
-    Object invokeStatic(Object... args);
 
-    MethodAccess bind(Object instance);
+        long sum =  reduceBy(new int[]{1,2,3,4,5,6,7,8}, this);
 
-    MethodHandle methodHandle();
 
-    MethodAccess methodAccess();
+        okOrDie(sputs("Sum was 36", sum), sum == 36);
 
-    Object bound();
 
-    MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object);
+    }
+
+
+    @Test
+    public void testNewMethod() {
+
+
+
+        long sum =  reduceBy(new int[]{1,2,3,4,5,6,7,8}, this, "sum");
+
+
+        okOrDie(sputs("Sum was 36", sum), sum == 36);
+
+
+    }
 }

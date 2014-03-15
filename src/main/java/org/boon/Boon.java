@@ -52,6 +52,10 @@ import static org.boon.Maps.fromMap;
 import static org.boon.Str.camelCaseLower;
 import static org.boon.Str.underBarCase;
 
+/**
+ * This class contains some utility methods and acts as facade
+ * over the most popular Boon features.
+ */
 public class Boon {
 
 

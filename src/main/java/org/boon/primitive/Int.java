@@ -32,7 +32,10 @@ import org.boon.Exceptions;
 import org.boon.Universal;
 import org.boon.core.reflection.Invoker;
 
+import java.lang.invoke.MethodHandle;
+
 import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.handle;
 
 
 public class Int {
@@ -419,8 +422,63 @@ public class Int {
 
     public static long reduceBy( final int[] array, Object object ) {
 
+        MethodHandle methodHandle = Invoker.invokeReducerLongIntReturnLongMethodHandle(object);
+
+
         long sum = 0;
         for ( int v : array ) {
+            try {
+                sum = (long) methodHandle.invokeExact( sum, v );
+            } catch (Throwable throwable) {
+                handle(throwable, "Unable to perform reduceBy");
+            }
+
+        }
+        return sum;
+    }
+
+    public static interface ReduceBy {
+        long reduce(long sum, int value);
+    }
+
+    public static long reduceBy( final int[] array, ReduceBy reduceBy ) {
+
+
+        long sum = 0;
+        for ( int v : array ) {
+                sum = reduceBy.reduce(sum, v);
+        }
+        return sum;
+    }
+
+    public static long reduceBy( final int[] array, Object object, String methodName ) {
+
+        MethodHandle methodHandle = Invoker.invokeReducerLongIntReturnLongMethodHandle(object, methodName);
+
+
+        long sum = 0;
+        for ( int v : array ) {
+            try {
+                sum = (long) methodHandle.invokeExact( sum, v );
+            } catch (Throwable throwable) {
+                handle(throwable, "Unable to perform reduceBy");
+            }
+
+        }
+        return sum;
+    }
+
+    public static long reduceBy( final int[] array,  int length,
+                                 Object object ) {
+        return reduceBy(array, 0, length, object);
+
+    }
+    public static long reduceBy( final int[] array, int start, int length,
+                                 Object object ) {
+
+        long sum = 0;
+        for ( int index = start; index < length; index++ ) {
+            int v = array [ index ];
             sum = (long)Invoker.invokeReducer(object, sum, v);
         }
         return sum;
@@ -438,4 +496,53 @@ public class Int {
 
         return expected == got;
     }
+
+
+    /**
+     * Sum
+     * Provides overflow protection.
+     * @param values values in int
+     * @return sum
+     */
+    public static int sum( int[] values ) {
+        return sum( values, 0, values.length);
+    }
+
+
+    /**
+     * Sum
+     * Provides overflow protection.
+     * @param values values in int
+     * @return sum
+     */
+    public static int sum( int[] values,  int length ) {
+        return sum( values, 0, length);
+    }
+
+    /**
+     * Sum
+     * Provides overflow protection.
+     * @param values values in int
+     * @return sum
+     */
+    public static int sum( int[] values, int start, int length ) {
+        long sum = 0;
+        for (int index = start; index < length; index++ ) {
+            sum+= values[index];
+        }
+
+        if (sum < Integer.MIN_VALUE) {
+            die ("overflow the sum is too small", sum);
+        }
+
+
+        if (sum > Integer.MAX_VALUE) {
+            die ("overflow the sum is too big", sum);
+        }
+
+        return (int) sum;
+
+
+    }
+
 }

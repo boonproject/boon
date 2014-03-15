@@ -37,6 +37,9 @@ import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.impl.ConstructorAccessImpl;
 import org.boon.core.reflection.impl.MethodAccessImpl;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.ConstantCallSite;
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -488,4 +491,21 @@ public class ClassMeta <T> implements Annotated{
         return this.cls.getSimpleName();
     }
 
+    public MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object) {
+        MethodAccess methodAccess;
+        if (methods.size()==1) {
+            methodAccess = methods.get(0);
+        } else  {
+            methodAccess = methodMap.get("reduce");
+        }
+        MethodHandle methodHandle = methodAccess.invokeReducerLongIntReturnLongMethodHandle(object);
+        return methodHandle;
+    }
+
+    public MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object, String methodName) {
+        MethodAccess methodAccess;
+        methodAccess = methodMap.get(methodName);
+        MethodHandle methodHandle = methodAccess.invokeReducerLongIntReturnLongMethodHandle(object);
+        return methodHandle;
+    }
 }

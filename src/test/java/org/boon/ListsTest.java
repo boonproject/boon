@@ -330,11 +330,6 @@ public class ListsTest {
 
 
 
-      sum =  (long) reduceBy(new int[]{1,2,3,4,5,6,7,8}, new Object() {
-            long sum(long s, int b) {return s+b;}
-      });
-
-      ok &= sum == 36 || die();
 
 
        sum =   (long) reduceBy(Lists.list(1,2,3,4,5,6,7,8), new Reducer<Integer, Integer>() {

@@ -28,7 +28,6 @@
 
 package org.boon.core.reflection.impl;
 
-import org.boon.Lists;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.MethodAccess;
@@ -55,16 +54,17 @@ public class MethodAccessImpl implements MethodAccess {
     final Map<String, AnnotationData> annotationMap;
 
 
-    //CallSite callSiteMethod;
 
-    //final MethodHandles.Lookup lookup = MethodHandles.lookup();
-    //final MethodHandle methodHandle;
+    final MethodHandles.Lookup lookup = MethodHandles.lookup();
+    final MethodHandle methodHandle;
+
+    Object instance;
 
     public MethodAccessImpl() {
         method=null;
         annotationData=null;
         annotationMap=null;
-        //methodHandle = null;
+        methodHandle = null;
     }
 
     public MethodAccessImpl( Method method ) {
@@ -73,18 +73,18 @@ public class MethodAccessImpl implements MethodAccess {
         this.annotationData = Annotations.getAnnotationDataForMethod(method);
 
 
-//        MethodHandle m;
-//         try {
-//
-//                    m = lookup.unreflect(method);
-//
-//        } catch (Exception e) {
-//            m = null;
-//            handle(e);
-//        }
-//
-//
-//        methodHandle = m;
+        MethodHandle m;
+         try {
+
+                    m = methodHandle();
+
+        } catch (Exception e) {
+            m = null;
+            handle(e);
+        }
+
+
+        methodHandle = m;
 
         annotationMap = new ConcurrentHashMap<>(  );
         for (AnnotationData data : annotationData) {
@@ -139,23 +139,22 @@ public class MethodAccessImpl implements MethodAccess {
         return null;
     }
 
-//    @Override
-//    public MethodHandle methodHandle() {
-//
-//
-//        MethodHandle m;
-//        try {
-//            m = lookup.unreflect(method);
-//
-//        } catch (Exception e) {
-//            m = null;
-//            handle(e);
-//        }
-//
-//        return  m;
-//    }
+    @Override
+    public MethodHandle methodHandle() {
 
-    Object instance;
+
+        MethodHandle m;
+        try {
+            m = lookup.unreflect(method);
+
+        } catch (Exception e) {
+            m = null;
+            handle(e);
+        }
+
+        return  m;
+    }
+
     @Override
     public MethodAccess methodAccess() {
         return new MethodAccessImpl(this.method){
@@ -163,7 +162,7 @@ public class MethodAccessImpl implements MethodAccess {
 
             @Override
             public MethodAccess bind(Object instance) {
-                //methodHandle.bindTo(instance);
+                methodHandle.bindTo(instance);
                 this.instance = instance;
                 return this;
             }
@@ -181,6 +180,20 @@ public class MethodAccessImpl implements MethodAccess {
     @Override
     public Object bound() {
         return null;
+    }
+
+    @Override
+    public MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object) {
+
+        MethodType methodType = MethodType.methodType(long.class, long.class, int.class);
+        try {
+            return this.lookup.bind(object, this.name(), methodType);
+        } catch (NoSuchMethodException e) {
+            handle(e, "Method not found", this.name());
+        } catch (IllegalAccessException e) {
+            handle(e, "Illegal access to method", this.name());
+        }
+        return  null;
     }
 
 

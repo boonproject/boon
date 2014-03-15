@@ -41,7 +41,6 @@ public class Byt {
 
 
     public static byte[] grow( byte[] array, final int size ) {
-        Exceptions.requireNonNull( array );
 
         byte[] newArray = new byte[ array.length + size ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -50,7 +49,6 @@ public class Byt {
 
 
     public static byte[] grow( byte[] array ) {
-        Exceptions.requireNonNull( array );
 
         byte[] newArray = new byte[ array.length * 2 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
@@ -59,7 +57,6 @@ public class Byt {
 
 
     public static byte[] shrink( byte[] array, int size ) {
-        Exceptions.requireNonNull( array );
 
         byte[] newArray = new byte[ array.length - size ];
 
@@ -69,7 +66,6 @@ public class Byt {
 
 
     public static byte[] compact( byte[] array ) {
-        Exceptions.requireNonNull( array );
 
         int nullCount = 0;
         for ( byte ch : array ) {
@@ -110,7 +106,6 @@ public class Byt {
      */
     @Universal
     public static byte[] array( final byte... array ) {
-        Exceptions.requireNonNull( array );
         return array;
     }
 
@@ -120,7 +115,6 @@ public class Byt {
      */
     @Universal
     public static byte[] bytes( final byte... array ) {
-        Exceptions.requireNonNull( array );
         return array;
     }
 
@@ -130,13 +124,7 @@ public class Byt {
      */
     @Universal
     public static byte[] bytes( String str ) {
-        Exceptions.requireNonNull( str );
-        try {
-            return str.getBytes( "UTF-8" );
-        } catch ( UnsupportedEncodingException ex ) {
-            Exceptions.handle( String.format( "Unable to addObject \"%s\" ", str ), ex );
-            return null;
-        }
+         return str.getBytes( StandardCharsets.UTF_8 );
     }
 
 
@@ -315,7 +303,6 @@ public class Byt {
 
     @Universal
     public static byte[] add( byte[] array, byte v ) {
-        Exceptions.requireNonNull( array );
         byte[] newArray = new byte[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
@@ -324,7 +311,6 @@ public class Byt {
 
     @Universal
     public static byte[] add( byte[] array, byte[] array2 ) {
-        Exceptions.requireNonNull( array );
         byte[] newArray = new byte[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         System.arraycopy( array2, 0, newArray, array.length, array2.length );
@@ -334,7 +320,6 @@ public class Byt {
 
     @Universal
     public static byte[] insert( final byte[] array, final int idx, final byte v ) {
-        Exceptions.requireNonNull( array );
 
         if ( idx >= array.length ) {
             return add( array, v );
@@ -374,7 +359,6 @@ public class Byt {
 
     @Universal
     public static byte[] insert( final byte[] array, final int fromIndex, final byte[] values ) {
-        Exceptions.requireNonNull( array );
 
         if ( fromIndex >= array.length ) {
             return add( array, values );
@@ -420,7 +404,6 @@ public class Byt {
     private static int calculateIndex( byte[] array, int originalIndex ) {
         final int length = array.length;
 
-        Exceptions.requireNonNull( array, "array cannot be null" );
 
 
         int index = originalIndex;
@@ -459,7 +442,6 @@ public class Byt {
 
 
     public static byte[] addInt( byte[] array, int v ) {
-        Exceptions.requireNonNull( array );
 
         byte[] arrayToHoldInt = new byte[ 4 ];
         intTo( arrayToHoldInt, 0, v );
@@ -468,7 +450,6 @@ public class Byt {
     }
 
     public static byte[] insertIntInto( byte[] array, int index, int v ) {
-        Exceptions.requireNonNull( array );
 
         byte[] arrayToHoldInt = new byte[ 4 ];
         intTo( arrayToHoldInt, 0, v );
@@ -496,7 +477,6 @@ public class Byt {
     }
 
     public static byte[] addLong( byte[] array, long value ) {
-        Exceptions.requireNonNull( array );
 
         byte[] holder = new byte[ 8 ];
         longTo( holder, 0, value );
@@ -530,7 +510,6 @@ public class Byt {
     }
 
     public static byte[] addShort( byte[] array, short value ) {
-        Exceptions.requireNonNull( array );
 
         byte[] holder = new byte[ 2 ];
         shortTo( holder, 0, value );
@@ -540,7 +519,6 @@ public class Byt {
 
 
     public static byte[] insertShortInto( byte[] array, int index, short value ) {
-        Exceptions.requireNonNull( array );
 
         byte[] holder = new byte[ 2 ];
         shortTo( holder, 0, value );
@@ -561,8 +539,6 @@ public class Byt {
     }
 
     public static byte[] addChar( byte[] array, char value ) {
-        Exceptions.requireNonNull( array );
-
         byte[] holder = new byte[ 2 ];
         charTo( holder, 0, value );
         return add( array, holder );
@@ -570,8 +546,6 @@ public class Byt {
     }
 
     public static byte[] insertCharInto( byte[] array, int index, char value ) {
-        Exceptions.requireNonNull( array );
-
         byte[] holder = new byte[ 2 ];
         charTo( holder, 0, value );
         return insert( array, index, holder );
@@ -595,7 +569,6 @@ public class Byt {
     }
 
     public static byte[] addFloat( byte[] array, float value ) {
-        Exceptions.requireNonNull( array );
 
         byte[] holder = new byte[ 4 ];
         floatTo( holder, 0, value );
@@ -604,7 +577,6 @@ public class Byt {
     }
 
     public static byte[] insertFloatInto( byte[] array, int index, float value ) {
-        Exceptions.requireNonNull( array );
 
         byte[] holder = new byte[ 4 ];
         floatTo( holder, 0, value );

@@ -28,6 +28,8 @@
 
 package org.boon.collections;
 
+import org.boon.primitive.Int;
+
 import java.util.AbstractList;
 
 import static org.boon.Exceptions.die;
@@ -112,24 +114,10 @@ public class IntList extends AbstractList<Integer> {
 
 
 
+    /** Sums the values with bounds checking. */
     public int sum() {
-        long sum = 0;
-        for (int index = 0; index < end; index++ ) {
-            sum+= values[index];
-        }
 
-        if (sum < Integer.MIN_VALUE) {
-            die ("overflow the sum is too small", sum);
-        }
-
-
-        if (sum > Integer.MAX_VALUE) {
-            die ("overflow the sum is too big", sum);
-        }
-
-        return (int) sum;
-
-
+        return Int.sum(values, end);
     }
 
 
@@ -137,4 +125,15 @@ public class IntList extends AbstractList<Integer> {
 
         return java.util.Arrays.copyOfRange(values, 0, end);
     }
+
+
+    /**
+     * This would be a good opportunity to reintroduce dynamic invoke
+     * @param object
+     * @return
+     */
+    public  long reduceBy( Object object ) {
+        return Int.reduceBy(values, end);
+    }
+
 }
