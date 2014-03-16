@@ -32,6 +32,14 @@ import org.boon.Exceptions;
 import org.boon.Universal;
 import org.boon.core.reflection.Invoker;
 
+import java.lang.invoke.ConstantCallSite;
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
+import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.handle;
+
 
 public class Lng {
 
@@ -431,13 +439,674 @@ public class Lng {
     }
 
 
-    public static long reduceBy( final long[] array, Object object ) {
+
+
+    /** Public interface for a very fast reduce by. */
+    public static interface ReduceBy {
+        long reduce(long sum, long value);
+    }
+
+    /**
+     * A very fast reduce by.
+     * If performance is your thing, this seems to be as fast a plain for loop when benchmarking with JMH.
+     *
+     * @param array array of items to reduce by
+     * @param reduceBy reduceBy interface
+     * @return the final value
+     */
+    public static long reduceBy( final long[] array, ReduceBy reduceBy ) {
+
 
         long sum = 0;
         for ( long v : array ) {
-            sum = (long) Invoker.invokeReducer(object, sum, v);
+            sum = reduceBy.reduce(sum, v);
         }
         return sum;
+    }
+
+    /**
+     *
+     * @param array array of items to reduce by
+     * @param start where to start in the array
+     * @param length where to end in the array
+     * @param reduceBy the function to do the reduce by
+     * @return the reduction
+     */
+    public static long reduceBy( final long[] array, final int start, final int length, ReduceBy reduceBy ) {
+
+
+        long sum = 0;
+
+        for (int index = start; index < length; index++) {
+            long v = array[index];
+            sum = reduceBy.reduce(sum, v);
+        }
+        return sum;
+    }
+
+
+    /**
+     *
+     * @param array array of items to reduce by
+     * @param length where to end in the array
+     * @param reduceBy the function to do the reduce by
+     * @return the reduction
+     */
+    public static long reduceBy( final long[] array, final int length, ReduceBy reduceBy ) {
+
+
+        long sum = 0;
+
+        for (int index = 0; index < length; index++) {
+            long v = array[index];
+            sum = reduceBy.reduce(sum, v);
+        }
+        return sum;
+    }
+
+
+
+
+    /**
+     * Reduce by functional support for int arrays.
+     * @param array array of items to reduce by
+     * @param object object that contains the reduce by function
+     * @param <T> the type of object
+     * @return the final reduction
+     */
+    public  static <T> long reduceBy( final long[] array, T object ) {
+        if (object.getClass().isAnonymousClass()) {
+            return reduceByR(array, object );
+        }
+
+
+        try {
+            ConstantCallSite callSite = Invoker.invokeReducerLongIntReturnLongMethodHandle(object);
+            MethodHandle methodHandle = callSite.dynamicInvoker();
+            try {
+
+                long sum = 0;
+                for ( long v : array ) {
+                    sum = (long) methodHandle.invokeExact( sum, v );
+
+                }
+                return sum;
+            } catch (Throwable throwable) {
+                return handle(Long.class, throwable, "Unable to perform reduceBy");
+            }
+        } catch (Exception ex) {
+            return reduceByR(array, object);
+        }
+
+    }
+
+
+
+
+
+    /**
+     * Reduce by functional support for int arrays.
+     * @param array array of items to reduce by
+     * @param object object that contains the reduce by function
+     * @param <T> the type of object
+     * @return the final reduction
+     */
+    public static <T> long reduceBy( final long[] array, T object, String methodName ) {
+
+        if (object.getClass().isAnonymousClass()) {
+            return reduceByR(array, object, methodName);
+        }
+
+        try {
+            ConstantCallSite callSite = Invoker.invokeReducerLongIntReturnLongMethodHandle(object, methodName);
+            MethodHandle methodHandle = callSite.dynamicInvoker();
+            try {
+
+                long sum = 0;
+                for ( long v : array ) {
+                    sum = (long) methodHandle.invokeExact( sum, v );
+
+                }
+                return sum;
+            } catch (Throwable throwable) {
+                return handle(Long.class, throwable, "Unable to perform reduceBy");
+            }
+        } catch (Exception ex) {
+            return reduceByR(array, object, methodName);
+        }
+
+
+    }
+
+
+    /**
+     * Fallback to reflection if the call-site will not work or did not work
+     * @param array array of items to reduce by
+     * @param object function object
+     * @param <T> type of function object.
+     * @return
+     */
+    private  static <T> long reduceByR( final long[] array, T object ) {
+        try {
+
+            Method method = Invoker.invokeReducerLongIntReturnLongMethod(object);
+
+
+            long sum = 0;
+            for ( long v : array ) {
+                sum = (long) method.invoke(object, sum, v);
+
+            }
+            return sum;
+
+        } catch (Throwable throwable) {
+            return handle(Long.class, throwable, "Unable to perform reduceBy");
+        }
+
+    }
+
+
+    /**
+     * Reflection based reduce by.
+     * @param array array of items to reduce by
+     * @param object function
+     * @param methodName name of method
+     * @param <T> type of function
+     * @return reduction
+     */
+    private  static <T> long reduceByR( final long[] array, T object, String methodName ) {
+        try {
+
+            Method method = Invoker.invokeReducerLongIntReturnLongMethod(object, methodName);
+
+
+            long sum = 0;
+            for ( long v : array ) {
+                sum = (long) method.invoke(object, sum, v);
+
+            }
+            return sum;
+
+        } catch (Throwable throwable) {
+            return handle(Long.class, throwable, "Unable to perform reduceBy");
+        }
+
+    }
+
+
+
+    /**
+     * Reflection based reduce by.
+     * @param array array of items to reduce by
+     * @param object function
+     * @param methodName name of method
+     * @param <T> type of function
+     * @return reduction
+     */
+    private  static <T> long reduceByR( final long[] array, int length, T object, String methodName ) {
+        try {
+
+            Method method = Invoker.invokeReducerLongIntReturnLongMethod(object, methodName);
+
+
+            long sum = 0;
+            for (int index=0; index< length; index++) {
+                long v = array[index];
+                sum = (long) method.invoke(object, sum, v);
+
+            }
+            return sum;
+
+        } catch (Throwable throwable) {
+            return handle(Long.class, throwable, "Unable to perform reduceBy");
+        }
+
+    }
+
+
+    /**
+     * Reflection based reduce by.
+     * @param array array of items to reduce by
+     * @param object function
+     * @param <T> type of function
+     * @return reduction
+     */
+    private  static <T> long reduceByR( final long[] array, int length, T object ) {
+        try {
+
+            Method method = Invoker.invokeReducerLongIntReturnLongMethod(object);
+
+
+            long sum = 0;
+            for (int index=0; index< length; index++) {
+                long v = array[index];
+                sum = (long) method.invoke(object, sum, v);
+
+            }
+            return sum;
+
+        } catch (Throwable throwable) {
+            return handle(Long.class, throwable, "Unable to perform reduceBy");
+        }
+
+    }
+
+    /**
+     * Reduce By
+     * @param array array of items to reduce by
+     * @param length where to end in the array
+     * @param object function
+     * @return reduction
+     */
+    public static long reduceBy( final long[] array,  int length,
+                                 Object object ) {
+
+
+        if (object.getClass().isAnonymousClass()) {
+            return reduceByR(array, length, object );
+        }
+
+        try {
+            ConstantCallSite callSite = Invoker.invokeReducerLongIntReturnLongMethodHandle(object );
+            MethodHandle methodHandle = callSite.dynamicInvoker();
+            try {
+
+                long sum = 0;
+                for (int index=0; index < length; index++) {
+                    long v = array[index];
+                    sum = (long) methodHandle.invokeExact( sum, v );
+
+                }
+                return sum;
+            } catch (Throwable throwable) {
+                return handle(Long.class, throwable, "Unable to perform reduceBy");
+            }
+        } catch (Exception ex) {
+            return reduceByR(array, length, object );
+        }
+
+
+    }
+
+
+
+    /**
+     * Reduce By
+     * @param array array of items to reduce by
+     * @param length where to end in the array
+     * @param function function
+     * @param function functionName
+     * @return reduction
+     */
+    public static long reduceBy( final long[] array,  int length,
+                                 Object function, String functionName ) {
+
+
+        if (function.getClass().isAnonymousClass()) {
+            return reduceByR(array, length, function, functionName );
+        }
+
+        try {
+            ConstantCallSite callSite = Invoker.invokeReducerLongIntReturnLongMethodHandle(function, functionName );
+            MethodHandle methodHandle = callSite.dynamicInvoker();
+            try {
+
+                long sum = 0;
+                for (int index=0; index < length; index++) {
+                    long v = array[index];
+                    sum = (long) methodHandle.invokeExact( sum, v );
+
+                }
+                return sum;
+            } catch (Throwable throwable) {
+                return handle(Long.class, throwable, "Unable to perform reduceBy");
+            }
+        } catch (Exception ex) {
+            return reduceByR(array, length, function, functionName );
+        }
+
+
+    }
+
+
+    /**
+     * Reduce By
+     * @param array array of items to reduce by
+     * @param length where to end in the array
+     * @param object function
+     * @return reduction
+     */
+    public static long reduceBy( final long[] array, int start, int length,
+                                 Object object ) {
+
+
+        if (object.getClass().isAnonymousClass()) {
+            return reduceByR(array, object );
+        }
+
+        try {
+            ConstantCallSite callSite = Invoker.invokeReducerLongIntReturnLongMethodHandle(object );
+            MethodHandle methodHandle = callSite.dynamicInvoker();
+            try {
+
+                long sum = 0;
+                for (int index=start; index < length; index++) {
+                    long v = array[index];
+                    sum = (long) methodHandle.invokeExact( sum, v );
+
+                }
+                return sum;
+            } catch (Throwable throwable) {
+                return handle(Long.class, throwable, "Unable to perform reduceBy");
+            }
+        } catch (Exception ex) {
+            return reduceByR(array, object );
+        }
+
+    }
+
+    /**
+     * Some quick validation for an expected value
+     * @param expected expected this
+     * @param got got this
+     * @return returns true or throws an exception
+     */
+    public static boolean equalsOrDie(long expected, long got) {
+        if (expected != got) {
+            return die(Boolean.class, "Expected was", expected, "but we got ", got);
+        }
+        return true;
+    }
+
+
+    /**
+     * Some quick validation for an expected value
+     * @param expected expected this
+     * @param got got this
+     * @return returns true or false
+     */
+    public static boolean equals(long expected, long got) {
+
+        return expected == got;
+    }
+
+
+
+    /**
+     * Sum
+     * @param values values in int
+     * @return sum
+     */
+    public static long sum( long[] values ) {
+        return sum(values, 0, values.length);
+    }
+
+
+    /**
+     * Sum
+     * @param values values in int
+     * @return sum
+     */
+    public static long sum( long[] values,  int length ) {
+        return sum(values, 0, length);
+    }
+
+    /**
+     * Big Sum
+     * @param values values in int
+     * @return sum
+     */
+    public static long sum( long[] values, int start, int length ) {
+        long sum = 0;
+        for (int index = start; index < length; index++ ) {
+            sum+= values[index];
+        }
+        return sum;
+    }
+
+
+
+    /**
+     * Max
+     * @param values values in int
+     * @return max
+     */
+    public static long max( long[] values, final int start, final int length ) {
+        long max = Long.MIN_VALUE;
+        for (int index = start; index < length; index++ ) {
+            if ( values[index] > max ) {
+                max = values[index];
+            }
+        }
+
+        return max;
+    }
+
+
+    /**
+     * max
+     * @param values values in int
+     * @return max
+     */
+    public static long max( long[] values ) {
+        return max(values, 0, values.length);
+    }
+
+
+    /**
+     * max
+     * @param values values in int
+     * @return max
+     */
+    public static long max( long[] values, int length ) {
+        return max(values, 0, length);
+    }
+
+
+    /**
+     * Min
+     * @param values values in int
+     * @return min
+     */
+    public static long min( long[] values, final int start, final int length ) {
+        long min = Long.MAX_VALUE;
+        for (int index = start; index < length; index++ ) {
+            if (values[index] < min) min = values[index];
+        }
+        return min;
+    }
+
+
+    /**
+     * Min
+     * @param values values in int
+     * @return min
+     */
+    public static long min( long[] values ) {
+        return min(values, 0, values.length);
+    }
+
+
+    /**
+     * Min
+     * @param values values in int
+     * @return min
+     */
+    public static long min( long[] values, int length ) {
+        return min(values, 0, length);
+    }
+
+
+
+
+    /**
+     * Average
+     * @param values values in int
+     * @return average
+     */
+    public static long mean( long[] values, final int start, final int length ) {
+        return (long) Math.round(meanDouble(values, start, length));
+    }
+
+
+
+
+    /**
+     * Average
+     * @param values values in int
+     * @return average
+     */
+    public static long mean( long[] values, final int length ) {
+        return Math.round(meanDouble(values, 0, length));
+    }
+
+
+    /**
+     * Average
+     * @param values values in int
+     * @return average
+     */
+    public static long mean( long[] values ) {
+
+        return Math.round(meanDouble(values, 0, values.length));
+    }
+
+
+    /**
+     * Calculates variance
+     * @param values values
+     * @param start start
+     * @param length length
+     * @return variance
+     */
+    public static long variance(long[] values, final int start, final int length) {
+        return (long) Math.round(varianceDouble(values, start, length));
+    }
+
+
+    /**
+     * Used internally to avoid loss and rounding errors a bit.
+     * @param values values
+     * @param start start
+     * @param length length
+     * @return meanDouble
+     */
+    public static double meanDouble( long[] values, final int start, final int length ) {
+        double mean = ((double)sum(values, start, length))/ ((double) length);
+        return mean;
+    }
+
+    /**
+     * Internal to avoid rounding errors
+     * @param values values
+     * @param start start
+     * @param length length
+     * @return double value
+     */
+    public static double varianceDouble(long[] values, final int start, final int length) {
+        double mean = meanDouble(values, start, length);
+        double temp = 0;
+        for(int index = start; index < length; index++) {
+            double a = values[index];
+            temp += (mean-a)*(mean-a);
+        }
+        return temp / length;
+    }
+
+    /**
+     * Calculate variance
+     * @param values
+     * @param length
+     * @return variance
+     */
+    public static long variance(long[] values,  final int length) {
+        return Math.round(varianceDouble(values, 0, length));
+    }
+
+    /**
+     * Calculate variance
+     * @param values
+     * @return variance
+     */
+    public static long variance(long[] values) {
+        return Math.round(varianceDouble(values, 0, values.length));
+    }
+
+    /**
+     * Calculate standard deviation.
+     *
+     * @param values values
+     * @param start start
+     * @param length length
+     * @return standard deviation
+     */
+    public static long standardDeviation(long[] values, final int start, final int length) {
+        double variance = varianceDouble(values, start, length);
+        return (int)Math.round(Math.sqrt(variance));
+    }
+
+    /**
+     * Calculate standard deviation.
+     * @param values values
+     * @param length length
+     * @return standard deviation
+     */
+    public static long standardDeviation(long[] values,  final int length) {
+        double variance = varianceDouble(values, 0, length);
+        return Math.round(Math.sqrt(variance));
+    }
+
+
+    /**
+     * Calculate Standard Deviation
+     * @param values values
+     * @return standardDeviation
+     */
+    public static int standardDeviation(long[] values) {
+        double variance = varianceDouble(values, 0, values.length);
+        return (int)Math.round(Math.sqrt(variance));
+    }
+
+    /**
+     * Calculate Median
+     * @param values values
+     * @param start start
+     * @param length length
+     * @return median
+     */
+    public static long median(long[] values, final int start, final int length) {
+        long[] sorted = new long[length];
+        System.arraycopy(values, start, sorted, 0, length);
+        Arrays.sort(sorted);
+
+        if (length % 2 == 0) {
+            int middle = sorted.length / 2;
+            double median = (sorted[middle-1] + sorted[middle]) / 2.0;
+            return Math.round(median);
+        } else {
+            return sorted[sorted.length / 2];
+        }
+    }
+
+
+    /**
+     * Calculate Median
+     * @param values values
+     * @param length length
+     * @return median
+     */
+    public static long median(long[] values, final int length) {
+        return median(values, 0, length);
+    }
+
+
+    /**
+     * Calculate Median
+     * @param values values
+     * @return median
+     */
+    public static long median(long[] values) {
+        return median(values, 0, values.length);
     }
 
 }

@@ -28,7 +28,9 @@
 
 package org.boon.core.reflection;
 
+import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
 
 /**
  * Created by Richard on 2/17/14.
@@ -58,5 +60,7 @@ public interface MethodAccess extends BaseAccess{
 
     Object bound();
 
-    MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object);
+    <T> ConstantCallSite invokeReducerLongIntReturnLongMethodHandle(T object);
+
+    Method method();
 }

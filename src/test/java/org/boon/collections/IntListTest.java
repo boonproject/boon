@@ -29,14 +29,91 @@
 package org.boon.collections;
 
 import junit.framework.TestCase;
+import org.boon.primitive.Int;
 import org.junit.Test;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 /**
  * Created by Richard on 2/18/14.
  */
 public class IntListTest extends TestCase {
+    @Test
+    public void testMath() {
+        IntList list = new IntList();
+        list.addInt(1);
+        list.addInt(2);
+        list.addInt(3);
+
+        Int.equalsOrDie(3, list.max());
+        Int.equalsOrDie(1, list.min());
+        Int.equalsOrDie(2, list.median());
+        Int.equalsOrDie(2, list.mean());
+        Int.equalsOrDie(1, list.standardDeviation());
+
+        for (int index = 0; index< 15; index++) {
+            list.addInt(3);
+        }
+
+
+        Int.equalsOrDie(3, list.max());
+        Int.equalsOrDie(1, list.min());
+        Int.equalsOrDie(3, list.median());
+        Int.equalsOrDie(3, list.mean());
+        Int.equalsOrDie(0, list.standardDeviation());
+
+        for (int index = 0; index< 20; index++) {
+            list.addInt(2);
+        }
+
+        Int.equalsOrDie(3, list.max());
+        Int.equalsOrDie(1, list.min());
+        Int.equalsOrDie(2, list.median());
+        Int.equalsOrDie(2, list.mean());
+        Int.equalsOrDie(1, list.standardDeviation());
+
+        list.addInt(10);
+
+        list.addInt(-10);
+
+
+        Int.equalsOrDie(10, list.max());
+        Int.equalsOrDie(-10, list.min());
+        Int.equalsOrDie(2, list.median());
+        Int.equalsOrDie(2, list.mean());
+        Int.equalsOrDie(2, list.standardDeviation());
+
+
+        list.addInt(100);
+
+        list.addInt(-100);
+
+
+        Int.equalsOrDie(100, list.max());
+        Int.equalsOrDie(-100, list.min());
+        Int.equalsOrDie(2, list.median());
+        Int.equalsOrDie(2, list.mean());
+        Int.equalsOrDie(22, list.standardDeviation());
+        Int.equalsOrDie(42, list.size());
+
+
+
+        for (int index = 0; index< 4000; index++) {
+            list.addInt(2);
+        }
+
+
+        Int.equalsOrDie(100, list.max());
+        Int.equalsOrDie(-100, list.min());
+        Int.equalsOrDie(2, list.median());
+        Int.equalsOrDie(2, list.mean());
+        Int.equalsOrDie(2, list.standardDeviation());
+        Int.equalsOrDie(4042, list.size());
+
+
+    }
+
 
     @Test
     public void test() {
@@ -44,6 +121,13 @@ public class IntListTest extends TestCase {
         list.addInt(1);
         list.addInt(2);
         list.addInt(3);
+
+        Int.equalsOrDie(3, list.max());
+        Int.equalsOrDie(1, list.min());
+        Int.equalsOrDie(2, list.median());
+        Int.equalsOrDie(2, list.mean());
+        Int.equalsOrDie(1, list.standardDeviation());
+
 
         if (list.getInt(0) != 1) die();
 

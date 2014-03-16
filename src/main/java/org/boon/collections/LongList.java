@@ -28,39 +28,39 @@
 
 package org.boon.collections;
 
-import org.boon.primitive.Int;
+import org.boon.primitive.Lng;
 
 import java.util.AbstractList;
 
-import static org.boon.primitive.Int.grow;
+import static org.boon.primitive.Lng.grow;
 
 /**
- * Created by Richard on 2/18/14.
+ * Created by Richard on 3/16/14.
  */
-public class IntList extends AbstractList<Integer> {
+public class LongList extends AbstractList<Long> {
 
     /**
      * Values in this list.
      */
-    private int [] values;
+    private long [] values;
 
     /** Index of last value added. */
     private int end;
 
 
     /** Create a new list with this many items in it. */
-    public IntList(int capacity) {
-        this.values = new int[capacity];
+    public LongList(int capacity) {
+        this.values = new long[capacity];
     }
 
 
     /** Create a new list with exactly 10 items in it. */
-    public IntList() {
-        this.values = new int[10];
+    public LongList() {
+        this.values = new long[10];
     }
 
     /** Create a new list with this many items in it. */
-    public IntList(int values[]) {
+    public LongList(long values[]) {
         this.values = values;
         this.end = values.length;
     }
@@ -71,7 +71,7 @@ public class IntList extends AbstractList<Integer> {
      * @return value
      */
     @Override
-    public Integer get(int index) {
+    public Long get(int index) {
         return values[index];
     }
 
@@ -80,7 +80,7 @@ public class IntList extends AbstractList<Integer> {
      * @param index index
      * @return value
      */
-    public final int getInt(int index) {
+    public final long getInt(int index) {
         return values[index];
     }
 
@@ -90,7 +90,7 @@ public class IntList extends AbstractList<Integer> {
      * @return was able to add.
      */
     @Override
-    public boolean add(Integer integer) {
+    public boolean add(Long integer) {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
@@ -104,7 +104,7 @@ public class IntList extends AbstractList<Integer> {
      * @param integer new value
      * @return was able to add.
      */
-    public boolean addInt(int integer) {
+    public boolean addLong(long integer) {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
@@ -113,12 +113,13 @@ public class IntList extends AbstractList<Integer> {
         return true;
     }
 
+
     /**
      * Add a new value to the list but don't employ a wrapper.
      * @param integer new value
      * @return was able to add.
      */
-    public IntList add(int integer) {
+    public LongList add(long integer) {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
@@ -127,11 +128,12 @@ public class IntList extends AbstractList<Integer> {
         return this;
     }
 
+
     /**
      * Add a new array to the list.
      * @return was able to add.
      */
-    public boolean addArray(int... integers) {
+    public boolean addArray(long... integers) {
         if (end + integers.length >= values.length) {
             values = grow(values, (values.length + integers.length) * 2);
         }
@@ -148,8 +150,8 @@ public class IntList extends AbstractList<Integer> {
      * @return old value at this index
      */
     @Override
-    public Integer set(int index, Integer element) {
-        int oldValue = values[index];
+    public Long set(int index, Long element) {
+        long oldValue = values[index];
         values [index] = element;
         return oldValue;
     }
@@ -161,8 +163,8 @@ public class IntList extends AbstractList<Integer> {
      * @param element new value
      * @return old value at this index
      */
-    public int setInt(int index, int element) {
-        int oldValue = values[index];
+    public long setLong(int index, int element) {
+        long oldValue = values[index];
         values [index] = element;
         return oldValue;
     }
@@ -179,9 +181,9 @@ public class IntList extends AbstractList<Integer> {
 
 
     /** Sums the values with bounds checking. */
-    public int sum() {
+    public long sum() {
 
-        return Int.sum(values, end);
+        return Lng.sum(values, end);
     }
 
 
@@ -189,7 +191,7 @@ public class IntList extends AbstractList<Integer> {
      * Get a copy of the array up to the end element.
      * @return
      */
-    public int [] toValueArray() {
+    public long [] toValueArray() {
 
         return java.util.Arrays.copyOfRange(values, 0, end);
     }
@@ -201,7 +203,7 @@ public class IntList extends AbstractList<Integer> {
      * @return
      */
     public  long reduceBy( Object function ) {
-        return Int.reduceBy(values, end, function);
+        return Lng.reduceBy(values, end, function);
     }
 
 
@@ -211,7 +213,7 @@ public class IntList extends AbstractList<Integer> {
      * @return
      */
     public  long reduceBy( Object function, String name ) {
-        return Int.reduceBy(values, end, function, name);
+        return Lng.reduceBy(values, end, function, name);
     }
 
 
@@ -220,16 +222,16 @@ public class IntList extends AbstractList<Integer> {
      * @param reduceBy reduceBy function
      * @return the reduction
      */
-    public  long reduceBy( Int.ReduceBy reduceBy ) {
-        return Int.reduceBy(values, end, reduceBy);
+    public  long reduceBy( Lng.ReduceBy reduceBy ) {
+        return Lng.reduceBy(values, end, reduceBy);
     }
 
     /**
      * Mean
      * @return mean
      */
-    public  int mean(  ) {
-        return Int.mean(values, end);
+    public  long mean(  ) {
+        return Lng.mean(values, end);
     }
 
 
@@ -237,8 +239,8 @@ public class IntList extends AbstractList<Integer> {
      * standardDeviation
      * @return standardDeviation
      */
-    public  int standardDeviation(  ) {
-        return Int.standardDeviation(values, end);
+    public  long standardDeviation(  ) {
+        return Lng.standardDeviation(values, end);
     }
 
 
@@ -246,8 +248,8 @@ public class IntList extends AbstractList<Integer> {
      * variance
      * @return variance
      */
-    public  int variance(  ) {
-        return Int.variance(values, end);
+    public  long variance(  ) {
+        return Lng.variance(values, end);
     }
 
 
@@ -255,8 +257,8 @@ public class IntList extends AbstractList<Integer> {
      * max
      * @return max
      */
-    public  int max(  ) {
-        return Int.max(values, end);
+    public  long max(  ) {
+        return Lng.max(values, end);
     }
 
 
@@ -264,8 +266,8 @@ public class IntList extends AbstractList<Integer> {
      * min
      * @return min
      */
-    public  int min(  ) {
-        return Int.min(values, end);
+    public  long min(  ) {
+        return Lng.min(values, end);
     }
 
 
@@ -273,7 +275,7 @@ public class IntList extends AbstractList<Integer> {
      * median
      * @return median
      */
-    public  int median(  ) {
-        return Int.median(values, end);
+    public  long median(  ) {
+        return Lng.median(values, end);
     }
 }

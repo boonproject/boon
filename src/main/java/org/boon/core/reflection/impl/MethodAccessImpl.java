@@ -183,17 +183,22 @@ public class MethodAccessImpl implements MethodAccess {
     }
 
     @Override
-    public MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object) {
+    public <T> ConstantCallSite invokeReducerLongIntReturnLongMethodHandle(T object) {
 
         MethodType methodType = MethodType.methodType(long.class, long.class, int.class);
         try {
-            return this.lookup.bind(object, this.name(), methodType);
+            return new ConstantCallSite(this.lookup.bind(object, this.name(), methodType));
         } catch (NoSuchMethodException e) {
             handle(e, "Method not found", this.name());
         } catch (IllegalAccessException e) {
             handle(e, "Illegal access to method", this.name());
         }
         return  null;
+    }
+
+    @Override
+    public Method method() {
+        return this.method;
     }
 
 

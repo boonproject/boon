@@ -491,21 +491,39 @@ public class ClassMeta <T> implements Annotated{
         return this.cls.getSimpleName();
     }
 
-    public MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object) {
+    public ConstantCallSite invokeReducerLongIntReturnLongMethodHandle(Object object) {
         MethodAccess methodAccess;
         if (methods.size()==1) {
             methodAccess = methods.get(0);
         } else  {
             methodAccess = methodMap.get("reduce");
         }
-        MethodHandle methodHandle = methodAccess.invokeReducerLongIntReturnLongMethodHandle(object);
+        ConstantCallSite methodHandle = methodAccess.invokeReducerLongIntReturnLongMethodHandle(object);
         return methodHandle;
     }
 
-    public MethodHandle invokeReducerLongIntReturnLongMethodHandle(Object object, String methodName) {
+    public ConstantCallSite invokeReducerLongIntReturnLongMethodHandle(Object object, String methodName) {
         MethodAccess methodAccess;
         methodAccess = methodMap.get(methodName);
-        MethodHandle methodHandle = methodAccess.invokeReducerLongIntReturnLongMethodHandle(object);
+        ConstantCallSite methodHandle = methodAccess.invokeReducerLongIntReturnLongMethodHandle(object);
         return methodHandle;
+    }
+
+
+
+    public Method invokeReducerLongIntReturnLongMethod(Object object) {
+        MethodAccess methodAccess;
+        if (methods.size()==1) {
+            methodAccess = methods.get(0);
+        } else  {
+            methodAccess = methodMap.get("reduce");
+        }
+        return methodAccess.method();
+     }
+
+    public Method invokeReducerLongIntReturnLongMethod(Object object, String methodName) {
+        MethodAccess methodAccess;
+        methodAccess = methodMap.get(methodName);
+        return methodAccess.method();
     }
 }
