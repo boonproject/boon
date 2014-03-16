@@ -157,7 +157,7 @@ public class Arry {
     public static <V> V[] slc( V[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end - start;
         if ( newLength < 0 ) {
             throw new ArrayIndexOutOfBoundsException(
@@ -265,7 +265,7 @@ public class Arry {
     @Universal
     public static <V> V[] slcEnd( V[] array, int endIndex ) {
 
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end;
 
         if ( newLength < 0 ) {
@@ -307,6 +307,31 @@ public class Arry {
     }
 
 
+
+    /* End universal methods. */
+    private static <T> int calculateEndIndex( T[] array, int originalIndex ) {
+        final int length = array.length;
+        int index = originalIndex;
+
+        /* Adjust for reading from the right as in
+        -1 reads the 4th element if the length is 5
+         */
+        if ( index < 0 ) {
+            index = length + index;
+        }
+
+        /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+        if ( index < 0 ) {
+            index = 0;
+        }
+        if ( index > length ) {
+            index = length;
+        }
+        return index;
+    }
 
 
     public static List<Map<String, Object>> toListOfMaps( Object... array ) {

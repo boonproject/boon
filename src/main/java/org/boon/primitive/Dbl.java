@@ -31,6 +31,7 @@ package org.boon.primitive;
 import org.boon.Exceptions;
 import org.boon.Universal;
 
+import static org.boon.Exceptions.die;
 
 
 public class Dbl {
@@ -132,13 +133,16 @@ public class Dbl {
         array[ i ] = value;
     }
 
+    @Universal
+    public static double[] sliceOf( double[] array, int startIndex, int endIndex ) {
+        return slc(array, startIndex, endIndex);
+    }
 
     @Universal
     public static double[] slc( double[] array, int startIndex, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex(array, endIndex);
         final int newLength = end - start;
 
         if ( newLength < 0 ) {
@@ -155,7 +159,6 @@ public class Dbl {
 
     @Universal
     public static double[] slc( double[] array, int startIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
         final int newLength = array.length - start;
@@ -172,11 +175,17 @@ public class Dbl {
         return newArray;
     }
 
-    @Universal
-    public static double[] slcEnd( double[] array, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
-        final int end = calculateIndex( array, endIndex );
+    @Universal
+    public static double[] endSliceOf( final double[] array, final int endIndex ) {
+        return slcEnd(array, endIndex);
+    }
+
+
+    @Universal
+    public static double[] slcEnd( final double[] array, final int endIndex ) {
+
+        final int end = calculateEndIndex(array, endIndex);
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
@@ -204,7 +213,6 @@ public class Dbl {
 
     @Universal
     public static double[] copy( double[] array ) {
-        Exceptions.requireNonNull( array );
         double[] newArray = new double[ array.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         return newArray;
@@ -213,7 +221,6 @@ public class Dbl {
 
     @Universal
     public static double[] add( double[] array, double v ) {
-        Exceptions.requireNonNull( array );
         double[] newArray = new double[ array.length + 1 ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         newArray[ array.length ] = v;
@@ -222,7 +229,6 @@ public class Dbl {
 
     @Universal
     public static double[] add( double[] array, double[] array2 ) {
-        Exceptions.requireNonNull( array );
         double[] newArray = new double[ array.length + array2.length ];
         System.arraycopy( array, 0, newArray, 0, array.length );
         System.arraycopy( array2, 0, newArray, array.length, array2.length );
@@ -272,9 +278,7 @@ public class Dbl {
 
     @Universal
     public static double[] insert( final double[] array, final int fromIndex, final double[] values ) {
-        Exceptions.requireNonNull( array );
-
-        if ( fromIndex >= array.length ) {
+         if ( fromIndex >= array.length ) {
             return add( array, values );
         }
 
@@ -318,9 +322,6 @@ public class Dbl {
     private static int calculateIndex( double[] array, int originalIndex ) {
         final int length = array.length;
 
-        Exceptions.requireNonNull( array, "array cannot be null" );
-
-
         int index = originalIndex;
 
         /* Adjust for reading from the right as in
@@ -345,6 +346,86 @@ public class Dbl {
             index = length - 1;
         }
         return index;
+    }
+
+
+    /* End universal methods. */
+    private static int calculateEndIndex( double[] array, int originalIndex ) {
+        final int length = array.length;
+
+        Exceptions.requireNonNull( array, "array cannot be null" );
+
+
+        int index = originalIndex;
+
+        /* Adjust for reading from the right as in
+        -1 reads the 4th element if the length is 5
+         */
+        if ( index < 0 ) {
+            index = length + index;
+        }
+
+        /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+         /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+        if ( index < 0 ) {
+            index = 0;
+        }
+        if ( index > length ) {
+            index = length;
+        }
+        return index;
+    }
+
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or throws exception if not.
+     */
+    public static boolean equalsOrDie(double[] expected, double[] got) {
+
+        if (expected.length != got.length) {
+            die("Lengths did not match, expected length", expected.length,
+                    "but got", got.length);
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+                die("value at index did not match index", index , "expected value",
+                        expected[index],
+                        "but got", got[index]);
+
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or false if not.
+     */
+    public static boolean equals(double[] expected, double[] got) {
+
+        if (expected.length != got.length) {
+            return false;
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

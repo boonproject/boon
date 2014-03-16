@@ -229,7 +229,7 @@ public class Int {
     public static int[] slc( int[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end - start;
 
         if ( newLength < 0 ) {
@@ -256,7 +256,7 @@ public class Int {
     public static int[] sliceOf( int[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end - start;
 
         if ( newLength < 0 ) {
@@ -331,7 +331,7 @@ public class Int {
     @Universal
     public static int[] slcEnd( int[] array, int endIndex ) {
 
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
@@ -356,7 +356,7 @@ public class Int {
     @Universal
     public static int[] endSliceOf( int[] array, int endIndex ) {
 
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
@@ -534,8 +534,6 @@ public class Int {
     private static int calculateIndex( int[] array, int originalIndex ) {
         final int length = array.length;
 
-        Exceptions.requireNonNull( array, "array cannot be null" );
-
 
         int index = originalIndex;
 
@@ -563,6 +561,41 @@ public class Int {
         return index;
     }
 
+    /**
+     * Calculates the index for slice notation so -1 is one minus length and so on.
+     * @param array array in question
+     * @param originalIndex the index give which might be negative or higher than length.
+     * @return
+     */
+    private static int calculateEndIndex( int[] array, int originalIndex ) {
+        final int length = array.length;
+
+
+        int index = originalIndex;
+
+        /* Adjust for reading from the right as in
+        -1 reads the 4th element if the length is 5
+         */
+        if ( index < 0 ) {
+            index = length + index;
+        }
+
+        /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+         /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+        if ( index < 0 ) {
+            index = 0;
+        }
+        if ( index > length ) {
+            index = length;
+        }
+        return index;
+    }
 
     /** Public interface for a very fast reduce by. */
     public static interface ReduceBy {
@@ -928,6 +961,12 @@ public class Int {
 
     }
 
+    /**
+     * Checks to see if two values are the same
+     * @param expected expected value
+     * @param got got value
+     * @return true if equal throws exception if not equal
+     */
     public static boolean equalsOrDie(int expected, int got) {
         if (expected != got) {
             return die(Boolean.class, "Expected was", expected, "but we got ", got);
@@ -935,12 +974,62 @@ public class Int {
         return true;
     }
 
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or throws exception if not.
+     */
+    public static boolean equalsOrDie(int[] expected, int[] got) {
 
+        if (expected.length != got.length) {
+            die("Lengths did not match, expected length", expected.length,
+                    "but got", got.length);
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+                die("value at index did not match index", index , "expected value",
+                        expected[index],
+                        "but got", got[index]);
+
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Compares two values
+     * @param expected expected value
+     * @param got got value
+     * @return true or false
+     */
     public static boolean equals(int expected, int got) {
 
         return expected == got;
     }
 
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or false if not.
+     */
+    public static boolean equals(int[] expected, int[] got) {
+
+        if (expected.length != got.length) {
+            return false;
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+               return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Sum

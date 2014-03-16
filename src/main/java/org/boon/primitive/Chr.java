@@ -129,7 +129,7 @@ public class Chr {
     public static char[] slc( char[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         int newLength = end - start;
 
         if ( newLength < 0 ) {
@@ -174,7 +174,7 @@ public class Chr {
     @Universal
     public static char[] slcEnd( char[] array, int endIndex ) {
 
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
@@ -540,6 +540,37 @@ public class Chr {
         return index;
     }
 
+
+    private static int calculateEndIndex( char[] array, int originalIndex ) {
+        final int length = array.length;
+
+
+
+        int index = originalIndex;
+
+        /* Adjust for reading from the right as in
+        -1 reads the 4th element if the length is 5
+         */
+        if ( index < 0 ) {
+            index = length + index;
+        }
+
+        /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+         /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+        if ( index < 0 ) {
+            index = 0;
+        }
+        if ( index > length ) {
+            index = length;
+        }
+        return index;
+    }
 
     //
     //

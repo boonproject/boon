@@ -40,6 +40,18 @@ public class StrTest {
 
     boolean ok;
 
+
+
+    @Test
+    public void sliceOfTest() {
+
+        String test = "01234567890";
+
+        String sliceOf = sliceOf(test, 0, 100);
+
+        Str.equalsOrDie(test, sliceOf);
+    }
+
     @Test
     public void insideOfString() {
 

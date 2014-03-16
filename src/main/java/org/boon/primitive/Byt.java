@@ -36,6 +36,8 @@ import org.boon.core.reflection.Invoker;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
+import static org.boon.Exceptions.die;
+
 
 public class Byt {
 
@@ -173,10 +175,9 @@ public class Byt {
 
     @Universal
     public static byte[] slc( byte[] array, int startIndex, int endIndex ) {
-        Exceptions.requireNonNull( array );
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex(array, endIndex);
         final int newLength = end - start;
 
         if ( newLength < 0 ) {
@@ -224,7 +225,7 @@ public class Byt {
     @Universal
     public static byte[] slcEnd( byte[] array, int endIndex ) {
 
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
@@ -432,6 +433,38 @@ public class Byt {
         return index;
     }
 
+
+    /* End universal methods. */
+    private static int calculateEndIndex( byte[] array, int originalIndex ) {
+        final int length = array.length;
+
+
+
+        int index = originalIndex;
+
+        /* Adjust for reading from the right as in
+        -1 reads the 4th element if the length is 5
+         */
+        if ( index < 0 ) {
+            index = length + index;
+        }
+
+        /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+         /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+        if ( index < 0 ) {
+            index = 0;
+        }
+        if ( index >length ) {
+            index = length;
+        }
+        return index;
+    }
 
     public static int idxInt( byte[] bytes, int off ) {
         return ( ( bytes[ off + 3 ] & 0xFF ) ) +
@@ -796,4 +829,51 @@ public class Byt {
         }
         return sum;
     }
+
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or throws exception if not.
+     */
+    public static boolean equalsOrDie(byte[] expected, byte[] got) {
+
+        if (expected.length != got.length) {
+            die("Lengths did not match, expected length", expected.length,
+                    "but got", got.length);
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+                die("value at index did not match index", index , "expected value",
+                        expected[index],
+                        "but got", got[index]);
+
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or false if not.
+     */
+    public static boolean equals(byte[] expected, byte[] got) {
+
+        if (expected.length != got.length) {
+            return false;
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

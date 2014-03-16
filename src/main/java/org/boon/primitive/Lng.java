@@ -172,7 +172,7 @@ public class Lng {
     public static long[] slc( long[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end - start;
 
         if ( newLength < 0 ) {
@@ -192,7 +192,7 @@ public class Lng {
     public static long[] sliceOf( long[] array, int startIndex, int endIndex ) {
 
         final int start = calculateIndex( array, startIndex );
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end - start;
 
         if ( newLength < 0 ) {
@@ -248,7 +248,7 @@ public class Lng {
     @Universal
     public static long[] slcEnd( long[] array, int endIndex ) {
 
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
@@ -267,7 +267,7 @@ public class Lng {
     @Universal
     public static long[] endSliceOf( long[] array, int endIndex ) {
 
-        final int end = calculateIndex( array, endIndex );
+        final int end = calculateEndIndex( array, endIndex );
         final int newLength = end; // +    (endIndex < 0 ? 1 : 0);
 
         if ( newLength < 0 ) {
@@ -439,6 +439,39 @@ public class Lng {
     }
 
 
+
+    /* End universal methods. */
+    private static int calculateEndIndex( long[] array, int originalIndex ) {
+        final int length = array.length;
+
+        Exceptions.requireNonNull( array, "array cannot be null" );
+
+
+        int index = originalIndex;
+
+        /* Adjust for reading from the right as in
+        -1 reads the 4th element if the length is 5
+         */
+        if ( index < 0 ) {
+            index = length + index;
+        }
+
+        /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+         /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+        if ( index < 0 ) {
+            index = 0;
+        }
+        if ( index > length ) {
+            index = length;
+        }
+        return index;
+    }
 
 
     /** Public interface for a very fast reduce by. */
@@ -1107,6 +1140,53 @@ public class Lng {
      */
     public static long median(long[] values) {
         return median(values, 0, values.length);
+    }
+
+
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or throws exception if not.
+     */
+    public static boolean equalsOrDie(long[] expected, long[] got) {
+
+        if (expected.length != got.length) {
+            die("Lengths did not match, expected length", expected.length,
+                    "but got", got.length);
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+                die("value at index did not match index", index , "expected value",
+                        expected[index],
+                        "but got", got[index]);
+
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or false if not.
+     */
+    public static boolean equals(long[] expected, long[] got) {
+
+        if (expected.length != got.length) {
+            return false;
+        }
+
+        for (int index=0; index< expected.length; index++) {
+            if (expected[index]!= got[index]) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

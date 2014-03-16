@@ -28,58 +28,22 @@
 
 package org.boon.primitive;
 
-import org.boon.core.Fn;
 import org.junit.Test;
 
-import static org.boon.Boon.sputs;
-import static org.boon.Exceptions.die;
-import static org.boon.Ok.okOrDie;
-import static org.boon.primitive.Int.reduceBy;
+import static org.boon.Boon.puts;
 
 /**
- * Created by Richard on 3/15/14.
+ * Created by Richard on 3/16/14.
  */
-public class IntTest {
-
-    public long reduce(long s, int b) {return s+b;}
-
-    public long sum(long s, int b) {return s+b;}
-
-    boolean ok;
+public class FltTest {
 
 
     @Test
     public void testSliceOf() {
-        int[] array = Int.array(0, 1, 2, 3, 4, 5, 6);
-        int[] ints = Int.sliceOf(array, 0, 100);
-        Int.equalsOrDie(array, ints);
-
-    }
-
-    @Test
-    public void test() {
-
-
-
-        long sum =  reduceBy(new int[]{1,2,3,4,5,6,7,8}, this);
-
-
-        okOrDie(sputs("Sum was 36", sum), sum == 36);
-
-
-    }
-
-
-    @Test
-    public void testNewMethod() {
-
-
-
-        long sum =  reduceBy(new int[]{1,2,3,4,5,6,7,8}, this, "sum");
-
-
-        okOrDie(sputs("Sum was 36", sum), sum == 36);
-
+        float[] array = Flt.array(0f, 1f, 2f, 3f, 4f, 5f, 6f);
+        float[] array2 = Flt.sliceOf(array, 0, 100);
+        puts(array, array2);
+        Flt.equalsOrDie(array, array2);
 
     }
 }

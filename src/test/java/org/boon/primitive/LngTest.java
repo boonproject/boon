@@ -34,6 +34,15 @@ import org.junit.Test;
 public class LngTest {
 
 
+
+    @Test
+    public void testSliceOf() {
+        long[] array = Lng.array(0, 1, 2, 3, 4, 5, 6);
+        long[] array2 = Lng.sliceOf(array, 0, 100);
+        Lng.equalsOrDie(array, array2);
+
+    }
+
     @Test
     public void test() {
         main();

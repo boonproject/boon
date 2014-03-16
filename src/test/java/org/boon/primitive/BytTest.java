@@ -39,6 +39,15 @@ public class BytTest {
 
 
     @Test
+    public void testSliceOf() {
+        byte[] array = Byt.array((byte)0, (byte)1, (byte)2, (byte)3, (byte)4, (byte)5, (byte)6);
+        byte[] array2 = Byt.sliceOf(array, 0, 100);
+        Byt.equalsOrDie(array, array2);
+
+    }
+
+
+    @Test
     public void testURLEncodeBytes() {
 
         ByteBuf buf = ByteBuf.create( 20 );
