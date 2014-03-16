@@ -31,11 +31,18 @@ package org.boon.collections;
 import org.boon.primitive.Int;
 
 import java.util.AbstractList;
+import java.util.Arrays;
 
 import static org.boon.primitive.Int.grow;
 
 /**
- * Created by Richard on 2/18/14.
+ * Holds primitive values in a list like object for ints.
+ *
+ * <p>
+ *     Has sum, mean, median, standardDeviation, reduceBy,
+ *     variance.
+ * </p>
+ * @author Rick Hightower
  */
 public class IntList extends AbstractList<Integer> {
 
@@ -275,5 +282,35 @@ public class IntList extends AbstractList<Integer> {
      */
     public  int median(  ) {
         return Int.median(values, end);
+    }
+
+
+    /**
+     * sort
+     * @return sort
+     */
+    public  void sort(  ) {
+        Arrays.sort(values, 0, end);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IntList integers = (IntList) o;
+
+        if (end != integers.end) return false;
+        if (!Int.equals(0, end, values, integers.values)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + (values != null ? Int.hashCode(0, end, values) : 0);
+        result = 31 * result + end;
+        return result;
     }
 }

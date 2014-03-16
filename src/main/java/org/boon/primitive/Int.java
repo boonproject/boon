@@ -1370,4 +1370,53 @@ public class Int {
         return median(values, 0, values.length);
     }
 
+
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or false if not.
+     */
+    public static boolean equals(int start, int end, int[] expected, int[] got) {
+
+        if (expected.length != got.length) {
+            return false;
+        }
+
+        for (int index=start; index< end; index++) {
+            if (expected[index]!= got[index]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int hashCode(int array[]) {
+        if (array == null)
+            return 0;
+
+        int result = 1;
+        for (int element : array) {
+
+            result = 31 * result + element;
+        }
+
+        return result;
+    }
+
+    public static int hashCode(int start, int end, int array[]) {
+        if (array == null)
+            return 0;
+
+        int result = 1;
+
+        for (int index=start; index< end; index++) {
+
+            result = 31 * result + array[index];
+        }
+
+        return result;
+    }
+
 }

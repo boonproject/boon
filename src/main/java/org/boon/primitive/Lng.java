@@ -1189,4 +1189,54 @@ public class Lng {
         return true;
     }
 
+
+    /**
+     * Checks to see if two arrays are equals
+     * @param expected expected array
+     * @param got got array
+     * @return true if equal or false if not.
+     */
+    public static boolean equals(int start, int end, long[] expected, long[] got) {
+
+        if (expected.length != got.length) {
+            return false;
+        }
+
+        for (int index=start; index< end; index++) {
+            if (expected[index]!= got[index]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int hashCode(long array[]) {
+        if (array == null)
+            return 0;
+
+        int result = 1;
+        for (long element : array) {
+            int elementHash = (int)(element ^ (element >>> 32));
+            result = 31 * result + elementHash;
+        }
+
+        return result;
+    }
+
+    public static int hashCode(int start, int end, long array[]) {
+        if (array == null)
+            return 0;
+
+        int result = 1;
+
+        for (int index=start; index< end; index++) {
+            long element = array[index];
+            int elementHash = (int)(element ^ (element >>> 32));
+            result = 31 * result + elementHash;
+
+        }
+
+        return result;
+    }
+
 }

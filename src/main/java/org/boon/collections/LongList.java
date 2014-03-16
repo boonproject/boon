@@ -31,11 +31,19 @@ package org.boon.collections;
 import org.boon.primitive.Lng;
 
 import java.util.AbstractList;
+import java.util.Arrays;
 
 import static org.boon.primitive.Lng.grow;
 
+
 /**
- * Created by Richard on 3/16/14.
+ * Holds primitive values in a list like object for long.
+ *
+ * <p>
+ *     Has sum, mean, median, standardDeviation, reduceBy,
+ *     variance.
+ * </p>
+ * @author Rick Hightower
  */
 public class LongList extends AbstractList<Long> {
 
@@ -278,4 +286,38 @@ public class LongList extends AbstractList<Long> {
     public  long median(  ) {
         return Lng.median(values, end);
     }
+
+
+    /**
+     * sort
+     * @return sort
+     */
+    public void sort(  ) {
+        Arrays.sort(values, 0, end);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LongList longs = (LongList) o;
+
+        if (end != longs.end) return false;
+        if (!Lng.equals(0, end, values, longs.values)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 131313;
+        result = 31 * result + (values != null ? Lng.hashCode(0, end, values) : 0);
+        result = 31 * result + end;
+        return result;
+    }
+
+
+
+
 }
