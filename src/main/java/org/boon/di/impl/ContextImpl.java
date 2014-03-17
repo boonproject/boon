@@ -103,6 +103,18 @@ public class ContextImpl implements Context, Module {
         return this;
     }
 
+
+    public Context combineFirst( Context newContext ) {
+
+        ContextImpl newContextImpl = (ContextImpl) newContext;
+
+        for ( Module module : newContextImpl.modules ) {
+            module.parent(this);
+            this.modules.addFirst( module );
+        }
+        return this;
+    }
+
     @Override
     public void parent(Context context) {
         if ( debug ) logger.debug(contextImpl, "parent");

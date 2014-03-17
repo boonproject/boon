@@ -600,9 +600,10 @@ public class Boon {
 
 
         return readConfig(namespace, path,
-                sysProp(BOON_SYSTEM_CONF_DIR, "/etc/"),  //look in /etc/{path}
-                localConfigDir, //look in local dir
-                "classpath:/"); //look in classpath
+                "classpath:/",
+                localConfigDir,//look in local dir
+                sysProp(BOON_SYSTEM_CONF_DIR, "/etc/") //look in /etc/{path}
+                ); //look in classpath
     }
 
 

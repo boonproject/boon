@@ -29,6 +29,7 @@
 package org.boon.config;
 
 import org.boon.IO;
+import org.boon.Str;
 import org.boon.di.Context;
 import org.boon.di.DependencyInjection;
 import org.boon.json.JsonParserAndMapper;
@@ -36,6 +37,8 @@ import org.boon.json.JsonParserFactory;
 
 import java.nio.file.Path;
 import java.util.*;
+
+import static org.boon.Boon.puts;
 
 
 public enum ContextConfig {
@@ -100,14 +103,15 @@ public enum ContextConfig {
                     all.putAll( child );
                 } else if ( resource.endsWith( ".json" ) ) {
                     child = createMapFromFile( namespace, startsWith, events, IO.path(resource) );
-                    all.putAll( child );
+                    all.putAll(child);
                 }
 
             }
             return all;
         }
 
-        private Map<String,Object> createMapFromFile( String namespace, boolean startsWith, MetaConfigEvents events, Path resource ) {
+        private Map<String,Object> createMapFromFile( String namespace, boolean startsWith,
+                                                      MetaConfigEvents events, Path resource ) {
             NamespaceEventHandler jsonCreatorEventHandler = new NamespaceEventHandler( namespace, events );
             JsonParserAndMapper laxParser = new JsonParserFactory().createParserWithEvents( jsonCreatorEventHandler );
 
@@ -126,6 +130,7 @@ public enum ContextConfig {
                all = fileConfig;
             }
 
+
             return all;
         }
 
@@ -139,7 +144,7 @@ public enum ContextConfig {
             List<Path> jsonFiles = IO.pathsByExt(resource, ".json");
             for ( Path jsonFile : jsonFiles ) {
                 child = createMapFromFile( namespace, startWith, events, jsonFile );
-                all.putAll( child );
+                all.putAll(child);
             }
             return all;
         }

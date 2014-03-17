@@ -59,5 +59,7 @@ public interface Context extends Module {
     void debug(  );
 
     Context combine( Context newContext );
+    Context combineFirst( Context newContext );
+
 
 }
