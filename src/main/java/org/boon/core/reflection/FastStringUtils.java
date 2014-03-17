@@ -167,12 +167,17 @@ public class FastStringUtils {
         return ENABLED;
     }
 
+    public static final char [] EMPTY_CHARS = new char[0];
+    public static final String EMPTY_STRING = "";
+
     public static char[] toCharArray(final String string) {
+        if (string == null) return EMPTY_CHARS;
         return STRING_IMPLEMENTATION.toCharArray(string);
 
     }
 
     public static char[] toCharArray(final CharSequence charSequence) {
+        if (charSequence == null) return EMPTY_CHARS;
         return toCharArray(charSequence.toString());
     }
 
@@ -181,6 +186,7 @@ public class FastStringUtils {
     }
 
     public static String noCopyStringFromChars(final char[] chars) {
+        if (chars==null) return EMPTY_STRING;
         return STRING_IMPLEMENTATION.noCopyStringFromChars(chars);
     }
 }
