@@ -405,7 +405,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
 
-        String keyName = selector.getName();
+        String keyName = selector.getAlias();
         for ( int index = 0; index < values.length && index < maps.size(); index++ ) {
             Map<String, Object> map = maps.get( index );
             values[ index ] = Conversions.toInt( map.get( keyName ) );

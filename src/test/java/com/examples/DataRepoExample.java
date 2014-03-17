@@ -28,6 +28,7 @@
 
 package com.examples;
 
+import org.boon.core.Function;
 import org.boon.datarepo.Repo;
 import org.boon.datarepo.Repos;
 import  org.boon.primitive.Int;
@@ -50,6 +51,8 @@ import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.atIndex;
 import static org.boon.criteria.ObjectFilter.*;
+import static org.boon.criteria.Selector.selectAs;
+import static org.boon.criteria.Selector.selects;
 
 public class DataRepoExample {
 
@@ -406,6 +409,24 @@ public class DataRepoExample {
         Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
 
         Str.equalsOrDie("Sue", (String) resultMaps.get(0).get("firstName"));
+
+
+        List<Map<String, Object>> list = employeeMapRepo.query(
+                selects(
+                        selectAs("firstName", "fn"),
+                        selectAs("lastName", "ln"),
+                        selectAs("salary", "pay", new Function<Integer, Float>() {
+                            @Override
+                            public Float apply(Integer salary) {
+                                float pay = salary.floatValue() / 100;
+                                return pay;
+                            }
+                        })
+                )
+        );
+
+        puts (toJson(list));
+
 
     }
 

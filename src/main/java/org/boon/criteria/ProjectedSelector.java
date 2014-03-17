@@ -47,13 +47,12 @@ public abstract class ProjectedSelector extends Selector {
 
 
     public static Selector max( final String fieldName ) {
-        return new Selector( join( '.', "max", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "max", fieldName ) ) {
             Comparable max;
 
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-                Comparable value = ( Comparable ) fields.get( fieldName ).getValue( item );
-
+                Comparable value = ( Comparable ) this.getPropertyValue(item, fields);
                 if ( max == null ) {
                     max = value;
                 }
@@ -71,7 +70,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, max );
+                    rows.get( 0 ).put( this.alias, max );
                 }
             }
         };
@@ -79,12 +78,12 @@ public abstract class ProjectedSelector extends Selector {
 
 
     public static Selector min( final String fieldName ) {
-        return new Selector( join( '.', "min", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "min", fieldName ) ) {
             Comparable min;
 
             @Override
             public void handleRow( int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields ) {
-                Comparable value = ( Comparable ) fields.get( fieldName ).getValue( item );
+                Comparable value = ( Comparable ) this.getPropertyValue(item, fields);
 
                 if ( min == null ) {
                     min = value;
@@ -103,7 +102,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, min );
+                    rows.get( 0 ).put( this.alias, min );
                 }
             }
         };
@@ -111,7 +110,7 @@ public abstract class ProjectedSelector extends Selector {
 
 
     public static Selector sum( final String fieldName ) {
-        return new Selector( join( '.', "sum", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "sum", fieldName ) ) {
             long sum = 0;
 
             @Override
@@ -122,7 +121,10 @@ public abstract class ProjectedSelector extends Selector {
                     int value = field.getInt( item );
                     sum += value;
                 } else {
-                    Integer ovalue = toInt( field.getValue( item ) );
+
+                    Comparable value = ( Comparable ) this.getPropertyValue(item, fields);
+
+                    Integer ovalue = toInt( value );
                     sum += ovalue;
 
                 }
@@ -137,14 +139,14 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, sum );
+                    rows.get( 0 ).put( this.alias, sum );
                 }
             }
         };
     }
 
     public static Selector sumFloat( final String fieldName ) {
-        return new Selector( join( '.', "sum", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "sum", fieldName ) ) {
             double sum = 0;
 
             @Override
@@ -155,7 +157,9 @@ public abstract class ProjectedSelector extends Selector {
                     float value = field.getFloat( item );
                     sum += value;
                 } else {
-                    Float ovalue = toFloat( field.getValue( item ) );
+                    Comparable value = ( Comparable ) this.getPropertyValue(item, fields);
+
+                    Float ovalue = toFloat( value );
                     sum += ovalue;
 
                 }
@@ -170,7 +174,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, sum );
+                    rows.get( 0 ).put( this.alias, sum );
                 }
 
             }
@@ -179,7 +183,7 @@ public abstract class ProjectedSelector extends Selector {
 
 
     public static Selector maxInt( final String fieldName ) {
-        return new Selector( join( '.', "max", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "max", fieldName ) ) {
             int max = Integer.MIN_VALUE;
 
             @Override
@@ -209,14 +213,14 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, max );
+                    rows.get( 0 ).put( this.alias, max );
                 }
             }
         };
     }
 
     public static Selector maxLong( final String fieldName ) {
-        return new Selector( join( '.', "max", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "max", fieldName ) ) {
             long max = Long.MIN_VALUE;
 
             @Override
@@ -246,7 +250,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, max );
+                    rows.get( 0 ).put( this.alias, max );
                 }
 
             }
@@ -254,7 +258,7 @@ public abstract class ProjectedSelector extends Selector {
     }
 
     public static Selector minInt( final String fieldName ) {
-        return new Selector( join( '.', "min", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "min", fieldName ) ) {
             int min = Integer.MAX_VALUE;
 
             @Override
@@ -282,7 +286,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, min );
+                    rows.get( 0 ).put( this.alias, min );
                 }
 
             }
@@ -290,7 +294,7 @@ public abstract class ProjectedSelector extends Selector {
     }
 
     public static Selector minLong( final String fieldName ) {
-        return new Selector( join( '.', "min", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "min", fieldName ) ) {
             long min = Long.MAX_VALUE;
 
             @Override
@@ -318,7 +322,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, min );
+                    rows.get( 0 ).put( this.alias, min );
                 }
 
             }
@@ -326,7 +330,7 @@ public abstract class ProjectedSelector extends Selector {
     }
 
     public static Selector maxFloat( final String fieldName ) {
-        return new Selector( join( '.', "max", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "max", fieldName ) ) {
             float max = Float.MIN_VALUE;
 
             @Override
@@ -354,14 +358,14 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, max );
+                    rows.get( 0 ).put( this.alias, max );
                 }
             }
         };
     }
 
     public static Selector minFloat( final String fieldName ) {
-        return new Selector( join( '.', "min", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "min", fieldName ) ) {
 
             float min = Float.MAX_VALUE;
 
@@ -391,7 +395,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( this.name, min );
+                    rows.get( 0 ).put( this.alias, min );
                 }
 
             }
@@ -399,7 +403,7 @@ public abstract class ProjectedSelector extends Selector {
     }
 
     public static Selector maxDouble( final String fieldName ) {
-        return new Selector( join( '.', "max", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "max", fieldName ) ) {
             double max = Double.MIN_VALUE;
 
             @Override
@@ -418,14 +422,14 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( name, max );
+                    rows.get( 0 ).put( alias, max );
                 }
             }
         };
     }
 
     public static Selector minDouble( final String fieldName ) {
-        return new Selector( join( '.', "min", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "min", fieldName ) ) {
             double min = Double.MAX_VALUE;
 
             @Override
@@ -444,14 +448,14 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( name, min );
+                    rows.get( 0 ).put( alias, min );
                 }
             }
         };
     }
 
     public static Selector minShort( final String fieldName ) {
-        return new Selector( join( '.', "min", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "min", fieldName ) ) {
             short min = Short.MAX_VALUE;
 
             @Override
@@ -470,14 +474,14 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( name, min );
+                    rows.get( 0 ).put( alias, min );
                 }
             }
         };
     }
 
     public static Selector maxShort( final String fieldName ) {
-        return new Selector( join( '.', "max", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "max", fieldName ) ) {
             short max = Short.MIN_VALUE;
 
             @Override
@@ -496,14 +500,14 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( name, max );
+                    rows.get( 0 ).put( alias, max );
                 }
             }
         };
     }
 
     public static Selector maxByte( final String fieldName ) {
-        return new Selector( join( '.', "max", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "max", fieldName ) ) {
             byte max = Byte.MIN_VALUE;
 
             @Override
@@ -522,7 +526,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( name, max );
+                    rows.get( 0 ).put( alias, max );
                 }
             }
         };
@@ -530,7 +534,7 @@ public abstract class ProjectedSelector extends Selector {
 
 
     public static Selector minByte( final String fieldName ) {
-        return new Selector( join( '.', "min", fieldName ) ) {
+        return new Selector( fieldName, join( '.', "min", fieldName ) ) {
             byte min = Byte.MAX_VALUE;
 
             @Override
@@ -549,7 +553,7 @@ public abstract class ProjectedSelector extends Selector {
             @Override
             public void handleComplete( List<Map<String, Object>> rows ) {
                 if ( rows.size() > 0 ) {
-                    rows.get( 0 ).put( name, min );
+                    rows.get( 0 ).put( alias, min );
                 }
             }
         };
