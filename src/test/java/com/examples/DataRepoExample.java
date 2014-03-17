@@ -56,7 +56,7 @@ public class DataRepoExample {
 
     @Test
     public void test() {
-        SortingObjects.main();
+        DataRepoExample.main();
 
     }
 

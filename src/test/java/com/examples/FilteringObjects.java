@@ -54,7 +54,7 @@ public class FilteringObjects {
 
     @Test
     public void test() {
-        SortingObjects.main();
+        FilteringObjects.main();
 
     }
 
