@@ -1067,7 +1067,8 @@ public class Conversions {
 
 
     public static String toString( Object obj ) {
-        return String.valueOf( obj );
+        return (obj == null) ? "" : obj.toString();
+
     }
 
     public static Number toWrapper( long l ) {

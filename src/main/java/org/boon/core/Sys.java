@@ -197,13 +197,24 @@ public class Sys {
      * all be stuffed into application context of web-app or ear if you use Java EE. */
     public static Object contextToHold () {
 
-        return Lists.list ( Reflection.contextToHold (), Annotations.contextToHold (), Logging.contextToHold() );
+        return Lists.list ( Reflection.contextToHold (),
+                Annotations.contextToHold (),
+                Logging.contextToHold() );
     }
 
     public static String sysProp(String key) {
             return sysProp(key, null);
     }
 
+    /**
+     * Checks for the key under system property.
+     * Then checks it as an environment variable.
+     * (Looks up in env using straight key and performing underBarCase on it.)
+     * Then converts defaultValue into a string.
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public static String sysProp(String key, Object defaultValue) {
         String property = System.getProperty(key, null);
         if (property == null) {

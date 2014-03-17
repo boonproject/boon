@@ -26,38 +26,29 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.di;
+package org.boon.core;
 
+import org.boon.Str;
+import org.junit.Test;
 
-public interface Context extends Module {
+/**
+ * Created by Richard on 3/16/14.
+ */
+public class SysTest {
+    @Test
+    public void testSysProp() throws Exception {
 
+        String str = Sys.sysProp("KEY_SOME_VALUE", "/etc/foo");
 
-    Object invoke( String objectName, String methodName, Object args);
+        Str.equalsOrDie("/etc/foo", str);
+    }
 
+    @Test
+    public void testSysPropNullDefault() throws Exception {
 
-    Object invokeOverload( String objectName, String methodName, Object args);
+        String str = Sys.sysProp("KEY_SOME_VALUE", null);
 
-
-
-    Object invokeFromJson( String objectName, String methodName, String args);
-
-
-    Object invokeOverloadFromJson( String objectName, String methodName, String args);
-
-    Context add( Module module );
-
-    Context remove( Module module );
-
-    Context addFirst( Module module );
-
-    Iterable<Module> children();
-
-    void resolveProperties( Object o );
-
-    void resolvePropertiesIgnoreRequired( Object o );
-
-    void debug(  );
-
-    Context combine( Context newContext );
+        Str.equalsOrDie("", str);
+    }
 
 }
