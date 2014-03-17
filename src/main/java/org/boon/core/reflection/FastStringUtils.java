@@ -176,6 +176,10 @@ public class FastStringUtils {
 
     }
 
+    public static char[] toCharArrayNoCheck(final CharSequence charSequence) {
+        return toCharArray(charSequence.toString());
+    }
+
     public static char[] toCharArray(final CharSequence charSequence) {
         if (charSequence == null) return EMPTY_CHARS;
         return toCharArray(charSequence.toString());
@@ -189,4 +193,10 @@ public class FastStringUtils {
         if (chars==null) return EMPTY_STRING;
         return STRING_IMPLEMENTATION.noCopyStringFromChars(chars);
     }
+
+
+    public static String noCopyStringFromCharsNoCheck(final char[] chars) {
+        return STRING_IMPLEMENTATION.noCopyStringFromChars(chars);
+    }
+
 }

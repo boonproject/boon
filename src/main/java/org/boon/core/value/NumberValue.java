@@ -91,7 +91,7 @@ public class NumberValue extends Number implements Value {
 
     public String toString () {
         if ( startIndex == 0 && endIndex == buffer.length ) {
-            return FastStringUtils.noCopyStringFromChars ( buffer );
+            return FastStringUtils.noCopyStringFromCharsNoCheck( buffer );
         } else {
             return new String ( buffer, startIndex, ( endIndex - startIndex ) );
         }
