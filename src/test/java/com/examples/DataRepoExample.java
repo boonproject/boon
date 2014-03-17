@@ -28,6 +28,8 @@
 
 package com.examples;
 
+import org.boon.datarepo.Repo;
+import org.boon.datarepo.Repos;
 import  org.boon.primitive.Int;
 
 import org.boon.Lists;
@@ -49,7 +51,7 @@ import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.atIndex;
 import static org.boon.criteria.ObjectFilter.*;
 
-public class FilteringObjects {
+public class DataRepoExample {
 
 
     @Test
@@ -297,34 +299,24 @@ public class FilteringObjects {
 
     public static void main(String... args) {
 
-        List<Department> departments;
-        List<Department> departmentsWithEmployeeNamedRick;
         List<Employee> employees;
 
-        /** Copy list of departments. */
-        departments = Lists.deepCopy(departmentsList);
+        Repo<Integer,Employee> employeeRepo;
+
 
         /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departments, "employees");
+        employees = (List<Employee>) atIndex(departmentsList, "employees");
 
 
-        /* -----------------
-        Search for departments that have an employee with the
-        first name Rick.
-         */
-        departmentsWithEmployeeNamedRick =  filter(departments,
-                contains("employees.firstName", "Rick"));
+        /** It builds indexes on properties. */
+        employeeRepo = Repos.builder()
+                .primaryKey("id")
+                .searchIndex("department.name")
+                .searchIndex("salary")
+                .build(int.class, Employee.class).init(employees);
 
-        /* Verify. */
-        Int.equalsOrDie(1, departmentsWithEmployeeNamedRick.size());
-
-        Str.equalsOrDie("Engineering",
-                departmentsWithEmployeeNamedRick.get(0).getName());
-
-
-        /* Grab all employees in HR. */
-        List<Employee> results = filter(employees, eq("department.name", "HR"));
-
+        List<Employee> results =
+                employeeRepo.query(eq("department.name", "HR"));
 
         /* Verify. */
         Int.equalsOrDie(4, results.size());
@@ -332,10 +324,8 @@ public class FilteringObjects {
         Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
 
 
-
-        /** Grab employees in HR with a salary greater than 301 */
-        results = filter(employees, eq("department.name", "HR"), gt("salary", 301));
-
+        results = employeeRepo.query( eq("department.name", "HR"),
+                gt("salary", 301));
 
         /* Verify. */
         Int.equalsOrDie(1, results.size());
@@ -345,24 +335,47 @@ public class FilteringObjects {
         Str.equalsOrDie("Sue", results.get(0).getFirstName());
 
 
-        /** Now work with maps */
-
-        List<Map<String, Object>> employeeMaps =
-        (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
-
-        /** Grab employees in HR with a salary greater than 301 */
-
-        List<Map<String, Object>> resultObjects = filter(employeeMaps,
-                eq("departmentName", "HR"), gt("salary", 301));
 
 
+        List<Map<String, Object>> employeeMaps;
+
+        Repo<Integer,Map<String, Object>> employeeMapRepo;
+
+
+        /** Get all employees in every department. */
+        employeeMaps = (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
+
+
+        /** It builds indexes on properties. */
+        employeeMapRepo = (Repo<Integer,Map<String, Object>>) (Object)
+                Repos.builder()
+                .primaryKey("id")
+                .searchIndex("departmentName")
+                .searchIndex("salary")
+                .build(int.class, Map.class).init((List)employeeMaps);
+
+        employeeMapRepo.addAll(employeeMaps);
+
+        List<Map<String, Object>> resultMaps =
+                employeeMapRepo.query(eq("departmentName", "HR"));
 
         /* Verify. */
-        Int.equalsOrDie(1, resultObjects.size());
+        Int.equalsOrDie(4, resultMaps.size());
 
-        Str.equalsOrDie("HR", (String) resultObjects.get(0).get("departmentName"));
+        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
 
-        Str.equalsOrDie("Sue", (String) resultObjects.get(0).get("firstName"));
+
+        resultMaps = employeeMapRepo.query( eq("departmentName", "HR"),
+                gt("salary", 301));
+
+         /* Verify. */
+        Int.equalsOrDie(1, resultMaps.size());
+
+        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
+
+        Str.equalsOrDie("Sue", (String) resultMaps.get(0).get("firstName"));
+
+
 
 
         /** Now with JSON. */
@@ -374,18 +387,25 @@ public class FilteringObjects {
         employeeMaps =
                 (List<Map<String, Object>>) atIndex(array, "employees");
 
+        employeeMapRepo = (Repo<Integer,Map<String, Object>>) (Object)
+                Repos.builder()
+                        .primaryKey("id")
+                        .searchIndex("departmentName")
+                        .searchIndex("salary")
+                        .build(int.class, Map.class).init((List)employeeMaps);
 
-        resultObjects = filter(employeeMaps,
+
+        resultMaps = employeeMapRepo.query(
                 eq("departmentName", "HR"), gt("salary", 301));
 
 
 
         /* Verify. */
-        Int.equalsOrDie(1, resultObjects.size());
+        Int.equalsOrDie(1, resultMaps.size());
 
-        Str.equalsOrDie("HR", (String) resultObjects.get(0).get("departmentName"));
+        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
 
-        Str.equalsOrDie("Sue", (String) resultObjects.get(0).get("firstName"));
+        Str.equalsOrDie("Sue", (String) resultMaps.get(0).get("firstName"));
 
     }
 

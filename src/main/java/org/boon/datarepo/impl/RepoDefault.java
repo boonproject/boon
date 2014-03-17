@@ -54,6 +54,12 @@ public class RepoDefault<KEY, ITEM> implements Repo<KEY, ITEM>, RepoComposer<KEY
     private SearchableCollection<KEY, ITEM> query;
 
     @Override
+    public Repo init(List<ITEM> items) {
+        this.addAll(items);
+        return this;
+    }
+
+    @Override
     public void updateByFilter( String property, Object value, Criteria... expressions ) {
         List<ITEM> items = query.query( expressions );
         for ( ITEM item : items ) {

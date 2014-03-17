@@ -30,6 +30,7 @@ package org.boon.datarepo.impl;
 
 import org.boon.Exceptions;
 import org.boon.Str;
+import org.boon.core.Typ;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.datarepo.*;
@@ -249,6 +250,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * <p/>
      * Employee.address.zip would be a nested index.
      */
+    @Deprecated
     private Map<String, String[]> nestedIndexes = new HashMap<>();
 
 
@@ -285,6 +287,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      * Listen to modification changes.
      */
     ModificationListener[] listeners;
+    private Class<?> itemClass;
 
 
     /**
@@ -656,6 +659,8 @@ public class RepoBuilderDefault implements RepoBuilder {
         /* Reflect and load all of the fields. */
         loadFields( clazz, classes );
 
+        this.itemClass = clazz;
+
 
 
         /* Construct */
@@ -680,6 +685,12 @@ public class RepoBuilderDefault implements RepoBuilder {
      * @param <ITEM>
      */
     private <ITEM> void loadFields( Class<ITEM> clazz, Class<?>[] classes ) {
+
+
+
+        if (Typ.isMap(clazz)) {
+            return;
+        }
         /**
          * Load all of the fields that we need.
          */
@@ -808,6 +819,7 @@ public class RepoBuilderDefault implements RepoBuilder {
         return this;
     }
 
+    @Deprecated
     @Override
     public RepoBuilder nestedIndex( String... propertyPath ) {
 
@@ -872,41 +884,86 @@ public class RepoBuilderDefault implements RepoBuilder {
             configIndex( prop, index );
         }
         for ( String prop : searchIndexes ) {
-            FieldAccess fieldAccess = fields.get( prop );
+            SearchIndex searchIndex = null;
 
-            requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+            if (!Typ.isMap(itemClass) && !isPropPath(prop)) {
+                FieldAccess fieldAccess = fields.get( prop );
 
-            Class<?> type = fieldAccess.type();
+                requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
-            SearchIndex searchIndex = this.searchIndexFactory.apply( type );
+                Class<?> type = fieldAccess.type();
+
+                searchIndex = this.searchIndexFactory.apply( type );
+            } else {
+                searchIndex = this.searchIndexFactory.apply( null );
+
+            }
             configSearchIndex( fields, prop, searchIndex );
 
         }
         for ( String prop : uniqueSearchIndexes ) {
-            FieldAccess fieldAccess = fields.get( prop );
-            requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
-            SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply( fieldAccess.type() );
-            configSearchIndex( fields, prop, searchIndex );
+            if (!Typ.isMap(itemClass) && !isPropPath(prop)) {
+
+                FieldAccess fieldAccess = fields.get( prop );
+                requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+
+                SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply( fieldAccess.type() );
+                configSearchIndex( fields, prop, searchIndex );
+            } else {
+
+                SearchIndex searchIndex = this.uniqueSearchIndexFactory.apply( Object.class );
+                configSearchIndex( fields, prop, searchIndex );
+
+            }
         }
 
         for ( String prop : lookupIndexes ) {
 
-            FieldAccess fieldAccess = fields.get( prop );
-            Exceptions.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+            if ( !Typ.isMap(itemClass) && !isPropPath(prop) ) {
 
-            LookupIndex index = this.lookupIndexFactory.apply( fieldAccess.type() );
-            configLookupIndex( fields, prop, index );
+
+                FieldAccess fieldAccess = fields.get( prop );
+                Exceptions.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+
+                LookupIndex index = this.lookupIndexFactory.apply( fieldAccess.type() );
+                configLookupIndex( fields, prop, index );
+            } else {
+
+
+                LookupIndex index = this.lookupIndexFactory.apply( Object.class );
+                configLookupIndex( fields, prop, index );
+
+            }
         }
         for ( String prop : uniqueLookupIndexes ) {
-            FieldAccess fieldAccess = fields.get( prop );
-            Exceptions.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
 
 
-            LookupIndex index = this.uniqueLookupIndexFactory.apply( fieldAccess.type() );
-            configLookupIndex( fields, prop, index );
+            if (!Typ.isMap(itemClass) && !isPropPath(prop) ) {
+
+
+                FieldAccess fieldAccess = fields.get( prop );
+                Exceptions.requireNonNull( fieldAccess, "Field access for property was null. " + prop );
+
+
+                LookupIndex index = this.uniqueLookupIndexFactory.apply( fieldAccess.type() );
+                configLookupIndex( fields, prop, index );
+            } else {
+
+                LookupIndex index = this.uniqueLookupIndexFactory.apply( Object.class );
+                configLookupIndex( fields, prop, index );
+
+            }
         }
 
+    }
+
+    private boolean isPropPath(String prop) {
+        if (prop.contains(".")) return true;
+        if (prop.equals("this")) return true;
+        if (prop.equals("[")) return true;
+
+        return false;
     }
 
     private void configLookupIndex( Map<String, FieldAccess> fields, String prop, LookupIndex index ) {
@@ -937,8 +994,30 @@ public class RepoBuilderDefault implements RepoBuilder {
         ( ( SearchableCollection ) query ).addSearchIndex( prop, index );
     }
 
-    private Function getKeyGetterOrCreate( Map<String, FieldAccess> fields, String prop ) {
-        Exceptions.requireNonNull( fields, "field cannot be null" );
+    private Function getKeyGetterOrCreate( Map<String, FieldAccess> fields,
+                                           final String prop ) {
+        if (Typ.isMap(itemClass))  {
+
+
+            Function kg = null;
+
+            kg = this.keyGetterMap.get( prop );
+
+            if ( kg == null ) {
+
+                keyGetterMap.put( prop, new Function() {
+                    @Override
+                    public Object apply(Object o) {
+                        return BeanUtils.atIndex(o, prop);
+                    }
+                } );
+            }
+            return this.keyGetterMap.get( prop );
+
+        }
+
+
+        Exceptions.requireNonNull( fields, "fields cannot be null" );
         Exceptions.requireNonNull( prop, "prop cannot be null" );
 
         Function kg = null;
@@ -946,10 +1025,21 @@ public class RepoBuilderDefault implements RepoBuilder {
         kg = this.keyGetterMap.get( prop );
 
         if ( kg == null ) {
-            FieldAccess field = fields.get( prop );
-            kg = createKeyGetter( field );
 
-            keyGetterMap.put( prop, kg );
+            if (prop.contains(".") || prop.contains("this") || prop.contains("[")) {
+                keyGetterMap.put(prop, new Function() {
+                    @Override
+                    public Object apply(Object o) {
+                        return BeanUtils.atIndex(o, prop);
+                    }
+                } );
+                kg = this.keyGetterMap.get( prop );
+
+            } else {
+                FieldAccess field = fields.get( prop );
+                kg = createKeyGetter( field );
+                keyGetterMap.put( prop, kg );
+            }
         }
         return kg;
 
@@ -962,7 +1052,7 @@ public class RepoBuilderDefault implements RepoBuilder {
         LookupIndex primaryKeyIndex = this.uniqueLookupIndexFactory.apply( type );
 
 
-        if ( !fields.containsKey( primaryKey ) ) {
+        if ( !Typ.isMap(itemClass) && !fields.containsKey( primaryKey ) ) {
             throw new IllegalStateException(
                     String.format( "Fields does not have primary key %s",
                             primaryKey ) );

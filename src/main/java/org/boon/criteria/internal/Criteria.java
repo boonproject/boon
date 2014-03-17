@@ -33,6 +33,7 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.Predicate;
 
+import java.util.Collections;
 import java.util.Map;
 
 public abstract class Criteria implements Predicate {
@@ -61,7 +62,12 @@ public abstract class Criteria implements Predicate {
     }
 
     protected Map<String, FieldAccess> getFieldsInternal( Object o ) {
-        return getFieldsInternal( o.getClass(), o );
+        if (o == null) {
+            return Collections.EMPTY_MAP;
+        }
+        else {
+            return getFieldsInternal( o.getClass(), o );
+        }
     }
 
 

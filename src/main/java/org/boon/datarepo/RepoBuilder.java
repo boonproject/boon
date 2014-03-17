@@ -108,6 +108,7 @@ public interface RepoBuilder {
 
     RepoBuilder underBarCaseIndex( String property );
 
+    @Deprecated
     RepoBuilder nestedIndex( String... propertyPath );
 
     RepoBuilder indexHierarchy();

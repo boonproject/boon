@@ -42,6 +42,8 @@ import java.util.List;
 public interface Repo<KEY, ITEM> extends ObjectEditor<KEY, ITEM>, SearchableCollection<KEY, ITEM> {
 
 
+    Repo init(List<ITEM> items);
+
     void updateByFilter( String property, Object value, Criteria... expressions );
 
     void updateByFilterUsingValue( String property, String value, Criteria... expressions );
