@@ -118,4 +118,5 @@ public interface FieldAccess {
     boolean isViewActive (String activeView);
 
 
+    void setStaticValue(Object newValue);
 }

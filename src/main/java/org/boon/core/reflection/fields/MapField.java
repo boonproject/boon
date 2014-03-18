@@ -330,6 +330,11 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+    public void setStaticValue(Object newValue) {
+
+    }
+
+    @Override
     public final boolean isFinal() {
         return false;
     }

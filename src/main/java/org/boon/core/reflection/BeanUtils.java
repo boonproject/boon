@@ -191,6 +191,75 @@ public class BeanUtils {
     }
 
 
+
+    /**
+     * Get property value, loads nested properties
+     *
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static void setPropertyValue( final Class<?> root, final Object newValue, final String... properties ) {
+
+        Object object = root;
+
+        int index = 0;
+
+
+        Map<String, FieldAccess> fields = getFieldsFromObject( root );
+
+
+        try {
+
+            for ( String property : properties ) {
+
+                FieldAccess field = fields.get( property );
+
+
+                if ( isDigits( property ) ) {
+                    /* We can index numbers and names. */
+                    object = idx ( object, Integer.parseInt ( property ) );
+
+                } else {
+
+                    if ( field == null ) {
+                        die( sputs(
+                                "We were unable to access property=", property,
+                                "\nThe properties passed were=", properties,
+                                "\nThe root object is =", root.getClass().getName(),
+                                "\nThe current object is =", object.getClass().getName()
+                        )
+                        );
+                    }
+
+
+                    if ( index == properties.length - 1 ) {
+                        if (object instanceof Class) {
+                            field.setStaticValue( newValue );
+                        } else {
+                            field.setValue( object, newValue );
+
+                        }
+                    } else {
+                        object = field.getObject( object );
+                        if (object != null) {
+                            fields = getFieldsFromObject( root );
+                        }
+                    }
+                }
+
+                index++;
+            }
+        } catch (Exception ex) {
+            requireNonNull(root, "Root cannot be null");
+            handle(ex, "Unable to set property for root object", className(root),
+                    "for property path", properties, "with new value", newValue,
+                    "last object in the tree was",
+                    className(object), "current property index", index);
+        }
+
+    }
+
     /**
      * Get property value, loads nested properties
      *
@@ -422,6 +491,21 @@ public class BeanUtils {
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
         setPropertyValue( object, value, properties );
+    }
+
+    /**
+     * Set a static value
+     *
+     * @param cls
+     * @param path   in dotted notation
+     * @return
+     */
+    public static void idx( Class<?> cls, String path, Object value ) {
+
+
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+
+        setPropertyValue( cls, value, properties );
     }
 
     /**
@@ -1175,6 +1259,11 @@ public class BeanUtils {
     }
 
     public static <T> T idx( Class<T> type, Object object, String property ) {
-        return null;
+        return (T) idx(object, property);
+    }
+
+
+    public static <T> T atIndex( Class<T> type, Object object, String property ) {
+        return (T) idx(object, property);
     }
 }

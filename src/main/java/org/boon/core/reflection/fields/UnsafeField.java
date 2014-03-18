@@ -28,6 +28,7 @@
 
 package org.boon.core.reflection.fields;
 
+import org.boon.Exceptions;
 import org.boon.core.Typ;
 import sun.misc.Unsafe;
 import java.lang.reflect.Field;
@@ -113,6 +114,17 @@ public abstract class UnsafeField extends BaseField {
             }
 
         }
+    }
+
+
+    @Override
+    public void setStaticValue(Object newValue) {
+        try {
+            field.set(null, newValue);
+        } catch (IllegalAccessException e) {
+            Exceptions.handle(e);
+        }
+
     }
 
 
@@ -308,6 +320,7 @@ public abstract class UnsafeField extends BaseField {
         public final void setInt( Object obj, int value ) {
             unsafe.putInt( obj, offset, value );
         }
+
 
         @Override
         public final int getInt( Object obj ) {

@@ -200,6 +200,11 @@ public class PropertyField extends BaseField {
         return null;
     }
 
+    @Override
+    public void setStaticValue(Object newValue) {
+
+    }
+
 
     @Override
     public final void setBoolean( Object obj, boolean value ) {

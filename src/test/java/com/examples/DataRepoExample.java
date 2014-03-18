@@ -120,7 +120,6 @@ public class DataRepoExample {
                         .searchIndex("salary")
                         .build(int.class, Map.class).init((List)employeeMaps);
 
-        employeeMapRepo.addAll(employeeMaps);
 
         List<Map<String, Object>> resultMaps =
                 employeeMapRepo.query(eq("departmentName", "HR"));

@@ -1081,5 +1081,10 @@ public abstract class Criterion<VALUE> extends Criteria {
         public boolean isViewActive(String activeView) {
             return false;
         }
+
+        @Override
+        public void setStaticValue(Object newValue) {
+
+        }
     }
 }

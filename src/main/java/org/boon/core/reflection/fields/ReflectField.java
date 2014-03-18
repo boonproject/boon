@@ -30,6 +30,8 @@ package org.boon.core.reflection.fields;
 
 
 
+import org.boon.Exceptions;
+
 import java.lang.reflect.Field;
 
 
@@ -177,6 +179,15 @@ public class ReflectField extends BaseField {
         return field;
     }
 
+
+    @Override
+    public void setStaticValue(Object newValue) {
+        try {
+            field.set(null, newValue);
+        } catch (IllegalAccessException e) {
+            Exceptions.handle(e);
+        }
+    }
 
 
     @Override
