@@ -36,6 +36,7 @@ import  org.boon.primitive.Int;
 import org.boon.Lists;
 import org.boon.Str;
 import org.boon.criteria.ObjectFilter;
+import org.boon.template.BoonTemplate;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -52,9 +53,226 @@ import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.atIndex;
 import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.criteria.Selector.selectAs;
+import static org.boon.criteria.Selector.selectAsTemplate;
 import static org.boon.criteria.Selector.selects;
+import static org.boon.template.BoonTemplate.jstl;
+import static org.boon.template.BoonTemplate.template;
 
 public class DataRepoExample {
+
+    static boolean ok;
+
+
+    public static void main(String... args) {
+
+        List<Employee> employees;
+
+        Repo<Integer,Employee> employeeRepo;
+
+
+        /** Get all employees in every department. */
+        employees = (List<Employee>) atIndex(departmentsList, "employees");
+
+
+        /** It builds indexes on properties. */
+        employeeRepo = Repos.builder()
+                .primaryKey("id")
+                .searchIndex("department.name")
+                .searchIndex("salary")
+                .build(int.class, Employee.class).init(employees);
+
+        List<Employee> results =
+                employeeRepo.query(eq("department.name", "HR"));
+
+        /* Verify. */
+        Int.equalsOrDie(4, results.size());
+
+        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
+
+
+        results = employeeRepo.query( eq("department.name", "HR"),
+                gt("salary", 301));
+
+        /* Verify. */
+        Int.equalsOrDie(1, results.size());
+
+        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
+
+        Str.equalsOrDie("Sue", results.get(0).getFirstName());
+
+
+
+
+        List<Map<String, Object>> employeeMaps;
+
+        Repo<Integer,Map<String, Object>> employeeMapRepo;
+
+
+        /** Get all employees in every department. */
+        employeeMaps = (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
+
+
+        /** It builds indexes on properties. */
+        employeeMapRepo = (Repo<Integer,Map<String, Object>>) (Object)
+                Repos.builder()
+                        .primaryKey("id")
+                        .searchIndex("departmentName")
+                        .searchIndex("salary")
+                        .build(int.class, Map.class).init((List)employeeMaps);
+
+        employeeMapRepo.addAll(employeeMaps);
+
+        List<Map<String, Object>> resultMaps =
+                employeeMapRepo.query(eq("departmentName", "HR"));
+
+        /* Verify. */
+        Int.equalsOrDie(4, resultMaps.size());
+
+        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
+
+
+        resultMaps = employeeMapRepo.query( eq("departmentName", "HR"),
+                gt("salary", 301));
+
+         /* Verify. */
+        Int.equalsOrDie(1, resultMaps.size());
+
+        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
+
+        Str.equalsOrDie("Sue", (String) resultMaps.get(0).get("firstName"));
+
+
+
+
+        /** Now with JSON. */
+
+        String json = toJson(departmentObjects);
+        puts(json);
+
+        List<?> array =  (List<?>) fromJson(json);
+        employeeMaps =
+                (List<Map<String, Object>>) atIndex(array, "employees");
+
+        employeeMapRepo = (Repo<Integer,Map<String, Object>>) (Object)
+                Repos.builder()
+                        .primaryKey("id")
+                        .searchIndex("departmentName")
+                        .searchIndex("salary")
+                        .build(int.class, Map.class).init((List)employeeMaps);
+
+
+        resultMaps = employeeMapRepo.query(
+                eq("departmentName", "HR"), gt("salary", 301));
+
+
+
+        /* Verify. */
+        Int.equalsOrDie(1, resultMaps.size());
+
+        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
+
+        Str.equalsOrDie("Sue", (String) resultMaps.get(0).get("firstName"));
+
+
+        List<Map<String, Object>> list = employeeMapRepo.query(
+                selects(
+                        selectAs("firstName", "fn"),
+                        selectAs("lastName", "ln"),
+                        selectAs("contactInfo.phoneNumbers[0]", "ph"),
+
+                        selectAs("salary", "pay", new Function<Integer, Float>() {
+                            @Override
+                            public Float apply(Integer salary) {
+                                float pay = salary.floatValue() / 100;
+                                return pay;
+                            }
+                        })
+                )
+        );
+
+        puts (toJson(list));
+
+
+
+
+        BoonTemplate template = template();
+        template.addFunctions(new DecryptionService());
+
+        template.addFunctions(new Salary());
+
+
+
+        list = employeeMapRepo.query(
+                selects(
+                        selectAsTemplate("fullName", "{{firstName}} {{lastName}}",
+                                template),
+                        selectAs("contactInfo.phoneNumbers[0]", "ph"),
+                        selectAsTemplate("pay", "{{pay(salary)}}", template),
+                        selectAsTemplate("id", "{{DecryptionService.decrypt(id)}}", template)
+
+                )
+        );
+
+        puts (list);
+
+
+        template = jstl();
+        template.addFunctions(new DecryptionService());
+        template.addFunctions(new Salary());
+
+
+
+        list = employeeMapRepo.query(
+                selects(
+                        selectAsTemplate("fullName", "${lastName},${firstName}",
+                                template),
+                        selectAsTemplate("ph", "${contactInfo.phoneNumbers[0]}",
+                                template),
+                        selectAsTemplate("pay", "${pay(salary)}", template),
+                        selectAsTemplate("id", "${DecryptionService.decrypt(id)}", template)
+
+                )
+        );
+
+        puts (list);
+
+
+        template = jstl();
+        template.addFunctions(new DecryptionService());
+        template.addFunctions(new Salary());
+
+
+
+        list = employeeMapRepo.query(
+                selects(
+                        selectAsTemplate("fullName", "${lastName},${firstName}",
+                                template),
+                        selectAsTemplate("ph", "${contactInfo.phoneNumbers[0]}",
+                                template),
+                        selectAsTemplate("pay", "${pay(salary)}", template),
+                        selectAsTemplate("id", "${DecryptionService.decrypt(id)}", template)
+
+                ), gt("salary", 50), eq("firstName", "Rick")
+        );
+
+
+        puts (list);
+
+    }
+
+    public static class DecryptionService {
+        public String decrypt(Integer id) {
+            return "" + ("" + (id == null ? "null" :  id.hashCode())).hashCode();
+        }
+    }
+
+    public static class Salary {
+        public Float pay(Integer salary) {
+            float pay = salary.floatValue() / 100;
+            return pay;
+        }
+
+    }
 
 
     @Test
@@ -297,138 +515,7 @@ public class DataRepoExample {
             map("name", "Sales", "employees", Collections.EMPTY_LIST),
             map("name", "Marketing", "employees", Collections.EMPTY_LIST)
     );
-    static boolean ok;
 
-
-    public static void main(String... args) {
-
-        List<Employee> employees;
-
-        Repo<Integer,Employee> employeeRepo;
-
-
-        /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departmentsList, "employees");
-
-
-        /** It builds indexes on properties. */
-        employeeRepo = Repos.builder()
-                .primaryKey("id")
-                .searchIndex("department.name")
-                .searchIndex("salary")
-                .build(int.class, Employee.class).init(employees);
-
-        List<Employee> results =
-                employeeRepo.query(eq("department.name", "HR"));
-
-        /* Verify. */
-        Int.equalsOrDie(4, results.size());
-
-        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
-
-
-        results = employeeRepo.query( eq("department.name", "HR"),
-                gt("salary", 301));
-
-        /* Verify. */
-        Int.equalsOrDie(1, results.size());
-
-        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
-
-        Str.equalsOrDie("Sue", results.get(0).getFirstName());
-
-
-
-
-        List<Map<String, Object>> employeeMaps;
-
-        Repo<Integer,Map<String, Object>> employeeMapRepo;
-
-
-        /** Get all employees in every department. */
-        employeeMaps = (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
-
-
-        /** It builds indexes on properties. */
-        employeeMapRepo = (Repo<Integer,Map<String, Object>>) (Object)
-                Repos.builder()
-                .primaryKey("id")
-                .searchIndex("departmentName")
-                .searchIndex("salary")
-                .build(int.class, Map.class).init((List)employeeMaps);
-
-        employeeMapRepo.addAll(employeeMaps);
-
-        List<Map<String, Object>> resultMaps =
-                employeeMapRepo.query(eq("departmentName", "HR"));
-
-        /* Verify. */
-        Int.equalsOrDie(4, resultMaps.size());
-
-        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
-
-
-        resultMaps = employeeMapRepo.query( eq("departmentName", "HR"),
-                gt("salary", 301));
-
-         /* Verify. */
-        Int.equalsOrDie(1, resultMaps.size());
-
-        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
-
-        Str.equalsOrDie("Sue", (String) resultMaps.get(0).get("firstName"));
-
-
-
-
-        /** Now with JSON. */
-
-        String json = toJson(departmentObjects);
-        puts(json);
-
-        List<?> array =  (List<?>) fromJson(json);
-        employeeMaps =
-                (List<Map<String, Object>>) atIndex(array, "employees");
-
-        employeeMapRepo = (Repo<Integer,Map<String, Object>>) (Object)
-                Repos.builder()
-                        .primaryKey("id")
-                        .searchIndex("departmentName")
-                        .searchIndex("salary")
-                        .build(int.class, Map.class).init((List)employeeMaps);
-
-
-        resultMaps = employeeMapRepo.query(
-                eq("departmentName", "HR"), gt("salary", 301));
-
-
-
-        /* Verify. */
-        Int.equalsOrDie(1, resultMaps.size());
-
-        Str.equalsOrDie("HR", (String) resultMaps.get(0).get("departmentName"));
-
-        Str.equalsOrDie("Sue", (String) resultMaps.get(0).get("firstName"));
-
-
-        List<Map<String, Object>> list = employeeMapRepo.query(
-                selects(
-                        selectAs("firstName", "fn"),
-                        selectAs("lastName", "ln"),
-                        selectAs("salary", "pay", new Function<Integer, Float>() {
-                            @Override
-                            public Float apply(Integer salary) {
-                                float pay = salary.floatValue() / 100;
-                                return pay;
-                            }
-                        })
-                )
-        );
-
-        puts (toJson(list));
-
-
-    }
 
 
 }

@@ -48,6 +48,7 @@ import java.util.*;
 
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
+import static org.boon.Str.add;
 import static org.boon.core.reflection.BeanUtils.*;
 import static org.boon.core.reflection.FastStringUtils.noCopyStringFromChars;
 import static org.boon.json.JsonFactory.fromJson;
@@ -754,6 +755,8 @@ public abstract class BoonTemplate {
 
         for (MethodAccess methodAccess : methods) {
             methodMap.put(methodAccess.name(), methodAccess.methodAccess().bind(functions));
+            methodMap.put(add(classMeta.name(), ".", methodAccess.name()), methodAccess.methodAccess().bind(functions));
+
         }
 
         if (!all) {
@@ -777,16 +780,16 @@ public abstract class BoonTemplate {
         if (!all) {
             for (MethodAccess methodAccess : methods) {
                 if (methodAccess.respondsTo(CharBuf.class, String.class, CharSequence.class, Object.class)) {
-                    commandMap.put(Str.add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
+                    commandMap.put(add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
                 } else if (methodAccess.respondsTo(String.class, CharSequence.class, Object.class)) {
-                    commandMap.put(Str.add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
+                    commandMap.put(add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
                 }
             }
 
 
         } else {
             for (MethodAccess methodAccess : methods) {
-                commandMap.put(Str.add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
+                commandMap.put(add(classMeta.name(), ".", methodAccess.name()), new InvokeCommand(functions, methodAccess));
             }
         }
     }
@@ -1080,7 +1083,7 @@ public abstract class BoonTemplate {
         CharSequence block;
         CharSequence[] blocks;
         String endOfBlock;
-        endOfBlock = Str.add(endBlockStart, cmd, endBlockEnd);
+        endOfBlock = add(endBlockStart, cmd, endBlockEnd);
 
 
         switch (Commands.command(cmd)) {

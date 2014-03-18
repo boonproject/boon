@@ -32,6 +32,7 @@ package org.boon.criteria;
 import org.boon.core.Function;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.template.BoonTemplate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -230,7 +231,6 @@ public abstract class Selector {
                                      final Function transform) {
         return new Selector( propName, alias ) {
 
-            private final boolean path = isPropPath(propName);
             @Override
             public void handleRow( int index, Map<String, Object> row,
                                    Object item, Map<String, FieldAccess> fields ) {
@@ -239,6 +239,38 @@ public abstract class Selector {
                     row.put( this.name, transform.apply(fields.get( this.name ).getValue( item )) );
                 } else {
                     row.put( alias, transform.apply(BeanUtils.atIndex( item, propName ))  );
+                }
+            }
+
+            @Override
+            public void handleStart( List<? extends Object> results ) {
+            }
+
+            @Override
+            public void handleComplete( List<Map<String, Object>> rows ) {
+            }
+        };
+    }
+
+    /**
+     * Selects but allows having a different alias for the output.
+   \  * @param alias name that the value will be selected as.
+     * @param transform Function that allows you to convert from an object into another object
+     * @return selector
+     * */
+    public static Selector selectAsTemplate( final String alias,
+                                     final String  template,
+                                     final BoonTemplate transform) {
+        return new Selector( alias, alias ) {
+
+            @Override
+            public void handleRow( int index, Map<String, Object> row,
+                                   Object item, Map<String, FieldAccess> fields ) {
+
+                if (!path && fields!=null) {
+                    row.put( this.name, transform.replace(template, item) );
+                } else {
+                    row.put( alias, transform.replace(template, item)  );
                 }
             }
 
