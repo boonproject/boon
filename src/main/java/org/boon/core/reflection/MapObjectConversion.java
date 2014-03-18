@@ -115,7 +115,7 @@ public class MapObjectConversion {
 
 
 
-    public static <T> T fromList( List<Object> argList, Class<T> clazz ) {
+    public static <T> T fromList( List<?> argList, Class<T> clazz ) {
           return fromList( FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), argList, clazz );
     }
 
@@ -205,7 +205,7 @@ public class MapObjectConversion {
     }
 
 
-    public static <T> T fromList( FieldsAccessor fieldsAccessor, List<Object> argList, Class<T> clazz ) {
+    public static <T> T fromList( FieldsAccessor fieldsAccessor, List<?> argList, Class<T> clazz ) {
         return fromList( false, null, fieldsAccessor, argList, clazz, null );
     }
 
