@@ -196,6 +196,8 @@ public enum Type {
                 case "org.boon.core.value.CharSequenceValue":
                     return Type.VALUE;
 
+                case "java.lang.Object":
+                    return Type.OBJECT;
 
             }
             return Type.INSTANCE;

@@ -277,11 +277,13 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     serializeSubtypeInstance ( value, builder );
                     return true;
 
+                case OBJECT:
                 case INSTANCE:
                     serializeFieldName ( fieldName, builder );
                     serializeInstance ( value, builder );
                     return true;
-                 case SYSTEM:
+
+                case SYSTEM:
                     return false;
 
                 default:

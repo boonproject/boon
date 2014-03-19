@@ -30,6 +30,8 @@ package org.boon.logging;
 
 import org.boon.Exceptions;
 import org.boon.primitive.CharBuf;
+import sun.misc.JavaLangAccess;
+import sun.misc.SharedSecrets;
 
 import java.io.PrintWriter;
 import java.util.logging.LogRecord;
@@ -50,6 +52,19 @@ public class BoonLogFormatter  extends java.util.logging.Formatter {
 
         sb.add("[").add(Thread.currentThread().getName()).append("]");
 
+
+//        JavaLangAccess access = SharedSecrets.getJavaLangAccess();
+//        Throwable throwable = new Throwable();
+//        int depth = access.getStackTraceDepth(throwable);
+//
+//        boolean lookingForLogger = true;
+//        for (int index = 0; index < depth; index++) {
+//            // prevents
+//            // from paying building the entire stack frame.
+//            StackTraceElement frame =
+//                    access.getStackTraceElement(throwable, index);
+//            String cname = frame.getClassName();
+//
 
         sb.add(record.getLevel()).add(" [");
         sb.add(record.getLoggerName()).add("]").add("  ");
