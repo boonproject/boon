@@ -1071,6 +1071,12 @@ public class BeanUtils {
     }
 
 
+    public static <T> T createFromSrc( Object src, Class<T> dest ) {
+        T instance = Reflection.newInstance(dest);
+        fieldByFieldCopy( src, instance );
+        return instance;
+    }
+
 
     public static void copyProperties( Object src, Object dest, String... ignore) {
         fieldByFieldCopy( src, dest, Sets.set ( ignore ) );

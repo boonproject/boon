@@ -123,6 +123,16 @@ public class Lists {
         return list;
     }
 
+
+    public static <V,T> List<T> deepCopy( Collection<V> src, Class<T> dest  ) {
+        List<T> list = new ArrayList<>(src.size());
+
+        for (V v : src) {
+            list.add( BeanUtils.createFromSrc( v, dest ));
+        }
+        return list;
+    }
+
     @Universal
     public static <V> List<V> deepCopy( List<V> list ) {
         if ( list instanceof LinkedList ) {

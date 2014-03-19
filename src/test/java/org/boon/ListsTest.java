@@ -53,6 +53,12 @@ import static org.junit.Assert.assertTrue;
 
 public class ListsTest {
 
+    boolean ok;
+
+    static class Person {
+        String name;
+    }
+
     static class Employee {
         String name;
         int salary = 100;
@@ -82,6 +88,19 @@ public class ListsTest {
         }
     }
 
+    @Test
+    public void testDeepCopy() {
+        List<Employee> list = Lists.list(new Employee("Bob"), new Employee("Sally"));
+        Lists.setListProperty(list, "salary", 200);
+        List<Person> people = Lists.deepCopy(list, Person.class);
+
+        ok = people.size() == 2 || die();
+
+        ok = people.get(0).name.equals("Bob");
+
+        ok = people.get(1).name.equals("Sally");
+
+    }
 
     @Test
     public void testFilter0() {
