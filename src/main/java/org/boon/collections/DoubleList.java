@@ -28,12 +28,13 @@
 
 package org.boon.collections;
 
-import org.boon.primitive.Flt;
+import org.boon.primitive.Dbl;
 
 import java.util.AbstractList;
 import java.util.Arrays;
 
-import static org.boon.primitive.Flt.grow;
+import static org.boon.primitive.Dbl.grow;
+
 /**
  * Holds primitive values in a list like object for ints.
  *
@@ -43,30 +44,30 @@ import static org.boon.primitive.Flt.grow;
  * </p>
  * @author Rick Hightower
  */
-public class FloatList extends AbstractList<Float> {
+public class DoubleList extends AbstractList<Double> {
 
     /**
      * Values in this list.
      */
-    private float [] values;
+    private double [] values;
 
     /** Index of last value added. */
     private int end;
 
 
     /** Create a new list with this many items in it. */
-    public FloatList(int capacity) {
-        this.values = new float[capacity];
+    public DoubleList(int capacity) {
+        this.values = new double[capacity];
     }
 
 
     /** Create a new list with exactly 10 items in it. */
-    public FloatList() {
-        this.values = new float[10];
+    public DoubleList() {
+        this.values = new double[10];
     }
 
     /** Create a new list with this many items in it. */
-    public FloatList(float values[]) {
+    public DoubleList(double values[]) {
         this.values = values;
         this.end = values.length;
     }
@@ -77,7 +78,7 @@ public class FloatList extends AbstractList<Float> {
      * @return value
      */
     @Override
-    public Float get(int index) {
+    public Double get(int index) {
         return values[index];
     }
 
@@ -86,7 +87,7 @@ public class FloatList extends AbstractList<Float> {
      * @param index index
      * @return value
      */
-    public float idx(int index) {
+    public double idx(int index) {
         return values[index];
     }
 
@@ -95,7 +96,7 @@ public class FloatList extends AbstractList<Float> {
      * @param index index
      * @return value
      */
-    public float atIndex(int index) {
+    public double atIndex(int index) {
         return values[index];
     }
 
@@ -104,7 +105,7 @@ public class FloatList extends AbstractList<Float> {
      * @param index index
      * @return value
      */
-    public final float getFloat(int index) {
+    public final double getFloat(int index) {
         return values[index];
     }
 
@@ -114,7 +115,7 @@ public class FloatList extends AbstractList<Float> {
      * @return was able to add.
      */
     @Override
-    public boolean add(Float integer) {
+    public boolean add(Double integer) {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
@@ -128,7 +129,7 @@ public class FloatList extends AbstractList<Float> {
      * @param value new value
      * @return was able to add.
      */
-    public boolean addFloat(float value) {
+    public boolean addFloat(double value) {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
@@ -142,7 +143,7 @@ public class FloatList extends AbstractList<Float> {
      * @param integer new value
      * @return was able to add.
      */
-    public FloatList add(float integer) {
+    public DoubleList add(double integer) {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
@@ -155,7 +156,7 @@ public class FloatList extends AbstractList<Float> {
      * Add a new array to the list.
      * @return was able to add.
      */
-    public boolean addArray(float... integers) {
+    public boolean addArray(double... integers) {
         if (end + integers.length >= values.length) {
             values = grow(values, (values.length + integers.length) * 2);
         }
@@ -172,8 +173,8 @@ public class FloatList extends AbstractList<Float> {
      * @return old value at this index
      */
     @Override
-    public Float set(int index, Float element) {
-        float oldValue = values[index];
+    public Double set(int index, Double element) {
+        double oldValue = values[index];
         values [index] = element;
         return oldValue;
     }
@@ -185,8 +186,8 @@ public class FloatList extends AbstractList<Float> {
      * @param element new value
      * @return old value at this index
      */
-    public float idx(int index, float element) {
-        float oldValue = values[index];
+    public double idx(int index, double element) {
+        double oldValue = values[index];
         values [index] = element;
         return oldValue;
     }
@@ -199,8 +200,8 @@ public class FloatList extends AbstractList<Float> {
      * @param element new value
      * @return old value at this index
      */
-    public float atIndex(int index, float element) {
-        float oldValue = values[index];
+    public double atIndex(int index, double element) {
+        double oldValue = values[index];
         values [index] = element;
         return oldValue;
     }
@@ -212,8 +213,8 @@ public class FloatList extends AbstractList<Float> {
      * @param element new value
      * @return old value at this index
      */
-    public float setFloat(int index, float element) {
-        float oldValue = values[index];
+    public double setFloat(int index, double element) {
+        double oldValue = values[index];
         values [index] = element;
         return oldValue;
     }
@@ -230,9 +231,9 @@ public class FloatList extends AbstractList<Float> {
 
 
     /** Sums the values with bounds checking. */
-    public float sum() {
+    public double sum() {
 
-        return Flt.sum(values, end);
+        return Dbl.sum(values, end);
     }
 
 
@@ -240,7 +241,7 @@ public class FloatList extends AbstractList<Float> {
      * Get a copy of the array up to the end element.
      * @return
      */
-    public float [] toValueArray() {
+    public double [] toValueArray() {
 
         return java.util.Arrays.copyOfRange(values, 0, end);
     }
@@ -252,7 +253,7 @@ public class FloatList extends AbstractList<Float> {
      * @return
      */
     public  double reduceBy( Object function ) {
-        return Flt.reduceBy(values, end, function);
+        return Dbl.reduceBy(values, end, function);
     }
 
 
@@ -262,7 +263,7 @@ public class FloatList extends AbstractList<Float> {
      * @return
      */
     public  double reduceBy( Object function, String name ) {
-        return Flt.reduceBy(values, end, function, name);
+        return Dbl.reduceBy(values, end, function, name);
     }
 
 
@@ -271,16 +272,16 @@ public class FloatList extends AbstractList<Float> {
      * @param reduceBy reduceBy function
      * @return the reduction
      */
-    public  double reduceBy( Flt.ReduceBy reduceBy ) {
-        return Flt.reduceBy(values, end, reduceBy);
+    public  double reduceBy( Dbl.ReduceBy reduceBy ) {
+        return Dbl.reduceBy(values, end, reduceBy);
     }
 
     /**
      * Mean
      * @return mean
      */
-    public  float mean(  ) {
-        return Flt.mean(values, end);
+    public  double mean(  ) {
+        return Dbl.mean(values, end);
     }
 
 
@@ -288,8 +289,8 @@ public class FloatList extends AbstractList<Float> {
      * standardDeviation
      * @return standardDeviation
      */
-    public  float standardDeviation(  ) {
-        return Flt.standardDeviation(values, end);
+    public  double standardDeviation(  ) {
+        return Dbl.standardDeviation(values, end);
     }
 
 
@@ -297,8 +298,8 @@ public class FloatList extends AbstractList<Float> {
      * variance
      * @return variance
      */
-    public  float variance(  ) {
-        return Flt.variance(values, end);
+    public  double variance(  ) {
+        return Dbl.variance(values, end);
     }
 
 
@@ -306,8 +307,8 @@ public class FloatList extends AbstractList<Float> {
      * max
      * @return max
      */
-    public  float max(  ) {
-        return Flt.max(values, end);
+    public  double max(  ) {
+        return Dbl.max(values, end);
     }
 
 
@@ -315,8 +316,8 @@ public class FloatList extends AbstractList<Float> {
      * min
      * @return min
      */
-    public  float min(  ) {
-        return Flt.min(values, end);
+    public  double min(  ) {
+        return Dbl.min(values, end);
     }
 
 
@@ -324,8 +325,8 @@ public class FloatList extends AbstractList<Float> {
      * median
      * @return median
      */
-    public  float median(  ) {
-        return Flt.median(values, end);
+    public  double median(  ) {
+        return Dbl.median(values, end);
     }
 
 
@@ -342,10 +343,10 @@ public class FloatList extends AbstractList<Float> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FloatList values = (FloatList) o;
+        DoubleList values = (DoubleList) o;
 
         if (end != values.end) return false;
-        if (!Flt.equals(0, end, this.values, values.values)) return false;
+        if (!Dbl.equals(0, end, this.values, values.values)) return false;
 
         return true;
     }
@@ -353,8 +354,9 @@ public class FloatList extends AbstractList<Float> {
     @Override
     public int hashCode() {
         int result = 1;
-        result = 31 * result + (values != null ? Flt.hashCode(0, end, values) : 0);
+        result = 31 * result + (values != null ? Dbl.hashCode(0, end, values) : 0);
         result = 31 * result + end;
         return result;
     }
 }
+

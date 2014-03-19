@@ -933,7 +933,7 @@ public class Flt {
      * @return sum
      */
     public static double bigSum( float[] values, int start, int length ) {
-        long sum = 0;
+        double sum = 0;
         for (int index = start; index < length; index++ ) {
             sum+= values[index];
         }
@@ -1219,30 +1219,34 @@ public class Flt {
     }
 
     public static int hashCode(float array[]) {
-        if (array == null)
+        if (array == null) {
             return 0;
-
-        float result = 1;
-        for (float element : array) {
-
-            result = 31 * result + element;
         }
 
-        return (int)result;
+        int result = 1;
+        for (float item : array) {
+
+            int bits = Float.floatToIntBits(item);
+            result = 31 * result + bits;
+        }
+
+        return result;
     }
 
     public static int hashCode(int start, int end, float array[]) {
-        if (array == null)
+        if (array == null) {
             return 0;
+        }
 
-        float result = 1;
+        int result = 1;
 
         for (int index=start; index< end; index++) {
 
-            result = 31 * result + array[index];
+            int bits = Float.floatToIntBits(array[index]);
+            result = 31 * result + bits;
         }
 
-        return (int)result;
+        return result;
     }
 
 
