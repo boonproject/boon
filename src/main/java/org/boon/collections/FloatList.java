@@ -28,10 +28,15 @@
 
 package org.boon.collections;
 
+import org.boon.StringScanner;
+import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Flt;
 
 import java.util.AbstractList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.boon.primitive.Flt.grow;
 /**
@@ -44,6 +49,42 @@ import static org.boon.primitive.Flt.grow;
  * @author Rick Hightower
  */
 public class FloatList extends AbstractList<Float> {
+
+
+
+    /** Creates a primitive list based on an input list and a property path
+     *
+     * @param inputList input list
+     * @param propertyPath property path
+     * @return primitive list
+     */
+    public static FloatList toFloatList( List<?> inputList, String propertyPath ) {
+        if (inputList.size() == 0 ) {
+            return new FloatList(0);
+        }
+
+        FloatList outputList = new FloatList(inputList.size());
+
+        if (propertyPath.contains(".") || propertyPath.contains("[")) {
+
+            String[] properties = StringScanner.splitByDelimiters(propertyPath, ".[]");
+
+            for (Object o : inputList) {
+                outputList.add(BeanUtils.getPropertyFloat(o, properties));
+            }
+
+        } else {
+
+            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            FieldAccess fieldAccess = fields.get(propertyPath);
+            for (Object o : inputList) {
+                outputList.add( fieldAccess.getFloat(o) );
+            }
+        }
+
+        return outputList;
+    }
+
 
     /**
      * Values in this list.

@@ -32,6 +32,7 @@ package org.boon.criteria;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +64,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 max = null;
             }
 
@@ -95,7 +96,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 min = null;
             }
 
@@ -132,7 +133,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 sum = Integer.MIN_VALUE;
             }
 
@@ -167,7 +168,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 sum = Integer.MIN_VALUE;
             }
 
@@ -206,7 +207,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 max = Integer.MIN_VALUE;
             }
 
@@ -243,7 +244,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 max = Long.MIN_VALUE;
             }
 
@@ -279,7 +280,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 min = Integer.MAX_VALUE;
             }
 
@@ -315,7 +316,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 min = Long.MAX_VALUE;
             }
 
@@ -351,7 +352,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 max = Float.MIN_VALUE;
             }
 
@@ -388,7 +389,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 min = Float.MAX_VALUE;
             }
 
@@ -415,7 +416,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 max = Double.MIN_VALUE;
             }
 
@@ -441,7 +442,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 min = Double.MIN_VALUE;
             }
 
@@ -467,7 +468,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 min = Short.MAX_VALUE;
             }
 
@@ -493,7 +494,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 max = Short.MIN_VALUE;
             }
 
@@ -519,7 +520,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 max = Byte.MIN_VALUE;
             }
 
@@ -546,7 +547,7 @@ public abstract class ProjectedSelector extends Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
                 min = Byte.MIN_VALUE;
             }
 

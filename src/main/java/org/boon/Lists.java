@@ -29,11 +29,16 @@
 package org.boon;
 
 
+import org.boon.collections.DoubleList;
+import org.boon.collections.FloatList;
+import org.boon.collections.IntList;
+import org.boon.collections.LongList;
 import org.boon.core.Conversions;
 import org.boon.core.Predicate;
 import org.boon.core.Reducer;
 import org.boon.core.reflection.*;
 import org.boon.core.Function;
+import org.boon.core.reflection.fields.FieldAccess;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -189,6 +194,49 @@ public class Lists {
         }
     }
 
+
+    public static <PROP> List<PROP> toList( List<?> inputList, Class<PROP> cls, String propertyPath ) {
+        List<PROP> outputList = new ArrayList<>();
+
+        for (Object o : inputList) {
+            outputList.add((PROP) BeanUtils.idx(o, propertyPath));
+        }
+
+        return outputList;
+    }
+
+    public static IntList toIntList( List<?> inputList, String propertyPath ) {
+
+        return IntList.toIntList(inputList, propertyPath);
+    }
+
+
+    public static FloatList toFloatList( List<?> inputList, String propertyPath ) {
+
+        return FloatList.toFloatList(inputList, propertyPath);
+    }
+
+
+    public static DoubleList toDoubleList( List<?> inputList, String propertyPath ) {
+
+        return DoubleList.toDoubleList(inputList, propertyPath);
+    }
+
+
+    public static LongList toLongList( List<?> inputList, String propertyPath ) {
+
+        return LongList.toLongList(inputList, propertyPath);
+    }
+
+    public static List<?> toList( List<?> inputList, String propertyPath ) {
+        List<Object> outputList = new ArrayList<>();
+
+        for (Object o : inputList) {
+            outputList.add(BeanUtils.idx(o, propertyPath));
+        }
+
+        return outputList;
+    }
 
     public static List<?> toList( Object item ) {
        if ( item!= null && item.getClass().isArray() ) {

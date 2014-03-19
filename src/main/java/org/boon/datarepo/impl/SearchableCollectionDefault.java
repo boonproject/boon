@@ -515,7 +515,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
 
         List<ITEM> results = this.query( expressions );
 
-        return Selector.performSelection( selectors, results, fields );
+        return Selector.selectFrom(selectors, results, fields);
     }
 
 

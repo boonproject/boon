@@ -34,10 +34,7 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.template.BoonTemplate;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.boon.Lists.list;
 import static org.boon.Boon.joinBy;
@@ -45,15 +42,79 @@ import static org.boon.Boon.joinBy;
 public abstract class Selector {
 
 
+
+
+    /**
+     * Performs collections from the results.
+     * @param selectors list of selectors
+     * @param results results we are selecting from
+     * @return map of selected items per row
+     */
+    public static void collectFrom(List<Selector> selectors, Collection<?> results) {
+
+        if (results.size() == 0) {
+            return;
+        }
+        Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(results.iterator().next());
+
+        collectFrom(selectors, results, fields);
+    }
+
+        /**
+         * Performs collections from the results.
+         * @param selectors list of selectors
+         * @param results results we are selecting from
+         * @param fields fields
+         * @return map of selected items per row
+         */
+    public static void collectFrom(List<Selector> selectors, Collection<?> results, Map<String, FieldAccess> fields) {
+
+
+        for ( Selector s : selectors ) {
+            s.handleStart( results );
+        }
+
+
+        int index = 0;
+        for ( Object item : results ) {
+            for ( Selector s : selectors ) {
+                s.handleRow( index, null, item, fields );
+            }
+            index++;
+        }
+
+        for ( Selector s : selectors ) {
+            s.handleComplete( null );
+        }
+
+    }
+
     /**
      * Performs the actual selection from the results.
      * @param selectors list of selectors
      * @param results results we are selecting from
-     * @param fields fields
      * @param <ITEM> List of items
      * @return map of selected items per row
      */
-    public static <ITEM> List<Map<String, Object>> performSelection( List<Selector> selectors, List<ITEM> results, Map<String, FieldAccess> fields ) {
+    public static <ITEM> List<Map<String, Object>> selectFrom(List<Selector> selectors, Collection<ITEM> results) {
+
+        if (results.size() == 0) {
+            return Collections.EMPTY_LIST;
+        }
+        Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(results.iterator().next());
+
+        return selectFrom(selectors, results, fields);
+    }
+
+        /**
+         * Performs the actual selection from the results.
+         * @param selectors list of selectors
+         * @param results results we are selecting from
+         * @param fields fields
+         * @param <ITEM> List of items
+         * @return map of selected items per row
+         */
+    public static <ITEM> List<Map<String, Object>> selectFrom(List<Selector> selectors, Collection<ITEM> results, Map<String, FieldAccess> fields) {
         List<Map<String, Object>> rows = new ArrayList<>( results.size() );
 
 
@@ -182,7 +243,7 @@ public abstract class Selector {
 
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -209,7 +270,7 @@ public abstract class Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -243,7 +304,7 @@ public abstract class Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -275,7 +336,7 @@ public abstract class Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -293,7 +354,7 @@ public abstract class Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -310,7 +371,7 @@ public abstract class Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -336,7 +397,7 @@ public abstract class Selector {
 
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -362,7 +423,7 @@ public abstract class Selector {
 
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -384,7 +445,7 @@ public abstract class Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -406,7 +467,7 @@ public abstract class Selector {
             }
 
             @Override
-            public void handleStart( List<? extends Object> results ) {
+            public void handleStart( Collection<?> results ) {
             }
 
             @Override
@@ -423,7 +484,7 @@ public abstract class Selector {
                                     Object item,
                                     Map<String, FieldAccess> fields );
 
-    public abstract void handleStart( List<? extends Object> results );
+    public abstract void handleStart( Collection<?> results );
 
     public abstract void handleComplete( List<Map<String, Object>> rows );
 

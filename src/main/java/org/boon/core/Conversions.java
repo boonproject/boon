@@ -854,7 +854,7 @@ public class Conversions {
 
     public static double[] darray( Object value ) {
         //You could handleUnexpectedException shorts, bytes, longs and chars more efficiently
-        if ( value.getClass() == Typ.shortArray ) {
+        if ( value.getClass() == Typ.doubleArray ) {
             return ( double[] ) value;
         }
         double[] values = new double[ Boon.len( value ) ];

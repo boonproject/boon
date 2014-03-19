@@ -28,10 +28,15 @@
 
 package org.boon.collections;
 
+import org.boon.StringScanner;
+import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Dbl;
 
 import java.util.AbstractList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.boon.primitive.Dbl.grow;
 
@@ -45,6 +50,42 @@ import static org.boon.primitive.Dbl.grow;
  * @author Rick Hightower
  */
 public class DoubleList extends AbstractList<Double> {
+
+
+
+    /** Creates a primitive list based on an input list and a property path
+     *
+     * @param inputList input list
+     * @param propertyPath property path
+     * @return primitive list
+     */
+    public static DoubleList toDoubleList( List<?> inputList, String propertyPath ) {
+        if (inputList.size() == 0 ) {
+            return new DoubleList(0);
+        }
+
+        DoubleList outputList = new DoubleList(inputList.size());
+
+        if (propertyPath.contains(".") || propertyPath.contains("[")) {
+
+            String[] properties = StringScanner.splitByDelimiters(propertyPath, ".[]");
+
+            for (Object o : inputList) {
+                outputList.add(BeanUtils.getPropertyDouble(o, properties));
+            }
+
+        } else {
+
+            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            FieldAccess fieldAccess = fields.get(propertyPath);
+            for (Object o : inputList) {
+                outputList.add( fieldAccess.getDouble(o) );
+            }
+        }
+
+        return outputList;
+    }
+
 
     /**
      * Values in this list.

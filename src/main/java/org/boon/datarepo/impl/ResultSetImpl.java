@@ -180,8 +180,8 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     public ResultSet<List<Map<String, Object>>> select( Selector... selectors ) {
         prepareResults();
         return new ResultSetImpl(
-                Selector.performSelection(
-                        Arrays.asList( selectors ), results, fields ),
+                Selector.selectFrom(
+                        Arrays.asList(selectors), results, fields),
                 fields );
 
     }
@@ -192,7 +192,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         int[] values = new int[ results.size() ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -208,7 +208,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         float[] values = new float[ results.size() ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -224,7 +224,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         short[] values = new short[ results.size() ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -240,7 +240,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         double[] values = new double[ results.size() ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -256,7 +256,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         byte[] values = new byte[ results.size() ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -272,7 +272,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         char[] values = new char[ results.size() ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -288,7 +288,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         Object[] values = new Object[ results.size() ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -304,7 +304,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         Object values = Array.newInstance( cls, results.size() );
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < results.size(); index++ ) {
@@ -321,7 +321,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         Object values = Array.newInstance( cls, results.size() );
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < results.size(); index++ ) {
@@ -403,7 +403,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         int[] values = new int[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getAlias();
         for ( int index = 0; index < values.length && index < maps.size(); index++ ) {
@@ -424,7 +424,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         float[] values = new float[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -443,7 +443,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         short[] values = new short[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -462,7 +462,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         double[] values = new double[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -481,7 +481,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         byte[] values = new byte[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -500,7 +500,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         char[] values = new char[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -519,7 +519,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         Object[] values = new Object[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
@@ -538,7 +538,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
 
         Object[] values = new Object[ 1 ];
 
-        List<Map<String, Object>> maps = Selector.performSelection( list( selector ), results, fields );
+        List<Map<String, Object>> maps = Selector.selectFrom(list(selector), results, fields);
 
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {

@@ -654,8 +654,6 @@ public class BeanUtils {
      */
     public static int idxInt( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
