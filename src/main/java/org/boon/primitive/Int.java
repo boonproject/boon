@@ -29,13 +29,20 @@
 package org.boon.primitive;
 
 import org.boon.Exceptions;
+import org.boon.StringScanner;
 import org.boon.Universal;
+import org.boon.collections.IntList;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Invoker;
+import org.boon.core.reflection.fields.FieldAccess;
 
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
@@ -1419,4 +1426,94 @@ public class Int {
         return result;
     }
 
+
+    /**
+     * Calculate a sum of a property from a list.
+     * @param inputList
+     * @param propertyPath to item we want to sum
+     * @return sum
+     */
+    public static long sum( Collection<?> inputList, String propertyPath ) {
+        if (inputList.size() == 0 ) {
+            return 0;
+        }
+
+        long sum = 0l;
+
+        if (propertyPath.contains(".") || propertyPath.contains("[")) {
+
+            String[] properties = StringScanner.splitByDelimiters(propertyPath, ".[]");
+
+            for (Object o : inputList) {
+                sum+=BeanUtils.getPropertyInt(o, properties);
+            }
+
+        } else {
+
+            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            FieldAccess fieldAccess = fields.get(propertyPath);
+            for (Object o : inputList) {
+                sum += fieldAccess.getInt(o);
+            }
+        }
+
+        return sum;
+    }
+
+    private static double mean( Collection<?> inputList, String propertyPath ) {
+        double mean = sum(inputList, propertyPath)/inputList.size();
+        return Math.round(mean);
+    }
+
+
+    public static double variance(Collection<?> inputList, String propertyPath) {
+        double mean = mean(inputList, propertyPath);
+        double temp = 0;
+
+
+        double a;
+
+        if (propertyPath.contains(".") || propertyPath.contains("[")) {
+
+            String[] properties = StringScanner.splitByDelimiters(propertyPath, ".[]");
+
+            for (Object o : inputList) {
+                a =BeanUtils.getPropertyInt(o, properties);
+                temp += (mean-a)*(mean-a);
+            }
+
+        } else {
+
+            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            FieldAccess fieldAccess = fields.get(propertyPath);
+            for (Object o : inputList) {
+                a = fieldAccess.getInt(o);
+                temp += (mean-a)*(mean-a);
+            }
+        }
+
+        return Math.round(temp / inputList.size());
+
+    }
+
+
+
+    /**
+     * Calculate standard deviation.
+     *
+     * @return standard deviation
+     */
+    public static double standardDeviation(Collection<?> inputList, String propertyPath) {
+        double variance = variance(inputList, propertyPath);
+        return Math.round(Math.sqrt(variance));
+    }
+
+    /**
+     * Calculate standard deviation.
+     *
+     * @return standard deviation
+     */
+    public static int median(Collection<?> inputList, String propertyPath) {
+        return IntList.toIntList(inputList, propertyPath).median();
+    }
 }

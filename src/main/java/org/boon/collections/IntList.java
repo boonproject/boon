@@ -33,10 +33,7 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Int;
 
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.boon.primitive.Int.grow;
 
@@ -58,7 +55,7 @@ public class IntList extends AbstractList<Integer> {
      * @param propertyPath property path
      * @return primitive list
      */
-    public static IntList toIntList( List<?> inputList, String propertyPath ) {
+    public static IntList toIntList( Collection<?> inputList, String propertyPath ) {
         if (inputList.size() == 0 ) {
             return new IntList(0);
         }

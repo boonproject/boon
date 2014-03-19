@@ -33,10 +33,7 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Dbl;
 
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.boon.primitive.Dbl.grow;
 
@@ -59,7 +56,7 @@ public class DoubleList extends AbstractList<Double> {
      * @param propertyPath property path
      * @return primitive list
      */
-    public static DoubleList toDoubleList( List<?> inputList, String propertyPath ) {
+    public static DoubleList toDoubleList( Collection<?> inputList, String propertyPath ) {
         if (inputList.size() == 0 ) {
             return new DoubleList(0);
         }

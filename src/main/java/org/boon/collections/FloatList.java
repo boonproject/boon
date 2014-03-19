@@ -33,10 +33,7 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Flt;
 
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.boon.primitive.Flt.grow;
 /**
@@ -58,7 +55,7 @@ public class FloatList extends AbstractList<Float> {
      * @param propertyPath property path
      * @return primitive list
      */
-    public static FloatList toFloatList( List<?> inputList, String propertyPath ) {
+    public static FloatList toFloatList( Collection<?> inputList, String propertyPath ) {
         if (inputList.size() == 0 ) {
             return new FloatList(0);
         }
