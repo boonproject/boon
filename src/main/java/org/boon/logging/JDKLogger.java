@@ -37,8 +37,12 @@ import static org.boon.Str.str;
 public class JDKLogger implements LoggerDelegate {
     private final java.util.logging.Logger logger;
 
+
+
+
     JDKLogger(final String name) {
         logger = java.util.logging.Logger.getLogger(name);
+
     }
 
     @Override
