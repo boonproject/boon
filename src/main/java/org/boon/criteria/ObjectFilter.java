@@ -29,9 +29,9 @@
 package org.boon.criteria;
 
 
-import com.sun.java.swing.plaf.windows.resources.windows_de;
 import org.boon.Boon;
 import org.boon.core.Conversions;
+import org.boon.core.Predicate;
 import org.boon.core.Typ;
 import org.boon.core.Type;
 import org.boon.core.reflection.BeanUtils;
@@ -47,11 +47,32 @@ import static org.boon.Exceptions.die;
 import static org.boon.Ok.okOrDie;
 
 
+/**
+ * Filters objects based on Criteria and Predicates.
+ * Also allows construction of predicates.
+ */
 public class ObjectFilter {
 
 
+    /**
+     * Does the object match this expression.
+     * An expression is a collection of criteria.
+     * @param obj object in question
+     * @param exp expression
+     * @return true or false
+     */
     public static boolean matches( Object obj, Criteria... exp ) {
         return ObjectFilter.and( exp ).test( obj );
+    }
+
+    /**
+     * Does the object match this predicate
+     * @param obj object in question
+     * @param exp predicate
+     * @return true or false
+     */
+    public static boolean matches( Object obj, Predicate exp ) {
+        return exp.test(obj);
     }
 
 
@@ -151,8 +172,8 @@ public class ObjectFilter {
             public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
 
 
-                FieldAccess field = fields.get( name );
-                return value.equals( field.getValue( owner ) );
+                Object compareValue = getValueToCompare(fields, name, value, owner);
+                return value.equals( compareValue );
             }
         };
     }

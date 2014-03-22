@@ -29,6 +29,7 @@
 package org.boon.criteria;
 
 import org.boon.Exceptions;
+import org.boon.Str;
 import org.boon.core.Typ;
 import org.boon.core.Conversions;
 import org.boon.core.Type;
@@ -82,6 +83,28 @@ public abstract class Criterion<VALUE> extends Criteria {
         hashCode = doHashCode();
         toString = doToString();
     }
+
+    public Object getValueToCompare(Map<String, FieldAccess> fields, Object name, Object value, Object owner) {
+
+        if (name instanceof Enum) {
+            name = Str.camelCaseLower(name.toString());
+        }
+
+        FieldAccess field = fields.get( name );
+
+        Object compareValue = field.getValue(owner);
+
+        if (value instanceof String) {
+            return Conversions.toString(compareValue);
+        } else if (Typ.isBasicType(value)) {
+            return Conversions.coerce(field.type(),field.getValue(owner));
+        } else {
+            return field.getValue(owner);
+        }
+
+    }
+
+
 
 
     public String getName() {
