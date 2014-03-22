@@ -34,7 +34,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+/**
+ * Concurrent HashSet.
+ * @param <T>
+ */
 public class ConcurrentHashSet<T> implements Set<T> {
 
     private final Map<T, Object> map;

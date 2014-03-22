@@ -28,6 +28,7 @@
 
 package com.examples;
 
+import org.boon.criteria.internal.Criteria;
 import  org.boon.primitive.Int;
 
 import org.boon.Lists;
@@ -51,6 +52,157 @@ import static org.boon.criteria.ObjectFilter.*;
 
 public class FilteringObjects {
 
+
+    public static void main(String... args) {
+
+        main1();
+        main2();
+    }
+
+
+    public static void main1(String... args) {
+
+        List<Department> departments;
+        List<Department> departmentsWithEmployeeNamedRick;
+        List<Employee> employees;
+
+        /** Copy list of departments. */
+        departments = Lists.deepCopy(departmentsList);
+
+        /** Get all employees in every department. */
+        employees = (List<Employee>) atIndex(departments, "employees");
+
+                /* Grab all employees in HR. */
+        List<Employee> results = filter(employees, eq("department.name", "HR"));
+
+
+        /* Verify. */
+        Int.equalsOrDie(4, results.size());
+
+        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
+
+
+
+        List listJson = list("an example", "com.examples.FilteringObjects$Employee", "AND",
+                list(
+                        list("department.name",
+                                "EQUAL", list("HR")
+                        ),
+                        list("department.name",
+                                "EQUAL", list("HR")
+                        )
+                )
+
+        );
+
+
+        Criteria criteria = ObjectFilter.criteriaFromList(listJson);
+
+        results = filter(employees, criteria);
+
+                /* Verify. */
+        Int.equalsOrDie(4, results.size());
+
+        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
+
+
+
+
+    }
+
+    public static void main2(String... args) {
+
+        List<Department> departments;
+        List<Department> departmentsWithEmployeeNamedRick;
+        List<Employee> employees;
+
+        /** Copy list of departments. */
+        departments = Lists.deepCopy(departmentsList);
+
+        /** Get all employees in every department. */
+        employees = (List<Employee>) atIndex(departments, "employees");
+
+
+        /* -----------------
+        Search for departments that have an employee with the
+        first name Rick.
+         */
+        departmentsWithEmployeeNamedRick =  filter(departments,
+                contains("employees.firstName", "Rick"));
+
+        /* Verify. */
+        Int.equalsOrDie(1, departmentsWithEmployeeNamedRick.size());
+
+        Str.equalsOrDie("Engineering",
+                departmentsWithEmployeeNamedRick.get(0).getName());
+
+
+        /* Grab all employees in HR. */
+        List<Employee> results = filter(employees, eq("department.name", "HR"));
+
+
+        /* Verify. */
+        Int.equalsOrDie(4, results.size());
+
+        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
+
+
+
+        /** Grab employees in HR with a salary greater than 301 */
+        results = filter(employees, eq("department.name", "HR"), gt("salary", 301));
+
+
+        /* Verify. */
+        Int.equalsOrDie(1, results.size());
+
+        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
+
+        Str.equalsOrDie("Sue", results.get(0).getFirstName());
+
+
+        /** Now work with maps */
+
+        List<Map<String, Object>> employeeMaps =
+                (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
+
+        /** Grab employees in HR with a salary greater than 301 */
+
+        List<Map<String, Object>> resultObjects = filter(employeeMaps,
+                eq("departmentName", "HR"), gt("salary", 301));
+
+
+
+        /* Verify. */
+        Int.equalsOrDie(1, resultObjects.size());
+
+        Str.equalsOrDie("HR", (String) resultObjects.get(0).get("departmentName"));
+
+        Str.equalsOrDie("Sue", (String) resultObjects.get(0).get("firstName"));
+
+
+        /** Now with JSON. */
+
+        String json = toJson(departmentObjects);
+        puts(json);
+
+        List<?> array =  (List<?>) fromJson(json);
+        employeeMaps =
+                (List<Map<String, Object>>) atIndex(array, "employees");
+
+
+        resultObjects = filter(employeeMaps,
+                eq("departmentName", "HR"), gt("salary", 301));
+
+
+
+        /* Verify. */
+        Int.equalsOrDie(1, resultObjects.size());
+
+        Str.equalsOrDie("HR", (String) resultObjects.get(0).get("departmentName"));
+
+        Str.equalsOrDie("Sue", (String) resultObjects.get(0).get("firstName"));
+
+    }
 
     @Test
     public void test() {
@@ -293,101 +445,6 @@ public class FilteringObjects {
             map("name", "Marketing", "employees", Collections.EMPTY_LIST)
     );
     static boolean ok;
-
-
-    public static void main(String... args) {
-
-        List<Department> departments;
-        List<Department> departmentsWithEmployeeNamedRick;
-        List<Employee> employees;
-
-        /** Copy list of departments. */
-        departments = Lists.deepCopy(departmentsList);
-
-        /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departments, "employees");
-
-
-        /* -----------------
-        Search for departments that have an employee with the
-        first name Rick.
-         */
-        departmentsWithEmployeeNamedRick =  filter(departments,
-                contains("employees.firstName", "Rick"));
-
-        /* Verify. */
-        Int.equalsOrDie(1, departmentsWithEmployeeNamedRick.size());
-
-        Str.equalsOrDie("Engineering",
-                departmentsWithEmployeeNamedRick.get(0).getName());
-
-
-        /* Grab all employees in HR. */
-        List<Employee> results = filter(employees, eq("department.name", "HR"));
-
-
-        /* Verify. */
-        Int.equalsOrDie(4, results.size());
-
-        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
-
-
-
-        /** Grab employees in HR with a salary greater than 301 */
-        results = filter(employees, eq("department.name", "HR"), gt("salary", 301));
-
-
-        /* Verify. */
-        Int.equalsOrDie(1, results.size());
-
-        Str.equalsOrDie("HR", results.get(0).getDepartment().getName());
-
-        Str.equalsOrDie("Sue", results.get(0).getFirstName());
-
-
-        /** Now work with maps */
-
-        List<Map<String, Object>> employeeMaps =
-        (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
-
-        /** Grab employees in HR with a salary greater than 301 */
-
-        List<Map<String, Object>> resultObjects = filter(employeeMaps,
-                eq("departmentName", "HR"), gt("salary", 301));
-
-
-
-        /* Verify. */
-        Int.equalsOrDie(1, resultObjects.size());
-
-        Str.equalsOrDie("HR", (String) resultObjects.get(0).get("departmentName"));
-
-        Str.equalsOrDie("Sue", (String) resultObjects.get(0).get("firstName"));
-
-
-        /** Now with JSON. */
-
-        String json = toJson(departmentObjects);
-        puts(json);
-
-        List<?> array =  (List<?>) fromJson(json);
-        employeeMaps =
-                (List<Map<String, Object>>) atIndex(array, "employees");
-
-
-        resultObjects = filter(employeeMaps,
-                eq("departmentName", "HR"), gt("salary", 301));
-
-
-
-        /* Verify. */
-        Int.equalsOrDie(1, resultObjects.size());
-
-        Str.equalsOrDie("HR", (String) resultObjects.get(0).get("departmentName"));
-
-        Str.equalsOrDie("Sue", (String) resultObjects.get(0).get("firstName"));
-
-    }
 
 
 }

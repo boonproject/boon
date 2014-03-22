@@ -106,6 +106,12 @@ public class Invoker {
     }
 
 
+    public static Object invokeFromObject(Class<?> cls, String name, Object args) {
+        return invokeFromObject(false, null, null, cls, null, name, args);
+
+    }
+
+
     /**
      * Invokes method from list or map depending on what the Object arg is.
      * @param object
@@ -168,34 +174,41 @@ public class Invoker {
     }
 
 
+
     public static Object invokeFromObject(boolean respectIgnore, String view, Set<String> ignoreProperties,
                                           Object object, String name, Object args) {
+        return invokeFromObject(respectIgnore, view, ignoreProperties, object.getClass(), object, name, args);
+
+    }
+
+    public static Object invokeFromObject(boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                          Class<?> cls, Object object, String name, Object args) {
 
         try {
             if (args instanceof Map) {
-                return invokeFromList(respectIgnore, view, ignoreProperties, object, name, Lists.list(args));
+                return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, Lists.list(args));
             } else if (args instanceof List) {
                 List list = (List) args;
-                ClassMeta classMeta = ClassMeta.classMeta(object.getClass());
+                ClassMeta classMeta = ClassMeta.classMeta(cls);
                 MethodAccess m = classMeta.method(name);
                 if (m.parameterTypes().length == 1 && list.size() > 0) {
 
                     Object firstArg = list.get(0);
                     if (firstArg instanceof Map || firstArg instanceof List) {
-                        return invokeFromList(respectIgnore, view, ignoreProperties, object, name, list);
+                        return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, list);
 
                     } else {
-                        return invokeFromList(respectIgnore, view, ignoreProperties, object, name, Lists.list(args));
+                        return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, Lists.list(args));
                     }
                 } else {
 
-                    return invokeFromList(respectIgnore, view, ignoreProperties, object, name, list);
+                    return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, list);
 
                 }
             } else if (args == null) {
                 return invoke(object, name);
             } else {
-                return invokeFromList(respectIgnore, view, ignoreProperties, object, name, Lists.list(args));
+                return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, Lists.list(args));
             }
         } catch (Exception ex) {
             return Exceptions.handle(Object.class, ex, "Unable to invoke method object", object, "name", name, "args", args);
@@ -207,16 +220,30 @@ public class Invoker {
         return invokeFromList(true, null, null, object, name, args);
     }
 
+
+    public static Object invokeFromList(Class<?> cls, String name, List<?> args) {
+        return invokeFromList(true, null, null, cls, null, name, args);
+    }
+
     public static Object invokeFromList(boolean respectIgnore, String view, Set<String> ignoreProperties, Object object, String name, List<?> args) {
+
+
+        return invokeFromList(respectIgnore, view, ignoreProperties, object.getClass(), object, name, args);
+
+    }
+
+
+    public static Object invokeFromList(boolean respectIgnore, String view, Set<String> ignoreProperties, Class<?> cls, Object object, String name, List<?> args) {
 
         try {
 
             List<Object> list = new ArrayList(args);
-            ClassMeta classMeta = ClassMeta.classMeta(object.getClass());
+            ClassMeta classMeta = ClassMeta.classMeta(cls);
             MethodAccess m = classMeta.method(name);
             Class<?>[] parameterTypes = m.parameterTypes();
             if (list.size() != parameterTypes.length) {
-                return die(Object.class, "Unable to invoke method", name, "on object", object, "with arguments", list);
+                return die(Object.class, "The list size does not match the parameter" +
+                        " length of the method. Unable to invoke method", name, "on object", object, "with arguments", list);
             }
 
             FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);
@@ -224,8 +251,9 @@ public class Invoker {
             for (int index = 0; index < parameterTypes.length; index++) {
 
                 if (!matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, m, parameterTypes, index)) {
-                    return die(Object.class, "Unable to invoke method as argument types did not match",
-                            name, "on object", object, "with arguments", list);
+                    return die(Object.class, index, "Unable to invoke method as argument types did not match",
+                            name, "on object", object, "with arguments", list,
+                            "\nValue at index = ", list.get(index));
                 }
 
             }
@@ -241,7 +269,6 @@ public class Invoker {
 
 
     }
-
 
 
     public static Object invokeMethodFromList(boolean respectIgnore, String view, Set<String> ignoreProperties,
@@ -396,7 +423,9 @@ public class Invoker {
                     Type type = method.getGenericParameterTypes()[index];
                     if (type instanceof ParameterizedType) {
                         ParameterizedType pType = (ParameterizedType) type;
-                        Class<?> componentType = (Class<?>) pType.getActualTypeArguments()[0];
+                        Type type1 = pType.getActualTypeArguments()[0];
+
+                        Class<?> componentType = type1 instanceof Class ? (Class<?>) type1 : Object.class;
                         List newList = new ArrayList(itemList.size());
 
                         for (Object o : itemList) {
@@ -405,7 +434,10 @@ public class Invoker {
                             }
 
                             List fromList = (List) o;
-                            o = fromList(fieldsAccessor, fromList, componentType);
+                            if (componentType != Object.class) {
+                                o = fromList(fieldsAccessor, fromList, componentType);
+                            }
+
                             newList.add(o);
                         }
                         list.set(index, newList);
@@ -414,6 +446,8 @@ public class Invoker {
                 }
             } else if (paramType == Typ.string && item instanceof CharSequence) {
                 list.set(index, item.toString());
+            } else if (paramType == Class.class && item instanceof CharSequence) {
+                list.set(index, Conversions.toClass(item.toString()));
             } else if (paramType.isEnum() && (item instanceof CharSequence | item instanceof Number)) {
                 list.set(index, toEnum(paramType, item));
             } else if (!paramType.isInstance(item)) {

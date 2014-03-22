@@ -32,11 +32,38 @@ package org.boon.cache;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static org.boon.primitive.Int.roundUpToPowerOf2;
+
+/**
+ * Uses striping to allow more than one thread to operate on the cache at a time, but
+ * due to the nature of the independent tracking of each strip the exact LRUness liveness
+ * is only an approximation. The tradeoff is speed for LRU approximation.
+ *
+ * Basically the very least recently used is not always harvested but one of the stripes
+ * will harvest one of the least recently used.
+ *
+ * So if you cache size was 10,000 and you had 8 CPUs, then a reaping would only
+ * get one of the least recently used, but maybe not the most least but within the least +-8.
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
+    /** Cache regions.*/
     final SimpleCache<K, V>[] cacheRegions;
 
+    private static final boolean useFastHash;
 
+    private transient final int hashSeed = randomHashSeed( this );
+
+
+
+    /**
+     * Cache class
+     * @param <K> key
+     * @param <V> value
+     */
     private static class SimpleThreadSafeCache<K, V> extends SimpleCache<K, V> {
         private final ReadWriteLock readWriteLock;
 
@@ -129,14 +156,29 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
+    /**
+     * New
+     * @param limit limit of the cache size
+     */
     public SimpleConcurrentCache( final int limit ) {
         this( limit, false, CacheType.LRU );
     }
 
+    /**
+     * New
+     * @param limit limit of the cache size
+     * @param type type of cache
+     */
     public SimpleConcurrentCache( final int limit, CacheType type ) {
         this( limit, false, type );
     }
 
+    /**
+     * Limit of hte cache size
+     * @param limit limit of the cache size
+     * @param fair should we be fair?
+     * @param type type of cache
+     */
     public SimpleConcurrentCache( final int limit, boolean fair, CacheType type ) {
         int cores = Runtime.getRuntime().availableProcessors();
         int stripeSize = cores < 2 ? 4 : cores * 2;
@@ -147,6 +189,20 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         }
     }
 
+    /**
+     *
+     * The more stripes the less accurate the LRU but the faster the access.
+     * Life is all about engineering trade-offs.
+     *
+     * 100,000 entries ok with 100 stripes, but 10 entries not so cool with 10 stripes.
+     *
+     * Try to keep the accuracy in the 1% to 5% range.
+     *
+     * @param concurrency how many stripes
+     * @param limit limit of the cache size
+     * @param fair should we be fair?
+     * @param type type of cache
+     */
     public SimpleConcurrentCache( final int concurrency, final int limit, boolean fair, CacheType type ) {
 
 
@@ -157,6 +213,14 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         }
     }
 
+    /**
+     * The more stripes the less accurate the LRU but the faster the access.
+     * Life is all about engineering trade-offs.
+     *
+     * @param concurrency how many stripes
+     * @param limit limit of the cache size
+     * @param fair should we be fair?
+     */
     public SimpleConcurrentCache( final int concurrency, final int limit, boolean fair ) {
 
 
@@ -167,33 +231,56 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         }
     }
 
+    /** Get the map for this region. */
     private SimpleCache<K, V> map( K key ) {
         return cacheRegions[ stripeIndex( key ) ];
     }
 
+    /**
+     * Put the key in.
+     * @param key the key
+     * @param value the value
+     */
     @Override
     public void put( K key, V value ) {
 
         map( key ).put( key, value );
     }
 
+    /**
+     * Take the key out.
+     * @param key the key
+     * @return value
+     */
     @Override
     public V get( K key ) {
         return map( key ).get( key );
     }
 
-    //For testing only
+
+    /**
+     * for testing only.
+     * @param key key to get the value with
+     * @return the value
+     */
     @Override
     public V getSilent( K key ) {
         return map( key ).getSilent( key );
 
     }
 
+    /**
+     * Remove the key
+     * @param key the key
+     */
     @Override
     public void remove( K key ) {
         map( key ).remove( key );
     }
 
+    /** Get the size of the cache.
+     *  This is not 100% accurate if cache is being concurrenly accessed.
+     */
     @Override
     public int size() {
         int size = 0;
@@ -203,6 +290,10 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         return size;
     }
 
+    /**
+     * toString
+     * @return string
+     */
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
@@ -214,7 +305,6 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
-    private static final boolean useFastHash;
 
     static {
 
@@ -229,8 +319,12 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
         useFastHash = yes;
     }
 
-    private transient final int hashSeed = randomHashSeed( this );
 
+    /** Create a hash seed.
+     *
+     * @param instance for me?
+     * @return hash seed
+     */
     private static int randomHashSeed( SimpleConcurrentCache instance ) {
 
 
@@ -242,6 +336,11 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
+    /**
+     * Calculate the hash.
+     * @param k key
+     * @return
+     */
     private final int hash( Object k ) {
         int h = hashSeed;
 
@@ -260,17 +359,11 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
-    private static int roundUpToPowerOf2( int number ) {
-        int rounded = number >= 1_000
-                ? 1_000
-                : ( rounded = Integer.highestOneBit( number ) ) != 0
-                ? ( Integer.bitCount( number ) > 1 ) ? rounded << 1 : rounded
-                : 1;
-
-        return rounded;
-    }
-
-
+    /**
+     * Striping
+     * @param key key to stripe
+     * @return stripe
+     */
     private int stripeIndex( K key ) {
         return indexFor( hash( key ), cacheRegions.length );
     }

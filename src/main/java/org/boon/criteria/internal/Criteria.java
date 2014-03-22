@@ -87,4 +87,6 @@ public abstract class Criteria implements Predicate {
         return fields;
     }
 
+
+
 }

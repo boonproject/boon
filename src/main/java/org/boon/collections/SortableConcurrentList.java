@@ -26,13 +26,17 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.cache;
+package org.boon.collections;
 
 
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * Just a concurrent list.
+ * @param <T>
+ */
 public class SortableConcurrentList<T extends Comparable> implements List<T> {
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final List<T> list;

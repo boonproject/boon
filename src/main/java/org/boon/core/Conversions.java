@@ -44,6 +44,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import static org.boon.Exceptions.handle;
 import static org.boon.primitive.Arry.len;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
@@ -1384,5 +1385,14 @@ public class Conversions {
             return 0; //will never get here.
         }
 
+    }
+
+    public static Class<?> toClass(String str) {
+
+        try {
+            return Class.forName(str);
+        } catch (ClassNotFoundException ex) {
+            return (Class<?>) handle(Object.class, ex);
+        }
     }
 }

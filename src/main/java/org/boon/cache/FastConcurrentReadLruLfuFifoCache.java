@@ -28,6 +28,7 @@
 
 package org.boon.cache;
 
+import org.boon.collections.SortableConcurrentList;
 import org.boon.core.timer.TimeKeeper;
 import org.boon.core.timer.TimeKeeperBasic;
 
@@ -38,18 +39,54 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+/**
+ * Fast concurrent read cache with many options.
+ *
+ * Writes are slow (single threaded lock)
+ * Reads are very fast no lock.
+ * Compaction (if you are over the limit) is slow.
+ *
+ *
+ * @param <KEY> key
+ * @param <VALUE> value
+ */
 public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
 
+    /**
+     * Map to hold cache items.
+     */
     private final ConcurrentHashMap<KEY, CacheEntry<KEY, VALUE>> map = new ConcurrentHashMap<>();
 
+    /**
+     * A list that can be sorted easily. It is concurrent.
+     */
     private final SortableConcurrentList<CacheEntry<KEY, VALUE>> list;
+
+    /**
+     * Eviction size.
+     */
     private final int evictSize;
+
+    /**
+     * Count which determines order.
+     */
     private final AtomicInteger count = new AtomicInteger();
+
+    /**
+     * CacheType.
+     */
     private final CacheType type;
 
+    /**
+     * How do we determine time of entry.
+     */
     private final TimeKeeper timeKeeper;
 
+    /**
+     * New cache LFU is the default.
+     * @param evictSize
+     */
     public FastConcurrentReadLruLfuFifoCache( int evictSize ) {
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
         list = new SortableConcurrentList<>();
@@ -59,6 +96,12 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
     }
 
 
+    /**
+     * New cache
+     * @param evictSize eviction size
+     * @param tradeoffs tradeoffs
+     * @param type cache type.
+     */
     public FastConcurrentReadLruLfuFifoCache( int evictSize, Tradeoffs tradeoffs, CacheType type ) {
         this.evictSize = ( int ) ( evictSize + ( evictSize * 0.20f ) );
 
@@ -99,6 +142,12 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
 
     }
 
+    /** Get the value from the cache. It does not touch the lock so
+     * reads are fast.
+     * This does not touch the order list so it is fast.
+     * @param key the key
+     * @return value
+     */
     public VALUE get( KEY key ) {
         CacheEntry<KEY, VALUE> cacheEntry = map.get( key );
         if ( cacheEntry != null ) {
@@ -110,6 +159,11 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
 
     }
 
+    /**
+     * Used for testing as it gets the value without updating stats
+     * @param key key
+     * @return value
+     */
     public VALUE getSilent( KEY key ) {
         CacheEntry<KEY, VALUE> cacheEntry = map.get( key );
         if ( cacheEntry != null ) {
@@ -120,6 +174,11 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
 
     }
 
+    /**
+     * Remove the key. This touches the lock.
+     * So removes are **not** fast.
+     * @param key key
+     */
     @Override
     public void remove( KEY key ) {
         CacheEntry<KEY, VALUE> entry = map.remove( key );
@@ -128,6 +187,11 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
         }
     }
 
+    /** Put the value. This touches the lock so puts are **not** fast.
+     *
+     * @param key the key key
+     * @param value the value value
+     */
     public void put( KEY key, VALUE value ) {
         CacheEntry<KEY, VALUE> entry = map.get( key );
 
@@ -143,11 +207,13 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
         evictIfNeeded();
     }
 
+    /** Gets the time. */
     private long time() {
         return this.timeKeeper.time();
     }
 
 
+    /** Avoid overflow. */
     private final int order() {
         int order = count.incrementAndGet();
         if ( order > Integer.MAX_VALUE - 100 ) {
@@ -156,6 +222,7 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
         return order;
     }
 
+    /** Evict if we are over the size limit.*/
     private final void evictIfNeeded() {
         if ( list.size() > evictSize ) {
 
@@ -173,6 +240,10 @@ public class FastConcurrentReadLruLfuFifoCache<KEY, VALUE> implements Cache<KEY,
     }
 
 
+    /**
+     * How many items do we have in the cache?
+     * @return size
+     */
     public int size() {
         return this.map.size();
     }

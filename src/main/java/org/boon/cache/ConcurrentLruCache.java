@@ -32,22 +32,43 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * ConcurrentLruCache cache.
+ * This has the limitation of using a single lock to update live status of key.
+ *
+ * @param <KEY> the key
+ * @param <VALUE> the value
+ */
 public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
 
-    private final ReentrantLock lock = new ReentrantLock();
 
 
+    /**
+     * Map to hold the cache values
+     */
     private final Map<KEY, VALUE> map = new ConcurrentHashMap<>();
-    private final Deque<KEY> queue = new LinkedList<>();
+
+    /** Queue to hold keys in the LRU cache.
+     */
+    private final Deque<KEY> queue = new ConcurrentLinkedDeque<>();
+
+    /** Limit the amount you can hold in the map. */
     private final int limit;
 
 
+    /** Creates an LRU Cache with a given limit. */
     public ConcurrentLruCache( int limit ) {
         this.limit = limit;
     }
 
+    /**
+     * Key
+     * @param key the key
+     * @param value the value
+     */
     @Override
     public void put( KEY key, VALUE value ) {
         VALUE oldValue = map.put( key, value );
@@ -62,6 +83,11 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
     }
 
 
+    /**
+     * Get the value at key
+     * @param key the key
+     * @return value
+     */
     @Override
     public VALUE get( KEY key ) {
         removeThenAddKey( key );
@@ -69,64 +95,69 @@ public class ConcurrentLruCache<KEY, VALUE> implements Cache<KEY, VALUE> {
     }
 
 
-    private void addKey( KEY key ) {
-        lock.lock();
-        try {
-            queue.addFirst( key );
-        } finally {
-            lock.unlock();
-        }
-
-
-    }
-
-    private KEY removeLast() {
-        lock.lock();
-        try {
-            final KEY removedKey = queue.removeLast();
-            return removedKey;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private void removeThenAddKey( KEY key ) {
-        lock.lock();
-        try {
-            queue.removeFirstOccurrence( key );
-            queue.addFirst( key );
-        } finally {
-            lock.unlock();
-        }
-
-    }
-
-    private void removeFirstOccurrence( KEY key ) {
-        lock.lock();
-        try {
-            queue.removeFirstOccurrence( key );
-        } finally {
-            lock.unlock();
-        }
-
-    }
-
-
+    /**
+     * Get the key without updating the LRU status for testing
+     * @param key key
+     * @return
+     */
     @Override
     public VALUE getSilent( KEY key ) {
         return map.get( key );
     }
 
+    /**
+     * Remove the key.
+     * @param key
+     */
     @Override
     public void remove( KEY key ) {
         removeFirstOccurrence( key );
         map.remove( key );
     }
 
+    /**
+     * Size of the cache.
+     * @return size
+     */
     @Override
     public int size() {
         return map.size();
     }
+
+
+    /** Add a key. */
+    private void addKey( KEY key ) {
+            queue.addFirst(key);
+      }
+
+    /** Remove the last key. */
+    private KEY removeLast() {
+            final KEY removedKey = queue.removeLast();
+            return removedKey;
+     }
+
+    /**
+     * This removes the item from the queue and then re-adds it to increment the
+     * live-ness of the item. It updates the LRU since this key was read.
+     *
+     * @param key key
+     */
+    private void removeThenAddKey( KEY key ) {
+            queue.removeFirstOccurrence( key );
+            queue.addFirst( key );
+
+    }
+
+    /**
+     * Remove the key.
+     * @param key
+     */
+    private void removeFirstOccurrence( KEY key ) {
+            queue.removeFirstOccurrence(key);
+
+    }
+
+
 
     public String toString() {
         return map.toString();

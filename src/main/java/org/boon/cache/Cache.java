@@ -28,9 +28,26 @@
 
 package org.boon.cache;
 
+/**
+ * Holds a set of key value pairs in a cache interface.
+ *
+ * @param <KEY> key
+ * @param <VALUE> value
+ */
 public interface Cache<KEY, VALUE> {
+
+    /**
+     * Puts the key in.
+     * @param key the key
+     * @param value the value
+     */
     void put( KEY key, VALUE value );
 
+    /**
+     * return the value given the key.
+     * @param key the key
+     * @return the value
+     */
     VALUE get( KEY key );
 
     VALUE getSilent( KEY key );

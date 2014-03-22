@@ -55,5 +55,9 @@ public enum Operator {
     NOT_IN,     //Not Indexed
     NOT,
 
+    AND, //FOR JSON CONFIG
+    OR
+
+
 
 }

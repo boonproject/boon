@@ -1516,4 +1516,21 @@ public class Int {
     public static int median(Collection<?> inputList, String propertyPath) {
         return IntList.toIntList(inputList, propertyPath).median();
     }
+
+
+    /**
+     * Round up to the nearest power of 2
+     * @param number number you want to round up to.
+     * @return rounded up to the power of 2.
+     */
+    public static int roundUpToPowerOf2( int number ) {
+        int rounded = number >= 1_000
+                ? 1_000
+                : ( rounded = Integer.highestOneBit( number ) ) != 0
+                ? ( Integer.bitCount( number ) > 1 ) ? rounded << 1 : rounded
+                : 1;
+
+        return rounded;
+    }
+
 }

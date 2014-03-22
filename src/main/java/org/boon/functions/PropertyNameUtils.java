@@ -26,7 +26,7 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.predicates;
+package org.boon.functions;
 
 import org.boon.Str;
 import org.boon.core.Function;

@@ -28,6 +28,7 @@
 
 package org.boon.criteria;
 
+import static org.boon.Boon.*;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.*;
 import static org.boon.Lists.*;
@@ -35,6 +36,11 @@ import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.criteria.ObjectFilter.matches;
 
 import org.boon.Lists;
+import org.boon.core.Type;
+import org.boon.core.reflection.Invoker;
+import org.boon.criteria.internal.Criteria;
+import org.boon.criteria.internal.Group;
+import org.boon.criteria.internal.Operator;
 import org.junit.Test;
 
 import java.util.List;
@@ -42,6 +48,157 @@ import java.util.Map;
 
 public class ObjectFilterTest {
 
+
+    @Test
+    public void testCreateCriteriaFromJson() {
+
+        List<Integer> list = Lists.list(1, 2);
+        Criterion foo = (Criterion) ObjectFilter.createCriteria("foo", Operator.EQUAL, Type.INT, list);
+
+        equalsOrDie(Operator.EQUAL, foo.getOperator());
+
+        equalsOrDie(foo.values[0], list.get(0));
+
+
+        equalsOrDie("foo", foo.getName());
+
+        foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class, "createCriteria", Lists.list("foo", Operator.EQUAL, Type.INT, list));
+
+        equalsOrDie(Operator.EQUAL, foo.getOperator());
+
+        equalsOrDie(foo.values[0], list.get(0));
+
+        List<Operator> operators = Lists.list(Operator.LESS_THAN, Operator.EQUAL, Operator.NOT_EQUAL,
+                Operator.GREATER_THAN, Operator.BETWEEN, Operator.IN,
+                Operator.NOT_IN, Operator.CONTAINS, Operator.ENDS_WITH, Operator.STARTS_WITH,
+                Operator.NOT_CONTAINS);
+
+
+        List<Type> types = Lists.list(Type.INT, Type.DOUBLE, Type.OBJECT,
+                Type.FLOAT, Type.SHORT, Type.BYTE,
+                Type.LONG);
+
+
+        for (Operator op : operators) {
+            for (Type type : types) {
+                List<Object> args = Lists.list("foo", op, type, list);
+
+                foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class,
+                        "createCriteria", args);
+
+                puts ("Now working with", op, type);
+
+                equalsOrDie(op, foo.getOperator());
+
+
+                equalsOrDie("foo", foo.getName());
+
+
+            }
+        }
+
+        String json = "[\"foo\", \"EQUAL\", \"INT\", [1,2,3]]";
+        Object object = fromJson(json);
+
+        puts (object);
+
+        foo = (Criterion) Invoker.invokeFromObject(ObjectFilter.class,
+                "createCriteria", object );
+
+
+
+        equalsOrDie(Operator.EQUAL, foo.getOperator());
+
+        equalsOrDie(foo.values[0], list.get(0));
+
+
+        equalsOrDie("foo", foo.getName());
+
+        foo = (Criterion) ObjectFilter.createCriteriaFromClass("foo",
+                org.boon.criteria.MyClass.class, Operator.EQUAL,list);
+
+
+
+        equalsOrDie(Operator.EQUAL, foo.getOperator());
+
+        equalsOrDie(foo.values[0], list.get(0));
+
+
+        equalsOrDie("foo", foo.getName());
+
+
+        foo = (Criterion) ObjectFilter.createCriteriaFromClass("bar.baz",
+                org.boon.criteria.MyClass.class, Operator.EQUAL, list);
+
+
+
+        equalsOrDie(Operator.EQUAL, foo.getOperator());
+
+        equalsOrDie(foo.values[0], list.get(0));
+
+
+        equalsOrDie("bar.baz", foo.getName());
+
+
+
+        json = "[\"bar.baz\", \"org.boon.criteria.MyClass\", \"EQUAL\",  [1,2,3]]";
+
+
+        object = fromJson(json);
+
+        puts(object);
+
+        foo = (Criterion) Invoker.invokeFromObject(ObjectFilter.class,
+                "createCriteriaFromClass", object );
+
+
+
+        equalsOrDie(Operator.EQUAL, foo.getOperator());
+
+        equalsOrDie(foo.values[0], list.get(0));
+
+
+        equalsOrDie("bar.baz", foo.getName());
+
+
+        json = "[\"bar.baz\", \"org.boon.criteria.MyClass\", \"EQUAL\",  [1,2,3]]";
+
+
+        List listJson = Lists.list("an example", "org.boon.criteria.MyClass", "AND",
+                Lists.list(
+                        Lists.list("bar.baz",
+                         "EQUAL", Lists.list(1,2,3)
+                        ),
+                        Lists.list("bar.baz",
+                                "EQUAL", Lists.list(1,2,3)
+                        )
+                )
+
+        );
+
+        json = toJson(listJson);
+        puts(json);
+
+
+        object = fromJson(json);
+
+        Group and = (Group) Invoker.invokeFromObject(ObjectFilter.class,
+                "createCriteriaFromClass", object );
+
+        puts(foo);
+
+        foo = (Criterion) and.getExpressions().get(0);
+
+
+        equalsOrDie(Operator.EQUAL, foo.getOperator());
+
+        equalsOrDie(foo.values[0], list.get(0));
+
+
+        equalsOrDie("bar.baz", foo.getName());
+
+
+    }
     @Test
     public void test() {
 

@@ -49,6 +49,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static org.boon.Boon.atIndex;
+import static org.boon.Boon.fromJson;
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
@@ -548,6 +550,8 @@ public class JsonTutorial {
         puts("ok?", ok);
 
 
+
+
     }
 
 
@@ -653,6 +657,13 @@ public class JsonTutorial {
 
 
     public static void main( String... args ) throws Exception {
+
+
+        String json = "{\"scout\": \"webdriver\", \"short_version\": \"4.3\", \"long_name\": \"iPad\", \"api_name\": \"ipad\", \n" +
+                "\n" +
+                "\"long_version\": \"4.3.\", \"automation_backend\": \"webdriver\", \"os\": \"Mac 10.6\"}";
+
+        System.out.println( atIndex(fromJson(json), "os") );
 
         part1ReadAndWriteMyBeanToAFile ();
         part2WorkingWithInputStreamsReaders ();

@@ -32,15 +32,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.boon.Exceptions.die;
 
+/**
+ * A cache entry.
+ * @param <KEY> the key for the cache entry
+ * @param <VALUE> the value
+ */
 class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
+
+    /** Keep track of the read count. */
     final AtomicInteger readCount = new AtomicInteger();
+
+    /** order. */
     final int order;
+
+    /** The value. */
     VALUE value;
+
+    /** The key. */
     final KEY key;
+
+    /** The type of cache.*/
     final CacheType type;
+
+    /** The time the entry was added. */
     final long time;
 
 
+    /** Creates a cache entry.
+     *
+     * @param key key
+     * @param value value
+     * @param order order
+     * @param type type
+     * @param time time of entry
+     */
     CacheEntry( KEY key, VALUE value, int order, CacheType type, long time ) {
         this.order = order;
         this.value = value;
@@ -50,6 +75,12 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
 
     }
 
+    /**
+     * Comparison of entries this determines what we will order the cache by
+     * which determines which type of cache it is.
+     * @param other the other entry
+     * @return results
+     */
     @Override
     public final int compareTo( CacheEntry other ) {
         switch ( type ) {
@@ -68,6 +99,11 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
     }
 
 
+    /**
+     *
+     * @param other other entry to compare to
+     * @return
+     */
     private final int compareReadCount( CacheEntry other ) {
 
         if ( readCount.get() > other.readCount.get() ) {  //this read count is greater so it has higher priority
@@ -81,6 +117,11 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         return 0;
     }
 
+    /**
+     * Compare the time.
+     * @param other the other entry
+     * @return results
+     */
     private final int compareTime( CacheEntry other ) {
 
         if ( time > other.time ) {  //this time stamp is  greater so it has higher priority
@@ -94,6 +135,11 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         return 0;
     }
 
+    /**
+     * Compare the order.
+     * @param other the other entry
+     * @return results
+     */
     private final int compareOrder( CacheEntry other ) {
 
         if ( order > other.order ) {  //this order is lower so it has higher priority
@@ -107,6 +153,11 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         return 0;
     }
 
+    /**
+     * Compares the read counts.
+     * @param other read count
+     * @return results
+     */
     private final int compareToLFU( CacheEntry other ) {
 
         int cmp = compareReadCount( other );
@@ -119,10 +170,15 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
             return cmp;
         }
 
-        return cmp = compareOrder( other );
+        return compareOrder( other );
     }
 
 
+    /**
+     * Compare the time.
+     * @param other other entry to compare to
+     * @return results
+     */
     private final int compareToLRU( CacheEntry other ) {
 
         int cmp = compareTime( other );
@@ -137,10 +193,15 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         }
 
 
-        return cmp = compareReadCount( other );
+        return compareReadCount( other );
     }
 
 
+    /**
+     * Compare for FIFO
+     * @param other the other entry
+     * @return results
+     */
     private final int compareToFIFO( CacheEntry other ) {
         int cmp = compareOrder( other );
         if ( cmp != 0 ) {

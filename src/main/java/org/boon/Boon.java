@@ -47,6 +47,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.boon.Exceptions.die;
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.Maps.fromMap;
 import static org.boon.Str.camelCaseLower;
@@ -1461,6 +1462,11 @@ public class Boon {
 
 
 
+    public static boolean equalsOrDie(Object expected, Object got) {
 
+        if (expected==null && got != null) die();
+        if (!expected.equals(got)) die("Expected was", expected, "but we got", got);
 
+        return  true;
+    }
 }

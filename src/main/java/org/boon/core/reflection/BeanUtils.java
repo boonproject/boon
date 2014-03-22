@@ -645,6 +645,26 @@ public class BeanUtils {
         return object;
     }
 
+
+    /**
+     * @param root
+     * @param properties
+     * @return
+     */
+    private static Class<?> baseForGetProperty( Class<?> root, String[] properties ) {
+        Class cls = root;
+
+        Map<String, FieldAccess> fields = null;
+
+        for ( int index = 0; index < properties.length - 1; index++ ) {
+            fields = getPropertyFieldAccessMap( cls );
+
+            String property = properties[ index ];
+            FieldAccess field = fields.get( property );
+            cls = field.type();
+        }
+        return cls;
+    }
     /**
      * Get property value
      *
@@ -788,6 +808,65 @@ public class BeanUtils {
 
 
     /**
+     * Get Property Path Type
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static Class<?> getPropertyPathType( final Object root,
+                                          final String... properties ) {
+
+
+        Object object = baseForGetProperty( root, properties );
+
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
+        final String lastProperty = properties[ properties.length - 1 ];
+        FieldAccess field = fields.get( lastProperty );
+
+        return field.type();
+    }
+
+
+    /**
+     * Get Property Path Type
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static FieldAccess getPropertyPathField( final Object root,
+                                                final String... properties ) {
+
+
+        Object object = baseForGetProperty( root, properties );
+
+        Map<String, FieldAccess> fields = getFieldsFromObject( object );
+        final String lastProperty = properties[ properties.length - 1 ];
+        FieldAccess field = fields.get( lastProperty );
+
+        return field;
+    }
+
+
+    /**
+     * Get Property Path Type
+     * @param root
+     * @param properties
+     * @return
+     */
+    public static FieldAccess getPropertyPathField( final Class root,
+                                                    final String... properties ) {
+
+
+        Class cls = baseForGetProperty( root, properties );
+
+        Map<String, FieldAccess> fields = getFieldsFromObject( cls );
+        final String lastProperty = properties[ properties.length - 1 ];
+        FieldAccess field = fields.get( lastProperty );
+
+        return field;
+    }
+
+    /**
      * @param object
      * @param path
      * @return
@@ -798,6 +877,47 @@ public class BeanUtils {
         String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
 
         return getPropertyShort( object, properties );
+    }
+
+    /**
+     * @param object
+     * @param path
+     * @return
+     */
+    public static Class idxType( Object object, String path ) {
+
+
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+
+        return getPropertyPathType( object, properties );
+    }
+
+
+    /**
+     * @param object
+     * @param path
+     * @return
+     */
+    public static FieldAccess idxField( Object object, String path ) {
+
+
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+
+        return getPropertyPathField( object, properties );
+    }
+
+
+    /**
+     * @param cls
+     * @param path
+     * @return
+     */
+    public static FieldAccess idxField( Class<?> cls, String path ) {
+
+
+        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+
+        return getPropertyPathField( cls, properties );
     }
 
     /**

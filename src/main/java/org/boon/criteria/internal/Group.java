@@ -28,18 +28,18 @@
 
 package org.boon.criteria.internal;
 
+import org.boon.Lists;
+import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.criteria.ObjectFilter;
 import org.boon.primitive.CharBuf;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Group extends Criteria {
 
-    protected Criteria[] expressions;
+    protected List<Criteria> expressions;
 
-    private final int hashCode;
-    private String toString;
 
     private Grouping grouping = Grouping.AND;
 
@@ -57,67 +57,53 @@ public abstract class Group extends Criteria {
 
     public Group( Grouping grouping, Criteria... expressions ) {
         this.grouping = grouping;
-        this.expressions = expressions;
-        hashCode = doHashCode();
+        this.expressions = Lists.list(expressions);
 
     }
 
-    private int doHashCode() {
-        int result = expressions != null ? Arrays.hashCode( expressions ) : 0;
-        result = 31 * result + ( grouping != null ? grouping.hashCode() : 0 );
-        return result;
-
-    }
-
-    private String doToString() {
-
-        if ( toString == null ) {
 
 
-            CharBuf builder = CharBuf.create( 80 );
-            builder.add( "{" );
-            builder.add( "\"expressions\":" );
-            builder.add( Arrays.toString( expressions ) );
-            builder.add( ", \"grouping\":" );
-            builder.add( String.valueOf( grouping ) );
-            builder.add( '}' );
-            toString = builder.toString();
+    public Group( Grouping grouping, Class<?> cls, List<?> list ) {
+        this.grouping = grouping;
+
+        ArrayList<Criteria> criteriaArrayList = new ArrayList();
+        List<List<?>> lists = (List<List<?>>)list;
+        for (List args : lists) {
+            args = new ArrayList(args);
+            args.add(1, cls);
+            Criteria criteria = (Criteria) Invoker.invokeFromObject(ObjectFilter.class, "createCriteriaFromClass", args);
+            criteriaArrayList.add(criteria);
         }
-        return toString;
+        this.expressions = criteriaArrayList;
 
     }
+
 
     public Grouping getGrouping() {
         return grouping;
     }
 
 
-    public Criteria[] getExpressions() {
+    public List<Criteria> getExpressions() {
         return expressions;
     }
 
+
     @Override
-    public boolean equals( Object o ) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Group group = ( Group ) o;
+        Group group = (Group) o;
 
-        if ( !Arrays.equals( expressions, group.expressions ) ) return false;
-        if ( grouping != group.grouping ) return false;
+        if (expressions != null ? !expressions.equals(group.expressions) : group.expressions != null) return false;
+        if (grouping != group.grouping) return false;
 
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        return hashCode;
-    }
 
-    @Override
-    public String toString() {
-        return doToString();
-    }
+
 
     public static class And extends Group {
 
@@ -125,6 +111,9 @@ public abstract class Group extends Criteria {
             super( Grouping.AND, expressions );
         }
 
+        public And( Class<?> cls,  List<?> list ) {
+            super( Grouping.AND, cls,  list );
+        }
 
         @Override
         public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
@@ -143,6 +132,10 @@ public abstract class Group extends Criteria {
 
         public Or( Criteria... expressions ) {
             super( Grouping.OR, expressions );
+        }
+
+        public Or( Class<?> cls,  List<?> list ) {
+            super( Grouping.OR, cls,  list );
         }
 
         @Override

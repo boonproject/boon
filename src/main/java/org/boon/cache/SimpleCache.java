@@ -33,7 +33,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-/* This supports both LRU and FIFO */
+/** This supports both LRU and FIFO.
+ *  Single threaded access.
+ */
 public class SimpleCache<K, V> implements Cache<K, V> {
 
     Map<K, V> map = new LinkedHashMap();

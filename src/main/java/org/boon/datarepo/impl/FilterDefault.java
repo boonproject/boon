@@ -166,7 +166,7 @@ public class FilterDefault implements Filter, FilterComposer {
         }
     }
 
-    private void or( Criteria[] expressions,
+    private void or( List<Criteria> expressions,
                      Map<String, FieldAccess> fields, ResultSetInternal results ) {
 
 
@@ -180,7 +180,7 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
 
-    private void and( Criteria[] expressions, Map<String, FieldAccess> fields, ResultSetInternal resultSet ) {
+    private void and( List<Criteria> expressions, Map<String, FieldAccess> fields, ResultSetInternal resultSet ) {
 
         Set<Criteria> expressionSet = Sets.set( expressions );
 
@@ -193,13 +193,13 @@ public class FilterDefault implements Filter, FilterComposer {
     }
 
 
-    private boolean applyIndexedFiltersForAnd( Criteria[] expressions, Map<String, FieldAccess> fields, Set<Criteria> expressionSet, ResultSetInternal resultSet ) {
+    private boolean applyIndexedFiltersForAnd( List<Criteria> expressions, Map<String, FieldAccess> fields, Set<Criteria> expressionSet, ResultSetInternal resultSet ) {
         Criterion criteria = null;
         boolean foundIndex = false;
 
 
-        if ( expressions.length == 1 && expressions[ 0 ] instanceof Criterion ) {
-            criteria = ( Criterion ) expressions[ 0 ];
+        if ( expressions.size() == 1 && expressions.get(0) instanceof Criterion ) {
+            criteria = ( Criterion ) expressions.get(0);
             foundIndex = doFilterWithIndex( criteria, fields, resultSet );
             if ( foundIndex ) {
                 expressionSet.remove( criteria );
