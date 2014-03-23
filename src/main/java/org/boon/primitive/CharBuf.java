@@ -776,7 +776,7 @@ public class CharBuf extends Writer implements CharSequence {
     }
 
     public String toString() {
-        return new String( buffer, 0, location );
+        return FastStringUtils.noCopyStringFromCharsNoCheck(buffer, location);
     }
 
     public String toDebugString() {

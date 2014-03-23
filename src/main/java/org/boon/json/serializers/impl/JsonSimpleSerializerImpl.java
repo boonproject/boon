@@ -57,18 +57,61 @@ import static org.boon.Exceptions.handle;
 public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<>( );
     private final String view;
+    private final boolean encodeStrings;
 
 
-    private CharBuf builder = CharBuf.create( 4000 );
+    private final CharBuf builder;
 
+    public JsonSimpleSerializerImpl() {
+
+        this.view = null;
+        this.encodeStrings = true;
+        builder = CharBuf.create( 4000 );
+
+
+    }
+
+
+    public JsonSimpleSerializerImpl(boolean encodeStrings) {
+
+        this.view = null;
+        this.encodeStrings = encodeStrings;
+        builder = CharBuf.create( 4000 );
+
+
+    }
+
+
+    public JsonSimpleSerializerImpl(boolean encodeStrings, int bufferSize) {
+
+        this.view = null;
+        this.encodeStrings = encodeStrings;
+        builder = CharBuf.create( bufferSize );
+
+
+    }
 
     public JsonSimpleSerializerImpl(String view) {
 
         this.view = view;
+        this.encodeStrings = true;
+        builder = CharBuf.create( 4000 );
+
+
+    }
+
+
+    public JsonSimpleSerializerImpl(String view, boolean encodeStrings) {
+
+        this.encodeStrings = encodeStrings;
+        this.view = view;
+        builder = CharBuf.create( 4000 );
+
     }
 
     public final void serializeString( String str, CharBuf builder ) {
-          builder.asJsonString(str);
+          if (encodeStrings) { builder.asJsonString(str); return;}
+          if (!encodeStrings) { builder.addString(str); return;}
 
     }
 

@@ -195,7 +195,21 @@ public class FastStringUtils {
     }
 
 
+    public static String noCopyStringFromCharsNoCheck(final char[] chars, int len) {
+        char[] newChars = new char[len];
+        System.arraycopy(chars, 0, newChars, 0, len);
+        return STRING_IMPLEMENTATION.noCopyStringFromChars(newChars);
+    }
+
+    public static String noCopyStringFromCharsNoCheck(final char[] chars, int start, int len) {
+        char[] newChars = new char[len];
+        System.arraycopy(chars, start, newChars, start, len);
+        return STRING_IMPLEMENTATION.noCopyStringFromChars(newChars);
+    }
+
+
     public static String noCopyStringFromCharsNoCheck(final char[] chars) {
+
         return STRING_IMPLEMENTATION.noCopyStringFromChars(chars);
     }
 
