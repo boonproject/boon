@@ -44,6 +44,7 @@ import java.util.*;
 import static org.boon.Boon.fromJson;
 import static org.boon.Boon.iterator;
 import static org.boon.Exceptions.die;
+import static org.boon.Lists.atIndex;
 import static org.boon.Ok.okOrDie;
 
 
@@ -1678,8 +1679,16 @@ public class ObjectFilter {
 
     public static Criteria criteriaFromList(List<?> list) {
 
+        List<Object> args = new ArrayList(list);
+
+        Object o = atIndex(args, -1);
+        if (! (o instanceof List) ) {
+            atIndex(args, -1, Collections.singletonList(o));
+        }
+
+
         return (Criteria) Invoker.invokeFromList(ObjectFilter.class,
-                "createCriteriaFromClass", list);
+                "createCriteriaFromClass", args);
 
     }
 

@@ -36,6 +36,8 @@ import org.boon.primitive.CharBuf;
 
 import java.util.*;
 
+import static org.boon.Lists.atIndex;
+
 public abstract class Group extends Criteria {
 
     protected List<Criteria> expressions;
@@ -71,6 +73,11 @@ public abstract class Group extends Criteria {
         for (List args : lists) {
             args = new ArrayList(args);
             args.add(1, cls);
+
+            Object o = atIndex(args, -1);
+            if (! (o instanceof List) ) {
+                atIndex(args, -1, Collections.singletonList(o));
+            }
             Criteria criteria = (Criteria) Invoker.invokeFromObject(ObjectFilter.class, "createCriteriaFromClass", args);
             criteriaArrayList.add(criteria);
         }
