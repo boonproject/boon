@@ -57,6 +57,7 @@ public class FilteringObjects {
 
         main1();
         main2();
+        main3();
     }
 
 
@@ -138,7 +139,7 @@ public class FilteringObjects {
 
 
         /* Grab all employees in HR. */
-        List<Employee> results = filter(employees, eq("department.name", "HR"));
+        List<Employee> results = filter(employees, eq("this.department.name", "HR"));
 
 
         /* Verify. */
@@ -159,6 +160,10 @@ public class FilteringObjects {
 
         Str.equalsOrDie("Sue", results.get(0).getFirstName());
 
+    }
+
+
+    public static void main3(String... args) {
 
         /** Now work with maps */
 
@@ -167,8 +172,12 @@ public class FilteringObjects {
 
         /** Grab employees in HR with a salary greater than 301 */
 
+
+
+        //eq("departmentName", "HR")
         List<Map<String, Object>> resultObjects = filter(employeeMaps,
-                eq("departmentName", "HR"), gt("salary", 301));
+                gt("salary", 301), eq("departmentName", "HR"));
+
 
 
 
@@ -191,7 +200,7 @@ public class FilteringObjects {
 
 
         resultObjects = filter(employeeMaps,
-                eq("departmentName", "HR"), gt("salary", 301));
+                eq("firstName", "Sue"), gt("salary", 301));
 
 
 

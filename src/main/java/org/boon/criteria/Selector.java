@@ -163,11 +163,7 @@ public abstract class Selector {
      * @return true or false
      */
     private static boolean isPropPath(String prop) {
-        if (prop.contains(".")) return true;
-        if (prop.equals("this")) return true;
-        if (prop.contains("[")) return true;
-
-        return false;
+        return BeanUtils.isPropPath(prop);
     }
 
     /**

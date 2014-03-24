@@ -82,10 +82,8 @@ public class FilterDefault implements Filter, FilterComposer {
     @Override
     public ResultSet filter( Criteria... expressions ) {
         try {
-            Criteria.fields( this.fields );
             return mainQueryPlan( expressions );
         } finally {
-            Criteria.clearFields();
         }
     }
 
@@ -363,9 +361,6 @@ public class FilterDefault implements Filter, FilterComposer {
 
         foundIndex = true;
 
-        if ( !criterion.isInitialized() ) {
-            criterion.initByFields( this.fields );
-        }
 
         switch ( operator ) {
             case EQUAL:

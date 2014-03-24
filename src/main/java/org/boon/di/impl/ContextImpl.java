@@ -590,9 +590,9 @@ public class ContextImpl implements Context, Module {
                 "VALUE TYPE", className(value), field.type());
 
 
-
-       field.setValue(object, value);
-
+        if (value!=null) {
+            field.setValue(object, value);
+        }
 
         if ( debug ) logger.debug(contextImpl, "handleInjectionOfBasicField(enforce, object, field )", "OUT",
                 enforce, object, field );

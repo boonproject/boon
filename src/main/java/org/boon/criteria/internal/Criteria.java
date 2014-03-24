@@ -37,55 +37,8 @@ import java.util.Collections;
 import java.util.Map;
 
 public abstract class Criteria implements Predicate {
-    private static ThreadLocal<Map<String, FieldAccess>> fieldsLocal = new ThreadLocal<>();
-
-    public static void fields( Map<String, FieldAccess> fields ) {
-        fieldsLocal.set( fields );
-    }
-
-    public static void clearFields() {
-        fieldsLocal.set( null );
-    }
-
-    public abstract void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner );
 
 
-    public abstract void cleanAfterGroupTest();
-
-    public abstract boolean resolve( Map<String, FieldAccess> fields, Object owner );
-
-
-    @Override
-    public boolean test( Object o ) {
-        Map<String, FieldAccess> fields = getFieldsInternal( o );
-        return resolve( fields, o );
-    }
-
-    protected Map<String, FieldAccess> getFieldsInternal( Object o ) {
-        if (o == null) {
-            return Collections.EMPTY_MAP;
-        }
-        else {
-            return getFieldsInternal( o.getClass(), o );
-        }
-    }
-
-
-    protected Map<String, FieldAccess> getFieldsInternal( Class o ) {
-        return getFieldsInternal( o.getClass(), null );
-    }
-
-    protected Map<String, FieldAccess> getFieldsInternal( Class clazz, Object o ) {
-        Map<String, FieldAccess> fields = fieldsLocal == null ? null : fieldsLocal.get();
-        if ( fields == null ) {
-            if ( o != null ) {
-                fields =  BeanUtils.getFieldsFromObject( o );
-            } else {
-                fields = BeanUtils.getFieldsFromObject( clazz );
-            }
-        }
-        return fields;
-    }
 
 
 

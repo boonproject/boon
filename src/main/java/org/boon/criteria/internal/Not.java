@@ -28,9 +28,6 @@
 
 package org.boon.criteria.internal;
 
-import org.boon.core.reflection.fields.FieldAccess;
-
-import java.util.Map;
 
 public class Not extends Criteria {
 
@@ -40,18 +37,9 @@ public class Not extends Criteria {
         this.expression = expression;
     }
 
-    @Override
-    public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
-
-    }
 
     @Override
-    public void cleanAfterGroupTest() {
-
-    }
-
-    @Override
-    public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
-        return !this.expression.resolve( fields, owner );
+    public boolean test(  Object owner ) {
+        return !this.expression.test( owner );
     }
 }

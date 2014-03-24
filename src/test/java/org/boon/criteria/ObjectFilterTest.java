@@ -49,11 +49,14 @@ import java.util.Map;
 public class ObjectFilterTest {
 
 
+    boolean ok = true;
+
+
     @Test
     public void testCreateCriteriaFromJson() {
 
         List<Integer> list = Lists.list(1, 2);
-        Criterion foo = (Criterion) ObjectFilter.createCriteria("foo", Operator.EQUAL, Type.INT, list);
+        Criterion foo = (Criterion) ObjectFilter.createCriteria("foo", Operator.EQUAL, Type.INT, Object.class, list);
 
         equalsOrDie(Operator.EQUAL, foo.getOperator());
 
@@ -62,7 +65,7 @@ public class ObjectFilterTest {
 
         equalsOrDie("foo", foo.getName());
 
-        foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class, "createCriteria", Lists.list("foo", Operator.EQUAL, Type.INT, list));
+        foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class, "createCriteria", Lists.list("foo", Operator.EQUAL, Type.INT, Object.class, list));
 
         equalsOrDie(Operator.EQUAL, foo.getOperator());
 
@@ -81,7 +84,7 @@ public class ObjectFilterTest {
 
         for (Operator op : operators) {
             for (Type type : types) {
-                List<Object> args = Lists.list("foo", op, type, list);
+                List<Object> args = Lists.list("foo", op, type, Object.class, list);
 
                 foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class,
                         "createCriteria", args);
@@ -97,7 +100,7 @@ public class ObjectFilterTest {
             }
         }
 
-        String json = "[\"foo\", \"EQUAL\", \"INT\", [1,2,3]]";
+        String json = "[\"foo\", \"EQUAL\", \"INT\", \"java.lang.Object\",  [1,2,3]]";
         Object object = fromJson(json);
 
         puts (object);
@@ -204,7 +207,6 @@ public class ObjectFilterTest {
 
         Map<String, Object> map = map("name", (Object) "Rick", "salary", 1);
 
-        boolean ok = true;
 
         ok &= matches( map, eq("name", "Rick"), eq("salary", 1) ) || die();
 
@@ -214,7 +216,7 @@ public class ObjectFilterTest {
 
         ok &= !matches( map, eq("name", "Rick"), lt( "salary", 0 ) ) || die();
 
-        ok &= !matches( map, not( eq("name", "Rick") ), lt( "salary", 1 ) ) || die();
+        ok &= !matches( map, notEq("name", "Rick"), lt( "salary", 1 ) ) || die();
 
     }
 

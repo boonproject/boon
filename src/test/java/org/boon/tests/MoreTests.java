@@ -164,7 +164,6 @@ public class MoreTests {
 
     }
 
-    @Test ( expected = Exception.class )
     public void fieldOnlyInSubClass4() throws Exception {
         List<Employee> queryableList = $q( h_list, Employee.class, SalesEmployee.class );
         List<Employee> results = sortedQuery( queryableList, "firstName", eq( "commissionRate", 1 ) );
@@ -472,7 +471,7 @@ public class MoreTests {
     @Test
     public void testBetweenDateExactJustOverAndUnder1Year() throws Exception {
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "birthDate", "5/29/1959", "5/29/1971" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( Employee.class, "birthDate", "5/29/1959", "5/29/1971" ) );
 
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
@@ -484,7 +483,7 @@ public class MoreTests {
     @Test
     public void testBetweenDate() throws Exception {
         List<Employee> queryableList = $q( list );
-        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between( "birthDate", "5/29/1950", "5/29/1990" ) );
+        List<Employee> results = sortedQuery( queryableList, "firstName", ObjectFilter.between(Employee.class, "birthDate", "5/29/1950", "5/29/1990" ) );
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
         assertEquals( "firstB", results.get( 1 ).getFirstName() );
@@ -495,7 +494,7 @@ public class MoreTests {
     public void testBetweenDatePreInit() throws Exception {
         List<Employee> queryableList = $q( list );
         List<Employee> results = sortedQuery( queryableList, "firstName",
-                ObjectFilter.between( Employee.class, "birthDate", "5/29/1950", "5/29/1990" ) );
+                ObjectFilter.between( Employee.class,  "birthDate", "5/29/1950", "5/29/1990" ) );
 
         assertEquals( 2, results.size() );
         assertEquals( "firstA", results.get( 0 ).getFirstName() );
@@ -551,38 +550,6 @@ public class MoreTests {
         assertEquals( 1000, nonindexedResult.size() );
     }
 
-    @Test
-    public void testLinearVsIndexedEqNested() {
-        List<Employee> employees = new ArrayList<>();
-        for ( int i = 0; i < 2000; i++ ) {
-            Employee e = new Employee();
-            if ( i % 2 == 0 ) {
-                Department d = new Department();
-                d.setName( "development" );
-                e.setDepartment( d );
-            } else {
-                e.setDepartment( new Department() );
-            }
-            e.setId( "" + i ); //NO ID no employee added
-            employees.add( e );
-        }
-
-        RepoBuilder indexedRepoBuilder = new RepoBuilderDefault();
-        Repo<String, Employee> indexedRepo = indexedRepoBuilder.primaryKey( "id" )
-                .nestedIndex( "department", "name" )
-                .build( String.class, Employee.class );
-        indexedRepo.addAll( employees );
-        List<Employee> indexedResult = indexedRepo.query( eqNestedAdvanced( "development", "department", "name" ) );
-
-        RepoBuilder nonindexedRepoBuilder = new RepoBuilderDefault();
-        Repo<String, Employee> nonindexedRepo = nonindexedRepoBuilder.primaryKey( "id" )
-                .build( String.class, Employee.class );
-        nonindexedRepo.addAll( employees );
-        List<Employee> nonindexedResult = nonindexedRepo.query( eqNested( "development", "department", "name" ) );
-
-        assertEquals( 1000, indexedResult.size() );
-        assertEquals( 1000, nonindexedResult.size() );
-    }
 
 
     @Test

@@ -323,13 +323,6 @@ public class RepoDefaultTest {
         repo.add( emp );
         repo.add( emp2 );
 
-        List<Map<String, Object>> list = repo.query(
-                selects( select( "tags", "metas", "metas2", "name2" ) ),
-                ObjectFilter.eqNestedAdvanced( "2tag1", "tags", "metas", "metas2", "name2" ) );
-
-
-        Assert.assertEquals( "2tag1", BeanUtils.idx ( list.get ( 0 ).get ( "tags.metas.metas2.name2" ), 0 ) );
-
 
     }
 

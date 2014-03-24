@@ -618,9 +618,20 @@ public class BeanUtils {
         Map<String, FieldAccess> fields = null;
 
         for ( int index = 0; index < properties.length - 1; index++ ) {
-            fields = getPropertyFieldAccessMap( object.getClass() );
+            if (object == null) {
+                return null;
+            }
+
 
             String property = properties[ index ];
+
+
+            if (property.equals("this")) {
+                continue;
+            }
+            
+            fields = getPropertyFieldAccessMap( object.getClass() );
+
             FieldAccess field = fields.get( property );
 
             if ( isDigits( property ) ) {
@@ -630,13 +641,7 @@ public class BeanUtils {
             } else {
 
                 if ( field == null ) {
-                    die( sputs(
-                            "We were unable to access property=", property,
-                            "\nThe properties passed were=", properties,
-                            "\nThe root object is =", root.getClass().getName(),
-                            "\nThe current object is =", object.getClass().getName()
-                    )
-                    );
+                        return null;
                 }
 
                 object = field.getObject( object );
@@ -1390,4 +1395,20 @@ public class BeanUtils {
     public static <T> T atIndex( Class<T> type, Object object, String property ) {
         return (T) idx(object, property);
     }
+
+
+
+    /**
+     * Is this a property path?
+     * @param prop property
+     * @return true or false
+     */
+    public static boolean isPropPath(String prop) {
+        if (prop.contains(".")) return true;
+        if (prop.equals("this")) return true;
+        if (prop.contains("[")) return true;
+
+        return false;
+    }
+
 }

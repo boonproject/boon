@@ -275,21 +275,36 @@ public class Conversions {
 
     }
 
-    public static boolean toBoolean( Object obj ) {
+
+    /**
+     * Converts the value to boolean.
+     * @param value value
+     * @return value converted to boolean
+     */
+    public static boolean toBoolean( Object value ) {
+        return toBoolean( value, false );
+    }
+
+
+    /**
+     * Converts the value to boolean, and if it is null, it uses the default value passed.
+     * @param obj value to convert to boolean
+     * @param defaultValue default value
+     * @return obj converted to boolean
+     */
+    public static boolean toBoolean( Object obj, boolean defaultValue ) {
 
         if (obj == null) {
-            return false;
+            return defaultValue;
         }
 
-        if ( obj.getClass() == boolean.class ) {
-            return boolean.class.cast( obj );
-        } else if ( obj instanceof Boolean ) {
+        if ( obj instanceof Boolean ) {
             return ( ( Boolean ) obj ).booleanValue();
         } else if ( obj instanceof Number || obj.getClass().isPrimitive() ) {
             int value = toInt( obj );
             return value != 0 ? true : false;
         } else if ( obj instanceof String || obj instanceof CharSequence ) {
-            String str = Conversions.toString( obj );
+            String str = Conversions.toString(obj);
             if ( str.length() == 0 ) {
                 return false;
             } if (str.equals("false")) {

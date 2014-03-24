@@ -42,10 +42,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.println;
-import static org.boon.criteria.ObjectFilter.eqNestedAdvanced;
-
 
 import static org.boon.core.reflection.BeanUtils.copy;
+import static org.boon.criteria.ObjectFilter.eq;
 
 public class BenchMarkUpdate {
 
@@ -123,7 +122,7 @@ public class BenchMarkUpdate {
             protected void test() {
                 repo.updateByFilter(
                         Update.update( Update.incPercent( "salary", 10 ) ),
-                        eqNestedAdvanced( "engineering", "department", "name" ) );
+                        eq("department.name", "engineering") );
             }
         };
     }

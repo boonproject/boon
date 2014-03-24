@@ -49,7 +49,6 @@ import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
 import static org.boon.criteria.ObjectFilter.eq;
-import static org.boon.criteria.ObjectFilter.eqNestedAdvanced;
 import static org.boon.criteria.ObjectFilter.notEq;
 
 
@@ -226,7 +225,7 @@ public class DataRepoExamples {
 
         putl( "Query using nested query Repo.eqNestedAdvanced()" );
         UserEmail bob = ( UserEmail ) userRepo.results(
-                eqNestedAdvanced( "bob@bob.com", "email", "email" ) )
+                eq( "email.email", "bob@bob.com" ) )
                 .expectOne().firstItem();
 
         ok |= bob.getEmail().getEmail().equals( "bob@bob.com" ) || die();
@@ -235,7 +234,7 @@ public class DataRepoExamples {
         putl( "Avoid the cast with using nested query Repo.eqNestedAdvanced(UserEmail.class)" );
 
         //NOT IN JDK7 Branch yet , but there is a generic version coming
-        bob = userRepo.results( eqNestedAdvanced( "bob@bob.com", "email", "email" ) )
+        bob = userRepo.results( eq( "email.email", "bob@bob.com") )
                 .expectOne( UserEmail.class ).firstItem();
 
 

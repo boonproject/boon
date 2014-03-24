@@ -46,16 +46,7 @@ public abstract class Group extends Criteria {
     private Grouping grouping = Grouping.AND;
 
 
-    //TODO there is an opportunity to optimize this so Group holds on to fields for subgroups.
-    @Override
-    public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
 
-    }
-
-    @Override
-    public void cleanAfterGroupTest() {
-
-    }
 
     public Group( Grouping grouping, Criteria... expressions ) {
         this.grouping = grouping;
@@ -123,13 +114,11 @@ public abstract class Group extends Criteria {
         }
 
         @Override
-        public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
+        public boolean test(  Object owner ) {
             for ( Criteria c : expressions ) {
-                c.prepareForGroupTest( fields, owner );
                 if ( !c.test( owner ) ) {
                     return false;
                 }
-                c.cleanAfterGroupTest();
             }
             return true;
         }
@@ -145,19 +134,13 @@ public abstract class Group extends Criteria {
             super( Grouping.OR, cls,  list );
         }
 
-        @Override
-        public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
-
-        }
 
         @Override
-        public boolean resolve( Map<String, FieldAccess> fields, Object owner ) {
+        public boolean test( Object owner ) {
             for ( Criteria c : expressions ) {
-                c.prepareForGroupTest( fields, owner );
                 if ( c.test( owner ) ) {
                     return true;
                 }
-                c.cleanAfterGroupTest();
             }
             return false;
         }

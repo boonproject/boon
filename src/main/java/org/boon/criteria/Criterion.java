@@ -54,9 +54,11 @@ public abstract class Criterion<VALUE> extends Criteria {
     
     
 
-    private String name;
+    private Object name;
     private Operator operator;
     protected VALUE value;
+    protected VALUE value2;
+
     protected VALUE[] values;
     private final int hashCode;
     private final String toString;
@@ -67,15 +69,21 @@ public abstract class Criterion<VALUE> extends Criteria {
 
     private FieldAccess field;
 
-    private Object objectUnderTest;
+    protected Object objectUnderTest;
 
     private Map<String, FieldAccess> fields;
-    private ThisMap thisFields;
+
+    private ThisField fakeField = null;
+
+    private boolean path;
 
     public Criterion( String name, Operator operator, VALUE... values ) {
         requireNonNull( name, "name cannot be null" );
         requireNonNull( operator, "operator cannot be null" );
         requireNonNull( values, "values cannot be null" );
+
+
+        path = isPropPath(name);
 
         this.name = name;
         this.operator = operator;
@@ -84,31 +92,205 @@ public abstract class Criterion<VALUE> extends Criteria {
         toString = doToString();
     }
 
-    public Object getValueToCompare(Map<String, FieldAccess> fields, Object name, Object value, Object owner) {
+
+    /**
+     * Gets the field value.
+     * @return the value of the field
+     */
+    public FieldAccess field(  ) {
+
+
+        FieldAccess field;
+
+        if (path) {
+            field = BeanUtils.idxField(objectUnderTest, name.toString());
+
+
+            if (field == null) {
+                return fakeField();
+            }
+
+            return field;
+        }
 
         if (name instanceof Enum) {
             name = Str.camelCaseLower(name.toString());
         }
 
-        FieldAccess field = fields.get( name );
+        field = fields().get(name);
 
-        Object compareValue = field.getValue(owner);
 
-        if (value instanceof String) {
-            return Conversions.toString(compareValue);
-        } else if (Typ.isBasicType(value)) {
-            return Conversions.coerce(field.type(),field.getValue(owner));
+        return field;
+    }
+
+    private FieldAccess fakeField() {
+
+        if (fakeField == null) {
+            fakeField = new ThisField(this.name.toString(), objectUnderTest);
+        }
+
+        fakeField.thisObject = objectUnderTest;
+
+        return fakeField;
+    }
+
+
+    /**
+     * Gets the field value.
+     * @return the value of the field
+     */
+    public Object fieldValue(  ) {
+
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getValue(objectUnderTest);
         } else {
-            return field.getValue(owner);
+            return BeanUtils.atIndex(objectUnderTest, name.toString());
+        }
+    }
+
+    public int fieldInt(  ) {
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getInt(objectUnderTest);
+        } else {
+            return BeanUtils.idxInt(objectUnderTest, name.toString());
+
+        }
+    }
+
+
+    public short fieldShort(  ) {
+
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getShort(objectUnderTest);
+        } else {
+            return BeanUtils.idxShort(objectUnderTest, name.toString());
+
         }
 
     }
 
 
 
+    public long fieldLong(  ) {
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getLong(objectUnderTest);
+        } else {
+            return BeanUtils.idxLong(objectUnderTest, name.toString());
+
+        }
+
+
+    }
+
+
+    public float fieldFloat(  ) {
+
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getFloat(objectUnderTest);
+        } else {
+            return BeanUtils.idxFloat(objectUnderTest, name.toString());
+
+        }
+
+    }
+
+
+    public double fieldDouble(  ) {
+
+
+
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getDouble(objectUnderTest);
+        } else {
+            return BeanUtils.idxDouble(objectUnderTest, name.toString());
+
+        }
+    }
+
+
+    public boolean fieldBoolean(  ) {
+
+
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getBoolean(objectUnderTest);
+        } else {
+            return BeanUtils.idxBoolean(objectUnderTest, name.toString());
+
+        }
+
+    }
+
+
+    public byte fieldByte(  ) {
+
+
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getByte(objectUnderTest);
+        } else {
+            return BeanUtils.idxByte(objectUnderTest, name.toString());
+
+        }
+    }
+
+    public char fieldChar(  ) {
+        if (!path) {
+            FieldAccess field1 = this.field();
+            return field1.getChar(objectUnderTest);
+        } else {
+            return BeanUtils.idxChar(objectUnderTest, name.toString());
+
+        }
+
+    }
+
+
+
+    boolean convert1st;
+
+    /**
+     * Gets the field value.
+     * @return the value of the field
+     */
+    public Object value(  ) {
+        if (!convert1st) {
+            FieldAccess field = this.field();
+            if (field != null) {
+                this.value = (VALUE) Conversions.coerce(field.type(), this.value);
+            }
+            convert1st = true;
+        }
+        return value;
+    }
+
+    boolean convert2nd;
+
+    /**
+     * Gets the field value.
+     * @return the value of the field
+     */
+    public Object value2(  ) {
+        if (!convert2nd) {
+            FieldAccess field = this.field();
+            this.value2 = (VALUE) Conversions.coerce(field.type(), this.value2);
+            convert2nd = true;
+        }
+        return value2;
+    }
+
+
+
+
 
     public String getName() {
-        return name;
+        return name.toString();
     }
 
     public Operator getOperator() {
@@ -129,9 +311,22 @@ public abstract class Criterion<VALUE> extends Criteria {
         if ( values.length > 0 ) {
             this.value = values[ 0 ];
         }
+        if ( values.length > 1 ) {
+            this.value2 = values[ 1 ];
+        }
+
         this.values = values;
     }
 
+
+    /**
+     * Is this a property path?
+     * @param prop property
+     * @return true or false
+     */
+    private static boolean isPropPath(String prop) {
+        return BeanUtils.isPropPath(prop);
+    }
 
     @Override
     public boolean equals( Object o ) {
@@ -188,30 +383,6 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
-    public void initByClass( Class clazz ) {
-
-        this.fields = getFieldsInternal( clazz );
-        initIfNeeded();
-    }
-
-    public void initByFields( Map<String, FieldAccess> fields ) {
-        this.fields = fields;
-        initIfNeeded();
-    }
-
-
-    //Only called when part of group.
-    public void prepareForGroupTest( Map<String, FieldAccess> fields, Object owner ) {
-
-        this.fields = fields;
-        this.objectUnderTest = owner;
-
-
-    }
-
-    public void cleanAfterGroupTest() {
-        clean();
-    }
 
     public void clean() {
         this.field = null;
@@ -221,6 +392,7 @@ public abstract class Criterion<VALUE> extends Criteria {
     }
 
 
+    public abstract boolean resolve( Object o );
 
     @Override
     public boolean test( Object o ) {
@@ -235,17 +407,21 @@ public abstract class Criterion<VALUE> extends Criteria {
             initIfNeeded();
             if ( this.useDelegate ) {
 
-                return this.nativeDelegate.resolve( fields, o );
+                this.nativeDelegate.fields = this.fields;
+                this.nativeDelegate.objectUnderTest = this.objectUnderTest;
+                return this.nativeDelegate.resolve(  o );
 
             }
 
-            FieldAccess field = fields().get(name);
 
-            if (field == null && o instanceof Map)  {
-                    return false;
+            FieldAccess field = field();
+
+
+            if ( !path && field == null && o instanceof Map) {
+                return false;
             }
 
-            boolean result = resolve( fields(), o );
+            boolean result = resolve( o );
 
 
             return result;
@@ -273,40 +449,12 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
     }
 
-    private FieldAccess field() {
-        if ( field == null ) {
-            field = fields().get( this.name );
-        }
-        return field;
-    }
 
     private Map<String, FieldAccess> fields() {
 
-        if (this.thisFields !=null) {
-            this.thisFields.thisField.thisObject = this.objectUnderTest;
-            return this.thisFields;
-        }
-
-        if ( fields == null ) {
-            fields = getFieldsInternal( this.objectUnderTest );
-        }
-        return fields;
+        return BeanUtils.getFieldsFromObject(objectUnderTest);
     }
 
-    public static abstract class PrimitiveCriterion extends Criterion {
-
-        public PrimitiveCriterion( String name, Operator operator, Object... objects ) {
-            super( name, operator, objects );
-        }
-
-        @Override
-        public boolean test( Object o ) {
-
-            Map<String, FieldAccess> fields = getFieldsInternal( o );
-            return resolve( fields, o );
-        }
-
-    }
 
 
     private void initForShortValue( short v ) {
@@ -365,13 +513,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         if ( initialized ) return;
         initialized = true;
 
-
-
-        if (name.equals("this") || name.contains(".") || name.contains("[")) {
-
-            this.thisFields = new ThisMap(name, this.objectUnderTest);
-            return;
-        }
+        String name = this.name.toString();
 
         FieldAccess field = field();
         if ( field == null ) {
