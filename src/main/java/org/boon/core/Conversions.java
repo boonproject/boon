@@ -45,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import static org.boon.Exceptions.handle;
+import static org.boon.core.Typ.getComponentType;
 import static org.boon.primitive.Arry.len;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
@@ -393,6 +394,12 @@ public class Conversions {
 
 
     public static <T> T coerce( Class<T> clz, Object value ) {
+        if (value!=null) {
+            if (clz == value.getClass()) {
+                return (T) value;
+            }
+        }
+
         return coerce( Type.getType( clz ), clz, value);
     }
     public static <T> T coerce( Type coerceTo, Class<T> clz, Object value ) {
@@ -1163,7 +1170,17 @@ public class Conversions {
 
     public static <T> T[] toArray( Class<T> componentType, Collection<T> collection ) {
         T[] array = (T[]) Array.newInstance(componentType, collection.size());
-        return collection.toArray(array);
+
+        if ( componentType.isAssignableFrom(getComponentType(collection))) {
+            return collection.toArray(array);
+        } else {
+
+            int index = 0;
+            for (Object o : collection) {
+                array[index] = Conversions.coerce(componentType, o);
+            }
+            return array;
+        }
     }
 
 //    public static <V> V[] array( Class<V> type, final Collection<V> array ) {

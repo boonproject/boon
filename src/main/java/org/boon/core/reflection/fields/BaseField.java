@@ -261,7 +261,7 @@ public abstract class BaseField implements FieldAccess {
                 }
 
                 if ( parameterizedType == null ) {
-                    componentClass = null;
+                    componentClass = Object.class;
                 }  else if ( this.typeEnum == Type.ARRAY) {
 
                     componentClass = this.type.getComponentType();
@@ -272,7 +272,7 @@ public abstract class BaseField implements FieldAccess {
                     if (obj2 instanceof Class) {
                         componentClass = ( Class<?> ) parameterizedType.getActualTypeArguments ()[ 0 ];
                     }else {
-                        componentClass=null;
+                        componentClass=Object.class;
                     }
                 }
 
@@ -293,7 +293,7 @@ public abstract class BaseField implements FieldAccess {
                 bits.set( PRIMITIVE, type.isPrimitive ());
                 typeName = type.getName ().intern ();
                 parameterizedType = null;
-                componentClass = null;
+                componentClass = Object.class;
                 parentType = setter.getDeclaringClass();
 
                 initAnnotationData ( setter.getDeclaringClass () );
@@ -363,13 +363,13 @@ public abstract class BaseField implements FieldAccess {
 
         }
         else if ( parameterizedType == null ) {
-            componentClass = null;
+            componentClass = Object.class;
         } else {
             Object obj = parameterizedType.getActualTypeArguments ()[ 0 ];
             if (obj instanceof Class) {
                 componentClass = ( Class<?> ) parameterizedType.getActualTypeArguments ()[ 0 ];
             }else {
-                componentClass=null;
+                componentClass=Object.class;
             }
         }
 

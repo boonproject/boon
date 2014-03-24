@@ -42,7 +42,10 @@ public class JsonFactory {
     private static ObjectMapper json = JsonFactory.create();
 
     public static ObjectMapper create () {
-          return new ObjectMapperImpl();
+        JsonParserFactory jsonParserFactory = new JsonParserFactory();
+        jsonParserFactory.lax();
+
+        return new ObjectMapperImpl(jsonParserFactory,  new JsonSerializerFactory());
     }
 
     public static String toJson(Object value) {

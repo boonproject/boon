@@ -253,6 +253,28 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
 
+
+    public Set<Object> valueSet(  ) {
+
+        if (!convert1st) {
+
+            HashSet<Object> set = new HashSet<>(values.length);
+            FieldAccess field = this.field();
+            Class<?> classType = field.type();
+
+            for (Object v : values) {
+                v =  Conversions.coerce(classType, this.value);
+                set.add(v);
+            }
+
+            value = (VALUE)set;
+
+            convert1st = true;
+        }
+        return (Set<Object>)value;
+    }
+
+
     boolean convert1st;
 
     /**
@@ -261,9 +283,19 @@ public abstract class Criterion<VALUE> extends Criteria {
      */
     public Object value(  ) {
         if (!convert1st) {
-            FieldAccess field = this.field();
+            FieldAccess field = field();
             if (field != null) {
-                this.value = (VALUE) Conversions.coerce(field.type(), this.value);
+                switch (field.typeEnum()) {
+
+                    case ARRAY:
+                    case COLLECTION:
+                    case SET:
+                    case LIST:
+                        this.value = (VALUE) Conversions.coerce(field.getComponentClass(), this.value);
+                    default:
+
+                        this.value = (VALUE) Conversions.coerce(field.type(), this.value);
+                }
             }
             convert1st = true;
         }
@@ -809,43 +841,43 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = ObjectFilter.eqByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.eqByte(name, (value));
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = ObjectFilter.notEqByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.notEqByte(name, (value));
                 break;
 
             case LESS_THAN:
-                nativeDelegate = ObjectFilter.ltByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.ltByte(name, (value));
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = ObjectFilter.lteByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.lteByte(name, (value));
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = ObjectFilter.gtByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.gtByte(name, (value));
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = ObjectFilter.gteByte( name, ( value ) );
+                nativeDelegate = ObjectFilter.gteByte(name, (value));
                 break;
 
             case IN:
-                nativeDelegate = ObjectFilter.inBytes( name, Conversions.barray( values ) );
+                nativeDelegate = ObjectFilter.inBytes(name, Conversions.barray(values));
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = ObjectFilter.notInBytes( name, Conversions.barray( values ) );
+                nativeDelegate = ObjectFilter.notInBytes(name, Conversions.barray(values));
 
                 break;
 
 
             case BETWEEN:
-                nativeDelegate = ObjectFilter.betweenByte( name, ( value ),
-                        Conversions.toByte( values[1] ) );
+                nativeDelegate = ObjectFilter.betweenByte(name, (value),
+                        Conversions.toByte(values[1]));
                 break;
 
 
@@ -872,41 +904,41 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         switch ( operator ) {
             case EQUAL:
-                nativeDelegate = ObjectFilter.eqInt( name, v );
+                nativeDelegate = ObjectFilter.eqInt(name, v);
                 break;
 
             case NOT_EQUAL:
-                nativeDelegate = ObjectFilter.notEqInt( name, v );
+                nativeDelegate = ObjectFilter.notEqInt(name, v);
                 break;
 
             case LESS_THAN:
-                nativeDelegate = ObjectFilter.ltInt( name, v );
+                nativeDelegate = ObjectFilter.ltInt(name, v);
                 break;
 
             case LESS_THAN_EQUAL:
-                nativeDelegate = ObjectFilter.lteInt( name, v );
+                nativeDelegate = ObjectFilter.lteInt(name, v);
                 break;
 
             case GREATER_THAN:
-                nativeDelegate = ObjectFilter.gtInt( name, v );
+                nativeDelegate = ObjectFilter.gtInt(name, v);
                 break;
 
             case GREATER_THAN_EQUAL:
-                nativeDelegate = ObjectFilter.gteInt( name, v );
+                nativeDelegate = ObjectFilter.gteInt(name, v);
                 break;
 
             case BETWEEN:
-                nativeDelegate = ObjectFilter.betweenInt( name, v,
-                        Conversions.toInt( values[1] ) );
+                nativeDelegate = ObjectFilter.betweenInt(name, v,
+                        Conversions.toInt(values[1]));
                 break;
 
             case IN:
-                nativeDelegate = ObjectFilter.inInts( name, Conversions.iarray( values ) );
+                nativeDelegate = ObjectFilter.inInts(name, Conversions.iarray(values));
                 break;
 
 
             case NOT_IN:
-                nativeDelegate = ObjectFilter.notInInts( name, Conversions.iarray( values ) );
+                nativeDelegate = ObjectFilter.notInInts(name, Conversions.iarray(values));
 
                 break;
 
@@ -1150,7 +1182,8 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         @Override
         public Type typeEnum() {
-            return null;
+            Object o = this.getValue(this.thisObject);
+            return Type.getInstanceType(o);
         }
 
         @Override
@@ -1229,7 +1262,16 @@ public abstract class Criterion<VALUE> extends Criteria {
 
         @Override
         public Class<?> getComponentClass() {
-            return null;
+            Object o = this.getValue(this.thisObject);
+            if (o instanceof Collection) {
+                Collection c = (Collection) o;
+                if (c.iterator().hasNext()) {
+                    return c.iterator().next().getClass();
+                }
+
+            }
+            return Object.class;
+
         }
 
         @Override

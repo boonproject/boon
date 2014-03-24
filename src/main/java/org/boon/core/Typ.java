@@ -187,7 +187,15 @@ public class Typ {
         if ( value.size() > 0 ) {
             return value.keySet().iterator().next().getClass();
         } else {
-            return null;
+            return Object.class;
+        }
+    }
+
+    public static Class<?> getComponentType( Collection value ) {
+        if ( value.size() > 0 ) {
+            return value.iterator().next().getClass();
+        } else {
+            return Object.class;
         }
     }
 

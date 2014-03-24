@@ -196,14 +196,6 @@ public class ObjectFilter {
     public static Criterion notIn( final Object name, final Object... values ) {
         return new Criterion<Object>( name.toString(), Operator.NOT_IN, values ) {
 
-            HashSet set = new HashSet<>();
-
-            {
-                for ( Object value : values ) {
-                    set.add( value );
-                }
-            }
-
             @Override
             public boolean resolve( Object owner ) {
 
@@ -212,20 +204,13 @@ public class ObjectFilter {
                 if ( value == null ) {
                     return false;
                 }
-                return !set.contains( fieldValue );
+                return !valueSet().contains( fieldValue );
             }
         };
     }
 
     public static Criterion in( final Object name, final Object... values ) {
         return new Criterion<Object>( name.toString(), Operator.IN, values ) {
-            HashSet set = new HashSet<>();
-
-            {
-                for ( Object value : values ) {
-                    set.add( value );
-                }
-            }
 
             @Override
             public boolean resolve( Object owner ) {
@@ -235,7 +220,7 @@ public class ObjectFilter {
                 if ( value == null ) {
                     return false;
                 }
-                return set.contains( fieldValue );
+                return valueSet().contains(fieldValue);
             }
         };
     }
