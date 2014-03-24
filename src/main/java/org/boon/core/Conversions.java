@@ -1178,6 +1178,7 @@ public class Conversions {
             int index = 0;
             for (Object o : collection) {
                 array[index] = Conversions.coerce(componentType, o);
+                index++;
             }
             return array;
         }
