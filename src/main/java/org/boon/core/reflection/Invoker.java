@@ -29,13 +29,16 @@
 package org.boon.core.reflection;
 
 
+import org.boon.Boon;
 import org.boon.Exceptions;
 import org.boon.Lists;
+import org.boon.Str;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueContainer;
+import org.boon.primitive.CharBuf;
 
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
@@ -234,13 +237,17 @@ public class Invoker {
 
 
     public static Object invokeFromList(boolean respectIgnore, String view, Set<String> ignoreProperties, Class<?> cls, Object object, String name, List<?> args) {
+        List<Object> list = new ArrayList(args);
 
+        ClassMeta classMeta = null;
+        MethodAccess methodAccess = null;
+        Class<?>[] parameterTypes = null;
         try {
 
-            List<Object> list = new ArrayList(args);
-            ClassMeta classMeta = ClassMeta.classMeta(cls);
-            MethodAccess m = classMeta.method(name);
-            Class<?>[] parameterTypes = m.parameterTypes();
+            classMeta = ClassMeta.classMeta(cls);
+            methodAccess = classMeta.method(name);
+            parameterTypes = methodAccess.parameterTypes();
+
             if (list.size() != parameterTypes.length) {
                 return die(Object.class, "The list size does not match the parameter" +
                         " length of the method. Unable to invoke method", name, "on object", object, "with arguments", list);
@@ -250,7 +257,7 @@ public class Invoker {
 
             for (int index = 0; index < parameterTypes.length; index++) {
 
-                if (!matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, m, parameterTypes, index)) {
+                if (!matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, methodAccess, parameterTypes, index)) {
                     return die(Object.class, index, "Unable to invoke method as argument types did not match",
                             name, "on object", object, "with arguments", list,
                             "\nValue at index = ", list.get(index));
@@ -258,12 +265,33 @@ public class Invoker {
 
             }
 
-            if (args == null && m.parameterTypes().length == 0) {
-                return m.invoke(object);
+            if (args == null && methodAccess.parameterTypes().length == 0) {
+                return methodAccess.invoke(object);
             } else {
-                return m.invoke(object, list.toArray(new Object[list.size()]));
+                return methodAccess.invoke(object, list.toArray(new Object[list.size()]));
             }
         } catch (Exception ex) {
+            CharBuf buf = CharBuf.create(255);
+            buf.puts("ERROR INVOKING METHOD VIA LIST",
+                    "Unable to invoke method object", object, "name", name, " with args", args);
+
+
+            buf.puts("classMeta", classMeta);
+            buf.puts("methodAccess", methodAccess);
+
+            if (list!=null && parameterTypes!= null && list.size() != parameterTypes.length) {
+                buf.puts("SIZES DON'T MATCH", "The list size does not match the parameter" +
+                        " length of the method. Unable to invoke method", name, "on object", object, "with arguments", list);
+            } else {
+
+                int index = 0;
+                for (Object o : list) {
+                    buf.puts (index, Str.lpad("value", 20),
+                            Str.lpad(Str.str(o), 20), Str.lpad(Boon.className(o), 20),
+                            "expected", Str.lpad(Str.str(parameterTypes[index]), 20));
+                    index++;
+                }
+            }
             return Exceptions.handle(Object.class, ex, "Unable to invoke method object", object, "name", name, "args", args);
         }
 

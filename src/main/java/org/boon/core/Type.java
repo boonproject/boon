@@ -38,7 +38,7 @@ public enum Type {
     DATE, NUMBER, LONG_WRAPPER, INTEGER_WRAPPER, SHORT_WRAPPER, CHAR_WRAPPER, BOOLEAN_WRAPPER,
     BYTE_WRAPPER, FLOAT_WRAPPER, DOUBLE_WRAPPER,
     INTEGER, STRING, DOUBLE, TRUE, FALSE, NULL, MAP, LIST, SET, CHAR_SEQUENCE,
-    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI;
+    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI, VOID;
 
 
 
@@ -137,6 +137,13 @@ public enum Type {
 
                 case "java.lang.Class":
                     return Type.CLASS;
+
+
+
+                case "java.lang.Void":
+                    return Type.VOID;
+
+
 
 
                 case "java.net.URL":
