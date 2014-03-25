@@ -343,7 +343,7 @@ public class Invoker {
     }
 
     public static Object invoke(Object object, String name, Object... args) {
-        return ClassMeta.classMeta(object.getClass()).invoke(object, name, args);
+        return ClassMeta.classMetaUnTyped(object.getClass()).invokeUntyped(object, name, args);
     }
 
 

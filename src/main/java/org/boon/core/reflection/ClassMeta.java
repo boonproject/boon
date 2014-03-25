@@ -244,6 +244,16 @@ public class ClassMeta <T> implements Annotated{
     }
 
 
+    public static  ClassMeta<?> classMetaUnTyped( Class<?> aClass ) {
+        ClassMeta meta = Reflection.context()._classMetaMap.get( aClass );
+        if (meta == null) {
+            meta = new ClassMeta( aClass );
+            Reflection.context()._classMetaMap.put( aClass, meta );
+        }
+        return meta;
+    }
+
+
     public static ClassMeta classMetaEither(Object obj) {
         if (obj instanceof Class) {
             return classMeta((Class<?>) obj);
@@ -421,6 +431,10 @@ public class ClassMeta <T> implements Annotated{
 
 
     public Object invoke(T instance, String methodName,  Object... args) {
+        return methodMap.get(methodName).invoke(instance, args);
+    }
+
+    public Object invokeUntyped(Object instance, String methodName,  Object... args) {
         return methodMap.get(methodName).invoke(instance, args);
     }
 

@@ -597,11 +597,11 @@ public class Reflection {
 
 
     public static Object invoke (Object object, String name, Object... args){
-        return ClassMeta.classMeta( object.getClass() ).invoke(object, name, args );
+        return ClassMeta.classMeta( object.getClass() ).invokeUntyped(object, name, args );
     }
 
 
     public static Object invoke (Object object, String name, List<?> args){
-        return ClassMeta.classMeta( object.getClass() ).invoke(object, name, args );
+        return ClassMeta.classMeta( object.getClass() ).invokeUntyped(object, name, args );
     }
 }
