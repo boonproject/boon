@@ -45,6 +45,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import static org.boon.Boon.className;
+import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
@@ -55,36 +56,80 @@ import static org.boon.core.Type.gatherTypes;
 
 /**
  * Created by rick on 12/26/13.
+ * @author Richard Hightower
+ * <p>
+ * This class creates Java objects from java.util.Lists and java.util.Maps.
+ * It is used by the JSON parser lib.
+ * There are map like objects that are index overlays of the parsed JSON.
+ * This set of utilties makes Java a bit more dynamic.
+ * </p>
  */
 public class MapObjectConversion {
 
 
+    /**
+     * Create an object from a list using the fields of the class.
+     * @param list list we are creating the object from
+     * @param clazz the type of object that we are creating.
+     * @param <T> generic type of the object that we are creating
+     * @return new object we created from a list
+     */
     public static <T> T fromListUsingFields( List<Object> list, Class<T> clazz ) {
 
         return fromListUsingFields( false, null, FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), list,  clazz, null );
 
     }
 
+    /**
+     * Create an object from a list using the fields of the class.
+     * This relies on the order of the fields as defined in the class.
+     * @param respectIgnore ignore things marked with @JsonIgnore and transient values
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param list list we are creating the object from
+     * @param clazz the type of object that we are creating.
+     * @param ignoreSet a set of properties to ignore
+     * @param <T> generic type we are returning
+     * @return new object
+     */
     public static <T> T fromListUsingFields( boolean respectIgnore, String view,
                                              FieldsAccessor fieldsAccessor, List<Object> list, Class<T> clazz ,
                                              Set<String> ignoreSet) {
 
+        /* Get the fields from the object. */
         Map<String, FieldAccess> fieldMap = fieldsAccessor.getFields( clazz );
         List<Field> fields = Reflection.getFields( clazz );
+
+        /* current item in the list. */
         Object item;
-        Class<?> paramType;
+        /* Current  type of the field arg. */
+        Class<?> fieldType;
+        /* Current field. */
         Field field;
 
+        /* Create a new instance of the object. */
         T toObject = Reflection.newInstance( clazz );
 
+        /* Loop through the fields. */
         loop:
         for ( int index = 0; index < fields.size(); index++ ) {
+
+            /* Get the field, param type, list item and field accessor. */
             field = fields.get( index );
-            paramType = field.getType();
+            fieldType = field.getType();
             item = list.get( index );
             FieldAccess fieldAccess = fieldMap.get( field.getName() );
 
-            if ( Typ.isList( paramType ) && item instanceof List ) {
+
+            /* if the field is a list and the item is a list then try to create the list and convert
+            the value.
+            REFACTOR: It seems like this same code to create a list from generic information is in
+            several places. This belongs in Conversions or some other class that knows
+            how to copy things into a field. Specifically this could be made more generic to work with
+            not just list but all types of collections.
+            REFACTOR:
+             */
+            if ( Typ.isList( fieldType ) && item instanceof List ) {
                 List<Object> itemList = ( List<Object> ) item;
                 if ( itemList.size() > 0 && itemList.get( 0 ) instanceof List ) {
                     Class<?> componentType = fieldAccess.getComponentClass();
@@ -97,14 +142,29 @@ public class MapObjectConversion {
                     fieldAccess.setValue( toObject, newList );
 
                 }
-            } else if ( paramType.isInstance( item ) ) {
-                fieldAccess.setValue( toObject, item );
+            /* If the field type and item type match then just inject the item.*/
+            } else if ( fieldType.isInstance( item ) ) {
+
+                fieldAccess.setObject( toObject, item );
             }
             else if (item instanceof Map) {
 
+                /* if the item was a map then convert it to the right object.
+                * REFACTOR: Looks like we have a generic function to convert a field into a map
+                * I wonder if this works with non instances too.
+                * Again we do this in several places. It seems like there can be a lot of consolidation.
+                * REFACTOR
+                * */
                 setFieldValueFromMap( respectIgnore, view, fieldsAccessor, ignoreSet, toObject, fieldAccess, item );
 
             } else {
+                /* This is sort of chicken shit, at this point we are just letting the system
+                decide how to convert it, if it can convert it.
+                setValue will try to inject it based on basic type matching and then finally
+                give up and call Conversion coerce.
+                REFACTOR: Seems we need a more general way to inject items into a field and convert/coerce them.
+                REFACTOR
+                 */
                 fieldAccess.setValue( toObject, item );
             }
         }
@@ -114,25 +174,51 @@ public class MapObjectConversion {
     }
 
 
-
+    /** Convert an item from a list into a class using the classes constructor.
+     *
+     * REFACTOR: Can't this just be from collection?
+     * REFACTOR
+     *
+     * @param argList list if arguments
+     * @param clazz  the type of the object we are creating
+     * @param <T> generics
+     * @return the new object that we just created.
+     */
     public static <T> T fromList( List<?> argList, Class<T> clazz ) {
           return fromList( FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), argList, clazz );
     }
 
 
-
-
+    /** Convert an item from a list into a class using the classes constructor.
+     *
+     * REFACTOR: Can't this just be from collection?
+     * REFACTOR
+     *
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view honor views for fields
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param argList list if arguments
+     * @param clazz  the type of the object we are creating
+     * @param ignoreSet a set of properties to ignore
+     * @param <T> generics
+     * @return the new object that we just created.
+     */
     public static <T> T fromList( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor,
                                   List<?> argList, Class<T> clazz, Set<String> ignoreSet ) {
 
+        /* Size of the arguments. */
         int size = argList.size();
 
-        List<Object> list = new ArrayList( argList );
+        /* List to hold items that we coerce into parameter types. */
+        List<Object> convertedArguments = new ArrayList<>( argList );
 
+        /* Meta data holder of the class. */
         ClassMeta<T> classMeta = ClassMeta.classMeta( clazz );
 
-        ConstructorAccess<T> match = null;
+        /* The constructor to match. */
+        ConstructorAccess<T> constructorToMatch = null;
 
+        /* The final arguments. */
         Object[] finalArgs = null;
 
 
@@ -141,30 +227,41 @@ public class MapObjectConversion {
         try {
 
 
+            /* Iterate through the constructors and see if one matches the arguments passed after coercion. */
             loop:
             for ( ConstructorAccess constructor : classMeta.constructors() ) {
+
+                /* Get the parameters on the constructor and see if the size matches what was passed. */
                 Class[] parameterTypes = constructor.parameterTypes();
                 if ( parameterTypes.length == size ) {
 
+                    /* Iterate through each parameter and see if it can be converted. */
                     for ( int index = 0; index < size; index++ ) {
+                        /* The match and convert does the bulk of the work. */
                         if ( !matchAndConvertArgs( respectIgnore, view,
-                                fieldsAccessor, list, constructor, parameterTypes, index, ignoreSet ) ) continue loop;
+                                fieldsAccessor, convertedArguments, constructor,
+                                parameterTypes, index, ignoreSet ) ) continue loop;
                     }
-                    match = constructor;
+                    constructorToMatch = constructor;
                 }
             }
 
-            if ( match != null ) {
-                finalArgs = list.toArray( new Object[list.size()] );
-                return ( T ) match.create( finalArgs );
+
+            /* If we were not able to match then we bail. */
+            if ( constructorToMatch != null ) {
+                finalArgs = convertedArguments.toArray( new Object[convertedArguments.size()] );
+                return constructorToMatch.create( finalArgs );
             } else {
-                return (T) die(Object.class, "Unable to convert list", list, "into", clazz);
+                return (T) die(Object.class, "Unable to convert list", convertedArguments, "into", clazz);
             }
 
+            /* Catch all of the exceptions and try to report why this failed.
+            * Since we are doing reflection and a bit of "magic", we have to be clear as to why/how things failed.
+            * */
         } catch ( Exception e ) {
 
 
-            if (match != null)  {
+            if (constructorToMatch != null)  {
 
 
                 CharBuf buf = CharBuf.create(200);
@@ -177,25 +274,31 @@ public class MapObjectConversion {
                 }
 
 
-                buf.multiply('-', 10).add("CONSTRUCTOR").add(match).multiply('-', 10).addLine();
+                buf.multiply('-', 10).add("CONSTRUCTOR").add(constructorToMatch).multiply('-', 10).addLine();
                 buf.multiply('-', 10).add("CONSTRUCTOR PARAMS").multiply('-', 10).addLine();
-                for (Class<?> c : match.parameterTypes()) {
+                for (Class<?> c : constructorToMatch.parameterTypes()) {
                         buf.puts("constructor type ", c);
                 }
 
                 buf.multiply('-', 35).addLine();
 
+                if (Boon.debugOn()) {
+                    puts(buf);
+                }
+
+                Boon.error( e, "unable to create object based on constructor", buf );
+
 
                 return ( T ) handle(Object.class, e, buf.toString(),
-                        "\nconstructor parameter types", match.parameterTypes(),
-                        "\nlist args after conversion", list, "types",
-                        gatherTypes(list),
+                        "\nconstructor parameter types", constructorToMatch.parameterTypes(),
+                        "\nlist args after conversion", convertedArguments, "types",
+                        gatherTypes(convertedArguments),
                         "\noriginal args", argList,
                         "original types", gatherTypes(argList));
             } else {
                 return ( T ) handle(Object.class, e,
-                        "\nlist args after conversion", list, "types",
-                        gatherTypes(list),
+                        "\nlist args after conversion", convertedArguments, "types",
+                        gatherTypes(convertedArguments),
                         "\noriginal args", argList,
                         "original types", gatherTypes(argList));
 
@@ -205,12 +308,46 @@ public class MapObjectConversion {
     }
 
 
+
+    /** Convert an item from a list into a class using the classes constructor.
+     *
+     * REFACTOR: Can't this just be from collection?
+     * REFACTOR
+     *
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param argList list if arguments
+     * @param clazz  the type of the object we are creating
+     * @param <T> generics
+     * @return the new object that we just created.
+     */
     public static <T> T fromList( FieldsAccessor fieldsAccessor, List<?> argList, Class<T> clazz ) {
         return fromList( false, null, fieldsAccessor, argList, clazz, null );
     }
 
+    /**
+     * This converts/coerce a constructor argument to the given parameter type.
+     *
+     * REFACTOR:
+     * This method was automatically refactored and its functionality gets duplicated in a few places.
+     * Namely Invoker lib. It needs to be documented. Refactored to use org.boon.core.Type.
+     * And code coverage. I have used it on several projects and have modified to work on
+     * edge cases for certain customers and have not updated the unit test.
+     * This method is beastly and important. It is currently 250 lines of code.
+     * It started off small, and kept getting added to. It needs love, but it was a bitch to write.
+     * REFACTOR
+     *
+     * @param view honor views for fields
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param ignoreSet a set of properties to ignore
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param convertedArgumentList   arguments being converted to match parameter types
+     * @param constructor    constructor
+     * @param parameterTypes   parameterTypes
+     * @param index           index of argument
+     * @return   true or false
+     */
     public static boolean matchAndConvertArgs( boolean respectIgnore, String view,
-                                               FieldsAccessor fieldsAccessor, List<Object> list,
+                                               FieldsAccessor fieldsAccessor, List<Object> convertedArgumentList,
                                                ConstructorAccess constructor,
                                                Class[] parameterTypes, int index, Set<String> ignoreSet  ) {
         try {
@@ -218,10 +355,10 @@ public class MapObjectConversion {
             Class paramType;
             Object item;
             paramType = parameterTypes[index];
-            item = list.get( index );
+            item = convertedArgumentList.get( index );
             if ( item instanceof ValueContainer ) {
                 item = ( ( ValueContainer ) item ).toValue();
-                list.set(index, item);
+                convertedArgumentList.set( index, item );
             }
 
             if (paramType.isPrimitive() && item == null) {
@@ -237,7 +374,7 @@ public class MapObjectConversion {
                     ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {
 
                     Object o = Conversions.coerceOrDie( paramType, item );
-                    list.set( index, o );
+                    convertedArgumentList.set( index, o );
             }
             /** Handle map to user class instance conversion. */
             else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
@@ -245,14 +382,14 @@ public class MapObjectConversion {
                 /** Handle instance value conversion from map to user defined class instance. */
                 if ( !paramType.isInterface() && !Typ.isAbstract( paramType ) ) {
                      item = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) item, paramType, ignoreSet );
-                     list.set(index, item);
+                     convertedArgumentList.set( index, item );
                 } else {
 
                     /** Handle conversion of user define interfaces. */
                     String  className = (String) ((Map) item).get( "class" );
                     if (className != null)  {
                         item = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) item, Reflection.loadClass( className ), ignoreSet );
-                        list.set(index, item);
+                        convertedArgumentList.set( index, item );
                     } else {
                         return false;
                     }
@@ -262,6 +399,10 @@ public class MapObjectConversion {
 
                 Map itemMap = (Map) item;
 
+                /* This code creates a map based on the parameterized types of the constructor arg.
+                 *  This does ninja level generics manipulations and needs to be captured in some
+                 *  reusable way.
+                  * */
                 Type type = constructor.getGenericParameterTypes()[index];
                 if ( type instanceof ParameterizedType ) {
                     ParameterizedType pType = ( ParameterizedType ) type;
@@ -272,6 +413,11 @@ public class MapObjectConversion {
 
 
                     Map newMap =  Conversions.createMap(paramType, itemMap.size());
+
+
+                    /* Iterate through the map items and convert the keys/values to match
+                    the parameterized constructor parameter args.
+                     */
 
                     for ( Object o : itemMap.entrySet() ) {
                         Map.Entry entry = (Map.Entry)o;
@@ -284,7 +430,9 @@ public class MapObjectConversion {
                         value = ValueContainer.toObject(value);
 
 
-
+                        /* Here is the actual conversion from a list or a map of some object.
+                        This can be captured in helper method the duplication is obvious.
+                         */
                         if (value instanceof List) {
                             value = fromList( respectIgnore, view, fieldsAccessor, (List)value, valueType, ignoreSet );
 
@@ -308,12 +456,13 @@ public class MapObjectConversion {
 
                         newMap.put(key, value);
                     }
-                    list.set( index, newMap );
+                    convertedArgumentList.set( index, newMap );
                 }
              }
 
 
-            /* It is some sort of instance parameters (user defined instance of a class) and the item is a list. */
+            /* The parameter type is some sort of instance parameters (user defined instance of a class)
+               and the item is a list. */
             else if ( item instanceof List && !Typ.isCollection(paramType) && !paramType.isEnum()) {
 
                 List<Object> listItem = null;
@@ -324,7 +473,7 @@ public class MapObjectConversion {
 
                     convertedItem = fromList(respectIgnore, view, fieldsAccessor, listItem, paramType, ignoreSet );
 
-                    list.set( index, convertedItem);
+                    convertedArgumentList.set( index, convertedItem );
 
                 } catch (Exception ex) {
 
@@ -333,23 +482,30 @@ public class MapObjectConversion {
                             "listItem", listItem,
                             "convertedItem", convertedItem,
                             "respectIgnore", respectIgnore, "view", view,
-                            "fieldsAccessor", fieldsAccessor, "list", list,
+                            "fieldsAccessor", fieldsAccessor, "list", convertedArgumentList,
                             "constructor", constructor, "parameters", parameterTypes,
                             "index", index, "ignoreSet", ignoreSet);
                     ex.printStackTrace();
                 }
 
-                /** The parameter is some sort of collection, and the item is a list. */
+                /* The parameter is some sort of collection, and the item is a list. */
             } else if ( Typ.isCollection(paramType) && item instanceof List ) {
                  
                 List<Object> itemList = ( List<Object> ) item;
 
-                /** Items have stuff in it, the item is a list of lists */
+                /* Items have stuff in it, the item is a list of lists.
+                 * This is like we did earlier with the map.
+                 * Here is some more ninja generics Java programming that needs to be captured in one place.
+                 * */
                 if ( itemList.size() > 0 && (itemList.get( 0 ) instanceof List ||
                         itemList.get(0) instanceof ValueContainer)  ) {
 
-
+                    /** Grab the generic type of the list. */
                     Type type = constructor.getGenericParameterTypes()[index];
+
+                    /*  Try to pull the generic type information out so you can create
+                       a strongly typed list to inject.
+                     */
                     if ( type instanceof ParameterizedType ) {
                         ParameterizedType pType = ( ParameterizedType ) type;
                         Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
@@ -366,12 +522,14 @@ public class MapObjectConversion {
                             o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
                             newList.add( o );
                         }
-                        list.set( index, newList );
+                        convertedArgumentList.set( index, newList );
 
                     }
                 } else {
 
-                    /* Just a list not a list of lists*/
+                    /* Just a list not a list of lists so see if it has generics and pull out the
+                    * type information and created a strong typed list. This looks a bit familiar.
+                    * There is a big opportunity for some reuse here. */
                     Type type = constructor.getGenericParameterTypes()[index];
                     if ( type instanceof ParameterizedType ) {
                         ParameterizedType pType = ( ParameterizedType ) type;
@@ -398,22 +556,22 @@ public class MapObjectConversion {
                                 newList.add( Conversions.coerce(componentType, o));
                             }
                         }
-                        list.set( index, newList );
+                        convertedArgumentList.set( index, newList );
 
                     }
 
                 }
             } else if ( paramType == Typ.string  && item instanceof CharSequence ) {
-                list.set( index, item.toString() );
+                convertedArgumentList.set( index, item.toString() );
             } else if ( paramType.isEnum()  && (item instanceof CharSequence| item instanceof Number)  ) {
-                list.set( index, toEnum(paramType, item));
+                convertedArgumentList.set( index, toEnum( paramType, item ) );
             } else if ( paramType.isInstance( item ) ) {
                 return true;
             } else {
                 org.boon.core.Type type = org.boon.core.Type.getType(paramType);
 
                 if ( type == org.boon.core.Type.INSTANCE ) {
-                    list.set(index, coerce(paramType, item));
+                    convertedArgumentList.set( index, coerce( paramType, item ) );
                 } else {
                     return false;
                 }
@@ -421,7 +579,7 @@ public class MapObjectConversion {
         } catch (Exception ex) {
             Boon.error(ex, "PROBLEM WITH matchAndConvertArgs",
                     "respectIgnore", respectIgnore, "view", view,
-                    "fieldsAccessor", fieldsAccessor, "list", list,
+                    "fieldsAccessor", fieldsAccessor, "list", convertedArgumentList,
                     "constructor", constructor, "parameters", parameterTypes,
                     "index", index, "ignoreSet", ignoreSet);
             ex.printStackTrace();
@@ -432,25 +590,24 @@ public class MapObjectConversion {
     }
 
 
-    @SuppressWarnings( "unchecked" )
-    public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
-        return fromMap( false, null, FieldAccessMode.FIELD_THEN_PROPERTY.create( true ), map, clazz, null );
 
-    }
-
-
-    public static List<Object> toList( Object object) {
+    /** Convert an object to a list.
+     *
+     * @param object the object we want to convert to a list
+     * @return new list from an object
+     */
+    public static List<?> toList( Object object) {
 
         org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(object);
 
         switch (instanceType) {
             case NULL:
-                return Lists.list(null);
+                return Lists.list((Object)null);
             case ARRAY:
                 return Conversions.toList(object);
             case INSTANCE:
                 if (Reflection.respondsTo(object, "toList")) {
-                    return (List<Object>) Reflection.invoke(object, "toList");
+                    return (List<?>) Reflection.invoke(object, "toList");
                 }
                 break;
         }
@@ -458,7 +615,30 @@ public class MapObjectConversion {
     }
 
 
+    /**
+     * From map.
+     * @param map map to create the object from.
+     * @param clazz the new instance type
+     * @param <T> generic type capture
+     * @return new object
+     */
+    @SuppressWarnings( "unchecked" )
+    public static <T> T fromMap( Map<String, Object> map, Class<T> clazz ) {
+        return fromMap( false, null, FieldAccessMode.FIELD_THEN_PROPERTY.create( true ), map, clazz, null );
 
+    }
+
+
+
+
+    /**
+     * fromMap converts a map into a java object.
+     * @param map map to create the object from.
+     * @param clazz  the new instance type
+     * @param excludeProperties the properties to exclude
+     * @param <T> generic type capture
+     * @return the new object
+     */
     @SuppressWarnings( "unchecked" )
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz, String... excludeProperties ) {
         Set<String> ignoreProps = excludeProperties.length > 0 ? Sets.set(excludeProperties) :  null;
@@ -467,7 +647,12 @@ public class MapObjectConversion {
     }
 
 
-
+    /**
+     * fromMap converts a map into a Java object.
+     * This version will see if there is a class parameter in the map, and dies if there is not.
+     * @param map map to create the object from.
+     * @return new object
+     */
     public static Object fromMap( Map<String, Object> map ) {
         String clazz = (String) map.get( "class" );
         Class cls = Reflection.loadClass( clazz );
@@ -475,27 +660,39 @@ public class MapObjectConversion {
     }
 
 
-
-
+    /**
+     * fromMap converts a map into a java object
+     * @param respectIgnore honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param map map to create the object from.
+     * @param cls class type of new object
+     * @param ignoreSet a set of properties to ignore
+     * @param <T> map to create teh object from.
+     * @return new object of type cls <T>
+     */
     @SuppressWarnings("unchecked")
     public static <T> T fromMap( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor, Map<String, Object> map, Class<T> cls, Set<String> ignoreSet ) {
 
 
         T toObject = Reflection.newInstance( cls );
         Map<String, FieldAccess> fields = fieldsAccessor.getFields( toObject.getClass() );
-        Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+        Set<Map.Entry<String, Object>> mapKeyValuesEntrySet = map.entrySet();
 
 
-        /* Iterate through the fields. */
-        //for ( FieldAccess field : fields ) {
-        for ( Map.Entry<String, Object> entry : entrySet ) {
-            String key = entry.getKey();
+        /* Iterate through the map keys/values. */
+        for ( Map.Entry<String, Object> mapEntry : mapKeyValuesEntrySet ) {
+
+            /* Get the field name. */
+            String key = mapEntry.getKey();
 
             if ( ignoreSet != null ) {
                 if ( ignoreSet.contains( key ) ) {
                     continue;
                 }
             }
+
+            /* Get the field and if it missing then ignore this map entry. */
             FieldAccess field = fields.get( key );
 
 
@@ -503,7 +700,9 @@ public class MapObjectConversion {
                 continue;
             }
 
-            /** Check the view if it is active. */
+
+
+            /* Check the view if it is active. */
             if ( view != null ) {
                 if ( !field.isViewActive( view ) ) {
                     continue;
@@ -511,7 +710,7 @@ public class MapObjectConversion {
             }
 
 
-            /** Check respects ignore it is active.
+            /* Check respects ignore is active.
              * Then needs to be a chain of responsibilities.
              * */
             if ( respectIgnore ) {
@@ -520,9 +719,13 @@ public class MapObjectConversion {
                 }
             }
 
-            Object value = entry.getValue();
+            /* Get the value from the map. */
+            Object value = mapEntry.getValue();
 
 
+            /* If the value is a Value (a index overlay), then convert ensure it is not a container and inject
+            it into the field, and we are done so continue.
+             */
             if ( value instanceof Value ) {
                 if ( ( ( Value ) value ).isContainer() ) {
                     value = ( ( Value ) value ).toValue();
@@ -532,21 +735,32 @@ public class MapObjectConversion {
                 }
             }
 
+            /* If the value is null, then inject an null value into the field.
+            * Notice we do not check to see if the field is a primitive, if
+            * it is we die which is the expected behavior.
+            */
             if ( value == null ) {
                 field.setObject( toObject, null );
                 continue;
             }
 
+            /* if the value's type and the field type are the same or
+            the field just takes an object, then inject what we have as is.
+             */
             if ( value.getClass() == field.type() || field.type() == Object.class) {
                 field.setObject( toObject, value );
             } else if ( Typ.isBasicType( value ) ) {
 
                 field.setValue(toObject, value);
-            } else if ( value instanceof Value ) {
-                field.setValue(toObject, value);
             }
-            /* See if it is a map<string, object>, and if it is then process it. */
-            //&& Typ.getKeyType ( ( Map<?, ?> ) value ) == Typ.string
+
+
+            /* See if it is a map<string, object>, and if it is then process it.
+             *  REFACTOR:
+             *  It looks like we are using some utility classes here that we could have used in
+             *  matchAndConvertArgs.
+             *  REFACTOR
+              * */
             else if ( value instanceof Map ) {
                 setFieldValueFromMap(respectIgnore, view, fieldsAccessor, ignoreSet, toObject, field, value);
             } else if ( value instanceof Collection ) {
@@ -556,6 +770,10 @@ public class MapObjectConversion {
                 /* It is an array of maps so, we need to process it as such. */
                 processArrayOfMaps(respectIgnore, view, fieldsAccessor, toObject, field, value, ignoreSet );
             } else {
+                /* If we could not determine how to convert it into some field
+                object then we just go ahead an inject it using setValue which
+                will call Conversion.coerce.
+                 */
                 field.setValue( toObject, value );
             }
 
@@ -564,6 +782,8 @@ public class MapObjectConversion {
         return toObject;
 
     }
+
+    //TODO
 
     private static <T> void setFieldValueFromMap( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor,
                                                   Set<String> ignoreSet, T toObject, FieldAccess field, Object value ) {

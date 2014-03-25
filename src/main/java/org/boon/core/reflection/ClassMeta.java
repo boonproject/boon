@@ -234,7 +234,7 @@ public class ClassMeta <T> implements Annotated{
 
     }
 
-    public static ClassMeta classMeta( Class<?> aClass ) {
+    public static <T> ClassMeta<T> classMeta( Class<T> aClass ) {
         ClassMeta meta = Reflection.context()._classMetaMap.get( aClass );
         if (meta == null) {
             meta = new ClassMeta( aClass );
