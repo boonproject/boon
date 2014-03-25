@@ -62,6 +62,7 @@ import static org.boon.core.Type.gatherTypes;
  * It is used by the JSON parser lib.
  * There are map like objects that are index overlays of the parsed JSON.
  * This set of utilties makes Java a bit more dynamic.
+ * This is the core of the serialization for JSON and works in conjunction with org.boon.core.Type.
  * </p>
  */
 public class MapObjectConversion {
@@ -783,17 +784,30 @@ public class MapObjectConversion {
 
     }
 
-    //TODO
 
+    /**
+     * Inject a map into an object's field.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param ignoreSet a set of properties to ignore
+     * @param toObject object we are copying value into
+     * @param field field we are injecting a value into
+     * @param value value we are trying to inject which might need coercion
+     * @param <T> generic type
+     */
     private static <T> void setFieldValueFromMap( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor,
                                                   Set<String> ignoreSet, T toObject, FieldAccess field, Object value ) {
-        Class<?> clazz = field.type();
+
+
+        Class<?> fieldClassType = field.type();
 
         Map mapInner = (Map)value;
 
-        if ( !Typ.isMap( clazz ) )  {
+        /* Is the field not a map. */
+        if ( !Typ.isMap( fieldClassType ) )  {
 
-            if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
+            if ( !fieldClassType.isInterface() && !Typ.isAbstract( fieldClassType ) ) {
                 value = fromMap( respectIgnore, view, fieldsAccessor, mapInner, field.type(), ignoreSet );
 
             } else {
@@ -804,7 +818,14 @@ public class MapObjectConversion {
                     value = null;
                 }
             }
-        }  else if (Typ.isMap( clazz ))  {
+
+           /*
+           REFACTOR:
+           This is at least the third time that I have seen this code in the class.
+            It was either cut and pasted or I forgot I wrote it three times.
+           REFACTOR:
+             */
+        }  else if (Typ.isMap( fieldClassType ))  {
             Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
             Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
 
@@ -834,34 +855,64 @@ public class MapObjectConversion {
     }
 
 
+
+    /**
+     * Creates an object from a value map.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param ignoreSet a set of properties to ignore
+     * @return new object from value map
+     */
     @SuppressWarnings("unchecked")
     private static Object fromValueMap(boolean respectIgnore, String view,
             final FieldsAccessor fieldsAccessor,
-            final Map<String, Value> map, Set<String> ignoreSet  ) {
+            final Map<String, Value> valueMap, Set<String> ignoreSet  ) {
 
         try {
-            String className = map.get( "class" ).toString();
+            String className = valueMap.get( "class" ).toString();
             Class<?> cls = Reflection.loadClass( className );
-            return fromValueMap( respectIgnore, view, fieldsAccessor, map, cls, ignoreSet );
+            return fromValueMap( respectIgnore, view, fieldsAccessor, valueMap, cls, ignoreSet );
         } catch ( Exception ex ) {
-            return handle(Object.class, sputs("fromValueMap", "map", map, "fieldAccessor", fieldsAccessor), ex);
+            return handle(Object.class, sputs("fromValueMap", "map", valueMap, "fieldAccessor", fieldsAccessor), ex);
         }
     }
 
 
+    /**
+     * Creates an object from a value map.
+     *
+     * This does some special handling to take advantage of us using the value map so it avoids creating
+     * a bunch of array objects and collections. Things you have to worry about when writing a
+     * high-speed JSON serializer.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param cls the new type
+     * @param ignoreSet a set of properties to ignore
+     * @return new object from value map
+     */
     @SuppressWarnings("unchecked")
     public static <T> T fromValueMap( boolean respectIgnore, String view, final FieldsAccessor fieldsAccessor,
-                                      final Map<String, Value> amap,
+                                      final Map<String, Value> valueMap,
                                       final Class<T> cls, Set<String> ignoreSet ) {
 
         T newInstance = Reflection.newInstance( cls );
-        ValueMap map = ( ValueMap ) ( Map ) amap;
+        ValueMap map = ( ValueMap ) ( Map ) valueMap;
 
 
         Map<String, FieldAccess> fields = fieldsAccessor.getFields( cls);
         Map.Entry<String, Object>[] entries;
+
+        FieldAccess field = null;
+        String fieldName = null;
+        Map.Entry<String, Object> entry;
+
+
         int size;
 
+
+        /* if the map is not hydrated get its entries right form the array to avoid collection creations. */
         if ( !map.hydrated() ) {
             size = map.len();
             entries = map.items();
@@ -870,16 +921,14 @@ public class MapObjectConversion {
             entries = ( Map.Entry<String, Object>[] ) map.entrySet().toArray( new Map.Entry[size] );
         }
 
-        /* guard. */
+        /* guard. We should check if this is still needed.
+        * I might have added it for debugging and forgot to remove it.*/
         if ( size == 0 || entries == null ) {
             return newInstance;
         }
 
 
-        FieldAccess field = null;
-        String fieldName = null;
-        Map.Entry<String, Object> entry;
-
+        /* Iterate through the entries. */
         for ( int index = 0; index < size; index++ ) {
             Object value = null;
             try {
@@ -933,30 +982,63 @@ public class MapObjectConversion {
         return newInstance;
     }
 
+    /**
+     *
+     * Gets called by  fromValueMap
+     * This does some special handling to take advantage of us using the value map so it avoids creating
+     * a bunch of array objects and collections. Things you have to worry about when writing a
+     * high-speed JSON serializer.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param ignoreSet a set of properties to ignore
+     * @param field  field we want to inject something into
+     * @param newInstance the thing we want to inject a field value into
+     * @param objectValue object value we want to inject into the field.
+     * @return new object from value map
+     */
     private static <T> void fromMapHandleNonValueCase( boolean respectIgnore, String view,
                                                        FieldsAccessor fieldsAccessor,
-                                                       T newInstance, FieldAccess field, Object ovalue, Set<String> ignoreSet ) {
+                                                       T newInstance, FieldAccess field,
+                                                       Object objectValue, Set<String> ignoreSet ) {
         try {
-            if ( ovalue instanceof Map ) {
+            if ( objectValue instanceof Map ) {
                 Class<?> clazz = field.type();
                 if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
-                    ovalue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) ovalue, field.type(), ignoreSet );
+                    objectValue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objectValue, field.type(), ignoreSet );
                 } else {
-                    ovalue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) ovalue, ignoreSet );
+                    objectValue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objectValue, ignoreSet );
                 }
-                field.setObject( newInstance, ovalue );
-            } else if ( ovalue instanceof Collection ) {
+                field.setObject( newInstance, objectValue );
+            } else if ( objectValue instanceof Collection ) {
                 handleCollectionOfValues( respectIgnore, view, fieldsAccessor, newInstance, field,
-                        ( Collection<Value> ) ovalue, ignoreSet );
+                        ( Collection<Value> ) objectValue, ignoreSet );
             } else {
-                field.setValue( newInstance, ovalue );
+                field.setValue( newInstance, objectValue );
             }
         } catch ( Exception ex ) {
             handle(sputs("Problem handling non value case of fromValueMap", "field", field.name(),
-                    "fieldType", field.type().getName(), "object from map", ovalue), ex);
+                    "fieldType", field.type().getName(), "object from map", objectValue), ex);
         }
     }
 
+
+
+    /**
+     *
+     * Gets called by  fromValueMap
+     * This does some special handling to take advantage of us using the value map so it avoids creating
+     * a bunch of array objects and collections. Things you have to worry about when writing a
+     * high-speed JSON serializer.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param ignoreSet a set of properties to ignore
+     * @param field  field we want to inject something into
+     * @param newInstance the thing we want to inject a field value into
+     * @param value object value of type Value we want to inject into the field.
+     * @return new object from value map
+     */
     private static <T> void fromValueMapHandleValueCase(
             boolean respectIgnore, String view,
             FieldsAccessor fieldsAccessor, T newInstance, FieldAccess field, Value value, Set<String> ignoreSet  ) {
@@ -971,6 +1053,14 @@ public class MapObjectConversion {
                         objValue = fromValueMap( respectIgnore, view, fieldsAccessor,
                                 ( Map<String, Value> ) objValue, field.type(), ignoreSet );
                     } else {
+
+                        /*
+                        REFACTOR:
+                        here is this same generics code again. This is the fourth time in this class
+                        that I have seen this very similar code base.
+                        REFACTOR
+                        Time to break out simean.
+                         */
                         if (Typ.isMap( field.type() ))  {
                             Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
                             Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
@@ -1015,6 +1105,19 @@ public class MapObjectConversion {
     }
 
 
+    /**
+     * Helper method to extract collection of values into some field collection.
+     * REFACTOR:
+     * This could be refactored to use the org.boon.core.Type system which should be faster.
+     * REFACTOR
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param newInstance new instance we are injecting field into
+     * @param field field we are injecting a value into
+     * @param collection the collection we are coercing into a field value
+     * @param ignoreSet set of properties that we want to ignore.
+     */
     private static void processCollectionFromMapUsingFields(boolean respectIgnore, String view,
             final FieldsAccessor fieldsAccessor, final Object newInstance,
             final FieldAccess field,
@@ -1034,6 +1137,7 @@ public class MapObjectConversion {
 
         }
 
+        /** See if this is a value object of some sort. */
         if ( Typ.isValue( valueComponentClass ) ) {
                  handleCollectionOfValues( respectIgnore, view,  fieldsAccessor, newInstance, field,
                         ( Collection<Value> ) collection, ignoreSet );
@@ -1041,9 +1145,10 @@ public class MapObjectConversion {
         }
 
 
-
-
-
+        /**
+         * See if the collection implements the same type as the field.
+         * I saw a few places that could have used this helper method earlier in the file but were not.
+         */
         if (Typ.implementsInterface( collection.getClass(), field.type() )) {
 
             if (fieldComponentClass!=null && fieldComponentClass.isAssignableFrom(valueComponentClass)) {
@@ -1054,6 +1159,20 @@ public class MapObjectConversion {
 
         }
 
+        /** See if this is some sort of collection.
+         * TODO we need a coerce that needs a respectIgnore
+         *
+         * REFACTOR:
+         * Note we are assuming it is a collection of instances.
+         * We don't handle enums here.
+         *
+         * We do in other places.
+         *
+         * We handle all sorts of generics but not here.
+         *
+         * REFACTOR
+         *
+         **/
         if (!field.typeEnum().isCollection()) {
             if (collection instanceof List) {
                 try {
@@ -1070,7 +1189,11 @@ public class MapObjectConversion {
         }
 
 
-
+        /**
+         * Create a new collection. if the types already match then just copy them over.
+         * Note that this is currently untyped in the null case.
+         * We are relying on the fact that the field.setValue calls the Conversion.coerce.
+         */
         Collection<Object> newCollection = Conversions.createCollection( field.type(), collection.size() );
 
         if ( fieldComponentClass == null || fieldComponentClass.isAssignableFrom(valueComponentClass)) {
@@ -1081,12 +1204,25 @@ public class MapObjectConversion {
         }
 
 
+
+        /* Here we try to do the coercion for each individual collection item. */
         for (Object itemValue : collection) {
             newCollection.add(Conversions.coerce(fieldComponentClass, itemValue));
             field.setValue(newInstance, newCollection);
         }
+
     }
 
+    /**
+     * Processes an array of maps.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view  the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor   how we are going to access the fields (by field, by property, combination)
+     * @param newInstance  new instance we are injecting field into
+     * @param field    field we are injecting a value into
+     * @param value     value we are trying to inject which might need coercion
+     * @param ignoreSet    set of properties that we want to ignore.
+     */
     private static void processArrayOfMaps( boolean respectIgnore, String view, final FieldsAccessor fieldsAccessor,
                                             Object newInstance, FieldAccess field, Object value, Set<String> ignoreSet) {
         Map<String, Object>[] maps = ( Map<String, Object>[] ) value;
@@ -1096,6 +1232,16 @@ public class MapObjectConversion {
 
     }
 
+
+    /**
+     * Processes an collection of maps.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view  the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor   how we are going to access the fields (by field, by property, combination)
+     * @param newInstance  new instance we are injecting field into
+     * @param field    field we are injecting a value into
+     * @param ignoreSet    set of properties that we want to ignore.
+     */
     @SuppressWarnings("unchecked")
     private static void handleCollectionOfMaps( boolean respectIgnore, String view, final FieldsAccessor fieldsAccessor, Object newInstance,
                                                 FieldAccess field, Collection<Map<String, Object>> collectionOfMaps,
@@ -1120,7 +1266,16 @@ public class MapObjectConversion {
 
     }
 
-
+    /**
+     * Processes an collection of maps.
+     * This can inject into an array and appears to be using some of the Type lib.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view  the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor   how we are going to access the fields (by field, by property, combination)
+     * @param newInstance  new instance we are injecting field into
+     * @param field    field we are injecting a value into
+     * @param ignoreSet    set of properties that we want to ignore.
+     */
     @SuppressWarnings("unchecked")
     private static void handleCollectionOfValues(
             boolean respectIgnore, String view,
@@ -1136,7 +1291,9 @@ public class MapObjectConversion {
         Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfValues.size() );
 
 
-
+        /** If the field is a collection than try to convert the items in the collection to
+         * the field type.
+         */
         if ( field.typeEnum().isCollection() ) {
 
             Class<?> componentClass = field.getComponentClass();
@@ -1156,6 +1313,11 @@ public class MapObjectConversion {
             }
             field.setObject( newInstance, newCollection );
 
+
+            /* In some of the fromList above we don't handle the array case, and here we clearly do.
+             *  This code needs to be put somewhere else and called wherever we want to convert
+             *  a collection to an array
+             */
         } else if (field.typeEnum() == org.boon.core.Type.ARRAY) {
 
             Class<?> componentClass = field.getComponentClass();
@@ -1268,10 +1430,20 @@ public class MapObjectConversion {
 
     }
 
+    /**
+     * Basic toMap to create an object into a map.
+     * @param object the object we want to convert to a list
+     * @param ignore do we honor ignore properties
+     * @return new map
+     */
     public static Map<String, Object> toMap( final Object object, final String... ignore ) {
         return toMap( object, Sets.set( ignore ) );
     }
 
+
+    /**
+     * Converts a field access set into a collection of map entries.
+     */
     public static class FieldToEntryConverter implements
             Function<FieldAccess, Maps.Entry<String, Object>> {
 
@@ -1293,7 +1465,13 @@ public class MapObjectConversion {
     }
 
 
-
+    /**
+     * This could be refactored to use core.Type class and it would run faster.
+     * Converts an object into a map
+     * @param object the object that we want to convert
+     * @param ignore the map
+     * @return map map representation of the object
+     */
     public static Map<String, Object> toMap( final Object object, Set<String> ignore ) {
 
         if ( object == null ) {
@@ -1371,6 +1549,20 @@ public class MapObjectConversion {
     }
 
 
+
+
+    /**
+     * This could be refactored to use core.Type class and it would run faster.
+     *
+     * REFACTOR:
+     * This is nearly a duplicate of the last method.
+     * I think the rationality was speed, but we need to rethink that and come up with a
+     * Mapper class.
+     * REFACTOR
+     * Converts an object into a map
+     * @param object the object that we want to convert
+     * @return map map representation of the object
+     */
     public static Map<String, Object> toMap( final Object object ) {
 
         if ( object == null ) {
@@ -1442,6 +1634,19 @@ public class MapObjectConversion {
         return map;
     }
 
+    /**
+     * This converts a list of maps to objects.
+     * I always forget that this exists. I need to remember.
+     *
+     * @param respectIgnore   honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param componentType The component type of the created list
+     * @param list the input list
+     * @param ignoreProperties properties to ignore
+     * @param <T> generics
+     * @return a new list
+     */
     public static <T> List<T> convertListOfMapsToObjects(   boolean respectIgnore, String view,
                                                             FieldsAccessor fieldsAccessor,
                                                             Class<T> componentType, List<?> list, Set<String> ignoreProperties) {
@@ -1467,6 +1672,11 @@ public class MapObjectConversion {
         return ( List<T> ) newList;
     }
 
+    /**
+     * Creates a list of maps from a list of class instances.
+     * @param collection  the collection we are coercing into a field value
+     * @return the return value.
+     */
     public static List<Map<String, Object>> toListOfMaps( Collection<?> collection ) {
         List<Map<String, Object>> list = new ArrayList<>();
         for ( Object o : collection ) {
