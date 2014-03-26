@@ -128,6 +128,14 @@ public class Lists {
         return list;
     }
 
+    public static <V> List<V> deepCopyToList( Collection<V> src,  List<V> dst) {
+
+        for (V v : src) {
+            dst.add( BeanUtils.copy( v ));
+        }
+        return  dst;
+    }
+
 
     public static <V,T> List<T> deepCopy( Collection<V> src, Class<T> dest  ) {
         List<T> list = new ArrayList<>(src.size());
@@ -141,11 +149,11 @@ public class Lists {
     @Universal
     public static <V> List<V> deepCopy( List<V> list ) {
         if ( list instanceof LinkedList ) {
-            return deepCopy( new LinkedList<>( list ) );
+            return deepCopyToList( list, new LinkedList<>( list ) );
         } else if ( list instanceof CopyOnWriteArrayList ) {
-            return deepCopy(new CopyOnWriteArrayList<>( list ));
+            return deepCopyToList( list, new CopyOnWriteArrayList<>( list ));
         } else {
-            return deepCopy((Collection)list);
+            return deepCopy( (Collection)list);
         }
     }
 

@@ -29,10 +29,14 @@
 package org.boon;
 
 
+import org.boon.collections.ConcurrentHashSet;
+import org.boon.core.Conversions;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.MapObjectConversion;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Sets {
@@ -348,10 +352,78 @@ public class Sets {
     }
 
 
+
+
+    public static <V> Set<V> deepCopy( Collection<V> collection ) {
+        Set<V> newSet = new LinkedHashSet<>(collection.size());
+
+        for (V v : collection) {
+            newSet.add(BeanUtils.copy(v));
+        }
+        return newSet;
+    }
+
+    public static <V> Set<V> deepCopyToSet( Collection<V> src,  Set<V> dst) {
+
+        for (V v : src) {
+            dst.add( BeanUtils.copy( v ));
+        }
+        return  dst;
+    }
+
+
+    public static <V,T> List<T> deepCopy( Collection<V> src, Class<T> dest  ) {
+        List<T> list = new ArrayList<>(src.size());
+
+        for (V v : src) {
+            list.add( BeanUtils.createFromSrc( v, dest ));
+        }
+        return list;
+    }
+
+    @Universal
+    public static <V> Set<V> deepCopy( Set<V> list ) {
+        if ( list instanceof LinkedHashSet ) {
+            return deepCopyToSet(list, new LinkedHashSet<>(list));
+        } else if ( list instanceof CopyOnWriteArraySet ) {
+            return deepCopyToSet(list, new CopyOnWriteArraySet<V>(list));
+        } else if ( list instanceof HashSet ) {
+            return deepCopyToSet(list, new HashSet<V>(list));
+        } else {
+            return deepCopy( (Collection)list);
+        }
+    }
+
     //end universal
 
-    public static List<Map<String, Object>> toListOfMaps( Set<?> list ) {
-        return MapObjectConversion.toListOfMaps( list );
+    public static List<Map<String, Object>> toListOfMaps( Set<?> set ) {
+        return MapObjectConversion.toListOfMaps( set );
+
+    }
+
+
+    public static <T> Set<T> setFromProperty( Class<T> propertyType, String propertyPath, Collection<?> list ) {
+        Set<T> newSet = new LinkedHashSet<>( list.size() );
+
+        for ( Object item : list ) {
+            T newItem = ( T ) BeanUtils.idx( item, propertyPath );
+            newSet.add(newItem);
+        }
+
+        return newSet;
+
+    }
+
+
+    public static <T> Set<T> setFromProperty( Class<T> propertyType, String propertyPath, Iterable<?> list ) {
+        Set<T> newSet = new LinkedHashSet<>(  );
+
+        for ( Object item : list ) {
+            T newItem = ( T ) BeanUtils.idx( item, propertyPath );
+            newSet.add(newItem);
+        }
+
+        return newSet;
 
     }
 

@@ -1112,40 +1112,16 @@ public class BeanUtils {
     }
 
 
-//
-//    private static Object getFieldValue( Object object, final String key ) {
-//        if ( object == null ) {
-//            return null;
-//        }
-//
-//        Class<?> cls = object.getClass();
-//
-//        Map<String, FieldAccess> fields = Reflection.getPropertyFieldAccessMapFieldFirst( cls );
-//
-//        if ( !fields.containsKey( key ) ) {
-//            return null;
-//        } else {
-//            return fields.get( key ).getValue( object );
-//        }
-//    }
-
-
     public static <T> T copy( T item ) {
         if ( item instanceof Cloneable ) {
-            try {
-                Method method = item.getClass().getMethod( "clone", ( Class[] ) null );
-                method.setAccessible( true );
-                return ( T ) method.invoke( item, ( Object[] ) null );
-            } catch ( NoSuchMethodException | InvocationTargetException | IllegalAccessException ex ) {
-                return fieldByFieldCopy( item );
-            }
+             return (T) ClassMeta.classMeta(item.getClass()).invokeUntyped(item, "clone", ( Class[] ) null);
         } else {
             return fieldByFieldCopy( item );
         }
     }
 
 
-    private static <T> T fieldByFieldCopy( T item ) {
+    public static <T> T fieldByFieldCopy( T item ) {
 
         final Class<T> aClass = (Class<T>) item.getClass();
         Map<String, FieldAccess> fields = Reflection.getAllAccessorFields( aClass );
@@ -1410,5 +1386,22 @@ public class BeanUtils {
 
         return false;
     }
+
+
+
+    public static void setCollectionProperty(Collection<?> list, String propertyName, Object value) {
+        for (Object object : list) {
+            BeanUtils.idx(object, propertyName, value);
+        }
+    }
+
+
+    public static void setIterableProperty(Iterable<?> list, String propertyName, Object value) {
+        for (Object object : list) {
+            BeanUtils.idx(object, propertyName, value);
+        }
+    }
+
+
 
 }
