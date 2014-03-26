@@ -161,6 +161,8 @@ public class DeepCopyRemix {
     @Test
     public void test() {
         DeepCopyRemix.main();
+
+        DeepCopyRemix.main2();
     }
 
 
