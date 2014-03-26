@@ -134,6 +134,11 @@ public class DeepCopyRemix {
 
 
     public static void main (String... args) {
+        main1();
+        main2();
+    }
+
+    public static void main1 (String... args) {
 
         List<Employee> original, copy;
 
@@ -160,9 +165,10 @@ public class DeepCopyRemix {
 
     @Test
     public void test() {
-        DeepCopyRemix.main();
 
         DeepCopyRemix.main2();
+        DeepCopyRemix.main();
+
     }
 
 
