@@ -1129,34 +1129,96 @@ public class BeanUtils {
         T clone = Reflection.newInstance( aClass );
 
         for ( FieldAccess field : fields.values() ) {
+
+
             try {
-            if ( field.isStatic() || field.isWriteOnly()) {
-                continue;
-            }
-            if (!field.isPrimitive() && !Typ.isBasicType( field.type() ))  {
 
-
-
-                Object value = field.getObject( item );
-                if (value == null) {
-                    field.setObject(clone, null);
-                } else {
-                    field.setObject( clone, copy( value ) );
-                }
-            } else if (field.isPrimitive()) {
-                field.setValue( clone, field.getValue( item ) );
-            } else {
-                Object value = field.getObject( item );
-
-                if (value == null) {
-                    field.setObject(clone, null);
-                } else {
-                    field.setObject( clone,  value  );
+                /* If the field is static or write only continue. */
+                if (field.isStatic() || field.isWriteOnly()) {
+                    continue;
                 }
 
-            }
-            }catch (Exception ex) {
-                return (T) Exceptions.handle(Object.class, ""+field,  ex );
+
+                   /* if the field is primitive then just inject it
+                    and allow for conversion if needed. */
+                if (field.isPrimitive()) {
+                    field.setValue(clone, field.getValue(item));
+                    continue;
+                }
+
+
+                Object value = field.getObject(item);
+
+                if (value == null ) {
+
+                    field.setObject(clone, null);
+                    continue;
+                }
+
+               /* If the field is not a basic type and not a primitive then
+                   then recursively copy a version into the field field.
+                 */
+                if (!field.isPrimitive() && !Typ.isBasicType(field.type())) {
+
+
+                     field.setObject(clone, copy(value));
+
+                    continue;
+                }
+
+
+
+                    /* It was a basic type so just copy a reference to it. */
+                /* It is a basic type. */
+                if (Typ.isBasicType(field.type())) {
+
+                     field.setObject(clone, value);
+
+                    continue;
+                }
+
+                if (Typ.isCollection(field.type())) {
+
+                    Collection<Object> src = ( Collection<Object> ) value;
+                    Class<?> collectionType = field.type();
+                    Collection<Object> dst = Conversions.createCollection(collectionType, src.size());
+
+                    for (Object o : src) {
+                        dst.add( copy ( o ) );
+                    }
+
+                    field.setObject(clone, dst);
+
+                    continue;
+                }
+
+
+                /** We don't handle maps yet. */
+                if (Typ.isMap(field.type())) {
+
+
+                    continue;
+                }
+
+                if (field.type().isArray()) {
+
+                    int length = Array.getLength(value);
+                    Object dst = Array.newInstance(field.getComponentClass(), length);
+
+                    for (int index =0; index < length; index++) {
+                        Object o = Array.get(value, index);
+                        Array.set(dst, index, copy (o));
+                    }
+
+                    field.setObject(clone, dst);
+
+                    continue;
+                }
+
+
+            } catch (Exception ex) {
+
+                return (T) Exceptions.handle(Object.class, "" + field,  ex );
             }
         }
         return clone;

@@ -146,12 +146,28 @@ public class Lists {
         return list;
     }
 
+    /**
+     * Clones each list item into a new instance with copied fields.
+     * It is like doing a clone operation.
+     *
+     * If the passed list is a LinkedList then the returned list will be a
+     * LinkedList.
+     *
+     * If the passed list is a CopyOnWriteArrayList then the returned list will
+     * be a CopyOnWriteArrayList list.
+     *
+     * All other lists become ArrayList.
+     *
+     * @param list list to clone
+     * @param <V> generics
+     * @return new list
+     */
     @Universal
     public static <V> List<V> deepCopy( List<V> list ) {
         if ( list instanceof LinkedList ) {
-            return deepCopyToList( list, new LinkedList<>( list ) );
+            return deepCopyToList( list, new LinkedList<V>(  ) );
         } else if ( list instanceof CopyOnWriteArrayList ) {
-            return deepCopyToList( list, new CopyOnWriteArrayList<>( list ));
+            return deepCopyToList( list, new CopyOnWriteArrayList<V>(  ));
         } else {
             return deepCopy( (Collection)list);
         }

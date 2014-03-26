@@ -382,15 +382,15 @@ public class Sets {
     }
 
     @Universal
-    public static <V> Set<V> deepCopy( Set<V> list ) {
-        if ( list instanceof LinkedHashSet ) {
-            return deepCopyToSet(list, new LinkedHashSet<>(list));
-        } else if ( list instanceof CopyOnWriteArraySet ) {
-            return deepCopyToSet(list, new CopyOnWriteArraySet<V>(list));
-        } else if ( list instanceof HashSet ) {
-            return deepCopyToSet(list, new HashSet<V>(list));
+    public static <V> Set<V> deepCopy( Set<V> set ) {
+        if ( set instanceof LinkedHashSet ) {
+            return deepCopyToSet(set, new LinkedHashSet<V>());
+        } else if ( set instanceof CopyOnWriteArraySet ) {
+            return deepCopyToSet(set, new CopyOnWriteArraySet<V>());
+        } else if ( set instanceof HashSet ) {
+            return deepCopyToSet(set, new HashSet<V>());
         } else {
-            return deepCopy( (Collection)list);
+            return deepCopy( (Collection)set);
         }
     }
 

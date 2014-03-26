@@ -26,27 +26,22 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.core.reflection;
+package org.boon.core;
 
 import org.junit.Test;
 
-import static org.boon.primitive.Int.equalsOrDie;
+import static org.boon.Exceptions.die;
 
 /**
- * Created by Richard on 3/18/14.
+ * Created by Richard on 3/25/14.
  */
-public class BeanUtils2Test {
+public class TypTest {
 
-    public static class MyClass {
-        static int prop = -1;
-    }
+    boolean ok;
 
     @Test
     public void test() {
-        BeanUtils.idx(MyClass.class, "prop", 10);
-        int i = MyClass.prop;
-        equalsOrDie(10, i);
+
+        ok = Typ.isBasicType(String.class) || die("String is a basic type");
     }
-
-
 }
