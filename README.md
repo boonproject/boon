@@ -39,10 +39,9 @@ Low Ceremony. High Productivity.
 
 Boon Home: http://richardhightower.github.io/site/Boon/Welcome.html
 
-There is a maven repo at:
+Boon is in maven central repo:
 
-http://richardhightower.github.io/site/releases/mvn/repo/
-
+http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.fastjson%22%20AND%20a%3A%22boon%22
 
 
 Brief introduction to Boon
