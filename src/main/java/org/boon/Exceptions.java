@@ -35,6 +35,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+import static org.boon.Maps.map;
 import static org.boon.primitive.Arry.add;
 import static org.boon.primitive.Arry.array;
 import static org.boon.Boon.sputs;
@@ -46,7 +47,7 @@ public class Exceptions {
 
 
     private static final Set<String> ignorePackages = set("sun.", "com.sun.",
-            "javax.java", "java.",  "oracle.", "com.oracle.", "org.junit", "org.boon.",
+            "javax.java", "java.",  "oracle.", "com.oracle.", "org.junit", "org.boon.Exceptions",
             "com.intellij");
 
 
@@ -391,6 +392,33 @@ public class Exceptions {
         buffer.addLine().indent(5).addJsonFieldName("message")
                 .asJsonString(ex.getMessage()).addLine(',');
 
+        if (ex.getCause()!=null) {
+            buffer.addLine().indent(5).addJsonFieldName("causeMessage")
+                    .asJsonString(ex.getCause().getMessage()).addLine(',');
+
+
+            if (ex.getCause().getCause()!=null) {
+                buffer.addLine().indent(5).addJsonFieldName("cause2Message")
+                        .asJsonString(ex.getCause().getCause().getMessage()).addLine(',');
+
+                if (ex.getCause().getCause().getCause()!=null) {
+                    buffer.addLine().indent(5).addJsonFieldName("cause3Message")
+                            .asJsonString(ex.getCause().getCause().getCause().getMessage()).addLine(',');
+
+                    if (ex.getCause().getCause().getCause().getCause()!=null) {
+                        buffer.addLine().indent(5).addJsonFieldName("cause4Message")
+                                .asJsonString(ex.getCause().getCause().getCause().getCause().getMessage()).addLine(',');
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+
 
 
         StackTraceElement[] stackTrace = getFilteredStackTrace(ex.getStackTrace());
@@ -412,6 +440,27 @@ public class Exceptions {
         return buffer.toString();
 
     }
+
+
+    public static Map asMap(Exception ex) {
+        StackTraceElement[] stackTrace = getFilteredStackTrace(ex.getStackTrace());
+
+        List stackTraceList = Lists.list(stackTrace);
+
+        List fullStackTrace = Lists.list(ex.getStackTrace());
+
+
+        return map(
+
+                    "message", ex.getMessage(),
+                    "causeMessage", ex.getCause()!=null ? ex.getCause().getMessage() : "none",
+                    "stackTrace", stackTraceList,
+                    "fullStackTrace", fullStackTrace
+
+            );
+
+    }
+
 
     public static void stackTraceToJson(CharBuf buffer, StackTraceElement[] stackTrace) {
 

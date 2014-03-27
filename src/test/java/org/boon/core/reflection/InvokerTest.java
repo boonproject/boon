@@ -28,8 +28,10 @@
 
 package org.boon.core.reflection;
 
+import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.Maps;
+import org.boon.primitive.CharBuf;
 import org.junit.Test;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +40,8 @@ import javax.annotation.PostConstruct;
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
+import static org.boon.Ok.okOrDie;
+import static org.boon.primitive.CharBuf.createCharBuf;
 
 /**
  * Created by Richard on 2/17/14.
@@ -130,6 +134,10 @@ public class InvokerTest {
 
             puts ( "hi ", hi );
 
+        }
+
+        private void sayDie(String hi, int i) {
+           die("SAY HI 3 AND DIE");
         }
 
 
@@ -275,6 +283,45 @@ public class InvokerTest {
         }
     }
 
+
+    @Test
+    public void testDie() {
+        HelloWorld hw = new HelloWorld();
+        hw.called1st = false;
+        hw.called2nd = false;
+
+        try {
+
+            Invoker.invokeOverloadedFromList(hw, "sayDie", Lists.list("Rick", "1"));
+
+        }
+        catch (Exception ex) {
+
+            CharBuf buf = createCharBuf();
+            ex.printStackTrace(buf);
+            okOrDie(buf.toString().contains("SAY HI 3 AND DIE"));
+        }
+
+    }
+
+
+    @Test
+    public void testDie2() {
+        HelloWorld hw = new HelloWorld();
+        hw.called1st = false;
+        hw.called2nd = false;
+
+        try {
+
+            Invoker.invokeOverloadedFromList(hw, "sayDie", Lists.list("Rick", "1"));
+
+        }
+        catch (Exception ex) {
+
+            okOrDie(Exceptions.asJson(ex).contains("SAY HI 3 AND DIE"));
+        }
+
+    }
 
 
     @Test
