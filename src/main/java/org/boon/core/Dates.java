@@ -817,6 +817,12 @@ public class Dates {
 
     }
 
+
+    public static boolean isJsonDate( String str ) {
+
+        return isJsonDate(FastStringUtils.toCharArray(str), 0, str.length());
+    }
+
     public static boolean isJsonDate( char[] charArray, int start, int to ) {
         boolean valid = true;
         final int length = to - start;

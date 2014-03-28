@@ -103,7 +103,7 @@ public class MethodAccessImpl implements MethodAccess {
 
             return handle( Object.class, ex,  "unable to invoke method", method,
                     " on object ", object, "with arguments", args,
-                    "\nparameter types", parameterTypes(), "\nargument types are" );
+                    "\nparameter types", parameterTypes(), "\nargument types are", args );
 
         }
     }

@@ -32,6 +32,7 @@ package org.boon.json.serializers.impl;
 import org.boon.Boon;
 import org.boon.Exceptions;
 import org.boon.Maps;
+import org.boon.Str;
 import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Invoker;
@@ -550,8 +551,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         int index=0;
         final Set<Map.Entry> entrySet = map.entrySet();
         for ( Map.Entry entry : entrySet ) {
-            if (entry.getValue ()!=null) {
-                serializeFieldName ( entry.getKey().toString (), builder );
+            if (entry.getValue ()!=null ) {
+                serializeFieldName ( Str.toString(entry.getKey()), builder );
                 serializeObject( entry.getValue(), builder );
                 builder.addChar ( ',' );
                 index++;

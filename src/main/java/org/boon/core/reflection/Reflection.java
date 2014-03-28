@@ -602,6 +602,6 @@ public class Reflection {
 
 
     public static Object invoke (Object object, String name, List<?> args){
-        return ClassMeta.classMeta( object.getClass() ).invokeUntyped(object, name, args );
+        return ClassMeta.classMeta( object.getClass() ).invokeUntyped(object, name, args.toArray(new Object[args.size()]));
     }
 }
