@@ -703,6 +703,10 @@ public class Lists {
     }
 
 
+    public static <T> List<T> mapBy(Class<T> cls, Collection<?> objects, Object function) {
+        return (List<T>) mapBy(objects, function);
+    }
+
     public static List<?> mapBy(Iterable<?> objects, Object function) {
 
 
