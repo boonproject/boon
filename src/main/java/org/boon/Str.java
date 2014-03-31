@@ -33,6 +33,7 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -485,6 +486,12 @@ public class Str {
 
     public static String doubleQuote(String s) {
         return add("\"", s, "\"");
+    }
+
+    /** Create a string from bytes. */
+    public static String str(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
+
     }
 
 }
