@@ -51,6 +51,7 @@ import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.handle;
 
 /**
+ *
  * This is a simple fast serializer.
  * It excludes default values, i.e., int v by default is 0.
  * It excludes nulls and empties as well.

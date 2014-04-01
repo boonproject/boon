@@ -794,7 +794,7 @@ public class Conversions {
             int i = toInt(value);
             return toEnum(cls, i);
         } else {
-            //die( "Can't convert  value " + value + " into enum of type " + cls ); //TODO Fix this
+            die( "Can't convert  value " + value + " into enum of type " + cls );
             return null;
         }
     }

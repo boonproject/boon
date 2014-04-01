@@ -100,40 +100,49 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
 
     private void put( ITEM item, KEY key ) {
 
+        MultiValue mv=null;
+        Object primaryKey=null;
 
-        if ( log.isLoggable( Level.FINE ) ) {
-            log.fine( String.format( "put item = %s with key = %s ", item, key ) );
-        }
+        try {
 
-        key = getKey( key );
-
-
-
-
-
-        if (key instanceof Collection) {
-            Collection collection = (Collection) key;
-
-            for (Object keyComponent : collection) {
-
-                MultiValue mv = map.get( keyComponent );
-                mv = mvCreateOrAddToMV( mv, item );
-                map.put((KEY) keyComponent, mv );
+            if (log.isLoggable(Level.FINE)) {
+                log.fine(String.format("put item = %s with key = %s ", item, key));
             }
-            return;
+
+            key = getKey(key);
+
+
+            if (key instanceof Collection) {
+                Collection collection = (Collection) key;
+
+                for (Object keyComponent : collection) {
+
+                    if (keyComponent == null) {
+                        continue;
+                    }
+                    mv = map.get(keyComponent);
+                    mv = mvCreateOrAddToMV(mv, item);
+                    map.put((KEY) keyComponent, mv);
+                }
+                return;
+            }
+
+
+            mv = map.get(key);
+            if (storeKeyInIndexOnly) {
+                primaryKey = primaryKeyGetter.apply(item);
+
+                mv = mvCreateOrAddToMV(mv, primaryKey);
+            } else {
+                mv = mvCreateOrAddToMV(mv, item);
+            }
+
+            map.put(key, mv);
+
+        }catch (Exception ex) {
+             Exceptions.handle(ex, "Problem putting item in lookup index, item=", item, "key=", key, "mv=", mv,
+                     "primaryKey=", primaryKey);
         }
-
-
-        MultiValue mv = map.get( key );
-        if ( storeKeyInIndexOnly ) {
-            Object primaryKey = primaryKeyGetter.apply( item );
-
-            mv = mvCreateOrAddToMV( mv, primaryKey );
-        } else {
-            mv = mvCreateOrAddToMV( mv, item );
-        }
-
-        map.put( key, mv );
     }
 
     private MultiValue mvCreateOrAddToMV( MultiValue mv, Object obj ) {
