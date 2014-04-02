@@ -26,77 +26,39 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package com.examples.security.model;
+package com.examples.model.test.movies.media;
 
 
-import org.boon.Boon;
-import org.boon.Str;
+import com.examples.model.test.movies.crud.CrudType;
 
-public class User extends Subject {
+import java.util.List;
 
-    public static final Class<User> user = User.class;
+/**
+ * Created by Richard on 2/26/14.
+ */
+public class MoviePushRequest {
 
-    public static User user( String email ) {
-        return new User( email );
+    final private List<Movie> movies;
+    final private CrudType operation;
+
+    public MoviePushRequest(CrudType type, List<Movie> movies) {
+        this.operation = type;
+        this.movies = movies;
     }
 
-
-    public static User[] users( User... users ) {
-        return users;
+    public List<Movie> videos() {
+        return movies;
     }
 
-    private final String email;
-
-
-    //For serialization only
-    public User() {
-        this.email = null;
+    public static MoviePushRequest videoPush(List<Movie> movies) {
+        return new MoviePushRequest(CrudType.UPDATE, movies);
     }
-
-    private User( final String email ) {
-
-        super( "Watcher:" + generateSubjectNameFromEmail( email ) );
-
-        this.email = email;
-    }
-
-    public static String generateSubjectNameFromEmail( final String email ) {
-
-        String name = null;
-
-        if ( email.endsWith( ".com" ) ) {
-            name = "company:" + Str.slc( email, 0, -4 );
-        } else if ( email.endsWith( ".org" ) ) {
-            name = "organization:" + Str.slc( email, 0, -4 );
-        } else {
-            name = "country:" + Str.slc( email, -2 ) + ":" + Str.slcEnd( email, -2 );
-        }
-
-        name = name.replace( '.', '_' ).replace( '@', '-' );
-
-        return name;
-    }
-
-    public static void main( String... args ) {
-
-        String email = "richardhightower@gmail.com";
-        //Boon.uts( email, generateSubjectNameFromEmail( email ) );
-
-        String email2 = "marcomilk@gmail.com.br";
-        //Boon.uts( email2, generateSubjectNameFromEmail( email2 ) );
-
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
 
     @Override
     public String toString() {
-        return "Watcher{" +
-                "email='" + email + '\'' +
+        return "MoviePushRequest{" +
+                "movies=" + movies +
+                ", operation=" + operation +
                 '}';
     }
 }

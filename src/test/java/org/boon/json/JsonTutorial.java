@@ -183,7 +183,7 @@ public class JsonTutorial {
 
         @Override
         public String toString() {
-            return "User{" +
+            return "Watcher{" +
                     "gender=" + gender +
                     ", name=" + name +
                     ", verified=" + verified +
@@ -321,7 +321,7 @@ public class JsonTutorial {
 
         puts( "userFromReader", userFromReader );
 
-        boolean ok = userFromReader.toString ().equals ( "User{gender=MALE, name=Name{first='Richard', " +
+        boolean ok = userFromReader.toString ().equals ( "Watcher{gender=MALE, name=Name{first='Richard', " +
                 "last='Hightower'}, verified=true, birthDate=Sun May 25 17:00:00 PDT 1980}"  ) ||
                 die (userFromReader.toString ());
     }

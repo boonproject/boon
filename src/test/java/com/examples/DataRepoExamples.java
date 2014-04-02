@@ -78,7 +78,7 @@ public class DataRepoExamples {
         repoBuilder.primaryKey( EMAIL );
 
 
-        /** Create a repo of type String.class and User.class */
+        /** Create a repo of type String.class and Watcher.class */
         final Repo<String, User> userRepo = repoBuilder.build( Typ.string, user );
 
         final List<User> users = Lists.list(
@@ -120,7 +120,7 @@ public class DataRepoExamples {
 
         /* Make sure we got what we wanted. */
         test |= !Objects.equals( notRick.getEmail(), "rick.hightower@foo.com" ) ||
-                die( "User Not Rick's email should NOT be equal " +
+                die( "Watcher Not Rick's email should NOT be equal " +
                         "to 'rick.hightower@foo.com' " );
 
 
@@ -212,7 +212,7 @@ public class DataRepoExamples {
         repoBuilder.nestedIndex( "email", "email" );
 
 
-        /** Create a repo of type String.class and User.class */
+        /** Create a repo of type String.class and Watcher.class */
         final Repo<Email, UserEmail> userRepo = repoBuilder.build(
                 Email.class, UserEmail.class );
 

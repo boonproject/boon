@@ -26,77 +26,59 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package com.examples.security.model;
+package com.examples.model.test.time;
 
-
-import org.boon.Boon;
 import org.boon.Str;
+import org.boon.core.Conversions;
 
-public class User extends Subject {
+import java.util.TimeZone;
 
-    public static final Class<User> user = User.class;
+/**
+ * Created by Richard on 2/12/14.
+ */
+public enum TimeZoneType {
+    EST (TimeZone.getTimeZone( "EST" )),//Eastern
+    PST (TimeZone.getTimeZone( "PST" )),//Pacific
+    MST (TimeZone.getTimeZone( "MST" )),//Mountain
+    HST (TimeZone.getTimeZone( "HST" )),//Hawaii
+    AKST (TimeZone.getTimeZone( "AKST" )),//Alaska
+    OTHER_ASIA_PACIFIC (null),
+    OTHER_ASIA (null),
+    OTHER_AFRICA (null),
+    OTHER_EASTERN_EUROPE (null),
+    OTHER_WESTERN_EUROPE (null),
+    OTHER_CANADA (null),
+    OTHER_UK (null),
+    OTHER (null);
 
-    public static User user( String email ) {
-        return new User( email );
+    final TimeZone timeZone;
+    TimeZoneType( TimeZone timeZone ) {
+
+        this.timeZone = timeZone;
     }
 
-
-    public static User[] users( User... users ) {
-        return users;
+    public TimeZone timeZone() {
+        return timeZone;
     }
 
-    private final String email;
-
-
-    //For serialization only
-    public User() {
-        this.email = null;
-    }
-
-    private User( final String email ) {
-
-        super( "Watcher:" + generateSubjectNameFromEmail( email ) );
-
-        this.email = email;
-    }
-
-    public static String generateSubjectNameFromEmail( final String email ) {
-
-        String name = null;
-
-        if ( email.endsWith( ".com" ) ) {
-            name = "company:" + Str.slc( email, 0, -4 );
-        } else if ( email.endsWith( ".org" ) ) {
-            name = "organization:" + Str.slc( email, 0, -4 );
-        } else {
-            name = "country:" + Str.slc( email, -2 ) + ":" + Str.slcEnd( email, -2 );
+    public static TimeZoneHolder createHolder(String timeZone) {
+        TimeZoneType timeZoneType = Conversions.toEnum(TimeZoneType.class, timeZone);
+        if (timeZoneType !=null) {
+            return new TimeZoneHolder(timeZoneType);
         }
+        else {
+            String[] split = Str.split(timeZone, '.');
+            if (split.length !=2) {
+                return new TimeZoneHolder(OTHER);
+            } else {
+                timeZoneType = Conversions.toEnum(TimeZoneType.class, split[0]);
+                if (timeZoneType == null) {
+                    return new TimeZoneHolder(OTHER);
+                } else {
+                    return new TimeZoneHolder(timeZoneType, split[1]);
+                }
 
-        name = name.replace( '.', '_' ).replace( '@', '-' );
-
-        return name;
-    }
-
-    public static void main( String... args ) {
-
-        String email = "richardhightower@gmail.com";
-        //Boon.uts( email, generateSubjectNameFromEmail( email ) );
-
-        String email2 = "marcomilk@gmail.com.br";
-        //Boon.uts( email2, generateSubjectNameFromEmail( email2 ) );
-
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Watcher{" +
-                "email='" + email + '\'' +
-                '}';
+            }
+        }
     }
 }
