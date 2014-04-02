@@ -1297,19 +1297,27 @@ public class Conversions {
         return unifyList(o, null);
     }
 
+    /**
+     * This flattens a list.
+     * @param o object that might be a list
+     * @param list list to add o to or all of o's items to.
+     * @return an object or a list
+     */
     public static Object unifyList(Object o, List list) {
 
-        if (list == null && !Boon.isArray(o) && !(o instanceof Iterable)) {
+        boolean isArray = Boon.isArray(o);
+
+        if (list == null && !isArray && !(o instanceof Iterable)) {
             return o;
         }
 
         if (list == null) {
-            list = new ArrayList(400);
+            list = new ArrayList();
         }
-        if (Boon.isArray(o)) {
-            int length = Boon.len(o);
+        if (isArray) {
+            int length = Array.getLength( o );
             for (int index = 0; index < length; index++) {
-                unifyList(BeanUtils.idx(o, index), list);
+                unifyList(Array.get ( o, index ), list);
             }
         } else if (o instanceof Iterable) {
             Iterable i = ((Iterable) o);

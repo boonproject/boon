@@ -64,7 +64,7 @@ public class FloatCollector extends Selector {
     public void handleRow(int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields) {
         float value;
         if (path) {
-            value = BeanUtils.idxInt(item, this.name);
+            value = BeanUtils.idxFloat(item, this.name);
         } else {
             value = fields.get(name).getFloat(item);
         }

@@ -66,7 +66,7 @@ public class DoubleCollector extends Selector {
     public void handleRow(int index, Map<String, Object> row, Object item, Map<String, FieldAccess> fields) {
         double value;
         if (path) {
-            value = BeanUtils.idxInt(item, this.name);
+            value = BeanUtils.idxDouble(item, this.name);
         } else {
             value = fields.get(name).getDouble(item);
         }

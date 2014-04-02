@@ -133,9 +133,31 @@ public class Reflection {
         Map<Class<?>, Map<String, FieldAccess>> _allAccessorPropertyFieldsCache = new ConcurrentHashMap<>( 200 );
         Map<Class<?>, Map<String, FieldAccess>> _allAccessorUnsafeFieldsCache = new ConcurrentHashMap<>( 200 );
 
+        Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsFieldsFirst = new ConcurrentHashMap<>( 200 );
+
+        Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsPropertyFirst = new ConcurrentHashMap<>( 200 );
 
     }
 
+
+
+    private static Map<String, FieldAccess> getCombinedFieldsPropertyFirst(Class<? extends Object> theClass) {
+        return context()._combinedFieldsPropertyFirst.get(theClass);
+    }
+
+
+    private static Map<String, FieldAccess> getCombinedFieldsFieldFirst(Class<? extends Object> theClass) {
+        return context()._combinedFieldsFieldsFirst.get(theClass);
+    }
+
+    private static void  putCombinedFieldsPropertyFirst(Class<?> theClass, Map<String, FieldAccess> map) {
+        context()._combinedFieldsPropertyFirst.put(theClass, map);
+    }
+
+
+    private static void putCombinedFieldsFieldFirst(Class<?> theClass,  Map<String, FieldAccess> map) {
+        context()._combinedFieldsFieldsFirst.put(theClass, map);
+    }
 
     static {
         try {
@@ -166,7 +188,7 @@ public class Reflection {
         return context()._allAccessorPropertyFieldsCache.get( theClass );
     }
 
-    private static Map<String, FieldAccess> getAccesorFieldFromCache( Class<? extends Object> theClass, boolean useUnsafe ) {
+    private static Map<String, FieldAccess> getAccessorFieldsFromCache(Class<? extends Object> theClass, boolean useUnsafe) {
 
         if ( useUnsafe ) {
             return context()._allAccessorUnsafeFieldsCache.get( theClass );
@@ -180,26 +202,38 @@ public class Reflection {
 
 
     /**
-     * Gets a listStream of fields merges with properties if field is not found.
+     * Gets a list of fields merges with properties if field is not found.
      *
      * @param clazz get the properties or fields
      * @return
      */
     public static Map<String, FieldAccess> getPropertyFieldAccessMapFieldFirst( Class<?> clazz ) {
-        /* Fallback map. */
-        Map<String, FieldAccess> fieldsFallbacks = null;
+        Map<String, FieldAccess> combinedFieldsFieldFirst = getCombinedFieldsFieldFirst(clazz);
 
-        /* Primary merge into this one. */
-        Map<String, FieldAccess> fieldsPrimary = null;
+        if (combinedFieldsFieldFirst!=null) {
+            return combinedFieldsFieldFirst;
+        } else {
+
+            /* Fallback map. */
+            Map<String, FieldAccess> fieldsFallbacks = null;
+
+            /* Primary merge into this one. */
+            Map<String, FieldAccess> fieldsPrimary = null;
 
 
-        /* Try to find the fields first if this is set. */
-        fieldsPrimary = Reflection.getAllAccessorFields( clazz, true );
-        fieldsFallbacks = Reflection.getPropertyFieldAccessors( clazz );
-        combineFieldMaps( fieldsFallbacks, fieldsPrimary );
+             /* Try to find the fields first if this is set. */
+            fieldsPrimary = Reflection.getAllAccessorFields(clazz, true);
+            fieldsFallbacks = Reflection.getPropertyFieldAccessors(clazz);
+            combineFieldMaps(fieldsFallbacks, fieldsPrimary);
+
+            combinedFieldsFieldFirst = fieldsPrimary;
+
+            putCombinedFieldsFieldFirst(clazz, combinedFieldsFieldFirst);
+            return combinedFieldsFieldFirst;
+
+        }
 
 
-        return fieldsPrimary;
     }
 
     private static void combineFieldMaps( Map<String, FieldAccess> fieldsFallbacks, Map<String, FieldAccess> fieldsPrimary ) {
@@ -212,23 +246,32 @@ public class Reflection {
     }
 
     public static Map<String, FieldAccess> getPropertyFieldAccessMapPropertyFirst( Class<?> clazz ) {
-        /* Fallback map. */
-        Map<String, FieldAccess> fieldsFallbacks = null;
 
-        /* Primary merge into this one. */
-        Map<String, FieldAccess> fieldsPrimary = null;
+        Map<String, FieldAccess> combinedFields = getCombinedFieldsPropertyFirst(clazz);
+
+        if (combinedFields!=null) {
+            return combinedFields;
+        } else {
+             /* Fallback map. */
+            Map<String, FieldAccess> fieldsFallbacks = null;
+
+            /* Primary merge into this one. */
+            Map<String, FieldAccess> fieldsPrimary = null;
 
 
 
              /* Try to find the properties first if this is set. */
-        fieldsFallbacks = Reflection.getAllAccessorFields( clazz, true );
-        fieldsPrimary = Reflection.getPropertyFieldAccessors( clazz );
+            fieldsFallbacks = Reflection.getAllAccessorFields(clazz, true);
+            fieldsPrimary = Reflection.getPropertyFieldAccessors(clazz);
 
 
-        /* Add missing fields */
-        combineFieldMaps( fieldsFallbacks, fieldsPrimary );
+            /* Add missing fields */
+            combineFieldMaps(fieldsFallbacks, fieldsPrimary);
 
-        return fieldsPrimary;
+            combinedFields = fieldsPrimary;
+            putCombinedFieldsPropertyFirst(clazz, combinedFields);
+            return combinedFields;
+        }
     }
 
 
@@ -386,7 +429,7 @@ public class Reflection {
 
     public static Map<String, FieldAccess> getAllAccessorFields(
             Class<? extends Object> theClass, boolean useUnsafe ) {
-        Map<String, FieldAccess> map = getAccesorFieldFromCache( theClass, useUnsafe );
+        Map<String, FieldAccess> map = getAccessorFieldsFromCache(theClass, useUnsafe);
         if ( map == null ) {
             List<FieldAccess> list = Lists.mapBy( getAllFields( theClass ), new FieldConverter( useUnsafe ) );
             map = new LinkedHashMap<>( list.size() );

@@ -39,17 +39,21 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.className;
+import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.*;
 import static org.boon.Str.lines;
 import static org.boon.StringScanner.isDigits;
+import static org.boon.primitive.CharScanner.isDigit;
 
 /**
  * Created by rick on 12/20/13.
  */
 public class BeanUtils {
+
 
 
     /**
@@ -297,7 +301,8 @@ public class BeanUtils {
             }
 
 
-            if ( isDigits( property ) ) {
+            char c = property.charAt(0);
+            if ( isDigit(c) ) {
                 /* We can index numbers and names. */
                 object = idx ( object, Integer.parseInt ( property ) );
 
@@ -305,12 +310,14 @@ public class BeanUtils {
 
 
                 if (object instanceof Collection) {
-                    object = byPath(object, property);
+                    object = getFieldValues(object, property);
+                    object = Conversions.unifyList(object);
                     continue;
                 }
 
 
-                Map<String, FieldAccess> fields = getFieldsFromObject( object );
+                Map<String, FieldAccess> fields =
+                         getPropertyFieldAccessMap( object.getClass() );
 
                 FieldAccess field = fields.get( property );
 
@@ -349,7 +356,7 @@ public class BeanUtils {
         Exceptions.requireNonNull( object );
         Exceptions.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return ( T ) getPropByPath( object, properties );
 
@@ -374,8 +381,8 @@ public class BeanUtils {
             String propName = path[ index ];
             if ( o == null ) {
                 return null;
-            } else if ( Boon.isArray( o ) || o instanceof Collection ) {
-                o = getCollecitonProp( o, propName, index, path );
+            } else if ( o.getClass().isArray() || o instanceof Collection ) {
+                o = getCollectionProp(o, propName, index, path);
                 break;
             } else {
                 o = getProp( o, propName );
@@ -395,7 +402,7 @@ public class BeanUtils {
     public static Object idx( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByCharsNoneEmpty( path, '.', '[', ']', '/' );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyValue( object, properties );
     }
@@ -426,9 +433,23 @@ public class BeanUtils {
     public static Object atIndex(Object object, String path) {
 
 
-        String[] properties = StringScanner.splitByCharsNoneEmpty( path, '.', '[', ']', '/' );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyValue( object, properties );
+    }
+
+    static Map<String, String[]> splitsPathsCache = new ConcurrentHashMap<>();
+
+    private static String[] propertyPathAsStringArray(String path) {
+        String[] split = splitsPathsCache.get(path);
+        if (split!=null) {
+            return split;
+        }
+
+
+        split =  StringScanner.splitByCharsNoneEmpty(path, '.', '[', ']', '/');
+        splitsPathsCache.put(path, split);
+        return split;
     }
 
 
@@ -473,7 +494,7 @@ public class BeanUtils {
     public static void injectIntoProperty( Object object, String path, Object value ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         setPropertyValue( object, value, properties );
     }
@@ -488,7 +509,7 @@ public class BeanUtils {
     public static void idx( Object object, String path, Object value ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         setPropertyValue( object, value, properties );
     }
@@ -503,7 +524,7 @@ public class BeanUtils {
     public static void idx( Class<?> cls, String path, Object value ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         setPropertyValue( cls, value, properties );
     }
@@ -516,7 +537,7 @@ public class BeanUtils {
     public static Object byPath(Object object, final String path) {
 
         try {
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropByPath( object, properties );
 
@@ -533,14 +554,14 @@ public class BeanUtils {
      * This is an amazing little recursive method. It walks a fanout of
      * nested collection to pull out the leaf nodes
      */
-    private static Object getCollecitonProp( Object o, String propName, int index, String[] path ) {
+    private static Object getCollectionProp( Object o, String propName, int index, String[] path ) {
         o = getFieldValues ( o, propName );
 
         if ( index + 1 == path.length ) {
             return o;
         } else {
             index++;
-            return getCollecitonProp( o, path[ index ], index, path );
+            return getCollectionProp(o, path[index], index, path);
         }
     }
 
@@ -680,7 +701,7 @@ public class BeanUtils {
     public static int idxInt( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyInt( object, properties );
     }
@@ -695,7 +716,7 @@ public class BeanUtils {
     public static String idxStr( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyString(object, properties);
     }
@@ -747,7 +768,7 @@ public class BeanUtils {
      */
     public static byte idxByte( Object object, String path ) {
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyByte( object, properties );
     }
@@ -782,7 +803,7 @@ public class BeanUtils {
         Exceptions.requireNonNull( object );
         Exceptions.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyFloat( object, properties );
     }
@@ -879,7 +900,7 @@ public class BeanUtils {
     public static short idxShort( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyShort( object, properties );
     }
@@ -892,7 +913,7 @@ public class BeanUtils {
     public static Class idxType( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyPathType( object, properties );
     }
@@ -906,7 +927,7 @@ public class BeanUtils {
     public static FieldAccess idxField( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyPathField( object, properties );
     }
@@ -920,7 +941,7 @@ public class BeanUtils {
     public static FieldAccess idxField( Class<?> cls, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyPathField( cls, properties );
     }
@@ -955,7 +976,7 @@ public class BeanUtils {
     public static char idxChar( Object object, String path ) {
 
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyChar( object, properties );
     }
@@ -995,7 +1016,7 @@ public class BeanUtils {
         Exceptions.requireNonNull( object );
         Exceptions.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyDouble( object, properties );
     }
@@ -1035,7 +1056,7 @@ public class BeanUtils {
         Exceptions.requireNonNull( object );
         Exceptions.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyLong( object, properties );
     }
@@ -1069,7 +1090,7 @@ public class BeanUtils {
         Exceptions.requireNonNull( object );
         Exceptions.requireNonNull( path );
 
-        String[] properties = StringScanner.splitByDelimiters( path, ".[]" );
+        String[] properties = propertyPathAsStringArray(path);
 
         return getPropertyBoolean( object, properties );
     }
@@ -1095,20 +1116,103 @@ public class BeanUtils {
     }
 
 
+    public static Object getFieldValuesOLD( Object object, final String key ) {
+        if ( object == null ) {
+            return null;
+        }
+
+        if (object instanceof Collection ) {
+            Collection collection = (Collection) object;
+
+            List list = new ArrayList( collection.size() );
+
+            for (Object item : collection) {
+                list.add( getFieldValues( item, key ) );
+
+            }
+
+            return list;
+        } else if ( object.getClass().isArray() ) {
+            int len = Array.getLength(object);
+            List list = new ArrayList( len );
+
+            for (int index = 0; index < len; index++) {
+                list.add( getFieldValues( Array.get(object, index), key ) );
+            }
+            return list;
+        }
+        else {
+            return atIndex(object, key);
+        }
+
+
+
+
+    }
+
+
+
     public static Object getFieldValues( Object object, final String key ) {
         if ( object == null ) {
             return null;
         }
-        if ( Boon.isArray( object ) || object instanceof Collection ) {
-            Iterator iter = Conversions.iterator( object );
-            List list = new ArrayList( Boon.len( object ) );
-            while ( iter.hasNext() ) {
-                list.add( getFieldValues( iter.next(), key ) );
+
+        if (object instanceof Collection ) {
+            Collection collection = (Collection) object;
+
+            if (collection.size() == 0) {
+                return Collections.EMPTY_LIST;
+            }
+            List list = new ArrayList( collection.size() );
+
+            Object firstItem = collection.iterator().next();
+
+            if (firstItem instanceof Map) {
+
+                for (Object item : collection) {
+                    Map map = (Map) item;
+                    list.add( map.get(key) );
+                }
+                return list;
+
+            } else {
+
+                Map<String, FieldAccess> fields =
+                        getPropertyFieldAccessMap( Typ.getComponentType(collection) );
+
+
+                for (Object item : collection) {
+
+                    FieldAccess field = fields.get(key);
+                    if (field == null) {
+                        list.add(idx(item, key));
+                    } else {
+
+                        list.add(field.getValue(item));
+                    }
+
+                }
+
+                return list;
+            }
+
+        } else if ( object.getClass().isArray() ) {
+            int len = Array.getLength(object);
+            List list = new ArrayList( len );
+
+
+            Map<String, FieldAccess> fields =
+                    getPropertyFieldAccessMap( object.getClass().getComponentType());
+
+            for (int index = 0; index < len; index++) {
+                list.add(  fields.get(key).getValue(Array.get(object, index)));
             }
             return list;
-        } else {
+        }
+        else {
             return atIndex(object, key);
         }
+
     }
 
 
