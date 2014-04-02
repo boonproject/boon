@@ -29,7 +29,6 @@
 package com.examples.model.test.time;
 
 /**
- * Created by Richard on 2/12/14.
  */
 public class DateTime {
 

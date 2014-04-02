@@ -32,15 +32,9 @@ package com.examples.model.test.movies.admin;
 import com.examples.model.test.movies.entitlement.RightsPushRequest;
 
 /**
- * @author Rick Hightower
- * Admin service is used to send users entitlements.
- * I envision other methods here to control and report on runtime diagnostics,
- * to turn on debug mode, to turn on performance monitoring, JMX, etc.
- *
- * Right now... It just takes an RightsPushRequest.
  */
 public interface AdminService {
 
-    boolean bulkAddEntitlements(RightsPushRequest request);
+    boolean rightsPush(RightsPushRequest request);
 
 }

@@ -37,7 +37,7 @@ import java.util.List;
 
 
 /**
- * Movie Vendor servers out playlists.
+ * Movie Vendor servers out movie playlists.
  * @author Rick Hightower
  */
 public class MovieListGetter {
@@ -49,7 +49,7 @@ public class MovieListGetter {
 
 
     /** Vends a play list after applying content rules based on user likeable. */
-    public List<MoviePlayListItem> videosToWatch( final String username ) {
+    public List<MoviePlayListItem> getMoviePlayList(final String username) {
         return retrievePlayList(username, ScreenDevice.UNKNOWN, DeviceConnectionSpeed.UNKNOWN, null);
     }
 

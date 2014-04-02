@@ -45,7 +45,7 @@ import java.util.*;
  * Stores users preferences.
  * Her likes and dislikes.
  * Also stores the last media watched.
- * The recent videos watched, and deice information.
+ * The recent movies watched, and deice information.
  *
  */
 public class Watcher {
@@ -84,7 +84,7 @@ public class Watcher {
     private Rights rights;
 
 
-    /** Set of videos that the user watched. */
+    /** Set of movies that the user watched. */
     private Set<String> watchedVideos = new LinkedHashSet<>();
 
 
@@ -173,8 +173,8 @@ public class Watcher {
      * @param version version
      * @param lastVideo lastVideo watched
      * @param lastVideoPosition last position of last media watched
-     * @param watchedVideos list of last watched videos
-     * @param tags category tags for videos
+     * @param watchedVideos list of last watched movies
+     * @param tags category tags for movies
      * @param actors actors we have scored
      * @param people people we have scored
      */

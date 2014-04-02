@@ -35,7 +35,6 @@ import org.boon.core.reflection.BeanUtils;
 import java.util.List;
 
 /**
- * Created by Richard on 3/18/14.
  * @author Rick Hightower
  */
 public class MutableMovie extends Movie {

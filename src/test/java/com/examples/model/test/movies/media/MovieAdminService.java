@@ -33,15 +33,12 @@ import com.examples.model.test.movies.crud.BatchResults;
 
 import java.util.List;
 
-/**
- * Created by Richard on 3/7/14.
- */
 public interface MovieAdminService {
 
 
     void refreshScores();
 
-    BatchResults updateVideos(MoviePushRequest moviePushRequest);
+    BatchResults updateMovies(MoviePushRequest moviePushRequest);
 
 
     BatchResults batchUpdateVideos(List<MoviePushRequest> moviePushRequest);

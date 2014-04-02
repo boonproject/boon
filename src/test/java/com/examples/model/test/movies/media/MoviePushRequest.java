@@ -46,11 +46,11 @@ public class MoviePushRequest {
         this.movies = movies;
     }
 
-    public List<Movie> videos() {
+    public List<Movie> movies() {
         return movies;
     }
 
-    public static MoviePushRequest videoPush(List<Movie> movies) {
+    public static MoviePushRequest moviePush(List<Movie> movies) {
         return new MoviePushRequest(CrudType.UPDATE, movies);
     }
 

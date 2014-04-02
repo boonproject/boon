@@ -33,9 +33,6 @@ import org.boon.Lists;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Richard on 2/12/14.
- */
 public class LikesBulkUpdate implements Iterable<UpdateCategoryRequest>{
     private List<UpdateCategoryRequest> updates;
     private String username;

@@ -34,7 +34,6 @@ import org.boon.core.Conversions;
 import java.util.TimeZone;
 
 /**
- * Created by Richard on 2/12/14.
  */
 public enum TimeZoneType {
     EST (TimeZone.getTimeZone( "EST" )),//Eastern
