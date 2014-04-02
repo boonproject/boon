@@ -46,7 +46,6 @@ import static org.boon.core.Typ.getComponentType;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.core.Typ.isArray;
-import static org.boon.core.Typ.object;
 
 
 public class Conversions {
@@ -1293,8 +1292,69 @@ public class Conversions {
     }
 
 
-    public static Object unifyList(Object o) {
-        return unifyList(o, null);
+    public static Object unifyListOrArray(Object o) {
+        return unifyListOrArray(o, null);
+    }
+
+    /**
+     * This flattens a list.
+     * @param o object that might be a list
+     * @param list list to add o to or all of o's items to.
+     * @return an object or a list
+     */
+    public static Object unifyListOrArray(Object o, List list) {
+
+        if (o==null) {
+            return null;
+        }
+
+        boolean isArray = o.getClass().isArray();
+
+        if (list == null && !isArray && !(o instanceof Iterable)) {
+            return o;
+        }
+
+        if (list == null) {
+            list = new ArrayList();
+        }
+
+        if (isArray) {
+            int length = Array.getLength( o );
+            for (int index = 0; index < length; index++) {
+
+                Object o1 = Array.get(o, index);
+                if (o1 instanceof Iterable || o.getClass().isArray()) {
+                    unifyListOrArray(o1, list);
+                } else {
+                    list.add(o1);
+                }
+            }
+        } else if (o instanceof Iterable) {
+            Iterable i = ((Iterable) o);
+            for (Object item : i) {
+
+                if (item instanceof Iterable || o.getClass().isArray()) {
+                    unifyListOrArray(item, list);
+                } else {
+                    list.add(item);
+                }
+
+            }
+
+
+        } else {
+            list.add(o);
+        }
+
+        return list;
+
+
+    }
+
+
+
+    public static Object unifyList(List list) {
+        return unifyListOrArray(list, null);
     }
 
     /**
@@ -1305,25 +1365,27 @@ public class Conversions {
      */
     public static Object unifyList(Object o, List list) {
 
-        boolean isArray = Boon.isArray(o);
-
-        if (list == null && !isArray && !(o instanceof Iterable)) {
-            return o;
+        if (o==null) {
+            return null;
         }
+
 
         if (list == null) {
             list = new ArrayList();
         }
-        if (isArray) {
-            int length = Array.getLength( o );
-            for (int index = 0; index < length; index++) {
-                unifyList(Array.get ( o, index ), list);
-            }
-        } else if (o instanceof Iterable) {
+
+        if (o instanceof Iterable) {
             Iterable i = ((Iterable) o);
+
+
             for (Object item : i) {
-                list = (List) unifyList(item, list);
+
+               unifyListOrArray(item, list);
+
             }
+
+
+
         } else {
             list.add(o);
         }

@@ -36,13 +36,10 @@ import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.MapField;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.className;
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.*;
 import static org.boon.Str.lines;
@@ -310,8 +307,8 @@ public class BeanUtils {
 
 
                 if (object instanceof Collection) {
-                    object = getFieldValues(object, property);
-                    object = Conversions.unifyList(object);
+                    object = getFieldValuesFromCollection((Collection)object, property);
+                    object = Conversions.unifyListOrArray(object);
                     continue;
                 }
 
@@ -330,6 +327,35 @@ public class BeanUtils {
         }
         return object;
     }
+
+    private static Object _getPropertyValue( final Object root, final String property ) {
+
+            Object object = root;
+
+
+            if (object == null) {
+                return null;
+            } else if (object instanceof Collection) {
+                    object = getFieldValuesFromCollection((Collection)object, property);
+                    object = Conversions.unifyList((List) object);
+                    return object;
+            } else {
+
+
+                Map<String, FieldAccess> fields =
+                        getPropertyFieldAccessMap(object.getClass());
+
+                FieldAccess field = fields.get(property);
+
+                if (field == null) {
+                    return null;
+                }
+
+                object = field.getValue(object);
+                return object;
+            }
+
+        }
 
 
     /**
@@ -388,7 +414,7 @@ public class BeanUtils {
                 o = getProp( o, propName );
             }
         }
-        return Conversions.unifyList ( o );
+        return Conversions.unifyListOrArray(o);
     }
 
 
@@ -555,7 +581,7 @@ public class BeanUtils {
      * nested collection to pull out the leaf nodes
      */
     private static Object getCollectionProp( Object o, String propName, int index, String[] path ) {
-        o = getFieldValues ( o, propName );
+        o = getFieldValuesFromCollection(o, propName);
 
         if ( index + 1 == path.length ) {
             return o;
@@ -1116,43 +1142,61 @@ public class BeanUtils {
     }
 
 
-    public static Object getFieldValuesOLD( Object object, final String key ) {
-        if ( object == null ) {
-            return null;
-        }
 
-        if (object instanceof Collection ) {
-            Collection collection = (Collection) object;
 
+    public static Object getFieldValuesFromCollection(Collection collection, final String key) {
+
+            if (collection.size() == 0) {
+                return Collections.EMPTY_LIST;
+            }
             List list = new ArrayList( collection.size() );
 
-            for (Object item : collection) {
-                list.add( getFieldValues( item, key ) );
 
+
+            Object firstItem;
+
+            if (collection instanceof List) {
+                firstItem = ((List) collection).get(0);
+            } else {
+
+                firstItem = collection.iterator().next();
             }
 
-            return list;
-        } else if ( object.getClass().isArray() ) {
-            int len = Array.getLength(object);
-            List list = new ArrayList( len );
+            if (firstItem instanceof Map) {
 
-            for (int index = 0; index < len; index++) {
-                list.add( getFieldValues( Array.get(object, index), key ) );
+                for (Object item : collection) {
+                    Map map = (Map) item;
+                    list.add( map.get(key) );
+                }
+                return list;
+
+            } else if (firstItem instanceof Collection) {
+
+                for (Object item : collection) {
+                    list.add(_getPropertyValue(item, key));
+                }
+                return list;
+            } else {
+
+                Map<String, FieldAccess> fields =
+                        getPropertyFieldAccessMap( Typ.getComponentType(collection) );
+
+
+                for (Object item : collection) {
+
+                    FieldAccess field = fields.get(key);
+                    list.add(field.getValue(item));
+
+                }
+
+                return list;
             }
-            return list;
-        }
-        else {
-            return atIndex(object, key);
-        }
-
-
 
 
     }
 
 
-
-    public static Object getFieldValues( Object object, final String key ) {
+    public static Object getFieldValuesFromCollection(Object object, final String key) {
         if ( object == null ) {
             return null;
         }
