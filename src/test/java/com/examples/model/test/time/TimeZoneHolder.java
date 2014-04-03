@@ -111,4 +111,13 @@ public class TimeZoneHolder {
             return Lists.list((Object)this.type);
         }
     }
+
+    @Override
+    public String toString() {
+        return "TimeZoneHolder{" +
+                "tz=" + tz +
+                ", type=" + type +
+                ", other='" + other + '\'' +
+                '}';
+    }
 }

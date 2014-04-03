@@ -59,4 +59,12 @@ public class RightsPushRequest {
     public long getSequenceNumber() {
         return sequenceNumber;
     }
+
+    @Override
+    public String toString() {
+        return "RightsPushRequest{" +
+                "entitlements=" + entitlements +
+                ", sequenceNumber=" + sequenceNumber +
+                '}';
+    }
 }

@@ -47,7 +47,7 @@ public class Rights {
     private boolean active;
 
 
-    public static Rights createEntitlement(RightsType type, boolean active, TimeZoneType timeZoneType, long milis) {
+    public static Rights createRights(RightsType type, boolean active, TimeZoneType timeZoneType, long milis) {
         Rights rights = new Rights(type, active, new DateTime(new TimeZoneHolder(timeZoneType), milis));
         return rights;
     }

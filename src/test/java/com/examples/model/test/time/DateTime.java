@@ -55,4 +55,13 @@ public class DateTime {
     public void setMilliseconds(long milliseconds) {
         this.milliseconds = milliseconds;
     }
+
+
+    @Override
+    public String toString() {
+        return "DateTime{" +
+                "timeZone=" + timeZone +
+                ", milliseconds=" + milliseconds +
+                '}';
+    }
 }

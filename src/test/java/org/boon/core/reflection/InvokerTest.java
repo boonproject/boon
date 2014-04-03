@@ -28,25 +28,87 @@
 
 package org.boon.core.reflection;
 
+import com.examples.model.test.movies.admin.AdminService;
+import com.examples.model.test.movies.crud.CrudType;
+import com.examples.model.test.movies.entitlement.Rights;
+import com.examples.model.test.movies.entitlement.RightsCrudRequest;
+import com.examples.model.test.movies.entitlement.RightsPushRequest;
+import com.examples.model.test.movies.entitlement.RightsType;
+import com.examples.model.test.time.TimeZoneHolder;
+import com.examples.model.test.time.TimeZoneType;
 import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.Maps;
 import org.boon.primitive.CharBuf;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.PostConstruct;
 
 
+import java.util.List;
+import java.util.TimeZone;
+
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Ok.okOrDie;
+import static org.boon.json.JsonFactory.fromJson;
+import static org.boon.json.JsonFactory.toJson;
 import static org.boon.primitive.CharBuf.createCharBuf;
 
 /**
  * Created by Richard on 2/17/14.
  */
 public class InvokerTest {
+
+    int counter = 0;
+
+    boolean ok;
+
+    @Before
+    public void init() {
+
+    }
+
+    @Test
+    public void invokeObj() {
+        AdminService adminService = new AdminService(){
+
+            @Override
+            public boolean rightsPush(RightsPushRequest request) {
+
+                puts(request);
+                counter++;
+                return false;
+            }
+        };
+
+
+        Rights rights = Rights.createRights(
+                RightsType.AMAZON_PRIME, true, TimeZoneType.EST, System.currentTimeMillis());
+        RightsCrudRequest rightsCrudRequest = new RightsCrudRequest("Bob",
+                CrudType.ADD, rights);
+
+        RightsCrudRequest rightsCrudRequest2 = BeanUtils.copy(rightsCrudRequest);
+        rightsCrudRequest2.setUsername("Rick2");
+        RightsCrudRequest rightsCrudRequest3 = BeanUtils.copy(rightsCrudRequest);
+        rightsCrudRequest3.setUsername("Jason3");
+
+        List<RightsCrudRequest> rightsList = Lists.list(rightsCrudRequest, rightsCrudRequest2, rightsCrudRequest3);
+
+        RightsPushRequest rightsPushRequest = new RightsPushRequest(1L, rightsList);
+
+        adminService.rightsPush( rightsPushRequest );
+
+        Invoker.invokeFromObject(adminService, "rightsPush", rightsPushRequest);
+
+        String json = toJson(rightsPushRequest);
+        Object o = fromJson(json);
+        Invoker.invokeFromObject(adminService, "rightsPush", o);
+
+        ok = counter == 3 || die();
+    }
 
 
     public static class HelloWorldArg  {
