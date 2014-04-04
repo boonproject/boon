@@ -72,7 +72,11 @@ public class BoonLogFormatter  extends java.util.logging.Formatter {
 
         sb.append(LINE_SEPARATOR);
 
+
+
         if (record.getThrown()!=null) {
+
+
 
             StackTraceElement[] filteredStackTrace = getFilteredStackTrace(record.getThrown().getStackTrace());
 
@@ -85,6 +89,8 @@ public class BoonLogFormatter  extends java.util.logging.Formatter {
                 record.getThrown().printStackTrace(pw);
                 pw.close();
 
+
+            record.getThrown().printStackTrace(sb);
         }
         return sb.toString();
     }
