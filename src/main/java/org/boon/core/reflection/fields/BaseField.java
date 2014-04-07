@@ -481,6 +481,13 @@ public abstract class BaseField implements FieldAccess {
             case SET:
                  this.setObject ( obj, Conversions.toCollection ( type, value ) );
                  return;
+            case CLASS:
+                try {
+                    this.setObject( obj, Class.forName(value.toString()));
+                } catch (ClassNotFoundException e) {
+                }
+                return;
+
             default:
                 if ( value != null ) {
                     if ( value.getClass () == this.type ) {
