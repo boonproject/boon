@@ -1461,7 +1461,18 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
     public CharBuf  multiply(char c, int len) {
-        this.add(Chr.multiply(c, len));
+        for (int index=0; index<len; index++) {
+            this.add(c);
+        }
+        return this;
+    }
+
+
+    public CharBuf  multiply(CharSequence str, int len) {
+
+        for (int index=0; index<len; index++) {
+            this.add(str.toString());
+        }
         return this;
     }
 
