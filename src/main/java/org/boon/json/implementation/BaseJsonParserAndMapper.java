@@ -63,8 +63,8 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
     protected Charset charset  = StandardCharsets.UTF_8;
 
 
-    protected int bufSize  = 256;
-
+    protected int bufSize  = 1024;
+    private char[] copyBuf;
 
 
     public BaseJsonParserAndMapper( JsonParser parser, FieldsAccessor fieldsAccessor ) {
@@ -646,8 +646,12 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
             Path filePath = IO.path ( fileName );
             long size = Files.size ( filePath );
             size = size > 2_000_000_000 ? 1_000_000 : size;
+            if (copyBuf==null) {
+                copyBuf = new char[bufSize];
+            }
+
             Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
-            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
+            fileInputBuf = IO.read( reader, fileInputBuf, (int)size, copyBuf );
             return parse(  fileInputBuf.readForRecycle() );
         } catch ( IOException ex ) {
             return Exceptions.handle ( Object.class, fileName, ex );
@@ -666,7 +670,11 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
     @Override
     public  <T> T parse( Class<T> type, Reader reader ) {
 
-        fileInputBuf = IO.read( reader, fileInputBuf, bufSize );
+        if (copyBuf==null) {
+            copyBuf = new char[bufSize];
+        }
+
+        fileInputBuf = IO.read( reader, fileInputBuf, bufSize, copyBuf );
         return parse( type, fileInputBuf.readForRecycle() );
 
     }
@@ -674,14 +682,18 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
     @Override
     public  <T> T parse( Class<T> type, InputStream input ) {
-        fileInputBuf = IO.read( input, fileInputBuf, charset, bufSize );
+        if (copyBuf==null) {
+            copyBuf = new char[bufSize];
+        }
+
+        fileInputBuf = IO.read( input, fileInputBuf, charset, bufSize, copyBuf );
         return parse( type, fileInputBuf.readForRecycle() );
     }
 
 
     @Override
     public  <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        fileInputBuf = IO.read( input, fileInputBuf, charset, 256 );
+        fileInputBuf = IO.read( input, fileInputBuf, charset, bufSize, copyBuf );
         return parse( type, fileInputBuf.readForRecycle() );
     }
 
@@ -694,7 +706,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
             long size = Files.size ( filePath );
             size = size > 2_000_000_000 ? 1_000_000 : size;
             Reader reader = Files.newBufferedReader ( IO.path ( fileName ), charset);
-            fileInputBuf = IO.read( reader, fileInputBuf, (int)size );
+            fileInputBuf = IO.read( reader, fileInputBuf, (int)size, copyBuf );
             return parse( type, fileInputBuf.readForRecycle() );
         } catch ( IOException ex ) {
             return Exceptions.handle ( type, fileName, ex );

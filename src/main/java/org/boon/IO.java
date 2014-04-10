@@ -389,10 +389,10 @@ public class IO {
     }
 
 
-    public static CharBuf read( InputStream inputStream, CharBuf charBuf, Charset charset, int bufSize ) {
+    public static CharBuf read( InputStream inputStream, CharBuf charBuf, Charset charset, int bufSize, char[] copyBuf ) {
 
         try ( Reader reader = new InputStreamReader( inputStream, charset ) ) {
-            return read( reader, charBuf, bufSize );
+            return read( reader, charBuf, bufSize, copyBuf );
         } catch ( Exception ex ) {
             return Exceptions.handle( CharBuf.class, ex );
         }
@@ -436,13 +436,16 @@ public class IO {
 
 
     public static long copyLarge( Reader reader, Writer writer ) {
-        return copyLarge( reader, writer, new char[ DEFAULT_BUFFER_SIZE ] );
+        return copyLarge( reader, writer,  null);
     }
 
     public static long copyLarge( Reader reader, Writer writer, char[] buffer ) {
         long count = 0;
         int n;
 
+        if (buffer==null) {
+            buffer = new char[ DEFAULT_BUFFER_SIZE ];
+        }
         try {
             while ( EOF != ( n = reader.read( buffer ) ) ) {
                 writer.write( buffer, 0, n );
@@ -471,7 +474,7 @@ public class IO {
         }
     }
 
-    public static CharBuf read( Reader input, CharBuf charBuf, final int bufSize ) {
+    public static CharBuf read( Reader input, CharBuf charBuf, final int bufSize, char[] copyBuffer ) {
 
         if ( charBuf == null ) {
             charBuf = CharBuf.create( bufSize );
@@ -491,7 +494,7 @@ public class IO {
                 return charBuf;
             }
 
-            copy( input, charBuf );
+            copy( input, charBuf, copyBuffer );
 
         } catch ( IOException e ) {
             Exceptions.handle( e );
@@ -509,7 +512,7 @@ public class IO {
     }
 
     public static CharBuf read( Reader input, CharBuf charBuf ) {
-        return read( input, charBuf, 2048 );
+        return read( input, charBuf, 2048, null );
     }
 
     public static char[] readCharBuffer( Reader input ) {
@@ -537,6 +540,13 @@ public class IO {
         return ( int ) count;
     }
 
+    public static int copy( Reader input, Writer output, char[] copyBuf ) {
+        long count = copyLarge( input, output, copyBuf );
+        if ( count > Integer.MAX_VALUE ) {
+            return -1;
+        }
+        return ( int ) count;
+    }
 
     public static char[] readCharBuffer( Reader reader, int size ) {
 

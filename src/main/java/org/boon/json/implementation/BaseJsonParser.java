@@ -82,7 +82,9 @@ public abstract class BaseJsonParser implements JsonParser {
         protected Charset charset  = StandardCharsets.UTF_8;
 
 
-        protected int bufSize  = 256;
+        protected int bufSize  = 1024;
+
+        protected char[] copyBuf;
 
 
         static {
@@ -139,7 +141,11 @@ public abstract class BaseJsonParser implements JsonParser {
         @Override
         public  Object parse(  Reader reader ) {
 
-            fileInputBuf = IO.read ( reader, fileInputBuf, bufSize );
+            if (copyBuf==null) {
+                copyBuf = new char[bufSize];
+            }
+
+            fileInputBuf = IO.read ( reader, fileInputBuf, bufSize, copyBuf );
             return parse( fileInputBuf.readForRecycle() );
 
         }

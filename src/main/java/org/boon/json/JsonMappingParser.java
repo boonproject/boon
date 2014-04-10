@@ -67,7 +67,8 @@ public class JsonMappingParser implements JsonParserAndMapper {
     private CharBuf charBuf;
 
 
-    private int bufSize = 32;
+    private char[] copyBuf;
+    private int bufSize = 1024*4;
 
 
     public JsonMappingParser( final FieldsAccessor fields,
@@ -271,7 +272,11 @@ public class JsonMappingParser implements JsonParserAndMapper {
     @Override
     public final <T> T parse( Class<T> type, Reader reader ) {
 
-        charBuf = IO.read( reader, charBuf, bufSize );
+        if (copyBuf==null) {
+            copyBuf = new char[bufSize];
+        }
+
+        charBuf = IO.read( reader, charBuf, bufSize, copyBuf );
         return parse( type, charBuf.readForRecycle() );
 
     }
@@ -790,13 +795,21 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
     @Override
     public final <T> T parse( Class<T> type, InputStream input ) {
-        charBuf = IO.read( input, charBuf, this.charset, bufSize );
+        if (copyBuf==null) {
+            copyBuf = new char[bufSize];
+        }
+
+        charBuf = IO.read( input, charBuf, this.charset, bufSize, copyBuf );
         return parse( type, charBuf.readForRecycle() );
     }
 
     @Override
     public final <T> T parse( Class<T> type, InputStream input, Charset charset ) {
-        charBuf = IO.read( input, charBuf, charset, bufSize );
+        if (copyBuf==null) {
+            copyBuf = new char[bufSize];
+        }
+
+        charBuf = IO.read( input, charBuf, charset, bufSize, copyBuf );
         return parse( type, charBuf.readForRecycle() );
     }
 
@@ -813,7 +826,11 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
     @Override
     public final <T> T parseAsStream( Class<T> type, byte[] value ) {
-        charBuf = IO.read( new InputStreamReader ( new InMemoryInputStream(value), charset ), charBuf, value.length );
+        if (copyBuf==null) {
+            copyBuf = new char[bufSize];
+        }
+
+        charBuf = IO.read( new InputStreamReader ( new InMemoryInputStream(value), charset ), charBuf, value.length, copyBuf );
         return this.basicParser.parse ( type, charBuf.readForRecycle () );
     }
 
