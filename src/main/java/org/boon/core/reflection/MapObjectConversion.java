@@ -1048,10 +1048,20 @@ public class MapObjectConversion {
             if ( value.isContainer() ) {
                 objValue = value.toValue();
                 if ( objValue instanceof Map ) {
+                    Map<String, Value> mapObjectValue = ( Map<String, Value> ) objValue;
                     Class<?> clazz = field.type();
+
+                    if (clazz == Object.class) {
+
+                        final Value aClass = mapObjectValue.get("class");
+                        if (aClass!=null) {
+                            String strClass = aClass.stringValue();
+                            clazz = Class.forName(strClass);
+                        }
+                    }
                     if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
                         objValue = fromValueMap( respectIgnore, view, fieldsAccessor,
-                                ( Map<String, Value> ) objValue, field.type(), ignoreSet );
+                                mapObjectValue, clazz, ignoreSet );
                     } else {
 
                         /*

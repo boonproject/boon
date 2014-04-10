@@ -323,6 +323,15 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
 
                 case OBJECT:
+                    serializeFieldName ( fieldName, builder );
+                    final Type instanceType = Type.getInstanceType(value);
+                    if (instanceType==Type.INSTANCE) {
+                        serializeSubtypeInstance(value, builder);
+                    } else {
+                        serializeObject(value, builder);
+                    }
+                    return true;
+
                 case INSTANCE:
                     serializeFieldName ( fieldName, builder );
                     serializeInstance ( value, builder );
