@@ -48,7 +48,7 @@ public class FastStringUtils {
     public static final boolean ENABLED;
 
     private static final boolean WRITE_TO_FINAL_FIELDS = Boolean.parseBoolean(System.getProperty("org.boon.write.to.final.string.fields", "true"));
-    private static final boolean DISABLE = Boolean.parseBoolean(System.getProperty("org.boon.faststringutils", "false"));
+    private static final boolean DISABLE = Boolean.parseBoolean(System.getProperty("org.boon.faststringutils.disable", "false"));
 
     private static Unsafe loadUnsafe() {
         try {
