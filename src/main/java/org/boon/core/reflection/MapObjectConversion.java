@@ -223,6 +223,8 @@ public class MapObjectConversion {
         Object[] finalArgs = null;
 
 
+        boolean[] flag = new boolean[1];
+
 
 
         try {
@@ -241,7 +243,7 @@ public class MapObjectConversion {
                         /* The match and convert does the bulk of the work. */
                         if ( !matchAndConvertArgs( respectIgnore, view,
                                 fieldsAccessor, convertedArguments, constructor,
-                                parameterTypes, index, ignoreSet ) ) continue loop;
+                                parameterTypes, index, ignoreSet, flag ) ) continue loop;
                     }
                     constructorToMatch = constructor;
                 }
@@ -350,7 +352,8 @@ public class MapObjectConversion {
     public static boolean matchAndConvertArgs( boolean respectIgnore, String view,
                                                FieldsAccessor fieldsAccessor, List<Object> convertedArgumentList,
                                                ConstructorAccess constructor,
-                                               Class[] parameterTypes, int index, Set<String> ignoreSet  ) {
+                                               Class[] parameterTypes, int index, Set<String> ignoreSet,
+                                               boolean[] flag) {
         try {
 
             Class paramType;
@@ -374,7 +377,11 @@ public class MapObjectConversion {
             if ( Typ.isPrimitiveOrWrapper( paramType ) &&
                     ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {
 
-                    Object o = Conversions.coerceOrDie( paramType, item );
+                    Object o = Conversions.coerceWithFlag( paramType, flag, item );
+
+                    if (flag[0] == false) {
+                        return false;
+                    }
                     convertedArgumentList.set( index, o );
             }
             /** Handle map to user class instance conversion. */
@@ -583,7 +590,6 @@ public class MapObjectConversion {
                     "fieldsAccessor", fieldsAccessor, "list", convertedArgumentList,
                     "constructor", constructor, "parameters", parameterTypes,
                     "index", index, "ignoreSet", ignoreSet);
-            ex.printStackTrace();
             return false;
         }
 

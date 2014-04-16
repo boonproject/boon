@@ -658,6 +658,169 @@ public class Conversions {
         }
     }
 
+
+
+    public static <T> T coerceWithFlag(Class<T> clz, boolean [] flag, Object value) {
+        return coerceWithFlag(Type.getType(clz), clz, flag, value);
+    }
+
+    public static <T> T coerceWithFlag(Type coerceTo, Class<T> clz, boolean [] flag, Object value) {
+        flag[0] = true;
+        if (value == null) {
+            return null;
+        }
+
+        switch (coerceTo) {
+            case STRING:
+            case CHAR_SEQUENCE:
+                return (T) value.toString();
+
+            case INT:
+            case INTEGER_WRAPPER:
+                Integer i = toInt(value);
+                if (i == Integer.MIN_VALUE) {
+                    flag[0] = false;
+                }
+                return (T) i;
+
+
+            case SHORT:
+            case SHORT_WRAPPER:
+                Short s = toShort(value);
+                if (s == Short.MIN_VALUE) {
+                    flag[0] = false;
+                }
+                return (T) s;
+
+
+            case BYTE:
+            case BYTE_WRAPPER:
+                Byte by = toByte(value);
+                if (by == Byte.MIN_VALUE) {
+                    flag[0] = false;
+                }
+                return (T) by;
+
+
+            case CHAR:
+            case CHAR_WRAPPER:
+                Character ch = toChar(value);
+                if (ch == (char) 0) {
+                    flag[0] = false;
+                }
+                return (T) ch;
+
+            case LONG:
+            case LONG_WRAPPER:
+                Long l = toLong(value);
+                if (l == Long.MIN_VALUE) {
+                    flag[0] = false;
+                }
+
+                return (T) l;
+
+            case DOUBLE:
+            case DOUBLE_WRAPPER:
+                Double d = toDouble(value);
+                if (d == Double.MIN_VALUE) {
+                    flag[0] = false;
+                }
+
+                return (T) d;
+
+
+            case FLOAT:
+            case FLOAT_WRAPPER:
+                Float f = toFloat(value);
+                if (f == Float.MIN_VALUE) {
+                    flag[0] = false;
+                }
+                return (T) f;
+
+            case DATE:
+                return (T) toDate(value);
+
+            case BIG_DECIMAL:
+                return (T) toBigDecimal(value);
+
+
+            case BIG_INT:
+                return (T) toBigInteger(value);
+
+            case CALENDAR:
+                return (T) toCalendar(toDate(value));
+
+
+            case BOOLEAN:
+            case BOOLEAN_WRAPPER:
+                return (T) (Boolean) toBooleanOrDie(value);
+
+            case MAP:
+                if (value instanceof Map) {
+                    return (T) value;
+                }
+                return (T) toMap(value);
+
+            case ARRAY:
+                return toPrimitiveArrayIfPossible(clz, value);
+
+            case COLLECTION:
+                return toCollection(clz, value);
+
+            case INSTANCE:
+                if (value instanceof Map) {
+                    return MapObjectConversion.fromMap((Map<String, Object>) value, clz);
+                } else if (value instanceof List) {
+                    return MapObjectConversion.fromList((List<Object>) value, clz);
+                } else if (clz.isInstance(value)) {
+                    return (T) value;
+                } else {
+                    ClassMeta meta = ClassMeta.classMeta(clz);
+                    List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
+
+                    if (constructors.size() == 0) {
+                        return null;
+                    } else if (constructors.size() == 1) {
+                        ConstructorAccess constructorAccess = constructors.get(0);
+                        Class<?> arg1Type = constructorAccess.parameterTypes()[0];
+                        if (arg1Type.isInstance(value)) {
+                            return (T) constructorAccess.create(value);
+                        } else {
+                            return (T) constructorAccess.create(coerce(arg1Type, value));
+                        }
+                    } else {
+                        for (ConstructorAccess c : constructors) {
+                            Class<?> arg1Type = c.parameterTypes()[0];
+                            if (arg1Type.isInstance(value)) {
+                                return (T) c.create(value);
+                            }
+                        }
+
+
+                        for (ConstructorAccess c : constructors) {
+                            Class<?> arg1Type = c.parameterTypes()[0];
+                            if (arg1Type.isAssignableFrom(value.getClass())) {
+                                return (T) c.create(value);
+                            }
+                        }
+
+                        flag[0] = false;
+                        break;
+
+                    }
+                }
+
+
+            case ENUM:
+                return (T) toEnum((Class<? extends Enum>) clz, value);
+
+
+            default:
+                flag[0] = false;
+                break;
+        }
+        return null;
+    }
     @SuppressWarnings("unchecked")
     public static <T> T coerceClassic(Class<T> clz, Object value) {
 
