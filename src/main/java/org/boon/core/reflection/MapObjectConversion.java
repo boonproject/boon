@@ -344,256 +344,299 @@ public class MapObjectConversion {
      * @param ignoreSet a set of properties to ignore
      * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
      * @param convertedArgumentList   arguments being converted to match parameter types
-     * @param constructor    constructor
+     * @param methodAccess    constructor
      * @param parameterTypes   parameterTypes
      * @param index           index of argument
      * @return   true or false
      */
     public static boolean matchAndConvertArgs( boolean respectIgnore, String view,
                                                FieldsAccessor fieldsAccessor, List<Object> convertedArgumentList,
-                                               ConstructorAccess constructor,
+                                               ConstructorAccess methodAccess,
                                                Class[] parameterTypes, int index, Set<String> ignoreSet,
                                                boolean[] flag) {
+
+
+        Object value;
+
         try {
 
-            Class paramType;
+            Class parameterClass;
             Object item;
-            paramType = parameterTypes[index];
+
+            parameterClass = parameterTypes[index];
             item = convertedArgumentList.get( index );
+
+
+            final org.boon.core.Type parameterType = org.boon.core.Type.getType(parameterClass);
+
+
             if ( item instanceof ValueContainer ) {
                 item = ( ( ValueContainer ) item ).toValue();
-                convertedArgumentList.set( index, item );
             }
 
-            if (paramType.isPrimitive() && item == null) {
-                return false;
+
+
+            switch (parameterType) {
+                case INT:
+                case SHORT:
+                case BYTE:
+                case BOOLEAN:
+                case CHAR:
+                case FLOAT:
+                case DOUBLE:
+                    if (item == null) {
+                        return false;
+                    }
+
             }
 
             if (item == null) {
                 return true;
             }
 
-            /** Handle primitive type conversion. */
-            if ( Typ.isPrimitiveOrWrapper( paramType ) &&
-                    ( item instanceof Number || item instanceof Boolean || item instanceof CharSequence ) ) {
-
-                    Object o = Conversions.coerceWithFlag( paramType, flag, item );
+            switch (parameterType) {
+                case INT:
+                case INTEGER_WRAPPER:
+                case SHORT:
+                case SHORT_WRAPPER:
+                case BYTE:
+                case BYTE_WRAPPER:
+                case BOOLEAN:
+                case BOOLEAN_WRAPPER:
+                case CHAR_WRAPPER:
+                case CHAR:
+                case FLOAT:
+                case FLOAT_WRAPPER:
+                case DOUBLE:
+                case DOUBLE_WRAPPER:
+                    value = Conversions.coerceWithFlag( parameterClass, flag, item );
 
                     if (flag[0] == false) {
                         return false;
                     }
-                    convertedArgumentList.set( index, o );
-            }
-            /** Handle map to user class instance conversion. */
-            else if ( item instanceof Map && !Typ.isMap( paramType ) ) {
+                    convertedArgumentList.set( index, value );
+                    return true;
 
-                /** Handle instance value conversion from map to user defined class instance. */
-                if ( !paramType.isInterface() && !Typ.isAbstract( paramType ) ) {
-                     item = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) item, paramType, ignoreSet );
-                     convertedArgumentList.set( index, item );
-                } else {
+                case MAP:
+                case VALUE_MAP:
 
-                    /** Handle conversion of user define interfaces. */
-                    String  className = (String) ((Map) item).get( "class" );
-                    if (className != null)  {
-                        item = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) item, Reflection.loadClass( className ), ignoreSet );
-                        convertedArgumentList.set( index, item );
-                    } else {
-                        return false;
-                    }
-                }
-            }   /** Handle map to user class instance conversion. */
-            else if ( item instanceof Map  ) {
+                    if (item instanceof Map) {
+                        Map itemMap = (Map)item;
 
-                Map itemMap = (Map) item;
+                    /* This code creates a map based on the parameterized types of the constructor arg.
+                     *  This does ninja level generics manipulations and needs to be captured in some
+                     *  reusable way.
+                      * */
+                    Type type = methodAccess.getGenericParameterTypes()[index];
+                    if ( type instanceof ParameterizedType ) {
+                        ParameterizedType pType = (ParameterizedType) type;
+                        Class<?> keyType = (Class<?>) pType.getActualTypeArguments()[0];
 
-                /* This code creates a map based on the parameterized types of the constructor arg.
-                 *  This does ninja level generics manipulations and needs to be captured in some
-                 *  reusable way.
-                  * */
-                Type type = constructor.getGenericParameterTypes()[index];
-                if ( type instanceof ParameterizedType ) {
-                    ParameterizedType pType = ( ParameterizedType ) type;
-                    Class<?> keyType = ( Class<?> ) pType.getActualTypeArguments()[0];
-
-                    Class<?> valueType = ( Class<?> ) pType.getActualTypeArguments()[1];
+                        Class<?> valueType = (Class<?>) pType.getActualTypeArguments()[1];
 
 
-
-                    Map newMap =  Conversions.createMap(paramType, itemMap.size());
+                        Map newMap = Conversions.createMap(parameterClass, itemMap.size());
 
 
                     /* Iterate through the map items and convert the keys/values to match
                     the parameterized constructor parameter args.
                      */
 
-                    for ( Object o : itemMap.entrySet() ) {
-                        Map.Entry entry = (Map.Entry)o;
+                        for (Object o : itemMap.entrySet()) {
+                            Map.Entry entry = (Map.Entry) o;
 
-                        Object key = entry.getKey();
-                        Object value = entry.getValue();
+                            Object key = entry.getKey();
+                            value = entry.getValue();
 
-                        key = ValueContainer.toObject(key);
+                            key = ValueContainer.toObject(key);
 
-                        value = ValueContainer.toObject(value);
+                            value = ValueContainer.toObject(value);
 
 
                         /* Here is the actual conversion from a list or a map of some object.
                         This can be captured in helper method the duplication is obvious.
                          */
-                        if (value instanceof List) {
-                            value = fromList( respectIgnore, view, fieldsAccessor, (List)value, valueType, ignoreSet );
+                            if (value instanceof List) {
+                                value = fromList(respectIgnore, view, fieldsAccessor, (List) value, valueType, ignoreSet);
 
-                        } else if (value instanceof Map) {
-                            value = fromMap( respectIgnore, view, fieldsAccessor, (Map) value, valueType, ignoreSet );
-
-                        } else {
-                            value = coerce(valueType, value);
-                        }
-
-
-                        if (key instanceof List) {
-                            key = fromList( respectIgnore, view, fieldsAccessor, (List)key, keyType, ignoreSet );
-
-                        } else if (value instanceof Map) {
-                            key = fromMap( respectIgnore, view, fieldsAccessor, (Map) key, keyType, ignoreSet );
-
-                        } else {
-                            key = coerce(keyType, key);
-                        }
-
-                        newMap.put(key, value);
-                    }
-                    convertedArgumentList.set( index, newMap );
-                }
-             }
-
-
-            /* The parameter type is some sort of instance parameters (user defined instance of a class)
-               and the item is a list. */
-            else if ( item instanceof List && !Typ.isCollection(paramType) && !paramType.isEnum()) {
-
-                List<Object> listItem = null;
-                Object convertedItem = null;
-
-                try {
-                    listItem =      ( List<Object> ) item;
-
-                    convertedItem = fromList(respectIgnore, view, fieldsAccessor, listItem, paramType, ignoreSet );
-
-                    convertedArgumentList.set( index, convertedItem );
-
-                } catch (Exception ex) {
-
-
-                    Boon.error(ex, "PROBLEM WITH matchAndConvertArgs converting a list item into an object",
-                            "listItem", listItem,
-                            "convertedItem", convertedItem,
-                            "respectIgnore", respectIgnore, "view", view,
-                            "fieldsAccessor", fieldsAccessor, "list", convertedArgumentList,
-                            "constructor", constructor, "parameters", parameterTypes,
-                            "index", index, "ignoreSet", ignoreSet);
-                    ex.printStackTrace();
-                }
-
-                /* The parameter is some sort of collection, and the item is a list. */
-            } else if ( Typ.isCollection(paramType) && item instanceof List ) {
-                 
-                List<Object> itemList = ( List<Object> ) item;
-
-                /* Items have stuff in it, the item is a list of lists.
-                 * This is like we did earlier with the map.
-                 * Here is some more ninja generics Java programming that needs to be captured in one place.
-                 * */
-                if ( itemList.size() > 0 && (itemList.get( 0 ) instanceof List ||
-                        itemList.get(0) instanceof ValueContainer)  ) {
-
-                    /** Grab the generic type of the list. */
-                    Type type = constructor.getGenericParameterTypes()[index];
-
-                    /*  Try to pull the generic type information out so you can create
-                       a strongly typed list to inject.
-                     */
-                    if ( type instanceof ParameterizedType ) {
-                        ParameterizedType pType = ( ParameterizedType ) type;
-                        Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
-
-
-                        Collection newList =  Conversions.createCollection( paramType, itemList.size() );
-
-                        for ( Object o : itemList ) {
-                            if ( o instanceof ValueContainer ) {
-                                o = ( ( ValueContainer ) o ).toValue();
-                            }
-
-                            List fromList = ( List ) o;
-                            o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
-                            newList.add( o );
-                        }
-                        convertedArgumentList.set( index, newList );
-
-                    }
-                } else {
-
-                    /* Just a list not a list of lists so see if it has generics and pull out the
-                    * type information and created a strong typed list. This looks a bit familiar.
-                    * There is a big opportunity for some reuse here. */
-                    Type type = constructor.getGenericParameterTypes()[index];
-                    if ( type instanceof ParameterizedType ) {
-                        ParameterizedType pType = ( ParameterizedType ) type;
-                        Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
-
-
-                        Collection newList =  Conversions.createCollection( paramType, itemList.size() );
-
-
-                        for ( Object o : itemList ) {
-                            if ( o instanceof ValueContainer ) {
-                                o = ( ( ValueContainer ) o ).toValue();
-                            }
-                            if (o instanceof List) {
-                                List fromList = ( List ) o;
-                                o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
-                                newList.add( o );
-                            } else if (o instanceof Map) {
-                                Map fromMap = ( Map ) o;
-                                o = fromMap(respectIgnore, view, fieldsAccessor, fromMap, componentType, ignoreSet);
-                                newList.add( o );
+                            } else if (value instanceof Map) {
+                                value = fromMap(respectIgnore, view, fieldsAccessor, (Map) value, valueType, ignoreSet);
 
                             } else {
-                                newList.add( Conversions.coerce(componentType, o));
+                                value = coerce(valueType, value);
                             }
-                        }
-                        convertedArgumentList.set( index, newList );
 
+
+                            if (key instanceof List) {
+                                key = fromList(respectIgnore, view, fieldsAccessor, (List) key, keyType, ignoreSet);
+
+                            } else if (value instanceof Map) {
+                                key = fromMap(respectIgnore, view, fieldsAccessor, (Map) key, keyType, ignoreSet);
+
+                            } else {
+                                key = coerce(keyType, key);
+                            }
+
+                            newMap.put(key, value);
+                        }
+                        convertedArgumentList.set(index, newMap);
+                        return true;
+                        }
+                    }
+                    break;
+                case INSTANCE:
+                    if ( parameterClass.isInstance( item ) ) {
+                        return true;
                     }
 
-                }
-            } else if ( paramType == Typ.string  && item instanceof CharSequence ) {
-                convertedArgumentList.set( index, item.toString() );
-            } else if ( paramType.isEnum()  && (item instanceof CharSequence| item instanceof Number)  ) {
-                convertedArgumentList.set( index, toEnum( paramType, item ) );
-            } else if ( paramType.isInstance( item ) ) {
-                return true;
-            } else {
-                org.boon.core.Type type = org.boon.core.Type.getType(paramType);
+                    if (item instanceof Map) {
+                        item = fromMap( respectIgnore, view, fieldsAccessor, ( Map<String, Object> ) item, parameterClass, ignoreSet );
+                        convertedArgumentList.set( index, item );
+                        return true;
+                    } else if ( item instanceof List ) {
 
-                if ( type == org.boon.core.Type.INSTANCE ) {
-                    convertedArgumentList.set( index, coerce( paramType, item ) );
-                } else {
-                    return false;
+                        List<Object> listItem = null;
+
+                        listItem =      ( List<Object> ) item;
+
+                        value = fromList(respectIgnore, view, fieldsAccessor, listItem, parameterClass, ignoreSet );
+
+                        convertedArgumentList.set( index, value );
+                        return true;
+
+                    } else {
+                        convertedArgumentList.set( index, coerce( parameterClass, item ) );
+                        return true;
+                    }
+                    //break;
+                case INTERFACE:
+                case ABSTRACT:
+                    if ( parameterClass.isInstance( item ) ) {
+                        return true;
+                    }
+
+                    if (item instanceof Map) {
+
+                        /** Handle conversion of user define interfaces. */
+                        String className = (String) ((Map) item).get("class");
+                        if (className != null) {
+                            item = fromMap(respectIgnore, view, fieldsAccessor, (Map<String, Object>) item, Reflection.loadClass(className), ignoreSet);
+                            convertedArgumentList.set(index, item);
+                            return true;
+                        } else {
+                            return false;
+                        }
+
+                    }
+                    break;
+
+                case COLLECTION:
+                case LIST:
+                case SET:
+                    if (item instanceof List ) {
+
+                        List<Object> itemList = ( List<Object> ) item;
+
+                        /* Items have stuff in it, the item is a list of lists.
+                         * This is like we did earlier with the map.
+                         * Here is some more ninja generics Java programming that needs to be captured in one place.
+                         * */
+                        if ( itemList.size() > 0 && (itemList.get( 0 ) instanceof List ||
+                                itemList.get(0) instanceof ValueContainer)  ) {
+
+                            /** Grab the generic type of the list. */
+                            Type type = methodAccess.getGenericParameterTypes()[index];
+
+                            /*  Try to pull the generic type information out so you can create
+                               a strongly typed list to inject.
+                             */
+                            if ( type instanceof ParameterizedType ) {
+                                ParameterizedType pType = ( ParameterizedType ) type;
+                                Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
+
+
+                                Collection newList =  Conversions.createCollection( parameterClass, itemList.size() );
+
+                                for ( Object o : itemList ) {
+                                    if ( o instanceof ValueContainer ) {
+                                        o = ( ( ValueContainer ) o ).toValue();
+                                    }
+
+                                    List fromList = ( List ) o;
+                                    o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
+                                    newList.add( o );
+                                }
+                                convertedArgumentList.set( index, newList );
+                                return true;
+
+                            }
+                    } else {
+
+                        /* Just a list not a list of lists so see if it has generics and pull out the
+                        * type information and created a strong typed list. This looks a bit familiar.
+                        * There is a big opportunity for some reuse here. */
+                        Type type = methodAccess.getGenericParameterTypes()[index];
+                        if ( type instanceof ParameterizedType ) {
+                            ParameterizedType pType = ( ParameterizedType ) type;
+                            Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
+
+
+                            Collection newList =  Conversions.createCollection( parameterClass, itemList.size() );
+
+
+                            for ( Object o : itemList ) {
+                                if ( o instanceof ValueContainer ) {
+                                    o = ( ( ValueContainer ) o ).toValue();
+                                }
+                                if (o instanceof List) {
+                                    List fromList = ( List ) o;
+                                    o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
+                                    newList.add( o );
+                                } else if (o instanceof Map) {
+                                    Map fromMap = ( Map ) o;
+                                    o = fromMap(respectIgnore, view, fieldsAccessor, fromMap, componentType, ignoreSet);
+                                    newList.add( o );
+
+                                } else {
+                                    newList.add( Conversions.coerce(componentType, o));
+                                }
+                            }
+                            convertedArgumentList.set( index, newList );
+                            return true;
+
+                        }
+
+                    }
                 }
+                return false;
+
+                case STRING:
+                case CHAR_SEQUENCE:
+                    convertedArgumentList.set( index, item.toString() );
+                    return true;
+                case ENUM:
+                    convertedArgumentList.set( index, toEnum( parameterClass, item ) );
+                    return true;
+
+
             }
+
+
+            if ( parameterClass.isInstance( item ) ) {
+                return true;
+            }
+
+
         } catch (Exception ex) {
             Boon.error(ex, "PROBLEM WITH matchAndConvertArgs",
                     "respectIgnore", respectIgnore, "view", view,
                     "fieldsAccessor", fieldsAccessor, "list", convertedArgumentList,
-                    "constructor", constructor, "parameters", parameterTypes,
+                    "constructor", methodAccess, "parameters", parameterTypes,
                     "index", index, "ignoreSet", ignoreSet);
             return false;
         }
 
-        return true;
+        return false;
     }
 
 
