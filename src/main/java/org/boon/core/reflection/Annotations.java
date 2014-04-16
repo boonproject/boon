@@ -30,8 +30,6 @@ package org.boon.core.reflection;
 
 import org.boon.Exceptions;
 import org.boon.core.Sys;
-import org.boon.core.reflection.fields.FieldAccess;
-import sun.misc.Unsafe;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;

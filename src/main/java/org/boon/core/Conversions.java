@@ -28,9 +28,12 @@
 
 package org.boon.core;
 
-import org.boon.*;
-import org.boon.primitive.Arry;
+import org.boon.Boon;
+import org.boon.Lists;
+import org.boon.Str;
+import org.boon.StringScanner;
 import org.boon.core.reflection.*;
+import org.boon.primitive.Arry;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -41,10 +44,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import static org.boon.Exceptions.handle;
-import static org.boon.core.Typ.getComponentType;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
+import static org.boon.Exceptions.handle;
+import static org.boon.core.Typ.getComponentType;
 import static org.boon.core.Typ.isArray;
 
 
@@ -661,13 +664,19 @@ public class Conversions {
 
 
     public static <T> T coerceWithFlag(Class<T> clz, boolean [] flag, Object value) {
+
         return coerceWithFlag(Type.getType(clz), clz, flag, value);
     }
 
     public static <T> T coerceWithFlag(Type coerceTo, Class<T> clz, boolean [] flag, Object value) {
+
         flag[0] = true;
         if (value == null) {
             return null;
+        }
+
+        if (clz.isInstance(value)) {
+            return (T) value;
         }
 
         switch (coerceTo) {
@@ -813,6 +822,9 @@ public class Conversions {
 
             case ENUM:
                 return (T) toEnum((Class<? extends Enum>) clz, value);
+
+            case CLASS:
+                return (T) toClass(value);
 
 
             default:
@@ -1606,6 +1618,16 @@ public class Conversions {
             return 0; //will never get here.
         }
 
+    }
+
+
+
+    public static Class<?> toClass(Object value) {
+
+        if (value instanceof Class || value == null) {
+            return (Class<?>) value;
+        }
+        return toClass(value.toString());
     }
 
     public static Class<?> toClass(String str) {

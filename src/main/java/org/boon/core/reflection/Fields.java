@@ -29,7 +29,6 @@
 package org.boon.core.reflection;
 
 import org.boon.Sets;
-import org.boon.Str;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 

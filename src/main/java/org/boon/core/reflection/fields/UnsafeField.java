@@ -31,8 +31,10 @@ package org.boon.core.reflection.fields;
 import org.boon.Exceptions;
 import org.boon.core.Typ;
 import sun.misc.Unsafe;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+
 import static org.boon.Exceptions.die;
 
 

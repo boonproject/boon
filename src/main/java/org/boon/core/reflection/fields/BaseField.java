@@ -50,7 +50,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.core.Conversions.*;
-import static org.boon.core.Conversions.toFloat;
 
 public abstract class BaseField implements FieldAccess {
 

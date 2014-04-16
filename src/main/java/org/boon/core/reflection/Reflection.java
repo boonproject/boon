@@ -28,20 +28,29 @@
 
 package org.boon.core.reflection;
 
-import org.boon.*;
-import org.boon.core.*;
-import org.boon.core.reflection.fields.*;
+import org.boon.Exceptions;
+import org.boon.Lists;
+import org.boon.core.Function;
+import org.boon.core.Pair;
+import org.boon.core.Sys;
+import org.boon.core.Typ;
+import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.core.reflection.fields.PropertyField;
+import org.boon.core.reflection.fields.ReflectField;
+import org.boon.core.reflection.fields.UnsafeField;
 import sun.misc.Unsafe;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
-import static org.boon.Str.*;
+import static org.boon.Str.lower;
+import static org.boon.Str.slc;
 
 
 public class Reflection {

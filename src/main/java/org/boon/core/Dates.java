@@ -37,7 +37,9 @@ import org.boon.primitive.CharScanner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Dates {
 

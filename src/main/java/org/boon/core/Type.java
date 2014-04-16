@@ -28,7 +28,6 @@
 
 package org.boon.core;
 
-import java.security.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -242,17 +241,47 @@ public enum Type {
 
 
 
-    public  static List<Type> gatherTypes ( List<?> list ) {
+    public  static List<Object> gatherTypes ( List<?> list ) {
 
-        List<Type> types = new ArrayList();
+        List<Object> types = new ArrayList<>();
 
         for (Object o : list) {
-            types.add(Type.getInstanceType( o )) ;
+            if (o instanceof List) {
+                types.add(gatherTypes((List) o));
+            }
+            else {
+                types.add(Type.getInstanceType(o));
+            }
         }
 
         return types;
     }
 
+
+
+    public  static List<Object> gatherActualTypes ( List<?> list ) {
+
+        List<Object> types = new ArrayList<>();
+
+        for (Object o : list) {
+            if (o instanceof List) {
+                types.add(gatherActualTypes((List) o));
+            }
+            else {
+                types.add(Type.getActualType(o));
+            }
+        }
+
+        return types;
+    }
+
+    private static Object getActualType(Object o) {
+        if (o == null) {
+            return NULL;
+        } else {
+            return o.getClass().getSimpleName();
+        }
+    }
 
     public  static List<Type> gatherTypes ( Object... list ) {
 

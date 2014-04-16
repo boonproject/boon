@@ -28,9 +28,9 @@
 
 package org.boon.core.reflection.fields;
 
+import org.boon.core.Conversions;
 import org.boon.core.Type;
 import org.boon.core.Value;
-import org.boon.core.Conversions;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

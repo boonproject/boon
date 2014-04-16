@@ -29,8 +29,8 @@
 package org.boon.core.value;
 
 
-import org.boon.primitive.Arry;
 import org.boon.core.Value;
+import org.boon.primitive.Arry;
 
 import java.util.*;
 

@@ -28,18 +28,14 @@
 
 package org.boon.core.reflection;
 
-import org.boon.Lists;
 import org.boon.Sets;
-import org.boon.collections.ConcurrentHashSet;
 import org.boon.collections.MultiMap;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.impl.ConstructorAccessImpl;
 import org.boon.core.reflection.impl.MethodAccessImpl;
 
-import java.lang.invoke.CallSite;
 import java.lang.invoke.ConstantCallSite;
-import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

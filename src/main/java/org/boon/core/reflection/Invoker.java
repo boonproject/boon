@@ -32,26 +32,24 @@ package org.boon.core.reflection;
 import org.boon.Boon;
 import org.boon.Exceptions;
 import org.boon.Lists;
-import org.boon.Str;
-import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.value.ValueContainer;
 import org.boon.primitive.CharBuf;
 
 import java.lang.invoke.ConstantCallSite;
-import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import static org.boon.Boon.className;
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
-import static org.boon.core.Conversions.toEnum;
-import static org.boon.core.reflection.MapObjectConversion.fromList;
-
-import static org.boon.core.reflection.MapObjectConversion.fromMap;
+import static org.boon.Exceptions.handle;
+import static org.boon.core.Type.gatherTypes;
+import static org.boon.core.reflection.MapObjectConversion.matchAndConvertArgs;
 
 /**
  *
@@ -236,63 +234,96 @@ public class Invoker {
     }
 
 
-    public static Object invokeFromList(boolean respectIgnore, String view, Set<String> ignoreProperties, Class<?> cls, Object object, String name, List<?> args) {
-        List<Object> list = new ArrayList(args);
+
+    public static Object invokeFromList(boolean respectIgnore, String view, Set<String> ignoreProperties, Class<?> cls, Object object, String name, List<?> argsList) {
+        List<Object> convertedArguments = new ArrayList(argsList);
 
         ClassMeta classMeta = null;
         MethodAccess methodAccess = null;
         Class<?>[] parameterTypes = null;
+
+        boolean[] flag = new boolean[1];
+
+        /* The final arguments. */
+        Object[] finalArgs = null;
+
         try {
 
             classMeta = ClassMeta.classMeta(cls);
             methodAccess = classMeta.method(name);
             parameterTypes = methodAccess.parameterTypes();
 
-            if (list.size() != parameterTypes.length) {
+            if (convertedArguments.size() != parameterTypes.length) {
                 return die(Object.class, "The list size does not match the parameter" +
-                        " length of the method. Unable to invoke method", name, "on object", object, "with arguments", list);
+                        " length of the method. Unable to invoke method", name, "on object", object, "with arguments", convertedArguments);
             }
 
             FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);
 
             for (int index = 0; index < parameterTypes.length; index++) {
 
-                if (!matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, methodAccess, parameterTypes, index)) {
+                if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, convertedArguments, methodAccess, parameterTypes, index, ignoreProperties, flag)) {
                     return die(Object.class, index, "Unable to invoke method as argument types did not match",
-                            name, "on object", object, "with arguments", list,
-                            "\nValue at index = ", list.get(index));
+                            name, "on object", object, "with arguments", convertedArguments,
+                            "\nValue at index = ", convertedArguments.get(index));
                 }
 
             }
 
-            if (args == null && methodAccess.parameterTypes().length == 0) {
+            if (argsList == null && methodAccess.parameterTypes().length == 0) {
                 return methodAccess.invoke(object);
             } else {
-                return methodAccess.invoke(object, list.toArray(new Object[list.size()]));
+                finalArgs = convertedArguments.toArray(new Object[convertedArguments.size()]);
+                return methodAccess.invoke(object, finalArgs);
             }
         } catch (Exception ex) {
-            CharBuf buf = CharBuf.create(255);
-            buf.puts("ERROR INVOKING METHOD VIA LIST",
-                    "Unable to invoke method object", object, "name", name, " with args", args);
 
 
-            buf.puts("classMeta", classMeta);
-            buf.puts("methodAccess", methodAccess);
 
-            if (list!=null && parameterTypes!= null && list.size() != parameterTypes.length) {
-                buf.puts("SIZES DON'T MATCH", "The list size does not match the parameter" +
-                        " length of the method. Unable to invoke method", name, "on object", object, "with arguments", list);
-            } else {
+            if (methodAccess != null)  {
 
-                int index = 0;
-                for (Object o : list) {
-                    buf.puts (index, Str.lpad("value", 20),
-                            Str.lpad(Str.str(o), 20), Str.lpad(Boon.className(o), 20),
-                            "expected", Str.lpad(Str.str(parameterTypes[index]), 20));
-                    index++;
+
+                CharBuf buf = CharBuf.create(200);
+                buf.addLine();
+                buf.multiply('-', 10).add("FINAL ARGUMENTS").multiply('-', 10).addLine();
+                if (finalArgs!=null) {
+                    for (Object o : finalArgs) {
+                        buf.puts("argument type    ", className(o));
+                    }
                 }
+
+
+                buf.multiply('-', 10).add("INVOKE METHOD").add(methodAccess).multiply('-', 10).addLine();
+                buf.multiply('-', 10).add("INVOKE METHOD PARAMS").multiply('-', 10).addLine();
+                for (Class<?> c : methodAccess.parameterTypes()) {
+                    buf.puts("constructor type ", c);
+                }
+
+                buf.multiply('-', 35).addLine();
+
+                if (Boon.debugOn()) {
+                    puts(buf);
+                }
+
+                Boon.error( ex, "unable to create invoke method", buf );
+
+
+                return  handle(Object.class, ex, buf.toString(),
+                        "\nconstructor parameter types", methodAccess.parameterTypes(),
+                        "\noriginal args\n", argsList,
+                        "\nlist args after conversion", convertedArguments, "\nconverted types\n",
+                        gatherTypes(convertedArguments),
+                        "original types\n", gatherTypes(argsList), "\n");
+            } else {
+                return  handle(Object.class, ex,
+                        "\nlist args after conversion", convertedArguments, "types",
+                        gatherTypes(convertedArguments),
+                        "\noriginal args", argsList,
+                        "original types\n", gatherTypes(argsList), "\n");
+
             }
-            return Exceptions.handle(Object.class, ex, "Unable to invoke method object", object, "name", name, "args", args);
+
+
         }
 
 
@@ -307,6 +338,8 @@ public class Invoker {
             List<Object> list = new ArrayList(args);
             Class<?>[] parameterTypes = method.parameterTypes();
 
+            boolean[] flag = new boolean[1];
+
             if (list.size() != parameterTypes.length) {
                return die(Object.class, "Unable to invoke method", method.name(), "on object", object, "with arguments", list);
             }
@@ -315,7 +348,7 @@ public class Invoker {
 
             for (int index = 0; index < parameterTypes.length; index++) {
 
-                if (!matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, method, parameterTypes, index)) {
+                if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, list, method, parameterTypes, index, ignoreProperties, flag)) {
                     return die(Object.class, "Unable to invoke method as argument types did not match",
                             method.name(), "on object", object, "with arguments", list);
                 }
@@ -380,13 +413,19 @@ public class Invoker {
 
     }
 
-    public static Object invokeOverloadedFromList(boolean respectIgnore, String view, Set<String> ignoreProperties, Object object, String name, List<?> args) {
+    public static Object invokeOverloadedFromList(boolean respectIgnore,
+                                                  String view,
+                                                  Set<String> ignoreProperties,
+                                                  Object object,
+                                                  String name,
+                                                  List<?> args) {
         ClassMeta classMeta = ClassMeta.classMeta(object.getClass());
         Iterable<MethodAccess> invokers = classMeta.methods(name);
 
         List<Object> list = new ArrayList(args);
         FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);
 
+        boolean[] flag = new boolean[1];
 
         loop:
         for (MethodAccess m : invokers) {
@@ -395,7 +434,7 @@ public class Invoker {
                 continue;
             }
             for (int index = 0; index < parameterTypes.length; index++) {
-                if (!matchAndConvertArgs(respectIgnore, view, ignoreProperties, fieldsAccessor, list, m, parameterTypes, index)) {
+                if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, list, m, parameterTypes, index, ignoreProperties, flag)) {
                     continue loop;
                 }
             }
@@ -425,68 +464,6 @@ public class Invoker {
         }
     }
 
-    public static boolean matchAndConvertArgs(boolean respectIgnore, String view, Set<String> ignoreSet, FieldsAccessor fieldsAccessor, List<Object> list, MethodAccess method, Class[] parameterTypes, int index) {
-        try {
-
-            Class paramType;
-            Object item;
-            paramType = parameterTypes[index];
-            item = list.get(index);
-            if (item instanceof ValueContainer) {
-                item = ((ValueContainer) item).toValue();
-            }
-
-            if (Typ.isPrimitiveOrWrapper(paramType) &&
-                    (item instanceof Number || item instanceof Boolean || item instanceof CharSequence)) {
-
-                Object o = Conversions.coerceOrDie(paramType, item);
-                list.set(index, o);
-            } else if (item instanceof Map && !Typ.isMap(paramType)) {
-                list.set(index, fromMap(respectIgnore, view, fieldsAccessor, (Map<String, Object>) item, paramType, ignoreSet));
-            } else if (item instanceof List && !Typ.isList(paramType)) {
-                list.set(index, fromList(fieldsAccessor, (List<Object>) item, paramType));
-            } else if (Typ.isList(paramType) && item instanceof List) {
-                List<Object> itemList = (List<Object>) item;
-                if (itemList.size() > 0 && (itemList.get(0) instanceof List || itemList.get(0) instanceof ValueContainer)) {
-                    Type type = method.getGenericParameterTypes()[index];
-                    if (type instanceof ParameterizedType) {
-                        ParameterizedType pType = (ParameterizedType) type;
-                        Type type1 = pType.getActualTypeArguments()[0];
-
-                        Class<?> componentType = type1 instanceof Class ? (Class<?>) type1 : Object.class;
-                        List newList = new ArrayList(itemList.size());
-
-                        for (Object o : itemList) {
-                            if (o instanceof ValueContainer) {
-                                o = ((ValueContainer) o).toValue();
-                            }
-
-                            List fromList = (List) o;
-                            if (componentType != Object.class) {
-                                o = fromList(fieldsAccessor, fromList, componentType);
-                            }
-
-                            newList.add(o);
-                        }
-                        list.set(index, newList);
-
-                    }
-                }
-            } else if (paramType == Typ.string && item instanceof CharSequence) {
-                list.set(index, item.toString());
-            } else if (paramType == Class.class && item instanceof CharSequence) {
-                list.set(index, Conversions.toClass(item.toString()));
-            } else if (paramType.isEnum() && (item instanceof CharSequence | item instanceof Number)) {
-                list.set(index, toEnum(paramType, item));
-            } else if (!paramType.isInstance(item)) {
-                return false;
-            }
-        } catch (Exception ex) {
-            return false;
-        }
-
-        return true;
-    }
 
     public static <T> boolean invokeBooleanReturn(Object object, T v) {
         Class cls;

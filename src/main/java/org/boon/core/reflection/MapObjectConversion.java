@@ -28,9 +28,14 @@
 
 package org.boon.core.reflection;
 
-import org.boon.*;
-import org.boon.primitive.Arry;
-import org.boon.core.*;
+import org.boon.Boon;
+import org.boon.Lists;
+import org.boon.Maps;
+import org.boon.Sets;
+import org.boon.core.Conversions;
+import org.boon.core.Function;
+import org.boon.core.Typ;
+import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
@@ -38,19 +43,20 @@ import org.boon.core.value.ValueContainer;
 import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
+import org.boon.primitive.Arry;
 import org.boon.primitive.CharBuf;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
-import static org.boon.Boon.className;
-import static org.boon.Boon.puts;
-import static org.boon.Boon.sputs;
+import static org.boon.Boon.*;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.coerce;
-import static org.boon.core.Conversions.toEnum;
+import static org.boon.core.Type.gatherActualTypes;
 import static org.boon.core.Type.gatherTypes;
 
 
@@ -289,15 +295,24 @@ public class MapObjectConversion {
                     puts(buf);
                 }
 
+
+
+                buf.addLine("PARAMETER TYPES");
+                buf.add(Lists.list(constructorToMatch.parameterTypes())).addLine();
+
+                buf.addLine("ORIGINAL TYPES PASSED");
+                buf.add(gatherTypes(convertedArguments)).addLine();
+
+                buf.add(gatherActualTypes(convertedArguments)).addLine();
+
+                buf.addLine("CONVERTED ARGUMENT TYPES");
+                buf.add(gatherTypes(convertedArguments)).addLine();
+                buf.add(gatherActualTypes(convertedArguments)).addLine();
+
                 Boon.error( e, "unable to create object based on constructor", buf );
 
 
-                return ( T ) handle(Object.class, e, buf.toString(),
-                        "\nconstructor parameter types", constructorToMatch.parameterTypes(),
-                        "\nlist args after conversion", convertedArguments, "types",
-                        gatherTypes(convertedArguments),
-                        "\noriginal args", argList,
-                        "original types", gatherTypes(argList));
+                return ( T ) handle(Object.class, e, buf.toString());
             } else {
                 return ( T ) handle(Object.class, e,
                         "\nlist args after conversion", convertedArguments, "types",
@@ -349,10 +364,14 @@ public class MapObjectConversion {
      * @param index           index of argument
      * @return   true or false
      */
-    public static boolean matchAndConvertArgs( boolean respectIgnore, String view,
-                                               FieldsAccessor fieldsAccessor, List<Object> convertedArgumentList,
-                                               ConstructorAccess methodAccess,
-                                               Class[] parameterTypes, int index, Set<String> ignoreSet,
+    public static boolean matchAndConvertArgs( boolean respectIgnore,
+                                               String view,
+                                               FieldsAccessor fieldsAccessor,
+                                               List<Object> convertedArgumentList,
+                                               BaseAccess methodAccess,
+                                               Class[] parameterTypes,
+                                               int index,
+                                               Set<String> ignoreSet,
                                                boolean[] flag) {
 
 
@@ -372,23 +391,12 @@ public class MapObjectConversion {
 
             if ( item instanceof ValueContainer ) {
                 item = ( ( ValueContainer ) item ).toValue();
+
+                convertedArgumentList.set( index, item );
             }
 
 
 
-            switch (parameterType) {
-                case INT:
-                case SHORT:
-                case BYTE:
-                case BOOLEAN:
-                case CHAR:
-                case FLOAT:
-                case DOUBLE:
-                    if (item == null) {
-                        return false;
-                    }
-
-            }
 
             if (item == null) {
                 return true;
@@ -396,20 +404,32 @@ public class MapObjectConversion {
 
             switch (parameterType) {
                 case INT:
-                case INTEGER_WRAPPER:
                 case SHORT:
-                case SHORT_WRAPPER:
                 case BYTE:
-                case BYTE_WRAPPER:
                 case BOOLEAN:
-                case BOOLEAN_WRAPPER:
-                case CHAR_WRAPPER:
                 case CHAR:
                 case FLOAT:
-                case FLOAT_WRAPPER:
                 case DOUBLE:
+                case LONG:
+                    if (item == null) {
+                        return false;
+                    }
+
+
+                case INTEGER_WRAPPER:
+                case BYTE_WRAPPER:
+                case SHORT_WRAPPER:
+                case BOOLEAN_WRAPPER:
+                case CHAR_WRAPPER:
+                case FLOAT_WRAPPER:
                 case DOUBLE_WRAPPER:
-                    value = Conversions.coerceWithFlag( parameterClass, flag, item );
+                case STRING:
+                case CHAR_SEQUENCE:
+                case NUMBER:
+                case LONG_WRAPPER:
+                case CLASS:
+                case ENUM:
+                    value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
 
                     if (flag[0] == false) {
                         return false;
@@ -530,9 +550,10 @@ public class MapObjectConversion {
                     }
                     break;
 
+
+                case SET:
                 case COLLECTION:
                 case LIST:
-                case SET:
                     if (item instanceof List ) {
 
                         List<Object> itemList = ( List<Object> ) item;
@@ -552,8 +573,14 @@ public class MapObjectConversion {
                              */
                             if ( type instanceof ParameterizedType ) {
                                 ParameterizedType pType = ( ParameterizedType ) type;
-                                Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
 
+
+                                Class<?> componentType;
+                                if (! (pType.getActualTypeArguments()[0] instanceof Class)) {
+                                    componentType = Object.class;
+                                } else {
+                                    componentType = (Class<?>) pType.getActualTypeArguments()[0];
+                                }
 
                                 Collection newList =  Conversions.createCollection( parameterClass, itemList.size() );
 
@@ -562,9 +589,14 @@ public class MapObjectConversion {
                                         o = ( ( ValueContainer ) o ).toValue();
                                     }
 
-                                    List fromList = ( List ) o;
-                                    o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
-                                    newList.add( o );
+                                    if (componentType==Object.class) {
+                                        newList.add(o);
+                                    } else {
+
+                                        List fromList = ( List ) o;
+                                        o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
+                                        newList.add( o );
+                                    }
                                 }
                                 convertedArgumentList.set( index, newList );
                                 return true;
@@ -578,8 +610,8 @@ public class MapObjectConversion {
                         Type type = methodAccess.getGenericParameterTypes()[index];
                         if ( type instanceof ParameterizedType ) {
                             ParameterizedType pType = ( ParameterizedType ) type;
-                            Class<?> componentType = ( Class<?> ) pType.getActualTypeArguments()[0];
 
+                            Class<?> componentType = pType.getActualTypeArguments()[0] instanceof Class ? (Class<?>) pType.getActualTypeArguments()[0] : Object.class;
 
                             Collection newList =  Conversions.createCollection( parameterClass, itemList.size() );
 
@@ -589,8 +621,12 @@ public class MapObjectConversion {
                                     o = ( ( ValueContainer ) o ).toValue();
                                 }
                                 if (o instanceof List) {
-                                    List fromList = ( List ) o;
-                                    o = fromList( respectIgnore, view, fieldsAccessor, fromList, componentType, ignoreSet );
+
+                                    if (componentType != Object.class) {
+
+                                        List fromList = ( List ) o;
+                                        o = fromList(fieldsAccessor, fromList, componentType);
+                                    }
                                     newList.add( o );
                                 } else if (o instanceof Map) {
                                     Map fromMap = ( Map ) o;
@@ -610,13 +646,48 @@ public class MapObjectConversion {
                 }
                 return false;
 
-                case STRING:
-                case CHAR_SEQUENCE:
-                    convertedArgumentList.set( index, item.toString() );
-                    return true;
-                case ENUM:
-                    convertedArgumentList.set( index, toEnum( parameterClass, item ) );
-                    return true;
+
+                default:
+                    final org.boon.core.Type itemType = org.boon.core.Type.getInstanceType(item);
+
+                    switch (itemType) {
+                        case LIST:
+                            convertedArgumentList.set(index, fromList(respectIgnore, view, fieldsAccessor, (List<Object>) item, parameterClass, ignoreSet));
+                        case MAP:
+                        case VALUE_MAP:
+                            convertedArgumentList.set(index, fromMap(respectIgnore, view, fieldsAccessor, (Map<String, Object>) item, parameterClass, ignoreSet));
+
+                        case NUMBER:
+                        case BOOLEAN:
+                        case CHAR_SEQUENCE:
+                        case STRING:
+                        case INT:
+                        case SHORT:
+                        case BYTE:
+                        case FLOAT:
+                        case DOUBLE:
+                        case LONG:
+                        case DOUBLE_WRAPPER:
+                        case FLOAT_WRAPPER:
+                        case INTEGER_WRAPPER:
+                        case SHORT_WRAPPER:
+                        case BOOLEAN_WRAPPER:
+                        case BYTE_WRAPPER:
+                        case LONG_WRAPPER:
+                        case CLASS:
+                        case VALUE:
+
+                            value = Conversions.coerceWithFlag( parameterClass, flag, item );
+
+                            if (flag[0] == false) {
+                                return false;
+                            }
+                            convertedArgumentList.set( index, value );
+                            return true;
+
+
+                    }
+
 
 
             }
@@ -628,7 +699,7 @@ public class MapObjectConversion {
 
 
         } catch (Exception ex) {
-            Boon.error(ex, "PROBLEM WITH matchAndConvertArgs",
+            Boon.error(ex, "PROBLEM WITH oldMatchAndConvertArgs",
                     "respectIgnore", respectIgnore, "view", view,
                     "fieldsAccessor", fieldsAccessor, "list", convertedArgumentList,
                     "constructor", methodAccess, "parameters", parameterTypes,
@@ -808,7 +879,7 @@ public class MapObjectConversion {
             /* See if it is a map<string, object>, and if it is then process it.
              *  REFACTOR:
              *  It looks like we are using some utility classes here that we could have used in
-             *  matchAndConvertArgs.
+             *  oldMatchAndConvertArgs.
              *  REFACTOR
               * */
             else if ( value instanceof Map ) {

@@ -32,7 +32,6 @@ package org.boon.core.value;
 import org.boon.core.Type;
 import org.boon.core.Value;
 
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
