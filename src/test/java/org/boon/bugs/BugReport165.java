@@ -29,6 +29,9 @@ package org.boon.bugs;
 
 
 
+import org.boon.json.JsonFactory;
+import org.boon.json.ObjectMapper;
+import org.boon.json.implementation.ObjectMapperImpl;
 import org.junit.Test;
 
 import static org.boon.Boon.puts;
@@ -47,7 +50,43 @@ public class BugReport165 {
         long birthDate;
     }
 
-    public static void main (String... args) {
+
+    @Test
+    public void test2() {
+
+        Employee employee = new Employee();
+
+        ObjectMapper mapper = JsonFactory.create();
+
+        String json = mapper.toJson(employee);
+
+        puts(json);
+
+        employee.name = "Rick Hightower";
+
+        json = mapper.toJson(employee);
+
+        puts(json);
+
+        employee.birthDate = System.currentTimeMillis() - 60 * 1000 * 24 * 7 * 52 * 29;
+
+
+        json = mapper.toJson(employee);
+
+        puts(json);
+
+        Employee newEmployee = mapper.fromJson(json, Employee.class);
+
+        puts("New Employee", newEmployee.birthDate, newEmployee.name);
+
+
+        ok = newEmployee.name.equals("Rick Hightower") && newEmployee.birthDate > 0;
+
+    }
+
+    @Test
+    public void test1() {
+
         Employee employee = new Employee();
         String json = toJson(employee);
         puts(json);
@@ -71,10 +110,42 @@ public class BugReport165 {
 
 
         ok = newEmployee.name.equals("Rick Hightower") && newEmployee.birthDate > 0;
+
     }
 
+
+
     @Test
-    public void test() {
-        BugReport165.main();
+    public void test3() {
+
+        Employee employee = new Employee();
+
+        ObjectMapper mapper = new ObjectMapperImpl();
+        String json = mapper.toJson(employee);
+
+        puts(json);
+
+        employee.name = "Rick Hightower";
+
+        json = mapper.toJson(employee);
+
+        puts(json);
+
+        employee.birthDate = System.currentTimeMillis() - 60 * 1000 * 24 * 7 * 52 * 29;
+
+
+        json = mapper.toJson(employee);
+
+        puts(json);
+
+        Employee newEmployee = mapper.fromJson(json, Employee.class);
+
+        puts("New Employee", newEmployee.birthDate, newEmployee.name);
+
+
+        ok = newEmployee.name.equals("Rick Hightower") && newEmployee.birthDate > 0;
+
+
+
     }
 }
