@@ -510,8 +510,12 @@ public class Conversions {
                 return (T) toTimeZone( value);
 
 
+
             case UUID:
                 return (T) toUUID(value);
+
+            case OBJECT:
+                return (T) value;
 
             default:
                 return createFromArg(clz, value);
@@ -695,6 +699,9 @@ public class Conversions {
             case UUID:
                 return (T) toUUID(flag, value);
 
+
+            case OBJECT:
+                return (T) value;
 
             default:
                 flag[0] = false;

@@ -84,6 +84,7 @@ public class BugReport165AndIssue169 {
         private Path path;
         private Locale locale;
         private TimeZone timeZone;
+        private Class clz ;
 
         private static final AtomicLongFieldUpdater<Sample> EFFECTIVEDATE_UPDATER
                 = AtomicLongFieldUpdater.newUpdater(Sample.class, "effectiveDate");
@@ -102,6 +103,12 @@ public class BugReport165AndIssue169 {
             try {
                 uri = new URI("http://www.google.com");
             } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                clz = Class.forName("java.lang.Object");
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
@@ -141,6 +148,7 @@ public class BugReport165AndIssue169 {
                     '}';
         }
 
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -149,6 +157,7 @@ public class BugReport165AndIssue169 {
             Sample sample = (Sample) o;
 
             if (effectiveDate != sample.effectiveDate) return false;
+            if (clz != null ? !clz.equals(sample.clz) : sample.clz != null) return false;
             if (date != null ? !date.equals(sample.date) : sample.date != null) return false;
             if (file != null ? !file.equals(sample.file) : sample.file != null) return false;
             if (locale != null ? !locale.equals(sample.locale) : sample.locale != null) return false;
@@ -171,6 +180,7 @@ public class BugReport165AndIssue169 {
             result = 31 * result + (path != null ? path.hashCode() : 0);
             result = 31 * result + (locale != null ? locale.hashCode() : 0);
             result = 31 * result + (timeZone != null ? timeZone.hashCode() : 0);
+            result = 31 * result + (clz != null ? clz.hashCode() : 0);
             result = 31 * result + (int) (effectiveDate ^ (effectiveDate >>> 32));
             return result;
         }

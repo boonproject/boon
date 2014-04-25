@@ -292,6 +292,7 @@ public abstract class Criterion<VALUE> extends Criteria {
                     case SET:
                     case LIST:
                         this.value = (VALUE) Conversions.coerce(field.getComponentClass(), this.value);
+                        break;
                     default:
 
                         this.value = (VALUE) Conversions.coerce(field.type(), this.value);
@@ -430,6 +431,8 @@ public abstract class Criterion<VALUE> extends Criteria {
     public boolean test( Object o ) {
 
 
+        FieldAccess field = null;
+
         try {
 
             requireNonNull( o, "object under test can't be null" );
@@ -445,8 +448,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
             }
 
-
-            FieldAccess field = field();
+            field = field();
 
 
             if ( !path && field == null && o instanceof Map) {
