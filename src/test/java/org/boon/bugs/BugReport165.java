@@ -34,7 +34,13 @@ import org.boon.json.ObjectMapper;
 import org.boon.json.implementation.ObjectMapperImpl;
 import org.junit.Test;
 
+import java.io.Serializable;
+import java.net.URL;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
+
 import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 import static org.boon.json.JsonFactory.fromJson;
 import static org.boon.json.JsonFactory.toJson;
 
@@ -50,6 +56,55 @@ public class BugReport165 {
         long birthDate;
     }
 
+
+
+    /**
+     *
+     * @author l man
+     */
+    public static class Temporal
+            implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        //private static URL url = new URL("http://www.google.com");
+
+
+        public Temporal() {
+            this.persistId = UUID.randomUUID();
+            this.effectiveDate = System.currentTimeMillis();
+        }
+
+        private final UUID persistId;
+
+        public UUID getPersistId() {
+            return persistId;
+        }
+
+        private volatile long effectiveDate;
+        private static final AtomicLongFieldUpdater<Temporal> EFFECTIVEDATE_UPDATER
+                = AtomicLongFieldUpdater.newUpdater(Temporal.class, "effectiveDate");
+
+        public final long getEffectiveDate() {
+            return effectiveDate;
+        }
+
+        public final void setEffectiveDate(long effectiveDate) {
+            EFFECTIVEDATE_UPDATER.compareAndSet(this, this.effectiveDate, effectiveDate);
+        }
+
+    }
+
+
+    @Test
+    public void test4() {
+        Temporal temporal = new Temporal();
+        String json = JsonFactory.toJson(temporal);
+        puts(json);
+
+        ok = json.contains("\"effectiveDate\"") || die();
+
+    }
 
     @Test
     public void test2() {
@@ -80,9 +135,11 @@ public class BugReport165 {
         puts("New Employee", newEmployee.birthDate, newEmployee.name);
 
 
-        ok = newEmployee.name.equals("Rick Hightower") && newEmployee.birthDate > 0;
+        ok = newEmployee.name.equals("Rick Hightower") && newEmployee.birthDate > 0 || die();
 
     }
+
+
 
     @Test
     public void test1() {
@@ -109,7 +166,7 @@ public class BugReport165 {
         puts("New Employee", newEmployee.birthDate, newEmployee.name);
 
 
-        ok = newEmployee.name.equals("Rick Hightower") && newEmployee.birthDate > 0;
+        ok = newEmployee.name.equals("Rick Hightower") && newEmployee.birthDate > 0 || die();
 
     }
 
