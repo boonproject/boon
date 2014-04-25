@@ -28,10 +28,16 @@
 
 package org.boon.bugs;
 
+import org.boon.core.reflection.MapObjectConversion;
+import org.boon.json.*;
+import org.boon.json.implementation.JsonFastParser;
+import org.boon.json.implementation.ObjectMapperImpl;
+import org.boon.json.serializers.impl.JsonSerializerImpl;
 import org.boon.primitive.Arry;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.boon.Boon.fromJson;
 import static org.boon.Boon.puts;
@@ -93,6 +99,14 @@ public class BugReport167 {
 
 
     public static void main(String... args) {
+        BugReport167 test = new  BugReport167();
+
+        test.test();
+        test.test2();
+    }
+
+    @Test
+    public void test() {
         user = new User("red", "yellow", "green", "purple");
         puts(user.getFavoriteColors());
 
@@ -105,11 +119,68 @@ public class BugReport167 {
 
         ok = user.equals(user2) || die("Users should be equal", user, user2);
 
-
     }
 
     @Test
-    public void test() {
-        BugReport167.main();
+    public void test2() {
+        user = new User("red", "yellow", "green", "purple");
+        puts(user.getFavoriteColors());
+
+
+        final ObjectMapper objectMapper = JsonFactory.createUseAnnotations(true);
+
+        json = objectMapper.toJson(user);
+        puts(json);
+
+        user2 = objectMapper.fromJson(json, User.class);
+
+        puts(user.getFavoriteColors());
+
+        ok = user.equals(user2) || die("Users should be equal", user, user2);
+
     }
+
+
+
+    @Test
+    public void test3() {
+        user = new User("red", "yellow", "green", "purple");
+        puts(user.getFavoriteColors());
+
+
+        final JsonParserFactory jsonParserFactory = new JsonParserFactory().usePropertiesFirst().useAnnotations();
+        final JsonSerializerFactory serializerFactory = new JsonSerializerFactory().includeNulls().useAnnotations();
+        final ObjectMapper objectMapper = new ObjectMapperImpl(jsonParserFactory, serializerFactory);
+
+        json = objectMapper.toJson(user);
+        puts(json);
+
+        user2 = objectMapper.fromJson(json, User.class);
+
+        puts(user.getFavoriteColors());
+
+        ok = user.equals(user2) || die("Users should be equal", user, user2);
+
+    }
+
+
+    @Test
+    public void test4() {
+        user = new User("red", "yellow", "green", "purple");
+        puts(user.getFavoriteColors());
+
+        JsonParser parser = new JsonFastParser();
+        JsonSerializer serializer = new JsonSerializerImpl();
+
+        json = serializer.serialize(user).toString();
+        puts(json);
+
+        user2 = MapObjectConversion.fromMap( (Map)parser.parse(json), User.class);
+
+        puts(user.getFavoriteColors());
+
+        ok = user.equals(user2) || die("Users should be equal", user, user2);
+
+    }
+
 }
