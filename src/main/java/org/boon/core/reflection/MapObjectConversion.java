@@ -869,7 +869,7 @@ public class MapObjectConversion {
             the field just takes an object, then inject what we have as is.
              */
             if ( value.getClass() == field.type() || field.type() == Object.class) {
-                field.setObject( toObject, value );
+                field.setValue( toObject, value );
             } else if ( Typ.isBasicType( value ) ) {
 
                 field.setValue(toObject, value);
@@ -970,7 +970,7 @@ public class MapObjectConversion {
 
         }
 
-        field.setObject( toObject, value );
+        field.setValue( toObject, value );
 
     }
 
@@ -1129,7 +1129,7 @@ public class MapObjectConversion {
                 } else {
                     objectValue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objectValue, ignoreSet );
                 }
-                field.setObject( newInstance, objectValue );
+                field.setValue( newInstance, objectValue );
             } else if ( objectValue instanceof Collection ) {
                 handleCollectionOfValues( respectIgnore, view, fieldsAccessor, newInstance, field,
                         ( Collection<Value> ) objectValue, ignoreSet );
@@ -1219,7 +1219,7 @@ public class MapObjectConversion {
                             objValue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objValue, ignoreSet );
                         }
                     }
-                    field.setObject( newInstance, objValue );
+                    field.setValue( newInstance, objValue );
                 } else if ( objValue instanceof Collection ) {
                     handleCollectionOfValues( respectIgnore, view, fieldsAccessor, newInstance, field,
                             ( Collection<Value> ) objValue, ignoreSet );
@@ -1307,13 +1307,13 @@ public class MapObjectConversion {
             if (collection instanceof List) {
                 try {
                     Object value = fromList(respectIgnore, view, fieldsAccessor, (List) collection, field.getComponentClass(), ignoreSet);
-                    field.setObject(newInstance, value);
+                    field.setValue(newInstance, value);
                 } catch  (Exception ex) {
                     //There is an edge case that needs this. We need a coerce that takes respectIngore, etc.
-                    field.setObject(newInstance, coerce(field.typeEnum(), field.type(), collection));
+                    field.setValue(newInstance, collection);
                 }
             } else {
-                field.setObject(newInstance, coerce(field.typeEnum(), field.type(), collection));
+                field.setValue(newInstance, collection);
             }
             return;
         }

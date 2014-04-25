@@ -326,6 +326,7 @@ public abstract class BaseField implements FieldAccess {
         bits.set(QUALIFIED, bits.get(FINAL) || bits.get(VOLATILE));
         bits.set(READ_ONLY, bits.get(FINAL) );
         bits.set(IGNORE, Modifier.isTransient ( field.getModifiers () ));
+        bits.set(IGNORE, Modifier.isStatic ( field.getModifiers () ));
 
         parentType = field.getDeclaringClass();
 
@@ -415,7 +416,6 @@ public abstract class BaseField implements FieldAccess {
     public final void setValue ( Object obj, Object value ) {
 
         if (this.isPrimitive() && value == null) {
-            //TODO log this as debug
             return;
         }
 
@@ -447,6 +447,7 @@ public abstract class BaseField implements FieldAccess {
             case DATE:
                 this.setObject ( obj, toDate ( value ) );
                 return;
+
             case STRING:
                 if (value instanceof String)  {
                     this.setObject ( obj, value );
@@ -480,35 +481,42 @@ public abstract class BaseField implements FieldAccess {
             case SET:
                  this.setObject ( obj, Conversions.toCollection ( type, value ) );
                  return;
-            case CLASS:
-                try {
-                    this.setObject( obj, Class.forName(value.toString()));
-                } catch (ClassNotFoundException e) {
-                }
-                return;
 
             default:
-                if ( value != null ) {
-                    if ( value.getClass () == this.type ) {
-                        this.setObject ( obj, value );
-                    } else if ( type.isInstance( value)) {
-                        this.setObject ( obj, value );
-                    } else {
+                if ( value == null ) {
+                    this.setObject ( obj, null );
+                    return;
+                }
 
-                        Object object = Conversions.coerce( typeEnum, type, value );
-                        if (object != null && this.type.isAssignableFrom( object.getClass() )) {
-                            this.setObject ( obj, object );
-                        } else {
-                            if (object != null) {
+                if ( value.getClass () == this.type ) {
+                        this.setObject ( obj, value );
+                        return;
+                } else if ( type.isInstance( value)) {
+                        this.setObject ( obj, value );
+                        return;
+                } else {
+
+                    Object object = Conversions.coerce( typeEnum, type, value );
+
+                    if (object == null) {
+                        die("Unable to convert", value, "to", typeEnum, type);
+                        return;
+                    }
+
+                    if ( object.getClass () == this.type ) {
+                        this.setObject ( obj, object );
+                        return;
+                    } else if ( type.isInstance( object)) {
+                        this.setObject ( obj, object );
+                        return;
+                    }  else if (object != null) {
                                 die(sputs("Unable to set value into field after conversion was called",
                                     this, "converted value", object, "original value", value, "field", this,
                                     "converted object type", object.getClass()
                                         ));
-                            }
-                        }
+
+
                     }
-                } else {
-                    this.setObject ( obj, null );
                 }
 
         }
@@ -587,11 +595,15 @@ public abstract class BaseField implements FieldAccess {
             case DATE:
                 this.setObject ( obj, value.dateValue () );
                 return;
+
+
+
+
             case ENUM:
                 this.setObject ( obj, value.toEnum (  ( Class<? extends Enum> )type ) );
                 return;
             default:
-                setObject ( obj, coerce ( typeEnum, type, value.toValue() ) );
+                setValue(obj, value.toValue());
         }
 
     }

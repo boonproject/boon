@@ -28,10 +28,7 @@
 
 package org.boon.core;
 
-import org.boon.Boon;
-import org.boon.Lists;
-import org.boon.Str;
-import org.boon.StringScanner;
+import org.boon.*;
 import org.boon.core.reflection.*;
 import org.boon.primitive.Arry;
 
@@ -364,6 +361,42 @@ public class Conversions {
         return coerce(Type.getType(clz), clz, value);
     }
 
+    public static <T> T createFromArg(Class<T> clz, Object value) {
+        if (value == null) {
+            return Reflection.newInstance(clz);
+        }
+        ClassMeta meta = ClassMeta.classMeta(clz);
+        List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
+
+        if (constructors.size() == 0) {
+            return null;
+        } else if (constructors.size() == 1) {
+            ConstructorAccess constructorAccess = constructors.get(0);
+            Class<?> arg1Type = constructorAccess.parameterTypes()[0];
+            if (arg1Type.isInstance(value)) {
+                return (T) constructorAccess.create(value);
+            } else {
+                return (T) constructorAccess.create(coerce(arg1Type, value));
+            }
+        } else {
+            for (ConstructorAccess c : constructors) {
+                Class<?> arg1Type = c.parameterTypes()[0];
+                if (arg1Type.isInstance(value)) {
+                    return (T) c.create(value);
+                }
+            }
+
+
+            for (ConstructorAccess c : constructors) {
+                Class<?> arg1Type = c.parameterTypes()[0];
+                if (arg1Type.isAssignableFrom(value.getClass())) {
+                    return (T) c.create(value);
+                }
+            }
+        }
+        return null;
+    }
+
     public static <T> T coerce(Type coerceTo, Class<T> clz, Object value) {
         if (value == null) {
             if (coerceTo != Type.INSTANCE && !clz.isPrimitive()) {
@@ -459,208 +492,35 @@ public class Conversions {
                 } else if (clz.isInstance(value)) {
                     return (T) value;
                 } else {
-                    if (value == null) {
-                        return Reflection.newInstance(clz);
-                    }
-                    ClassMeta meta = ClassMeta.classMeta(clz);
-                    List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
-
-                    if (constructors.size() == 0) {
-                        return null;
-                    } else if (constructors.size() == 1) {
-                        ConstructorAccess constructorAccess = constructors.get(0);
-                        Class<?> arg1Type = constructorAccess.parameterTypes()[0];
-                        if (arg1Type.isInstance(value)) {
-                            return (T) constructorAccess.create(value);
-                        } else {
-                            return (T) constructorAccess.create(coerce(arg1Type, value));
-                        }
-                    } else {
-                        for (ConstructorAccess c : constructors) {
-                            Class<?> arg1Type = c.parameterTypes()[0];
-                            if (arg1Type.isInstance(value)) {
-                                return (T) c.create(value);
-                            }
-                        }
-
-
-                        for (ConstructorAccess c : constructors) {
-                            Class<?> arg1Type = c.parameterTypes()[0];
-                            if (arg1Type.isAssignableFrom(value.getClass())) {
-                                return (T) c.create(value);
-                            }
-                        }
-                    }
-
+                    return createFromArg(clz, value);
                 }
 
             case ENUM:
                 return (T) toEnum((Class<? extends Enum>) clz, value);
 
 
-            default:
-                return (T) value;
-        }
-    }
-
-    public static <T> T coerceOrDie(Class<T> clz, Object value) {
-        return coerceOrDie(Type.getType(clz), clz, value);
-    }
-
-    public static <T> T coerceOrDie(Type coerceTo, Class<T> clz, Object value) {
-        if (value == null) {
-            return null;
-        }
-
-        switch (coerceTo) {
-            case STRING:
-            case CHAR_SEQUENCE:
-                return (T) value.toString();
-
-            case INT:
-            case INTEGER_WRAPPER:
-                Integer i = toInt(value);
-                if (i == Integer.MIN_VALUE) {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-                }
-                return (T) i;
+            case PATH:
+                return (T) IO.path(value.toString());
 
 
-            case SHORT:
-            case SHORT_WRAPPER:
-                Short s = toShort(value);
-                if (s == Short.MIN_VALUE) {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-                }
-                return (T) s;
+            case CLASS:
+                return (T) toClass(value);
+
+            case TIME_ZONE:
+                return (T) toTimeZone( value);
 
 
-            case BYTE:
-            case BYTE_WRAPPER:
-                Byte by = toByte(value);
-                if (by == Byte.MIN_VALUE) {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-                }
-                return (T) by;
-
-
-            case CHAR:
-            case CHAR_WRAPPER:
-                Character ch = toChar(value);
-                if (ch == (char) 0) {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-                }
-                return (T) ch;
-
-            case LONG:
-            case LONG_WRAPPER:
-                Long l = toLong(value);
-                if (l == Long.MIN_VALUE) {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-                }
-
-                return (T) l;
-
-            case DOUBLE:
-            case DOUBLE_WRAPPER:
-                Double d = toDouble(value);
-                if (d == Double.MIN_VALUE) {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-                }
-
-                return (T) d;
-
-
-            case FLOAT:
-            case FLOAT_WRAPPER:
-                Float f = toFloat(value);
-                if (f == Float.MIN_VALUE) {
-                    return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-                }
-                return (T) f;
-
-            case DATE:
-                return (T) toDate(value);
-
-            case BIG_DECIMAL:
-                return (T) toBigDecimal(value);
-
-
-            case BIG_INT:
-                return (T) toBigInteger(value);
-
-            case CALENDAR:
-                return (T) toCalendar(toDate(value));
-
-
-            case BOOLEAN:
-            case BOOLEAN_WRAPPER:
-                return (T) (Boolean) toBooleanOrDie(value);
-
-            case MAP:
-                if (value instanceof Map) {
-                    return (T) value;
-                }
-                return (T) toMap(value);
-
-            case ARRAY:
-                return toPrimitiveArrayIfPossible(clz, value);
-
-            case COLLECTION:
-                return toCollection(clz, value);
-
-            case INSTANCE:
-                if (value instanceof Map) {
-                    return MapObjectConversion.fromMap((Map<String, Object>) value, clz);
-                } else if (value instanceof List) {
-                    return MapObjectConversion.fromList((List<Object>) value, clz);
-                } else if (clz.isInstance(value)) {
-                    return (T) value;
-                } else {
-                    ClassMeta meta = ClassMeta.classMeta(clz);
-                    List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
-
-                    if (constructors.size() == 0) {
-                        return null;
-                    } else if (constructors.size() == 1) {
-                        ConstructorAccess constructorAccess = constructors.get(0);
-                        Class<?> arg1Type = constructorAccess.parameterTypes()[0];
-                        if (arg1Type.isInstance(value)) {
-                            return (T) constructorAccess.create(value);
-                        } else {
-                            return (T) constructorAccess.create(coerce(arg1Type, value));
-                        }
-                    } else {
-                        for (ConstructorAccess c : constructors) {
-                            Class<?> arg1Type = c.parameterTypes()[0];
-                            if (arg1Type.isInstance(value)) {
-                                return (T) c.create(value);
-                            }
-                        }
-
-
-                        for (ConstructorAccess c : constructors) {
-                            Class<?> arg1Type = c.parameterTypes()[0];
-                            if (arg1Type.isAssignableFrom(value.getClass())) {
-                                return (T) c.create(value);
-                            }
-                        }
-
-                        return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
-
-                    }
-                }
-
-
-            case ENUM:
-                return (T) toEnum((Class<? extends Enum>) clz, value);
-
+            case UUID:
+                return (T) toUUID(value);
 
             default:
-                return (T) die(Object.class, "Unable to convert to ", coerceTo, "from", value);
+                return createFromArg(clz, value);
         }
     }
 
+    private static UUID toUUID(Object value) {
+        return UUID.fromString(value.toString());
+    }
 
 
     public static <T> T coerceWithFlag(Class<T> clz, boolean [] flag, Object value) {
@@ -700,6 +560,7 @@ public class Conversions {
                     flag[0] = false;
                 }
                 return (T) s;
+
 
 
             case BYTE:
@@ -827,12 +688,36 @@ public class Conversions {
                 return (T) toClass(value);
 
 
+            case TIME_ZONE:
+                return (T) toTimeZone(flag, value);
+
+
+            case UUID:
+                return (T) toUUID(flag, value);
+
+
             default:
                 flag[0] = false;
                 break;
         }
         return null;
     }
+
+    private static UUID toUUID(boolean[] flag, Object value) {
+        return toUUID(value);
+    }
+
+    public static TimeZone toTimeZone(boolean[] flag, Object value) {
+        String id = value.toString();
+        return TimeZone.getTimeZone(id);
+    }
+
+
+    public static TimeZone toTimeZone(Object value) {
+        String id = value.toString();
+        return TimeZone.getTimeZone(id);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> T coerceClassic(Class<T> clz, Object value) {
 

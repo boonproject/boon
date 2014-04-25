@@ -37,7 +37,7 @@ public enum Type {
     DATE, NUMBER, LONG_WRAPPER, INTEGER_WRAPPER, SHORT_WRAPPER, CHAR_WRAPPER, BOOLEAN_WRAPPER,
     BYTE_WRAPPER, FLOAT_WRAPPER, DOUBLE_WRAPPER,
     INTEGER, STRING, DOUBLE, TRUE, FALSE, NULL, MAP, LIST, SET, CHAR_SEQUENCE,
-    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI, VOID;
+    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI, VOID, FILE, PATH, UUID, LOCALE, TIME_ZONE;
 
 
 
@@ -145,12 +145,6 @@ public enum Type {
 
 
 
-                case "java.net.URL":
-                    return Type.URL;
-
-
-                case "java.net.URI":
-                    return Type.URL;
 
                 case "java.lang.Long":
                     return Type.LONG_WRAPPER;
@@ -204,6 +198,31 @@ public enum Type {
 
                 case "java.lang.Object":
                     return Type.OBJECT;
+
+                case "java.io.File":
+                    return Type.FILE;
+
+                case "java.net.URI":
+                    return Type.URI;
+
+                case "java.net.URL":
+                    return Type.URL;
+
+                case "java.nio.file.Path":
+                    return Type.PATH;
+
+                case "java.util.UUID":
+                    return Type.UUID;
+
+
+                case "java.util.Locale":
+                    return Type.LOCALE;
+
+
+                case "java.util.TimeZone":
+                    return Type.TIME_ZONE;
+
+
 
             }
             return Type.INSTANCE;

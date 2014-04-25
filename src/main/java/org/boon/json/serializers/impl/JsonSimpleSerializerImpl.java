@@ -151,6 +151,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             }
 
             switch ( typeEnum ) {
+
                 case INT:
                     int value = fieldAccess.getInt ( parent );
                     if (value !=0) {
@@ -340,6 +341,15 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                 case SYSTEM:
                     return false;
 
+
+                case TIME_ZONE:
+
+                    serializeFieldName ( fieldName, builder );
+                    TimeZone zone = (TimeZone) value;
+
+                    builder.addQuoted ( zone.getID() );
+                    return true;
+
                 default:
                     serializeFieldName ( fieldName, builder );
                     serializeUnknown(value, builder);
@@ -440,6 +450,13 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             case ENUM:
                 builder.addQuoted ( obj.toString () );
                 return;
+
+            case TIME_ZONE:
+                TimeZone zone = (TimeZone) obj;
+
+                builder.addQuoted ( zone.getID() );
+                return;
+
 
             case COLLECTION:
             case LIST:
