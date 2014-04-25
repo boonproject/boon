@@ -236,24 +236,17 @@ public class MapObjectConversion {
         try {
 
 
-            /* Iterate through the constructors and see if one matches the arguments passed after coercion. */
-            loop:
-            for ( ConstructorAccess constructor : classMeta.constructors() ) {
+            constructorToMatch = lookupConstructorMeta(respectIgnore,
+                    view, fieldsAccessor, ignoreSet, size,
+                    convertedArguments, classMeta, constructorToMatch, flag, false);
 
-                /* Get the parameters on the constructor and see if the size matches what was passed. */
-                Class[] parameterTypes = constructor.parameterTypes();
-                if ( parameterTypes.length == size ) {
-
-                    /* Iterate through each parameter and see if it can be converted. */
-                    for ( int index = 0; index < size; index++ ) {
-                        /* The match and convert does the bulk of the work. */
-                        if ( !matchAndConvertArgs( respectIgnore, view,
-                                fieldsAccessor, convertedArguments, constructor,
-                                parameterTypes, index, ignoreSet, flag ) ) continue loop;
-                    }
-                    constructorToMatch = constructor;
-                }
+            if (constructorToMatch == null) {
+                constructorToMatch = lookupConstructorMeta(respectIgnore,
+                        view, fieldsAccessor, ignoreSet, size,
+                        convertedArguments, classMeta, constructorToMatch, flag, true);
             }
+
+
 
 
             /* If we were not able to match then we bail. */
@@ -325,6 +318,33 @@ public class MapObjectConversion {
 
     }
 
+    private static <T> ConstructorAccess<T> lookupConstructorMeta(boolean respectIgnore,
+                                                                  String view, FieldsAccessor fieldsAccessor,
+                                                                  Set<String> ignoreSet, int size,
+                                                                  List<Object> convertedArguments,
+                                                                  ClassMeta<T> classMeta,
+                                                                  ConstructorAccess<T> constructorToMatch,
+                                                                  boolean[] flag, boolean loose) {
+    /* Iterate through the constructors and see if one matches the arguments passed after coercion. */
+        loop:
+        for ( ConstructorAccess constructor : classMeta.constructors() ) {
+
+            /* Get the parameters on the constructor and see if the size matches what was passed. */
+            Class[] parameterTypes = constructor.parameterTypes();
+            if ( parameterTypes.length == size ) {
+
+                /* Iterate through each parameter and see if it can be converted. */
+                for ( int index = 0; index < size; index++ ) {
+                    /* The match and convert does the bulk of the work. */
+                    if ( !matchAndConvertArgs( respectIgnore, view,
+                            fieldsAccessor, convertedArguments, constructor,
+                            parameterTypes, index, ignoreSet, flag, loose ) ) continue loop;
+                }
+                constructorToMatch = constructor;
+            }
+        }
+        return constructorToMatch;
+    }
 
 
     /** Convert an item from a list into a class using the classes constructor.
@@ -372,7 +392,7 @@ public class MapObjectConversion {
                                                Class[] parameterTypes,
                                                int index,
                                                Set<String> ignoreSet,
-                                               boolean[] flag) {
+                                               boolean[] flag, boolean loose) {
 
 
         Object value;
@@ -423,12 +443,32 @@ public class MapObjectConversion {
                 case CHAR_WRAPPER:
                 case FLOAT_WRAPPER:
                 case DOUBLE_WRAPPER:
-                case STRING:
                 case CHAR_SEQUENCE:
                 case NUMBER:
                 case LONG_WRAPPER:
+                    if (!loose && item instanceof CharSequence) {
+                        return false;
+                    }
+
+
+                    value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
+
+                    if (flag[0] == false) {
+                        return false;
+                    }
+                    convertedArgumentList.set( index, value );
+                    return true;
+
+
+
                 case CLASS:
                 case ENUM:
+                case STRING:
+                    if (!loose && !(item instanceof CharSequence)) {
+                        return false;
+                    }
+
+
                     value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
 
                     if (flag[0] == false) {
@@ -659,8 +699,6 @@ public class MapObjectConversion {
 
                         case NUMBER:
                         case BOOLEAN:
-                        case CHAR_SEQUENCE:
-                        case STRING:
                         case INT:
                         case SHORT:
                         case BYTE:
@@ -676,6 +714,18 @@ public class MapObjectConversion {
                         case LONG_WRAPPER:
                         case CLASS:
                         case VALUE:
+                            value = Conversions.coerceWithFlag( parameterClass, flag, item );
+
+                            if (flag[0] == false) {
+                                return false;
+                            }
+                            convertedArgumentList.set( index, value );
+                            return true;
+
+
+
+                        case CHAR_SEQUENCE:
+                        case STRING:
 
                             value = Conversions.coerceWithFlag( parameterClass, flag, item );
 
@@ -684,6 +734,7 @@ public class MapObjectConversion {
                             }
                             convertedArgumentList.set( index, value );
                             return true;
+
 
 
                     }
@@ -869,7 +920,7 @@ public class MapObjectConversion {
             the field just takes an object, then inject what we have as is.
              */
             if ( value.getClass() == field.type() || field.type() == Object.class) {
-                field.setValue( toObject, value );
+                field.setValue(toObject, value);
             } else if ( Typ.isBasicType( value ) ) {
 
                 field.setValue(toObject, value);
@@ -970,7 +1021,7 @@ public class MapObjectConversion {
 
         }
 
-        field.setValue( toObject, value );
+        field.setValue(toObject, value);
 
     }
 
@@ -1129,7 +1180,7 @@ public class MapObjectConversion {
                 } else {
                     objectValue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objectValue, ignoreSet );
                 }
-                field.setValue( newInstance, objectValue );
+                field.setValue(newInstance, objectValue);
             } else if ( objectValue instanceof Collection ) {
                 handleCollectionOfValues( respectIgnore, view, fieldsAccessor, newInstance, field,
                         ( Collection<Value> ) objectValue, ignoreSet );
@@ -1219,7 +1270,7 @@ public class MapObjectConversion {
                             objValue = fromValueMap( respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objValue, ignoreSet );
                         }
                     }
-                    field.setValue( newInstance, objValue );
+                    field.setValue(newInstance, objValue);
                 } else if ( objValue instanceof Collection ) {
                     handleCollectionOfValues( respectIgnore, view, fieldsAccessor, newInstance, field,
                             ( Collection<Value> ) objValue, ignoreSet );
@@ -1555,7 +1606,7 @@ public class MapObjectConversion {
             }
         }
         else  {
-            field.setObject( newInstance, fromList( fieldsAccessor,  (List) acollectionOfValues, field.type()));
+            field.setObject(newInstance, fromList(fieldsAccessor, (List) acollectionOfValues, field.type()));
         }
 
     }

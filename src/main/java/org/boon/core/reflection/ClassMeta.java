@@ -28,6 +28,7 @@
 
 package org.boon.core.reflection;
 
+import org.boon.Lists;
 import org.boon.Sets;
 import org.boon.collections.MultiMap;
 import org.boon.core.Typ;
@@ -56,7 +57,7 @@ public class ClassMeta <T> implements Annotated{
 
     final Map<String, MethodAccess> methodMap;
 
-    final Set<ConstructorAccess<T>> constructorAccessSet;
+    final List<ConstructorAccess<T>> constructorAccessSet;
 
     final MultiMap<String, MethodAccess> methodsMulti;
     final List <MethodAccess> methods;
@@ -149,7 +150,7 @@ public class ClassMeta <T> implements Annotated{
 
         ConstructorAccess noArg = null;
 
-        Set set = new HashSet();
+        Set set = new LinkedHashSet();
 
         for (Constructor constructor : constructors ) {
             if (constructor.getParameterTypes().length == 0 ) {
@@ -161,7 +162,7 @@ public class ClassMeta <T> implements Annotated{
 
         this.noArgConstructor = noArg;
 
-        this.constructorAccessSet = (Set<ConstructorAccess<T>> ) Sets.safeSet(set);
+        this.constructorAccessSet = (List<ConstructorAccess<T>> ) Lists.safeList(set);
 
         List<Class<?>> classes = getBaseClassesSuperFirst(cls);
 

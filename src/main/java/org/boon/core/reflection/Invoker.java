@@ -233,49 +233,62 @@ public class Invoker {
 
     }
 
+    private static Object[] convertArguments(boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                                 Object object,  List<?> argsList, MethodAccess methodAccess
+                                                  ) {
 
-
-    public static Object invokeFromList(boolean respectIgnore, String view, Set<String> ignoreProperties, Class<?> cls, Object object, String name, List<?> argsList) {
         List<Object> convertedArguments = new ArrayList(argsList);
-
-        ClassMeta classMeta = null;
-        MethodAccess methodAccess = null;
-        Class<?>[] parameterTypes = null;
+        Class<?>[] parameterTypes = methodAccess.parameterTypes();
 
         boolean[] flag = new boolean[1];
 
-        /* The final arguments. */
-        Object[] finalArgs = null;
+        if (convertedArguments.size() != parameterTypes.length) {
+            return die(Object[].class, "The list size does not match the parameter" +
+                    " length of the method. Unable to invoke method", methodAccess.name(), "on object", object, "with arguments", convertedArguments);
+        }
+
+        FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);
+
+
+
+        for (int index = 0; index < parameterTypes.length; index++) {
+
+            if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, convertedArguments, methodAccess, parameterTypes, index, ignoreProperties, flag, true)) {
+                return die(Object[].class, index, "Unable to invoke method as argument types did not match",
+                        methodAccess.name(), "on object", object, "with arguments", convertedArguments,
+                        "\nValue at index = ", convertedArguments.get(index));
+            }
+
+        }
+
+        return convertedArguments.toArray(new Object[convertedArguments.size()]);
+    }
+
+
+    public static Object invokeFromList(boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                        Class<?> cls, Object object,
+                                        String name, List<?> argsList) {
+
+
+
+
+        Object[] finalArgs=null;
+        ClassMeta classMeta;
+        MethodAccess methodAccess;
+
+
+        classMeta = ClassMeta.classMeta(cls);
+        methodAccess = classMeta.method(name);
+
 
         try {
+            finalArgs = convertArguments(respectIgnore, view, ignoreProperties,
+                    object, argsList, methodAccess
+                    );
 
-            classMeta = ClassMeta.classMeta(cls);
-            methodAccess = classMeta.method(name);
-            parameterTypes = methodAccess.parameterTypes();
+            return methodAccess.invoke(object, finalArgs);
 
-            if (convertedArguments.size() != parameterTypes.length) {
-                return die(Object.class, "The list size does not match the parameter" +
-                        " length of the method. Unable to invoke method", name, "on object", object, "with arguments", convertedArguments);
-            }
 
-            FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);
-
-            for (int index = 0; index < parameterTypes.length; index++) {
-
-                if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, convertedArguments, methodAccess, parameterTypes, index, ignoreProperties, flag)) {
-                    return die(Object.class, index, "Unable to invoke method as argument types did not match",
-                            name, "on object", object, "with arguments", convertedArguments,
-                            "\nValue at index = ", convertedArguments.get(index));
-                }
-
-            }
-
-            if (argsList == null && methodAccess.parameterTypes().length == 0) {
-                return methodAccess.invoke(object);
-            } else {
-                finalArgs = convertedArguments.toArray(new Object[convertedArguments.size()]);
-                return methodAccess.invoke(object, finalArgs);
-            }
         } catch (Exception ex) {
 
 
@@ -311,13 +324,13 @@ public class Invoker {
                 return  handle(Object.class, ex, buf.toString(),
                         "\nconstructor parameter types", methodAccess.parameterTypes(),
                         "\noriginal args\n", argsList,
-                        "\nlist args after conversion", convertedArguments, "\nconverted types\n",
-                        gatherTypes(convertedArguments),
+                        "\nlist args after conversion", finalArgs, "\nconverted types\n",
+                        gatherTypes(finalArgs),
                         "original types\n", gatherTypes(argsList), "\n");
             } else {
                 return  handle(Object.class, ex,
-                        "\nlist args after conversion", convertedArguments, "types",
-                        gatherTypes(convertedArguments),
+                        "\nlist args after conversion", finalArgs, "types",
+                        gatherTypes(finalArgs),
                         "\noriginal args", argsList,
                         "original types\n", gatherTypes(argsList), "\n");
 
@@ -331,37 +344,24 @@ public class Invoker {
 
 
     public static Object invokeMethodFromList(boolean respectIgnore, String view, Set<String> ignoreProperties,
-                                              Object object, MethodAccess method, List<?> args) {
+                                              Object object, MethodAccess method, List<?> argsList) {
 
         try {
 
-            List<Object> list = new ArrayList(args);
-            Class<?>[] parameterTypes = method.parameterTypes();
 
-            boolean[] flag = new boolean[1];
-
-            if (list.size() != parameterTypes.length) {
-               return die(Object.class, "Unable to invoke method", method.name(), "on object", object, "with arguments", list);
-            }
-
-            FieldsAccessor fieldsAccessor = FieldAccessMode.FIELD.create(true);
-
-            for (int index = 0; index < parameterTypes.length; index++) {
-
-                if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, list, method, parameterTypes, index, ignoreProperties, flag)) {
-                    return die(Object.class, "Unable to invoke method as argument types did not match",
-                            method.name(), "on object", object, "with arguments", list);
-                }
-
-            }
-
-            if (args == null && method.parameterTypes().length == 0) {
+            if (argsList == null && method.parameterTypes().length == 0) {
                 return method.invoke(object);
             } else {
-                return method.invoke(object, list.toArray(new Object[list.size()]));
+
+                Object [] finalArgs = convertArguments(respectIgnore, view, ignoreProperties,
+                        object, argsList, method
+                );
+
+
+                return method.invoke(object, finalArgs);
             }
         }catch (Exception ex) {
-            return Exceptions.handle(Object.class, ex, "Unable to invoke method object", object, "method", method, "args", args);
+            return Exceptions.handle(Object.class, ex, "Unable to invoke method object", object, "method", method, "args", argsList);
         }
 
     }
@@ -427,6 +427,27 @@ public class Invoker {
 
         boolean[] flag = new boolean[1];
 
+        MethodAccess method = lookupOverloadedMethod(respectIgnore, view, ignoreProperties, invokers, list, fieldsAccessor, flag, false);
+
+        if (method == null) {
+            method = lookupOverloadedMethod(respectIgnore, view, ignoreProperties, invokers, list, fieldsAccessor, flag, true);
+        }
+
+        if (method!=null) {
+            return method.invoke(object, list.toArray(new Object[list.size()]));
+        } else {
+            return die(Object.class, "Unable to invoke method", name, "on object", object, "with arguments", args);
+        }
+    }
+
+    private static
+        MethodAccess
+        lookupOverloadedMethod(boolean respectIgnore, String view, Set<String> ignoreProperties,
+                                               Iterable<MethodAccess> invokers, List<Object> list,
+                                               FieldsAccessor fieldsAccessor, boolean[] flag, boolean loose) {
+
+        MethodAccess method = null;
+
         loop:
         for (MethodAccess m : invokers) {
             Class<?>[] parameterTypes = m.parameterTypes();
@@ -434,13 +455,17 @@ public class Invoker {
                 continue;
             }
             for (int index = 0; index < parameterTypes.length; index++) {
-                if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, list, m, parameterTypes, index, ignoreProperties, flag)) {
+                if (!matchAndConvertArgs(respectIgnore, view, fieldsAccessor, list, m,
+                        parameterTypes, index, ignoreProperties, flag, loose)) {
+
                     continue loop;
                 }
             }
-            return m.invoke(object, list.toArray(new Object[list.size()]));
+            method = m;
+            break;
         }
-        return die(Object.class, "Unable to invoke method", name, "on object", object, "with arguments", args);
+
+        return method;
     }
 
     public static void invokeMethodWithAnnotationNoReturn(Object object, String annotation) {
