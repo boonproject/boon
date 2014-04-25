@@ -103,6 +103,8 @@ public class BugReport167 {
 
         test.test();
         test.test2();
+
+        //test.test3();
     }
 
     @Test
@@ -142,7 +144,7 @@ public class BugReport167 {
 
 
 
-    @Test
+    //@Test
     public void test3() {
         user = new User("red", "yellow", "green", "purple");
         puts(user.getFavoriteColors());

@@ -1549,7 +1549,7 @@ public class MapObjectConversion {
                         }
                         index++;
                     }
-                    field.setObject( newInstance, array);
+                    field.setValue( newInstance, array);
                     return;
 
             }
