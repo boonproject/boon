@@ -29,6 +29,11 @@ Blog about. Use it. Give me feedback. I am doing this for the street cred and to
 
 
 
+Do I like new task lists in MarkDown?
+- [x] Yes
+- [ ] No
+- [ ] Maybe
+
 
 Java Boon
 ====
