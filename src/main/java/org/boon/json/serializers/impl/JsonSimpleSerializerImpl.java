@@ -213,7 +213,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     char cvalue = fieldAccess.getChar( parent );
                     if ( cvalue != 0 ) {
                         serializeFieldName ( fieldName, builder );
-                        builder.addChar( cvalue  );
+                        builder.addQuoted( "" + cvalue  );
                         return true;
                     }
                     return false;
@@ -283,7 +283,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
                 case CHAR_WRAPPER:
                     serializeFieldName ( fieldName, builder );
-                    builder.addChar ( ( Character ) value );
+                    builder.addQuoted ( (( Character ) value).toString() );
                     return true;
                 case ENUM:
                     serializeFieldName ( fieldName, builder );

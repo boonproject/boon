@@ -200,7 +200,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 char cvalue = fieldAccess.getChar( parent );
                 if (includeDefault || include || cvalue != 0 ) {
                     serializeFieldName ( fieldName, builder );
-                    builder.addChar( cvalue  );
+                    builder.addQuoted( "" + cvalue  );
                     return true;
                 }
                 return false;
@@ -289,7 +289,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 return true;
             case CHAR_WRAPPER:
                 serializeFieldName ( fieldName, builder );
-                builder.addChar ( ( Character ) value );
+                builder.addQuoted ( value.toString() );
                 return true;
             case ENUM:
                 serializeFieldName ( fieldName, builder );
