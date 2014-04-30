@@ -87,6 +87,9 @@ public class Sys {
                 ex.printStackTrace ();
                 System.err.println ( "Unable to determine build number or version" );
             }
+        } else if ("1.8.0".equals(sversion)) {
+            b = -1;
+            v = new BigDecimal("1.8");
         } else {
             v = new BigDecimal ( sversion );
             b = -1;
