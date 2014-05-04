@@ -57,7 +57,7 @@ public class FieldsAccessorFieldThenProp implements FieldsAccessor {
     }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-        Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapFieldFirst ( aClass );
+        Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapFieldFirstForSerializer ( aClass );
 
 
         if ( useAlias ) {

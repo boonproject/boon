@@ -29,6 +29,8 @@
 package org.boon.bugs;
 
 import com.examples.model.test.FrequentPrimitives;
+import org.boon.bugs.data.media.Image;
+import org.boon.bugs.data.media.MediaContent;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.junit.Test;
@@ -38,6 +40,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 
 
 /**
@@ -48,12 +51,50 @@ public class Bug173_174 {
     @Test
     public void test() {
 
-        final ObjectMapper mapper = JsonFactory.create();
+        final ObjectMapper mapper =  JsonFactory.createUseProperties(true);
+
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         mapper.writeValue(stream, FrequentPrimitives.getArray(2));
 
         puts(new String(stream.toByteArray()));
+    }
+
+
+    @Test
+    public void test2() {
+
+        final ObjectMapper mapper =  JsonFactory
+                .createUseProperties(true);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        //String uri, String title, int width, int height, Size size
+        mapper.writeValue(stream, new Image("/foo", "Foo", 5, 10, Image.Size.SMALL));
+
+
+        puts(new String(stream.toByteArray()));
+    }
+
+
+
+    @Test
+    public void test3() {
+
+        final ObjectMapper mapper =  JsonFactory
+                .createUseProperties(true);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        MediaContent mediaContent = MediaContent.mediaContent();
+
+        //String uri, String title, int width, int height, Size size
+        mapper.writeValue(stream, mediaContent);
+
+
+        MediaContent mediaContent2 = mapper.readValue(stream.toByteArray(), MediaContent.class);
+
+        boolean ok = mediaContent.equals(mediaContent2) || die();
     }
 }

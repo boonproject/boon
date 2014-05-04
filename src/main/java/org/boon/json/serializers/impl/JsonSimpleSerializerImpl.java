@@ -140,9 +140,6 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         try {
 
-            if ( fieldAccess.ignore() ) {
-                 return false;
-            }
 
             if ( view!=null ){
                 if (!fieldAccess.isViewActive( view ) ) {
@@ -545,7 +542,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
    }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-        Map<String, FieldAccess> fields =  Maps.copy ( Reflection.getPropertyFieldAccessMapFieldFirst ( aClass ) );
+        Map<String, FieldAccess> fields =  Maps.copy ( Reflection.getPropertyFieldAccessMapFieldFirstForSerializer ( aClass ) );
 
         List<FieldAccess> removeFields = new ArrayList<>();
 

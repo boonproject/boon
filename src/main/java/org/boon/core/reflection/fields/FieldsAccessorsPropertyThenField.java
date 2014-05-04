@@ -54,7 +54,7 @@ public class FieldsAccessorsPropertyThenField implements FieldsAccessor {
     }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-        Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapPropertyFirst( aClass );
+        Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapPropertyFirstForSerializer( aClass );
 
         if ( useAlias ) {
             Map<String, FieldAccess> fieldAccessMap2 = new LinkedHashMap<> ( fieldAccessMap.size () );

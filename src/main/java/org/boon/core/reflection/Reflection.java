@@ -143,8 +143,10 @@ public class Reflection {
         Map<Class<?>, Map<String, FieldAccess>> _allAccessorUnsafeFieldsCache = new ConcurrentHashMap<>( 200 );
 
         Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsFieldsFirst = new ConcurrentHashMap<>( 200 );
+        Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsFieldsFirstForSerializer = new ConcurrentHashMap<>( 200 );
 
         Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsPropertyFirst = new ConcurrentHashMap<>( 200 );
+        Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsPropertyFirstForSerializer = new ConcurrentHashMap<>( 200 );
 
     }
 
@@ -155,8 +157,16 @@ public class Reflection {
     }
 
 
+    private static Map<String, FieldAccess> getCombinedFieldsPropertyFirstForSerializer(Class<? extends Object> theClass) {
+        return context()._combinedFieldsPropertyFirstForSerializer.get(theClass);
+    }
+
     private static Map<String, FieldAccess> getCombinedFieldsFieldFirst(Class<? extends Object> theClass) {
         return context()._combinedFieldsFieldsFirst.get(theClass);
+    }
+
+    private static Map<String, FieldAccess> getCombinedFieldsFieldFirstForSerializer(Class<? extends Object> theClass) {
+        return context()._combinedFieldsFieldsFirstForSerializer.get(theClass);
     }
 
     private static void  putCombinedFieldsPropertyFirst(Class<?> theClass, Map<String, FieldAccess> map) {
@@ -164,8 +174,16 @@ public class Reflection {
     }
 
 
+    private static void  putCombinedFieldsPropertyFirstForSerializer(Class<?> theClass, Map<String, FieldAccess> map) {
+        context()._combinedFieldsPropertyFirst.put(theClass, map);
+    }
+
     private static void putCombinedFieldsFieldFirst(Class<?> theClass,  Map<String, FieldAccess> map) {
         context()._combinedFieldsFieldsFirst.put(theClass, map);
+    }
+
+    private static void putCombinedFieldsFieldFirstForSerializer(Class<?> theClass,  Map<String, FieldAccess> map) {
+        context()._combinedFieldsFieldsFirstForSerializer.put(theClass, map);
     }
 
     static {
@@ -232,7 +250,10 @@ public class Reflection {
 
              /* Try to find the fields first if this is set. */
             fieldsPrimary = Reflection.getAllAccessorFields(clazz, true);
+
             fieldsFallbacks = Reflection.getPropertyFieldAccessors(clazz);
+
+
             combineFieldMaps(fieldsFallbacks, fieldsPrimary);
 
             combinedFieldsFieldFirst = fieldsPrimary;
@@ -244,6 +265,48 @@ public class Reflection {
 
 
     }
+
+
+
+    /**
+     * Gets a list of fields merges with properties if field is not found.
+     *
+     * @param clazz get the properties or fields
+     * @return
+     */
+    public static Map<String, FieldAccess> getPropertyFieldAccessMapFieldFirstForSerializer( Class<?> clazz ) {
+        Map<String, FieldAccess> combinedFieldsFieldFirst = getCombinedFieldsFieldFirstForSerializer(clazz);
+
+        if (combinedFieldsFieldFirst!=null) {
+            return combinedFieldsFieldFirst;
+        } else {
+
+            /* Fallback map. */
+            Map<String, FieldAccess> fieldsFallbacks = null;
+
+            /* Primary merge into this one. */
+            Map<String, FieldAccess> fieldsPrimary = null;
+
+
+             /* Try to find the fields first if this is set. */
+            fieldsPrimary = Reflection.getAllAccessorFields(clazz, true);
+            fieldsFallbacks = Reflection.getPropertyFieldAccessors(clazz);
+
+            fieldsPrimary = removeNonSerializable(fieldsPrimary);
+            fieldsFallbacks = removeNonSerializable(fieldsFallbacks);
+
+            combineFieldMaps(fieldsFallbacks, fieldsPrimary);
+
+            combinedFieldsFieldFirst = fieldsPrimary;
+
+            putCombinedFieldsFieldFirstForSerializer(clazz, combinedFieldsFieldFirst);
+            return combinedFieldsFieldFirst;
+
+        }
+
+
+    }
+
 
     private static void combineFieldMaps( Map<String, FieldAccess> fieldsFallbacks, Map<String, FieldAccess> fieldsPrimary ) {
     /* Add missing fields */
@@ -283,6 +346,48 @@ public class Reflection {
         }
     }
 
+
+    public static Map<String, FieldAccess> getPropertyFieldAccessMapPropertyFirstForSerializer( Class<?> clazz ) {
+
+        Map<String, FieldAccess> combinedFields = getCombinedFieldsPropertyFirstForSerializer(clazz);
+
+        if (combinedFields!=null) {
+            return combinedFields;
+        } else {
+             /* Fallback map. */
+            Map<String, FieldAccess> fieldsFallbacks = null;
+
+            /* Primary merge into this one. */
+            Map<String, FieldAccess> fieldsPrimary = null;
+
+
+
+             /* Try to find the properties first if this is set. */
+            fieldsFallbacks = Reflection.getAllAccessorFields(clazz, true);
+            fieldsFallbacks = removeNonSerializable(fieldsFallbacks);
+
+            fieldsPrimary = Reflection.getPropertyFieldAccessors(clazz);
+            fieldsPrimary = removeNonSerializable(fieldsPrimary);
+
+            /* Add missing fields */
+            combineFieldMaps(fieldsFallbacks, fieldsPrimary);
+
+            combinedFields = fieldsPrimary;
+            putCombinedFieldsPropertyFirstForSerializer(clazz, combinedFields);
+            return combinedFields;
+        }
+    }
+
+    private static Map<String, FieldAccess> removeNonSerializable(Map<String, FieldAccess> fieldAccessMap) {
+        final List<String> set = new ArrayList(fieldAccessMap.keySet());
+        for (String key : set) {
+            final FieldAccess fieldAccess = fieldAccessMap.get(key);
+            if (fieldAccess.isStatic() || fieldAccess.ignore() ) {
+                fieldAccessMap.remove(key);
+            }
+        }
+        return fieldAccessMap;
+    }
 
     @SuppressWarnings ( "serial" )
     public static class ReflectionException extends RuntimeException {
