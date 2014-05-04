@@ -31,8 +31,7 @@ package org.boon.bugs;
 import com.examples.model.test.FrequentPrimitives;
 import org.boon.bugs.data.media.Image;
 import org.boon.bugs.data.media.MediaContent;
-import org.boon.json.JsonFactory;
-import org.boon.json.ObjectMapper;
+import org.boon.json.*;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -96,5 +95,78 @@ public class Bug173_174 {
         MediaContent mediaContent2 = mapper.readValue(stream.toByteArray(), MediaContent.class);
 
         boolean ok = mediaContent.equals(mediaContent2) || die();
+    }
+
+
+
+    final JsonSerializer serializer = new JsonSerializerFactory().useFieldsOnly().create();
+    final JsonParserAndMapper parser = new JsonParserFactory().create();
+
+    @Test
+    public void test4() {
+
+
+
+        MediaContent mediaContent = MediaContent.mediaContent();
+
+        String json = serializer.serialize(mediaContent).toString();
+
+        final MediaContent mediaContent1 = parser.parse(MediaContent.class, json);
+
+        boolean ok = mediaContent.equals(mediaContent1) || die();
+
+
+
+    }
+
+    @Test
+    public void test5() {
+
+
+        for (int index=0; index < 100; index++) {
+
+            test4();
+        }
+    }
+
+
+
+    @Test
+    public void test6() {
+
+        Runnable task =  new Runnable() {
+            @Override
+            public void run() {
+
+                    for (int index = 0; index < 10_000; index++) {
+
+
+                        Bug173_174 bugs = new Bug173_174();
+
+                        bugs.test4();
+                    }
+                }
+            };
+
+
+        Thread thread1 = new Thread(task);
+        Thread thread2 = new Thread(task);
+        Thread thread3 = new Thread(task);
+        Thread thread4 = new Thread(task);
+        Thread thread5 = new Thread(task);
+
+        thread1.start(); thread2.start(); thread3.start();
+        thread4.start(); thread5.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+            thread3.join();
+            thread4.join();
+            thread5.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

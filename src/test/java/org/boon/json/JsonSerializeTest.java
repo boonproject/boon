@@ -38,6 +38,7 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.*;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 /**
@@ -78,6 +79,8 @@ public class JsonSerializeTest {
         Employee rick = new Employee();
         String sRick = new JsonSerializerFactory().useFieldsFirst().setOutputType( true ).create()
                 .serialize( rick ).toString();
+
+        puts (sRick);
         boolean ok = sRick.equals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\"}" ) || die( sRick );
     }
 

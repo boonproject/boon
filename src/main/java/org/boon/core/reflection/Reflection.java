@@ -379,14 +379,16 @@ public class Reflection {
     }
 
     private static Map<String, FieldAccess> removeNonSerializable(Map<String, FieldAccess> fieldAccessMap) {
+
+        LinkedHashMap<String, FieldAccess> map = new LinkedHashMap<>(fieldAccessMap);
         final List<String> set = new ArrayList(fieldAccessMap.keySet());
         for (String key : set) {
             final FieldAccess fieldAccess = fieldAccessMap.get(key);
             if (fieldAccess.isStatic() || fieldAccess.ignore() ) {
-                fieldAccessMap.remove(key);
+                map.remove(key);
             }
         }
-        return fieldAccessMap;
+        return map;
     }
 
     @SuppressWarnings ( "serial" )
