@@ -61,6 +61,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     private final String view;
     private final boolean encodeStrings;
 
+    private final boolean serializeAsSupport;
+
 
     private final CharBuf builder;
 
@@ -68,6 +70,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         this.view = null;
         this.encodeStrings = true;
+        serializeAsSupport = true;
         builder = CharBuf.create( 4000 );
 
 
@@ -78,6 +81,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         this.view = null;
         this.encodeStrings = encodeStrings;
+
+        serializeAsSupport = true;
         builder = CharBuf.create( 4000 );
 
 
@@ -88,6 +93,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         this.view = null;
         this.encodeStrings = encodeStrings;
+        this.serializeAsSupport = true;
         builder = CharBuf.create( bufferSize );
 
 
@@ -99,13 +105,26 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         this.encodeStrings = true;
         builder = CharBuf.create( 4000 );
 
+        serializeAsSupport = true;
+
 
     }
 
 
-    public JsonSimpleSerializerImpl(String view, boolean encodeStrings) {
+    public JsonSimpleSerializerImpl(String view, boolean encodeStrings, boolean serializeAsSupport, int bufSize) {
 
         this.encodeStrings = encodeStrings;
+        this.serializeAsSupport = serializeAsSupport;
+        this.view = view;
+        builder = CharBuf.create( bufSize );
+
+    }
+
+
+    public JsonSimpleSerializerImpl(String view, boolean encodeStrings, boolean serializeAsSupport) {
+
+        this.encodeStrings = encodeStrings;
+        this.serializeAsSupport = serializeAsSupport;
         this.view = view;
         builder = CharBuf.create( 4000 );
 
@@ -501,7 +520,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         try {
 
-            if (Reflection.respondsTo(instance, "serializeAs")) {
+            if (serializeAsSupport && Reflection.respondsTo(instance, "serializeAs")) {
                 serializeObject(Invoker.invoke(instance, "serializeAs"), builder);
                 return;
             }
@@ -671,6 +690,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         }
     }
+
+
 
 }
 
