@@ -52,6 +52,7 @@ public class JsonSerializerFactory {
     private boolean handleComplexBackReference = false;
     private boolean includeDefault = false;
     private boolean cacheInstances = true;
+    private boolean encodeStrings = true;
     private String view;
 
     private List<FieldFilter> filterProperties = null;
@@ -66,7 +67,7 @@ public class JsonSerializerFactory {
                 !handleComplexBackReference && !includeDefault && filterProperties == null
                 && customFieldSerializers == null && customObjectSerializers == null &&
                 fieldAccessType == FieldAccessMode.FIELD) {
-            return new JsonSimpleSerializerImpl (view);
+            return new JsonSimpleSerializerImpl (view, encodeStrings);
         } else {
 
             InstanceSerializer instanceSerializer;
@@ -91,7 +92,7 @@ public class JsonSerializerFactory {
             }
 
 
-            stringSerializer = new StringSerializerImpl ();
+            stringSerializer = new StringSerializerImpl (encodeStrings);
             mapSerializer = new MapSerializerImpl ();
 
             if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference
@@ -355,6 +356,15 @@ public class JsonSerializerFactory {
 
     public JsonSerializerFactory setView( String view ) {
         this.view = view;
+        return this;
+    }
+
+    public boolean isEncodeStrings() {
+        return encodeStrings;
+    }
+
+    public JsonSerializerFactory setEncodeStrings(boolean encodeStrings) {
+        this.encodeStrings = encodeStrings;
         return this;
     }
 }

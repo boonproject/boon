@@ -251,4 +251,9 @@ public class NumberValue extends Number implements Value {
         return buffer[startIndex];
     }
 
+    @Override
+    public Type type() {
+        return Type.NUMBER;
+    }
+
 }

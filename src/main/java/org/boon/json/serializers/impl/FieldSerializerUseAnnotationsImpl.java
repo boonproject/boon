@@ -255,6 +255,18 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                     return true;
                 }
                 return false;
+            case CLASS:
+                serializeFieldName ( fieldName, builder );
+                builder.addQuoted ( (( Class ) value).getName());
+                return true;
+
+            case TIME_ZONE:
+
+                serializeFieldName ( fieldName, builder );
+                TimeZone zone = (TimeZone) value;
+
+                builder.addQuoted ( zone.getID() );
+                return true;
             case CHAR_SEQUENCE:
                 String s2 =  value.toString();
                 if (includeEmpty ||  include || s2.length() > 0) {

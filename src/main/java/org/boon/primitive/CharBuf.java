@@ -203,7 +203,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
 
         if (icache == null) {
-            icache = new SimpleCache<> ( 20, CacheType.LRU );
+            icache = new SimpleCache<> ( 1000, CacheType.LRU );
         }
         char [] chars = icache.get ( key );
 
@@ -284,7 +284,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
     public final  CharBuf addDouble( Double key ) {
 
         if (dcache == null) {
-            dcache = new SimpleCache<> ( 20, CacheType.LRU );
+            dcache = new SimpleCache<> ( 100, CacheType.LRU );
         }
         char [] chars = dcache.get ( key );
 
@@ -316,7 +316,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
     public final  CharBuf addFloat( Float key ) {
 
         if (fcache == null) {
-            fcache = new SimpleCache<> ( 20, CacheType.LRU );
+            fcache = new SimpleCache<> ( 100, CacheType.LRU );
         }
         char [] chars = fcache.get ( key );
 
@@ -432,27 +432,20 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     public final CharBuf addQuoted( char[] chars ) {
 
-        int _location = location;
-        char [] _buffer = buffer;
-        int _capacity = capacity;
 
-        int sizeNeeded = chars.length + 2 + _location;
-        if (  sizeNeeded > _capacity ) {
-            _buffer = Chr.grow( _buffer, sizeNeeded * 2  );
-            _capacity = _buffer.length;
+        int sizeNeeded = chars.length + 2 + location;
+        if (  sizeNeeded > capacity ) {
+            buffer = Chr.grow( buffer, sizeNeeded * 2  );
+            capacity = buffer.length;
         }
-        _buffer [_location] = '"';
-        _location++;
+        buffer [location] = '"';
+        location++;
 
-        arraycopy( chars, 0, _buffer, _location, chars.length );
+        System.arraycopy( chars, 0, buffer, location, chars.length );
+        location += (chars.length);
+        buffer [location] = '"';
+        location++;
 
-        _location += (chars.length);
-        _buffer [_location] = '"';
-        _location++;
-
-        location = _location;
-        buffer = _buffer;
-        capacity = _capacity;
         return this;
     }
 
@@ -468,14 +461,8 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     private static  boolean isJSONControlOrUnicode( int c ) {
 
-        if (c < 30) {
-            return true;
-        } else if (c == 34 || c == 92 ) {
-            return true;
-        } else if ( c > 126 ) {
-            return true;
-        }
-        return false;
+        return (c < 30 || c == 34 || c == 92 || c > 126) ? true : false;
+
     }
 
     static final  int calculateSizeForJsonEncodedString( final char[] charArray ) {
@@ -672,37 +659,24 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
     public final CharBuf addJsonFieldName( char[] chars ) {
-        int _location = location;
-        char [] _buffer = buffer;
-        int _capacity = capacity;
-
-        try {
-
-
-            int sizeNeeded = chars.length + 4 + _location;
-            if (  sizeNeeded > _capacity ) {
-                _buffer = Chr.grow( _buffer, sizeNeeded * 2  );
-                _capacity = _buffer.length;
+            int sizeNeeded = chars.length + 4 + location;
+            if (  sizeNeeded > capacity ) {
+                buffer = Chr.grow( buffer, sizeNeeded * 2  );
+                capacity = buffer.length;
             }
-            _buffer [_location] = '"';
-            _location++;
+            buffer [location] = '"';
+            location++;
 
-            arraycopy( chars, 0, _buffer, _location, chars.length );
+            System.arraycopy( chars, 0, buffer, location, chars.length );
 
-            _location += (chars.length);
-            _buffer [_location] = '"';
-            _location++;
-            _buffer [_location] = ':';
-            _location++;
+            location += (chars.length);
+            buffer [location] = '"';
+            location++;
+            buffer [location] = ':';
+            location++;
 
-            location = _location;
-            buffer = _buffer;
-            capacity = _capacity;
             return this;
-        } catch (Exception ex) {
-            return Exceptions.handle (CharBuf.class, sputs( toDebugString(), new String(chars), "_location", _location), ex);
-        }
-    }
+     }
 
     public final CharBuf addQuoted( String str ) {
         final char[] chars = FastStringUtils.toCharArray ( str );
@@ -738,13 +712,13 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     private final static void sysstemarraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
 
-        try {
+        //try {
 
             System.arraycopy( src, srcPos, dest, destPos, length );
 
-        }catch (Exception ex) {
-            handle( sputs("arraycopy issue", "src", src, "srcPos", srcPos, "dest", dest, "destPos", destPos, "length", length), ex );
-        }
+//        }catch (Exception ex) {
+//            handle( sputs("arraycopy issue", "src", src, "srcPos", srcPos, "dest", dest, "destPos", destPos, "length", length), ex );
+//        }
     }
 
 
@@ -1037,7 +1011,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
     private Cache <BigDecimal, char[]> bigDCache;
     public CharBuf addBigDecimal( BigDecimal key ) {
         if (bigDCache == null) {
-            bigDCache = new SimpleCache<> ( 20, CacheType.LRU );
+            bigDCache = new SimpleCache<> ( 100, CacheType.LRU );
         }
         char [] chars = bigDCache.get ( key );
 
@@ -1058,7 +1032,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     public CharBuf addBigInteger( BigInteger key ) {
         if (bigICache == null) {
-            bigICache = new SimpleCache<> ( 20, CacheType.LRU );
+            bigICache = new SimpleCache<> ( 100, CacheType.LRU );
         }
         char [] chars = bigICache.get ( key );
 
@@ -1088,7 +1062,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
     public final  CharBuf addLong( Long key ) {
 
         if (lcache == null) {
-            lcache = new SimpleCache<> ( 20, CacheType.LRU );
+            lcache = new SimpleCache<> ( 100, CacheType.LRU );
         }
         char [] chars = lcache.get ( key );
 

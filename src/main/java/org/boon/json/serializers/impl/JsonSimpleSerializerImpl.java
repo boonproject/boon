@@ -112,8 +112,11 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
     public final void serializeString( String str, CharBuf builder ) {
-          if (encodeStrings) { builder.asJsonString(str); return;}
-          if (!encodeStrings) { builder.addString(str); return;}
+          if (encodeStrings) {
+              builder.asJsonString(str);
+          } else {
+              builder.addQuoted(str);
+          }
 
     }
 
@@ -138,7 +141,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         final Type typeEnum = fieldAccess.typeEnum ();
 
 
-        try {
+        //try {
 
 
             if ( view!=null ){
@@ -247,7 +250,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
                 case CLASS:
                     serializeFieldName ( fieldName, builder );
-                    serializeString ( (( Class ) value).getName(), builder );
+                    builder.addQuoted ( (( Class ) value).getName());
                     return true;
 
                 case CHAR_SEQUENCE:
@@ -353,10 +356,10 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
             }
 
-        } catch (Exception ex) {
-            return handle(Boolean.class, ex, "Unable to serialize field", fieldName, "from parent object", parent,
-                    "type enum", typeEnum);
-        }
+//        } catch (Exception ex) {
+//            return handle(Boolean.class, ex, "Unable to serialize field", fieldName, "from parent object", parent,
+//                    "type enum", typeEnum);
+//        }
 
     }
 
@@ -411,7 +414,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                 serializeDate ( ( Date ) obj, builder );
                 return;
             case CLASS:
-                serializeString ( (( Class ) obj).getName(), builder );
+                builder.addQuoted ( (( Class ) obj).getName() );
                 return;
 
             case STRING:
@@ -484,12 +487,12 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
     public void serializeUnknown ( Object obj, CharBuf builder ) {
-        try {
+        //try {
             builder.addQuoted ( obj.toString () );
-        } catch (Exception ex) {
+        //} catch (Exception ex) {
            //unknown so... TODO log
            //
-        }
+        //}
     }
 
 
@@ -511,7 +514,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             int index = 0;
             for ( FieldAccess fieldAccess : fields ) {
                  if (serializeField ( instance, fieldAccess, builder ) ) {
-                     builder.addChar ( ',' );
+                     builder.add(',');
                      index++;
                  }
             }
@@ -608,11 +611,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
     private void serializeFieldName ( String name, CharBuf builder ) {
-        try {
             builder.addJsonFieldName ( FastStringUtils.toCharArray ( name ) );
-        } catch (Exception ex) {
-            handle(sputs("Unable to serialize field name", name), ex);
-        }
     }
 
 

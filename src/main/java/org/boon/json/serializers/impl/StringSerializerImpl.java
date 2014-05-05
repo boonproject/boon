@@ -36,9 +36,20 @@ import org.boon.primitive.CharBuf;
  * Created by rick on 1/1/14.
  */
 public class StringSerializerImpl implements StringSerializer {
+
+    final boolean encodeStrings;
+
+    public StringSerializerImpl(boolean encodeStrings) {
+        this.encodeStrings = encodeStrings;
+    }
+
     @Override
     public final void serializeString ( JsonSerializerInternal serializer, String string, CharBuf builder )  {
-        builder.asJsonString(string);
+        if (encodeStrings) {
 
+            builder.asJsonString(string);
+        } else {
+            builder.addQuoted(string);
+        }
     }
 }

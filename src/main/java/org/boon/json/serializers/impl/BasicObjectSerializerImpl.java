@@ -38,6 +38,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by rick on 1/1/14.
@@ -88,6 +89,17 @@ public class BasicObjectSerializerImpl implements ObjectSerializer {
             case STRING:
                 jsonSerializer.serializeString ( ( String ) obj, builder );
                 return;
+            case CLASS:
+                builder.addQuoted ( (( Class ) obj).getName() );
+                return;
+
+            case TIME_ZONE:
+                TimeZone zone = (TimeZone) obj;
+
+                builder.addQuoted ( zone.getID() );
+                return;
+
+
             case CHAR_SEQUENCE:
                 jsonSerializer.serializeString ( obj.toString (), builder );
                 return;

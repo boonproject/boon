@@ -40,6 +40,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by rick on 1/1/14.
@@ -152,6 +153,18 @@ public class FieldSerializerImpl implements FieldSerializer {
             case STRING:
                 serializeFieldName ( fieldName, builder );
                 serializer.serializeString ( ( String ) value, builder );
+                return true;
+            case CLASS:
+                serializeFieldName ( fieldName, builder );
+                builder.addQuoted ( (( Class ) value).getName());
+                return true;
+
+            case TIME_ZONE:
+
+                serializeFieldName ( fieldName, builder );
+                TimeZone zone = (TimeZone) value;
+
+                builder.addQuoted ( zone.getID() );
                 return true;
             case CHAR_SEQUENCE:
                 serializeFieldName ( fieldName, builder );

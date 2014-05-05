@@ -33,6 +33,7 @@ import org.boon.Exceptions;
 import org.boon.Universal;
 import org.boon.core.reflection.FastStringUtils;
 
+import static java.lang.System.arraycopy;
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
@@ -137,7 +138,7 @@ public class Chr {
         }
 
         char[] newArray = new char[ newLength ];
-        Chr.arraycopy( array, start, newArray, 0, newLength );
+        arraycopy(array, start, newArray, 0, newLength);
         return newArray;
     }
 
@@ -161,7 +162,7 @@ public class Chr {
         }
 
         char[] newArray = new char[ newLength ];
-        arraycopy ( array, start, newArray, 0, newLength );
+        arraycopy(array, start, newArray, 0, newLength);
         return newArray;
     }
 
@@ -185,7 +186,7 @@ public class Chr {
         }
 
         char[] newArray = new char[ newLength ];
-        arraycopy ( array, 0, newArray, 0, newLength );
+        arraycopy(array, 0, newArray, 0, newLength);
         return newArray;
     }
 
@@ -756,29 +757,15 @@ public class Chr {
 
 
     public static void _idx( final char[] array, int startIndex, char[] input ) {
-        try {
 
-            arraycopy ( input, 0, array, startIndex, input.length );
-        } catch ( Exception ex ) {
-            Exceptions.handle( String.format( "array size %d, startIndex %d, input length %d",
-                    array.length, startIndex, input.length ), ex );
-        }
+            arraycopy(input, 0, array, startIndex, input.length);
     }
 
 
-    private static void arraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
-         System.arraycopy( src, srcPos, dest, destPos,length );
-    } 
-
 
     public static void _idx( final char[] array, int startIndex, char[] input, final int inputLength ) {
-        try {
 
-            arraycopy ( input, 0, array, startIndex, inputLength );
-        } catch ( Exception ex ) {
-            Exceptions.handle( String.format( "array size %d, startIndex %d, input length %d",
-                    array.length, startIndex, input.length ), ex );
-        }
+        arraycopy(input, 0, array, startIndex, inputLength);
     }
 
     public static void _idx( char[] buffer, int location, byte[] chars, int start, int end ) {

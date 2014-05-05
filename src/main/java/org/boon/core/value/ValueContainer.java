@@ -49,7 +49,7 @@ public class ValueContainer implements CharSequence, Value {
 
     public Object value;
 
-    public Type type;
+    public final Type type;
     private boolean container;
 
     public boolean decodeStrings;
@@ -165,6 +165,11 @@ public class ValueContainer implements CharSequence, Value {
     @Override
     public char charValue () {
         return 0;
+    }
+
+    @Override
+    public Type type() {
+        return type;
     }
 
     @Override

@@ -311,4 +311,9 @@ public class CharSequenceValue implements Value, CharSequence {
     public char charValue () {
         return buffer[startIndex];
     }
+
+    @Override
+    public Type type() {
+        return Type.CHAR_SEQUENCE;
+    }
 }

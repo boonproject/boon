@@ -28,10 +28,7 @@
 
 package org.boon.core.reflection;
 
-import org.boon.Boon;
-import org.boon.Lists;
-import org.boon.Maps;
-import org.boon.Sets;
+import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.Function;
 import org.boon.core.Typ;
@@ -56,8 +53,7 @@ import static org.boon.Boon.*;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.coerce;
-import static org.boon.core.Type.gatherActualTypes;
-import static org.boon.core.Type.gatherTypes;
+import static org.boon.core.Type.*;
 
 
 /**
@@ -1210,7 +1206,7 @@ public class MapObjectConversion {
      * @param value object value of type Value we want to inject into the field.
      * @return new object from value map
      */
-    private static <T> void fromValueMapHandleValueCase(
+    private static <T> void fromValueMapHandleValueCaseOLD(
             boolean respectIgnore, String view,
             FieldsAccessor fieldsAccessor, T newInstance, FieldAccess field, Value value, Set<String> ignoreSet  ) {
         Object objValue = null;
@@ -1285,6 +1281,201 @@ public class MapObjectConversion {
         }
     }
 
+
+
+    /**
+     *
+     * Gets called by  fromValueMap
+     * This does some special handling to take advantage of us using the value map so it avoids creating
+     * a bunch of array objects and collections. Things you have to worry about when writing a
+     * high-speed JSON serializer.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param ignoreSet a set of properties to ignore
+     * @param field  field we want to inject something into
+     * @param newInstance the thing we want to inject a field value into
+     * @param value object value of type Value we want to inject into the field.
+     * @return new object from value map
+     */
+    private static <T> void fromValueMapHandleValueCase(
+            boolean respectIgnore, String view,
+            FieldsAccessor fieldsAccessor, T newInstance, FieldAccess field, Value value, Set<String> ignoreSet  ) {
+
+
+           Object objValue =
+                ValueContainer.toObject(value);
+
+            Class<?> clazz = field.type();
+//
+//            if (field.typeEnum()==INSTANCE && value.type() == MAP) {
+//                field.setObject(newInstance, fromValueMap(respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objValue, clazz, ignoreSet ));
+//
+//                return;
+//            } else if (field.typeEnum()==INSTANCE && value.type() == LIST) {
+//                field.setObject(newInstance, fromList(respectIgnore, view, fieldsAccessor, ( List<Object> ) objValue, clazz, ignoreSet ));
+//                return;
+//            }
+
+
+
+            switch (field.typeEnum()) {
+
+                case OBJECT:
+                case ABSTRACT:
+                case INTERFACE:
+                    if (objValue instanceof  Map) {
+                        final Map<String, Value> valueMap = (Map<String, Value>) objValue;
+
+                        final Value aClass = valueMap.get("class");
+                        clazz = Reflection.loadClass(aClass.stringValue());
+
+                    }
+                case INSTANCE:
+                    switch (value.type()) {
+                        case MAP:
+                            objValue = fromValueMap(respectIgnore, view, fieldsAccessor, ( Map<String, Value> ) objValue, clazz, ignoreSet );
+                            break;
+                        case LIST:
+                            objValue = fromList(respectIgnore, view, fieldsAccessor, (List<Object>) objValue, clazz, ignoreSet);
+                            break;
+
+
+                    }
+                    field.setValue(newInstance, objValue);
+
+                    break;
+
+                case MAP:
+                case VALUE_MAP:
+
+
+                    Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
+                    Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
+
+                    Map mapInner = (Map)objValue;
+                    Set<Map.Entry> set = mapInner.entrySet();
+                    Map newMap = new LinkedHashMap(  );
+
+                    for (Map.Entry entry : set) {
+                        Object evalue = entry.getValue();
+
+                        Object key = entry.getKey();
+
+                        if (evalue instanceof ValueContainer) {
+                            evalue = ((ValueContainer) evalue).toValue();
+                        }
+
+                        key  = Conversions.coerce( keyType, key );
+                        evalue = Conversions.coerce( valueType, evalue );
+                        newMap.put( key, evalue );
+                    }
+
+                    objValue = newMap;
+
+                    field.setValue(newInstance, objValue);
+
+                    break;
+
+                case LIST:
+                case COLLECTION:
+                case SET:
+                case ARRAY:
+
+
+                    handleCollectionOfValues( respectIgnore, view, fieldsAccessor, newInstance, field,
+                            ( Collection<Value> ) objValue, ignoreSet );
+
+                    break;
+
+                default:
+                        field.setFromValue(newInstance, value);
+
+            }
+    }
+
+
+    /**
+     *
+     * Gets called by  fromValueMap
+     * This does some special handling to take advantage of us using the value map so it avoids creating
+     * a bunch of array objects and collections. Things you have to worry about when writing a
+     * high-speed JSON serializer.
+     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
+     * @param view the view of the object which can ignore certain fields given certain views
+     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
+     * @param ignoreSet a set of properties to ignore
+     * @param field  field we want to inject something into
+     * @param newInstance the thing we want to inject a field value into
+     * @param value object value of type Value we want to inject into the field.
+     * @return new object from value map
+     */
+    private static <T> void fromValueMapHandleValueCase2(
+            boolean respectIgnore, String view,
+            FieldsAccessor fieldsAccessor, T newInstance, FieldAccess field, Value value, Set<String> ignoreSet  ) {
+
+        Class<?> clazz = field.type();
+
+        switch (value.type()) {
+
+            case MAP:
+
+                Map<String, Value> valueMap = (Map<String, Value>)  ValueContainer.toObject(value);
+
+
+                switch (field.typeEnum()) {
+                    case OBJECT:
+                    case ABSTRACT:
+                    case INTERFACE:
+                        Value aClass = valueMap.get("class");
+                        clazz = Reflection.loadClass(aClass.stringValue());
+                        //fall through
+                    case INSTANCE:
+                        field.setObject(newInstance, fromValueMap(respectIgnore, view, fieldsAccessor, valueMap, clazz, ignoreSet));
+                        break;
+                    case MAP:
+                    case VALUE_MAP:
+
+                        Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
+                        Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
+
+                        Set<Map.Entry<String, Value>> set = valueMap.entrySet();
+                        Map newMap = new LinkedHashMap(  );
+
+                        for (Map.Entry entry : set) {
+                            Object evalue = entry.getValue();
+                            evalue = ValueContainer.toObject(evalue);
+
+                            Object key = entry.getKey();
+
+
+                            key  = Conversions.coerce( keyType, key );
+                            evalue = Conversions.coerce( valueType, evalue );
+                            newMap.put( key, evalue );
+                        }
+
+
+                        field.setValue(newInstance, newMap);
+
+                        break;
+
+
+
+                }
+                break;
+            case LIST:
+                handleCollectionOfValues(respectIgnore, view, fieldsAccessor, newInstance, field,
+                        (Collection<Value>) ValueContainer.toObject(value), ignoreSet);
+                break;
+            case TRUE:
+            case FALSE:
+            case CHAR_SEQUENCE:
+            case NUMBER:
+                field.setFromValue(newInstance, value);
+
+        }
+
+     }
 
     /**
      * Helper method to extract collection of values into some field collection.
@@ -1465,148 +1656,155 @@ public class MapObjectConversion {
 
         Collection collectionOfValues = acollectionOfValues;
 
+        if(field.typeEnum() == INSTANCE) {
+
+            field.setObject(newInstance, fromList(fieldsAccessor, (List) acollectionOfValues, field.type()));
+            return;
+
+        }
+
         if ( collectionOfValues instanceof ValueList ) {
             collectionOfValues = ( ( ValueList ) collectionOfValues ).list();
         }
 
         Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfValues.size() );
 
+        Class<?> componentClass = field.getComponentClass();
+
+
 
         /** If the field is a collection than try to convert the items in the collection to
          * the field type.
          */
-        if ( field.typeEnum().isCollection() ) {
+        switch (field.typeEnum() ) {
 
-            Class<?> componentClass = field.getComponentClass();
 
-            for ( Value value : ( List<Value> ) collectionOfValues ) {
+            case LIST:
+            case SET:
+            case COLLECTION:
 
-                if ( value.isContainer() ) {
-                    Object oValue = value.toValue();
-                    if ( oValue instanceof Map ) {
-                        newCollection.add( fromValueMap( respectIgnore, view, fieldsAccessor, ( Map ) oValue, componentClass, ignoreSet ) );
+
+                for ( Value value : ( List<Value> ) collectionOfValues ) {
+
+                    if ( value.isContainer() ) {
+                        Object oValue = value.toValue();
+                        if ( oValue instanceof Map ) {
+                            newCollection.add( fromValueMap( respectIgnore, view, fieldsAccessor, ( Map ) oValue, componentClass, ignoreSet ) );
+                        }
+                    } else {
+                        newCollection.add( Conversions.coerce( componentClass, value.toValue() ) );
                     }
-                } else {
-                    newCollection.add( Conversions.coerce( componentClass, value.toValue() ) );
+
+
                 }
+                field.setObject( newInstance, newCollection );
+                break;
+
+            case ARRAY:
+
+                org.boon.core.Type componentType =  org.boon.core.Type.getType(componentClass);
+                int index = 0;
+
+                switch (componentType) {
+                    case INT:
+                        int [] iarray = new int[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                              iarray[index] = value.intValue();
+                            index++;
+
+                        }
+                        field.setObject( newInstance, iarray);
+                        return;
+                    case SHORT:
+                        short [] sarray = new short[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            sarray[index] = value.shortValue();
+                            index++;
+
+                        }
+                        field.setObject( newInstance, sarray);
+                        return;
+                    case DOUBLE:
+                        double [] darray = new double[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            darray[index] = value.doubleValue();
+                            index++;
+
+                        }
+                        field.setObject( newInstance, darray);
+                        return;
+                    case FLOAT:
+                        float [] farray = new float[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            farray[index] = value.floatValue();
+                            index++;
+
+                        }
+                        field.setObject( newInstance, farray);
+                        return;
+
+                    case LONG:
+                        long [] larray = new long[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            larray[index] = value.longValue();
+                            index++;
+
+                        }
+                        field.setObject( newInstance, larray);
+                        return;
 
 
-            }
-            field.setObject( newInstance, newCollection );
+                    case BYTE:
+                        byte [] barray = new byte[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            barray[index] = value.byteValue();
+                            index++;
+
+                        }
+                        field.setObject( newInstance, barray);
+                        return;
 
 
-            /* In some of the fromList above we don't handle the array case, and here we clearly do.
-             *  This code needs to be put somewhere else and called wherever we want to convert
-             *  a collection to an array
-             */
-        } else if (field.typeEnum() == org.boon.core.Type.ARRAY) {
-
-            Class<?> componentClass = field.getComponentClass();
-            org.boon.core.Type componentType =  org.boon.core.Type.getType(componentClass);
-            int index = 0;
-
-            switch (componentType) {
-                case INT:
-                    int [] iarray = new int[collectionOfValues.size()];
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                          iarray[index] = value.intValue();
-                        index++;
-
-                    }
-                    field.setObject( newInstance, iarray);
-                    return;
-                case SHORT:
-                    short [] sarray = new short[collectionOfValues.size()];
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                        sarray[index] = value.shortValue();
-                        index++;
-
-                    }
-                    field.setObject( newInstance, sarray);
-                    return;
-                case DOUBLE:
-                    double [] darray = new double[collectionOfValues.size()];
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                        darray[index] = value.doubleValue();
-                        index++;
-
-                    }
-                    field.setObject( newInstance, darray);
-                    return;
-                case FLOAT:
-                    float [] farray = new float[collectionOfValues.size()];
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                        farray[index] = value.floatValue();
-                        index++;
-
-                    }
-                    field.setObject( newInstance, farray);
-                    return;
-
-                case LONG:
-                    long [] larray = new long[collectionOfValues.size()];
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                        larray[index] = value.longValue();
-                        index++;
-
-                    }
-                    field.setObject( newInstance, larray);
-                    return;
+                    case CHAR:
+                        char [] chars = new char[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            chars[index] = value.charValue();
+                            index++;
+                        }
+                        field.setObject( newInstance, chars);
+                        return;
 
 
-                case BYTE:
-                    byte [] barray = new byte[collectionOfValues.size()];
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                        barray[index] = value.byteValue();
-                        index++;
+                    default:
+                        Object array = Array.newInstance( componentClass, collectionOfValues.size() );
+                        Object o;
 
-                    }
-                    field.setObject( newInstance, barray);
-                    return;
-
-
-                case CHAR:
-                    char [] chars = new char[collectionOfValues.size()];
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                        chars[index] = value.charValue();
-                        index++;
-                    }
-                    field.setObject( newInstance, chars);
-                    return;
-
-
-                default:
-                    Object array = Array.newInstance( componentClass, collectionOfValues.size() );
-                    Object o;
-
-                    for ( Value value : ( List<Value> ) collectionOfValues ) {
-                        if (value instanceof ValueContainer) {
-                            o = value.toValue();
-                            if (o instanceof List) {
-                                o = fromList(fieldsAccessor, (List)o, componentClass);
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            if (value instanceof ValueContainer) {
+                                o = value.toValue();
+                                if (o instanceof List) {
+                                    o = fromList(fieldsAccessor, (List)o, componentClass);
+                                    if (componentClass.isInstance( o )) {
+                                       Array.set(array, index, o);
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            } else {
+                                o = value.toValue();
                                 if (componentClass.isInstance( o )) {
-                                   Array.set(array, index, o);
+                                    Array.set(array, index, o);
                                 } else {
-                                    break;
+                                    Array.set(array, index, Conversions.coerce( componentClass, o ));
                                 }
                             }
-                        } else {
-                            o = value.toValue();
-                            if (componentClass.isInstance( o )) {
-                                Array.set(array, index, o);
-                            } else {
-                                Array.set(array, index, Conversions.coerce( componentClass, o ));
-                            }
+                            index++;
                         }
-                        index++;
-                    }
-                    field.setValue( newInstance, array);
-                    return;
+                        field.setValue( newInstance, array);
 
-            }
-        }
-        else  {
-            field.setObject(newInstance, fromList(fieldsAccessor, (List) acollectionOfValues, field.type()));
+
+                }
+                break;
         }
 
     }

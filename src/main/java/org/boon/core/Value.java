@@ -68,4 +68,7 @@ public interface Value {
     public void chop();
 
     char charValue ();
+
+
+    Type type ();
 }
