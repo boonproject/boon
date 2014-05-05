@@ -351,23 +351,30 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     public final CharBuf addChar( final char ch ) {
 
-        int _location = location;
-        char [] _buffer = buffer;
-        int _capacity = capacity;
 
-        if ( 1 + _location > _capacity ) {
-            _buffer = Chr.grow( _buffer );
-            _capacity = _buffer.length;
+        if ( 1 + location > capacity ) {
+            buffer = Chr.grow( buffer );
+            capacity = buffer.length;
 
         }
 
-        _buffer [_location] = ch;
-        _location ++;
+        buffer [location] = ch;
+        location ++;
 
+        return this;
+    }
 
-        location = _location;
-        buffer = _buffer;
-        capacity = _capacity;
+    public final CharBuf add( char ch ) {
+
+        if ( 1 + location > capacity ) {
+            buffer = Chr.grow( buffer );
+            capacity = buffer.length;
+
+        }
+
+        buffer [location] = ch;
+        location ++;
+
         return this;
     }
 
@@ -424,7 +431,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
             capacity = buffer.length;
         }
 
-        arraycopy ( chars, 0, buffer, location, chars.length );
+        System.arraycopy ( chars, 0, buffer, location, chars.length );
         location += chars.length;
         return this;
     }
@@ -520,6 +527,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
     final byte[] encoded = new byte[2];
 
     final byte[] charTo = new byte[2];
+
     private final CharBuf doAddJsonEscapedString( char[] charArray ) {
 
         char [] _buffer = buffer;
@@ -710,23 +718,6 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
 
-    private final static void sysstemarraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
-
-        //try {
-
-            System.arraycopy( src, srcPos, dest, destPos, length );
-
-//        }catch (Exception ex) {
-//            handle( sputs("arraycopy issue", "src", src, "srcPos", srcPos, "dest", dest, "destPos", destPos, "length", length), ex );
-//        }
-    }
-
-
-    private final static void arraycopy (final char [] src, final int srcPos, final char [] dest, final int destPos, final int length)  {
-
-          sysstemarraycopy( src, srcPos, dest, destPos, length );
-
-    }
 
 
     public CharBuf add( byte[] bytes, int start, int end ) {
@@ -741,17 +732,6 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
 
-    public final CharBuf add( char ch ) {
-        if ( 1 + location < capacity ) {
-           buffer [location] = ch;
-        } else {
-            buffer = Chr.grow( buffer );
-            buffer [location] = ch;
-            capacity = buffer.length;
-        }
-        location += 1;
-        return this;
-    }
 
     @Override
     public int length () {
