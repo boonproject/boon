@@ -28,6 +28,8 @@
 
 package org.boon.json;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import org.boon.Lists;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.json.serializers.impl.JsonSimpleSerializerImpl;
@@ -40,6 +42,7 @@ import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
+import org.boon.core.Dates;
 
 /**
  * Created by rick on 12/18/13.
@@ -50,6 +53,9 @@ public class JsonSerializeTest {
 
         String name = "Rick";
         String url = "http://foo.bar/foo.jpg";
+        Date dob = Dates.getUSDate( 5, 25, 1980 );
+        Currency currency = Currency.getInstance("USD");
+        BigDecimal salary = new BigDecimal("100000.00");
 
         public String getName() {
             return name;
@@ -62,10 +68,9 @@ public class JsonSerializeTest {
 
     @Test
     public void test() {
-
         Employee rick = new Employee();
         String sRick = new JsonSimpleSerializerImpl(null).serialize( rick ).toString();
-        boolean ok = sRick.equals( "{\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\"}" ) || die( sRick );
+        boolean ok = sRick.equals( "{\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
 
         rick = new JsonParserFactory ().create ().parse ( Employee.class, sRick );
         ok = rick.url.equals( "http://foo.bar/foo.jpg" ) || die( sRick );
@@ -81,7 +86,7 @@ public class JsonSerializeTest {
                 .serialize( rick ).toString();
 
         puts (sRick);
-        boolean ok = sRick.equals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\"}" ) || die( sRick );
+        boolean ok = sRick.equals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
     }
 
 

@@ -41,6 +41,7 @@ import org.boon.primitive.CharScanner;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.Date;
 
 import static org.boon.Exceptions.die;
@@ -296,6 +297,11 @@ public class CharSequenceValue implements Value, CharSequence {
     @Override
     public float floatValue () {
         return CharScanner.parseFloat( this.buffer, startIndex, endIndex );
+    }
+
+    @Override
+    public Currency currencyValue () {
+        return Currency.getInstance( toString() );
     }
 
     public final void chop () {

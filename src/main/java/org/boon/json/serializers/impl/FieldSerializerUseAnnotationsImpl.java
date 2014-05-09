@@ -368,6 +368,11 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 }
                 return true;
 
+            case CURRENCY:
+                serializeFieldName ( fieldName, builder );
+                builder.addCurrency(( Currency ) value );
+                return true;
+
             default:
                 serializeFieldName ( fieldName, builder );
                 serializer.serializeUnknown ( value, builder );

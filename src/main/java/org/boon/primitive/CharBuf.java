@@ -46,6 +46,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
@@ -1057,6 +1058,25 @@ public class CharBuf extends PrintWriter implements CharSequence {
         return this;
     }
 
+    private Cache <Currency, char[]> currencyCache;
+    public CharBuf addCurrency( Currency key ) {
+        if (currencyCache == null) {
+            currencyCache = new SimpleCache<> ( 100, CacheType.LRU );
+        }
+        char [] chars = currencyCache.get ( key );
+
+        if ( chars ==  null ) {
+            String str = '"' + key.toString() + '"';
+            chars = FastStringUtils.toCharArray ( str );
+            currencyCache.put ( key, chars );
+        }
+
+        add ( chars );
+
+        return this;
+
+
+    }
 
 
     /**

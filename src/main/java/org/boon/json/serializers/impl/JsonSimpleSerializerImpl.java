@@ -369,6 +369,11 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     builder.addQuoted ( zone.getID() );
                     return true;
 
+                case CURRENCY:
+                    serializeFieldName ( fieldName, builder );
+                    serializeCurrency ( (Currency) value, builder );
+                    return true;
+
                 default:
                     serializeFieldName ( fieldName, builder );
                     serializeUnknown(value, builder);
@@ -389,6 +394,12 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         builder.addLong(date.getTime ());
     }
 
+
+    public final void serializeCurrency ( Currency currency, CharBuf builder ) {
+        builder.addChar ( '"' );
+        builder.addString(currency.getCurrencyCode());
+        builder.addChar ( '"' );
+    }
 
     public final void serializeObject( Object obj, CharBuf builder )  {
 
@@ -495,6 +506,9 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
             case INSTANCE:
                 serializeInstance ( obj, builder );
+                return;
+            case CURRENCY:
+                serializeCurrency ( ( Currency ) obj, builder );
                 return;
             default:
                 serializeUnknown ( obj, builder );

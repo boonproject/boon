@@ -481,6 +481,13 @@ public abstract class BaseField implements FieldAccess {
             case SET:
                  this.setObject ( obj, Conversions.toCollection ( type, value ) );
                  return;
+            case CURRENCY:
+                if ( value instanceof Currency )  {
+                    this.setObject ( obj, value );
+                } else {
+                    this.setObject ( obj, toCurrency ( value ) );
+                }
+                return;
 
             default:
                 if ( value == null ) {
@@ -601,6 +608,9 @@ public abstract class BaseField implements FieldAccess {
 
             case ENUM:
                 this.setObject ( obj, value.toEnum (  ( Class<? extends Enum> )type ) );
+                return;
+            case CURRENCY:
+                this.setObject ( obj, value.currencyValue () );
                 return;
             default:
                 setValue(obj, value.toValue());

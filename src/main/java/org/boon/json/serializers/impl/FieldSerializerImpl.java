@@ -38,6 +38,7 @@ import org.boon.primitive.CharBuf;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Currency;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
@@ -245,6 +246,12 @@ public class FieldSerializerImpl implements FieldSerializer {
                     serializer.serializeSubtypeInstance ( value, builder );
                 }
                 return true;
+
+            case CURRENCY:
+                serializeFieldName ( fieldName, builder );
+                builder.addCurrency ( (Currency ) value );
+                return true;
+
             default:
                 serializeFieldName ( fieldName, builder );
                 serializer.serializeUnknown ( value, builder );

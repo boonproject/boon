@@ -34,6 +34,7 @@ import org.boon.core.Value;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -223,5 +224,8 @@ public class ValueContainer implements CharSequence, Value {
         return 0;
     }
 
-
+    @Override
+    public Currency currencyValue () {
+        return null;
+    }
 }
