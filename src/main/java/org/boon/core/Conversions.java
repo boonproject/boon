@@ -855,7 +855,7 @@ public class Conversions {
     public static <T extends Enum> T toEnum(Class<T> cls, Object value) {
 
         if (value instanceof Value) {
-            return (T) ((Value) value).toEnum(cls);
+            return ((Value) value).toEnum(cls);
         } else if (value instanceof CharSequence) {
             return toEnum(cls, value.toString());
         } else if (value instanceof Number || value.getClass().isPrimitive()) {
@@ -863,6 +863,10 @@ public class Conversions {
             int i = toInt(value);
             return toEnum(cls, i);
         } else {
+
+            if (value instanceof Collection) {
+               return  toEnum(cls, ((Collection) value).iterator().next());
+            }
             die( "Can't convert  value " + value + " into enum of type " + cls );
             return null;
         }
