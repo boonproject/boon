@@ -30,6 +30,7 @@ package org.boon.core;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Currency;
 import java.util.Date;
 
 public interface Value {
@@ -58,6 +59,8 @@ public interface Value {
     String stringValue();
 
     String stringValueEncoded();
+
+    Currency currencyValue();
 
     Object toValue();
 

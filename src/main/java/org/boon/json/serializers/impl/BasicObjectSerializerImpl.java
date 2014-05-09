@@ -36,6 +36,7 @@ import org.boon.primitive.CharBuf;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Currency;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
@@ -144,6 +145,9 @@ public class BasicObjectSerializerImpl implements ObjectSerializer {
                 return;
             case INSTANCE:
                 jsonSerializer.serializeInstance ( obj, builder );
+                return;
+            case CURRENCY:
+                builder.addCurrency(( Currency ) obj );
                 return;
             default:
                 jsonSerializer.serializeUnknown ( obj, builder );

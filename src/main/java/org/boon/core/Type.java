@@ -37,7 +37,8 @@ public enum Type {
     DATE, NUMBER, LONG_WRAPPER, INTEGER_WRAPPER, SHORT_WRAPPER, CHAR_WRAPPER, BOOLEAN_WRAPPER,
     BYTE_WRAPPER, FLOAT_WRAPPER, DOUBLE_WRAPPER,
     INTEGER, STRING, DOUBLE, TRUE, FALSE, NULL, MAP, LIST, SET, CHAR_SEQUENCE,
-    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI, VOID, FILE, PATH, UUID, LOCALE, TIME_ZONE;
+    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI, VOID, FILE, PATH, UUID,
+    LOCALE, TIME_ZONE, CURRENCY;
 
 
 
@@ -222,7 +223,8 @@ public enum Type {
                 case "java.util.TimeZone":
                     return Type.TIME_ZONE;
 
-
+                case "java.util.Currency":
+                    return Type.CURRENCY;
 
             }
             return Type.INSTANCE;

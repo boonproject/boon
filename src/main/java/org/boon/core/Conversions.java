@@ -212,6 +212,18 @@ public class Conversions {
 
     }
 
+    public static Currency toCurrency(Object obj) {
+        if (obj instanceof Currency) {
+            return (Currency) obj;
+        }
+
+        if (obj instanceof String) {
+            String str = Str.toString(obj);
+            return Currency.getInstance(str);
+        }
+
+        return null;
+    }
 
     /**
      * Converts the value to boolean.
@@ -517,6 +529,9 @@ public class Conversions {
             case UUID:
                 return (T) toUUID(value);
 
+            case CURRENCY:
+                return (T) toCurrency(value);
+
             case OBJECT:
                 return (T) value;
 
@@ -702,6 +717,8 @@ public class Conversions {
             case UUID:
                 return (T) toUUID(flag, value);
 
+            case CURRENCY:
+                return (T) toCurrency(value);
 
             case OBJECT:
                 return (T) value;
