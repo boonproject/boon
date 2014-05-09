@@ -481,6 +481,9 @@ public class Conversions {
             case ARRAY:
                 return toPrimitiveArrayIfPossible(clz, value);
 
+
+            case LIST:
+            case SET:
             case COLLECTION:
                 return toCollection(clz, value);
 

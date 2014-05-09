@@ -30,9 +30,19 @@ package com.examples;
 
 import org.boon.Maps;
 import org.boon.Sets;
+import org.boon.core.reflection.ClassMeta;
+import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.criteria.ObjectFilter;
+import org.boon.criteria.internal.Criteria;
+import org.boon.di.Required;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +52,7 @@ import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.copy;
 import static org.boon.Maps.fromMap;
+import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.json.JsonFactory.fromJson;
 import static org.boon.json.JsonFactory.toJson;
 
@@ -50,9 +61,24 @@ import static org.boon.json.JsonFactory.toJson;
  */
 public class ValidatePropsArePresent {
 
+
+    /**
+     * @author Rick Hightower
+     */
+    @Target( {ElementType.METHOD, ElementType.FIELD, ElementType.TYPE, ElementType.PARAMETER} )
+    @Retention( RetentionPolicy.RUNTIME )
+    public @interface UseCase1 {
+    }
+
+
     public static class Employee {
         String firstName;
+
+
+        @UseCase1
         String lastName;
+
+
         List<String> todo;
 
         public Employee(String firstName, String lastName, List<String> todo) {
@@ -68,6 +94,8 @@ public class ValidatePropsArePresent {
                     ", lastName='" + lastName + '\'' +
                     ", todo=" + todo +
                     '}';
+
+
         }
 
         @Override
@@ -90,6 +118,30 @@ public class ValidatePropsArePresent {
             result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
             result = 31 * result + (todo != null ? todo.hashCode() : 0);
             return result;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public List<String> getTodo() {
+            return todo;
+        }
+
+        public void setTodo(List<String> todo) {
+            this.todo = todo;
         }
     }
 
@@ -128,6 +180,8 @@ public class ValidatePropsArePresent {
             puts ("No todos!!!!");
         }
 
+
+
         //You can still convert to an object, in fact there is almost no overhead, the map is not a real map it is an parsed index overlay that looks like a map :)
 
         Employee hovik3WithNoTodos = fromMap(map, Employee.class);
@@ -153,6 +207,41 @@ public class ValidatePropsArePresent {
 
 
         puts(set);
+
+
+        final ClassMeta<Employee> employeeClassMeta = ClassMeta.classMeta(Employee.class);
+        final Iterator<FieldAccess> properties = employeeClassMeta.properties();
+
+        map = mapper.parseMap("{\"firstName\":\"Hovik\",\"lastName\":\"Gambino\"} ");
+
+
+        while (properties.hasNext()) {
+
+            FieldAccess property = properties.next();
+
+            puts (property.name());
+            if (property.hasAnnotation("UseCase1")) {
+                if (map.get(property.name())==null){
+                    die("Property was required", property.name());
+                }
+            }
+        }
+
+
+        map = mapper.parseMap("{\"firstName\":\"Hovik\",\"lastName\":\"Gambino\",  \"todo\":[\"Eat Salad\"]} ");
+
+
+        map.size();
+
+        if (matches(map,
+                notNull("firstName"),
+                notEmpty("firstName"),
+                contains("todo", "Eat Salad"))
+                ) {
+            puts ("Hovik is cool");
+        } else {
+            puts ("Hovik eat some damn salad");
+        }
 
     }
 }

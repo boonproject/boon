@@ -1178,6 +1178,10 @@ public class IO {
             final List<String> resources = Classpaths.resources(
                     IO.class, path );
 
+            if (resources == null || resources.size() == 0) {
+                die("Resource not found", location);
+            }
+
             String result = Lists.idx( resources, 0 );
             if ( result == null ) {
                 return path( path );

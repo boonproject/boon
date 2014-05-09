@@ -263,6 +263,9 @@ public class Dates {
         calendar.set( Calendar.DAY_OF_MONTH, day );
         calendar.set( Calendar.HOUR_OF_DAY, hour );
         calendar.set( Calendar.MINUTE, minute );
+        calendar.set( Calendar.SECOND, 0 );
+        calendar.set( Calendar.MILLISECOND, 0 );
+
 
         return calendar.getTime();
     }
@@ -278,6 +281,8 @@ public class Dates {
         calendar.set( Calendar.HOUR_OF_DAY, hour );
         calendar.set( Calendar.MINUTE, minute );
         calendar.set( Calendar.SECOND, second );
+        calendar.set( Calendar.MILLISECOND, 0 );
+
         calendar.setTimeZone( tz );
 
         return calendar.getTime();
@@ -339,6 +344,15 @@ public class Dates {
         calendar.set( Calendar.YEAR, year );
         calendar.set( Calendar.MONTH, month );
         calendar.set( Calendar.DAY_OF_MONTH, day );
+
+        calendar.set( Calendar.HOUR_OF_DAY, 0 );
+
+        calendar.set( Calendar.MINUTE, 0 );
+
+        calendar.set( Calendar.SECOND, 0 );
+
+        calendar.set( Calendar.MILLISECOND, 0 );
+
 
         return calendar.getTime().getTime();
     }
@@ -438,6 +452,7 @@ public class Dates {
         c.setTimeZone(GMT);
         c.set( 1970, Calendar.JANUARY, 2, 0, 0, 0 );
         c.set( Calendar.YEAR, year );
+        c.set( Calendar.MILLISECOND, 0 );
         return c.getTime();
     }
 
@@ -445,6 +460,7 @@ public class Dates {
         Calendar c = Calendar.getInstance();
         c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, 0, 0, 0 );
+        c.set( Calendar.MILLISECOND, 0 );
         return c.getTime();
     }
 
@@ -453,6 +469,7 @@ public class Dates {
         Calendar c = Calendar.getInstance();
         c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, hour, minute, second );
+        c.set( Calendar.MILLISECOND, 0 );
         return c.getTime();
     }
 
@@ -460,6 +477,7 @@ public class Dates {
         Calendar c = Calendar.getInstance();
         c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, 0, 0, 0 );
+        c.set( Calendar.MILLISECOND, 0 );
         return c.getTime();
     }
 
@@ -467,6 +485,7 @@ public class Dates {
         Calendar c = Calendar.getInstance();
         c.setTimeZone(GMT);
         c.set( year, month - 1, day + 1, hour, minute, second );
+        c.set( Calendar.MILLISECOND, 0 );
         return c.getTime();
     }
 
