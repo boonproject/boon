@@ -70,6 +70,8 @@ public class JsonSerializeTest {
     public void test() {
         Employee rick = new Employee();
         String sRick = new JsonSimpleSerializerImpl(null).serialize( rick ).toString();
+
+        puts(sRick);
         boolean ok = sRick.equals( "{\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
 
         rick = new JsonParserFactory ().create ().parse ( Employee.class, sRick );

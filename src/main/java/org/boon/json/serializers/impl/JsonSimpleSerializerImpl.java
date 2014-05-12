@@ -33,6 +33,7 @@ import org.boon.Boon;
 import org.boon.Exceptions;
 import org.boon.Maps;
 import org.boon.Str;
+import org.boon.cache.SimpleCache;
 import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Invoker;
@@ -130,9 +131,34 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     }
 
+
+    SimpleCache<String, String> stringCache;
+    CharBuf encodedJsonChars;
+
     public final void serializeString( String str, CharBuf builder ) {
+
+
+
           if (encodeStrings) {
-              builder.asJsonString(str);
+
+              if (stringCache == null) {
+                  stringCache = new SimpleCache<>(1000);
+                  encodedJsonChars = CharBuf.create(str.length());
+
+              }
+
+              String encodedString = stringCache.get(str);
+              if (encodedString == null) {
+
+
+
+                  encodedJsonChars.asJsonString(str);
+                  encodedString = encodedJsonChars.toStringAndRecycle();
+                  stringCache.put(str, encodedString);
+              }
+
+              builder.add(encodedString);
+
           } else {
               builder.addQuoted(str);
           }
@@ -330,7 +356,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     if (value.getClass().isArray()) {
                         if ( Array.getLength (value) > 0) {
                             serializeFieldName ( fieldName, builder );
-                            this.serializeArray (  value, builder );
+                            this.serializeArray ( fieldAccess.componentType(), value, builder );
                             return true;
                         }
                     }
@@ -624,8 +650,29 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     }
 
+
+    public final void serializeArray ( Type componentType, Object objectArray, CharBuf builder ) {
+
+
+        switch (componentType) {
+            case STRING: //optimization
+                String[] array = (String[]) objectArray;
+                final int length = array.length;
+
+                builder.addChar( '[' );
+                for ( int index = 0; index < length; index++ ) {
+                        serializeString( array[index], builder );
+                        builder.addChar ( ',' );
+                }
+                builder.removeLastChar ();
+                builder.addChar( ']' );
+                break;
+            default:
+                serializeArray(objectArray, builder);
+        }
+    }
     @Override
-    public void serializeArray ( Object array, CharBuf builder ) {
+    public final void serializeArray ( Object array, CharBuf builder ) {
 
         if ( Array.getLength (array) == 0 ) {
             builder.addChars ( EMPTY_LIST_CHARS );

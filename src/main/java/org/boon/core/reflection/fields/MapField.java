@@ -335,6 +335,11 @@ public class MapField implements FieldAccess {
     }
 
     @Override
+    public Type componentType() {
+        return null;
+    }
+
+    @Override
     public final boolean isFinal() {
         return false;
     }

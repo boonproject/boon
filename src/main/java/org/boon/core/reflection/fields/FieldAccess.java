@@ -119,4 +119,6 @@ public interface FieldAccess {
 
 
     void setStaticValue(Object newValue);
+
+    Type componentType();
 }

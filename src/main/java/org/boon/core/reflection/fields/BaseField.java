@@ -75,6 +75,7 @@ public abstract class BaseField implements FieldAccess {
     protected final Class<?> componentClass;
     protected final String typeName;
     public final Type typeEnum;
+    private final Type componentType;
     private  Map<String,  Map<String, Object>> annotationMap = new ConcurrentHashMap<> (  );
     private  HashSet<String> includedViews;
     private  HashSet<String> ignoreWithViews;
@@ -261,9 +262,11 @@ public abstract class BaseField implements FieldAccess {
 
                 if ( parameterizedType == null ) {
                     componentClass = Object.class;
+                    componentType = Type.OBJECT;
                 }  else if ( this.typeEnum == Type.ARRAY) {
 
                     componentClass = this.type.getComponentType();
+                    componentType = Type.getType(componentClass);
 
                 }
                 else {
@@ -273,6 +276,9 @@ public abstract class BaseField implements FieldAccess {
                     }else {
                         componentClass=Object.class;
                     }
+
+                    componentType = Type.getType(componentClass);
+
                 }
 
                 getter.setAccessible(true);
@@ -293,6 +299,8 @@ public abstract class BaseField implements FieldAccess {
                 typeName = type.getName ().intern ();
                 parameterizedType = null;
                 componentClass = Object.class;
+                componentType = Type.getType(componentClass);
+
                 parentType = setter.getDeclaringClass();
 
                 initAnnotationData ( setter.getDeclaringClass () );
@@ -371,7 +379,10 @@ public abstract class BaseField implements FieldAccess {
             }else {
                 componentClass=Object.class;
             }
+
         }
+
+        componentType = Type.getType(componentClass);
 
 
 
@@ -811,5 +822,12 @@ public abstract class BaseField implements FieldAccess {
     public Class<?> declaringParent() {
         return this.parentType;
     }
+
+
+    @Override
+    public Type componentType() {
+        return this.componentType;
+    }
+
 
 }

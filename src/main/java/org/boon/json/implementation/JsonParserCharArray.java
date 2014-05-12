@@ -38,8 +38,7 @@ import org.boon.primitive.Chr;
 import java.nio.charset.Charset;
 import java.util.*;
 
-import static org.boon.primitive.CharScanner.isInteger;
-import static org.boon.primitive.CharScanner.skipWhiteSpaceFast;
+import static org.boon.primitive.CharScanner.*;
 
 /**
  * Converts an input JSON String into Java objects works with String or char array
@@ -332,6 +331,59 @@ public class JsonParserCharArray extends BaseJsonParser  {
     private CharBuf builder = CharBuf.create( 20 );
 
     private String decodeString() {
+
+
+        char[] array = charArray;
+        int index = __index;
+        char currentChar = charArray[index];
+
+        if (index < array.length && currentChar == '"') {
+            index++;
+        }
+
+        final int startIndex = index;
+
+
+        boolean escape = false;
+
+        boolean hasEscaped = false;
+
+
+        while (true) {
+            currentChar = array[index];
+            if (isDoubleQuote(currentChar)) {
+                if (!escape) {
+                    break;
+                }
+            }
+            if (isEscape(currentChar)) {
+                hasEscaped = true;
+                escape = true;
+            } else {
+                escape = false;
+            }
+            index++;
+            if (index >= array.length) break;
+        }
+
+
+        String value = null;
+        if (hasEscaped) {
+            value = JsonStringDecoder.decodeForSure(array, startIndex, index);
+        } else {
+            value = new String(array, startIndex, (index - startIndex));
+        }
+
+        if (index < charArray.length) {
+            index++;
+        }
+        __index = index;
+        return value;
+
+    }
+
+
+    private String decodeStringNew() {
 
         char[] array = charArray;
         int index = __index;

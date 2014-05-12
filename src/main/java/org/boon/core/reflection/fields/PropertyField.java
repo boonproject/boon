@@ -29,6 +29,7 @@
 package org.boon.core.reflection.fields;
 
 import org.boon.Exceptions;
+import org.boon.core.Type;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

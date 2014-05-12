@@ -1295,5 +1295,10 @@ public abstract class Criterion<VALUE> extends Criteria {
         public void setStaticValue(Object newValue) {
 
         }
+
+        @Override
+        public Type componentType() {
+            return null;
+        }
     }
 }

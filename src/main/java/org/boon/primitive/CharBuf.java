@@ -473,50 +473,29 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     }
 
-    static final  int calculateSizeForJsonEncodedString( final char[] charArray ) {
-        int index = 0;
-        int c;
-        int controlCount=0;
-        int unicodeCount=0;
+    int jsonControlCount;
 
-        while ( true ) {
-            c = charArray[ index ];
-
-            if (c < 30) {
-                //less than space double quote or indent add 1 for each
-                if (   c == 7 || c == 12 || c == 15) {
-                    controlCount++;
-                } else {
-                    unicodeCount++;
-                }
-            } else if (c == 34 || c == 92 ) {
-                controlCount++;
-            } else if ( c > 126 ) {
-                //above 126 assume unicode and add five for each
-                unicodeCount++;
-            }
-            if ( ++index >= charArray.length) break;
-        }
-        return charArray.length + controlCount + (unicodeCount * 5) + 2;
-
-    }
-
-    private static  boolean hasAnyJSONControlOrUnicodeChars( final char[] charArray ) {
+    private final  boolean hasAnyJSONControlOrUnicodeChars( final char[] charArray ) {
         int index = 0;
         char c;
         while ( true ) {
             c = charArray[ index ];
             if ( isJSONControlOrUnicode( c )) {
-                return true;
+                jsonControlCount++;
+
             }
-            if ( ++index >= charArray.length) return false;
+            if ( ++index >= charArray.length) break;
         }
+
+        return (jsonControlCount>0) ? true : false;
 
     }
 
 
 
     public final CharBuf addJsonEscapedString( final char[] charArray ) {
+        jsonControlCount = 0;
+
         if ( charArray.length > 0 && hasAnyJSONControlOrUnicodeChars( charArray )) {
             return doAddJsonEscapedString(charArray);
         } else {
@@ -531,6 +510,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     private final CharBuf doAddJsonEscapedString( char[] charArray ) {
 
+
         char [] _buffer = buffer;
         int _location =  this.location;
 
@@ -538,13 +518,13 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
         final byte[] _charTo = charTo;
         /* We are making a bet that not all chars will be unicode. */
-        int  ensureThisMuch = calculateSizeForJsonEncodedString( charArray );
+        int  ensureThisMuch = charArray.length +  ((jsonControlCount +1) * 5);
 
         int sizeNeeded =  (ensureThisMuch) + _location;
         if ( sizeNeeded  > capacity ) {
 
             int growBy =   ( _buffer.length * 2 ) <  sizeNeeded  ? sizeNeeded : (_buffer.length*2);
-            _buffer = Chr.grow( buffer, growBy);
+            _buffer = Chr.grow( _buffer, growBy);
             capacity = _buffer.length;
         }
 
