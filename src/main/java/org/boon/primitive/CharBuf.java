@@ -1240,111 +1240,35 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
         /* Methods that do not terminate lines */
 
-    /**
-     * Prints a boolean value.  The string produced by <code>{@link
-     * java.lang.String#valueOf(boolean)}</code> is translated into bytes
-     * according to the platform's default character encoding, and these bytes
-     * are written in exactly the manner of the <code>{@link
-     * #write(int)}</code> method.
-     *
-     * @param      b   The <code>boolean</code> to be printed
-     */
     public void print(boolean b) {
         this.addBoolean(b);
     }
 
-    /**
-     * Prints a character.  The character is translated into one or more bytes
-     * according to the platform's default character encoding, and these bytes
-     * are written in exactly the manner of the <code>{@link
-     * #write(int)}</code> method.
-     *
-     * @param      c   The <code>char</code> to be printed
-     */
     public void print(char c) {
         this.add(c);
     }
 
-    /**
-     * Prints an integer.  The string produced by <code>{@link
-     * java.lang.String#valueOf(int)}</code> is translated into bytes according
-     * to the platform's default character encoding, and these bytes are
-     * written in exactly the manner of the <code>{@link #write(int)}</code>
-     * method.
-     *
-     * @param      i   The <code>int</code> to be printed
-     * @see        java.lang.Integer#toString(int)
-     */
     public void print(int i) {
         this.addInt(i);
     }
 
-    /**
-     * Prints a long integer.  The string produced by <code>{@link
-     * java.lang.String#valueOf(long)}</code> is translated into bytes
-     * according to the platform's default character encoding, and these bytes
-     * are written in exactly the manner of the <code>{@link #write(int)}</code>
-     * method.
-     *
-     * @param      l   The <code>long</code> to be printed
-     * @see        java.lang.Long#toString(long)
-     */
     public void print(long l) {
         this.addLong(l);
     }
 
-    /**
-     * Prints a floating-point number.  The string produced by <code>{@link
-     * java.lang.String#valueOf(float)}</code> is translated into bytes
-     * according to the platform's default character encoding, and these bytes
-     * are written in exactly the manner of the <code>{@link #write(int)}</code>
-     * method.
-     *
-     * @param      f   The <code>float</code> to be printed
-     * @see        java.lang.Float#toString(float)
-     */
     public void print(float f) {
         this.add(f);
     }
 
-    /**
-     * Prints a double-precision floating-point number.  The string produced by
-     * <code>{@link java.lang.String#valueOf(double)}</code> is translated into
-     * bytes according to the platform's default character encoding, and these
-     * bytes are written in exactly the manner of the <code>{@link
-     * #write(int)}</code> method.
-     *
-     * @param      d   The <code>double</code> to be printed
-     * @see        java.lang.Double#toString(double)
-     */
     public void print(double d) {
 
         this.add(d);
     }
 
-    /**
-     * Prints an array of characters.  The characters are converted into bytes
-     * according to the platform's default character encoding, and these bytes
-     * are written in exactly the manner of the <code>{@link #write(int)}</code>
-     * method.
-     *
-     * @param      s   The array of chars to be printed
-     *
-     * @throws  NullPointerException  If <code>s</code> is <code>null</code>
-     */
     public void print(char s[]) {
         this.addChars(s);
     }
 
-    /**
-     * Prints a string.  If the argument is <code>null</code> then the string
-     * <code>"null"</code> is printed.  Otherwise, the string's characters are
-     * converted into bytes according to the platform's default character
-     * encoding, and these bytes are written in exactly the manner of the
-     * <code>{@link #write(int)}</code> method.
-     *
-     * @param      s   The <code>String</code> to be printed
-     */
     public void print(String s) {
         if (s == null) {
             s = "null";
@@ -1352,189 +1276,53 @@ public class CharBuf extends PrintWriter implements CharSequence {
         this.addString(s);
     }
 
-    /**
-     * Prints an object.  The string produced by the <code>{@link
-     * java.lang.String#valueOf(Object)}</code> method is translated into bytes
-     * according to the platform's default character encoding, and these bytes
-     * are written in exactly the manner of the <code>{@link #write(int)}</code>
-     * method.
-     *
-     * @param      obj   The <code>Object</code> to be printed
-     * @see        java.lang.Object#toString()
-     */
     public void print(Object obj) {
         write(String.valueOf(obj));
     }
 
     /* Methods that do terminate lines */
 
-    /**
-     * Terminates the current line by writing the line separator string.  The
-     * line separator string is defined by the system property
-     * <code>line.separator</code>, and is not necessarily a single newline
-     * character (<code>'\n'</code>).
-     */
     public void println() {
         this.addLine();
     }
 
-    /**
-     * Prints a boolean value and then terminates the line.  This method behaves
-     * as though it invokes <code>{@link #print(boolean)}</code> and then
-     * <code>{@link #println()}</code>.
-     *
-     * @param x the <code>boolean</code> value to be printed
-     */
     public void println(boolean x) {
         this.addBoolean(x).addLine();
     }
 
-    /**
-     * Prints a character and then terminates the line.  This method behaves as
-     * though it invokes <code>{@link #print(char)}</code> and then <code>{@link
-     * #println()}</code>.
-     *
-     * @param x the <code>char</code> value to be printed
-     */
     public void println(char x) {
         this.addChar(x).addLine();
     }
 
-    /**
-     * Prints an integer and then terminates the line.  This method behaves as
-     * though it invokes <code>{@link #print(int)}</code> and then <code>{@link
-     * #println()}</code>.
-     *
-     * @param x the <code>int</code> value to be printed
-     */
     public void println(int x) {
         this.addInt(x).addLine();
 
     }
 
-    /**
-     * Prints a long integer and then terminates the line.  This method behaves
-     * as though it invokes <code>{@link #print(long)}</code> and then
-     * <code>{@link #println()}</code>.
-     *
-     * @param x the <code>long</code> value to be printed
-     */
     public void println(long x) {
 
         this.addLong(x).addLine();
     }
 
-    /**
-     * Prints a floating-point number and then terminates the line.  This method
-     * behaves as though it invokes <code>{@link #print(float)}</code> and then
-     * <code>{@link #println()}</code>.
-     *
-     * @param x the <code>float</code> value to be printed
-     */
     public void println(float x) {
         add(x).addLine();
     }
 
-    /**
-     * Prints a double-precision floating-point number and then terminates the
-     * line.  This method behaves as though it invokes <code>{@link
-     * #print(double)}</code> and then <code>{@link #println()}</code>.
-     *
-     * @param x the <code>double</code> value to be printed
-     */
     public void println(double x) {
         add(x).addLine();
     }
 
-    /**
-     * Prints an array of characters and then terminates the line.  This method
-     * behaves as though it invokes <code>{@link #print(char[])}</code> and then
-     * <code>{@link #println()}</code>.
-     *
-     * @param x the array of <code>char</code> values to be printed
-     */
+
     public void println(char x[]) {
         add(x).addLine();
 
     }
 
-    /**
-     * A convenience method to write a formatted string to this writer using
-     * the specified format string and arguments.  If automatic flushing is
-     * enabled, calls to this method will flush the output buffer.
-     *
-     * <p> An invocation of this method of the form <tt>out.printf(format,
-     * args)</tt> behaves in exactly the same way as the invocation
-     *
-     * <pre>
-     *     out.format(format, args) </pre>
-     *
-     * @param  format
-     *         A format string as described in <a
-     *         href="../util/Formatter.html#syntax">Format string syntax</a>.
-     *
-     * @param  args
-     *         Arguments referenced by the format specifiers in the format
-     *         string.  If there are more arguments than format specifiers, the
-     *         extra arguments are ignored.  The number of arguments is
-     *         variable and may be zero.  The maximum number of arguments is
-     *         limited by the maximum dimension of a Java array as defined by
-     *         <cite>The Java&trade; Virtual Machine Specification</cite>.
-     *         The behaviour on a
-     *         <tt>null</tt> argument depends on the <a
-     *         href="../util/Formatter.html#syntax">conversion</a>.
-     *
-     *
-     * @throws  NullPointerException
-     *          If the <tt>format</tt> is <tt>null</tt>
-     *
-     * @return  This writer
-     *
-     */
     public PrintWriter printf(String format, Object ... args) {
         this.addLine(String.format(format, args));
         return this;
     }
 
-    /**
-     * A convenience method to write a formatted string to this writer using
-     * the specified format string and arguments.  If automatic flushing is
-     * enabled, calls to this method will flush the output buffer.
-     *
-     * <p> An invocation of this method of the form <tt>out.printf(l, format,
-     * args)</tt> behaves in exactly the same way as the invocation
-     *
-     * <pre>
-     *     out.format(l, format, args) </pre>
-     *
-     * @param  l
-     *         The {@linkplain java.util.Locale locale} to apply during
-     *         formatting.  If <tt>l</tt> is <tt>null</tt> then no localization
-     *         is applied.
-     *
-     * @param  format
-     *         A format string as described in <a
-     *         href="../util/Formatter.html#syntax">Format string syntax</a>.
-     *
-     * @param  args
-     *         Arguments referenced by the format specifiers in the format
-     *         string.  If there are more arguments than format specifiers, the
-     *         extra arguments are ignored.  The number of arguments is
-     *         variable and may be zero.  The maximum number of arguments is
-     *         limited by the maximum dimension of a Java array as defined by
-     *         <cite>The Java&trade; Virtual Machine Specification</cite>.
-     *         The behaviour on a
-     *         <tt>null</tt> argument depends on the <a
-     *         href="../util/Formatter.html#syntax">conversion</a>.
-     *
-     *
-     * @throws  NullPointerException
-     *          If the <tt>format</tt> is <tt>null</tt>
-     *
-     * @return  This writer
-     *
-     * @since  1.5
-     */
     public PrintWriter printf(Locale l, String format, Object ... args) {
 
         this.addLine(String.format(l, format, args));
