@@ -26,34 +26,29 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.json.implementation;
+package com.examples;
+import org.boon.IO;
+import org.boon.json.JsonParserAndMapper;
+import org.boon.json.JsonParserFactory;
+import static org.boon.Boon.puts;
 
-import org.boon.primitive.CharBuf;
-import org.boon.primitive.Chr;
+/**
+ * Created by Richard on 5/12/14.
+ */
+public class EvilJsonParse {
+    public static class Employee {String firstName; String lastName; int salary; }
+    public static void main (String... args) {
+        long start;
+        long stop;
+        long time;
+        final String json = IO.read("/Users/Richard/dos_100000.json"); //talking IO time out of the equation
+        final JsonParserAndMapper mapper = new JsonParserFactory().create();
 
-public class JsonStringDecoder {
-
-
-
-
-
-
-    public static String decode( char[] chars, int start, int to ) {
-
-        if ( !Chr.contains( chars, '\\', start, to - start ) ) {
-            return new String( chars, start, to - start );
-        }
-        return decodeForSure( chars, start, to );
-    }
-
-
-
-    public static String decodeForSure( char[] chars, int start, int to ) {
-
-        CharBuf builder = CharBuf.create( to - start );
-        builder.decodeJsonString(chars, start, to);
-        return builder.toString();
+        start = System.nanoTime();
+        Employee employee = mapper.parse(Employee.class, json);
+        stop = System.nanoTime();
+        time = (stop - start) / 1_000_000; //milli-seconds
+        puts ("time", time, "ms");
 
     }
-
 }

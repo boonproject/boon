@@ -8,3 +8,7 @@ target
 .settings
 .gitignore~
 hs_err_pid3287.log
+
+src/test/resources/foo.json
+
+src/test/resources/freeformatter-out.json

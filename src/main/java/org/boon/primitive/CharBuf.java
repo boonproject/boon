@@ -28,8 +28,6 @@
 
 package org.boon.primitive;
 
-
-import org.boon.Exceptions;
 import org.boon.Str;
 import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
@@ -37,24 +35,18 @@ import org.boon.cache.SimpleCache;
 import org.boon.core.Dates;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
-import sun.nio.cs.Surrogate;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.Locale;
-
-import static org.boon.Boon.puts;
-import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
-import static org.boon.Exceptions.handle;
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.primitive.CharScanner.*;
 
@@ -74,8 +66,12 @@ public class CharBuf extends PrintWriter implements CharSequence {
     public CharBuf( byte[] bytes ) {
 
         super(writer());
-        this.buffer = null;
-        this.addAsUTF( bytes );
+
+        String str = new String(bytes, StandardCharsets.UTF_8);
+        this.buffer = FastStringUtils.toCharArray(str);
+        this.location = buffer.length;
+        this.capacity = buffer.length;
+
     }
 
     public static CharBuf createExact( final int capacity ) {
@@ -814,146 +810,14 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     public void addAsUTF( byte[] value ) {
 
-
-
-        if ( this.buffer == null ) {
-            this.buffer = new char[ value.length * 2 ];
-            capacity = buffer.length;
-        } else if ( this.buffer.length < value.length ) {
-            buffer = Chr.grow( buffer, value.length - buffer.length );
-            capacity = buffer.length;
-        }
-
-        char [] buffer = this.buffer;
-        int location = this.location;
-
-        for ( int index = 0; index < value.length; index++ ) {
-            int c = value[ index ];
-
-
-            if ( c >= 0 ) {
-                buffer [location] = (char)c;
-                location ++;
-            } else {
-                this.location = location;
-                index = utf8MultiByte( c, index, value );
-                location = this.location;
-            }
-
-        }
-
-        this.location = location;
-
+        String str = new String(value, StandardCharsets.UTF_8);
+        final char[] chars = FastStringUtils.toCharArray(str);
+        this.add(chars);
 
 
     }
 
 
-    //  [C2..DF] [80..BF]
-    private static boolean isMalformed2( int b1, int b2 ) {
-        return ( b1 & 0x1e ) == 0x0 || ( b2 & 0xc0 ) != 0x80;
-    }
-
-    //  [E0]     [A0..BF] [80..BF]
-    //  [E1..EF] [80..BF] [80..BF]
-    private static boolean isMalformed3( int b1, int b2, int b3 ) {
-        return ( b1 == ( byte ) 0xe0 && ( b2 & 0xe0 ) == 0x80 ) ||
-                ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80;
-    }
-
-    //  [F0]     [90..BF] [80..BF] [80..BF]
-    //  [F1..F3] [80..BF] [80..BF] [80..BF]
-    //  [F4]     [80..8F] [80..BF] [80..BF]
-    //  only check 80-be range here, the [0xf0,0x80...] and [0xf4,0x90-...]
-    //  will be checked by Surrogate.neededFor(uc)
-    private static boolean isMalformed4( int b2, int b3, int b4 ) {
-        return ( b2 & 0xc0 ) != 0x80 || ( b3 & 0xc0 ) != 0x80 ||
-                ( b4 & 0xc0 ) != 0x80;
-    }
-
-
-    private final int utf8MultiByte( final int c, int index, byte[] bytes ) {
-
-
-        int location = this.location;
-        char [] buffer = this.buffer;
-
-        //boolean ok = true;
-
-        if ( ( c >> 5 ) == -2 ) {
-            int b2;
-
-            //ok = index + 1 < bytes.length || die( "unable to parse 2 byte utf 8 - b2" );
-            index++;
-            b2 = bytes[ index ];
-
-            if ( isMalformed2( c, b2 ) ) {
-
-                buffer [location] =  '#' ;
-                location ++;
-
-            } else {
-                buffer [location] =  (char) (( ( c << 6 ) ^ b2 ) ^ 0x0f80 )  ;
-                location ++;
-
-            }
-        } else if ( ( c >> 4 ) == -2 ) {
-            int b2;
-            int b3;
-
-            //ok = index + 1 < bytes.length || die( "unable to parse 3 byte utf 8 - b2" );
-            index++;
-            b2 = bytes[ index ];
-            //ok = index + 1 < bytes.length || die( "unable to parse 3 byte utf 8 - b3" );
-            index++;
-            b3 = bytes[ index ];
-
-            if ( isMalformed3( c, b2, b3 ) ) {
-                buffer [location] =  '#' ;
-                location ++;
-            } else {
-                buffer [location] = (char) ( ( ( c << 12 ) ^ ( b2 << 6 ) ^ b3 ) ^ 0x1f80 ) ;
-                location ++;
-            }
-        } else if ( ( c >> 3 ) == -2 ) {
-            int b2;
-            int b3;
-            int b4;
-
-            //ok = index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b2" );
-            index++;
-            b2 = bytes[ index ];
-            //ok = index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b3" );
-            index++;
-            b3 = bytes[ index ];
-            //ok = index + 1 < bytes.length || die( "unable to parse 4 byte utf 8 - b4" );
-            index++;
-            b4 = bytes[ index ];
-
-            int uc = ( ( c & 0x07 ) << 18 ) |
-                    ( ( b2 & 0x3f ) << 12 ) |
-                    ( ( b3 & 0x3f ) << 6 ) |
-                    ( b4 & 0x3f );
-
-            if ( isMalformed4( b2, b3, b4 ) && !Surrogate.neededFor( uc ) ) {
-                addChar( '#' );
-            } else {
-
-                final char high = Surrogate.high( uc );
-                final char low = Surrogate.low( uc );
-
-                addChar( high );
-                addChar( low );
-
-            }
-        }
-
-
-
-        this.location = location;
-        this.buffer = buffer;
-        return index;
-    }
 
 
     final static char [] nullChars = "null".toCharArray ();
@@ -1242,149 +1106,12 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
 
     public final CharBuf decodeJsonString ( byte[] bytes, int start, int to ) {
-        int len = to - start;
 
-        char [] buffer = this.buffer;
-        int location = this.location;
 
-        if (len > capacity) {
-            buffer =  Chr.grow ( buffer, buffer.length * 2 + len );
-            capacity = buffer.length;
-        }
-
-        for ( int index = start; index < to; index++ ) {
-            int c = bytes[ index ];
-            if ( c >= 0 ) {
-                if (c == ESCAPE && index < to)  {
-                    c = bytes[ ++index ];
-                    switch ( c ) {
-                        case LETTER_N:
-                            buffer[location++]='\n';
-                            break;
-                        case FORWARD_SLASH:
-                            buffer[location++]='/';
-                            break;
-                        case DOUBLE_QUOTE:
-                            buffer[location++]='"';
-                            break;
-                        case LETTER_F:
-                            buffer[location++]='\f';
-                            break;
-                        case LETTER_T:
-                            buffer[location++]='\t';
-                            break;
-                        case ESCAPE:
-                            buffer[location++]='\\';
-                            break;
-                        case LETTER_B:
-                            buffer[location++]='\b';
-                            break;
-                        case LETTER_R:
-                            buffer[location++]='\r';
-                            break;
-                        case LETTER_U:
-                            if ( index + 4 < to ) {
-                                String hex = new String( bytes, index + 1, 4 );
-                                char unicode = ( char ) Integer.parseInt( hex, 16 );
-                                buffer[location++]=unicode;
-                                index += 4;
-                            }
-                            break;
-                        default:
-                            throw new JsonException ( "Unable to decode string" );
-                    }
-
-                } else  {
-                    buffer[location++]=(char)c;
-                }
-            } else {
-                index = utf8MultiByte( c, index, bytes );
-            }
-        }
-
-        this.buffer = buffer;
-        this.location = location;
-
+        String str = new String(bytes, start, to - start, StandardCharsets.UTF_8);
+        final char[] chars = FastStringUtils.toCharArray(str);
+        this.decodeJsonString(chars);
         return this;
-
-    }
-
-    public final CharBuf decodeJsonStringAscii ( byte[] bytes, int start, int to ) {
-        int len = to - start;
-
-        char [] buffer = this.buffer;
-        int location = this.location;
-
-        if (len > capacity) {
-            buffer =  Chr.grow ( buffer, buffer.length * 2 + len );
-            capacity = buffer.length;
-        }
-
-        for ( int index = start; index < to; index++ ) {
-            int c = bytes[ index ];
-            if ( c == ESCAPE ) {
-                if ( index < to ) {
-                    index++;
-                    c = bytes[ index ];
-                    switch ( c ) {
-
-                        case LETTER_N:
-                            buffer[location++]='\n';
-                            break;
-
-                        case FORWARD_SLASH:
-                            buffer[location++]='/';
-                            break;
-
-                        case DOUBLE_QUOTE:
-                            buffer[location++]='"';
-                            break;
-
-                        case LETTER_F:
-                            buffer[location++]='\f';
-                            break;
-
-                        case LETTER_T:
-                            buffer[location++]='\t';
-                            break;
-
-                        case ESCAPE:
-                            buffer[location++]='\\';
-                            break;
-
-                        case LETTER_B:
-                            buffer[location++]='\b';
-                            break;
-
-                        case LETTER_R:
-                            buffer[location++]='\r';
-                            break;
-
-                        case LETTER_U:
-
-                            if ( index + 4 < to ) {
-                                String hex = new String( bytes, index + 1, 4 );
-                                char unicode = ( char ) Integer.parseInt( hex, 16 );
-                                buffer[location++]=unicode;
-                                index += 4;
-                            }
-                            break;
-                        default:
-                            throw new JsonException ( "Unable to decode string" );
-                    }
-                }
-            } else {
-
-
-                    buffer[location++]=(char)c;
-            }
-        }
-
-        this.buffer = buffer;
-        this.location = location;
-
-        return this;
-
     }
 
     public void ensure( int i ) {
