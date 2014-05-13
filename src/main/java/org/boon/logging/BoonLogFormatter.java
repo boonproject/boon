@@ -40,6 +40,11 @@ import static org.boon.Exceptions.getFilteredStackTrace;
 
 /**
  * Created by Richard on 3/5/14.
+ * All of the logging here was heavily inspired by the logging that is in Vertx.
+ *
+ *
+ * I believe at all times the usage was small enough and derived enough to be covered under "fair use".
+ * And now the work has been so derived and changed that it is a different beast.
  */
 public class BoonLogFormatter  extends java.util.logging.Formatter {
     private static String LINE_SEPARATOR = System.getProperty("line.separator");

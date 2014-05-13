@@ -38,6 +38,18 @@ import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 
+
+/**
+ * This class uses int, float and double parsing that I saw in Jackson for int parsing.
+ * I have mentioned this many times on my blog and to Tatu on a few occasions.
+ *
+ * The work is now a complete derivative, but early versions of the int parsing
+ * were heavily based on the same approach used in Jackson.
+ *
+ * I believe at all times the usage was small enough to be covered under "fair use".
+ * And now the work has been so derived and changed that it is a different beast.
+ *
+ */
 public class CharScanner {
 
 

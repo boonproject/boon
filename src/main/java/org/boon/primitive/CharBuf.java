@@ -50,6 +50,16 @@ import static org.boon.Exceptions.die;
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.primitive.CharScanner.*;
 
+/**
+ * This class is like a StringBuilder but it also pretends to be a PrintWriter.
+ * The class existed long before I added PrintWriter cababilities.
+ * I did look at the PrintWriter code but any code in this class should be a derivative product.
+ * If I copied and/or emulated any technique from PrintWriter, be assured that I give them full credit.
+ *
+ * I believe at all times the usage was small enough to be covered under "fair use".
+ * But to remove any doubt, the comments in question have been deleted.
+ *
+ */
 public class CharBuf extends PrintWriter implements CharSequence {
     protected int capacity = 16;
     protected int location = 0;
