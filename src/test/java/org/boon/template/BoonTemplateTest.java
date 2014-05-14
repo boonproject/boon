@@ -193,7 +193,8 @@ public class BoonTemplateTest {
                 "\n";
         equalsOrDie(test, replace);
 
-        replace = template().replace(listTemplate, niceJson("{'items' : {'apple': 1, 'oranges': 2, 'pears': 4)}}"));
+        final String json = niceJson("{'items' : {'apple': 1, 'oranges': 2, 'pears': 4)}}");
+        replace = template().replace(listTemplate, json);
         test = "\n" +
                 " this 33, index 0, key pears, first true, last false\n" +
                 "\n" +
