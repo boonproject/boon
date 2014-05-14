@@ -28,6 +28,7 @@
 
 package org.boon.core.value;
 
+import org.boon.core.Sys;
 import org.boon.core.Value;
 import org.boon.primitive.Arry;
 
@@ -214,7 +215,14 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
     private final void buildMap() {
 
-        map = new HashMap<>( items.length );
+
+        /** added to avoid hash collision attack. */
+        if (Sys.is1_7OrLater() && System.getProperty("jdk.map.althashing.threshold") != null) {
+            map = new HashMap<>( items.length );
+        } else {
+            map = new TreeMap<>();
+        }
+
 
         for ( Entry<String, Value> miv : items ) {
             if ( miv == null ) {

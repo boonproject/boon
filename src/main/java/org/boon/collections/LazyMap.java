@@ -28,6 +28,7 @@
 
 package org.boon.collections;
 
+import org.boon.core.Sys;
 import org.boon.primitive.Arry;
 import org.boon.Maps;
 
@@ -124,7 +125,14 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     private void buildIfNeeded() {
         if ( map == null ) {
-            map = new LinkedHashMap<>( size, 0.01f );
+
+            /** added to avoid hash collision attack. */
+            if (Sys.is1_7OrLater() && System.getProperty("jdk.map.althashing.threshold") != null) {
+                map = new LinkedHashMap<>( size, 0.01f );
+            } else {
+                map = new TreeMap<>();
+            }
+
             for ( int index = 0; index < size; index++ ) {
                 map.put( keys[ index ], values[ index ] );
             }

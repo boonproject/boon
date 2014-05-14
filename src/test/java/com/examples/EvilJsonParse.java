@@ -30,6 +30,9 @@ package com.examples;
 import org.boon.IO;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
+
+import java.util.Map;
+
 import static org.boon.Boon.puts;
 
 /**
@@ -41,11 +44,19 @@ public class EvilJsonParse {
         long start;
         long stop;
         long time;
+
+
         final String json = IO.read("/Users/Richard/dos_100000.json"); //talking IO time out of the equation
         final JsonParserAndMapper mapper = new JsonParserFactory().create();
 
         start = System.nanoTime();
-        Employee employee = mapper.parse(Employee.class, json);
+
+        final Map<String,Object> map = mapper.parseMap(json);
+
+        map.size();
+
+
+
         stop = System.nanoTime();
         time = (stop - start) / 1_000_000; //milli-seconds
         puts ("time", time, "ms");
