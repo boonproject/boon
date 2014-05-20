@@ -99,7 +99,8 @@ public class Typ {
 
     public static boolean isBasicType( Object value ) {
         return ( value instanceof Number || value instanceof CharSequence
-                || value instanceof Date || value instanceof Calendar || value instanceof Boolean );
+                || value instanceof Date || value instanceof Calendar || value instanceof Currency
+                || value instanceof Boolean );
     }
 
 
