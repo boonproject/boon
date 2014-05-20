@@ -32,6 +32,8 @@ and [YourKit .Net  profiler](http://www.yourkit.com/.net/profiler/index.jsp).
 
 ![YourKit Logo](https://raw.githubusercontent.com/RichardHightower/boon/master/yourkit.png)
 
+![YourKit Logo](https://raw.githubusercontent.com/RichardHightower/boon/master/yourkit2.png)
+
 
 Philosophy
 ==========
