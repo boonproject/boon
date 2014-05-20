@@ -21,6 +21,16 @@ License
 
 
 
+YourKit
+=======
+
+YourKit supports Boon open source project with its full-featured Java Profiler.
+YourKit, LLC is the creator of innovative and intelligent tools for profiling
+Java and .NET applications. Take a look at YourKit's leading software products:
+[YourKit Java Profiler](http://www.yourkit.com/java/profiler/index.jsp) 
+and [YourKit .Net  profiler](http://www.yourkit.com/.net/profiler/index.jsp).
+
+
 Philosophy
 ==========
 Use it as you wish.  Give me some credit if you fork it or copy major portions of it. 
