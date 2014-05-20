@@ -49,6 +49,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.sputs;
+import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 
 /**
@@ -66,6 +67,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
     private final CharBuf builder;
+
+    private int level;
 
     public JsonSimpleSerializerImpl() {
 
@@ -167,6 +170,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
     public CharBuf serialize( Object obj ) {
+        level=0;
 
         builder.readForRecycle ();
         try {
@@ -560,6 +564,12 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         try {
 
+            level++;
+
+            if (level > 100) {
+                die("Detected circular dependency", builder.toString());
+            }
+
             if (serializeAsSupport && Reflection.respondsTo(instance, "serializeAs")) {
                 serializeObject(Invoker.invoke(instance, "serializeAs"), builder);
                 return;
@@ -582,10 +592,13 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             }
             builder.addChar( '}' );
 
+
         } catch (Exception ex) {
             Exceptions.handle(ex, "serialize instance", instance,
                     "class name of instance", Boon.className(instance),
                     "obj", instance);
+        } finally {
+            level--;
         }
 
     }
@@ -726,6 +739,12 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     @Override
     public void serializeSubtypeInstance( Object instance, CharBuf builder ) {
 
+        level++;
+
+        if (level > 100) {
+            die("Detected circular dependency", builder.toString());
+        }
+
         final Map<String, FieldAccess> fieldAccessors = getFields(instance.getClass ());
         final Collection<FieldAccess> values = fieldAccessors.values ();
 
@@ -750,6 +769,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             builder.addChar( '}' );
 
         }
+
+        level--;
     }
 
 
