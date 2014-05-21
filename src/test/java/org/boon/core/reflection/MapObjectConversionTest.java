@@ -28,11 +28,18 @@
 
 package org.boon.core.reflection;
 
+import java.math.BigDecimal;
+import java.util.Currency;
+import java.util.Date;
+import java.util.Map;
 import org.boon.Lists;
 import org.junit.Test;
 
 import static org.boon.Exceptions.die;
+import org.boon.core.Dates;
 import static org.boon.core.reflection.MapObjectConversion.fromList;
+import static org.boon.core.reflection.MapObjectConversion.toMap;
+import static org.boon.core.reflection.MapObjectConversion.fromMap;
 
 /**
  * Created by Richard on 4/25/14.
@@ -45,11 +52,13 @@ public class MapObjectConversionTest {
     Employee boss = new Employee(1);
     boolean ok;
 
-
     public static class Employee {
 
         private  int i = -555;
         private  String abc;
+        private Date dob = Dates.getUSDate( 5, 25, 1980 );
+        private Currency currency = Currency.getInstance("USD");
+        private BigDecimal salary = new BigDecimal("100000.00");
 
         Employee(int i) {
             this.i = i;
@@ -205,6 +214,35 @@ public class MapObjectConversionTest {
         ok = employee != null || die();
         ok = employee.abc.equals("1") || die();
         ok = employee.i == 2 || die();
+    }
+
+    @Test
+    public void testToMap() {
+        Employee emp = new Employee("ABC" );
+        Map<String, Object> employeeMap = toMap(emp);
+        ok = employeeMap != null || die();
+        ok = employeeMap.size() == 6 || die();
+        ok = employeeMap.get("abc").equals( "ABC" ) || die();
+        ok = employeeMap.get("i").equals( -555 ) || die();
+        ok = employeeMap.get("dob").toString().equals( Dates.getUSDate( 5, 25, 1980 ).toString() ) || die();
+        ok = employeeMap.get("currency").equals( Currency.getInstance( "USD" ) ) || die();
+        ok = employeeMap.get("salary").equals(new BigDecimal( "100000.00" ) ) || die();
+    }
+
+    @Test
+    public void testFromMap() {
+        Employee emp = new Employee("DEF" );
+        
+        Map<String, Object> employeeMap = toMap(emp);
+        Employee emp2 = (Employee)fromMap(employeeMap);
+        
+        ok = emp2 != null || die();
+        ok = emp2.abc.equals( "DEF" ) || die();
+        ok = emp2.i == -555 || die();
+        ok = emp2.dob.toString().equals( Dates.getUSDate( 5, 25, 1980 ).toString() ) || die();
+        ok = emp2.currency.equals( Currency.getInstance( "USD" ) ) || die();
+        ok = emp2.salary.equals(new BigDecimal( "100000.00" ) ) || die();
+        
     }
 
 }

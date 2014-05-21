@@ -28,13 +28,12 @@
 
 package org.boon.core.reflection;
 
+import java.math.BigDecimal;
+import java.util.*;
 import org.boon.Lists;
 import org.boon.Maps;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 
 import static org.boon.Boon.puts;
@@ -47,6 +46,7 @@ import static org.boon.json.JsonFactory.*;
 import static org.boon.Exceptions.die;
 import static org.boon.Str.lpad;
 import static org.boon.Str.rpad;
+import org.boon.core.Dates;
 
 /**
  * Created by Richard on 2/12/14.
@@ -61,6 +61,10 @@ public class MapConversionTest {
         Employee boss;
 
         List<Employee> reports;
+
+        Date dob = Dates.getUSDate( 5, 25, 1980 );
+        Currency currency = Currency.getInstance("USD");
+        BigDecimal salary = new BigDecimal("100000.00");
 
         public Employee( String name, int age ) {
             this.name = name;
@@ -88,6 +92,9 @@ public class MapConversionTest {
                     ", age=" + age +
                     ", boss=" + (boss == null ? "executive" : boss) +
 //                    ", reports=" + reports +
+                    ", dob=" + dob +
+                    ", currency=" + currency +
+                    ", salary=" + salary +
                     '}';
         }
     }
@@ -96,7 +103,7 @@ public class MapConversionTest {
     public void testMain() {
         MapConversionTest.main();
     }
-
+    
     public static void main( String... args ) {
         List<Object> rickList;
         Map<String, Object> rickMap;
@@ -324,7 +331,7 @@ public class MapConversionTest {
         List<Object> reports = new ArrayList<>();
         reports.add( report );
 
-        Employee emp = MapObjectConversion.fromListUsingFields( list( "Rick", 29, boss, reports ), Employee.class );
+        Employee emp = MapObjectConversion.fromListUsingFields( list( "Rick", 29, boss, reports, Dates.getUSDate( 5, 25, 1980 ), Currency.getInstance("USD"), new BigDecimal("100000.00")), Employee.class );
 
         boolean ok = emp != null || die();
         ok = emp.name != null || die();
@@ -346,6 +353,15 @@ public class MapConversionTest {
         ok = emp.reports.size() == 1 || die();
         ok = emp.reports.get( 0 ).name.equals( "Lucas" ) || die();
         ok = emp.reports.get( 0 ).age == 10 || die();
+
+        ok = emp.dob != null || die();
+        ok = emp.dob.toString().equals( Dates.getUSDate( 5, 25, 1980 ).toString() ) || die();
+        
+        ok = emp.currency != null || die();
+        ok = emp.currency == Currency.getInstance( "USD" ) || die();
+        
+        ok = emp.salary != null || die();
+        ok = emp.salary.equals(new BigDecimal( "100000.00" ) ) || die();
 
     }
 }
