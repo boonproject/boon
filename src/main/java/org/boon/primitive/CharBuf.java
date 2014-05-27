@@ -1000,6 +1000,22 @@ public class CharBuf extends PrintWriter implements CharSequence {
     public final CharBuf decodeJsonString ( char[] chars ) {
         return decodeJsonString ( chars, 0, chars.length );
     }
+
+
+    static final char[] controlMap = new char[255];
+
+    static {
+        controlMap[(int)'n'] = '\n';
+        controlMap[(int)'b'] = '\b';
+        controlMap[(int)'/'] = '/';
+        controlMap[(int)'f'] = '\f';
+        controlMap[(int)'r'] = '\r';
+        controlMap[(int)'t'] = '\t';
+        controlMap[(int)'\\'] = '\\';
+
+        controlMap[(int)'"'] = '"';
+    }
+
     public final CharBuf decodeJsonString ( char[] chars, int start, int to ) {
         int len = to - start;
 
@@ -1015,47 +1031,17 @@ public class CharBuf extends PrintWriter implements CharSequence {
             this.buffer = buffer;
         }
 
-        for ( int index = start; index < to; index++ ) {
-            char c = chars[ index ];
-            if ( c == '\\' ) {
-                if ( index < to -1  ) {
+        char c;
+        int index = start;
+
+        while (true) {
+            c = chars[ index ];
+            if ( c == '\\'  && index < (to -1)) {
                     index++;
                     c = chars[ index ];
-                    switch ( c ) {
-
-                        case 'n':
-                            buffer[location++]='\n';
-                            break;
-
-                        case '/':
-                            buffer[location++]='/';
-                            break;
-
-                        case '"':
-                            buffer[location++]='"';
-                            break;
-
-                        case 'f':
-                            buffer[location++]='\f';
-                            break;
-
-                        case 't':
-                            buffer[location++]='\t';
-                            break;
-
-                        case '\\':
-                            buffer[location++]='\\';
-                            break;
-
-                        case 'b':
-                            buffer[location++]='\b';
-                            break;
-
-                        case 'r':
-                            buffer[location++]='\r';
-                            break;
-
-                        case 'u':
+                    if (c!='u') {
+                        buffer[location++] = controlMap[(int)c];
+                    } else {
 
                             if ( index + 4 < to ) {
                                 String hex = new String( chars, index + 1, 4 );
@@ -1063,24 +1049,16 @@ public class CharBuf extends PrintWriter implements CharSequence {
                                 buffer[location++]=unicode;
                                 index += 4;
                             }
-                            break;
-                        default:
-                            throw new JsonException ( "Unable to decode string" );
                     }
-                }
+
             } else {
                 buffer[location++]=c;
             }
+            if (index >= (to -1)) {
+                break;
+            }
+            index++;
         }
-//        }
-//        catch (ArrayIndexOutOfBoundsException axe) {
-//
-//            handle(axe, "Got ARRAY INDEX OUT OF BOUNDS \n",
-//                    "the buffer is this big", this.buffer.length,
-//                    "\nwe are at this location ", location,
-//                    "\nthe length of the span is ", len, "input buffer length", chars.length);
-//
-//        }
 
 
         this.buffer = buffer;

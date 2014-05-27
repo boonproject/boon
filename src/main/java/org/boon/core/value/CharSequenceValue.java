@@ -36,6 +36,7 @@ import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
 import org.boon.json.implementation.JsonStringDecoder;
+import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 
 import java.math.BigDecimal;
@@ -208,6 +209,15 @@ public class CharSequenceValue implements Value, CharSequence {
     public String stringValue () {
         if ( this.decodeStrings ) {
             return JsonStringDecoder.decodeForSure ( buffer, startIndex, endIndex );
+        } else {
+            return toString ();
+        }
+    }
+
+    @Override
+    public String stringValue(CharBuf charBuf) {
+        if ( this.decodeStrings ) {
+            return JsonStringDecoder.decodeForSure ( charBuf, buffer, startIndex, endIndex );
         } else {
             return toString ();
         }

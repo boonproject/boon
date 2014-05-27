@@ -1367,12 +1367,13 @@ public class Conversions {
     }
 
 
+
     public static <TO, FROM> List<TO> mapFilterNulls(Function<FROM, TO> converter,
-                                                     List<FROM> fromList) {
+                                                     Collection<FROM> fromCollection) {
 
-        ArrayList<TO> toList = new ArrayList<TO>(fromList.size());
+        ArrayList<TO> toList = new ArrayList<>(fromCollection.size());
 
-        for (FROM from : fromList) {
+        for (FROM from : fromCollection) {
             TO converted = converter.apply(from);
             if (converted != null) {
                 toList.add(converted);

@@ -34,6 +34,7 @@ import org.boon.core.Dates;
 import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 
 import java.math.BigDecimal;
@@ -172,6 +173,11 @@ public class NumberValue extends Number implements Value {
 
     public String stringValue () {
             return toString ();
+    }
+
+    @Override
+    public String stringValue(CharBuf charBuf) {
+        return toString();
     }
 
     @Override

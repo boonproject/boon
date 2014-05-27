@@ -31,6 +31,7 @@ package org.boon.core.value;
 
 import org.boon.core.Type;
 import org.boon.core.Value;
+import org.boon.primitive.CharBuf;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -113,6 +114,15 @@ public class ValueContainer implements CharSequence, Value {
 
     @Override
     public String stringValue() {
+        if (type == Type.NULL)  {
+            return null;
+        } else {
+            return type.toString();
+        }
+    }
+
+    @Override
+    public String stringValue(CharBuf charBuf) {
         if (type == Type.NULL)  {
             return null;
         } else {

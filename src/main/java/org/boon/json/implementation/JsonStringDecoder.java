@@ -56,4 +56,14 @@ public class JsonStringDecoder {
 
     }
 
+
+    public static String decodeForSure( CharBuf charBuf, char[] chars, int start, int to ) {
+
+        charBuf.recycle();
+
+        charBuf.decodeJsonString(chars, start, to);
+        return charBuf.toString();
+
+    }
+
 }

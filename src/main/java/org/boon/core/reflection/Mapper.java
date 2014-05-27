@@ -986,6 +986,16 @@ public class Mapper {
                         field.setObject( newInstance, chars);
                         return;
 
+                    case STRING:
+                        CharBuf buffer = CharBuf.create(100);
+                        String [] strings = new String[collectionOfValues.size()];
+                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                            strings[index] = value.stringValue(buffer);
+                            index++;
+                        }
+                        field.setObject( newInstance, strings);
+                        return;
+
 
                     default:
                         Object array = Array.newInstance(componentClass, collectionOfValues.size());
@@ -1492,7 +1502,7 @@ public class Mapper {
         // subclass fields with the same name
 
         List<Maps.Entry<String, Object>> entries = Conversions.mapFilterNulls(
-                new FieldToEntryConverter(object), new ArrayList( fields ) );
+                new FieldToEntryConverter(object), fields );
 
         map.put( "class", object.getClass().getName() );
 

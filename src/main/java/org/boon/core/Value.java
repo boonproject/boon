@@ -28,6 +28,8 @@
 
 package org.boon.core;
 
+import org.boon.primitive.CharBuf;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Currency;
@@ -57,6 +59,9 @@ public interface Value {
     Date dateValue();
 
     String stringValue();
+
+
+    String stringValue(CharBuf charBuf);
 
     String stringValueEncoded();
 
