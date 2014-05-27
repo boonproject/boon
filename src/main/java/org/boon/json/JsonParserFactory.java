@@ -28,11 +28,13 @@
 
 package org.boon.json;
 
+import org.boon.core.reflection.Mapper;
 import org.boon.core.reflection.fields.*;
 import org.boon.json.implementation.*;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 public class JsonParserFactory {
 
@@ -43,6 +45,11 @@ public class JsonParserFactory {
     private boolean lazyChop = true;
     private FieldAccessMode fieldAccessType = FieldAccessMode.FIELD;
     private boolean useAnnotations;
+
+    private  Set<String> ignoreSet;
+    private  String view;
+    private  boolean respectIgnore;
+
 
 
     public FieldAccessMode getFieldAccessType() {
@@ -91,7 +98,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createFastParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  false, chop, lazyChop ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  false, chop, lazyChop ),   new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
         jsonParser.setCharset ( charset );
         return jsonParser;
     }
@@ -99,7 +106,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createFastObjectMapperParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  true ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  true ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
         jsonParser.setCharset ( charset );
         return jsonParser;
     }
@@ -108,7 +115,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createUTF8DirectByteParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonUTF8Parser (  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonUTF8Parser (  ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( StandardCharsets.UTF_8 );
         return jsonParser;
@@ -116,7 +123,7 @@ public class JsonParserFactory {
     }
 
     public JsonParserAndMapper createASCIIParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonAsciiParser (  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonAsciiParser (  ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( StandardCharsets.US_ASCII );
         return jsonParser;
@@ -125,7 +132,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createLaxParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop  ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -135,7 +142,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createParserWithEvents(JsonParserEvents events) {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop, false, events  ),
-                FieldAccessMode.create( fieldAccessType, useAnnotations ));
+                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -143,14 +150,16 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createCharacterSourceParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserUsingCharacterSource ( ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserUsingCharacterSource ( ),
+                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
     }
 
     public JsonParserAndMapper createJsonCharArrayParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserCharArray( ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserCharArray( ),
+                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -161,7 +170,8 @@ public class JsonParserFactory {
         if (charset==null) {
            charset= StandardCharsets.US_ASCII;
         }
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new PlistParser ( false, chop, lazyChop  ),  FieldAccessMode.create( fieldAccessType, useAnnotations ));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new PlistParser ( false, chop, lazyChop  ),
+                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -183,7 +193,7 @@ public class JsonParserFactory {
             charset = StandardCharsets.UTF_8;
         }
 
-        return new JsonMappingParser ( FieldAccessMode.create( fieldAccessType, useAnnotations ), charset,
+        return new JsonMappingParser ( new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore), charset,
                  lax,  chop, lazyChop );
     }
 
@@ -238,4 +248,35 @@ public class JsonParserFactory {
         return this;
 
     }
+
+
+
+
+    public Set<String> getIgnoreSet() {
+        return ignoreSet;
+    }
+
+    public JsonParserFactory setIgnoreSet(Set<String> ignoreSet) {
+        this.ignoreSet = ignoreSet;
+        return this;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public JsonParserFactory setView(String view) {
+        this.view = view;
+        return this;
+    }
+
+    public boolean isRespectIgnore() {
+        return respectIgnore;
+    }
+
+    public JsonParserFactory setRespectIgnore(boolean respectIgnore) {
+        this.respectIgnore = respectIgnore;
+        return this;
+    }
+
 }

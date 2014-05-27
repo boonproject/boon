@@ -35,6 +35,7 @@ import org.boon.core.Typ;
 import org.boon.core.Type;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.Mapper;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonParser;
 import org.boon.json.JsonParserAndMapper;
@@ -56,9 +57,9 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
 
 
-    protected final FieldsAccessor fieldsAccessor;
     protected final JsonParser parser;
     private final CharBuf builder = CharBuf.create( 20 );
+    private final Mapper mapper;
 
     protected Charset charset  = StandardCharsets.UTF_8;
 
@@ -67,9 +68,9 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
     private char[] copyBuf;
 
 
-    public BaseJsonParserAndMapper( JsonParser parser, FieldsAccessor fieldsAccessor ) {
-        this.fieldsAccessor = fieldsAccessor;
+    public BaseJsonParserAndMapper( JsonParser parser, Mapper mapper ) {
         this.parser = parser;
+        this.mapper = mapper;
 
     }
 
@@ -95,16 +96,16 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
             switch ( coerceFrom ) {
 
                 case VALUE_MAP:
-                    return MapObjectConversion.fromValueMap( false, null, fieldsAccessor, ( Map<String, Value> ) object, clz, null );
+                    return mapper.fromValueMap(  ( Map<String, Value> ) object, clz );
 
                 case MAP:
-                    return MapObjectConversion.fromMap ( false, null, fieldsAccessor, ( Map<String, Object> ) object, clz, null );
+                    return mapper.fromMap ( ( Map<String, Object> ) object, clz );
 
                 case VALUE:
                     return (T)( (Value) object).toValue ();
 
                 case LIST:
-                    return (T)MapObjectConversion.convertListOfMapsToObjects(clz, (List<Map>)object);
+                    return (T) mapper.convertListOfMapsToObjects( (List<Map>)object, clz);
 
                 default:
                     if ( Typ.isBasicTypeOrCollection( clz ) ) {

@@ -71,6 +71,14 @@ public class Mapper {
     private final String view;
     private final boolean respectIgnore;
 
+
+
+    public Mapper( FieldAccessMode fieldAccessType, boolean useAnnotations, Set<String> ignoreSet, String view, boolean respectIgnore ) {
+        fieldsAccessor = FieldAccessMode.create( fieldAccessType, useAnnotations );
+        this.ignoreSet = ignoreSet;
+        this.view = view;
+        this.respectIgnore = respectIgnore;
+    }
     public Mapper( FieldsAccessor fieldsAccessor, Set<String> ignoreSet, String view, boolean respectIgnore ) {
         this.fieldsAccessor = fieldsAccessor;
         this.ignoreSet = ignoreSet;
@@ -79,7 +87,7 @@ public class Mapper {
     }
 
     public Mapper( Set<String> ignoreSet, String view, boolean respectIgnore ) {
-        this.fieldsAccessor = new FieldsAccessorFieldThenProp(true);;
+        this.fieldsAccessor = new FieldsAccessorFieldThenProp(true);
         this.ignoreSet = ignoreSet;
         this.view = view;
         this.respectIgnore = respectIgnore;
@@ -96,7 +104,7 @@ public class Mapper {
     public Mapper( ) {
         fieldsAccessor = new FieldsAccessorFieldThenProp(true);
 
-        ignoreSet = Collections.emptySet();
+        ignoreSet = null;
         view = null;
         respectIgnore = true;
     }
@@ -1492,8 +1500,10 @@ public class Mapper {
 
             String key = entry.key();
 
-            if ( ignoreSet.contains( key ) ) {
-                continue;
+            if (ignoreSet!=null) {
+                if ( ignoreSet.contains( key ) ) {
+                    continue;
+                }
             }
 
             Object value = entry.value();
@@ -1565,5 +1575,45 @@ public class Mapper {
             return entry;
         }
     }
+
+
+
+    /**
+     * Creates a list of maps from a list of class instances.
+     * @param collection  the collection we are coercing into a field value
+     * @return the return value.
+     */
+    public  List<Map<String, Object>> toListOfMaps( Collection<?> collection ) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for ( Object o : collection ) {
+            list.add( toMap( o ) );
+        }
+        return list;
+    }
+
+
+    /** Convert an object to a list.
+     *
+     * @param object the object we want to convert to a list
+     * @return new list from an object
+     */
+    public  List<?> toList( Object object) {
+
+        org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(object);
+
+        switch (instanceType) {
+            case NULL:
+                return Lists.list((Object)null);
+            case ARRAY:
+                return Conversions.toList(object);
+            case INSTANCE:
+                if (Reflection.respondsTo(object, "toList")) {
+                    return (List<?>) Reflection.invoke(object, "toList");
+                }
+                break;
+        }
+        return Lists.list(object);
+    }
+
 
 }

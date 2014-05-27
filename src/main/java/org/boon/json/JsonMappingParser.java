@@ -33,6 +33,7 @@ import org.boon.IO;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.core.reflection.Mapper;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueContainer;
 import org.boon.json.implementation.*;
@@ -61,7 +62,8 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
 
     private final JsonParserAndMapper largeFileParser;
-    private final FieldsAccessor fields;
+    private final Mapper mapper;
+
     private final Charset charset;
 
     private CharBuf charBuf;
@@ -71,21 +73,20 @@ public class JsonMappingParser implements JsonParserAndMapper {
     private int bufSize = 1024*4;
 
 
-    public JsonMappingParser( final FieldsAccessor fields,
-                                    Charset charset,
+    public JsonMappingParser(       Mapper mapper, Charset charset,
                                     boolean lax,
                                     boolean chop, boolean lazyChop ) {
 
 
         this.charset = charset;
-        this.fields = fields;
+        this.mapper = mapper;
 
         if ( lax ) {
-           this.basicParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop ), fields);
-           this.objectParser = new BaseJsonParserAndMapper(new JsonParserLax ( true ), fields);
+           this.basicParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop ), mapper);
+           this.objectParser = new BaseJsonParserAndMapper(new JsonParserLax ( true ), mapper);
         } else {
-            this.basicParser = new BaseJsonParserAndMapper( new JsonFastParser ( false, chop, lazyChop ), fields);
-            this.objectParser = new BaseJsonParserAndMapper(new JsonFastParser ( true ), fields);
+            this.basicParser = new BaseJsonParserAndMapper( new JsonFastParser ( false, chop, lazyChop ), mapper);
+            this.objectParser = new BaseJsonParserAndMapper(new JsonFastParser ( true ), mapper);
         }
 
         ( (BaseJsonParserAndMapper ) basicParser).setCharset ( charset );
@@ -204,7 +205,7 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
         if (object instanceof Map ) {
             Map<String, Value> objectMap = ( Map<String, Value> ) object;
-           return MapObjectConversion.fromValueMap( false, null, fields, objectMap, type, null );
+           return mapper.fromValueMap( objectMap, type );
         }
 
         if (object instanceof ValueContainer) {

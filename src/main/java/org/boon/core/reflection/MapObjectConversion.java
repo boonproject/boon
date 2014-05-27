@@ -133,20 +133,7 @@ public class MapObjectConversion {
      */
     public static List<?> toList( Object object) {
 
-        org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(object);
-
-        switch (instanceType) {
-            case NULL:
-                return Lists.list((Object)null);
-            case ARRAY:
-                return Conversions.toList(object);
-            case INSTANCE:
-                if (Reflection.respondsTo(object, "toList")) {
-                    return (List<?>) Reflection.invoke(object, "toList");
-                }
-                break;
-        }
-        return Lists.list(object);
+        return mapper.toList(object);
     }
 
 
@@ -211,79 +198,6 @@ public class MapObjectConversion {
 
         return mapper.fromMap(map, cls);
     }
-
-
-    /**
-     * Inject a map into an object's field.
-     * @param respectIgnore  honor @JsonIgnore, transients, etc. of the field
-     * @param view the view of the object which can ignore certain fields given certain views
-     * @param fieldsAccessor how we are going to access the fields (by field, by property, combination)
-     * @param ignoreSet a set of properties to ignore
-     * @param toObject object we are copying value into
-     * @param field field we are injecting a value into
-     * @param value value we are trying to inject which might need coercion
-     * @param <T> generic type
-     */
-    private static <T> void setFieldValueFromMap( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor,
-                                                  Set<String> ignoreSet, T toObject, FieldAccess field, Object value ) {
-
-
-        Class<?> fieldClassType = field.type();
-
-        Map mapInner = (Map)value;
-
-        /* Is the field not a map. */
-        if ( !Typ.isMap( fieldClassType ) )  {
-
-            if ( !fieldClassType.isInterface() && !Typ.isAbstract( fieldClassType ) ) {
-                value = fromMap( respectIgnore, view, fieldsAccessor, mapInner, field.type(), ignoreSet );
-
-            } else {
-                String  className = (String) ((Map) value).get( "class" );
-                if (className != null)  {
-                    value = fromMap( respectIgnore, view, fieldsAccessor, mapInner, Reflection.loadClass( className ), ignoreSet );
-                } else {
-                    value = null;
-                }
-            }
-
-           /*
-           REFACTOR:
-           This is at least the third time that I have seen this code in the class.
-            It was either cut and pasted or I forgot I wrote it three times.
-           REFACTOR:
-             */
-        }  else if (Typ.isMap( fieldClassType ))  {
-            Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
-            Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
-
-            Set<Map.Entry> set = mapInner.entrySet();
-            Map newMap = new LinkedHashMap(  );
-
-            for (Map.Entry entry : set) {
-                Object evalue = entry.getValue();
-
-                Object key = entry.getKey();
-
-                if (evalue instanceof ValueContainer) {
-                    evalue = ((ValueContainer) evalue).toValue();
-                }
-
-                key  = Conversions.coerce( keyType, key );
-                evalue = Conversions.coerce( valueType, evalue );
-                newMap.put( key, evalue );
-            }
-
-            value  = newMap;
-
-        }
-
-        field.setValue(toObject, value);
-
-    }
-
-
-
 
 
     /**
@@ -392,11 +306,8 @@ public class MapObjectConversion {
      * @return the return value.
      */
     public static List<Map<String, Object>> toListOfMaps( Collection<?> collection ) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for ( Object o : collection ) {
-            list.add( toMap( o ) );
-        }
-        return list;
+
+        return mapper.toListOfMaps(collection);
     }
 
 }
