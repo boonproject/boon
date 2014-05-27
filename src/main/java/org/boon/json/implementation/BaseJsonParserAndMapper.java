@@ -104,8 +104,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
                     return (T)( (Value) object).toValue ();
 
                 case LIST:
-                    return (T)MapObjectConversion.convertListOfMapsToObjects(false, null, this.fieldsAccessor,
-                            clz, (List<Object>)object, null);
+                    return (T)MapObjectConversion.convertListOfMapsToObjects(clz, (List<Map>)object);
 
                 default:
                     if ( Typ.isBasicTypeOrCollection( clz ) ) {
@@ -136,7 +135,8 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
     private <T> List<T> convertList( Class<T> componentType, List<Object> list ) {
 
-        return MapObjectConversion.convertListOfMapsToObjects(false, null, fieldsAccessor, componentType, list, null );
+        List l = list;
+        return MapObjectConversion.convertListOfMapsToObjects(componentType, (List<Map>)l );
     }
 
 

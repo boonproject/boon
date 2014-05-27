@@ -320,48 +320,4 @@ public class MapConversionTest {
 
     }
 
-
-    @Test
-    public void testListNotUsingConstructor() {
-
-        List<Object> boss = list( ( Object ) "Jason", 21 );
-        List<Object> report = list( ( Object ) "Lucas", 10 );
-
-
-        List<Object> reports = new ArrayList<>();
-        reports.add( report );
-
-        Employee emp = MapObjectConversion.fromListUsingFields( list( "Rick", 29, boss, reports, Dates.getUSDate( 5, 25, 1980 ), Currency.getInstance("USD"), new BigDecimal("100000.00")), Employee.class );
-
-        boolean ok = emp != null || die();
-        ok = emp.name != null || die();
-        ok = emp.name.equals( "Rick" ) || die();
-
-        ok = emp.age == 29 || die();
-
-        ok = emp.name != null || die();
-        ok = emp.name.equals( "Rick" ) || die();
-        ok = emp.age == 29 || die();
-
-        ok = emp.boss != null || die();
-        ok = emp.boss.name.equals( "Jason" ) || die();
-        ok = emp.boss.age == 21 || die();
-
-
-        ok = emp.reports != null || die();
-
-        ok = emp.reports.size() == 1 || die();
-        ok = emp.reports.get( 0 ).name.equals( "Lucas" ) || die();
-        ok = emp.reports.get( 0 ).age == 10 || die();
-
-        ok = emp.dob != null || die();
-        ok = emp.dob.toString().equals( Dates.getUSDate( 5, 25, 1980 ).toString() ) || die();
-        
-        ok = emp.currency != null || die();
-        ok = emp.currency == Currency.getInstance( "USD" ) || die();
-        
-        ok = emp.salary != null || die();
-        ok = emp.salary.equals(new BigDecimal( "100000.00" ) ) || die();
-
-    }
 }

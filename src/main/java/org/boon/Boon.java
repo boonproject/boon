@@ -1105,10 +1105,10 @@ public class Boon {
      * @return JSON object loaded as resource
      */
     public static <T> List<T> resourceListFromTemplate(String path,  Class<T> listOf, Object context) {
-        List<Object> list = (List)jsonResourceFromTemplate(path, context);
+        List<?> list = (List)jsonResourceFromTemplate(path, context);
 
         return MapObjectConversion.convertListOfMapsToObjects(true, null,
-                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
+                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, (List<Map>)list, Collections.EMPTY_SET);
     }
 
 
@@ -1121,10 +1121,9 @@ public class Boon {
      * @return JSON object loaded as resource
      */
     public static <T> List<T> resourceListFromTemplate(Path path,  Class<T> listOf, Object context) {
-        List<Object> list = (List)jsonResourceFromTemplate(path, context);
+        List<Map> list = (List)jsonResourceFromTemplate(path, context);
 
-        return MapObjectConversion.convertListOfMapsToObjects(true, null,
-                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
+        return MapObjectConversion.convertListOfMapsToObjects( listOf, list);
     }
 
     /**
@@ -1137,10 +1136,9 @@ public class Boon {
      */
     public static <T> List<T> resourceList(String path, Class<T> listOf) {
 
-        List<Object> list = (List)jsonResource(path);
+        List<Map> list = (List)jsonResource(path);
 
-        return MapObjectConversion.convertListOfMapsToObjects(true, null,
-                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
+        return MapObjectConversion.convertListOfMapsToObjects( listOf, list);
 
     }
 
@@ -1155,10 +1153,9 @@ public class Boon {
      */
     public static <T> List<T> resourceList(Path path, Class<T> listOf) {
 
-        List<Object> list = (List)jsonResource(path);
+        List<Map> list = (List)jsonResource(path);
 
-        return MapObjectConversion.convertListOfMapsToObjects(true, null,
-                FieldAccessMode.FIELD_THEN_PROPERTY.create(true), listOf, list, Collections.EMPTY_SET);
+        return MapObjectConversion.convertListOfMapsToObjects(listOf, list);
 
     }
 

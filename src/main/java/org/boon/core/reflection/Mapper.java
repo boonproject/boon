@@ -30,16 +30,20 @@ package org.boon.core.reflection;
 
 import org.boon.Boon;
 import org.boon.Lists;
+import org.boon.Maps;
 import org.boon.core.Conversions;
+import org.boon.core.Function;
 import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.reflection.fields.FieldsAccessorFieldThenProp;
 import org.boon.core.value.ValueContainer;
 import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
 import org.boon.core.value.ValueMapImpl;
+import org.boon.primitive.Arry;
 import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
@@ -62,10 +66,10 @@ import static org.boon.core.Type.gatherTypes;
  */
 public class Mapper {
 
-    final FieldsAccessor fieldsAccessor;
-    final Set<String> ignoreSet;
-    final String view;
-    final boolean respectIgnore;
+    private final FieldsAccessor fieldsAccessor;
+    private final Set<String> ignoreSet;
+    private final String view;
+    private final boolean respectIgnore;
 
     public Mapper( FieldsAccessor fieldsAccessor, Set<String> ignoreSet, String view, boolean respectIgnore ) {
         this.fieldsAccessor = fieldsAccessor;
@@ -74,11 +78,25 @@ public class Mapper {
         this.respectIgnore = respectIgnore;
     }
 
+    public Mapper( Set<String> ignoreSet, String view, boolean respectIgnore ) {
+        this.fieldsAccessor = new FieldsAccessorFieldThenProp(true);;
+        this.ignoreSet = ignoreSet;
+        this.view = view;
+        this.respectIgnore = respectIgnore;
+    }
+
+
+    public Mapper( Set<String> ignoreSet) {
+        this.fieldsAccessor = new FieldsAccessorFieldThenProp(true);;
+        this.ignoreSet = ignoreSet;
+        this.view = null;
+        this.respectIgnore = true;
+    }
 
     public Mapper( ) {
         fieldsAccessor = new FieldsAccessorFieldThenProp(true);
 
-        ignoreSet = null;
+        ignoreSet = Collections.emptySet();
         view = null;
         respectIgnore = true;
     }
@@ -240,52 +258,6 @@ public class Mapper {
 
 
 
-
-    /**
-     * Processes an array of maps.
-     * @param newInstance  new instance we are injecting field into
-     * @param field    field we are injecting a value into
-     */
-    private  void processArrayOfMaps( Object newInstance, FieldAccess field, Map<String, Object>[] maps) {
-        List<Map<String, Object>> list = Lists.list(maps);
-        handleCollectionOfMaps(  newInstance, field,
-                list);
-
-    }
-
-
-    /**
-     * Processes an collection of maps.
-     * @param newInstance  new instance we are injecting field into
-     * @param field    field we are injecting a value into
-     */
-    @SuppressWarnings("unchecked")
-    private  void handleCollectionOfMaps( Object newInstance,
-                                                FieldAccess field, Collection<Map<String, Object>> collectionOfMaps
-                                                 ) {
-
-        Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfMaps.size() );
-
-
-        Class<?> componentClass = field.getComponentClass();
-
-        if ( componentClass != null ) {
-
-
-            for ( Map<String, Object> mapComponent : collectionOfMaps ) {
-
-                newCollection.add( fromMap( mapComponent, componentClass ) );
-
-            }
-            field.setObject( newInstance, newCollection );
-
-        }
-
-    }
-
-
-
-
     /** Convert an item from a list into a class using the classes constructor.
      *
      * REFACTOR: Can't this just be from collection?
@@ -400,6 +372,53 @@ public class Mapper {
         }
 
     }
+
+
+
+
+
+    /**
+     * Processes an array of maps.
+     * @param newInstance  new instance we are injecting field into
+     * @param field    field we are injecting a value into
+     */
+    private  void processArrayOfMaps( Object newInstance, FieldAccess field, Map<String, Object>[] maps) {
+        List<Map<String, Object>> list = Lists.list(maps);
+        handleCollectionOfMaps(  newInstance, field,
+                list);
+
+    }
+
+
+    /**
+     * Processes an collection of maps.
+     * @param newInstance  new instance we are injecting field into
+     * @param field    field we are injecting a value into
+     */
+    @SuppressWarnings("unchecked")
+    private  void handleCollectionOfMaps( Object newInstance,
+                                                FieldAccess field, Collection<Map<String, Object>> collectionOfMaps
+                                                 ) {
+
+        Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfMaps.size() );
+
+
+        Class<?> componentClass = field.getComponentClass();
+
+        if ( componentClass != null ) {
+
+
+            for ( Map<String, Object> mapComponent : collectionOfMaps ) {
+
+                newCollection.add( fromMap( mapComponent, componentClass ) );
+
+            }
+            field.setObject( newInstance, newCollection );
+
+        }
+
+    }
+
 
 
 
@@ -975,7 +994,7 @@ public class Mapper {
                                         break;
                                     }
                                 } else if (o instanceof  Map) {
-                                    o = fromMap( (Map)o, componentClass);
+                                    o = fromMap((Map) o, componentClass);
                                     if (componentClass.isInstance( o )) {
                                         Array.set(array, index, o);
                                     } else {
@@ -999,6 +1018,28 @@ public class Mapper {
 
     }
 
+
+    /**
+     * Creates an object from a value map.
+     *
+     * This does some special handling to take advantage of us using the value map so it avoids creating
+     * a bunch of array objects and collections. Things you have to worry about when writing a
+     * high-speed JSON serializer.
+     * @return new object from value map
+     */
+    @SuppressWarnings("unchecked")
+    public  Object fromValueMap( final Map<String, Value> valueMap
+                                 ) {
+
+
+        try {
+            String className = valueMap.get( "class" ).toString();
+            Class<?> cls = Reflection.loadClass( className );
+            return fromValueMap( valueMap, cls );
+        } catch ( Exception ex ) {
+            return handle(Object.class, sputs("fromValueMap", "map", valueMap, "fieldAccessor", fieldsAccessor), ex);
+        }
+    }
 
 
 
@@ -1403,5 +1444,126 @@ public class Mapper {
     }
 
 
+    /**
+     * fromMap converts a map into a Java object.
+     * This version will see if there is a class parameter in the map, and dies if there is not.
+     * @param map map to create the object from.
+     * @return new object
+     */
+    public  Object fromMap( Map<String, Object> map ) {
+        String clazz = (String) map.get( "class" );
+        Class cls = Reflection.loadClass( clazz );
+        return fromMap(map, cls);
+    }
+
+
+
+
+    /**
+     * This could be refactored to use core.Type class and it would run faster.
+     * Converts an object into a map
+     * @param object the object that we want to convert
+     * @return map map representation of the object
+     */
+    public Map<String, Object> toMap( final Object object ) {
+
+        if ( object == null ) {
+            return null;
+        }
+
+        Map<String, Object> map = new LinkedHashMap<>();
+
+
+
+        final Map<String, FieldAccess> fieldMap = Reflection.getAllAccessorFields( object.getClass() );
+        List<FieldAccess> fields = new ArrayList( fieldMap.values() );
+
+
+        Collections.reverse( fields ); // make super classes fields first that
+        // their update get overridden by
+        // subclass fields with the same name
+
+        List<Maps.Entry<String, Object>> entries = Conversions.mapFilterNulls(
+                new FieldToEntryConverter(object), new ArrayList( fields ) );
+
+        map.put( "class", object.getClass().getName() );
+
+        for ( Maps.Entry<String, Object> entry : entries ) {
+
+            String key = entry.key();
+
+            if ( ignoreSet.contains( key ) ) {
+                continue;
+            }
+
+            Object value = entry.value();
+            if ( value == null ) {
+                continue;
+            }
+            if ( Typ.isBasicType( value ) ) {
+                map.put( key, entry.value() );
+            } else if ( Boon.isArray( value )
+                    && Typ.isBasicType( value.getClass().getComponentType() ) ) {
+                map.put( key, entry.value() );
+            } else if ( Boon.isArray( value ) ) {
+                int length = Arry.len(value);
+                List<Map<String, Object>> list = new ArrayList<>( length );
+                for ( int index = 0; index < length; index++ ) {
+                    Object item = BeanUtils.idx( value, index );
+                    list.add( toMap( item ) );
+                }
+                map.put( key, list );
+            } else if ( value instanceof Collection ) {
+                Collection<?> collection = ( Collection<?> ) value;
+                Class<?> componentType = Reflection.getComponentType( collection, fieldMap.get( entry.key() ) );
+                if ( Typ.isBasicType( componentType ) ) {
+                    map.put( key, value );
+                } else {
+                    List<Map<String, Object>> list = new ArrayList<>(
+                            collection.size() );
+                    for ( Object item : collection ) {
+                        if ( item != null ) {
+                            list.add( toMap( item ) );
+                        } else {
+
+                        }
+                    }
+                    map.put( entry.key(), list );
+                }
+            } else if ( value instanceof Map ) {
+
+            } else {
+                map.put( entry.key(), toMap( value ) );
+            }
+        }
+        return map;
+
+
+    }
+
+
+
+    /**
+     * Converts a field access set into a collection of map entries.
+     */
+    public static class FieldToEntryConverter implements
+            Function<FieldAccess, Maps.Entry<String, Object>> {
+
+        final Object object;
+
+        public FieldToEntryConverter(Object object) {
+            this.object = object;
+        }
+
+        @Override
+        public Maps.Entry<String, Object> apply( FieldAccess from ) {
+            if ( from.isReadOnly() ) {
+                return null;
+            }
+            Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.name(),
+                    from.getValue( object ) );
+            return entry;
+        }
+    }
 
 }
