@@ -38,10 +38,15 @@ public class FieldsAccessorsPropertyThenField implements FieldsAccessor {
 
     private final Map <Class<?>, Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
     private final boolean useAlias;
+    private final boolean caseInsensitive;
 
+    public FieldsAccessorsPropertyThenField(boolean useAlias) {
+        this(useAlias, false);
+    }
 
-    public FieldsAccessorsPropertyThenField (boolean useAlias) {
+    public FieldsAccessorsPropertyThenField(boolean useAlias, boolean caseInsensitive) {
         this.useAlias = useAlias;
+        this.caseInsensitive = caseInsensitive;
     }
 
     public final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
@@ -53,14 +58,30 @@ public class FieldsAccessorsPropertyThenField implements FieldsAccessor {
         return map;
     }
 
+    @Override
+    public boolean isCaseInsensitive() {
+        return caseInsensitive;
+    }
+
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
         Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapPropertyFirstForSerializer( aClass );
+        if (caseInsensitive) {
+            Map<String, FieldAccess> mapOld = fieldAccessMap;
+            fieldAccessMap = new LinkedHashMap<>();
+            for (Map.Entry<String, FieldAccess> entry : mapOld.entrySet()) {
+                fieldAccessMap.put(entry.getKey().toLowerCase(), entry.getValue());
+            }
+        }
 
         if ( useAlias ) {
             Map<String, FieldAccess> fieldAccessMap2 = new LinkedHashMap<> ( fieldAccessMap.size () );
 
             for (FieldAccess fa : fieldAccessMap.values ()) {
-                fieldAccessMap2.put ( fa.alias(), fa );
+                String alias = fa.alias();
+                if (caseInsensitive) {
+                    alias = alias.toLowerCase();
+                }
+                fieldAccessMap2.put (alias, fa );
             }
             return fieldAccessMap2;
         } else {

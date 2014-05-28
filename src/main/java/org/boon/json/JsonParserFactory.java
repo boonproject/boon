@@ -45,6 +45,7 @@ public class JsonParserFactory {
     private boolean lazyChop = true;
     private FieldAccessMode fieldAccessType = FieldAccessMode.FIELD;
     private boolean useAnnotations;
+    private boolean caseInsensitiveFields;
 
     private  Set<String> ignoreSet;
     private  String view;
@@ -98,7 +99,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createFastParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  false, chop, lazyChop ),   new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  false, chop, lazyChop ),   new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
         jsonParser.setCharset ( charset );
         return jsonParser;
     }
@@ -106,7 +107,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createFastObjectMapperParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  true ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  true ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
         jsonParser.setCharset ( charset );
         return jsonParser;
     }
@@ -115,7 +116,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createUTF8DirectByteParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonUTF8Parser (  ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonUTF8Parser (  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( StandardCharsets.UTF_8 );
         return jsonParser;
@@ -123,7 +124,7 @@ public class JsonParserFactory {
     }
 
     public JsonParserAndMapper createASCIIParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonAsciiParser (  ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonAsciiParser (  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( StandardCharsets.US_ASCII );
         return jsonParser;
@@ -132,7 +133,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createLaxParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop  ),  new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -142,7 +143,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createParserWithEvents(JsonParserEvents events) {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop, false, events  ),
-                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -151,7 +152,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createCharacterSourceParser() {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserUsingCharacterSource ( ),
-                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -159,7 +160,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createJsonCharArrayParser() {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserCharArray( ),
-                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -171,7 +172,7 @@ public class JsonParserFactory {
            charset= StandardCharsets.US_ASCII;
         }
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new PlistParser ( false, chop, lazyChop  ),
-                new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -193,7 +194,7 @@ public class JsonParserFactory {
             charset = StandardCharsets.UTF_8;
         }
 
-        return new JsonMappingParser ( new Mapper(fieldAccessType, useAnnotations, ignoreSet, view, respectIgnore), charset,
+        return new JsonMappingParser ( new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore), charset,
                  lax,  chop, lazyChop );
     }
 
@@ -245,6 +246,22 @@ public class JsonParserFactory {
 
     public JsonParserFactory setUseAnnotations( boolean useAnnotations ) {
         this.useAnnotations = useAnnotations;
+        return this;
+
+    }
+
+
+    public JsonParserFactory caseInsensitiveFields () {
+        this.caseInsensitiveFields  = true;
+        return this;
+    }
+
+    public boolean isCaseInsensitiveFields() {
+        return caseInsensitiveFields;
+    }
+
+    public JsonParserFactory setCaseInsensitiveFields( boolean caseInsensitiveFields ) {
+        this.caseInsensitiveFields = caseInsensitiveFields;
         return this;
 
     }

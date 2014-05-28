@@ -73,8 +73,8 @@ public class Mapper {
 
 
 
-    public Mapper( FieldAccessMode fieldAccessType, boolean useAnnotations, Set<String> ignoreSet, String view, boolean respectIgnore ) {
-        fieldsAccessor = FieldAccessMode.create( fieldAccessType, useAnnotations );
+    public Mapper(FieldAccessMode fieldAccessType, boolean useAnnotations, boolean caseInsensitiveFields, Set<String> ignoreSet, String view, boolean respectIgnore) {
+        fieldsAccessor = FieldAccessMode.create( fieldAccessType, useAnnotations, caseInsensitiveFields );
         this.ignoreSet = ignoreSet;
         this.view = view;
         this.respectIgnore = respectIgnore;
@@ -174,7 +174,7 @@ public class Mapper {
             }
 
             /* Get the field and if it missing then ignore this map entry. */
-            FieldAccess field = fields.get( key );
+            FieldAccess field = fields.get( fieldsAccessor.isCaseInsensitive() ? key.toLowerCase() : key );
 
 
             if ( field == null ) {
@@ -1121,7 +1121,7 @@ public class Mapper {
                     }
                 }
 
-                field = fields.get( fieldName );
+                field = fields.get(fieldsAccessor.isCaseInsensitive() ? fieldName.toLowerCase() : fieldName);
 
 
                 if ( field == null ) {

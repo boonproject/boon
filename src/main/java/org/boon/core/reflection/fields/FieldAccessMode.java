@@ -36,28 +36,36 @@ public enum FieldAccessMode {
     PROPERTY_THEN_FIELD;
 
 
-    public FieldsAccessor create ( boolean useAlias ) {
-        return FieldAccessMode.create (this,  useAlias);
+    public FieldsAccessor create(boolean useAlias) {
+        return FieldAccessMode.create (this,  useAlias, false);
+    }
+
+    public FieldsAccessor create(boolean useAlias, boolean caseInsensitive) {
+        return FieldAccessMode.create (this,  useAlias, caseInsensitive);
     }
 
     public static FieldsAccessor create(FieldAccessMode fieldAccessType, boolean useAlias) {
+        return FieldAccessMode.create (fieldAccessType,  useAlias, false);
+    }
+
+    public static FieldsAccessor create(FieldAccessMode fieldAccessType, boolean useAlias, boolean caseInsensitive) {
         FieldsAccessor fieldsAccessor = null;
 
         switch ( fieldAccessType )  {
             case FIELD:
-                fieldsAccessor = new FieldFieldsAccessor( useAlias );
+                fieldsAccessor = new FieldFieldsAccessor( useAlias, caseInsensitive);
                 break;
             case PROPERTY:
-                fieldsAccessor = new PropertyFieldAccessor ( useAlias );
+                fieldsAccessor = new PropertyFieldAccessor ( useAlias, caseInsensitive);
                 break;
             case FIELD_THEN_PROPERTY:
-                fieldsAccessor = new FieldsAccessorFieldThenProp( useAlias );
+                fieldsAccessor = new FieldsAccessorFieldThenProp( useAlias, caseInsensitive);
                 break;
             case PROPERTY_THEN_FIELD:
-                fieldsAccessor = new FieldsAccessorsPropertyThenField( useAlias  );
+                fieldsAccessor = new FieldsAccessorsPropertyThenField( useAlias, caseInsensitive);
                 break;
             default:
-                fieldsAccessor = new FieldFieldsAccessor( useAlias );
+                fieldsAccessor = new FieldFieldsAccessor( useAlias, caseInsensitive);
 
         }
 
