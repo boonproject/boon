@@ -239,6 +239,8 @@ public class CharSequenceValue implements Value, CharSequence {
                 if ( Dates.isJsonDate ( buffer, startIndex, endIndex ) ) {
                     return Dates.fromJsonDate ( buffer, startIndex, endIndex );
 
+                } else if ( Dates.isISO8601Jackson(buffer, startIndex, endIndex) ) {
+                    return Dates.fromISO8601Jackson(buffer, startIndex, endIndex);
                 } else if ( Dates.isISO8601 ( buffer, startIndex, endIndex ) ) {
                     return Dates.fromISO8601 ( buffer, startIndex, endIndex );
                 } else {
