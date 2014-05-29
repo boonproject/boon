@@ -63,6 +63,15 @@ public class DatesTest {
     }
 
 
+    @Test
+    public void testIsoJacksonLongDate() {
+        String test = "2014-05-29T08:54:09.764+0200";
+        Date date = Dates.fromISO8601Jackson(test);
+        Date date2 = Dates.fromISO8601Jackson_(test);
+
+        assertEquals( date2.toString(), "" + date );
+    }
+
     /*
         var d=new Date();
         var s = JSON.stringify(d);

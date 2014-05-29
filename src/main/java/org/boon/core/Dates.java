@@ -502,6 +502,18 @@ public class Dates {
 
     }
 
+    public static Date fromISO8601Jackson_(String string) {
+
+        try {
+
+            return new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" ).parse( string );
+        } catch ( ParseException e ) {
+            return Exceptions.handle ( Date.class, "Not a valid ISO8601 \"Jackson\" date", e );
+        }
+
+
+    }
+
     public static Date fromJsonDate_( String string ) {
 
         try {
@@ -527,6 +539,12 @@ public class Dates {
 
     }
 
+    public static Date fromISO8601Jackson(String string) {
+
+        return fromISO8601Jackson(FastStringUtils.toCharArray(string), 0, string.length());
+
+    }
+
     public static Date fromISO8601DateLoose( String string ) {
         return fromISO8601DateLoose( FastStringUtils.toCharArray( string ), 0, string.length() );
 
@@ -540,6 +558,7 @@ public class Dates {
 
     final static int SHORT_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30Z".length();
     final static int LONG_ISO_8601_TIME_LENGTH = "1994-11-05T08:15:30-05:00".length();
+    final static int LONG_ISO_8601_JACKSON_TIME_LENGTH = "1994-11-05T08:11:22.123-0500".length();
     public final static int JSON_TIME_LENGTH = "2013-12-14T01:55:33.412Z".length();
 
 
@@ -699,6 +718,45 @@ public class Dates {
         return toDate( year, month, day, hour, minutes, seconds, mili );
     }
 
+    public static Date fromISO8601Jackson(char[] charArray, int from, int to) {
+
+        try {
+            int length = to - from;
+            if ( isISO8601Jackson(charArray, from, to) ) {
+                int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
+                int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
+                int day = CharScanner.parseIntFromTo( charArray, from + 8, from + 10 );
+                int hour = CharScanner.parseIntFromTo( charArray, from + 11, from + 13 );
+
+                int minute = CharScanner.parseIntFromTo( charArray, from + 14, from + 16 );
+
+                int second = CharScanner.parseIntFromTo( charArray, from + 17, from + 19 );
+                int millisecond = CharScanner.parseIntFromTo( charArray, from + 20, from + 23 );
+
+                TimeZone tz = null;
+
+                if ( charArray[ from + 19 ] == 'Z' ) {
+
+                    tz = GMT;
+
+                } else {
+                    StringBuilder builder = new StringBuilder( 8 );
+                    builder.append("GMT");
+                    builder.append( charArray, from + 23, 5 );
+                    String tzStr = builder.toString();
+                    tz = TimeZone.getTimeZone(tzStr);
+                }
+                return toDate( tz, year, month, day, hour, minute, second, millisecond );
+
+            } else {
+                return null;
+            }
+        } catch (Exception ex) {
+            return null;
+        }
+
+    }
+
     public static Date fromISO8601( char[] charArray, int from, int to ) {
 
         try {
@@ -787,6 +845,31 @@ public class Dates {
             valid &= ( charArray[ start + 19 ] == '-' || charArray[ start + 19 ] == '+' );
             valid &= ( charArray[ start + 22 ] == ':' );
 
+        } else {
+            return false;
+        }
+
+        //  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
+        // "1 9 9 4 - 1 1 - 0 5 T 0 8 : 1 5 : 3 0 - 0 5 : 0 0
+
+        valid &= ( charArray[ start + 4 ] == '-' ) &&
+                ( charArray[ start + 7 ] == '-' ) &&
+                ( charArray[ start + 10 ] == 'T' ) &&
+                ( charArray[ start + 13 ] == ':' ) &&
+                ( charArray[ start + 16 ] == ':' );
+
+        return valid;
+    }
+
+    public static boolean isISO8601Jackson(char[] charArray, int start, int to) {
+        boolean valid = true;
+        final int length = to - start;
+
+        if ( length == SHORT_ISO_8601_TIME_LENGTH ) {
+            valid &= ( charArray[ start + 19 ] == 'Z' );
+
+        } else if ( length == LONG_ISO_8601_JACKSON_TIME_LENGTH) {
+            valid &= ( charArray[ start + 23 ] == '-' || charArray[ start + 23 ] == '+' );
         } else {
             return false;
         }
