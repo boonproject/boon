@@ -29,6 +29,8 @@
 package org.boon.cache;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -105,5 +107,12 @@ public class SimpleCache<K, V> implements Cache<K, V> {
         return map.toString();
     }
 
+    public Collection<V> values() {
+        return new ArrayList<>(this.map.values());
+    }
+
+    public Collection<K> keys() {
+        return new ArrayList<>(this.map.keySet());
+    }
 
 }
