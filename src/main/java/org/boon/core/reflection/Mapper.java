@@ -865,6 +865,10 @@ public class Mapper {
             FieldAccess field, Collection<Value> acollectionOfValues ) {
 
         Collection collectionOfValues = acollectionOfValues;
+        if (null == collectionOfValues) {
+            field.setObject(newInstance, null);
+            return;
+        }
 
         if(field.typeEnum() == INSTANCE) {
 
