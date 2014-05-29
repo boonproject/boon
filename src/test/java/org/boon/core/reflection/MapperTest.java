@@ -30,6 +30,8 @@ package org.boon.core.reflection;
 
 import org.boon.Lists;
 import org.boon.Maps;
+import org.boon.core.Type;
+import org.boon.core.value.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ public class MapperTest {
         Employee boss;
 
         List<Employee> reports;
+        String[] descriptions;
 
         public Employee( String name, int age ) {
             this.name = name;
@@ -177,6 +180,32 @@ public class MapperTest {
         ok |= emp.age == 29 || die();
 
 
+    }
+
+    @Test
+    public void testNullCollectionFromValueMap() {
+        ValueMap valueMap = new ValueMapImpl();
+        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "reports".length(), "reports".toCharArray(), false, false ), ValueContainer.NULL));
+        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "name".length(), "name".toCharArray(), false, false ), new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "Rick".length(), "Rick".toCharArray(), false, false )));
+        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+
+        ok = emp != null || die();
+        ok |= emp.reports == null || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+    }
+
+    @Test
+    public void testNullArrayFromValueMap() {
+        ValueMap valueMap = new ValueMapImpl();
+        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "descriptions".length(), "descriptions".toCharArray(), false, false ), ValueContainer.NULL));
+        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "name".length(), "name".toCharArray(), false, false ), new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "Rick".length(), "Rick".toCharArray(), false, false )));
+        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+
+        ok = emp != null || die();
+        ok |= emp.reports == null || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
     }
 
 
