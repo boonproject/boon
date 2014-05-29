@@ -263,17 +263,10 @@ public abstract class BaseField implements FieldAccess {
                 if ( this.typeEnum == Type.ARRAY) {
                     componentClass = this.type.getComponentType();
                     componentType = Type.getType(componentClass);
-<<<<<<< HEAD
                 } else if ( parameterizedType == null ) {
                     componentClass = Object.class;
                     componentType = Type.OBJECT;
                 }  else  {
-=======
-                }  else if ( parameterizedType == null ) {
-                    componentClass = Object.class;
-                    componentType = Type.OBJECT;
-                }  else {
->>>>>>> ada635dbca65c218300d7dfd18f0e2beae7640da
                     Object obj2 = parameterizedType.getActualTypeArguments ()[ 0 ];
                     if (obj2 instanceof Class) {
                         componentClass = ( Class<?> ) parameterizedType.getActualTypeArguments ()[ 0 ];
