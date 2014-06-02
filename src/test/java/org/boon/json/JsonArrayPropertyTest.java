@@ -14,7 +14,6 @@ public class JsonArrayPropertyTest {
     @Before
     public void setUp() throws Exception {
         objectMapper = new ObjectMapperImpl(new JsonParserFactory().usePropertyOnly(), new JsonSerializerFactory().usePropertyOnly());
-
     }
 
     @Test
@@ -42,8 +41,9 @@ public class JsonArrayPropertyTest {
             return typeName1;
         }
 
-        public void setTypeName(String typeName) {
+        public ApiDynamicType setTypeName(String typeName) {
             this.typeName1 = typeName;
+            return this;
         }
 
         public ApiDynamicTypeField[] getFields() {

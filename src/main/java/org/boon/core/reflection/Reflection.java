@@ -636,7 +636,6 @@ public class Reflection {
         try {
 
             if ( method.getParameterTypes().length == 1
-                    && method.getReturnType() == void.class
                     && name.startsWith( "set" ) ) {
                 Pair<Method> pair = new Pair<Method>();
                 pair.setFirst( method );
