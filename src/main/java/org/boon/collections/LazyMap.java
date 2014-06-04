@@ -123,11 +123,14 @@ public class LazyMap extends AbstractMap<String, Object> {
         return map.get( key );
     }
 
+
+    final static boolean althashingThreshold = System.getProperty("jdk.map.althashing.threshold") != null;
+
     private void buildIfNeeded() {
         if ( map == null ) {
 
             /** added to avoid hash collision attack. */
-            if (Sys.is1_7OrLater() && System.getProperty("jdk.map.althashing.threshold") != null) {
+            if (Sys.is1_7OrLater() && althashingThreshold) {
                 map = new LinkedHashMap<>( size, 0.01f );
             } else {
                 map = new TreeMap<>();
