@@ -82,7 +82,10 @@ public class Sys {
                     v = new BigDecimal ("1.9" );
                 }
 
-                b = Integer.parseInt ( split[ 1 ] );
+                String build = split[ 1 ];
+                if (build.endsWith("-ea"))
+                  build.substring(0, build.length() - 3);
+                b = Integer.parseInt ( build );
             } catch ( Exception ex ) {
                 ex.printStackTrace ();
                 System.err.println ( "Unable to determine build number or version" );
