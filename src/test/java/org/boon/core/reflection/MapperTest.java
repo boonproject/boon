@@ -31,6 +31,7 @@ package org.boon.core.reflection;
 import org.boon.Lists;
 import org.boon.Maps;
 import org.boon.core.Type;
+import org.boon.core.Value;
 import org.boon.core.value.*;
 import org.junit.Test;
 
@@ -68,6 +69,7 @@ public class MapperTest {
 
         List<Employee> reports;
         String[] descriptions;
+        List<String> props;
 
         public Employee( String name, int age ) {
             this.name = name;
@@ -185,12 +187,12 @@ public class MapperTest {
     @Test
     public void testNullCollectionFromValueMap() {
         ValueMap valueMap = new ValueMapImpl();
-        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "reports".length(), "reports".toCharArray(), false, false ), ValueContainer.NULL));
-        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "name".length(), "name".toCharArray(), false, false ), new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "Rick".length(), "Rick".toCharArray(), false, false )));
+        valueMap.add(stringTuple("props", null));
+        valueMap.add(stringTuple("name", "Rick"));
         Employee emp = mapper.fromValueMap(valueMap, Employee.class);
 
         ok = emp != null || die();
-        ok |= emp.reports == null || die();
+        ok |= emp.props == null || die();
         ok = emp.name != null || die();
         ok = emp.name.equals( "Rick" ) || die();
     }
@@ -198,14 +200,97 @@ public class MapperTest {
     @Test
     public void testNullArrayFromValueMap() {
         ValueMap valueMap = new ValueMapImpl();
-        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "descriptions".length(), "descriptions".toCharArray(), false, false ), ValueContainer.NULL));
-        valueMap.add(new MapItemValue(new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "name".length(), "name".toCharArray(), false, false ), new CharSequenceValue(false, Type.CHAR_SEQUENCE, 0, "Rick".length(), "Rick".toCharArray(), false, false )));
+        valueMap.add(stringTuple("descriptions", null));
+        valueMap.add(stringTuple("name", "Rick"));
         Employee emp = mapper.fromValueMap(valueMap, Employee.class);
 
         ok = emp != null || die();
-        ok |= emp.reports == null || die();
+        ok |= emp.descriptions == null || die();
         ok = emp.name != null || die();
         ok = emp.name.equals( "Rick" ) || die();
+    }
+
+
+    @Test
+    public void testCollectionFromMap() {
+        ValueMap valueMap = new ValueMapImpl();
+        valueMap.add(stringArrayTuple("props", "Rick is great"));
+        valueMap.add(stringTuple("name", "Rick"));
+        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+
+        ok = emp != null || die();
+        ok = emp.props != null || die();
+        ok = emp.props.size() == 1 || die();
+        ok = emp.props.get(0).equals("Rick is great") || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+    }
+
+    @Test
+    public void testCollectionFromSingleValueMap() {
+        mapper = new Mapper(true);
+
+        ValueMap valueMap = new ValueMapImpl();
+        valueMap.add(stringTuple("props", "Rick is great"));
+        valueMap.add(stringTuple("name", "Rick"));
+        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+
+        ok = emp != null || die();
+        ok = emp.props != null || die();
+        ok = emp.props.size() == 1 || die();
+        ok = emp.props.get(0).equals("Rick is great") || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+    }
+
+    @Test
+    public void testArrayFromMap() {
+        ValueMap valueMap = new ValueMapImpl();
+        valueMap.add(stringArrayTuple("descriptions", "Rick is great"));
+        valueMap.add(stringTuple("name", "Rick"));
+        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+
+        ok = emp != null || die();
+        ok = emp.descriptions != null || die();
+        ok = emp.descriptions.length == 1 || die();
+        ok = emp.descriptions[0].equals("Rick is great") || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+    }
+
+    @Test
+    public void testArrayFromSingleValueMap() {
+        mapper = new Mapper(true);
+
+        ValueMap valueMap = new ValueMapImpl();
+        valueMap.add(stringTuple("descriptions", "Rick is great"));
+        valueMap.add(stringTuple("name", "Rick"));
+        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+
+        ok = emp != null || die();
+        ok = emp.descriptions != null || die();
+        ok = emp.descriptions.length == 1 || die();
+        ok = emp.descriptions[0].equals("Rick is great") || die();
+        ok = emp.name != null || die();
+        ok = emp.name.equals( "Rick" ) || die();
+    }
+
+    private MapItemValue stringArrayTuple(String key, String... values) {
+        List<CharSequenceValue>list = new ArrayList<>();
+        for (String value : values) {
+            list.add(new CharSequenceValue(false, Type.STRING, 0, value.length(), value.toCharArray(), false, false));
+        }
+        return new MapItemValue(new CharSequenceValue(false, Type.STRING, 0, key.length(), key.toCharArray(), false, false ), new ValueContainer(list, Type.LIST, false));
+    }
+
+    private MapItemValue stringTuple(String props, String value) {
+        Value v;
+        if(null==value) {
+            v= ValueContainer.NULL;
+        }else {
+            v = new CharSequenceValue(false, Type.STRING, 0, value.length(), value.toCharArray(), false, false);
+        }
+        return new MapItemValue(new CharSequenceValue(false, Type.STRING, 0, props.length(), props.toCharArray(), false, false ), v);
     }
 
 
