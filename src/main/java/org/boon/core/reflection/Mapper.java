@@ -57,9 +57,7 @@ import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.coerce;
-import static org.boon.core.Type.INSTANCE;
-import static org.boon.core.Type.gatherActualTypes;
-import static org.boon.core.Type.gatherTypes;
+import static org.boon.core.Type.*;
 
 /**
  * Created by Richard on 2/17/14.
@@ -70,20 +68,23 @@ public class Mapper {
     private final Set<String> ignoreSet;
     private final String view;
     private final boolean respectIgnore;
+    private final boolean acceptSingleValueAsArray;
 
 
 
-    public Mapper(FieldAccessMode fieldAccessType, boolean useAnnotations, boolean caseInsensitiveFields, Set<String> ignoreSet, String view, boolean respectIgnore) {
+    public Mapper(FieldAccessMode fieldAccessType, boolean useAnnotations, boolean caseInsensitiveFields, Set<String> ignoreSet, String view, boolean respectIgnore, boolean acceptSingleValueAsArray) {
         fieldsAccessor = FieldAccessMode.create( fieldAccessType, useAnnotations, caseInsensitiveFields );
         this.ignoreSet = ignoreSet;
         this.view = view;
         this.respectIgnore = respectIgnore;
+        this.acceptSingleValueAsArray = acceptSingleValueAsArray;
     }
     public Mapper( FieldsAccessor fieldsAccessor, Set<String> ignoreSet, String view, boolean respectIgnore ) {
         this.fieldsAccessor = fieldsAccessor;
         this.ignoreSet = ignoreSet;
         this.view = view;
         this.respectIgnore = respectIgnore;
+        this.acceptSingleValueAsArray = false;
     }
 
     public Mapper( Set<String> ignoreSet, String view, boolean respectIgnore ) {
@@ -91,6 +92,7 @@ public class Mapper {
         this.ignoreSet = ignoreSet;
         this.view = view;
         this.respectIgnore = respectIgnore;
+        this.acceptSingleValueAsArray = false;
     }
 
 
@@ -99,6 +101,17 @@ public class Mapper {
         this.ignoreSet = ignoreSet;
         this.view = null;
         this.respectIgnore = true;
+        this.acceptSingleValueAsArray = false;
+    }
+
+    public Mapper(boolean acceptSingleValueAsArray) {
+        fieldsAccessor = new FieldsAccessorFieldThenProp(true);
+
+        ignoreSet = null;
+        view = null;
+        respectIgnore = true;
+        this.acceptSingleValueAsArray = acceptSingleValueAsArray;
+
     }
 
     public Mapper( ) {
@@ -107,10 +120,8 @@ public class Mapper {
         ignoreSet = null;
         view = null;
         respectIgnore = true;
+        acceptSingleValueAsArray = false;
     }
-
-
-
 
 
         /**
@@ -1287,6 +1298,13 @@ public class Mapper {
             case SET:
             case ARRAY:
 
+                if (acceptSingleValueAsArray && ValueContainer.NULL != value && !(objValue instanceof Collection)) {
+                    if (objValue instanceof ValueMapImpl) {
+                        objValue = Arrays.asList(new ValueContainer(objValue, MAP, false));
+                    } else {
+                        objValue = Arrays.asList(objValue);
+                    }
+                }
 
                 handleCollectionOfValues( newInstance, field,
                         ( Collection<Value> ) objValue );

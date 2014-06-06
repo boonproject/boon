@@ -50,7 +50,7 @@ public class JsonParserFactory {
     private  Set<String> ignoreSet;
     private  String view;
     private  boolean respectIgnore;
-
+    private boolean acceptSingleValueAsArray;
 
 
     public FieldAccessMode getFieldAccessType() {
@@ -99,7 +99,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createFastParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  false, chop, lazyChop ),   new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  false, chop, lazyChop ),   new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
         jsonParser.setCharset ( charset );
         return jsonParser;
     }
@@ -107,7 +107,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createFastObjectMapperParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  true ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonFastParser (  true ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
         jsonParser.setCharset ( charset );
         return jsonParser;
     }
@@ -116,7 +116,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createUTF8DirectByteParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonUTF8Parser (  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonUTF8Parser (  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
 
         jsonParser.setCharset ( StandardCharsets.UTF_8 );
         return jsonParser;
@@ -124,7 +124,7 @@ public class JsonParserFactory {
     }
 
     public JsonParserAndMapper createASCIIParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonAsciiParser (  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonAsciiParser (  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
 
         jsonParser.setCharset ( StandardCharsets.US_ASCII );
         return jsonParser;
@@ -133,7 +133,7 @@ public class JsonParserFactory {
 
 
     public JsonParserAndMapper createLaxParser() {
-        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop  ),  new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -143,7 +143,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createParserWithEvents(JsonParserEvents events) {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserLax ( false, chop, lazyChop, false, events  ),
-                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -152,7 +152,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createCharacterSourceParser() {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserUsingCharacterSource ( ),
-                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -160,7 +160,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createJsonCharArrayParser() {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new JsonParserCharArray( ),
-                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -172,7 +172,7 @@ public class JsonParserFactory {
            charset= StandardCharsets.US_ASCII;
         }
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper( new PlistParser ( false, chop, lazyChop  ),
-                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore));
+                new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray));
 
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -194,7 +194,7 @@ public class JsonParserFactory {
             charset = StandardCharsets.UTF_8;
         }
 
-        return new JsonMappingParser ( new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore), charset,
+        return new JsonMappingParser ( new Mapper(fieldAccessType, useAnnotations, caseInsensitiveFields, ignoreSet, view, respectIgnore, acceptSingleValueAsArray), charset,
                  lax,  chop, lazyChop );
     }
 
@@ -296,4 +296,18 @@ public class JsonParserFactory {
         return this;
     }
 
+    public JsonParserFactory acceptSingleValueAsArray () {
+        this.acceptSingleValueAsArray  = true;
+        return this;
+    }
+
+    public boolean isAcceptSingleValueAsArray() {
+        return acceptSingleValueAsArray;
+    }
+
+    public JsonParserFactory setAcceptSingleValueAsArray( boolean acceptSingleValueAsArray ) {
+        this.acceptSingleValueAsArray = acceptSingleValueAsArray;
+        return this;
+
+    }
 }
