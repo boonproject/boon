@@ -247,4 +247,12 @@ public class Sys {
     public static boolean hasSysProp(String propertyName) {
         return System.getProperties().containsKey(propertyName);
     }
+
+    public static void sleep(long duration) {
+        try {
+            Thread.sleep(duration);
+        } catch (InterruptedException e) {
+            Thread.interrupted();
+        }
+    }
 }

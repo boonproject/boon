@@ -213,11 +213,13 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
         return map.entrySet();
     }
 
+    final static boolean althashingThreshold = System.getProperty("jdk.map.althashing.threshold") != null;
+
     private final void buildMap() {
 
 
         /** added to avoid hash collision attack. */
-        if (Sys.is1_7OrLater() && System.getProperty("jdk.map.althashing.threshold") != null) {
+        if (Sys.is1_7OrLater() && althashingThreshold) {
             map = new HashMap<>( items.length );
         } else {
             map = new TreeMap<>();
