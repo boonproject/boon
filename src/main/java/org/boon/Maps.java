@@ -1522,4 +1522,26 @@ public class Maps {
         }
     }
 
+
+    public static  <K, V> void copyKeys(Collection<K> keys, Map<K, V> sourceMap, Map<K,V> destinationMap) {
+        for (K key : keys) {
+            V value = sourceMap.get(key);
+            if (value != null) {
+                destinationMap.put(key, value);
+            }
+        }
+    }
+
+    public static <K, V> Map<K, V> copyKeys(Collection<K> keys, Map<K, V> sourceMap) {
+        Map<K,V> destinationMap = new ConcurrentHashMap<>();
+        for (K key : keys) {
+            V value = sourceMap.get(key);
+            if (value != null) {
+                destinationMap.put(key, value);
+            }
+        }
+        return destinationMap;
+    }
+
+
 }
