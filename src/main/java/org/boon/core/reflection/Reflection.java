@@ -55,6 +55,24 @@ import static org.boon.Str.slc;
 
 public class Reflection {
 
+
+
+    public static List<Field> getFields( Class<? extends Object> theClass ) {
+
+
+        List<Field> fields = context().__fields.get(theClass);
+        if (fields!=null) {
+            return fields;
+        }
+
+        fields = Lists.list( theClass.getDeclaredFields() );
+        for ( Field field : fields ) {
+            field.setAccessible( true );
+        }
+        return fields;
+    }
+
+
     private static final Logger log = Logger.getLogger( Reflection.class.getName() );
 
     private static boolean _useUnsafe;
@@ -132,6 +150,9 @@ public class Reflection {
     }
 
     static class Context {
+
+
+        Map<Class<?>, List<Field>> __fields = new ConcurrentHashMap<>( 200 );
 
         Unsafe control;
         Map<String, String> _sortableFields = new ConcurrentHashMap<>();
@@ -692,14 +713,6 @@ public class Reflection {
         }catch (Exception ex) {
             Exceptions.handle(ex, "getFields", theClass, list);
         }
-    }
-
-    public static List<Field> getFields( Class<? extends Object> theClass ) {
-        List<Field> list = Lists.list( theClass.getDeclaredFields() );
-        for ( Field field : list ) {
-            field.setAccessible( true );
-        }
-        return list;
     }
 
 
