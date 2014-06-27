@@ -524,7 +524,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
         final byte[] _charTo = charTo;
         /* We are making a bet that not all chars will be unicode. */
-        int  ensureThisMuch = charArray.length +  ((jsonControlCount +1) * 5);
+        int  ensureThisMuch = charArray.length +  ((jsonControlCount +2) * 5);
 
         int sizeNeeded =  (ensureThisMuch) + _location;
         if ( sizeNeeded  > capacity ) {
