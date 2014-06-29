@@ -37,6 +37,7 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.Random;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
@@ -169,4 +170,41 @@ public class Bug173_174 {
         }
 
     }
+
+    static class Data {
+        int myint;
+        long mylong;
+
+        Data(int myint, long mylong) {
+            this.myint = myint;
+            this.mylong = mylong;
+        }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "myint=" + myint +
+                    ", mylong=" + mylong +
+                    '}';
+        }
+    }
+
+        @Test
+        public void test198() {
+
+
+            Data original = new Data(Integer.MAX_VALUE, Long.MAX_VALUE);
+            System.out.println("original: \n" + original + "\n");
+
+            ObjectMapper boon = JsonFactory.create();
+            String serialized = boon.writeValueAsString(original);
+            System.out.println("serialized: \n" + serialized + "\n");
+
+            Data deserialized = boon.readValue(serialized, Data.class);
+            System.out.println("deserialized: \n" + deserialized + "\n");
+
+            String reserialized = boon.writeValueAsString(deserialized);
+            System.out.println("reserialized: \n" + reserialized + "\n");
+        }
+
 }

@@ -546,7 +546,7 @@ public class Maps {
         return map;
     }
 
-    public static <K, V> Map<K, V> map( Collection<K> keys, Collection<V> values ) {
+    public static <K, V> Map<K, V> map( List<K> keys, List<V> values ) {
         Map<K, V> map = new LinkedHashMap<>( 10 + keys.size() );
         Iterator<V> iterator = values.iterator();
         for ( K k : keys ) {
@@ -560,6 +560,29 @@ public class Maps {
         return map;
     }
 
+
+    public static <K, V> Map<K, V> map( LinkedHashSet<K> keys, LinkedHashSet<V> values ) {
+        Map<K, V> map = new LinkedHashMap<>( 10 + keys.size() );
+        Iterator<V> iterator = values.iterator();
+        for ( K k : keys ) {
+            if ( iterator.hasNext() ) {
+                V v = iterator.next();
+                map.put( k, v );
+            } else {
+                map.put( k, null );
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Note, you need to make sure that the iterators are from some sort of ordered collection.
+     * @param keys
+     * @param values
+     * @param <K>
+     * @param <V>
+     * @return
+     */
     public static <K, V> Map<K, V> map( Iterable<K> keys, Iterable<V> values ) {
         Map<K, V> map = new LinkedHashMap<>();
         Iterator<V> iterator = values.iterator();

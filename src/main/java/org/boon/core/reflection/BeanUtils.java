@@ -105,6 +105,7 @@ public class BeanUtils {
 
            fields = getPropertyFieldAccessMap( object.getClass() );
            if ( object instanceof Map ) {
+               fields = new HashMap<>(fields);
                fields = getFieldsFromMap( fields, ( Map<String, Object> ) object );
            }
            return fields;
