@@ -30,6 +30,7 @@ package org.boon.primitive;
 
 
 import org.boon.Lists;
+import org.boon.StringScanner;
 import org.junit.Test;
 
 import java.util.List;
@@ -42,6 +43,30 @@ import static org.junit.Assert.assertEquals;
 
 public class CharScannerTest {
 
+    boolean ok;
+
+    @Test
+    public void splitWithLimit() {
+
+
+        String string = "01234_567891_01112ZZ1234567890_ABC";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 2);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01234") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("567891") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("01112ZZ1234567890_ABC") || die(three);
+
+    }
 
     @Test
     public void findString() {

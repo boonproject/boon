@@ -343,6 +343,55 @@ public class CharScanner {
     }
 
 
+    public static char[][] split( final char[] inputArray,
+                                  final char split, final int limit ) {
+        /** Holds the results. */
+        char[][] results = new char[ limit + 1 ][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex = 0;
+        int currentLineLength = 1;
+
+
+        char c = '\u0000';
+        int index = 0;
+
+        for (; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[ index ];
+            if ( c == split ) {
+
+
+                results[ resultIndex ] = Chr.copy(
+                        inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                startCurrentLineIndex = index + 1; //skip the char
+
+                resultIndex++;
+
+                if ( resultIndex >= limit ) {
+                    break;
+                }
+
+
+
+
+                currentLineLength = 0;
+
+            }
+        }
+
+
+        results[ resultIndex ] = Chr.copy(
+                    inputArray, startCurrentLineIndex, inputArray.length - index - 1);
+        resultIndex++;
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length ) {
+            final int newSize = results.length - actualLength;
+            results = __shrink( results, newSize );
+        }
+        return results;
+    }
+
     public static char[][] splitFrom( final char[] inputArray, int fromIndex,
                                   final char split ) {
         /** Holds the results. */

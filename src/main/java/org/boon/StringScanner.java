@@ -40,6 +40,18 @@ public class StringScanner {
         return CharScanner.isDigits( FastStringUtils.toCharArray( input ) );
     }
 
+
+
+    public static String[]  split( final String string,
+                                  final char split, final int limit ) {
+
+
+        char[][] comps = CharScanner.split( FastStringUtils.toCharArray( string ), split, limit );
+
+        return Str.fromCharArrayOfArrayToStringArray( comps );
+
+
+    }
     public static String[] split( final String string,
                                   final char split ) {
 
