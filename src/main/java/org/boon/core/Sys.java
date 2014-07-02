@@ -240,6 +240,27 @@ public class Sys {
     }
 
 
+    public static boolean sysProp(String key, boolean defaultValue) {
+
+        String property = System.getProperty(key, null);
+        if (property == null) {
+            property = System.getenv(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = System.getenv(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Boolean.parseBoolean(property);
+
+    }
+
+
     public static String putSysProp(String key, Object value) {
         return System.setProperty(key, Conversions.toString(value));
     }
