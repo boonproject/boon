@@ -89,7 +89,7 @@ public class Counter {
 
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return "" + get();
     }
 }
