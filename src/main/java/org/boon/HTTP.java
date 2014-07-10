@@ -46,7 +46,7 @@ import java.util.Set;
 public class HTTP {
 
     public static final int DEFAULT_TIMEOUT_SECONDS =
-            Integer.parseInt( System.getProperty( "org.boon.HTTP.timeout.seconds", "5" ) );
+            Integer.parseInt( System.getProperty( "org.boon.HTTP.timeout.seconds", "30" ) );
     public static final String APPLICATION_JSON = "application/json";
 
     public static String get(

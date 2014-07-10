@@ -315,7 +315,7 @@ public class RepoDefaultTest {
 
     }
 
-    //@Test
+    @Test
     public void testIndexedLookup() throws Exception {
         Employee emp = employee( "Diana", "Hightower", "2178599966", "08.15.82", 100_000 );
         Employee emp2 = employee( "Bob", "Hightower", "21785990", "08.15.82", 100_000 );

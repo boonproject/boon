@@ -1327,7 +1327,7 @@ public class JsonParserAndMapperBaseTest {
 
     }
 
-    //@Test
+    @Test
     public void testBackSlashEscaping2() {
         Object obj = null;
 

@@ -66,10 +66,10 @@ public class ProcessRunnerTest {
     }
 
 
-    //@Test (expected = Runner.ProcessException.class)
-    public void runRunTimeoutFails() {
-        //puts( Runner.run( 1, "sleep 20" ) );
-    }
+//    @Test (expected = Runner.ProcessException.class)
+//    public void runRunTimeoutFails() {
+//        //puts( Runner.run( 1, "sleep 20" ) );
+//    }
 
 
 //    @Test  (expected = Runner.ProcessException.class)
