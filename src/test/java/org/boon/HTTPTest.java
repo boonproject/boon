@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Maps.copy;
@@ -362,6 +363,14 @@ public class HTTPTest {
 
 
     }
+
+
+    @Test
+    public void damnYouChris() {
+        final String s = HTTP.get("https://login.yahoo.com");
+        puts(s);
+    }
+
 
 
 }

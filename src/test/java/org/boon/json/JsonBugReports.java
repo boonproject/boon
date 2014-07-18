@@ -47,7 +47,103 @@ public class JsonBugReports {
         puts (map);
         puts (toJson(map));
 
-        boolean ok = toJson(map).equals("{\"empty\":\"\",\"docId\":111,\"serviceName\":\"cafe\"}") || die();
+        boolean ok = toJson(map).equals("{\"empty\":\"\",\"docId\":111,\"serviceName\":\"cafe\"}") ||
+                die(toJson(map).equals("{\"empty\":\"\",\"docId\":111,\"serviceName\":\"cafe\"}") );
     }
+
+
+    @Test
+    public void testForBug202() {
+        String test = "{  \n" +
+                "   \"timestamp\":1405673028,\n" +
+                "   \"status\":200,\n" +
+                "   \"request\":{  \n" +
+                "      \"mbean\":\"com.openexchange.pooling:name=ConfigDB Read\",\n" +
+                "      \"attribute\":\"MaxUseTime\",\n" +
+                "      \"type\":\"read\"\n" +
+                "   },\n" +
+                "   \"value\":24\n" +
+                "}";
+
+        Map map = (Map) fromJson(test);
+    }
+
+
+    @Test
+    public void testForBug202_1() {
+        String test = "{  \n" +
+                "   \"timestamp\":1405673028,\n" +
+                "   \"status\":200,\n" +
+                "   \"request\":{  \n" +
+                "      \"mbean\":\"com.openexchange.pooling:name=ConfigDB Read\",\n" +
+                "      \"attribute\":\"MaxUseTime\",\n" +
+                "      \"type\":\"read\"\n" +
+                "   },\n" +
+                "   \"value\":24\n" +
+                "}";
+
+
+        Map map = (Map) JsonFactory.create().fromJson(test);
+    }
+
+
+
+    @Test
+    public void testForBug202_2() {
+        String test = "{  \n" +
+                "   \"timestamp\":1405673028,\n" +
+                "   \"status\":200,\n" +
+                "   \"request\":{  \n" +
+                "      \"mbean\":\"com.openexchange.pooling:name=ConfigDB Read\",\n" +
+                "      \"attribute\":\"MaxUseTime\",\n" +
+                "      \"type\":\"read\"\n" +
+                "   },\n" +
+                "   \"value\":24\n" +
+                "}";
+
+
+        Map map = (Map) JsonFactory.create().fromJson(test);
+    }
+
+
+    @Test
+    public void testForBug202_3() {
+        String test = "{  \n" +
+                "   \"timestamp\":1405673028,\n" +
+                "   \"status\":200,\n" +
+                "   \"request\":{  \n" +
+                "      \"mbean\":\"com.openexchange.pooling:name=ConfigDB Read\",\n" +
+                "      \"attribute\":\"MaxUseTime\",\n" +
+                "      \"type\":\"read\"\n" +
+                "   },\n" +
+                "   \"value\":24\n" +
+                "}";
+
+
+        final JsonParserFactory jsonParserFactory = new JsonParserFactory();
+        final Map<String, Object> stringObjectMap = jsonParserFactory.createFastParser().parseMap(test);
+     }
+
+    @Test
+    public void testForBug202_4() {
+        String test = "{  \n" +
+                "   \"timestamp\":1405673028,\n" +
+                "   \"status\":200,\n" +
+                "   \"request\":{  \n" +
+                "      \"mbean\":\"com.openexchange.pooling:name=ConfigDB Read\",\n" +
+                "      \"attribute\":\"MaxUseTime\",\n" +
+                "      \"type\":\"read\"\n" +
+                "   },\n" +
+                "   \"value\":24\n" +
+                "}";
+
+
+        final JsonParserFactory jsonParserFactory = new JsonParserFactory();
+        final Map<String, Object> stringObjectMap =
+                jsonParserFactory.createJsonCharArrayParser().parseMap(test);
+
+    }
+
+
 
 }
