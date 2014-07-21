@@ -475,7 +475,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     private static  boolean isJSONControlOrUnicode( int c ) {
 
-        return (c < 30 || c == 34 || c == 92 || c > 126) ? true : false;
+        return (c < 30 || c == 34 || c == 92 ) ? true : false;
 
     }
 
