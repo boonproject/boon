@@ -84,7 +84,10 @@ public class CharSequenceValue implements Value, CharSequence {
     }
 
     public String toString () {
-        if ( startIndex == 0 && endIndex == buffer.length ) {
+
+        if (this.decodeStrings) {
+            return stringValue();
+        } else if ( startIndex == 0 && endIndex == buffer.length ) {
             return FastStringUtils.noCopyStringFromCharsNoCheck( buffer );
         } else {
             return new String ( buffer, startIndex, ( endIndex - startIndex ) );
