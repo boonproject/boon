@@ -84,13 +84,13 @@ public class Sys {
 
                 String build = split[ 1 ];
                 if (build.endsWith("-ea"))
-                  build.substring(0, build.length() - 3);
+                  build = build.substring(0, build.length() - 3);
                 b = Integer.parseInt ( build );
             } catch ( Exception ex ) {
                 ex.printStackTrace ();
                 System.err.println ( "Unable to determine build number or version" );
             }
-        } else if ("1.8.0".equals(sversion)) {
+        } else if ("1.8.0".equals(sversion) || "1.8.0-ea".equals(sversion)) {
             b = -1;
             v = new BigDecimal("1.8");
         } else {
