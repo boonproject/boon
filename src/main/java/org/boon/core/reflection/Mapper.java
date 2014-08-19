@@ -1573,7 +1573,7 @@ public class Mapper {
                     map.put( entry.key(), list );
                 }
             } else if ( value instanceof Map ) {
-
+                map.put(entry.key(), value);
             } else {
                 map.put( entry.key(), toMap( value ) );
             }
