@@ -36,10 +36,14 @@ import org.boon.Lists;
 import org.junit.Test;
 
 import static org.boon.Exceptions.die;
+
 import org.boon.core.Dates;
+
 import static org.boon.core.reflection.MapObjectConversion.fromList;
 import static org.boon.core.reflection.MapObjectConversion.toMap;
 import static org.boon.core.reflection.MapObjectConversion.fromMap;
+
+import java.util.LinkedHashMap;
 
 /**
  * Created by Richard on 4/25/14.
@@ -59,6 +63,7 @@ public class MapObjectConversionTest {
         private Date dob = Dates.getUSDate( 5, 25, 1980 );
         private Currency currency = Currency.getInstance("USD");
         private BigDecimal salary = new BigDecimal("100000.00");
+        private Map<String, String> name;
 
         Employee(int i) {
             this.i = i;
@@ -66,6 +71,9 @@ public class MapObjectConversionTest {
 
         Employee(String abc) {
             this.abc = abc;
+            this.name = new LinkedHashMap<>();
+            this.name.put("first", "Joe");
+            this.name.put("last", "Smith");
         }
 
 
@@ -221,12 +229,18 @@ public class MapObjectConversionTest {
         Employee emp = new Employee("ABC" );
         Map<String, Object> employeeMap = toMap(emp);
         ok = employeeMap != null || die();
-        ok = employeeMap.size() == 6 || die();
+        ok = employeeMap.size() == 7 || die();
         ok = employeeMap.get("abc").equals( "ABC" ) || die();
         ok = employeeMap.get("i").equals( -555 ) || die();
         ok = employeeMap.get("dob").toString().equals( Dates.getUSDate( 5, 25, 1980 ).toString() ) || die();
         ok = employeeMap.get("currency").equals( Currency.getInstance( "USD" ) ) || die();
         ok = employeeMap.get("salary").equals(new BigDecimal( "100000.00" ) ) || die();
+
+        ok = employeeMap.get("name") != null || die();
+        ok = employeeMap.get("name") instanceof Map || die();
+        Map name = (Map)employeeMap.get("name");
+        ok = name.get("first").equals("Joe") || die();
+        ok = name.get("last").equals("Smith") || die();
     }
 
     @Test
