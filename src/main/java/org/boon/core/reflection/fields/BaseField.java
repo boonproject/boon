@@ -330,8 +330,8 @@ public abstract class BaseField implements FieldAccess {
         bits.set(VOLATILE, Modifier.isVolatile ( field.getModifiers () ));
         bits.set(QUALIFIED, bits.get(FINAL) || bits.get(VOLATILE));
         bits.set(READ_ONLY, bits.get(FINAL) );
-        bits.set(IGNORE, Modifier.isTransient ( field.getModifiers () ));
-        bits.set(IGNORE, Modifier.isStatic ( field.getModifiers () ));
+        bits.set(IGNORE, Modifier.isTransient ( field.getModifiers () ) || Modifier.isStatic ( field.getModifiers () ));
+//        bits.set(IGNORE, Modifier.isStatic ( field.getModifiers () ));
 
         parentType = field.getDeclaringClass();
 
