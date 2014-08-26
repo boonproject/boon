@@ -636,7 +636,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     private static final char [] EMPTY_MAP_CHARS = {'{', '}'};
 
-    public final void serializeMap( Map<String, Object> smap, CharBuf builder )  {
+    public final void serializeMap( Map<Object, Object> smap, CharBuf builder )  {
 
         Map map = smap;
         if ( map.size () == 0 ) {

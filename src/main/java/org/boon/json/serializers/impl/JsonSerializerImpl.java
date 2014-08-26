@@ -189,7 +189,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
     }
 
 
-    public final void serializeMap( Map<String, Object> map, CharBuf builder )  {
+    public final void serializeMap( Map<Object, Object> map, CharBuf builder )  {
         this.mapSerializer.serializeMap ( this, map, builder );
 
     }

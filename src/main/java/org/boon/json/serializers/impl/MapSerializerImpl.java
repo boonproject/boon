@@ -48,7 +48,7 @@ public class MapSerializerImpl implements MapSerializer {
     }
 
     @Override
-    public final void serializeMap ( JsonSerializerInternal serializer, Map<String, Object> map, CharBuf builder ) {
+    public final void serializeMap ( JsonSerializerInternal serializer, Map<Object, Object> map, CharBuf builder ) {
 
         if ( map.size () == 0 ) {
             builder.addChars ( EMPTY_MAP_CHARS );
@@ -58,11 +58,11 @@ public class MapSerializerImpl implements MapSerializer {
 
         builder.addChar( '{' );
 
-        final Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+        final Set<Map.Entry<Object, Object>> entrySet = map.entrySet();
         int index=0;
-        for ( Map.Entry<String, Object> entry : entrySet ) {
+        for ( Map.Entry<Object, Object> entry : entrySet ) {
             if (entry.getValue ()!=null) {
-                serializeFieldName ( entry.getKey (), builder );
+                serializeFieldName ( entry.getKey().toString(), builder );
                 serializer.serializeObject ( entry.getValue (), builder );
                 builder.addChar ( ',' );
                 index++;

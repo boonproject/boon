@@ -50,7 +50,7 @@ public interface JsonSerializerInternal extends JsonSerializer {
 
     void serializeCollection ( Collection<?> collection, CharBuf builder );
 
-    void serializeMap ( Map<String, Object> map, CharBuf builder );
+    void serializeMap ( Map<Object, Object> map, CharBuf builder );
 
     void serializeArray ( Object array, CharBuf builder );
 
