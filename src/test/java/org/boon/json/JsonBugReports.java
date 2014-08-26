@@ -47,8 +47,8 @@ public class JsonBugReports {
         puts (map);
         puts (toJson(map));
 
-        boolean ok = toJson(map).equals("{\"empty\":\"\",\"docId\":111,\"serviceName\":\"cafe\"}") ||
-                die(toJson(map).equals("{\"empty\":\"\",\"docId\":111,\"serviceName\":\"cafe\"}") );
+        boolean ok = toJson(map).equals("{\"docId\":111,\"empty\":\"\",\"serviceName\":\"cafe\"}") ||
+                die(toJson(map) );
     }
 
 
