@@ -96,12 +96,14 @@ public class LikeabilityUpdate {
         return this;
     }
 
+
     @Override
     public String toString() {
         return "LikeabilityUpdate{" +
                 "username='" + username + '\'' +
-                ", media='" + video + '\'' +
+                ", video='" + video + '\'' +
                 ", like=" + like +
+                ", spot=" + spot +
                 '}';
     }
 
