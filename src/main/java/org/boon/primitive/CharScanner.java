@@ -67,6 +67,7 @@ public class CharScanner {
     protected static final int DECIMAL_POINT = '.';
     private static final int SPACE =  ' ';
     private static final int PIPE = '|';
+    private static final char[][] EMPTY_CHAR_ARRAY_ARRAY = new char[0][0];
 
     private static int NEWLINE= '\n';
 
@@ -305,8 +306,10 @@ public class CharScanner {
         int currentLineLength = 1;
 
 
-        char c = '\u0000';
+        char c = 0;
         int index = 0;
+
+
 
         for (; index < inputArray.length; index++, currentLineLength++ ) {
             c = inputArray[ index ];
@@ -345,6 +348,11 @@ public class CharScanner {
 
     public static char[][] split( final char[] inputArray,
                                   final char split, final int limit ) {
+
+
+        if (inputArray.length==0) {
+            return EMPTY_CHAR_ARRAY_ARRAY;
+        }
         /** Holds the results. */
         char[][] results = new char[ limit + 1 ][];
 
@@ -353,8 +361,25 @@ public class CharScanner {
         int currentLineLength = 1;
 
 
-        char c = '\u0000';
+        char c=0;
         int index = 0;
+
+
+
+
+//Ignore start delims
+//
+//        while (true) {
+//            c = inputArray[index];
+//            if (c==split) {
+//                index++;
+//                startCurrentLineIndex=index;
+//            }else {
+//
+//                break;
+//            }
+//
+//        }
 
         for (; index < inputArray.length; index++, currentLineLength++ ) {
             c = inputArray[ index ];
@@ -380,9 +405,21 @@ public class CharScanner {
         }
 
 
-        results[ resultIndex ] = Chr.copy(
+
+
+        if (c!=split) {
+            results[resultIndex] = Chr.copy(
+                    inputArray, startCurrentLineIndex, currentLineLength - 1);
+            resultIndex++;
+        } else if (index == inputArray.length) {
+            //noop
+        } else {
+            results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, inputArray.length - index - 1);
-        resultIndex++;
+            resultIndex++;
+
+        }
+
 
         int actualLength = resultIndex;
         if ( actualLength < results.length ) {

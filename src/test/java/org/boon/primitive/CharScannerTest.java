@@ -69,6 +69,389 @@ public class CharScannerTest {
     }
 
     @Test
+    public void splitWithLimit3() {
+
+
+        String string = "01234_567891_01112ZZ1234567890_ABC_xyz";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 3);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01234") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("567891") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("01112ZZ1234567890") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("ABC_xyz") || die(three);
+
+    }
+
+
+    @Test
+    public void splitWithLimit10ButOnly4() {
+
+
+        String string = "01_34_67_90";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 10);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("34") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("67") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("90") || die(three);
+
+
+
+       ok |= split.length == 4 || die("Length is wrong size");
+
+
+
+    }
+
+    @Test
+    public void splitWithLimit10ButOnly4_withExtraDelim() {
+
+
+        String string = "01_34_67_90_";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 10);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("34") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("67") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("90") || die(three);
+
+
+
+        ok |= split.length == 4 || die("Length is wrong size");
+
+
+
+    }
+
+    @Test
+    public void splitButOnly4_withTwoExtraDelim() {
+
+
+        String string = "01_34_67_90__";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_');
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("34") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("67") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("90") || die(three);
+
+        String five = new String(split[4]);
+        ok |= five.equals("") || die(five);
+
+
+
+        ok |= split.length == 5 || die("Length is wrong size");
+
+
+
+    }
+
+
+    @Test
+    public void splitWithLimit10ButOnly4_withTwoExtraDelim() {
+
+
+        String string = "01_34_67_90__";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 10);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("34") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("67") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("90") || die(three);
+
+        String five = new String(split[4]);
+        ok |= five.equals("") || die(five);
+
+
+
+        ok |= split.length == 5 || die("Length is wrong size");
+
+
+
+    }
+
+
+    @Test
+    public void splitWithLimit10ButOnly4_startDelim() {
+
+
+        String string = "_01_34_67_90";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 10);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("01") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("34") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("67") || die(three);
+
+
+
+        ok |= split.length == 5 || die("Length is wrong size");
+
+
+
+    }
+
+
+    @Test
+    public void splitOnly4_startDelim() {
+
+
+        String string = "_01_34_67_90";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_');
+
+        String zero = new String(split[0]);
+
+        ok |= zero.equals("") || die(zero);
+
+
+        String one = new String(split[1]);
+
+        ok |= one.equals("01") || die(one);
+
+
+        String two = new String(split[2]);
+        ok |= two.equals("34") || die(two);
+
+
+        String three = new String(split[3]);
+        ok |= three.equals("67") || die(three);
+
+
+        String four = new String(split[4]);
+        ok |= four.equals("90") || die(three);
+
+
+
+        ok |= split.length == 5 || die("Length is wrong size");
+
+
+
+    }
+
+    @Test
+    public void splitWithLimit10ButOnly4_twoStartDelim() {
+
+
+        String string = "__01_34_67_90";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 10);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("01") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("34") || die(three);
+
+
+
+        ok |= split.length == 6 || die("Length is wrong size");
+
+
+
+    }
+
+
+    @Test
+    public void splitButOnly4_twoStartDelim() {
+
+
+        String string = "__01_34_67_90";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_');
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("01") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("34") || die(three);
+
+
+
+        ok |= split.length == 6 || die("Length is wrong size");
+
+
+
+    }
+
+
+
+
+    @Test
+    public void splitWithLimit10ButOnly4_twoMiddleDelim() {
+
+
+        String string = "01__34_67_90";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_', 10);
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("34") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("67") || die(four);
+
+
+        String five = new String(split[4]);
+        ok |= five.equals("90") || die(five);
+
+
+        ok |= split.length == 5 || die("Length is wrong size", split.length);
+
+
+
+    }
+
+
+
+    @Test
+    public void splitButOnly4_twoMiddleDelim() {
+
+
+        String string = "01__34_67_90";
+
+
+        final char[][] split = CharScanner.split(string.toCharArray(), '_');
+
+        String one = new String(split[0]);
+
+        ok |= one.equals("01") || die(one);
+
+
+        String two = new String(split[1]);
+        ok |= two.equals("") || die(two);
+
+
+        String three = new String(split[2]);
+        ok |= three.equals("34") || die(three);
+
+
+        String four = new String(split[3]);
+        ok |= four.equals("67") || die(four);
+
+
+        String five = new String(split[4]);
+        ok |= five.equals("90") || die(five);
+
+
+        ok |= split.length == 5 || die("Length is wrong size", split.length);
+
+
+
+    }
+    @Test
     public void findString() {
         String findString = "456";
         String string = "0123456789101112";

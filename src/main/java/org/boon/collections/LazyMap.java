@@ -41,6 +41,7 @@ import java.util.*;
 public class LazyMap extends AbstractMap<String, Object> {
 
 
+    private final boolean delayMap;
     /* Holds the actual map that will be lazily created. */
     private Map<String, Object> map;
     /* The size of the map. */
@@ -55,11 +56,21 @@ public class LazyMap extends AbstractMap<String, Object> {
     public LazyMap() {
         keys = new String[ 5 ];
         values = new Object[ 5 ];
+        this.delayMap=false;
     }
 
     public LazyMap( int initialSize ) {
         keys = new String[ initialSize ];
         values = new Object[ initialSize ];
+        this.delayMap=false;
+
+    }
+
+
+    public LazyMap( int initialSize, boolean delayMap ) {
+        keys = new String[ initialSize ];
+        values = new Object[ initialSize ];
+        this.delayMap = delayMap;
 
     }
 
@@ -80,8 +91,15 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        buildIfNeeded();
-        return map.entrySet();
+        if (map != null)  map.entrySet();
+
+        if (delayMap) {
+
+            return new FakeMapEntrySet(size, keys, values);
+        }else {
+            buildIfNeeded();
+            return map.entrySet();
+        }
     }
 
     @Override
@@ -228,7 +246,7 @@ public class LazyMap extends AbstractMap<String, Object> {
     }
 
     public LazyMap clearAndCopy() {
-        LazyMap map = new LazyMap ();
+        LazyMap map = new LazyMap (size);
         for ( int index = 0; index < size; index++ ) {
             map.put( keys[ index ], values[ index ] );
         }

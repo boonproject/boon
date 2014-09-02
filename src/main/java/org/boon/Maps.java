@@ -312,7 +312,7 @@ public class Maps {
 
     }
 
-    public static interface Entry<K, V> extends Comparable<Entry>,
+    public static interface Entry<K, V> extends Comparable<Entry>, Map.Entry<K, V>,
             Serializable, Cloneable {
         K key();
 
@@ -363,6 +363,23 @@ public class Maps {
             return v;
         }
 
+
+        @Override
+        public K getKey() {
+            return k;
+        }
+
+        @Override
+        public V getValue() {
+            return v;
+        }
+
+        @Override
+        public V setValue(V value) {
+            V old = this.v;
+            this.v = value;
+            return old;
+        }
 
         @Override
         public boolean equals( Object o ) {

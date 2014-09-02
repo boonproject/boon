@@ -137,6 +137,29 @@ public class NumberValue extends Number implements Value {
 
     @Override
     public boolean equals ( Object o ) {
+
+        if (o instanceof Integer) {
+            Integer i = (Integer) o;
+            return toValue().equals(i);
+        } else if  (o instanceof Float) {
+            Float i = (Float) o;
+            return floatValue() == i;
+        } else if (o instanceof Double) {
+            Double i = (Double) o;
+            return toValue().equals(i);
+        } else if (o instanceof Short) {
+            Short i = (Short) o;
+            return shortValue() == i;
+        } else if (o instanceof Byte) {
+            Byte i = (Byte) o;
+            return byteValue() == i;
+        } else if (o instanceof Date) {
+            Date i = (Date) o;
+            return dateValue().equals(i);
+        } else if (o instanceof Long) {
+            Long i = (Long) o;
+            return longValue()==i;
+        }
         if ( this == o ) return true;
         if ( !( o instanceof Value ) ) return false;
 
@@ -267,5 +290,8 @@ public class NumberValue extends Number implements Value {
     public Type type() {
         return Type.NUMBER;
     }
+
+
+
 
 }
