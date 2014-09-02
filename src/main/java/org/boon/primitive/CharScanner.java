@@ -330,11 +330,29 @@ public class CharScanner {
             }
         }
 
-        if ( c != split ) {
 
-            results[ resultIndex ] = Chr.copy(
-                    inputArray, startCurrentLineIndex, currentLineLength - 1 );
+
+        if (c!=split) {
+
+            if ( resultIndex == results.length ) {
+
+                results = _grow( results );
+            }
+            results[resultIndex] = Chr.copy(
+                    inputArray, startCurrentLineIndex, currentLineLength - 1);
             resultIndex++;
+        } else if (index == inputArray.length) {
+            //noop
+        } else {
+
+            if ( resultIndex == results.length ) {
+
+                results = _grow( results );
+            }
+            results[ resultIndex ] = Chr.copy(
+                    inputArray, startCurrentLineIndex, inputArray.length - index - 1);
+            resultIndex++;
+
         }
 
         int actualLength = resultIndex;
@@ -408,18 +426,27 @@ public class CharScanner {
 
 
         if (c!=split) {
+
+            if ( resultIndex == results.length ) {
+
+                results = _grow( results );
+            }
             results[resultIndex] = Chr.copy(
                     inputArray, startCurrentLineIndex, currentLineLength - 1);
             resultIndex++;
         } else if (index == inputArray.length) {
             //noop
         } else {
+
+            if ( resultIndex == results.length ) {
+
+                results = _grow( results );
+            }
             results[ resultIndex ] = Chr.copy(
                     inputArray, startCurrentLineIndex, inputArray.length - index - 1);
             resultIndex++;
 
         }
-
 
         int actualLength = resultIndex;
         if ( actualLength < results.length ) {

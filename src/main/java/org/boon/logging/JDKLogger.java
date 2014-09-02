@@ -72,6 +72,21 @@ public class JDKLogger implements LoggerDelegate {
         logger.log(Level.SEVERE, sputs(messages), t);
     }
 
+
+    public void fatal(final Exception message) {
+        logger.log(Level.SEVERE, "", message);
+    }
+
+
+    public void error(final Exception message) {
+        logger.log(Level.SEVERE, "", message);
+    }
+
+
+    public void warn(final Exception message) {
+        logger.log(Level.WARNING, "", message);
+    }
+
     @Override
     public void error(Object... messages) {
 
@@ -233,7 +248,6 @@ public class JDKLogger implements LoggerDelegate {
     public void error(final Object message, final Throwable t) {
         logger.log(Level.SEVERE, str(message), t);
 
-        logger.log(Level.SEVERE, str(message), t);
     }
 
     public void warn(final Object message) {

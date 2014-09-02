@@ -93,6 +93,22 @@ public class Logger {
         logger.fatal(message);
     }
 
+
+    public void fatal(final Exception message) {
+        logger.fatal("", message);
+    }
+
+
+    public void error(final Exception message) {
+        logger.error("", message);
+    }
+
+
+    public void warn(final Exception message) {
+        logger.warn("", message);
+    }
+
+
     public void fatal(final Object message, final Throwable t) {
         logger.fatal(message, t);
     }

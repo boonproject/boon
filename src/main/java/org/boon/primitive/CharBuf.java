@@ -748,7 +748,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
     public String toStringAndRecycle() {
 
-        String str = new String( buffer, 0, location );
+        String str = this.toString();
         location = 0;
         return str;
     }
