@@ -41,6 +41,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static org.boon.Boon.len;
+import static org.boon.Boon.puts;
+
 public class Dates {
 
     public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
@@ -504,11 +507,26 @@ public class Dates {
 
     public static Date fromISO8601Jackson_(String string) {
 
-        try {
 
-            return new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSZ" ).parse( string );
-        } catch ( ParseException e ) {
-            return Exceptions.handle ( Date.class, "Not a valid ISO8601 \"Jackson\" date", e );
+        if (string.length() == 29 && Str.idx(string, -3) == ':') {
+
+            try {
+
+                return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX").parse(string);
+            } catch (ParseException e) {
+                return Exceptions.handle(Date.class, "Not a valid ISO8601 \"Jackson\" date", e);
+            }
+
+
+        } else {
+
+            try {
+
+                return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(string);
+            } catch (ParseException e) {
+                return Exceptions.handle(Date.class, "Not a valid ISO8601 \"Jackson\" date", e);
+            }
+
         }
 
 
@@ -721,7 +739,6 @@ public class Dates {
     public static Date fromISO8601Jackson(char[] charArray, int from, int to) {
 
         try {
-            int length = to - from;
             if ( isISO8601Jackson(charArray, from, to) ) {
                 int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
                 int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
@@ -739,10 +756,18 @@ public class Dates {
 
                     tz = GMT;
 
-                } else {
+                }
+
+                else {
                     StringBuilder builder = new StringBuilder( 8 );
                     builder.append("GMT");
-                    builder.append( charArray, from + 23, 5 );
+
+                    for (int index = from + 23; index < to; index++ ) {
+                        if (charArray[index] == ':') {
+                            continue;
+                        }
+                        builder.append( charArray[index] );
+                    }
                     String tzStr = builder.toString();
                     tz = TimeZone.getTimeZone(tzStr);
                 }
@@ -868,7 +893,7 @@ public class Dates {
         if ( length == SHORT_ISO_8601_TIME_LENGTH ) {
             valid &= ( charArray[ start + 19 ] == 'Z' );
 
-        } else if ( length == LONG_ISO_8601_JACKSON_TIME_LENGTH) {
+        } else if ( length == LONG_ISO_8601_JACKSON_TIME_LENGTH || length == 29) {
             valid &= ( charArray[ start + 23 ] == '-' || charArray[ start + 23 ] == '+' );
         } else {
             return false;
