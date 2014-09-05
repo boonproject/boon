@@ -81,6 +81,8 @@ public class LazyMap extends AbstractMap<String, Object> {
         this.keys = Arry.array(String.class, keys);
         this.values = Arry.array(Object.class, values);
 
+        this.size = this.keys.length;
+
         this.delayMap = delayMap;
 
     }
