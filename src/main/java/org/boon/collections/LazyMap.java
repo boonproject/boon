@@ -28,6 +28,7 @@
 
 package org.boon.collections;
 
+import org.boon.Sets;
 import org.boon.core.Sys;
 import org.boon.primitive.Arry;
 import org.boon.Maps;
@@ -74,6 +75,15 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     }
 
+
+    public LazyMap( final List<String> keys, final List values, boolean delayMap ) {
+
+        this.keys = Arry.array(String.class, keys);
+        this.values = Arry.array(Object.class, values);
+
+        this.delayMap = delayMap;
+
+    }
     public Object put( String key, Object value ) {
         if ( map == null ) {
             keys[ size ] = key;
@@ -165,21 +175,15 @@ public class LazyMap extends AbstractMap<String, Object> {
     @Override
     public Object remove( Object key ) {
 
-        if ( map == null ) {
-            throw new RuntimeException( "wrong type of map" );
-        } else {
-            return map.remove( key );
-        }
+        buildIfNeeded();
+        return map.remove( key );
+
     }
 
     @Override
     public void putAll( Map m ) {
-
-        if ( map == null ) {
-            throw new RuntimeException( "wrong type of map" );
-        } else {
-            map.putAll( m );
-        }
+        buildIfNeeded();
+        map.putAll( m );
     }
 
     @Override
@@ -194,8 +198,9 @@ public class LazyMap extends AbstractMap<String, Object> {
     @Override
     public Set<String> keySet() {
 
+
         if ( map == null ) {
-            return null;
+            return Sets.set(size, keys);
         } else {
             return map.keySet();
         }

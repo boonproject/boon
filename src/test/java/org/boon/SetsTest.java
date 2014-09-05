@@ -29,6 +29,7 @@
 package org.boon;
 
 
+import org.boon.primitive.Arry;
 import org.junit.Test;
 
 
@@ -37,6 +38,7 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
 
+import static org.boon.Boon.puts;
 import static org.boon.Sets.*;
 import static org.boon.Sets.safeSet;
 import static org.boon.Sets.safeSortedSet;
@@ -45,6 +47,17 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings ( "unchecked" )
 public class SetsTest {
+
+
+    @Test
+    public void arrayConversion() {
+
+        String[] arry = Arry.array("0", "1", "2", "3", "4");
+
+        Set<String> set = set( 3, arry);
+
+        puts(set("0", "1", "2").equals(set));
+    }
 
 
     @Test

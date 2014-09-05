@@ -112,6 +112,22 @@ public class Sets {
         return set;
     }
 
+    @SafeVarargs
+    public static <V> Set<V> set( int size, final V... array  ) {
+
+        int index=0;
+        Set<V> set = new LinkedHashSet<>();
+
+        for ( V v : array ) {
+            set.add( v );
+            index++;
+            if (index == size) {
+                break;
+            }
+        }
+        return set;
+    }
+
 
     public static <V> NavigableSet<V> sortedSet( Iterator<V> iterator ) {
         NavigableSet<V> set = new TreeSet<>();
