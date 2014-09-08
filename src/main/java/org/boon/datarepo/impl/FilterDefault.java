@@ -184,7 +184,9 @@ public class FilterDefault implements Filter, FilterComposer {
 
 
         boolean foundIndex = applyIndexedFiltersForAnd( expressions, fields, expressionSet, resultSet );
-        applyLinearSearch( expressionSet, resultSet, foundIndex );
+
+        resultSet.andResults();
+        applyLinearSearch(expressionSet, resultSet, foundIndex);
         applyGroups( expressionSet, resultSet );
 
 
@@ -216,22 +218,8 @@ public class FilterDefault implements Filter, FilterComposer {
 
 
                 foundIndex = doFilterWithIndex( criteria, fields, resultSet );
-                if ( foundIndex ) {
-                    expressionSet.remove( criteria );
-                }
-
-                /* if it is less than 20, just linear search the rest. */
-                if ( resultSet.lastSize() < 20 ) {
-                    resultSet.andResults(); //consolidate now
-                    return foundIndex;
-                } else if ( resultSet.lastSize() > 0 ) {
-                    //No op
-                }
 
             }
-        }
-        if ( foundIndex ) {
-            resultSet.andResults();
         }
         return foundIndex;
     }
@@ -341,7 +329,7 @@ public class FilterDefault implements Filter, FilterComposer {
         SearchIndex searchIndex = searchIndexMap.get( name );
         LookupIndex lookupIndex = lookupIndexMap.get( name );
         List resultList = null;
-        boolean foundIndex = false;
+        boolean foundIndex;
 
         if ( lookupIndex != null && operator == Operator.EQUAL ) {
             foundIndex = true;

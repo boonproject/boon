@@ -23,8 +23,9 @@ public class Bug216 {
 
     static List<Map<String, String>> database = new ArrayList<>();
 
-    static String[] jobs = new String[] {"manager", "clerk", "footballer", "artist", "teacher"};
-    static String[] colours = new String[] {"red", "blue", "green", "yellow", "orange"};
+    static String[] jobs = new String[] {"manager", "clerk",  "teacher", "artist", "engineer", "astrotech", "mining"};
+    static String[] colours = new String[] {"red", "blue", "green", "yellow", "orange", "magenta", "pink", "hotpink", "brickred", "azul"};
+    static String[] sports = new String[] {"cycle", "shoot", "bowl", "ski", "mountaincliming", "biking", "baseball", "cricket"};
 
 
     public static void main(String[] args) {
@@ -34,6 +35,8 @@ public class Bug216 {
             entry.put("name","Mr "+i);
             entry.put("colour",colours[((int) (Math.random() * colours.length))]);
             entry.put("job",jobs[((int) (Math.random() * jobs.length))]);
+            entry.put("sport",sports[((int) (Math.random() * sports.length))]);
+
             database.add(entry);
         }
 

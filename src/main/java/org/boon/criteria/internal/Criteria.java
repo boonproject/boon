@@ -29,12 +29,8 @@
 package org.boon.criteria.internal;
 
 
-import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.Predicate;
 
-import java.util.Collections;
-import java.util.Map;
 
 public abstract class Criteria implements Predicate {
 

@@ -39,6 +39,7 @@ import org.boon.datarepo.DataRepoException;
 import org.boon.datarepo.PlanStep;
 import org.boon.datarepo.ResultSet;
 import org.boon.datarepo.spi.ResultSetInternal;
+import sun.invoke.empty.Empty;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -384,13 +385,13 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     public T firstItem() {
         prepareResults();
 
-        return results.get( 0 );
+        return results.get(0);
     }
 
     @Override
     public Map<String, Object> firstMap() {
         prepareResults();
-        return toMap( this.firstItem() );
+        return toMap(this.firstItem());
     }
 
     @Override
@@ -409,7 +410,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getAlias();
         for ( int index = 0; index < values.length && index < maps.size(); index++ ) {
             Map<String, Object> map = maps.get( index );
-            values[ index ] = Conversions.toInt( map.get( keyName ) );
+            values[ index ] = Conversions.toInt(map.get(keyName));
             if ( index == 1 ) {
                 break;
             }
@@ -430,7 +431,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
             Map<String, Object> map = maps.get( index );
-            values[ index ] = Conversions.toFloat( map.get( keyName ) );
+            values[ index ] = Conversions.toFloat(map.get(keyName));
             if ( index == 1 ) {
                 break;
             }
@@ -449,7 +450,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
             Map<String, Object> map = maps.get( index );
-            values[ index ] = Conversions.toShort( map.get( keyName ) );
+            values[ index ] = Conversions.toShort(map.get(keyName));
             if ( index == 1 ) {
                 break;
             }
@@ -468,7 +469,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
             Map<String, Object> map = maps.get( index );
-            values[ index ] = Conversions.toDouble( map.get( keyName ) );
+            values[ index ] = Conversions.toDouble(map.get(keyName));
             if ( index == 1 ) {
                 break;
             }
@@ -487,7 +488,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
             Map<String, Object> map = maps.get( index );
-            values[ index ] = Conversions.toByte( map.get( keyName ) );
+            values[ index ] = Conversions.toByte(map.get(keyName));
             if ( index == 1 ) {
                 break;
             }
@@ -506,7 +507,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
         String keyName = selector.getName();
         for ( int index = 0; index < values.length; index++ ) {
             Map<String, Object> map = maps.get( index );
-            values[ index ] = Conversions.toChar( map.get( keyName ) );
+            values[ index ] = Conversions.toChar(map.get(keyName));
             if ( index == 1 ) {
                 break;
             }
@@ -596,59 +597,6 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
-    public void andResults() {
-        if ( allResults.size() == 0 ) {
-            return;
-        }
-
-        if ( allResults.size() == 1 ) {
-            prepareResults();
-            return;
-        }
-
-        boolean foundEmpty = false;
-
-        for ( List<T> list : allResults ) {
-            if ( list.size() == 0 ) {
-                foundEmpty = true;
-                break;
-            }
-        }
-
-        if ( foundEmpty ) {
-            results = Collections.EMPTY_LIST;
-            allResults.clear();
-            totalSize = 0;
-            return;
-        }
-
-
-        List<T> shortestList = null;
-        int min = Integer.MAX_VALUE;
-        for ( List<T> list : allResults ) {
-            int size = list.size();
-            if ( size < min ) {
-                min = size;
-                shortestList = list;
-            }
-        }
-        if ( shortestList == null ) {
-            return;
-        }
-
-        allResults.remove( shortestList );
-        Set set = new HashSet( shortestList );
-        for ( List<T> list : allResults ) {
-            set.retainAll( list );
-        }
-
-        results = new ArrayList( set );
-        allResults.clear();
-        totalSize = 0;
-
-    }
-
-    @Override
     public int lastSize() {
         if ( lastList == null ) {
             return 0;
@@ -656,6 +604,36 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
             return lastList.size();
         }
 
+    }
+
+    public void andResults() {
+
+        int size = Integer.MAX_VALUE;
+        List<T> finalResult = Collections.emptyList();
+
+        for (List<T> result : allResults) {
+
+            if (result.size()==0) {
+                finalResult = Collections.emptyList();
+                size=0;
+                break;
+            }
+            if (result.size() < size) {
+                size = result.size();
+            }
+        }
+
+
+        for (List<T> result : allResults) {
+
+            if (result.size() ==size) {
+                finalResult = result;
+                break;
+            }
+        }
+
+        allResults.clear();
+        allResults.add(finalResult);
     }
 
 
