@@ -192,6 +192,13 @@ public class Lists {
         return list;
     }
 
+    public static <V> List<V> linkedList( Iterable<V> iterable ) {
+        List<V> list = new LinkedList<>();
+        for ( V o : iterable ) {
+            list.add( o );
+        }
+        return list;
+    }
 
     public static List<?> toListOrSingletonList( Object item ) {
         if ( item == null ) {
