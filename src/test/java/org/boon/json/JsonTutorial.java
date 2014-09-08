@@ -661,6 +661,10 @@ public class JsonTutorial {
 
     public static void main( String... args ) throws Exception {
 
+        puts(-0.0, 0.0, Float.parseFloat("-0.0"), -0, 0);
+
+
+
 
         String json = "{\"scout\": \"webdriver\", \"short_version\": \"4.3\", \"long_name\": \"iPad\", \"api_name\": \"ipad\", \n" +
                 "\n" +

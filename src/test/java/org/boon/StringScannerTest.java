@@ -30,6 +30,7 @@ package org.boon;
 
 import org.junit.Test;
 
+import static org.boon.Boon.puts;
 import static org.boon.primitive.Arry.idx;
 import static org.boon.primitive.Arry.len;
 import static org.boon.Exceptions.die;
@@ -44,6 +45,19 @@ public class StringScannerTest {
     private static final String TEST_STRING = "[199984,1384795052823,\"/127.0.0.1:51706\",[\"abc123\",\"rickHigh\"," +
             "\"217.0.0.1\",\"start\",1234567,12345678,\"abcsesson123\",\"asdfasdf\"]]";
 
+
+    boolean ok = true;
+    @Test
+    public void parseFloatIssue179() {
+
+        String testString = "-0.0";
+
+        float value = StringScanner.parseFloat(testString);
+
+        String str = ""+value;
+
+        ok |= str.equals("-0.0") || die();
+    }
 
     @Test
     public void testRemoveChars() {

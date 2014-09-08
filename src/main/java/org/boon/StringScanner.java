@@ -98,4 +98,13 @@ public class StringScanner {
         return Str.fromCharArrayOfArrayToStringArray( comps );
     }
 
+    public static float parseFloat( String buffer, int from, int to ) {
+        return CharScanner.parseFloat( FastStringUtils.toCharArray(buffer), from , to );
+    }
+
+    public static float parseFloat( String buffer ) {
+        return CharScanner.parseFloat( FastStringUtils.toCharArray(buffer) );
+    }
+
+
 }

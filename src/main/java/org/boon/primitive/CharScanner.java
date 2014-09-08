@@ -1010,6 +1010,10 @@ public class CharScanner {
         return (float) parseDouble( buffer, from , to );
     }
 
+    public static float parseFloat( char[] buffer ) {
+        return (float) parseDouble( buffer, 0 , buffer.length );
+    }
+
 
     public static double parseDouble( char[] buffer ) {
         return parseDouble( buffer, 0, buffer.length );
@@ -1021,10 +1025,13 @@ public class CharScanner {
         int digitsPastPoint = 0;
 
         int index = from;
+        boolean negative=false;
+
 
 
         if (buffer[index] == '-') {
             index++;
+            negative=true;
         }
 
         boolean foundDot = false;
@@ -1087,7 +1094,11 @@ public class CharScanner {
 
 
 
-        return value;
+        if (value==0.0 && negative) {
+            return -0.0;
+        } else {
+            return value;
+        }
     }
 
     private static double powersOf10[] = {
