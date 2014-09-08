@@ -542,11 +542,13 @@ public class JsonTutorial {
         ok |= Arrays.equals( new int[]{1,2,3,4,5,6,7,8}, intArray );
 
 
-        String jsonMap = "{\"race\":true, \"speedup\": false, \"name\": \"bob\"}";
+        String jsonMap = "{\"race\":true, \"speedup\": false, \"name\": \"bob\", \"value\": -0}";
 
         Map <String, Object> map  = mapper.parser().parseMap( jsonMap );
 
         ok |= ( map.get("race") == Boolean.TRUE  && map.get("name").equals( "bob" ) )  || die(map.toString());
+
+        ok |= map.get("value") == -0 || die(map.get("value"));
 
         puts("ok?", ok);
 

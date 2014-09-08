@@ -129,6 +129,30 @@ public class JsonParserAndMapperBaseTest {
     }
 
 
+    @Test
+    public void bugReport179() {
+
+        Map<String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( Map.class,
+                lines (
+
+                        "{ \"nums\": [-0, 12345678, 999.999, 123456789.99],\n " +
+                                "    \"nums2\": [12, 12345678, 999.999, 123456789.99],\n" +
+                                "    \"nums3\": [12, 12345678, 999.999, 123456789.99]\n" +
+                                "}"
+                )
+        );
+
+        final Object nums = map.get("nums");
+        puts(nums);
+
+        int i = -0;
+        int b = 0;
+
+        if (i == b) {
+            puts("What?");
+        }
+    }
+
 
     @Test
     public void parseNegativeLong () {
