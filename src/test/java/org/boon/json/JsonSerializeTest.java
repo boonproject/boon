@@ -48,6 +48,7 @@ import org.boon.core.Dates;
  * Created by rick on 12/18/13.
  */
 public class JsonSerializeTest {
+    boolean ok;
 
     public static class Employee {
 
@@ -91,6 +92,19 @@ public class JsonSerializeTest {
         boolean ok = sRick.equals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
     }
 
+    @Test
+    public void testControlCharEncoding() {
+
+
+        Employee rick = new Employee();
+        rick.setName("\u001d\u001eRick");
+        String sRick = new JsonSerializerFactory().useFieldsFirst().setOutputType( true ).create()
+                .serialize( rick ).toString();
+
+        puts (sRick);
+
+        ok |= sRick.contains("name\":\"\\u001d\\u001eRick");
+    }
 
     @Test
     public void testBug() {

@@ -34,7 +34,6 @@ import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
 import org.boon.core.Dates;
 import org.boon.core.reflection.FastStringUtils;
-import org.boon.json.JsonException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -473,9 +472,9 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
 
 
-    private static  boolean isJSONControlOrUnicode( int c ) {
+    private static  boolean isJSONEscapeOrAsciiControl(int c) {
 
-        return (c < 30 || c == 34 || c == 92 ) ? true : false;
+        return (c < 32 || c == 34 || c == 92 ) ? true : false;
 
     }
 
@@ -486,7 +485,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
         char c;
         while ( true ) {
             c = charArray[ index ];
-            if ( isJSONControlOrUnicode( c )) {
+            if ( isJSONEscapeOrAsciiControl(c)) {
                 jsonControlCount++;
 
             }
@@ -546,7 +545,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
                 char c = charArray[ index ];
 
 
-                if ( isJSONControlOrUnicode( c )) {
+                if ( isJSONEscapeOrAsciiControl(c)) {
 
                     switch ( c ) {
                         case '\"':
