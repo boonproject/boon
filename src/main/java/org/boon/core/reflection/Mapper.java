@@ -28,9 +28,7 @@
 
 package org.boon.core.reflection;
 
-import org.boon.Boon;
-import org.boon.Lists;
-import org.boon.Maps;
+import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.Function;
 import org.boon.core.Typ;
@@ -1525,12 +1523,12 @@ public class Mapper {
         // their update get overridden by
         // subclass fields with the same name
 
-        List<Maps.Entry<String, Object>> entries = Conversions.mapFilterNulls(
+        List<Entry<String, Object>> entries = Conversions.mapFilterNulls(
                 new FieldToEntryConverter(object), fields );
 
         map.put( "class", object.getClass().getName() );
 
-        for ( Maps.Entry<String, Object> entry : entries ) {
+        for ( Entry<String, Object> entry : entries ) {
 
             String key = entry.key();
 
@@ -1591,7 +1589,7 @@ public class Mapper {
      * Converts a field access set into a collection of map entries.
      */
     public static class FieldToEntryConverter implements
-            Function<FieldAccess, Maps.Entry<String, Object>> {
+            Function<FieldAccess, Entry<String, Object>> {
 
         final Object object;
 
@@ -1600,11 +1598,11 @@ public class Mapper {
         }
 
         @Override
-        public Maps.Entry<String, Object> apply( FieldAccess from ) {
+        public Entry<String, Object> apply( FieldAccess from ) {
             if ( from.isReadOnly() ) {
                 return null;
             }
-            Maps.Entry<String, Object> entry = new Maps.EntryImpl<>( from.name(),
+            Entry<String, Object> entry = new Pair<>( from.name(),
                     from.getValue( object ) );
             return entry;
         }

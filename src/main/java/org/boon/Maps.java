@@ -34,7 +34,6 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.MapObjectConversion;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -284,11 +283,11 @@ public class Maps {
 
 
     public static <K, V> Entry<K, V> entry( final K k, final V v ) {
-        return new EntryImpl<>( k, v );
+        return new Pair<>( k, v );
     }
 
     public static <K, V> Entry<K, V> entry( Entry<K, V> entry ) {
-        return new EntryImpl<>( entry );
+        return new Pair<>( entry );
     }
 
     public static Map<?, ?> mapFromArray( Object... args ) {
@@ -310,114 +309,6 @@ public class Maps {
         }
         return map;
 
-    }
-
-    public static interface Entry<K, V> extends Comparable<Entry>, Map.Entry<K, V>,
-            Serializable, Cloneable {
-        K key();
-
-        V value();
-
-        boolean equals( Entry o );
-    }
-
-    public static class EntryImpl<K, V> implements Entry<K, V> {
-
-        private K k;
-        private V v;
-
-        public EntryImpl() {
-
-        }
-
-        public EntryImpl( EntryImpl<K, V> impl ) {
-            requireNonNull( impl );
-            requireNonNull( impl.k );
-
-            this.k = impl.k;
-            this.v = impl.v;
-        }
-
-        public EntryImpl( Entry<K, V> entry ) {
-            requireNonNull( entry );
-            requireNonNull( entry.key() );
-
-            this.k = entry.key();
-            this.v = entry.value();
-        }
-
-        public EntryImpl( K k, V v ) {
-            Exceptions.requireNonNull( k );
-
-            this.k = k;
-            this.v = v;
-        }
-
-        @Override
-        public K key() {
-            return k;
-        }
-
-        @Override
-        public V value() {
-            return v;
-        }
-
-
-        @Override
-        public K getKey() {
-            return k;
-        }
-
-        @Override
-        public V getValue() {
-            return v;
-        }
-
-        @Override
-        public V setValue(V value) {
-            V old = this.v;
-            this.v = value;
-            return old;
-        }
-
-        @Override
-        public boolean equals( Object o ) {
-            if ( this == o ) return true;
-            if ( o == null || getClass() != o.getClass() ) return false;
-
-            EntryImpl entry = ( EntryImpl ) o;
-            return this.equals( entry );
-        }
-
-        @Override
-        public boolean equals( Entry entry ) {
-
-            if ( k != null ? !k.equals( entry.key() ) : entry.key() != null ) return false;
-            return !( v != null ? !v.equals( entry.value() ) : entry.value() != null );
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = k != null ? k.hashCode() : 0;
-            result = 31 * result + ( v != null ? v.hashCode() : 0 );
-            return result;
-        }
-
-        @Override
-        public int compareTo( Entry entry ) {
-            requireNonNull( entry );
-            return this.key().toString().compareTo( entry.key().toString() );
-        }
-
-        @Override
-        public String toString() {
-            return "{" +
-                    "\"k\":" + k +
-                    ", \"v\":" + v +
-                    '}';
-        }
     }
 
 
@@ -547,7 +438,7 @@ public class Maps {
     public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
                                         V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
                                         K k9, V v9, K k10, V v10 ) {
-        Map<K, V> map = new LinkedHashMap<>( 10 );
+        Map<K, V> map = new LinkedHashMap<>( 11 );
         map.put( k0, v0 );
         map.put( k1, v1 );
         map.put( k2, v2 );
@@ -562,6 +453,241 @@ public class Maps {
 
         return map;
     }
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11 ) {
+        Map<K, V> map = new LinkedHashMap<>( 12 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+
+        return map;
+    }
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12 ) {
+        Map<K, V> map = new LinkedHashMap<>( 13 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+
+        return map;
+    }
+
+
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12, K k13, V v13 ) {
+        Map<K, V> map = new LinkedHashMap<>( 14 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+        map.put( k13, v13 );
+
+        return map;
+    }
+
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12, K k13, V v13,
+                                        K k14, V v14) {
+        Map<K, V> map = new LinkedHashMap<>( 15 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+        map.put( k13, v13 );
+        map.put( k14, v14 );
+
+        return map;
+    }
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12, K k13, V v13,
+                                        K k14, V v14, K k15, V v15) {
+        Map<K, V> map = new LinkedHashMap<>( 16 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+        map.put( k13, v13 );
+        map.put( k14, v14 );
+        map.put( k15, v15 );
+
+        return map;
+    }
+
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12, K k13, V v13,
+                                        K k14, V v14, K k15, V v15, K k16, V v16) {
+        Map<K, V> map = new LinkedHashMap<>( 17 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+        map.put( k13, v13 );
+        map.put( k14, v14 );
+        map.put( k15, v15 );
+        map.put( k16, v16 );
+
+        return map;
+    }
+
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12, K k13, V v13,
+                                        K k14, V v14, K k15, V v15, K k16, V v16, K k17, V v17) {
+        Map<K, V> map = new LinkedHashMap<>( 18 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+        map.put( k13, v13 );
+        map.put( k14, v14 );
+        map.put( k15, v15 );
+        map.put( k16, v16 );
+        map.put( k17, v17 );
+
+
+        return map;
+    }
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12, K k13, V v13,
+                                        K k14, V v14, K k15, V v15, K k16, V v16, K k17, V v17,
+                                        K k18, V v18) {
+        Map<K, V> map = new LinkedHashMap<>( 19 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+        map.put( k13, v13 );
+        map.put( k14, v14 );
+        map.put( k15, v15 );
+        map.put( k16, v16 );
+        map.put( k17, v17 );
+        map.put( k18, v18 );
+
+        return map;
+    }
+
+
+    public static <K, V> Map<K, V> map( K k0, V v0, K k1, V v1, K k2, V v2, K k3,
+                                        V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8,
+                                        K k9, V v9, K k10, V v10, K k11, V v11, K k12, V v12, K k13, V v13,
+                                        K k14, V v14, K k15, V v15, K k16, V v16, K k17, V v17,
+                                        K k18, V v18, K k19, V v19) {
+        Map<K, V> map = new LinkedHashMap<>( 20 );
+        map.put( k0, v0 );
+        map.put( k1, v1 );
+        map.put( k2, v2 );
+        map.put( k3, v3 );
+        map.put( k4, v4 );
+        map.put( k5, v5 );
+        map.put( k6, v6 );
+        map.put( k7, v7 );
+        map.put( k8, v8 );
+        map.put( k9, v9 );
+        map.put( k10, v10 );
+        map.put( k11, v11 );
+        map.put( k12, v12 );
+        map.put( k13, v13 );
+        map.put( k14, v14 );
+        map.put( k15, v15 );
+        map.put( k16, v16 );
+        map.put( k17, v17 );
+        map.put( k18, v18 );
+        map.put( k19, v19 );
+
+        return map;
+    }
+
+
+
+
 
     public static <K, V> Map<K, V> map( List<K> keys, List<V> values ) {
         Map<K, V> map = new LinkedHashMap<>( 10 + keys.size() );
@@ -633,6 +759,16 @@ public class Maps {
 
     @SafeVarargs
     public static <K, V> Map<K, V> map( Entry<K, V>... entries ) {
+        Map<K, V> map = new LinkedHashMap<>( entries.length );
+        for ( Entry<K, V> entry : entries ) {
+            map.put( entry.key(), entry.value() );
+        }
+        return map;
+    }
+
+
+    @SafeVarargs
+    public static <K, V> Map<K, V> mapByEntries( Entry<K, V>... entries ) {
         Map<K, V> map = new LinkedHashMap<>( entries.length );
         for ( Entry<K, V> entry : entries ) {
             map.put( entry.key(), entry.value() );
@@ -964,6 +1100,10 @@ public class Maps {
         return map;
     }
 
+
+    public static <K, V> Map<K, V> safeMap( Map<K, V> map ) {
+        return new ConcurrentHashMap<>(map);
+    }
 
     public static <K, V> Map<K, V> safeMap( K k0, V v0 ) {
         Map<K, V> map = new ConcurrentHashMap<>( 10 );

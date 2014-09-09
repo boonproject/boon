@@ -389,6 +389,21 @@ public class Str {
         return builder.toString();
     }
 
+    public static String joinObjects( char delim, Object... args ) {
+        CharBuf builder = CharBuf.create( 10 * args.length );
+
+        int index = 0;
+        for ( Object arg : args ) {
+            builder.add( arg == null ? "null" : arg.toString() );
+            if ( !( index == args.length - 1 ) ) {
+                builder.add( delim );
+            }
+            index++;
+        }
+        return builder.toString();
+    }
+
+
     public static String join( String... args ) {
         CharBuf builder = CharBuf.create( 10 * args.length );
 

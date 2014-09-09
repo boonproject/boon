@@ -140,12 +140,12 @@ public class MapsTest {
 
 
         assertTrue( entry.hashCode()
-                == ( new EntryImpl( entry ).hashCode() ) );
+                == ( new Pair( entry ).hashCode() ) );
 
         assertEquals( "{\"k\":dog, \"v\":Dog{\"name\":\"dog\"}}",
                 entry.toString() );
 
-        new EntryImpl();
+        new Pair();
     }
 
     @Test
