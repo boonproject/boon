@@ -1086,7 +1086,8 @@ public class Conversions {
             return new ArrayList((Collection) value);
         } else if (value == null) {
             return new ArrayList();
-        } else {
+        }  else
+        {
             ArrayList list = new ArrayList(Boon.len(value));
             Iterator<Object> iterator = iterator(Typ.object, value);
             while (iterator.hasNext()) {

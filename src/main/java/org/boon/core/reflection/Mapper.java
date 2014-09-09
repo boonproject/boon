@@ -690,6 +690,8 @@ public class Mapper {
                     break;
 
 
+                case ARRAY:
+                   item = Conversions.toList(item);
                 case SET:
                 case COLLECTION:
                 case LIST:
