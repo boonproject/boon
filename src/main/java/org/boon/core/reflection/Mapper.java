@@ -183,7 +183,7 @@ public class Mapper {
             }
 
             /* Get the field and if it missing then ignore this map entry. */
-            FieldAccess field = fieldsAccessor.getField(cls, key);
+            FieldAccess field = fields.get( fieldsAccessor.isCaseInsensitive() ? key.toLowerCase() : key );
 
 
             if ( field == null ) {
@@ -1092,6 +1092,8 @@ public class Mapper {
         T newInstance = Reflection.newInstance( cls );
         ValueMap map = ( ValueMap ) ( Map ) valueMap;
 
+
+        Map<String, FieldAccess> fields = fieldsAccessor.getFields( cls);
         Map.Entry<String, Object>[] entries;
 
         FieldAccess field = null;
@@ -1134,7 +1136,7 @@ public class Mapper {
                     }
                 }
 
-                field = fieldsAccessor.getField(cls, fieldName);
+                field = fields.get(fieldsAccessor.isCaseInsensitive() ? fieldName.toLowerCase() : fieldName);
 
 
                 if ( field == null ) {

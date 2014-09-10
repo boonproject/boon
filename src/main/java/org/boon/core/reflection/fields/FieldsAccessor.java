@@ -37,6 +37,5 @@ import java.util.Map;
 public interface FieldsAccessor {
       Map<String, FieldAccess> getFields ( Class<? extends Object> aClass );
 
-      FieldAccess getField(Class<? extends Object> aClass, String name);
-
+      boolean isCaseInsensitive();
 }
