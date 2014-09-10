@@ -349,6 +349,22 @@ public class Str {
     }
 
 
+    public static String rpad( Object obj) {
+        if (obj != null) {
+            return new String( Chr.rpad( obj.toString().toCharArray(), 20, ' ' ) );
+        } else {
+            return new String( Chr.rpad( "<NULL>".toCharArray(), 20, ' ' ) );
+        }
+    }
+
+    public static String rpad( Object obj, int size, char fill ) {
+        if (obj != null) {
+            return new String( Chr.rpad( obj.toString().toCharArray(), size, fill ) );
+        } else {
+            return new String( Chr.rpad( "<NULL>".toCharArray(), size, fill ) );
+        }
+    }
+
     public static String[] split( final String input,
                                   final char split ) {
         return StringScanner.split( input, split );

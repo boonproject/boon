@@ -428,6 +428,15 @@ public class Conversions {
                 return (T) value.toString();
 
 
+
+            case NUMBER:
+                if (value instanceof Number) {
+                    return (T)value;
+                } else {
+                    Double d = toDouble(value);
+                    return (T) d;
+                }
+
             case INT:
             case INTEGER_WRAPPER:
                 Integer i = toInt(value);

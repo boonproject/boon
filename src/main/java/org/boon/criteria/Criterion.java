@@ -290,6 +290,10 @@ public abstract class Criterion<VALUE> extends Criteria {
                     case ARRAY:
                     case COLLECTION:
                     case SET:
+                    case NUMBER:
+
+                        this.value = (VALUE) Conversions.coerce(field.type(), this.value);
+                        return new MyNumber(this.value);
                     case LIST:
                         this.value = (VALUE) Conversions.coerce(field.getComponentClass(), this.value);
                         break;
@@ -461,6 +465,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             return result;
 
         } catch ( Exception ex ) {
+
             return Exceptions.handle( Typ.bool,
                     sputl( "In class " + this.getClass().getName(),
                             "the test method is unable to test the following criteria operator",
@@ -1646,6 +1651,54 @@ public abstract class Criterion<VALUE> extends Criteria {
         @Override
         public Type componentType() {
             return null;
+        }
+    }
+
+    private static class MyNumber extends Number implements Comparable<Number> {
+
+        Object value;
+
+        MyNumber(Object value) {
+
+            this.value = value;
+        }
+
+        @Override
+        public int intValue() {
+            return Conversions.toInt(value);
+        }
+
+        @Override
+        public long longValue() {
+
+            return Conversions.toLong(value);
+        }
+
+        @Override
+        public float floatValue() {
+
+            return Conversions.toFloat(value);
+        }
+
+        @Override
+        public double doubleValue() {
+            return Conversions.toDouble(value);
+        }
+
+        @Override
+        public int compareTo(Number number) {
+            double thisDouble = this.doubleValue();
+
+            double thatValue = number.doubleValue();
+
+            if (thisDouble > thatValue) {
+                return 1;
+            } else if(thisDouble < thatValue) {
+                return -1;
+            } else {
+                return 0;
+            }
+
         }
     }
 }

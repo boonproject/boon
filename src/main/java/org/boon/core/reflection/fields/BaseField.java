@@ -477,6 +477,14 @@ public abstract class BaseField implements FieldAccess {
                     this.setObject ( obj, toBigDecimal ( value ) );
                 }
                 return;
+            case NUMBER:
+                if ( value instanceof Number )  {
+                    this.setObject ( obj, value );
+                } else {
+                    this.setObject ( obj, toDouble ( value ) );
+                }
+                return;
+
             case BIG_INT:
                 if ( value instanceof BigInteger )  {
                     this.setObject ( obj, value );

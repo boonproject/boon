@@ -171,6 +171,11 @@ public class FieldSerializerImpl implements FieldSerializer {
                 serializeFieldName ( fieldName, builder );
                 serializer.serializeString ( value.toString (), builder );
                 return true;
+            case NUMBER:
+                serializeFieldName ( fieldName, builder );
+                builder.addString (  value.toString() );
+                return true;
+
             case INTEGER_WRAPPER:
                 serializeFieldName ( fieldName, builder );
                 builder.addInt ( ( Integer ) value );

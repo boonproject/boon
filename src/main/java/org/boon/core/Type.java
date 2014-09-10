@@ -134,6 +134,8 @@ public enum Type {
                     return Type.FLOAT_WRAPPER;
                 case "java.lang.Character":
                     return Type.CHAR_WRAPPER;
+                case "java.lang.Number":
+                    return Type.NUMBER;
 
                 case "java.lang.Class":
                     return Type.CLASS;

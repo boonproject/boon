@@ -117,7 +117,8 @@ public class SPIFactory {
                 public SearchIndex apply( Class keyType ) {
                     if ( keyType == Typ.string ) {
                         return new SearchIndexDefault( keyType );
-                    } else {
+                    }
+                    else{
                         return new SearchIndexDefault( keyType );
                     }
                 }

@@ -47,7 +47,7 @@ public class MapCreatorImpl implements MapCreator {
     @Override
     public NavigableMap createNavigableMap( Class<?> keyType, Comparator collator ) {
 
-        if ( keyType == String.class ) {
+        if ( collator != null ) {
             return new JavaUtilNavigableMap( collator );
         } else {
             return new JavaUtilNavigableMap();

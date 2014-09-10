@@ -46,6 +46,7 @@ import org.boon.core.Function;
 import org.boon.functions.PropertyNameUtils;
 import org.boon.core.Supplier;
 
+import java.math.BigDecimal;
 import java.text.Collator;
 import java.util.*;
 import java.util.logging.Level;
@@ -968,6 +969,9 @@ public class RepoBuilderDefault implements RepoBuilder {
 
     private void configLookupIndex( Map<String, FieldAccess> fields, String prop, LookupIndex index ) {
         Function kg = getKeyGetterOrCreate( fields, prop );
+
+
+
         index.setInputKeyTransformer( this.keyTransformers.get( prop ) );
         index.setKeyGetter( kg );
         index.setBucketSize( this.indexBucketSize.get( prop ) == null ? 3 : this.indexBucketSize.get( prop ) );
@@ -977,11 +981,69 @@ public class RepoBuilderDefault implements RepoBuilder {
     }
 
     private void configSearchIndex( Map<String, FieldAccess> fields, String prop, SearchIndex searchIndex ) {
-        searchIndex.setComparator( this.collators.get( prop ) );
+
+        FieldAccess fieldAccess = fields == null ? null : fields.get(prop);
+
+        Comparator comparator = this.collators.get(prop);
+        if (comparator==null) {
+            if (fieldAccess!=null && fieldAccess.type() == Typ.number) {
+                comparator = new Comparator<Number>() {
+                    @Override
+                    public int compare(Number o1, Number o2) {
+
+                        if (o1 instanceof Long) {
+                            long long1 = o1.longValue();
+                            long long2 = o2.longValue();
+                            if (long1 > long2) {
+                                return 1;
+                            } else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        } else if (o1 instanceof Double) {
+                            double long1 = o1.doubleValue();
+                            double long2 = o2.doubleValue();
+                            if (long1 > long2) {
+                                return 1;
+                            } else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        } else if (o1 instanceof BigDecimal) {
+                            double long1 = o1.doubleValue();
+                            double long2 = o2.doubleValue();
+                            if (long1 > long2) {
+                                return 1;
+                            } else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        } else {
+                            double long1 = o1.doubleValue();
+                            double long2 = o2.doubleValue();
+                            if (long1 > long2) {
+                                return 1;
+                            } else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+
+                    }
+                };
+            }
+        }
+
+        searchIndex.setComparator( comparator );
         searchIndex.setInputKeyTransformer( this.keyTransformers.get( prop ) );
         Function kg = getKeyGetterOrCreate( fields, prop );
         searchIndex.setKeyGetter( kg );
         searchIndex.setBucketSize( this.indexBucketSize.get( prop ) == null ? 3 : this.indexBucketSize.get( prop ) );
+
         searchIndex.init();
         ( ( SearchableCollection ) query ).addSearchIndex( prop, searchIndex );
     }

@@ -37,8 +37,14 @@ import org.boon.core.timer.TimeKeeper;
 import org.boon.core.timer.TimeKeeperBasic;
 import org.boon.logging.Logging;
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static org.boon.Boon.puts;
 
 
 public class Sys {
@@ -276,4 +282,56 @@ public class Sys {
             Thread.interrupted();
         }
     }
+
+    public static int availableProcessors() {
+        return Runtime.getRuntime().availableProcessors();
+    }
+
+
+    public static long freeMemory() {
+        return Runtime.getRuntime().freeMemory();
+    }
+
+
+    public static long totalMemory() {
+        return Runtime.getRuntime().totalMemory();
+    }
+
+
+    public static long maxMemory() {
+        return Runtime.getRuntime().maxMemory();
+    }
+
+
+
+    public static List<GarbageCollectorMXBean> gc() {
+        return ManagementFactory.getGarbageCollectorMXBeans();
+    }
+
+    public static double loadAverage() {
+        return ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
+    }
+
+    public static long uptime() {
+        return ManagementFactory.getRuntimeMXBean().getUptime();
+    }
+
+    public static long startTime() {
+        return ManagementFactory.getRuntimeMXBean().getStartTime();
+    }
+
+    public static int pendingFinalizationCount() {
+        return ManagementFactory.getMemoryMXBean().getObjectPendingFinalizationCount();
+    }
+
+
+    public static MemoryUsage heapMemoryUsage() {
+        return ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+    }
+
+    public static MemoryUsage nonHeapMemoryUsage() {
+        return ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
+    }
+
+
 }

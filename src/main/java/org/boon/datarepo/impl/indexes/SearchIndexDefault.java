@@ -28,11 +28,13 @@
 
 package org.boon.datarepo.impl.indexes;
 
+import org.boon.core.Typ;
 import org.boon.datarepo.spi.SPIFactory;
 import org.boon.datarepo.spi.SearchIndex;
 import org.boon.core.Function;
 import org.boon.primitive.CharBuf;
 
+import java.math.BigDecimal;
 import java.text.Collator;
 import java.util.*;
 
@@ -50,12 +52,14 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
     private Class<?> keyType;
 
 
+
     public SearchIndexDefault( Class<?> keyType ) {
         super( keyType );
         this.keyType = keyType;
 
-
     }
+
+
 
     public SearchIndexDefault( Class<?> keyType, List<ITEM> items, Function<ITEM, KEY> keyGetter ) {
         super( null );
@@ -90,8 +94,68 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
     @Override
     public void init() {
-        super.map = SPIFactory.getMapCreatorFactory().get().createNavigableMap( this.keyType, this.collator );
+
+        if (this.collator!=null) {
+            super.map = SPIFactory.getMapCreatorFactory().get().createNavigableMap(this.keyType, this.collator);
+
+        } else {
+            if (keyType == Typ.number) {
+                super.map = SPIFactory.getMapCreatorFactory().get().createNavigableMap(keyType, new Comparator<Number>() {
+                    @Override
+                    public int compare(Number o1, Number o2) {
+
+                        if (o1 instanceof Long) {
+                            long long1 = o1.longValue();
+                            long long2 = o2.longValue();
+                            if (long1 > long2) {
+                                return 1;
+                            } else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        } else if (o1 instanceof Double) {
+                            double long1 = o1.doubleValue();
+                            double long2 = o2.doubleValue();
+                            if (long1 > long2) {
+                                return 1;
+                            } else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        } else if (o1 instanceof BigDecimal) {
+                            double long1 = o1.doubleValue();
+                            double long2 = o2.doubleValue();
+                            if (long1 > long2) {
+                                return 1;
+                            } else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        } else {
+                            double long1 = o1.doubleValue();
+                            double long2 = o2.doubleValue();
+                            if (long1 > long2) {
+                                return 1;
+                            }else if (long1 < long2) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+
+                    }
+                });
+            } else {
+                super.map = SPIFactory.getMapCreatorFactory().get().createNavigableMap(this.keyType);
+
+            }
+        }
+
         this.navigableMap = ( NavigableMap<KEY, MultiValue> ) super.map;
+
     }
 
 

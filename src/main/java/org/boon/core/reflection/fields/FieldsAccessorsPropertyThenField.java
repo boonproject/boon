@@ -58,9 +58,15 @@ public class FieldsAccessorsPropertyThenField implements FieldsAccessor {
         return map;
     }
 
+
+
     @Override
-    public boolean isCaseInsensitive() {
-        return caseInsensitive;
+    public FieldAccess getField(Class<? extends Object> aClass, String name) {
+        if (caseInsensitive) {
+            return fieldMap.get(aClass).get(name.toLowerCase());
+        } else {
+            return fieldMap.get(aClass).get(name);
+        }
     }
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {

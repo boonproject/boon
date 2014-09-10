@@ -234,6 +234,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                         return true;
                     }
                     return false;
+
                 case DOUBLE:
                     double dvalue = fieldAccess.getDouble ( parent );
                     if ( dvalue != 0 ) {
@@ -285,6 +286,14 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     serializeFieldName ( fieldName, builder );
                     builder.addBigDecimal ( (BigDecimal) value );
                     return true;
+                case NUMBER:
+                    Number nvalue = (Number) fieldAccess.getObject(parent);
+                    if ( nvalue != 0 ) {
+                        serializeFieldName ( fieldName, builder );
+                        builder.addString(nvalue.toString());
+                        return true;
+                    }
+                    return false;
                 case BIG_INT:
                     serializeFieldName ( fieldName, builder );
                     builder.addBigInteger((BigInteger) value);
