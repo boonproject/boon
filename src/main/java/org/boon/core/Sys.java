@@ -29,6 +29,7 @@
 package org.boon.core;
 
 
+import com.sun.management.UnixOperatingSystemMXBean;
 import org.boon.Lists;
 import org.boon.Str;
 import org.boon.core.reflection.Annotations;
@@ -303,6 +304,18 @@ public class Sys {
     }
 
 
+    static boolean _oracleJVMAndUnix = false;
+    static {
+        try {
+            Class.forName("com.sun.management.UnixOperatingSystemMXBean");
+            _oracleJVMAndUnix = true;
+        } catch (ClassNotFoundException e) {
+            _oracleJVMAndUnix = false;
+        }
+    }
+
+    private final static boolean oracleJVMAndUnix = _oracleJVMAndUnix;
+
 
     public static List<GarbageCollectorMXBean> gc() {
         return ManagementFactory.getGarbageCollectorMXBeans();
@@ -311,6 +324,130 @@ public class Sys {
     public static double loadAverage() {
         return ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
     }
+
+
+
+    public static long maxFileDescriptorCount() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getMaxFileDescriptorCount();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static long openFileDescriptorCount() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getOpenFileDescriptorCount();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static long committedVirtualMemorySize() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getCommittedVirtualMemorySize();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static long totalSwapSpaceSize() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getTotalSwapSpaceSize();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static long freeSwapSpaceSize() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getFreeSwapSpaceSize();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static long processCpuTime() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getProcessCpuTime();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static long freePhysicalMemorySize() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getFreePhysicalMemorySize();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static long totalPhysicalMemorySize() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getTotalPhysicalMemorySize();
+        }else {
+            return -1;
+        }
+    }
+
+
+
+    public static double systemCpuLoad() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getSystemCpuLoad();
+        }else {
+            return -1;
+        }
+    }
+
+
+    public static double processCpuLoad() {
+
+        if (oracleJVMAndUnix) {
+
+            UnixOperatingSystemMXBean unix = (UnixOperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+            return unix.getProcessCpuLoad();
+        }else {
+            return -1;
+        }
+    }
+
+
 
     public static long uptime() {
         return ManagementFactory.getRuntimeMXBean().getUptime();
