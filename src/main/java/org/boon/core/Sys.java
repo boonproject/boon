@@ -334,4 +334,36 @@ public class Sys {
     }
 
 
+    public static int threadPeakCount() {
+
+        return ManagementFactory.getThreadMXBean().getPeakThreadCount();
+    }
+
+
+    public static int threadCount() {
+
+        return ManagementFactory.getThreadMXBean().getThreadCount();
+    }
+
+
+    public static long threadsStarted() {
+
+        return ManagementFactory.getThreadMXBean().getTotalStartedThreadCount();
+    }
+
+    public static long threadCPUTime() {
+
+        return ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
+    }
+
+    public static long threadUserTime() {
+
+        return ManagementFactory.getThreadMXBean().getCurrentThreadUserTime();
+    }
+
+
+    public static int threadDaemonCount() {
+
+        return ManagementFactory.getThreadMXBean().getDaemonThreadCount();
+    }
 }
