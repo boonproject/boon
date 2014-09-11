@@ -357,5 +357,11 @@ public class LongList extends AbstractList<Long> {
 
 
 
+    public void clear() {
+        this.values = new long[10];
+        this.end = 0;
+    }
+
+
 
 }

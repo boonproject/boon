@@ -103,6 +103,12 @@ public class IntList extends AbstractList<Integer> {
         this.values = new int[10];
     }
 
+
+    public void clear() {
+        this.values = new int[10];
+        this.end = 0;
+    }
+
     /** Create a new list with this many items in it. */
     public IntList(int values[]) {
         this.values = values;

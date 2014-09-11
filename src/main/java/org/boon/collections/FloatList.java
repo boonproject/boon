@@ -395,4 +395,11 @@ public class FloatList extends AbstractList<Float> {
         result = 31 * result + end;
         return result;
     }
+
+
+    public void clear() {
+        this.values = new float[10];
+        this.end = 0;
+    }
+
 }

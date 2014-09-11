@@ -12,6 +12,11 @@ public class Pair<K, V> implements Entry<K, V> {
         return new Pair<>( k, v );
     }
 
+
+    public static <K, V> Pair<K, V> pair( final K k, final V v ) {
+        return new Pair<>( k, v );
+    }
+
     public static <K, V> Entry<K, V> entry( Entry<K, V> entry ) {
         return new Pair<>( entry );
     }

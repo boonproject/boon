@@ -396,5 +396,12 @@ public class DoubleList extends AbstractList<Double> {
         result = 31 * result + end;
         return result;
     }
+
+
+    public void clear() {
+        this.values = new double[10];
+        this.end = 0;
+    }
+
 }
 
