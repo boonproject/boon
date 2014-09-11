@@ -33,6 +33,8 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.primitive.Chr;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
@@ -343,6 +345,17 @@ public class Str {
         return new String( Chr.lpad( inStr.toCharArray(), size, ' ' ) );
     }
 
+
+    public static String lpad( Object inStr, int size ) {
+        return new String( Chr.lpad(inStr == null ? "".toCharArray() : inStr.toString().toCharArray(), size, ' ') );
+    }
+
+
+    public static String lpad( Object inStr) {
+        return new String( Chr.lpad( inStr == null ? "".toCharArray() : inStr.toString().toCharArray(), 20, ' ' ) );
+    }
+
+
     public static String zfill( int num, int size ) {
         return new String( Chr.lpad( Integer.toString( num ).toCharArray(),
                 size, '0' ) );
@@ -544,4 +557,56 @@ public class Str {
 
     }
 
+    public static String num(Number count) {
+
+        if (count == null) {
+            return "";
+        }
+        if (count instanceof  Double || count instanceof BigDecimal) {
+            String s = count.toString();
+            if (idx(s, 1) == '.' && s.length() > 16) {
+                s = slc(s, 0, 16);
+                return s;
+            } else {
+                return s;
+            }
+
+        } else if (count instanceof Integer || count instanceof Long || count instanceof Short || count instanceof BigInteger){
+            String s = count.toString();
+            s = new StringBuilder(s).reverse().toString();
+
+            CharBuf buf = CharBuf.create(s.length());
+
+            int index = 0;
+            for (char c : s.toCharArray()) {
+
+
+                index++;
+
+                buf.add(c);
+
+
+                if (index % 3 == 0) {
+                    buf.add(',');
+                }
+
+
+            }
+
+            if (buf.lastChar() == ',') {
+                buf.removeLastChar();
+            }
+
+            s = buf.toString();
+
+            s = new StringBuilder(s).reverse().toString();
+
+            return s;
+
+        }
+
+        return count.toString();
+
+
+    }
 }

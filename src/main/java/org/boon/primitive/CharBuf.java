@@ -834,6 +834,10 @@ public class CharBuf extends PrintWriter implements CharSequence {
         this.add ( nullChars );
     }
 
+    public char lastChar() {
+        return buffer[location-1];
+    }
+
     public void removeLastChar () {
         location--;
         if (location < 0) {

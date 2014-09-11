@@ -208,6 +208,7 @@ public class FilterDefault implements Filter, FilterComposer {
             return foundIndex;
         }
 
+        int foundCount =0 ;
 
         for ( Criteria expression : expressions ) {
             /*
@@ -217,11 +218,13 @@ public class FilterDefault implements Filter, FilterComposer {
                 criteria = ( Criterion ) expression;
 
 
-                foundIndex = doFilterWithIndex( criteria, fields, resultSet );
+                if (doFilterWithIndex( criteria, fields, resultSet )) {
+                    foundCount++;
+                }
 
             }
         }
-        return foundIndex;
+        return foundCount > 0;
     }
 
 
