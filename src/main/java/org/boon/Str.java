@@ -182,6 +182,25 @@ public class Str {
         return builder.toString();
     }
 
+
+    public static String addObjects( Object... objects ) {
+        int length = 0;
+        for ( Object obj : objects ) {
+            if ( obj == null ) {
+                continue;
+            }
+            length += obj.toString().length();
+        }
+        CharBuf builder = CharBuf.createExact( length );
+        for ( Object str : objects ) {
+            if ( str == null ) {
+                continue;
+            }
+            builder.add( str.toString() );
+        }
+        return builder.toString();
+    }
+
     public static String compact( String str ) {
         return FastStringUtils.noCopyStringFromChars( Chr.compact( FastStringUtils.toCharArray(str) ) );
     }

@@ -411,6 +411,10 @@ public class Lists {
         return list;
     }
 
+    public static <V> List<V> safeList(Class<V> cls) {
+        return new CopyOnWriteArrayList<>(  );
+    }
+
     @SafeVarargs
     public static <V> List<V> safeList( final V... array ) {
         return new CopyOnWriteArrayList<>( array );
