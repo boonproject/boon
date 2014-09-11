@@ -86,6 +86,9 @@ public interface ResultSet<T> extends Iterable<T> {
 
     List<T> asList();
 
+
+    <G> List<G> asList(Class<G> cls);
+
     Set<T> asSet();
 
     List<PlanStep> queryPlan();

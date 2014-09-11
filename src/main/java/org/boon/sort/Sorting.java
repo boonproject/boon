@@ -710,11 +710,31 @@ public class Sorting {
             return collator.compare( str1, str2 );
 
         /** Objects are comparable, yeah! */
-        } else if ( Typ.isComparable( value1 ) ) {
+        } else if ( Typ.isComparable( value1 ) && value1.getClass() == value2.getClass()) {
             Comparable c1 = Conversions.comparable(value1);
             Comparable c2 = Conversions.comparable(value2);
             return c1.compareTo( c2 );
-        } else {
+        } else if (  value1 instanceof Integer && value2 instanceof Integer ) {
+            Comparable c1 = Conversions.comparable(value1);
+            Comparable c2 = Conversions.comparable(value2);
+            return c1.compareTo( c2 );
+        }
+        else if (  value1 instanceof Double && value2 instanceof Double ) {
+            Comparable c1 = Conversions.comparable(value1);
+            Comparable c2 = Conversions.comparable(value2);
+            return c1.compareTo( c2 );
+        }
+        else if (  value1 instanceof Long && value2 instanceof Long ) {
+            Comparable c1 = Conversions.comparable(value1);
+            Comparable c2 = Conversions.comparable(value2);
+            return c1.compareTo( c2 );
+        }
+        else if (  value1 instanceof Number && value2 instanceof Number ) {
+            Double c1 = Conversions.toDouble(value1);
+            Double c2 = Conversions.toDouble(value2);
+            return c1.compareTo( c2 );
+        }
+         else {
             /** Object are neither String like or comparable.
              * Ours it not to reason why, ours it to do or die.
              * Find the first sortable field and sort by that.

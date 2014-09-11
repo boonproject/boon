@@ -564,8 +564,8 @@ public class Str {
         }
         if (count instanceof  Double || count instanceof BigDecimal) {
             String s = count.toString();
-            if (idx(s, 1) == '.' && s.length() > 16) {
-                s = slc(s, 0, 16);
+            if (idx(s, 1) == '.' && s.length() > 7) {
+                s = slc(s, 0, 5);
                 return s;
             } else {
                 return s;

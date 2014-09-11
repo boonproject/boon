@@ -370,6 +370,11 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
     }
 
     @Override
+    public <G> List<G> asList(Class<G> cls) {
+        return (List<G>)asList();
+    }
+
+    @Override
     public Set<T> asSet() {
         prepareResults();
 
