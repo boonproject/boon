@@ -171,6 +171,26 @@ public class Arry {
         return ( V[] ) newArray;
     }
 
+
+    public static <V> V[] fastSlice( V[] array, int start, int end ) {
+
+        final int newLength = end - start;
+
+
+        Object newArray = Array.newInstance( array.getClass().getComponentType(), newLength );
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return ( V[] ) newArray;
+    }
+
+    public static Object[] fastObjectArraySlice(Object[] array, int start, int end) {
+
+        final int newLength = end - start;
+
+        Object [] newArray = new Object[newLength];
+        System.arraycopy( array, start, newArray, 0, newLength );
+        return newArray;
+    }
+
     @Universal
     public static <V> boolean in( V value, V[] array ) {
         for ( V currentValue : array ) {
@@ -361,6 +381,20 @@ public class Arry {
         } else {
             die( "array(listStream): The collection has to have at least one item in it" );
             return null;
+        }
+    }
+
+
+    public static Object[] objectArray( Collection collection ) {
+            return collection.toArray(new Object[collection.size()]);
+    }
+
+
+    public static Object[] objectArray( Iterable iter ) {
+        if (iter instanceof  Collection) {
+            return objectArray((Collection)iter);
+        } else {
+            return objectArray(Lists.list(iter));
         }
     }
 

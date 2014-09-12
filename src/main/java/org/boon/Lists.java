@@ -192,6 +192,12 @@ public class Lists {
         return list;
     }
 
+
+
+    public static <V> List<V> list( Collection<V> collection ) {
+        return new ArrayList<>(collection);
+    }
+
     public static <V> List<V> linkedList( Iterable<V> iterable ) {
         List<V> list = new LinkedList<>();
         for ( V o : iterable ) {
@@ -423,7 +429,7 @@ public class Lists {
     @SafeVarargs
     public static <V> List<V> linkedList( final V... array ) {
         if ( array == null ) {
-            return new ArrayList<>();
+            return new LinkedList<>();
         }
         List<V> list = new LinkedList<>();
         Collections.addAll( list, array );
