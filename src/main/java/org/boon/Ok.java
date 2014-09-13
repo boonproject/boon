@@ -48,7 +48,7 @@ public class Ok {
     }
 
     public static boolean ok(Number i) {
-        return i!=null && i!=0;
+        return i!=null && i.intValue()!=0;
     }
 
     public static boolean ok(int i) {
@@ -85,7 +85,7 @@ public class Ok {
     }
 
     public static boolean okOrDie(Number i) {
-        return (i!=null && i!=0) || die();
+        return (i!=null && i.intValue() !=0) || die();
     }
 
 
@@ -142,7 +142,7 @@ public class Ok {
     }
 
     public static boolean okOrDie(String message, Number i) {
-        return (i!=null && i!=0) || die(message);
+        return (i!=null && i.intValue() !=0) || die(message);
     }
 
 

@@ -548,7 +548,7 @@ public class JsonTutorial {
 
         ok |= ( map.get("race") == Boolean.TRUE  && map.get("name").equals( "bob" ) )  || die(map.toString());
 
-        ok |= map.get("value") == -0 || die(map.get("value"));
+        ok |= (int)map.get("value") == -0 || die(map.get("value"));
 
         puts("ok?", ok);
 
@@ -606,7 +606,7 @@ public class JsonTutorial {
 
         IO.write( IO.path( file.toString()), jsonString);
         List<User> users2 = jsonParserAndMapper.parseListFromFile( User.class, file.toString() );
-  
+
         //Or you can pass them to the ObjectMapper interface you know and love, just pass the factories to it.
         ObjectMapper mapper = JsonFactory.create( jsonParserFactory, jsonSerializerFactory );
 

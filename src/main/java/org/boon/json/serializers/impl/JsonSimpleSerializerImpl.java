@@ -288,7 +288,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
                 case NUMBER:
                     Number nvalue = (Number) fieldAccess.getObject(parent);
-                    if ( nvalue != 0 ) {
+                    if ( nvalue.intValue() != 0 ) {
                         serializeFieldName ( fieldName, builder );
                         builder.addString(nvalue.toString());
                         return true;
