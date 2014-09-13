@@ -42,10 +42,11 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.boon.Boon.puts;
 
 
 public class Sys {
@@ -216,8 +217,13 @@ public class Sys {
     }
 
     public static String sysProp(String key) {
-            return sysProp(key, null);
+            return sysProp(key, (String)null);
     }
+
+
+    public static ConcurrentHashMap <Object, Object> systemProperties = new ConcurrentHashMap<>(System.getProperties());
+
+    public static ConcurrentHashMap <String, String> env = new ConcurrentHashMap<>(System.getenv());
 
     /**
      * Checks for the key under system property.
@@ -229,14 +235,14 @@ public class Sys {
      * @return
      */
     public static String sysProp(String key, Object defaultValue) {
-        String property = System.getProperty(key, null);
+        String property = (String) systemProperties.get(key);
         if (property == null) {
-            property = System.getenv(key);
+            property = env.get(key);
         }
 
         if (property == null) {
             String newKey = Str.underBarCase(key);
-            property = System.getenv(newKey);
+            property = env.get(newKey);
         }
 
         if (property == null) {
@@ -247,33 +253,221 @@ public class Sys {
     }
 
 
+    public static boolean sysPropBoolean(String key) {
+        return sysProp(key, false);
+    }
+
+
     public static boolean sysProp(String key, boolean defaultValue) {
 
-        String property = System.getProperty(key, null);
+        String property = (String) systemProperties.get(key);
         if (property == null) {
-            property = System.getenv(key);
+            property = env.get(key);
         }
 
         if (property == null) {
             String newKey = Str.underBarCase(key);
-            property = System.getenv(newKey);
+            property = env.get(newKey);
         }
 
         if (property == null) {
             return defaultValue;
         }
 
-        return Boolean.parseBoolean(property);
+        return Conversions.toBoolean(property);
 
     }
+
+
+    public static int sysPropInt(String key) {
+        return sysProp(key, -1);
+    }
+
+
+
+    public static int sysProp(String key, int defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Conversions.toInt(property);
+
+    }
+
+    public static int sysPropLong(String key) {
+        return sysProp(key, -1);
+    }
+
+
+    public static long sysProp(String key, long defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Conversions.toLong(property);
+
+    }
+
+
+    public static short sysPropShort(String key) {
+        return sysProp(key, (short) -1);
+    }
+
+
+    public static short sysProp(String key, short defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Conversions.toShort(property);
+
+    }
+
+
+    public static byte sysPropByte(String key) {
+        return sysProp(key, (byte) -1);
+    }
+
+
+    public static byte sysProp(String key, byte defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Conversions.toByte(property);
+
+    }
+
+
+    public static BigDecimal sysPropBigDecimal(String key) {
+        return sysPropBigDecima(key, (BigDecimal) null);
+    }
+
+
+    public static BigDecimal sysPropBigDecima(String key, BigDecimal defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Conversions.toBigDecimal(property);
+
+    }
+
+
+    public static BigInteger sysPropBigInteger(String key) {
+        return sysPropBigInteger(key, (BigInteger) null);
+    }
+
+
+    public static BigInteger sysPropBigInteger(String key, BigInteger defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Conversions.toBigInteger(property);
+
+    }
+
+
+    public static <T extends Enum> T sysPropEnum(Class<T> cls, String key) {
+        return sysProp(cls, key,  null);
+    }
+
+    public static <T extends Enum> T sysProp(Class<T> cls, String key, T defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return Conversions.toEnum(cls, property);
+
+    }
+
+
 
 
     public static String putSysProp(String key, Object value) {
-        return System.setProperty(key, Conversions.toString(value));
+        return (String) systemProperties.put(key, Conversions.toString(value));
     }
 
     public static boolean hasSysProp(String propertyName) {
-        return System.getProperties().containsKey(propertyName);
+        return systemProperties.containsKey(propertyName);
     }
 
     public static void sleep(long duration) {
