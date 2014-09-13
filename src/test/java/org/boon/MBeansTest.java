@@ -34,8 +34,12 @@ import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
+import static org.boon.Boon.puts;
+import static org.boon.Boon.toJson;
 import static org.junit.Assert.assertEquals;
 
 
@@ -90,6 +94,11 @@ public class MBeansTest {
 
 
     @Test
+    public void jsonDump() throws Exception {
+        puts(MBeans.toJson());
+    }
+
+    @Test
     public void createTest() throws Exception {
 
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
@@ -100,12 +109,17 @@ public class MBeansTest {
         MBeans.registerMBean( "com.example", "hello", dynamicMBean );
         Set<ObjectName> objectNames = server.queryNames( null, null );
 
+        Map<String, Map<String, Object>> map = new LinkedHashMap<>();
 
         for ( ObjectName name : objectNames ) {
-            System.out.println( name.toString() );
-            System.out.println( MBeans.map( server, name ) );
+
+            map.put(name.toString(), MBeans.map(server, name));
 
         }
+
+        puts("\n\n\n", toJson(map), "\n\n\n");
+
+        puts();
 
         hello.name = "laskdjfal;ksdjf;laskjdf;laksjdfl;aksjdfl;kajsdf\n\n\n\n\\n\n";
 
@@ -118,6 +132,8 @@ public class MBeansTest {
 
 
     }
+
+
 
 
 }

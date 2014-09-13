@@ -35,6 +35,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import static org.boon.Boon.toJson;
 import static org.boon.Exceptions.requireNonNull;
 
 
@@ -42,6 +43,33 @@ import static org.boon.Exceptions.requireNonNull;
  * Utility methods to convert MBeans to a Map.
  */
 public class MBeans {
+
+    public static String toJson () {
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        return toJson(server);
+
+    }
+
+
+    public static String toJson (final MBeanServer server) {
+        Set<ObjectName> objectNames = server.queryNames( null, null );
+
+        Map<String, Map<String, Object>> map = new LinkedHashMap<>();
+
+        for ( ObjectName name : objectNames ) {
+
+            map.put(name.toString(), MBeans.map(server, name));
+
+        }
+
+        return Boon.toJson(map);
+    }
+
+    public static Map<String, Object> map(  final ObjectName name ) {
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        return map(server, name);
+    }
+
 
     public static Map<String, Object> map( final MBeanServer server,
                                            final ObjectName name ) {
