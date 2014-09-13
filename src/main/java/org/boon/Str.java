@@ -43,45 +43,90 @@ import java.util.Set;
 public class Str {
 
 
+    /**
+     * Empty string
+     */
     public final static String EMPTY_STRING = "";
 
 
-
+    /**
+     * gets length
+     * @param str string
+     * @return length
+     */
     @Universal
     public static int lengthOf( String str ) {
         return len(str);
     }
 
 
+    /**
+     * Gets slice of a string.
+     * @param str string
+     * @param start start index of slice
+     * @return new string
+     */
     @Universal
     public static String sliceOf( String str, int start ) {
         return slc(str, start);
     }
 
 
+    /**
+     * Get slice of string
+     * @param str string
+     * @param start start index
+     * @param end end index
+     * @return new string
+     */
     @Universal
     public static String sliceOf( String str, int start, int end ) {
         return slc(str, start, end);
     }
 
 
+    /**
+     * Gets end slice of a string.
+     * @param str string
+     * @param end end index of slice
+     * @return new string
+     */
     @Universal
     public static String endSliceOf( String str, int end ) {
         return slcEnd(str, end);
     }
 
 
+    /**
+     * Gets character at index
+     * @param str string
+     * @param index index
+     * @return char at
+     */
     @Universal
     public static char atIndex( String str, int index ) {
         return idx(str, index);
     }
 
+
+    /**
+     * Puts character at index
+     * @param str string
+     * @param index index
+     * @param c char to put in
+     * @return new string
+     */
     @Universal
     public static String atIndex( String str, int index, char c ) {
             return idx (str, index, c);
     }
 
 
+    /**
+     * gets length
+     * @param str string
+     * @return length
+     */
     @Universal
     public static int len( String str ) {
         return str.length();
@@ -89,6 +134,12 @@ public class Str {
 
 
 
+    /**
+     * Gets slice of a string.
+     * @param str string
+     * @param start start index of slice
+     * @return new string
+     */
     @Universal
     public static String slc( String str, int start ) {
 
@@ -96,12 +147,25 @@ public class Str {
     }
 
 
+    /**
+     * Get slice of string
+     * @param str string
+     * @param start start index
+     * @param end end index
+     * @return new string
+     */
     @Universal
     public static String slc( String str, int start, int end ) {
         return FastStringUtils.noCopyStringFromChars(Chr.slc(FastStringUtils.toCharArray(str), start, end));
     }
 
 
+    /**
+     * Gets end slice of a string.
+     * @param str string
+     * @param end end index of slice
+     * @return new string
+     */
     @Universal
     public static String slcEnd( String str, int end ) {
         return FastStringUtils.noCopyStringFromChars( Chr.slcEnd( FastStringUtils.toCharArray(str), end ) );
@@ -109,6 +173,12 @@ public class Str {
 
 
 
+    /**
+     * Gets character at index
+     * @param str string
+     * @param index index
+     * @return char at
+     */
     @Universal
     public static char idx( String str, int index ) {
         int i = calculateIndex( str.length(), index );
@@ -118,6 +188,13 @@ public class Str {
     }
 
 
+    /**
+     * Puts character at index
+     * @param str string
+     * @param index index
+     * @param c char to put in
+     * @return new string
+     */
     @Universal
     public static String idx( String str, int index, char c ) {
 
@@ -126,36 +203,75 @@ public class Str {
         return new String( chars );
     }
 
+    /**
+     * See if chars is in another string
+     * @param chars chars
+     * @param str string
+     * @return true or false
+     */
     @Universal
     public static boolean in( char[] chars, String str ) {
         return Chr.in ( chars, FastStringUtils.toCharArray(str) );
     }
 
 
+    /**
+     * See if a char is in another string
+     * @param c char
+     * @param str string
+     * @return true or false
+     */
     @Universal
     public static boolean in( char c, String str ) {
         return Chr.in ( c, FastStringUtils.toCharArray(str) );
     }
 
 
+    /**
+     * See if a char is in a string
+     * @param c char
+     * @param offset offset
+     * @param str string
+     * @return true or false
+     */
     @Universal
     public static boolean in( char c, int offset, String str ) {
         return Chr.in ( c, offset, FastStringUtils.toCharArray(str) );
     }
 
 
+    /**
+     * See if a char is in a string but in a certain bounds of string
+     * @param c char
+     * @param offset offset
+     * @param end end of span to search
+     * @param str string
+     * @return true or false
+     */
     @Universal
     public static boolean in( char c, int offset, int end, String str ) {
         return Chr.in ( c, offset, end, FastStringUtils.toCharArray(str) );
     }
 
 
+    /**
+     * Add a char to a string
+     * @param str string
+     * @param c char
+     * @return new string
+     */
     @Universal
     public static String add( String str, char c ) {
         return FastStringUtils.noCopyStringFromChars( Chr.add( FastStringUtils.toCharArray(str), c ) );
     }
 
 
+    /**
+     * Add one string to another
+     * @param str string 1
+     * @param str2 string 2
+     * @return new string
+     */
     @Universal
     public static String add( String str, String str2 ) {
         return FastStringUtils.noCopyStringFromChars(
@@ -165,6 +281,12 @@ public class Str {
         );
     }
 
+
+    /**
+     * Add many strings together to another
+     * @param strings strings
+     * @return new string
+     */
     @Universal
     public static String add( String... strings ) {
         int length = 0;
@@ -185,6 +307,13 @@ public class Str {
     }
 
 
+
+    /**
+     * Add many objects converted to strings together.
+     * Null are ignored so be careful.
+     * @param objects objects to convert to strings
+     * @return new string
+     */
     public static String addObjects( Object... objects ) {
         int length = 0;
         for ( Object obj : objects ) {
@@ -203,11 +332,22 @@ public class Str {
         return builder.toString();
     }
 
+    /**
+     * Gets rid of null characters lurking in the string
+     * @param str string
+     * @return new string
+     */
     public static String compact( String str ) {
         return FastStringUtils.noCopyStringFromChars( Chr.compact( FastStringUtils.toCharArray(str) ) );
     }
 
 
+    /**
+     * calculates an index for slicing.
+     * @param length length of index
+     * @param originalIndex original index might be negative
+     * @return new index
+     */
     private static int calculateIndex( final int length, int originalIndex ) {
 
 
@@ -238,33 +378,66 @@ public class Str {
     }
 
 
+    /**
+     * Split a string
+     * @param str string to split
+     * @return string array
+     */
     public static String[] split( String str ) {
         char[][] split = Chr.split( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
+
+    /**
+     * Split a string by lines
+     * @param str string to split
+     * @return string array
+     */
     public static String[] splitLines( String str ) {
         char[][] split = Chr.splitLines( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
 
+    /**
+     * Split a string by commas
+     * @param str string to split
+     * @return string array
+     */
     public static String[] splitComma( String str ) {
         char[][] split = Chr.splitComma( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
 
+    /**
+     * Split a string by space
+     * @param str string to split
+     * @return string array
+     */
     public static String[] splitBySpace( String str ) {
         char[][] split = CharScanner.splitBySpace( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
+
+    /**
+     * Split a string by pipe
+     * @param str string to split
+     * @return string array
+     */
     public static String[] splitByPipe( String str ) {
         char[][] split = CharScanner.splitByPipe( FastStringUtils.toCharArray(str) );
         return fromCharArrayOfArrayToStringArray( split );
     }
 
+
+    /**
+     * Convert arrays of chars to arrays of strings
+     * @param split array of chars
+     * @return string array
+     */
     public static String[] fromCharArrayOfArrayToStringArray( char[][] split ) {
         String[] results = new String[ split.length ];
 
@@ -280,28 +453,62 @@ public class Str {
     }
 
 
+    /**
+     * Convert to upper case
+     * @param str string to convert
+     * @return new string
+     */
     public static String upper( String str ) {
         return str.toUpperCase();
     }
 
+
+    /**
+     * Convert to lower case
+     * @param str string to convert
+     * @return new string
+     */
     public static String lower( String str ) {
         return str.toLowerCase();
     }
 
 
+    /**
+     * Convert to camel case upper (starts with upper case)
+     * @param in string to convert
+     * @return new string
+     */
     public static String camelCaseUpper( String in ) {
         return camelCase( in, true );
     }
 
 
+    /**
+     * Convert to camel case lower (starts with lower case)
+     * @param in string to convert
+     * @return new string
+     */
     public static String camelCaseLower( String in ) {
         return camelCase( in, false );
     }
 
+
+    /**
+     * Convert to camel case
+     * @param in string to convert
+     * @return new string
+     */
     public static String camelCase( String in ) {
         return camelCase( in, false );
     }
 
+
+    /**
+     * Convert to camel case and pass upper or lower
+     * @param inStr string to convert
+     * @param upper upper flag
+     * @return new string
+     */
     public static String camelCase( String inStr, boolean upper ) {
         char[] in = FastStringUtils.toCharArray(inStr);
         char[] out = Chr.camelCase( in, upper );
@@ -309,10 +516,22 @@ public class Str {
     }
 
 
+    /**
+     * Checks to see if a string is inside of another
+     * @param start start
+     * @param inStr input string
+     * @param end index at end
+     * @return
+     */
     public static boolean insideOf(String start, String inStr, String end) {
         return Chr.insideOf(FastStringUtils.toCharArray(start), FastStringUtils.toCharArray(inStr), FastStringUtils.toCharArray(end));
     }
 
+    /**
+     * Convert to under bar case
+     * @param inStr input string
+     * @return new string
+     */
     public static String underBarCase( String inStr ) {
         char[] in = FastStringUtils.toCharArray(inStr);
         char[] out = Chr.underBarCase( in );
@@ -320,12 +539,23 @@ public class Str {
     }
 
 
+    /**
+     * See if they are equal or die
+     * @param a a
+     * @param b b
+     */
     public static void equalsOrDie(CharSequence a, CharSequence b) {
         char[] ac = FastStringUtils.toCharArray(a);
         char[] bc = FastStringUtils.toCharArray(b);
         Chr.equalsOrDie(ac, bc);
     }
 
+
+    /**
+     * See if they are equal or die
+     * @param a a
+     * @param b b
+     */
     public static void equalsOrDie(String a, String b) {
         char[] ac = FastStringUtils.toCharArray(a);
         char[] bc = FastStringUtils.toCharArray(b);
@@ -333,45 +563,91 @@ public class Str {
     }
 
 
-    /* Left off here. */
-
-
+    /**
+     *
+     * @param inStr
+     * @param size
+     * @param fill
+     * @return
+     */
     public static String lpad( String inStr, int size, char fill ) {
         return new String( Chr.lpad( inStr.toCharArray(), size, fill ) );
     }
 
 
+    /**
+     *
+     * @param inStr
+     * @param size
+     * @return
+     */
     public static String lpad( String inStr, int size ) {
         return new String( Chr.lpad( inStr.toCharArray(), size, ' ' ) );
     }
 
 
+    /**
+     *
+     * @param inStr
+     * @param size
+     * @return
+     */
     public static String lpad( Object inStr, int size ) {
         return new String( Chr.lpad(inStr == null ? "".toCharArray() : inStr.toString().toCharArray(), size, ' ') );
     }
 
 
+    /**
+     *
+     * @param inStr
+     * @return
+     */
     public static String lpad( Object inStr) {
         return new String( Chr.lpad( inStr == null ? "".toCharArray() : inStr.toString().toCharArray(), 20, ' ' ) );
     }
 
 
+    /**
+     *
+     * @param num
+     * @param size
+     * @return
+     */
     public static String zfill( int num, int size ) {
         return new String( Chr.lpad( Integer.toString( num ).toCharArray(),
                 size, '0' ) );
     }
 
 
+    /**
+     *
+     * @param inStr
+     * @param size
+     * @param fill
+     * @return
+     */
     public static String rpad( String inStr, int size, char fill ) {
         return new String( Chr.rpad( inStr.toCharArray(), size, fill ) );
     }
 
 
+    /**
+     *
+     * @param inStr
+     * @param size
+     * @return
+     */
     public static String rpad( String inStr, int size) {
         return new String( Chr.rpad( inStr.toCharArray(), size, ' ' ) );
     }
 
 
+    /**
+     *
+     * @param obj
+     * @param size
+     * @return
+     */
     public static String rpad( Object obj, int size) {
         if (obj != null) {
             return new String( Chr.rpad( obj.toString().toCharArray(), size, ' ' ) );
@@ -381,6 +657,11 @@ public class Str {
     }
 
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     public static String rpad( Object obj) {
         if (obj != null) {
             return new String( Chr.rpad( obj.toString().toCharArray(), 20, ' ' ) );
@@ -389,6 +670,13 @@ public class Str {
         }
     }
 
+    /**
+     *
+     * @param obj
+     * @param size
+     * @param fill
+     * @return
+     */
     public static String rpad( Object obj, int size, char fill ) {
         if (obj != null) {
             return new String( Chr.rpad( obj.toString().toCharArray(), size, fill ) );
@@ -397,23 +685,45 @@ public class Str {
         }
     }
 
+    /**
+     *
+     * @param input
+     * @param split
+     * @return
+     */
     public static String[] split( final String input,
                                   final char split ) {
         return StringScanner.split( input, split );
 
     }
 
+    /**
+     *
+     * @param value
+     * @param str
+     * @return
+     */
+    @Universal
     public static boolean in( String value, String str ) {
         return str.contains( value );
     }
 
 
+    /**
+     *
+     * @param lines
+     * @return
+     */
     public static String lines( String... lines ) {
         return join( '\n', lines );
     }
 
 
-
+    /**
+     *
+     * @param lines
+     * @return
+     */
     public static String linesConvertQuotes( String... lines ) {
 
         for (int index=0; index < lines.length; index++) {
@@ -423,6 +733,12 @@ public class Str {
     }
 
 
+    /**
+     *
+     * @param delim
+     * @param args
+     * @return
+     */
     public static String join( char delim, String... args ) {
         CharBuf builder = CharBuf.create( 10 * args.length );
 
@@ -437,6 +753,12 @@ public class Str {
         return builder.toString();
     }
 
+    /**
+     *
+     * @param delim
+     * @param args
+     * @return
+     */
     public static String joinObjects( char delim, Object... args ) {
         CharBuf builder = CharBuf.create( 10 * args.length );
 
@@ -452,6 +774,11 @@ public class Str {
     }
 
 
+    /**
+     *
+     * @param args
+     * @return
+     */
     public static String join( String... args ) {
         CharBuf builder = CharBuf.create( 10 * args.length );
 
@@ -461,6 +788,12 @@ public class Str {
         return builder.toString();
     }
 
+    /**
+     *
+     * @param delim
+     * @param args
+     * @return
+     */
     public static String joinCollection( char delim, List<?> args ) {
         CharBuf builder = CharBuf.create( 10 * args.size() );
 
@@ -480,6 +813,12 @@ public class Str {
     }
 
 
+    /**
+     *
+     * @param str
+     * @return
+     */
+    @Universal
     public static boolean isEmpty( String str ) {
         if ( str == null ) {
             return true;
@@ -490,6 +829,11 @@ public class Str {
     }
 
 
+    /**
+     *
+     * @param string
+     * @return
+     */
     public static String uncapitalize( String string ) {
         StringBuilder rv = new StringBuilder();
         if ( string.length() > 0 ) {
@@ -501,6 +845,12 @@ public class Str {
         return rv.toString();
     }
 
+    /**
+     *
+     * @param object
+     * @param defaultString
+     * @return
+     */
     public static String toString(Object object, String defaultString) {
         if (object == null) {
             return defaultString;
@@ -510,6 +860,11 @@ public class Str {
     }
 
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     public static String toString(Object object) {
         if (object == null) {
             return "";
@@ -519,10 +874,21 @@ public class Str {
     }
 
 
+    /**
+     *
+     * @param str
+     * @return
+     */
     public static String str(Object str) {
         return str == null ? "<NULL>" : str.toString();
     }
 
+    /**
+     *
+     * @param name
+     * @param startsWithList
+     * @return
+     */
     public static boolean startsWithItemInCollection(String name, Collection<String> startsWithList) {
         for (String startsWith : startsWithList) {
             if (name.startsWith(startsWith)) {
@@ -537,26 +903,50 @@ public class Str {
     }
 
 
+    /**
+     * Quote a string
+     * @param s input string
+     * @return new String
+     */
     public static String quote(String s) {
         return add("\"", s, "\"");
     }
 
 
+    /**
+     * single Quote a string
+     * @param s input string
+     * @return new String
+     */
     public static String singleQuote(String s) {
         return add("\'", s, "\'");
     }
 
 
+    /**
+     * double Quote a string
+     * @param s input string
+     * @return new String
+     */
     public static String doubleQuote(String s) {
         return add("\"", s, "\"");
     }
 
-    /** Create a string from bytes. */
+    /** Create a string from bytes.
+     * @param bytes bytes in
+     * @return string out
+     */
     public static String str(byte[] bytes) {
         return new String(bytes, StandardCharsets.UTF_8);
 
     }
 
+    /**
+     * Do a nice pretty print of a number.
+     * Add commas and such.
+     * @param count number
+     * @return string format of number
+     */
     public static String num(Number count) {
 
         if (count == null) {
