@@ -28,7 +28,6 @@
 
 package org.boon.json.serializers;
 
-import org.boon.json.JsonSerializer;
 import org.boon.primitive.CharBuf;
 
 /**

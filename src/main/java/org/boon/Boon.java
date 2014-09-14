@@ -1198,6 +1198,16 @@ public class Boon {
     }
 
     /**
+     * Gets class name from object.
+     * It is null safe.
+     * @param object class name
+     * @return class name of object
+     */
+    public static Class<?> cls(Object object) {
+        return object == null ? null : object.getClass();
+    }
+
+    /**
      * Gets simple class name from object.
      * @param object object to get class name from
      * @return returns the class name

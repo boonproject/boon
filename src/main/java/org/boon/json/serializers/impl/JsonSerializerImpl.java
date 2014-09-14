@@ -227,6 +227,12 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
     }
 
     @Override
+    public void serializeInstance(Object obj, CharBuf builder, boolean includeTypeInfo) {
+        this.instanceSerializer.serializeInstance ( this, obj, builder, includeTypeInfo );
+
+    }
+
+    @Override
     public void serializeSubtypeInstance( Object obj, CharBuf builder ) {
         this.instanceSerializer.serializeSubtypeInstance ( this, obj, builder );
     }

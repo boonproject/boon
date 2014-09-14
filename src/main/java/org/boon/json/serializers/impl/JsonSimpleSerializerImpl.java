@@ -612,10 +612,15 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     }
 
+    @Override
+    public void serializeInstance(Object obj, CharBuf builder, boolean includeTypeInfo) {
+
+        this.serializeInstance(obj, builder);
+
+    }
 
 
-
-   public Map<String, FieldAccess> getFields( Class<? extends Object> aClass ) {
+    public Map<String, FieldAccess> getFields( Class<? extends Object> aClass ) {
             Map<String, FieldAccess> map = fieldMap.get( aClass );
             if (map == null) {
                 map = doGetFields ( aClass );

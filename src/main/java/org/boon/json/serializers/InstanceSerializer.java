@@ -28,7 +28,7 @@
 
 package org.boon.json.serializers;
 
-import org.boon.json.JsonSerializer;
+import org.boon.json.serializers.impl.JsonSerializerImpl;
 import org.boon.primitive.CharBuf;
 
 /**
@@ -38,4 +38,5 @@ public interface InstanceSerializer {
     void serializeInstance(JsonSerializerInternal serializer,  Object instance, CharBuf builder );
     void serializeSubtypeInstance( JsonSerializerInternal serializer, Object instance, CharBuf builder );
 
+    void serializeInstance(JsonSerializerImpl jsonSerializer, Object obj, CharBuf builder, boolean includeTypeInfo);
 }

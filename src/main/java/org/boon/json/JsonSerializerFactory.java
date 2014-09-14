@@ -86,8 +86,11 @@ public class JsonSerializerFactory {
 
             instanceSerializer = new InstanceSerializerImpl ();
 
-            if ( !outputType )  {
+            if ( !outputType && customObjectSerializers == null )  {
                 objectSerializer = new BasicObjectSerializerImpl();
+            } else if (customObjectSerializers != null ) {
+
+                objectSerializer = new CustomObjectSerializerImpl(outputType, customObjectSerializers);
             } else {
                 objectSerializer = new ObjectSerializationWithTypeInfo();
             }

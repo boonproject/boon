@@ -56,6 +56,7 @@ public interface JsonSerializerInternal extends JsonSerializer {
 
     void serializeInstance ( Object obj, CharBuf builder );
 
+    void serializeInstance ( Object obj, CharBuf builder, boolean includeTypeInfo );
 
     void serializeSubtypeInstance( Object obj, CharBuf builder );
 

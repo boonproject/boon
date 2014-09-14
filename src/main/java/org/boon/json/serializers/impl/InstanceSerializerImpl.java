@@ -40,6 +40,7 @@ import java.util.Map;
  * Created by rick on 1/1/14.
  */
 public class InstanceSerializerImpl implements InstanceSerializer{
+
     @Override
     public final void serializeInstance ( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
         final Map<String, FieldAccess> fieldAccessors =   serializer.getFields(instance.getClass ());
@@ -94,6 +95,33 @@ public class InstanceSerializerImpl implements InstanceSerializer{
 
 
         }
+
+    }
+
+    @Override
+    public void serializeInstance(JsonSerializerImpl serializer, Object instance, CharBuf builder, boolean includeTypeInfo) {
+        final Map<String, FieldAccess> fieldAccessors =   serializer.getFields(instance.getClass ());
+        final Collection<FieldAccess> values = fieldAccessors.values ();
+
+        if (includeTypeInfo) {
+            builder.addString("{\"class\":");
+            builder.addQuoted(instance.getClass().getName());
+
+        } else {
+
+            builder.addChar('{');
+        }
+        int index = 0;
+        for ( FieldAccess fieldAccess : values ) {
+            if (serializer.serializeField ( instance, fieldAccess, builder ) ) {
+                builder.addChar ( ',' );
+                index++;
+            }
+        }
+        if ( index > 0 ) {
+            builder.removeLastChar();
+        }
+        builder.addChar( '}' );
 
     }
 }
