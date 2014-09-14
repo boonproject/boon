@@ -329,7 +329,8 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
 
         if ( useFastHash ) {
-            return sun.misc.Hashing.randomHashSeed( instance );
+            //return sun.misc.Hashing.randomHashSeed( instance );
+            return 0;
         }
 
         return 0;
