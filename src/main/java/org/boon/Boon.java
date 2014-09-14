@@ -1485,4 +1485,10 @@ public class Boon {
 
         return  true;
     }
+
+    public static String toPrettyJson(Object object) {
+
+        CharBuf buf = CharBuf.createCharBuf();
+        return buf.prettyPrintObject(object, 0).toString();
+    }
 }

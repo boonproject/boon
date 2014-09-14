@@ -29,14 +29,12 @@
 package org.boon;
 
 
-import org.boon.collections.ConcurrentHashSet;
-import org.boon.core.Conversions;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.primitive.CharBuf;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Sets {
@@ -441,6 +439,12 @@ public class Sets {
 
         return newSet;
 
+    }
+
+
+    public static String asPrettyJsonString(Set set) {
+        CharBuf buf = CharBuf.createCharBuf();
+        return buf.prettyPrintCollection(set, 0).toString();
     }
 
 

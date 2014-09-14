@@ -36,6 +36,7 @@ import java.util.Arrays;
 
 import java.util.*;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.*;
@@ -47,6 +48,30 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings ( "unchecked" )
 public class MapsTest {
 
+
+    @Test
+    public void prettyPrintMap() {
+        Map<String, Object> map = Maps.map(
+                "name", (Object)"Rick",
+                "age", 45,
+                "wife", Maps.map("name", "Diana"),
+                "children", Lists.list(
+                        Maps.map("name", "Whitney"),
+                        Maps.map("name", "Maya"),
+                        Maps.map("name", "Lucas"),
+                        Maps.map("name", "Ryan"),
+                        Maps.map("name", "Noah")
+                        ),
+                "fruit", Lists.list("apple", "orange", "strawberry")
+                );
+
+
+        puts(Maps.asPrettyJsonString(map));
+        puts(Boon.toPrettyJson(map));
+
+
+
+    }
     class Dog {
         String name = "dog";
 

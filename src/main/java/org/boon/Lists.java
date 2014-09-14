@@ -33,12 +33,10 @@ import org.boon.collections.DoubleList;
 import org.boon.collections.FloatList;
 import org.boon.collections.IntList;
 import org.boon.collections.LongList;
-import org.boon.core.Conversions;
-import org.boon.core.Predicate;
-import org.boon.core.Reducer;
+import org.boon.core.*;
 import org.boon.core.reflection.*;
-import org.boon.core.Function;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.primitive.CharBuf;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -920,5 +918,12 @@ public class Lists {
             }
         }
         return list;
+    }
+
+
+
+    public static String asPrettyJsonString(List list) {
+        CharBuf buf = CharBuf.createCharBuf();
+        return buf.prettyPrintCollection(list, 0).toString();
     }
 }

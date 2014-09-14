@@ -30,9 +30,11 @@ package org.boon;
 
 
 import org.boon.core.Typ;
+import org.boon.core.Type;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.MapObjectConversion;
+import org.boon.primitive.CharBuf;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1724,4 +1726,8 @@ public class Maps {
     }
 
 
+    public static String asPrettyJsonString(Map<String, Object> map) {
+        CharBuf buf = CharBuf.createCharBuf();
+        return buf.prettyPrintMap(map).toString();
+    }
 }

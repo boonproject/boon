@@ -33,6 +33,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 public class BeanUtilsTest {
@@ -54,6 +55,11 @@ public class BeanUtilsTest {
                 Player.player ( "2", "Diana", "Hightower"  ) );
     }
 
+
+    @Test
+    public void test99() {
+        puts(BeanUtils.asPrettyJsonString(new TestClass()));
+    }
 
 
     public static class TestPrime {

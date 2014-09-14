@@ -1602,9 +1602,9 @@ public class Mapper {
 
         @Override
         public Entry<String, Object> apply( FieldAccess from ) {
-            if ( from.isReadOnly() ) {
-                return null;
-            }
+//            if ( from.isReadOnly() ) {
+//                return null;
+//            }
             Entry<String, Object> entry = new Pair<>( from.name(),
                     from.getValue( object ) );
             return entry;

@@ -28,12 +28,16 @@
 
 package org.boon.primitive;
 
+import org.boon.Lists;
+import org.boon.Maps;
 import org.boon.Str;
 import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
 import org.boon.core.Dates;
+import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
+import org.boon.core.reflection.Mapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,10 +45,8 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Currency;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
+
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.toListOrSingletonList;
 import static org.boon.primitive.CharScanner.*;
@@ -1325,5 +1327,133 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
         System.out.println(this.toString());
     }
+
+
+
+    public  CharBuf prettyPrintMap(Map map) {
+        return prettyPrintMap(map,  0);
+
+
+    }
+
+    public  CharBuf prettyPrintBean(Object object) {
+        final Map<String, Object> map = Maps.toMap(object);
+        return prettyPrintMap(map,  0);
+    }
+
+    public  CharBuf prettyPrintBean(Mapper mapper, Object object) {
+        return prettyPrintMap(mapper.toMap(object),  0);
+    }
+
+
+    public  CharBuf prettyPrintMap(Map map, final int indent) {
+        final Set set = map.entrySet();
+
+        final Iterator iterator = set.iterator();
+
+        indent(indent * 4).add("{\n");
+
+        while (iterator.hasNext()) {
+
+            Map.Entry entry =  (Map.Entry)iterator.next();
+
+            indent((indent + 1) * 4);
+
+            addJsonEscapedString(entry.getKey().toString().toCharArray());
+
+            add(" : ");
+
+            Object value = entry.getValue();
+
+            prettyPrintObject(value, indent);
+
+            add(",\n");
+
+        }
+
+
+        if (map.size()>0) {
+            removeLastChar();
+            removeLastChar();
+            add("\n");
+        }
+
+        indent(indent * 4).add('}');
+
+        return this;
+
+    }
+
+
+
+    public  CharBuf prettyPrintCollection(Collection values,  int indent) {
+
+
+        add('[');
+        for (Object value : values) {
+
+            prettyPrintObject(value, indent);
+
+
+            add(',');
+        }
+
+        if (values.size()>1) {
+            removeLastChar();
+        }
+
+        add(']');
+
+        return this;
+    }
+
+    public CharBuf prettyPrintObject(Object value, int indent) {
+
+
+        Type instanceType = Type.getInstanceType(value);
+        switch (instanceType) {
+
+
+            case BYTE_WRAPPER:
+            case SHORT_WRAPPER:
+            case BOOLEAN_WRAPPER:
+            case BIG_DECIMAL:
+            case BIG_INT:
+            case DOUBLE_WRAPPER:
+            case INTEGER_WRAPPER:
+            case LONG_WRAPPER:
+            case NUMBER:
+                add(value);
+                break;
+
+            case NULL:
+                addNull();
+                break;
+
+            case MAP:
+                prettyPrintMap((Map) value, indent + 2);
+                break;
+
+            case INSTANCE:
+                prettyPrintMap(Maps.toMap(value), indent);
+                break;
+
+            case COLLECTION:
+            case SET:
+            case LIST:
+                prettyPrintCollection((Collection) value, indent);
+                break;
+
+
+            default:
+                addJsonEscapedString(value.toString().toCharArray());
+
+
+        }
+
+        return this;
+    }
+
+
 }
 
