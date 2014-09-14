@@ -53,10 +53,10 @@ public class StringScannerTest {
     boolean ok = true;
 
 
-    @Test
+    //@Test
     public void speedTestParseInt() {
 
-        int numIter = 10_000_000;
+        int numIter = 50_000_000;
 
         List<String> numbers =  new ArrayList<>(numIter);
 
@@ -104,7 +104,7 @@ public class StringScannerTest {
     }
 
 
-    @Test
+    //@Test
     public void speedTestParseLong() {
 
         int numIter = 10_000_000;
@@ -156,7 +156,7 @@ public class StringScannerTest {
 
     }
 
-    @Test //JDK wins this one but it is close
+    //@Test //JDK wins this one but it is close
     public void speedTestDoubleLong() {
 
         int numIter = 10_000_000;
@@ -210,7 +210,7 @@ public class StringScannerTest {
 
 
 
-    @Test //We win this one
+    //@Test //We win this one
     public void speedTestDoubleLong2() {
 
         int numIter = 10_000_000;

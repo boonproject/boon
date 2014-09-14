@@ -96,6 +96,7 @@ public class MapField implements FieldAccess {
         if ( obj instanceof Map ) {
             Map map = ( Map ) obj;
             map.put( name, value );
+            return;
         }
         die( "Object must be a map" );
     }

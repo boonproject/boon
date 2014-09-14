@@ -494,9 +494,6 @@ public class Conversions {
                 return (T) (Boolean) toBoolean(value);
 
             case MAP:
-                if (value instanceof Map) {
-                    return (T) value;
-                }
                 return (T) toMap(value);
 
             case ARRAY:
@@ -657,9 +654,6 @@ public class Conversions {
                 return (T) (Boolean) toBooleanOrDie(value);
 
             case MAP:
-                if (value instanceof Map) {
-                    return (T) value;
-                }
                 return (T) toMap(value);
 
             case ARRAY:
@@ -794,9 +788,6 @@ public class Conversions {
             Boolean b = toBoolean(value);
             return (T) b;
         } else if (Typ.isMap(clz)) {
-            if (value instanceof Map) {
-                return (T) value;
-            }
             return (T) toMap(value);
         } else if (clz.isArray()) {
             return toPrimitiveArrayIfPossible(clz, value);

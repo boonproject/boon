@@ -1511,6 +1511,9 @@ public class Mapper {
             return null;
         }
 
+        if (object instanceof Map) {
+            return (Map<String, Object>) object;
+        }
         Map<String, Object> map = new LinkedHashMap<>();
 
 

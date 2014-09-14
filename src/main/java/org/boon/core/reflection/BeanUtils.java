@@ -32,10 +32,13 @@ import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
 import org.boon.core.Type;
+import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.MapField;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -101,13 +104,15 @@ public class BeanUtils {
         try {
            Map<String, FieldAccess> fields;
 
+            if ( object instanceof Map ) {
+
+                fields = getFieldsFromMap( ( Map<String, Object> ) object );
+            } else {
+                fields = getPropertyFieldAccessMap( object.getClass() );
+
+            }
 
 
-           fields = getPropertyFieldAccessMap( object.getClass() );
-           if ( object instanceof Map ) {
-               fields = new HashMap<>(fields);
-               fields = getFieldsFromMap( fields, ( Map<String, Object> ) object );
-           }
            return fields;
         } catch (Exception ex) {
            requireNonNull(object, "Item cannot be null" );
@@ -120,16 +125,347 @@ public class BeanUtils {
     /**
      * Get fields from map.
      *
-     * @param fields
      * @param map
      * @return
      */
-    private static Map<String, FieldAccess> getFieldsFromMap( Map<String, FieldAccess> fields, Map<String, Object> map ) {
+    private static Map<String, FieldAccess> getFieldsFromMap(final Map<String, Object> map ) {
 
-        for ( Map.Entry<String, Object> entry : map.entrySet() ) {
-            fields.put( entry.getKey(), new MapField( entry.getKey() ) );
-        }
-        return fields;
+
+        return new Map<String, FieldAccess>() {
+            @Override
+            public int size() {
+                return map.size();
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return map.isEmpty();
+            }
+
+            @Override
+            public boolean containsKey(Object key) {
+                return map.containsKey(key);
+            }
+
+            @Override
+            public boolean containsValue(Object value) {
+                return true;
+            }
+
+            @Override
+            public FieldAccess get(final Object key) {
+                return new FieldAccess() {
+                    @Override
+                    public boolean injectable() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean requiresInjection() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isNamed() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean hasAlias() {
+                        return false;
+                    }
+
+                    @Override
+                    public String alias() {
+                        return null;
+                    }
+
+                    @Override
+                    public String named() {
+                        return key.toString();
+                    }
+
+                    @Override
+                    public String name() {
+                        return key.toString();
+                    }
+
+                    @Override
+                    public Object getValue(Object obj) {
+                        return map.get(key);
+                    }
+
+                    @Override
+                    public void setValue(Object obj, Object value) {
+                        map.put(key.toString(), value);
+                    }
+
+                    @Override
+                    public void setFromValue(Object obj, Value value) {
+                        map.put(key.toString(), value.toValue());
+                    }
+
+                    @Override
+                    public boolean getBoolean(Object obj) {
+                        return Conversions.toBoolean(getValue(key));
+                    }
+
+                    @Override
+                    public void setBoolean(Object obj, boolean value) {
+
+                        setValue(map, value);
+
+                    }
+
+                    @Override
+                    public int getInt(Object obj) {
+
+                        return Conversions.toInt(getValue(key));
+                    }
+
+                    @Override
+                    public void setInt(Object obj, int value) {
+
+                        setValue(map, value);
+                    }
+
+                    @Override
+                    public short getShort(Object obj) {
+
+                        return Conversions.toShort(getValue(key));
+                    }
+
+                    @Override
+                    public void setShort(Object obj, short value) {
+
+                        setValue(map, value);
+
+                    }
+
+                    @Override
+                    public char getChar(Object obj) {
+
+                        return Conversions.toChar(getValue(key));
+                    }
+
+                    @Override
+                    public void setChar(Object obj, char value) {
+
+                        setValue(map, value);
+
+                    }
+
+                    @Override
+                    public long getLong(Object obj) {
+
+                        return Conversions.toChar(getValue(key));
+                    }
+
+                    @Override
+                    public void setLong(Object obj, long value) {
+
+                        setValue(map, value);
+                    }
+
+                    @Override
+                    public double getDouble(Object obj) {
+
+                        return Conversions.toDouble(getValue(key));
+                    }
+
+                    @Override
+                    public void setDouble(Object obj, double value) {
+
+
+                        setValue(map, value);
+
+                    }
+
+                    @Override
+                    public float getFloat(Object obj) {
+
+                        return Conversions.toFloat(getValue(key));
+                    }
+
+                    @Override
+                    public void setFloat(Object obj, float value) {
+
+                        setValue(map, value);
+
+                    }
+
+                    @Override
+                    public byte getByte(Object obj) {
+
+                        return Conversions.toByte(getValue(key));
+                    }
+
+                    @Override
+                    public void setByte(Object obj, byte value) {
+
+                        setValue(map, value);
+
+                    }
+
+                    @Override
+                    public Object getObject(Object obj) {
+
+                        return getValue(obj);
+                    }
+
+                    @Override
+                    public void setObject(Object obj, Object value) {
+
+                        this.setValue(obj, value);
+                    }
+
+                    @Override
+                    public Type typeEnum() {
+                        return Type.OBJECT;
+                    }
+
+                    @Override
+                    public boolean isPrimitive() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isFinal() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isStatic() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isVolatile() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isQualified() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isReadOnly() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isWriteOnly() {
+                        return false;
+                    }
+
+                    @Override
+                    public Class<?> type() {
+                        return Object.class;
+                    }
+
+                    @Override
+                    public Class<?> declaringParent() {
+                        return null;
+                    }
+
+                    @Override
+                    public Object parent() {
+                        return map;
+                    }
+
+                    @Override
+                    public Field getField() {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean include() {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean ignore() {
+                        return false;
+                    }
+
+                    @Override
+                    public ParameterizedType getParameterizedType() {
+                        return null;
+                    }
+
+                    @Override
+                    public Class<?> getComponentClass() {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean hasAnnotation(String annotationName) {
+                        return false;
+                    }
+
+                    @Override
+                    public Map<String, Object> getAnnotationData(String annotationName) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean isViewActive(String activeView) {
+                        return false;
+                    }
+
+                    @Override
+                    public void setStaticValue(Object newValue) {
+
+                    }
+
+                    @Override
+                    public Type componentType() {
+                        return null;
+                    }
+                };
+            }
+
+            @Override
+            public FieldAccess put(String key, FieldAccess value) {
+                return null;
+            }
+
+            @Override
+            public FieldAccess remove(Object key) {
+                return null;
+            }
+
+            @Override
+            public void putAll(Map<? extends String, ? extends FieldAccess> m) {
+
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public Set<String> keySet() {
+                return null;
+            }
+
+            @Override
+            public Collection<FieldAccess> values() {
+                return null;
+            }
+
+            @Override
+            public Set<Entry<String, FieldAccess>> entrySet() {
+                return null;
+            }
+        };
+
+//        for ( Map.Entry<String, Object> entry : map.entrySet() ) {
+//            fields.put( entry.getKey(), new MapField( entry.getKey() ) );
+//        }
+//        return fields;
 
     }
 
@@ -608,7 +944,7 @@ public class BeanUtils {
 
         if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-            object = idx ( object, StringScanner.parseInt ( property ) );
+            object = idx(object, StringScanner.parseInt(property));
 
         }
 

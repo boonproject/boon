@@ -36,10 +36,7 @@ import org.boon.datarepo.ObjectEditor;
 import org.boon.datarepo.SearchableCollection;
 import org.boon.datarepo.spi.ObjectEditorComposer;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -239,7 +236,12 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, Object value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setObject( item, value );
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setObject(item, value);
+        }
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -247,7 +249,13 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void updateByValue( KEY key, String property, String value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setValue( item, value );
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setValue(item, value);
+        }
+
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -255,7 +263,14 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, int value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setInt( item, value );
+
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setInt( item, value );
+        }
+
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -263,7 +278,14 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, long value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setLong( item, value );
+
+
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setLong( item, value );
+        }
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -271,7 +293,14 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, char value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setChar( item, value );
+
+
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setChar( item, value );
+        }
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -279,7 +308,15 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, short value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setShort( item, value );
+
+
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setShort( item, value );
+        }
+
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -287,7 +324,15 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, byte value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setByte( item, value );
+
+
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setByte( item, value );
+        }
+
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -295,7 +340,15 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, float value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setFloat( item, value );
+
+
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setFloat( item, value );
+        }
+
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -303,7 +356,15 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
     public void update( KEY key, String property, double value ) {
         ITEM item = lookupAndExpectByKey( key );
         query.invalidateIndex( property, item );
-        fields.get( property ).setDouble( item, value );
+
+
+        final FieldAccess fieldAccess = fields.get(property);
+        if (fieldAccess==null) {
+            BeanUtils.idx(item, property, value);
+        } else {
+            fieldAccess.setDouble( item, value );
+        }
+
         optimizeHash( item );
         query.validateIndex( property, item );
     }
@@ -501,7 +562,12 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
 
 
     public void setFields( Map<String, FieldAccess> fields ) {
-        this.fields = fields;
+
+        if (fields != null) {
+            this.fields = fields;
+        } else {
+            fields = Collections.EMPTY_MAP;
+        }
     }
 
 
