@@ -29,6 +29,11 @@
 package org.boon.cache;
 
 
+import org.boon.core.reflection.ClassMeta;
+import org.boon.core.reflection.MethodAccess;
+import org.boon.core.reflection.Reflection;
+
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -181,7 +186,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
      */
     public SimpleConcurrentCache( final int limit, boolean fair, CacheType type ) {
         int cores = Runtime.getRuntime().availableProcessors();
-        int stripeSize = cores < 2 ? 4 : cores * 2;
+        int stripeSize = cores < 2 ? 8 : cores * 4;
         stripeSize = roundUpToPowerOf2( stripeSize );
         cacheRegions = new SimpleCache[ stripeSize ];
         for ( int index = 0; index < cacheRegions.length; index++ ) {
@@ -305,18 +310,29 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
     }
 
 
+    static final MethodAccess randomHashSeedMethod;
 
     static {
 
         boolean yes;
+        MethodAccess randomHashSeed = null;
         try {
-            Class.forName( "sun.misc.Hashing" );
-            yes = true;
+            Class cls = Class.forName( "sun.misc.Hashing" );
+
+            ClassMeta classMeta = ClassMeta.classMeta(cls);
+
+            yes = classMeta.respondsTo("randomHashSeed", Object.class)
+                    && classMeta.classMethods().contains("randomHashSeed");
+
+            randomHashSeed = classMeta.method("randomHashSeed");
+
+
         } catch ( Exception ex ) {
             yes = false;
         }
 
         useFastHash = yes;
+        randomHashSeedMethod = randomHashSeed;
     }
 
 
@@ -330,7 +346,7 @@ public class SimpleConcurrentCache<K, V> implements Cache<K, V> {
 
         if ( useFastHash ) {
             //return sun.misc.Hashing.randomHashSeed( instance );
-            return 0;
+            return (int) randomHashSeedMethod.invoke(instance);
         }
 
         return 0;

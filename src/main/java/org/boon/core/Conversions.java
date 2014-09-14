@@ -200,7 +200,7 @@ public class Conversions {
             }
 
             try {
-                return Long.parseLong(str);
+                return StringScanner.parseLong(str);
             } catch (Exception ex) {
                 return longDefault;
             }

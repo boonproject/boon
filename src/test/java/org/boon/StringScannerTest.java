@@ -156,6 +156,112 @@ public class StringScannerTest {
 
     }
 
+    @Test //JDK wins this one but it is close
+    public void speedTestDoubleLong() {
+
+        int numIter = 10_000_000;
+
+        long BIG_NUM = Integer.MAX_VALUE;
+
+        List<String> numbers =  new ArrayList<>(numIter);
+
+        for (int index =0; index < numIter; index++) {
+            numbers.add("" + ((BIG_NUM+ index) * 1.33d));
+        }
+        long total = 0;
+
+        puts("Number generated", numbers.size(), BIG_NUM);
+
+        for (String num : numbers) {
+            final double i = StringScanner.parseDouble(num);
+            total += i;
+        }
+
+        puts (total);
+        total = 0;
+        long start = Timer.timer().now();
+
+        for (String num : numbers) {
+            final double i = StringScanner.parseDouble(num);
+            total += i;
+        }
+        long stop = Timer.timer().now();
+
+        long duration = stop - start;
+        puts("new parse", duration, total);
+
+
+
+        start = Timer.timer().now();
+        total = 0;
+
+        for (String num : numbers) {
+            final double i = Double.parseDouble(num);
+            total += i;
+        }
+        stop = Timer.timer().now();
+
+        duration = stop - start;
+
+
+        puts("old parse", duration, total);
+
+    }
+
+
+
+    @Test //We win this one
+    public void speedTestDoubleLong2() {
+
+        int numIter = 10_000_000;
+
+        long BIG_NUM = 1_000_000;
+
+        List<String> numbers =  new ArrayList<>(numIter);
+
+        for (int index =0; index < numIter; index++) {
+            numbers.add("" + ((BIG_NUM+ index) * 0.1d));
+        }
+        long total = 0;
+
+        puts("Number generated", numbers.size(), BIG_NUM);
+
+        for (String num : numbers) {
+            final double i = StringScanner.parseDouble(num);
+            total += i;
+        }
+
+        puts (total);
+        total = 0;
+        long start = Timer.timer().now();
+
+        for (String num : numbers) {
+            final double i = StringScanner.parseDouble(num);
+            total += i;
+        }
+        long stop = Timer.timer().now();
+
+        long duration = stop - start;
+        puts("new parse", duration, total);
+
+
+
+        start = Timer.timer().now();
+        total = 0;
+
+        for (String num : numbers) {
+            final double i = Double.parseDouble(num);
+            total += i;
+        }
+        stop = Timer.timer().now();
+
+        duration = stop - start;
+
+
+        puts("old parse", duration, total);
+
+    }
+
     @Test
     public void parseFloatIssue179() {
 
