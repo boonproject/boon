@@ -29,6 +29,7 @@
 package org.boon;
 
 
+import org.boon.core.Sys;
 import org.boon.primitive.ByteBuf;
 import org.boon.service.Response;
 
@@ -45,8 +46,7 @@ import java.util.Set;
 
 public class HTTP {
 
-    public static final int DEFAULT_TIMEOUT_SECONDS =
-            Integer.parseInt( System.getProperty( "org.boon.HTTP.timeout.seconds", "30" ) );
+    public static final int DEFAULT_TIMEOUT_SECONDS = Sys.sysProp("org.boon.HTTP.timeout.seconds", 30 );
     public static final String APPLICATION_JSON = "application/json";
 
     public static String get(

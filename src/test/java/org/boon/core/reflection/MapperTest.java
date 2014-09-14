@@ -147,7 +147,7 @@ public class MapperTest {
         String rickJsonMap  = toJson( rickMap );
         puts( "Rick JSON List", rpad( rickJsonList, 60 ), "len", rickJsonList.length() );
         puts( "Rick JSON Map ", rpad( rickJsonMap,  60 ), "len", rickJsonMap.length()  );
-        puts ( "LEFT PAD really shows the difference");
+        puts ( "LEFT PAD speedTestParseInt shows the difference");
         puts( "Rick JSON List", lpad( rickJsonList, 60 ), "len", rickJsonList.length() );
         puts( "Rick JSON Map ", lpad( rickJsonMap,  60 ), "len", rickJsonMap.length()  );
 

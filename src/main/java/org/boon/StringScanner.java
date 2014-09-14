@@ -36,12 +36,23 @@ import org.boon.primitive.Chr;
 public class StringScanner {
 
 
+    /**
+     * Checks the input string to see if it is only digits
+     * @param input digits
+     * @return true or false
+     */
     public static boolean isDigits( String input ) {
         return CharScanner.isDigits( FastStringUtils.toCharArray( input ) );
     }
 
 
-
+    /**
+     * Splits a string into many parts
+     * @param string input string
+     * @param split char to split by
+     * @param limit the limit of the times you want it split up
+     * @return the split string
+     */
     public static String[]  split( final String string,
                                   final char split, final int limit ) {
 
@@ -52,6 +63,13 @@ public class StringScanner {
 
 
     }
+
+    /**
+     * Splits a string
+     * @param string string to split
+     * @param split what you want to split it by
+     * @return the split up string
+     */
     public static String[] split( final String string,
                                   final char split ) {
 
@@ -61,6 +79,12 @@ public class StringScanner {
 
     }
 
+    /**
+     * Split string by a list of delimiters
+     * @param string string to split
+     * @param delimiters delimeters to split it by
+     * @return the split up string
+     */
     public static String[] splitByChars( final String string,
                                          final char... delimiters ) {
 
@@ -70,6 +94,13 @@ public class StringScanner {
 
     }
 
+
+    /**
+     * Split string by a list of delimiters
+     * @param string string to split
+     * @param delimiters delimeters to split it by
+     * @return the split up string
+     */
     public static String[] splitByDelimiters( final String string,
                                               final String delimiters ) {
 
@@ -80,17 +111,39 @@ public class StringScanner {
     }
 
 
+
+    /**
+     * Split string by a list of delimiters but none are empty
+     * @param string string to split
+     * @param delimiters delimeters to split it by
+     * @return the split up string
+     */
     public static String[] splitByCharsNoneEmpty( final String string, final char... delimiters ) {
 
         char[][] comps = CharScanner.splitByCharsNoneEmpty( FastStringUtils.toCharArray( string ), delimiters );
         return Str.fromCharArrayOfArrayToStringArray( comps );
     }
 
+
+    /**
+     * remove chars from a string
+     * @param string string to split
+     * @param delimiters delimeters to remove
+     * @return the split up string
+     */
     public static String removeChars( final String string, final char... delimiters ) {
         char[][] comps = CharScanner.splitByCharsNoneEmpty( FastStringUtils.toCharArray( string ), delimiters );
         return new String(Chr.add ( comps ));
     }
 
+
+
+    /**
+     * Split string by a list of delimiters but none are empty within a range
+     * @param string string to split
+     * @param delimiters delimeters to split it by
+     * @return the split up string
+     */
     public static String[] splitByCharsNoneEmpty( final String string, int start, int end, final char... delimiters ) {
         Exceptions.requireNonNull( string );
 
@@ -98,13 +151,107 @@ public class StringScanner {
         return Str.fromCharArrayOfArrayToStringArray( comps );
     }
 
+    /**
+     * Parse float
+     * @param buffer input buffer
+     * @param from from
+     * @param to to
+     * @return value
+     */
     public static float parseFloat( String buffer, int from, int to ) {
         return CharScanner.parseFloat( FastStringUtils.toCharArray(buffer), from , to );
     }
 
+    /**
+     * parse a float
+     * @param buffer input string
+     * @return value
+     */
     public static float parseFloat( String buffer ) {
         return CharScanner.parseFloat( FastStringUtils.toCharArray(buffer) );
     }
+
+
+    /**
+     * parse a double
+     * @param buffer input string
+     * @return value
+     */
+    public static double parseDouble( String buffer, int from, int to ) {
+        return CharScanner.parseDouble( FastStringUtils.toCharArray(buffer), from , to );
+    }
+
+
+    /**
+     * parse a double
+     * @param buffer input string
+     * @return value
+     */
+    public static double parseDouble( String buffer ) {
+        return CharScanner.parseDouble( FastStringUtils.toCharArray(buffer) );
+    }
+
+
+
+    /**
+     * parse an int within a range
+     * @param buffer input string
+     * @return value
+     */
+    public static int parseInt( String buffer, int from, int to ) {
+        return CharScanner.parseInt( FastStringUtils.toCharArray(buffer), from , to );
+    }
+
+    /**
+     * parse an int within a range
+     * @param buffer input string
+     * @return value
+     */
+    public static int parseInt( String buffer ) {
+        return CharScanner.parseInt( FastStringUtils.toCharArray(buffer) );
+    }
+
+
+    /**
+     * parse an long within a range
+     * @param buffer input string
+     * @return value
+     */
+    public static long parseLong( String buffer, int from, int to ) {
+        return CharScanner.parseLong( FastStringUtils.toCharArray(buffer), from , to );
+    }
+
+
+    /**
+     * parse an long within a range
+     * @param buffer input string
+     * @return value
+     */
+    public static long parseLong( String buffer ) {
+        return CharScanner.parseLong( FastStringUtils.toCharArray(buffer) );
+    }
+
+
+
+    public static short parseShort( String buffer, int from, int to ) {
+        return (short) CharScanner.parseInt( FastStringUtils.toCharArray(buffer), from , to );
+    }
+
+    public static short parseShort( String buffer ) {
+        return (short) CharScanner.parseInt( FastStringUtils.toCharArray(buffer) );
+    }
+
+
+    public static short parseByte( String buffer, int from, int to ) {
+        return (byte) CharScanner.parseInt( FastStringUtils.toCharArray(buffer), from , to );
+    }
+
+    public static short parseByte( String buffer ) {
+        return (byte) CharScanner.parseInt( FastStringUtils.toCharArray(buffer) );
+    }
+
+
+
 
 
 }

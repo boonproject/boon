@@ -105,7 +105,7 @@ public class Conversions {
             return value ? 1 : 0;
         } else if (obj instanceof CharSequence) {
             try {
-                return Integer.parseInt(Str.toString(obj));
+                return StringScanner.parseInt(Str.toString(obj));
             } catch (Exception ex) {
                 return defaultValue;
             }

@@ -30,7 +30,6 @@ package org.boon.primitive;
 
 
 import org.boon.Lists;
-import org.boon.StringScanner;
 import org.junit.Test;
 
 import java.util.List;
@@ -856,27 +855,27 @@ public class CharScannerTest {
     public void parseLong() {
 
         String str = "12345678910";
-        long l1 =  CharScanner.parseLongFromTo( str.toCharArray(), 0, str.length() );
+        long l1 =  CharScanner.parseLong(str.toCharArray(), 0, str.length());
         boolean ok = l1 ==  12345678910L || die("" + l1);
 
 
 
         str = "abc12345678910";
-        l1 =  CharScanner.parseLongFromTo( str.toCharArray(), 3, str.length() );
+        l1 =  CharScanner.parseLong(str.toCharArray(), 3, str.length());
         ok = l1 ==  12345678910L || die("" + l1);
 
 
 
 
         str = "abcdefghijklmnopqrstuvwxyz12345678910";
-        l1 =  CharScanner.parseLongFromTo( str.toCharArray(), 26, str.length() );
+        l1 =  CharScanner.parseLong(str.toCharArray(), 26, str.length());
         ok = l1 ==  12345678910L || die("" + l1);
 
 
 
 
         String str2 = "abcdefghijklmnopqrstuvwxyz12345678910mymilkshakemakestheboysintheyard";
-        l1 =  CharScanner.parseLongFromTo( str2.toCharArray(), 26, str.length() );
+        l1 =  CharScanner.parseLong(str2.toCharArray(), 26, str.length());
         ok = l1 ==  12345678910L || die("" + l1);
     }
 

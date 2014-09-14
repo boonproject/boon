@@ -28,7 +28,11 @@
 
 package org.boon;
 
+import org.boon.concurrent.Timer;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.boon.Boon.puts;
 import static org.boon.primitive.Arry.idx;
@@ -47,6 +51,111 @@ public class StringScannerTest {
 
 
     boolean ok = true;
+
+
+    @Test
+    public void speedTestParseInt() {
+
+        int numIter = 10_000_000;
+
+        List<String> numbers =  new ArrayList<>(numIter);
+
+        for (int index =0; index < numIter; index++) {
+            numbers.add("" + index);
+        }
+        long total = 0;
+
+        puts("Number generated", numbers.size());
+
+        for (String num : numbers) {
+            final int i = StringScanner.parseInt(num);
+            total += i;
+        }
+
+        puts (total);
+        total = 0;
+        long start = Timer.timer().now();
+
+        for (String num : numbers) {
+            final int i = StringScanner.parseInt(num);
+            total += i;
+        }
+        long stop = Timer.timer().now();
+
+        long duration = stop - start;
+        puts("new parse", duration, total);
+
+
+
+        start = Timer.timer().now();
+        total = 0;
+
+        for (String num : numbers) {
+            final int i = Integer.parseInt(num);
+            total += i;
+        }
+        stop = Timer.timer().now();
+
+        duration = stop - start;
+
+
+        puts("old parse", duration, total);
+
+    }
+
+
+    @Test
+    public void speedTestParseLong() {
+
+        int numIter = 10_000_000;
+
+        long BIG_NUM = Integer.MAX_VALUE;
+
+        List<String> numbers =  new ArrayList<>(numIter);
+
+        for (int index =0; index < numIter; index++) {
+            numbers.add("" + (BIG_NUM+ index));
+        }
+        long total = 0;
+
+        puts("Number generated", numbers.size(), BIG_NUM);
+
+        for (String num : numbers) {
+            final long i = StringScanner.parseLong(num);
+            total += i;
+        }
+
+        puts (total);
+        total = 0;
+        long start = Timer.timer().now();
+
+        for (String num : numbers) {
+            final long i = StringScanner.parseLong(num);
+            total += i;
+        }
+        long stop = Timer.timer().now();
+
+        long duration = stop - start;
+        puts("new parse", duration, total);
+
+
+
+        start = Timer.timer().now();
+        total = 0;
+
+        for (String num : numbers) {
+            final long i = Long.parseLong(num);
+            total += i;
+        }
+        stop = Timer.timer().now();
+
+        duration = stop - start;
+
+
+        puts("old parse", duration, total);
+
+    }
+
     @Test
     public void parseFloatIssue179() {
 

@@ -41,9 +41,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static org.boon.Boon.len;
-import static org.boon.Boon.puts;
-
 public class Dates {
 
     public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
@@ -740,15 +737,15 @@ public class Dates {
 
         try {
             if ( isISO8601Jackson(charArray, from, to) ) {
-                int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
-                int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
-                int day = CharScanner.parseIntFromTo( charArray, from + 8, from + 10 );
-                int hour = CharScanner.parseIntFromTo( charArray, from + 11, from + 13 );
+                int year = CharScanner.parseInt(charArray, from + 0, from + 4);
+                int month = CharScanner.parseInt(charArray, from + 5, from + 7);
+                int day = CharScanner.parseInt(charArray, from + 8, from + 10);
+                int hour = CharScanner.parseInt(charArray, from + 11, from + 13);
 
-                int minute = CharScanner.parseIntFromTo( charArray, from + 14, from + 16 );
+                int minute = CharScanner.parseInt(charArray, from + 14, from + 16);
 
-                int second = CharScanner.parseIntFromTo( charArray, from + 17, from + 19 );
-                int millisecond = CharScanner.parseIntFromTo( charArray, from + 20, from + 23 );
+                int second = CharScanner.parseInt(charArray, from + 17, from + 19);
+                int millisecond = CharScanner.parseInt(charArray, from + 20, from + 23);
 
                 TimeZone tz = null;
 
@@ -787,14 +784,14 @@ public class Dates {
         try {
         int length = to - from;
         if ( isISO8601( charArray, from, to ) ) {
-            int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
-            int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
-            int day = CharScanner.parseIntFromTo( charArray, from + 8, from + 10 );
-            int hour = CharScanner.parseIntFromTo( charArray, from + 11, from + 13 );
+            int year = CharScanner.parseInt(charArray, from + 0, from + 4);
+            int month = CharScanner.parseInt(charArray, from + 5, from + 7);
+            int day = CharScanner.parseInt(charArray, from + 8, from + 10);
+            int hour = CharScanner.parseInt(charArray, from + 11, from + 13);
 
-            int minute = CharScanner.parseIntFromTo( charArray, from + 14, from + 16 );
+            int minute = CharScanner.parseInt(charArray, from + 14, from + 16);
 
-            int second = CharScanner.parseIntFromTo( charArray, from + 17, from + 19 );
+            int second = CharScanner.parseInt(charArray, from + 17, from + 19);
             TimeZone tz = null;
 
             if ( charArray[ from + 19 ] == 'Z' ) {
@@ -824,16 +821,16 @@ public class Dates {
     public static Date fromJsonDate( char[] charArray, int from, int to ) {
         try {
         if ( isJsonDate( charArray, from, to ) ) {
-            int year = CharScanner.parseIntFromTo( charArray, from + 0, from + 4 );
-            int month = CharScanner.parseIntFromTo( charArray, from + 5, from + 7 );
-            int day = CharScanner.parseIntFromTo( charArray, from + 8, from + 10 );
-            int hour = CharScanner.parseIntFromTo( charArray, from + 11, from + 13 );
+            int year = CharScanner.parseInt(charArray, from + 0, from + 4);
+            int month = CharScanner.parseInt(charArray, from + 5, from + 7);
+            int day = CharScanner.parseInt(charArray, from + 8, from + 10);
+            int hour = CharScanner.parseInt(charArray, from + 11, from + 13);
 
-            int minute = CharScanner.parseIntFromTo( charArray, from + 14, from + 16 );
+            int minute = CharScanner.parseInt(charArray, from + 14, from + 16);
 
-            int second = CharScanner.parseIntFromTo( charArray, from + 17, from + 19 );
+            int second = CharScanner.parseInt(charArray, from + 17, from + 19);
 
-            int milliseconds = CharScanner.parseIntFromTo( charArray, from + 20, from + 23 );
+            int milliseconds = CharScanner.parseInt(charArray, from + 20, from + 23);
 
             TimeZone tz = GMT;
 

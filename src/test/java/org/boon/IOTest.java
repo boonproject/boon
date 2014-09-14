@@ -44,7 +44,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static java.lang.Integer.parseInt;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.idx;
 import static org.boon.Lists.len;
@@ -496,7 +495,7 @@ public class IOTest {
         public static Proxy createProxy( String line ) {
             String[] lineSplit = line.split( ":" );
             String address = lineSplit[ 0 ];
-            int port = parseInt( lineSplit[ 1 ] );
+            int port = StringScanner.parseInt( lineSplit[ 1 ] );
             return new Proxy( address, port );
         }
 
@@ -540,7 +539,7 @@ public class IOTest {
         private static Proxy2 createProxy( String line ) {
             String[] lineSplit = line.split( ":" );
             String address = lineSplit[ 0 ];
-            int port = parseInt( lineSplit[ 1 ] );
+            int port = StringScanner.parseInt( lineSplit[ 1 ] );
             return new Proxy2( address, port );
         }
 

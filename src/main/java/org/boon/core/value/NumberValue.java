@@ -218,7 +218,7 @@ public class NumberValue extends Number implements Value {
     @Override
     public int intValue () {
         if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
-            return parseIntFromTo ( buffer, startIndex, endIndex  );
+            return parseInt(buffer, startIndex, endIndex);
         } else {
             return 0;
         }
@@ -228,9 +228,9 @@ public class NumberValue extends Number implements Value {
     public long longValue () {
 
         if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
-            return parseIntFromTo( buffer, startIndex, endIndex  );
+            return parseInt(buffer, startIndex, endIndex);
         } else if( isLong(  buffer, startIndex, endIndex - startIndex)){
-            return parseLongFromTo( buffer, startIndex, endIndex  );
+            return parseLong(buffer, startIndex, endIndex);
         } else {
             return 0L;
         }

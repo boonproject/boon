@@ -158,7 +158,7 @@ public class BeanUtils {
 
                 if ( isDigits( property ) ) {
                     /* We can index numbers and names. */
-                    object = idx ( object, Integer.parseInt ( property ) );
+                    object = idx ( object, StringScanner.parseInt ( property ) );
 
                 } else {
 
@@ -220,7 +220,7 @@ public class BeanUtils {
 
                 if ( isDigits( property ) ) {
                     /* We can index numbers and names. */
-                    object = idx ( object, Integer.parseInt ( property ) );
+                    object = idx ( object, StringScanner.parseInt ( property ) );
 
                 } else {
 
@@ -302,7 +302,7 @@ public class BeanUtils {
             char c = property.charAt(0);
             if ( isDigit(c) ) {
                 /* We can index numbers and names. */
-                object = idx ( object, Integer.parseInt ( property ) );
+                object = idx ( object, StringScanner.parseInt ( property ) );
 
             } else {
 
@@ -608,7 +608,7 @@ public class BeanUtils {
 
         if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-            object = idx ( object, Integer.parseInt ( property ) );
+            object = idx ( object, StringScanner.parseInt ( property ) );
 
         }
 
@@ -684,7 +684,7 @@ public class BeanUtils {
 
             if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
-                object = idx ( object, Integer.parseInt ( property ) );
+                object = idx ( object, StringScanner.parseInt ( property ) );
 
             } else {
 

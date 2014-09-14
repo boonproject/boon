@@ -263,7 +263,7 @@ public class CharSequenceValue implements Value, CharSequence {
     public int intValue () {
         if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
 
-            return parseIntFromTo ( buffer, startIndex, endIndex );
+            return parseInt(buffer, startIndex, endIndex);
         }  else {
             return die(int.class, "not an int");
         }
@@ -272,9 +272,9 @@ public class CharSequenceValue implements Value, CharSequence {
     @Override
     public long longValue () {
         if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ){
-            return parseIntFromTo( buffer, startIndex, endIndex  );
+            return parseInt(buffer, startIndex, endIndex);
         } else {
-           return parseLongFromTo( buffer, startIndex, endIndex  );
+           return parseLong(buffer, startIndex, endIndex);
         }
     }
 

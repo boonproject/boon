@@ -29,6 +29,8 @@
 package org.boon.core.timer;
 
 
+import org.boon.core.Sys;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
@@ -47,7 +49,7 @@ public class TimeKeeperBasic implements TimeKeeper {
 
     private final AtomicInteger callEveryNowAndThen = new AtomicInteger();
     private final AtomicLong time = new AtomicLong();
-    private final int TIME_KEEPER_FREQUENCY = Integer.parseInt( System.getProperty( "org.boon.timekeeper.frequency", "100" ) );
+    private final int TIME_KEEPER_FREQUENCY = Sys.sysProp( "org.boon.timekeeper.frequency", 100 );
 
     private final ReentrantLock lock = new ReentrantLock();
 

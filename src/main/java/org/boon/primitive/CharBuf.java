@@ -789,11 +789,11 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
     public int intValue() {
-        return CharScanner.parseIntFromTo( buffer, 0, location );
+        return CharScanner.parseInt(buffer, 0, location);
     }
 
     public long longValue() {
-        return CharScanner.parseLongFromTo( buffer, 0, location );
+        return CharScanner.parseLong(buffer, 0, location);
     }
 
 

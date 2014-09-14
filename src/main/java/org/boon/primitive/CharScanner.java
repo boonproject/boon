@@ -34,7 +34,6 @@ import org.boon.core.reflection.FastStringUtils;
 import java.util.Arrays;
 
 
-import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 
@@ -733,13 +732,13 @@ public class CharScanner {
     }
 
     public static int parseInt( char[] digitChars ) {
-        return parseIntFromTo( digitChars, 0, digitChars.length );
+        return parseInt(digitChars, 0, digitChars.length);
     }
 
 
 
 
-    public static int parseIntFromTo( char[] digitChars, int offset, int to ) {
+    public static int parseInt(char[] digitChars, int offset, int to) {
 
         try {
 
@@ -869,7 +868,7 @@ public class CharScanner {
         return negative ? num * -1 : num;
     }
 
-    public static long parseLongFromTo( char[] digitChars, int offset, int to ) {
+    public static long parseLong(char[] digitChars, int offset, int to) {
 
 
         long num;
@@ -898,7 +897,7 @@ public class CharScanner {
 
 
     public static long parseLong( char[] digitChars ) {
-        return parseLongFromTo( digitChars, 0, digitChars.length );
+        return parseLong(digitChars, 0, digitChars.length);
     }
 
 
@@ -967,9 +966,9 @@ public class CharScanner {
 
         if (!foundDot && simple) {
             if ( isInteger( buffer, from, length ) ) {
-                value = parseIntFromTo( buffer, from, index );
+                value = parseInt(buffer, from, index);
             } else {
-                value = parseLongFromTo( buffer, from, index );
+                value = parseLong(buffer, from, index);
             }
         }
         else if ( foundDot && simple ) {
@@ -1062,9 +1061,9 @@ public class CharScanner {
 
         if (!foundDot && simple) {
             if ( isInteger( buffer, from, length ) ) {
-                value = parseIntFromTo( buffer, from, index );
+                value = parseInt(buffer, from, index);
             } else {
-                value = parseLongFromTo( buffer, from, index );
+                value = parseLong(buffer, from, index);
             }
         }
         else if ( foundDot && simple ) {

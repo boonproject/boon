@@ -102,5 +102,9 @@ public class Timer {
     }
 
 
+    public long now() {
+        return time.get();
+    }
+
 
 }
