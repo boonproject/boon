@@ -69,6 +69,9 @@ public class MapsTest {
         puts(Maps.asPrettyJsonString(map));
         puts(Boon.toPrettyJson(map));
 
+        final Object o = Boon.fromJson(Boon.toPrettyJson(map));
+
+        Boon.equalsOrDie("Values are equal", map, o);
 
 
     }

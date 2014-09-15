@@ -28,6 +28,7 @@
 
 package org.boon.core.reflection;
 
+import org.boon.Boon;
 import org.boon.Lists;
 import org.junit.Test;
 
@@ -53,12 +54,42 @@ public class BeanUtilsTest {
         List<Player> players = Player.players (
                 Player.player ( "1", "Rick", "Hightower"  ),
                 Player.player ( "2", "Diana", "Hightower"  ) );
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof TestClass)) return false;
+
+            TestClass testClass = (TestClass) o;
+
+            if (child != null ? !child.equals(testClass.child) : testClass.child != null) return false;
+            if (id != null ? !id.equals(testClass.id) : testClass.id != null) return false;
+            if (players != null ? !players.equals(testClass.players) : testClass.players != null) return false;
+            if (time != null ? !time.equals(testClass.time) : testClass.time != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (time != null ? time.hashCode() : 0);
+            result = 31 * result + (child != null ? child.hashCode() : 0);
+            result = 31 * result + (players != null ? players.hashCode() : 0);
+            return result;
+        }
     }
 
 
     @Test
     public void test99() {
         puts(BeanUtils.asPrettyJsonString(new TestClass()));
+
+        final String s = BeanUtils.asPrettyJsonString(new TestClass());
+
+        final Object o = Boon.fromJson(s);
+
+        //Boon.equalsOrDie("not the same", o, new TestClass());
     }
 
 
@@ -77,9 +108,9 @@ public class BeanUtilsTest {
 
     public static class Player {
 
-        private final String id;
-        private final String firstName;
-        private final String lastName;
+        private  String id;
+        private  String firstName;
+        private  String lastName;
 
 
 
