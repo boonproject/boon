@@ -39,7 +39,7 @@
 	<!-- boon.io, json.io was taken. -->
 	<groupId>io.fastjson</groupId>
 	<artifactId>boon</artifactId>
-	<version>0.26-SNAPSHOT</version>
+	<version>0.26</version>
 	<name>boon</name>
 	<description>Simple opinionated Java for the novice to expert level Java Programmer. 
                  Low Ceremony. High Productivity. A real boon to Java to developers!</description>
