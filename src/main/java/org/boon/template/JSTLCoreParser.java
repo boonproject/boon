@@ -367,11 +367,25 @@ public class JSTLCoreParser {
     private List<Token> tokenList;
 
 
+
     public static class Token {
 
         int start;
         int stop;
         TokenTypes type;
+
+        public int start() {
+            return start;
+        }
+
+
+        public int stop() {
+            return stop;
+        }
+
+        public TokenTypes type() {
+            return type;
+        }
 
         public Token(int start, int stop, TokenTypes type) {
             this.start = start;
@@ -446,16 +460,13 @@ public class JSTLCoreParser {
 
 
 
-    public void TemplateParser() {
-
-    }
 
     public void parse(String string) {
 
         this.charArray = FastStringUtils.toCharArray(string);
         this.index = 0;
 
-        tokenList = new ArrayList();
+        tokenList = new ArrayList<>();
 
 
         processLoop();
@@ -488,6 +499,7 @@ public class JSTLCoreParser {
 
                     index += TokenTypes.EXPRESSION_START.chars.length;
                     handleExpression();
+                    text = Token.text(index, -1);
 
                 }
             } else {
@@ -537,7 +549,11 @@ public class JSTLCoreParser {
         tokenList.add(commandBody);
 
 
+
         Token text = Token.text(index, -1);
+
+
+
 
 
 
@@ -557,6 +573,7 @@ public class JSTLCoreParser {
                 } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.chars, index, this.charArray)) {
 
 
+
                     text = textToken(text);
 
                     commandBody.stop = index;
@@ -569,18 +586,28 @@ public class JSTLCoreParser {
             } else if (ch=='$') {
                 if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
 
+
                     text = textToken(text);
+
                     index += TokenTypes.EXPRESSION_START.chars.length;
                     handleExpression();
+                    text = Token.text(index, -1);
+
 
                 }
-            }
-            else {
+            } else {
                 if (text == null) {
 
                     text = Token.text(index, -1);
                 }
             }
+
+        }
+
+
+        if (text!=null) {
+            text.stop = charArray.length;
+            this.tokenList.add( text );
         }
 
 
@@ -651,6 +678,12 @@ public class JSTLCoreParser {
 
 
     }
+
+
+    public List<Token> getTokenList() {
+        return tokenList;
+    }
+
 
 
 }

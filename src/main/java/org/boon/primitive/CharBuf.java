@@ -721,6 +721,16 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
 
+    public CharBuf add( String string, int start, int end ) {
+        int charsLength =  end - start ;
+        if ( charsLength + location > capacity ) {
+            buffer = Chr.grow( buffer, buffer.length * 2 + charsLength );
+        }
+
+        return this.add(string.substring(start, end));
+    }
+
+
 
     @Override
     public int length () {
