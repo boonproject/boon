@@ -7,8 +7,10 @@ target
 .project
 .settings
 .gitignore~
-hs_err_pid3287.log
+hs_err_*.log
 
 src/test/resources/foo.json
 
 src/test/resources/freeformatter-out.json
+
+
