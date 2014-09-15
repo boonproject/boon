@@ -37,6 +37,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.boon.Boon.equalsOrDie;
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
@@ -223,5 +224,188 @@ public class BeanUtilsTest {
 
         ok = prime.child.time == 1L  || die();
         ok &= Lists.list("1", "2").equals ( prime.players ) || die("" + prime.players);
+    }
+
+    public static enum Fruit {
+        ORANGES,
+        APPLES,
+        STRAWBERRIES
+    }
+    public static class Phone {
+        String areaCode;
+        String countryCode;
+        String number;
+
+        public Phone(String areaCode, String countryCode, String number) {
+            this.areaCode = areaCode;
+            this.countryCode = countryCode;
+            this.number = number;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Phone)) return false;
+
+            Phone phone = (Phone) o;
+
+            if (areaCode != null ? !areaCode.equals(phone.areaCode) : phone.areaCode != null) return false;
+            if (countryCode != null ? !countryCode.equals(phone.countryCode) : phone.countryCode != null) return false;
+            if (number != null ? !number.equals(phone.number) : phone.number != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = areaCode != null ? areaCode.hashCode() : 0;
+            result = 31 * result + (countryCode != null ? countryCode.hashCode() : 0);
+            result = 31 * result + (number != null ? number.hashCode() : 0);
+            return result;
+        }
+    }
+
+
+    public static class Employee {
+        List<Fruit> fruits;
+
+        String firstName;
+
+        String lastName;
+        int empNum;
+        Phone phone;
+
+        boolean current = true;
+
+        public Employee(String firstName, String lastName, int empNum, Phone phone, Fruit... fruits) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.empNum = empNum;
+            this.phone = phone;
+            this.fruits = Lists.list(fruits);
+
+        }
+
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Employee)) return false;
+
+            Employee employee = (Employee) o;
+
+            if (empNum != employee.empNum) return false;
+            if (firstName != null ? !firstName.equals(employee.firstName) : employee.firstName != null) return false;
+            if (lastName != null ? !lastName.equals(employee.lastName) : employee.lastName != null) return false;
+            if (phone != null ? !phone.equals(employee.phone) : employee.phone != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = fruits != null ? fruits.hashCode() : 0;
+            result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+            result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+            result = 31 * result + empNum;
+            result = 31 * result + (phone != null ? phone.hashCode() : 0);
+            return result;
+        }
+    }
+
+    public static class Dept {
+        String name;
+
+        Employee[] employees;
+
+        public Dept(String name, Employee... employees) {
+            this.name = name;
+            this.employees = employees;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Dept)) return false;
+
+            Dept dept = (Dept) o;
+
+            if (!Arry.equals(employees, dept.employees)) return false;
+            if (name != null ? !name.equals(dept.name) : dept.name != null) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = name != null ? name.hashCode() : 0;
+            result = 31 * result + (employees != null ? Arrays.hashCode(employees) : 0);
+            return result;
+        }
+    }
+
+    @Test
+    public void bug75() {
+
+        Employee rick =  new Employee("Rick", "Hightower", 66,
+                new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES);
+        final List<Dept> list = Lists.list(
+                new Dept("Engineering", rick),
+                new Dept("HR", new Employee("Diana", "Hightower", 2, new Phone("320", "555", "1212")))
+
+        );
+
+        final Object idx = BeanUtils.idx(list, "[0].employees.firstName");
+
+        equalsOrDie(Lists.list("Rick"), idx);
+
+
+        final String s = BeanUtils.idxStr(list, "[0].employees.firstName[0]");
+        equalsOrDie("Rick", s);
+
+
+        int empNum = BeanUtils.idxInt(list, "[0].employees.empNum[0]");
+        equalsOrDie(66, empNum);
+
+
+        float fvalue = BeanUtils.idxFloat(list, "[0].employees.empNum[0]");
+        equalsOrDie(66.0f, fvalue);
+
+
+        double dvalue = BeanUtils.idxDouble(list, "[0].employees.empNum[0]");
+        equalsOrDie(66.0d, dvalue);
+
+        empNum = BeanUtils.idxShort(list, "[0].employees.empNum[0]");
+        equalsOrDie(66, empNum);
+
+
+        empNum = BeanUtils.idxByte(list, "[0].employees.empNum[0]");
+        equalsOrDie(66, empNum);
+
+        empNum = BeanUtils.idxChar(list, "[0].employees.empNum[0]");
+        equalsOrDie(66, empNum);
+
+
+
+        empNum = (int)BeanUtils.idxLong(list, "[0].employees.empNum[0]");
+        equalsOrDie(66, empNum);
+
+        boolean current = BeanUtils.idxBoolean(list, "[0].employees.current[0]");
+        equalsOrDie(true, current);
+
+        final Employee employee = BeanUtils.idxGeneric(Employee.class, list, "[0].employees[0]");
+
+        equalsOrDie(rick, employee);
+
+
+
+
+
+
     }
 }

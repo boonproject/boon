@@ -44,6 +44,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.className;
+import static org.boon.Boon.equalsOrDie;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.*;
 import static org.boon.Str.lines;
@@ -648,6 +649,12 @@ public class BeanUtils {
                     object = getFieldValuesFromCollection((Collection)object, property);
                     object = Conversions.unifyListOrArray(object);
                     continue;
+                } else if (Typ.isArray(object)) {
+                    Iterator iter = Conversions.iterator(object);
+                    List list = Lists.list(iter);
+                    object = getFieldValuesFromCollection(list, property);
+                    object = Conversions.unifyListOrArray(object);
+                    continue;
                 }
 
 
@@ -717,12 +724,10 @@ public class BeanUtils {
     @SuppressWarnings ( "unchecked" )
     public static <T> T idxGeneric( Class<T> t, Object object, final String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = propertyPathAsStringArray(path);
 
-        return ( T ) getPropByPath( object, properties );
+        return ( T ) getPropertyValue( object, properties );
 
 
     }
@@ -972,16 +977,25 @@ public class BeanUtils {
      */
     public static int getPropertyInt( final Object root, final String... properties ) {
 
-        Exceptions.requireNonNull( root );
-        Exceptions.requireNonNull( properties );
+
+        final String lastProperty = properties[ properties.length - 1 ];
+
+
+
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toInt(getPropertyValue(root, properties));
+
+        }
 
 
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
-        final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
+
 
         if ( field.type() == Typ.intgr ) {
             return field.getInt( object );
@@ -1014,16 +1028,30 @@ public class BeanUtils {
             if (property.equals("this")) {
                 continue;
             }
-            
-            fields = getPropertyFieldAccessMap( object.getClass() );
-
-            FieldAccess field = fields.get( property );
 
             if ( isDigits( property ) ) {
                 /* We can index numbers and names. */
                 object = idx ( object, StringScanner.parseInt ( property ) );
 
             } else {
+
+                if (object instanceof Collection) {
+                    object = getFieldValuesFromCollection((Collection)object, property);
+                    object = Conversions.unifyListOrArray(object);
+                    continue;
+                } else if (Typ.isArray(object)) {
+                    Iterator iter = Conversions.iterator(object);
+                    List list = Lists.list(iter);
+                    object = getFieldValuesFromCollection(list, property);
+                    object = Conversions.unifyListOrArray(object);
+                    continue;
+                }
+
+
+                fields = getPropertyFieldAccessMap( object.getClass() );
+
+                FieldAccess field = fields.get( property );
+
 
                 if ( field == null ) {
                         return null;
@@ -1080,9 +1108,8 @@ public class BeanUtils {
     public static String idxStr( Object object, String path ) {
 
 
-        String[] properties = propertyPathAsStringArray(path);
-
-        return getPropertyString(object, properties);
+        final Object val = idx(object, path);
+        return Conversions.toString(val);
     }
 
     private static String getPropertyString(Object root, String[] properties) {
@@ -1112,10 +1139,21 @@ public class BeanUtils {
      * @return
      */
     public static byte getPropertyByte( final Object root, final String... properties ) {
+
+
+
+        final String lastProperty = properties[ properties.length - 1 ];
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toByte(getPropertyValue(root, properties));
+
+        }
+
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
-        final String lastProperty = properties[ properties.length - 1 ];
+
         FieldAccess field = fields.get( lastProperty );
 
         if ( field.type() == Typ.bt ) {
@@ -1143,10 +1181,19 @@ public class BeanUtils {
      * @return
      */
     public static float getPropertyFloat( final Object root, final String... properties ) {
+
+        final String lastProperty = properties[ properties.length - 1 ];
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toFloat(getPropertyValue(root, properties));
+
+        }
+
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
-        final String lastProperty = properties[ properties.length - 1 ];
+
         FieldAccess field = fields.get( lastProperty );
 
         if ( field.type() == Typ.flt ) {
@@ -1164,8 +1211,6 @@ public class BeanUtils {
      */
     public static float idxFloat( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = propertyPathAsStringArray(path);
 
@@ -1181,11 +1226,22 @@ public class BeanUtils {
     public static short getPropertyShort( final Object root,
                                           final String... properties ) {
 
+        final String lastProperty = properties[ properties.length - 1 ];
+
+
+
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toShort(getPropertyValue(root, properties));
+
+        }
+
+
 
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
-        final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
 
@@ -1318,10 +1374,20 @@ public class BeanUtils {
     public static char getPropertyChar( final Object root,
                                         final String... properties ) {
 
+
+        final String lastProperty = properties[ properties.length - 1 ];
+
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toChar(getPropertyValue(root, properties));
+
+        }
+
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
-        final String lastProperty = properties[ properties.length - 1 ];
+
         FieldAccess field = fields.get( lastProperty );
 
         if ( field.type() == Typ.chr ) {
@@ -1355,11 +1421,21 @@ public class BeanUtils {
                                             final String... properties ) {
 
 
+
+        final String lastProperty = properties[ properties.length - 1 ];
+
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toDouble(getPropertyValue(root, properties));
+
+        }
+
+
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
-        final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
         if ( field.type() == Typ.dbl ) {
@@ -1377,8 +1453,6 @@ public class BeanUtils {
      */
     public static double idxDouble( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = propertyPathAsStringArray(path);
 
@@ -1394,12 +1468,20 @@ public class BeanUtils {
     public static long getPropertyLong( final Object root,
                                         final String... properties ) {
 
+        final String lastProperty = properties[ properties.length - 1 ];
+
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toLong(getPropertyValue(root, properties));
+
+        }
+
 
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
 
-        final String lastProperty = properties[ properties.length - 1 ];
         FieldAccess field = fields.get( lastProperty );
 
         if ( field.type() == Typ.lng ) {
@@ -1417,8 +1499,6 @@ public class BeanUtils {
      */
     public static long idxLong( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = propertyPathAsStringArray(path);
 
@@ -1435,10 +1515,20 @@ public class BeanUtils {
                                               final String... properties ) {
 
 
+        final String lastProperty = properties[ properties.length - 1 ];
+
+
+        if ( isDigits( lastProperty ) ) {
+
+            return Conversions.toBoolean(getPropertyValue(root, properties));
+
+        }
+
+
         Object object = baseForGetProperty( root, properties );
 
         Map<String, FieldAccess> fields = getFieldsFromObject( object );
-        final String lastProperty = properties[ properties.length - 1 ];
+
         FieldAccess field = fields.get( lastProperty );
 
         if ( field.type() == Typ.bln ) {
@@ -1451,8 +1541,6 @@ public class BeanUtils {
 
     public static boolean idxBoolean( Object object, String path ) {
 
-        Exceptions.requireNonNull( object );
-        Exceptions.requireNonNull( path );
 
         String[] properties = propertyPathAsStringArray(path);
 
@@ -1461,8 +1549,7 @@ public class BeanUtils {
 
 
     public static <V> Map<String, V> collectionToMap( String propertyKey, Collection<V> values ) {
-        LinkedHashMap<String, V> map = new LinkedHashMap<String, V>( values.size() );
-        Iterator<V> iterator = values.iterator();
+        LinkedHashMap<String, V> map = new LinkedHashMap<>( values.size() );
         for ( V v : values ) {
             String key = idxGeneric( Typ.string, v, propertyKey );
             map.put( key, v );
