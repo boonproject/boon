@@ -13,6 +13,13 @@ __________                              _____          __   .__
               \/           \/          \/         \/        \/  \/
 ```              
 
+Status
+======
+Boon is now at version 0.26. 
+There are a few more features to implement, and then Boon will be 1.0. 
+This last push fixed a lot of long lived bugs. 
+Boon now compiles (again) in JDK 1.8. 
+
 License
 =======
 
