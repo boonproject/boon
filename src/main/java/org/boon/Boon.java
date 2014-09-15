@@ -1501,13 +1501,13 @@ public class Boon {
     public static String toPrettyJson(Object object) {
 
         CharBuf buf = CharBuf.createCharBuf();
-        return buf.prettyPrintObject(object, 0).toString();
+        return buf.prettyPrintObject(object, false, 0).toString();
     }
 
 
     public static String toPrettyJsonWithTypes(Object object) {
 
         CharBuf buf = CharBuf.createCharBuf();
-        return buf.prettyPrintBeanWithTypes(object).toString();
+        return buf.prettyPrintObject(object, true, 0).toString();
     }
 }

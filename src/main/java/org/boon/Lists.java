@@ -922,8 +922,8 @@ public class Lists {
 
 
 
-    public static String asPrettyJsonString(List list) {
+    public static String toPrettyJson(List list) {
         CharBuf buf = CharBuf.createCharBuf();
-        return buf.prettyPrintCollection(list, 0).toString();
+        return buf.prettyPrintCollection(list, false, 0).toString();
     }
 }

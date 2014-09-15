@@ -442,9 +442,9 @@ public class Sets {
     }
 
 
-    public static String asPrettyJsonString(Set set) {
+    public static String toPrettyJson(Set set) {
         CharBuf buf = CharBuf.createCharBuf();
-        return buf.prettyPrintCollection(set, 0).toString();
+        return buf.prettyPrintCollection(set, false, 0).toString();
     }
 
 

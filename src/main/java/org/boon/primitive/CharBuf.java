@@ -1371,7 +1371,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
             Object value = entry.getValue();
 
-            prettyPrintObject(value, indent);
+            prettyPrintObject(value, true, indent);
 
             add(",\n");
 
@@ -1392,13 +1392,13 @@ public class CharBuf extends PrintWriter implements CharSequence {
 
 
 
-    public  CharBuf prettyPrintCollection(Collection values,  int indent) {
+    public  CharBuf prettyPrintCollection(Collection values,  boolean type, int indent) {
 
 
         add('[');
         for (Object value : values) {
 
-            prettyPrintObject(value, indent);
+            prettyPrintObject(value, type, indent);
 
 
             add(',');
@@ -1413,7 +1413,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
         return this;
     }
 
-    public CharBuf prettyPrintObject(Object value, int indent) {
+    public CharBuf prettyPrintObject(Object value, boolean type, int indent) {
 
 
         Type instanceType = Type.getInstanceType(value);
@@ -1441,20 +1441,24 @@ public class CharBuf extends PrintWriter implements CharSequence {
                 break;
 
             case INSTANCE:
-                prettyPrintMap(Maps.toPrettyMap(value), indent);
+                if (type) {
+                    prettyPrintMap(Maps.toMap(value), indent);
+                } else {
+                    prettyPrintMap(Maps.toPrettyMap(value), indent);
+                }
                 break;
 
 
             case COLLECTION:
             case SET:
             case LIST:
-                prettyPrintCollection((Collection) value, indent);
+                prettyPrintCollection((Collection) value, type, indent);
                 break;
 
 
 
             case ARRAY:
-                prettyPrintCollection(Lists.list(Conversions.iterator(value)), indent);
+                prettyPrintCollection(Lists.list(Conversions.iterator(value)), type, indent);
                 break;
 
 

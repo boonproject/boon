@@ -168,6 +168,17 @@ public class BoonTest extends TestCase {
         Boon.equalsOrDie("dept lists are the same", list, list2);
 
 
+        final String json3 = Boon.toPrettyJsonWithTypes(list);
+        puts("JSON 3 WITH TYPES\n\n", json3);
+
+        final List<Dept> list3 =Boon.fromJsonArray(json3, Dept.class);
+
+
+        Boon.equalsOrDie("dept lists are the same", list, list3);
+
+
+
+
 
 
     }
