@@ -79,7 +79,7 @@ public class MapObjectConversion {
             FieldAccessMode.PROPERTY_THEN_FIELD, //fieldAccessType
             true, //useAnnotations
             false, //caseInsensitiveFields
-            (Set<String>) (Object) Collections.emptySet(), //ignoreSet
+            null, //ignoreSet
             null, //view
             true, true);
 

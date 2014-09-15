@@ -99,6 +99,17 @@ public class BeanUtilsTest {
         Boon.equalsOrDie("not the same", o, new TestClass());
     }
 
+    @Test
+    public void testPrettyPrintWithTypes() {
+        puts(Boon.toPrettyJsonWithTypes(new TestClass()));
+
+        final String s = BeanUtils.asPrettyJsonString(new TestClass());
+
+        final Object o = Boon.fromJson(s, TestClass.class);
+
+        Boon.equalsOrDie("not the same", o, new TestClass());
+    }
+
 
     public static class TestPrime {
         private String id="bar";

@@ -1731,7 +1731,7 @@ public class Maps {
         return buf.prettyPrintMap(map).toString();
     }
 
-    public static Map toPrettyMap(Object object) {
+    public static Map <String, Object> toPrettyMap(Object object) {
         return MapObjectConversion.toPrettyMap(object);
     }
 }

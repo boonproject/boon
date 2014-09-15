@@ -124,6 +124,21 @@ public class Arry {
         return array[ i ];
     }
 
+    @Universal
+    public static Object idx( final Object array, int index ) {
+        final int i = calculateIndex( array, index );
+
+        return Array.get(array, i);
+    }
+
+
+    @Universal
+    public static Object fastIndex( final Object array, int index ) {
+        final int i = calculateIndex( array, index );
+
+        return Array.get(array, index);
+    }
+
 
     @Universal
     public static <V> V atIndex( final V[] array, int index ) {
@@ -301,6 +316,32 @@ public class Arry {
     }
 
 
+
+    private static int calculateIndex(Object array, int originalIndex) {
+        final int length = Array.getLength(array);
+        int index = originalIndex;
+
+        /* Adjust for reading from the right as in
+        -1 reads the 4th element if the length is 5
+         */
+        if ( index < 0 ) {
+            index = length + index;
+        }
+
+        /* Bounds check
+            if it is still less than 0, then they
+            have an negative index that is greater than length
+         */
+        if ( index < 0 ) {
+            index = 0;
+        }
+        if ( index >= length ) {
+            index = length - 1;
+        }
+        return index;
+
+    }
+
     /* End universal methods. */
     private static <T> int calculateIndex( T[] array, int originalIndex ) {
         final int length = array.length;
@@ -402,4 +443,31 @@ public class Arry {
         Object newInstance = Array.newInstance( cls, collection.size() );
         return collection.toArray( ( V[] ) newInstance );
     }
+
+    public static <T> boolean  equals(T[] array1, T[] array2) {
+        if (array1==array2) {
+            return true;
+        }
+        if (array1==null || array2==null) {
+            return false;
+        }
+
+        int length = array1.length;
+        if (array2.length != length) {
+            return false;
+        }
+
+        for (int index=0; index<length; index++) {
+            Object value1 = array1[index];
+            Object value2 = array2[index];
+            if (value1==null || value2==null) {
+                return false;
+            }
+            return value1.equals(value2);
+
+        }
+
+        return true;
+    }
+
 }

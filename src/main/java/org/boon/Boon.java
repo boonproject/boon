@@ -452,6 +452,18 @@ public class Boon {
         return JsonFactory.fromJson(value, clazz);
     }
 
+    /**
+     * converts JSON into strongly typed list
+     * @param value value
+     * @param clazz class
+     * @param <T> T
+     * @return new list
+     */
+    public static <T> List<T>  fromJsonArray(String value, Class<T> clazz) {
+        return JsonFactory.fromJsonArray(value, clazz);
+    }
+
+
 
     /**
      * Does path lookup.
@@ -1490,5 +1502,12 @@ public class Boon {
 
         CharBuf buf = CharBuf.createCharBuf();
         return buf.prettyPrintObject(object, 0).toString();
+    }
+
+
+    public static String toPrettyJsonWithTypes(Object object) {
+
+        CharBuf buf = CharBuf.createCharBuf();
+        return buf.prettyPrintBeanWithTypes(object).toString();
     }
 }

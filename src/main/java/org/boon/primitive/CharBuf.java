@@ -1342,6 +1342,11 @@ public class CharBuf extends PrintWriter implements CharSequence {
         return prettyPrintMap(map,  0);
     }
 
+    public  CharBuf prettyPrintBeanWithTypes(Object object) {
+        final Map<String, Object> map = Maps.toMap(object);
+        return prettyPrintMap(map,  0);
+    }
+
     public  CharBuf prettyPrintBean(Mapper mapper, Object object) {
         return prettyPrintMap(mapper.toMap(object),  0);
     }
@@ -1399,7 +1404,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
             add(',');
         }
 
-        if (values.size()>1) {
+        if (values.size()>0) {
             removeLastChar();
         }
 
@@ -1438,6 +1443,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
             case INSTANCE:
                 prettyPrintMap(Maps.toPrettyMap(value), indent);
                 break;
+
 
             case COLLECTION:
             case SET:

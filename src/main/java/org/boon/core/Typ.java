@@ -226,4 +226,9 @@ public class Typ {
         if ( obj == null ) return false;
         return obj.getClass().isArray();
     }
+
+    public static boolean isEnum(Class<?> componentType) {
+
+        return componentType.isEnum();
+    }
 }

@@ -1575,7 +1575,7 @@ public class Mapper {
                 int length = Arry.len(value);
                 List<Map<String, Object>> list = new ArrayList<>( length );
                 for ( int index = 0; index < length; index++ ) {
-                    Object item = BeanUtils.idx( value, index );
+                    Object item = Arry.fastIndex( value, index );
                     list.add( toMap( item ) );
                 }
                 map.put( key, list );
@@ -1583,15 +1583,24 @@ public class Mapper {
                 Collection<?> collection = ( Collection<?> ) value;
                 Class<?> componentType = Reflection.getComponentType( collection, fieldMap.get( entry.key() ) );
                 if ( Typ.isBasicType( componentType ) ) {
-                    map.put( key, value );
+
+                    map.put(entry.key(), value);
+                } else if (Typ.isEnum(componentType)) {
+                    List<String> list = new ArrayList<>(
+                            collection.size() );
+                    for ( Object item : collection ) {
+                        if ( item != null ) {
+                            list.add( item.toString() );
+                        }
+                    }
+                    map.put( entry.key(), list );
+
                 } else {
                     List<Map<String, Object>> list = new ArrayList<>(
                             collection.size() );
                     for ( Object item : collection ) {
                         if ( item != null ) {
                             list.add( toMap( item ) );
-                        } else {
-
                         }
                     }
                     map.put( entry.key(), list );
