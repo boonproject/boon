@@ -467,6 +467,8 @@ public class HTTP {
                                         String contentType, String charset, boolean binary ) throws IOException {
         URLConnection connection;/* Handle output. */
         connection = new URL( url ).openConnection();
+        connection.setConnectTimeout( DEFAULT_TIMEOUT_SECONDS * 1000 );
+
         manageContentTypeHeaders( contentType, charset, connection, binary );
 
         manageHeaders( headers, connection );
@@ -596,6 +598,7 @@ public class HTTP {
                                         String contentType, String charset ) throws IOException {
         URLConnection connection;/* Handle output. */
         connection = new URL( url ).openConnection();
+        connection.setConnectTimeout( DEFAULT_TIMEOUT_SECONDS * 1000 );
 
         manageContentTypeHeaders ( contentType, charset, connection );
 
@@ -612,6 +615,7 @@ public class HTTP {
         }
         URLConnection connection;/* Handle output. */
         connection = new URL( url ).openConnection();
+        connection.setConnectTimeout( DEFAULT_TIMEOUT_SECONDS * 1000 );
 
         manageContentTypeHeaders( contentType, charset, connection );
 
