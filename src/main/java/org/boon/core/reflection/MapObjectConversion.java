@@ -72,6 +72,20 @@ public class MapObjectConversion {
     private static final Mapper mapper = new Mapper();
 
 
+
+
+    private static final Mapper prettyMapper = new Mapper(
+            false, //outputType
+            FieldAccessMode.PROPERTY_THEN_FIELD, //fieldAccessType
+            true, //useAnnotations
+            false, //caseInsensitiveFields
+            (Set<String>) (Object) Collections.emptySet(), //ignoreSet
+            null, //view
+            true, true);
+
+
+
+
     /** Convert an item from a list into a class using the classes constructor.
      *
      * REFACTOR: Can't this just be from collection?
@@ -310,4 +324,7 @@ public class MapObjectConversion {
         return mapper.toListOfMaps(collection);
     }
 
+    public static Map toPrettyMap(Object object) {
+        return prettyMapper.toMap(object);
+    }
 }

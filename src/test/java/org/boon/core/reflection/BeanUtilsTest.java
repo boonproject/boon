@@ -30,8 +30,11 @@ package org.boon.core.reflection;
 
 import org.boon.Boon;
 import org.boon.Lists;
+import org.boon.primitive.Arry;
+import org.boon.primitive.Int;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.boon.Boon.puts;
@@ -43,6 +46,8 @@ public class BeanUtilsTest {
         private String id="foo";
         private  Long time;
         TestClass child =null;
+
+        int [] score = Int.array(1,2,3);
 
         void init()
         {
@@ -65,6 +70,7 @@ public class BeanUtilsTest {
             if (child != null ? !child.equals(testClass.child) : testClass.child != null) return false;
             if (id != null ? !id.equals(testClass.id) : testClass.id != null) return false;
             if (players != null ? !players.equals(testClass.players) : testClass.players != null) return false;
+            if (!Arrays.equals(score, testClass.score)) return false;
             if (time != null ? !time.equals(testClass.time) : testClass.time != null) return false;
 
             return true;
@@ -75,6 +81,7 @@ public class BeanUtilsTest {
             int result = id != null ? id.hashCode() : 0;
             result = 31 * result + (time != null ? time.hashCode() : 0);
             result = 31 * result + (child != null ? child.hashCode() : 0);
+            result = 31 * result + (score != null ? Arrays.hashCode(score) : 0);
             result = 31 * result + (players != null ? players.hashCode() : 0);
             return result;
         }
@@ -82,14 +89,14 @@ public class BeanUtilsTest {
 
 
     @Test
-    public void test99() {
+    public void testPrettyPrint() {
         puts(BeanUtils.asPrettyJsonString(new TestClass()));
 
         final String s = BeanUtils.asPrettyJsonString(new TestClass());
 
-        final Object o = Boon.fromJson(s);
+        final Object o = Boon.fromJson(s, TestClass.class);
 
-        //Boon.equalsOrDie("not the same", o, new TestClass());
+        Boon.equalsOrDie("not the same", o, new TestClass());
     }
 
 

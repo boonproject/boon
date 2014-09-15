@@ -67,15 +67,29 @@ public class Mapper {
     private final String view;
     private final boolean respectIgnore;
     private final boolean acceptSingleValueAsArray;
+    private final boolean outputType;
 
 
-
-    public Mapper(FieldAccessMode fieldAccessType, boolean useAnnotations, boolean caseInsensitiveFields, Set<String> ignoreSet, String view, boolean respectIgnore, boolean acceptSingleValueAsArray) {
+    public Mapper(boolean outputType, FieldAccessMode fieldAccessType, boolean useAnnotations,
+                  boolean caseInsensitiveFields, Set<String> ignoreSet,
+                  String view, boolean respectIgnore, boolean acceptSingleValueAsArray) {
         fieldsAccessor = FieldAccessMode.create( fieldAccessType, useAnnotations, caseInsensitiveFields );
         this.ignoreSet = ignoreSet;
         this.view = view;
         this.respectIgnore = respectIgnore;
         this.acceptSingleValueAsArray = acceptSingleValueAsArray;
+        this.outputType = outputType;
+    }
+
+    public Mapper(FieldAccessMode fieldAccessType, boolean useAnnotations,
+                  boolean caseInsensitiveFields, Set<String> ignoreSet,
+                  String view, boolean respectIgnore, boolean acceptSingleValueAsArray) {
+        fieldsAccessor = FieldAccessMode.create( fieldAccessType, useAnnotations, caseInsensitiveFields );
+        this.ignoreSet = ignoreSet;
+        this.view = view;
+        this.respectIgnore = respectIgnore;
+        this.acceptSingleValueAsArray = acceptSingleValueAsArray;
+        this.outputType = true;
     }
     public Mapper( FieldsAccessor fieldsAccessor, Set<String> ignoreSet, String view, boolean respectIgnore ) {
         this.fieldsAccessor = fieldsAccessor;
@@ -83,6 +97,7 @@ public class Mapper {
         this.view = view;
         this.respectIgnore = respectIgnore;
         this.acceptSingleValueAsArray = false;
+        this.outputType = true;
     }
 
     public Mapper( Set<String> ignoreSet, String view, boolean respectIgnore ) {
@@ -91,6 +106,7 @@ public class Mapper {
         this.view = view;
         this.respectIgnore = respectIgnore;
         this.acceptSingleValueAsArray = false;
+        this.outputType = true;
     }
 
 
@@ -100,6 +116,7 @@ public class Mapper {
         this.view = null;
         this.respectIgnore = true;
         this.acceptSingleValueAsArray = false;
+        this.outputType = true;
     }
 
     public Mapper(boolean acceptSingleValueAsArray) {
@@ -109,6 +126,7 @@ public class Mapper {
         view = null;
         respectIgnore = true;
         this.acceptSingleValueAsArray = acceptSingleValueAsArray;
+        this.outputType = true;
 
     }
 
@@ -119,10 +137,11 @@ public class Mapper {
         view = null;
         respectIgnore = true;
         acceptSingleValueAsArray = false;
+        this.outputType = true;
     }
 
 
-        /**
+    /**
          * This converts a list of maps to objects.
          * I always forget that this exists. I need to remember.
          *
@@ -1529,7 +1548,9 @@ public class Mapper {
         List<Entry<String, Object>> entries = Conversions.mapFilterNulls(
                 new FieldToEntryConverter(object), fields );
 
-        map.put( "class", object.getClass().getName() );
+        if (outputType) {
+            map.put("class", object.getClass().getName());
+        }
 
         for ( Entry<String, Object> entry : entries ) {
 

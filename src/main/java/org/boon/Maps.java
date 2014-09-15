@@ -1730,4 +1730,8 @@ public class Maps {
         CharBuf buf = CharBuf.createCharBuf();
         return buf.prettyPrintMap(map).toString();
     }
+
+    public static Map toPrettyMap(Object object) {
+        return MapObjectConversion.toPrettyMap(object);
+    }
 }

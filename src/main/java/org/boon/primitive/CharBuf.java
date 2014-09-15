@@ -34,6 +34,7 @@ import org.boon.Str;
 import org.boon.cache.Cache;
 import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
+import org.boon.core.Conversions;
 import org.boon.core.Dates;
 import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
@@ -1337,7 +1338,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
     public  CharBuf prettyPrintBean(Object object) {
-        final Map<String, Object> map = Maps.toMap(object);
+        final Map<String, Object> map = Maps.toPrettyMap(object);
         return prettyPrintMap(map,  0);
     }
 
@@ -1435,13 +1436,19 @@ public class CharBuf extends PrintWriter implements CharSequence {
                 break;
 
             case INSTANCE:
-                prettyPrintMap(Maps.toMap(value), indent);
+                prettyPrintMap(Maps.toPrettyMap(value), indent);
                 break;
 
             case COLLECTION:
             case SET:
             case LIST:
                 prettyPrintCollection((Collection) value, indent);
+                break;
+
+
+
+            case ARRAY:
+                prettyPrintCollection(Lists.list(Conversions.iterator(value)), indent);
                 break;
 
 
