@@ -34,6 +34,7 @@ import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
+import org.boon.core.Type;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueContainer;
@@ -42,7 +43,6 @@ import org.boon.primitive.CharBuf;
 import java.lang.invoke.ConstantCallSite;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 import static org.boon.Boon.className;
@@ -201,7 +201,16 @@ public class Invoker {
                         return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, list);
 
                     } else {
-                        return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, Lists.list(args));
+                        final Class<?> aClass = m.parameterTypes()[0];
+                        final Type type = Type.getType(aClass);
+                        switch (type) {
+                            case INSTANCE:
+                                return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, Lists.list(args));
+
+                            default:
+                                return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, list);
+
+                        }
                     }
                 } else {
 
@@ -700,7 +709,7 @@ public class Invoker {
                      *  This does ninja level generics manipulations and needs to be captured in some
                      *  reusable way.
                       * */
-                        Type type = methodAccess.getGenericParameterTypes()[index];
+                        java.lang.reflect.Type type = methodAccess.getGenericParameterTypes()[index];
                         if ( type instanceof ParameterizedType) {
                             ParameterizedType pType = (ParameterizedType) type;
                             Class<?> keyType = (Class<?>) pType.getActualTypeArguments()[0];
@@ -819,7 +828,7 @@ public class Invoker {
                                 itemList.get(0) instanceof ValueContainer)  ) {
 
                             /** Grab the generic type of the list. */
-                            Type type = methodAccess.getGenericParameterTypes()[index];
+                            java.lang.reflect.Type type = methodAccess.getGenericParameterTypes()[index];
 
                             /*  Try to pull the generic type information out so you can create
                                a strongly typed list to inject.
@@ -860,7 +869,7 @@ public class Invoker {
                         /* Just a list not a list of lists so see if it has generics and pull out the
                         * type information and created a strong typed list. This looks a bit familiar.
                         * There is a big opportunity for some reuse here. */
-                            Type type = methodAccess.getGenericParameterTypes()[index];
+                            java.lang.reflect.Type type = methodAccess.getGenericParameterTypes()[index];
                             if ( type instanceof ParameterizedType ) {
                                 ParameterizedType pType = ( ParameterizedType ) type;
 

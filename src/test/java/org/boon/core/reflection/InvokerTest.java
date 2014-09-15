@@ -36,9 +36,7 @@ import com.examples.model.test.movies.entitlement.RightsPushRequest;
 import com.examples.model.test.movies.entitlement.RightsType;
 import com.examples.model.test.time.TimeZoneHolder;
 import com.examples.model.test.time.TimeZoneType;
-import org.boon.Exceptions;
-import org.boon.Lists;
-import org.boon.Maps;
+import org.boon.*;
 import org.boon.primitive.CharBuf;
 import org.junit.Before;
 import org.junit.Test;
@@ -171,10 +169,13 @@ public class InvokerTest {
             return hi;
         }
 
-        private void sayHi(String hi) {
+        private String sayHi(String hi) {
             puts ( "hi ", hi );
 
+            return Str.add("hi ", hi);
         }
+
+
 
 
 
@@ -219,6 +220,15 @@ public class InvokerTest {
     }
 
 
+    @Test
+    public void testBug159() {
+        String value = (String) Invoker.invokeFromObject(
+                new HelloWorld(), "sayHi", Lists.list("Rick"));
+
+        puts(value);
+
+        Boon.equalsOrDie("Should be", "hi Rick", value);
+    }
 
     @Test
     public void testPostConstruct() {
