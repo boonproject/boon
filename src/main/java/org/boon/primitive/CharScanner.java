@@ -1466,6 +1466,24 @@ public class CharScanner {
         return idx;
     }
 
+    public static int findWhiteSpace(char[] line) {
+        int idx = -1;
+        for ( int index = 0;  index < line.length; index++) {
+
+            char c = line[index];
+
+            switch (c) {
+                case '\t':
+                case '\n':
+                case '\r':
+                case ' ':
+                    return index;
+
+            }
+        }
+        return idx;
+    }
+
 
 
     public static int findChar(char c, int startIndex, char[] line) {

@@ -36,6 +36,8 @@ import org.boon.primitive.Chr;
 public class StringScanner {
 
 
+    private static final char[] WHITE_SPACE = new char[] {'\n', '\t', ' ', '\r'};
+
     /**
      * Checks the input string to see if it is only digits
      * @param input digits
@@ -94,6 +96,19 @@ public class StringScanner {
 
     }
 
+    /**
+     * Split string by white space
+     * @param string string to split
+     * @return the split up string
+     */
+    public static String[] splitByWhiteSpace( final String string
+                                         ) {
+
+        char[][] comps = CharScanner.splitByChars( FastStringUtils.toCharArray( string ), WHITE_SPACE );
+
+        return Str.fromCharArrayOfArrayToStringArray( comps );
+
+    }
 
     /**
      * Split string by a list of delimiters
@@ -251,7 +266,7 @@ public class StringScanner {
     }
 
 
-
-
-
+    public static int findWhiteSpace(String buffer) {
+        return CharScanner.findWhiteSpace(FastStringUtils.toCharArray(buffer));
+    }
 }

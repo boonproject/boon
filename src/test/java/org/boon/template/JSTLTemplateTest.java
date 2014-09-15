@@ -3,6 +3,7 @@ package org.boon.template;
 import junit.framework.TestCase;
 import org.boon.Boon;
 import org.boon.Lists;
+import org.boon.Maps;
 import org.boon.primitive.Arry;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +67,54 @@ public class JSTLTemplateTest  {
         Boon.equalsOrDie("Engineering, HR", results);
 
     }
+
+
+    @Test
+    public void test4() {
+
+        final String results = template.replace("<c:if test='true'> ${name} </c:if>" , company);
+
+
+        Boon.equalsOrDie("# Mammatus #", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void test5() {
+
+        final String results = template.replace("<c:if test='false'> ${name} </c:if>" , company);
+
+
+        Boon.equalsOrDie("##", "#"+results+"#");
+
+    }
+
+    @Test
+    public void test6() {
+
+        final String results = template.replace("<c:if test='${flag}'> ${name} </c:if>" ,
+
+                Lists.list(Maps.map("flag", false), company));
+
+
+        Boon.equalsOrDie("##", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void test7() {
+
+        final String results = template.replace("<c:if test='${flag}'> ${name} </c:if>" ,
+
+                Lists.list(Maps.map("flag", true), company));
+
+
+        Boon.equalsOrDie("# Mammatus #", "#"+results+"#");
+
+    }
+
 
     public static enum Fruit {
         ORANGES,
