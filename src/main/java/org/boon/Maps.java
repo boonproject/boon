@@ -162,7 +162,7 @@ public class Maps {
 
 
     public static <K, V> String idxStr( Map<K, V> map, K k ) {
-        return (String)map.get( k );
+        return Str.toString(map.get( k ));
     }
 
 

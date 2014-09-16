@@ -28,6 +28,7 @@
 
 package org.boon.json.serializers.impl;
 
+import org.boon.Sets;
 import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -55,6 +56,8 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
     private Map<Class, CustomObjectSerializer> overrideMap;
     private Map<String, CustomFieldSerializer> customFieldSerializerMap;
     private List<CustomFieldSerializer> customFieldSerializers;
+
+    private final Set<Class> noHandle = Sets.safeSet(Class.class);
 
     private final List<FieldFilter> filterProperties;
 
@@ -225,14 +228,6 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
 
 
 
-        if ( overrideMap!=null ) {
-            final CustomObjectSerializer customObjectSerializer = overrideMap.get ( fieldAccess.type() );
-            if (customObjectSerializer!=null) {
-                serializeFieldName ( fieldName, builder );
-                customObjectSerializer.serializeObject ( serializer, value, builder );
-                return true;
-            }
-        }
 
 
 
@@ -348,7 +343,16 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 }
 
                 serializeFieldName ( fieldName, builder );
-                serializer.serializeSubtypeInstance ( value, builder );
+
+                if (overrideMap!=null) {
+
+                    SerializeUtils.handleInstance(serializer, value, builder,
+                            overrideMap, noHandle, false, typeEnum);
+
+                } else {
+                    serializer.serializeSubtypeInstance(value, builder);
+                }
+
                 return true;
             case INSTANCE:
                 if (handleSimpleBackReference && value == parent ) {
@@ -362,11 +366,22 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 }
 
                 serializeFieldName ( fieldName, builder );
-                if ( fieldAccess.type() == value.getClass () ) {
-                    serializer.serializeInstance ( value, builder );
+
+
+                if (overrideMap!=null) {
+
+                    SerializeUtils.handleInstance(serializer, value, builder,
+                            overrideMap, noHandle, false, typeEnum);
+
                 } else {
-                    serializer.serializeSubtypeInstance ( value, builder );
+                    if ( fieldAccess.type() == value.getClass () ) {
+                        serializer.serializeInstance ( value, builder );
+                    } else {
+                        serializer.serializeSubtypeInstance ( value, builder );
+                    }
                 }
+
+
                 return true;
 
             case CURRENCY:

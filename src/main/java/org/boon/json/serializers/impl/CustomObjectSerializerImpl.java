@@ -1,6 +1,7 @@
 package org.boon.json.serializers.impl;
 
 import org.boon.Boon;
+import org.boon.Sets;
 import org.boon.core.Type;
 import org.boon.json.serializers.CustomObjectSerializer;
 import org.boon.json.serializers.JsonSerializerInternal;
@@ -18,6 +19,7 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
 
 
     private final Map<Class, CustomObjectSerializer> overrideMap;
+    private final Set<Class> noHandle = Sets.safeSet(Class.class);
 
 
     private final boolean typeInfo;
@@ -35,14 +37,6 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
     public final void serializeObject (JsonSerializerInternal jsonSerializer, Object obj, CharBuf builder )  {
 
         Type type = Type.getInstanceType (obj);
-        Class<?> cls = Boon.cls(obj);
-        if (cls != null) {
-            final CustomObjectSerializer customObjectSerializer = overrideMap.get(cls);
-            if (customObjectSerializer != null) {
-                customObjectSerializer.serializeObject(jsonSerializer, obj, builder);
-                return;
-            }
-        }
         switch ( type ) {
 
             case NULL:
@@ -138,7 +132,8 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
                 jsonSerializer.serializeArray ( obj, builder );
                 return;
             case INSTANCE:
-                jsonSerializer.serializeInstance ( obj, builder, typeInfo );
+                SerializeUtils.handleInstance(jsonSerializer, obj, builder,
+                        overrideMap, noHandle, typeInfo, type);
                 return;
             case CURRENCY:
                 builder.addCurrency((Currency) obj );
