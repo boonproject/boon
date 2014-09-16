@@ -108,8 +108,11 @@ public class ConstructorAccessImpl <T> implements ConstructorAccess {
         try {
             return constructor.newInstance( args );
         } catch ( Exception ex ) {
-            return handle(constructor.getDeclaringClass(), ex, "unable to invoke constructor", constructor,
-                    " on object ", constructor.getDeclaringClass(), "with arguments", args);
+            return handle(constructor.getDeclaringClass(), ex,
+                    "\nunable to invoke constructor", constructor,
+                    "\n on object ", constructor.getDeclaringClass(),
+                    "\nwith arguments", args,
+                    "\nparams", constructor.getParameterTypes());
 
         }
 

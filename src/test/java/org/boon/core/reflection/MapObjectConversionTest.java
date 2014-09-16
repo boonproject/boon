@@ -77,15 +77,16 @@ public class MapObjectConversionTest {
         }
 
 
+
         Employee(Employee boss, String abc) {
             this.abc = abc;
 
         }
 
-
         Employee(Employee boss, int i) {
             this.i = i;
         }
+
 
 
         Employee(Employee boss, String abc, int i) {
@@ -136,7 +137,7 @@ public class MapObjectConversionTest {
         employee = fromList(Lists.list(1), Employee.class);
         ok = employee != null || die();
         ok = !"1".equals(employee.abc) || die();
-        ok = employee.i == 1 || die();
+        ok = employee.i == 1 || die(employee.i);
 
     }
 
@@ -145,7 +146,7 @@ public class MapObjectConversionTest {
         employee = fromList(Lists.list(boss, 1), Employee.class);
         ok = employee != null || die();
         ok = !"1".equals(employee.abc) || die();
-        ok = employee.i == 1 || die();
+        ok = employee.i == 1 || die(employee.i);
 
     }
 

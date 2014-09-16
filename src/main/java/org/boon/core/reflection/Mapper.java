@@ -311,8 +311,6 @@ public class Mapper {
         /* Size of the arguments. */
         int size = argList.size();
 
-        /* List to hold items that we coerce into parameter types. */
-        List<Object> convertedArguments = new ArrayList<>( argList );
 
         /* Meta data holder of the class. */
         ClassMeta<T> classMeta = ClassMeta.classMeta( clazz );
@@ -325,16 +323,23 @@ public class Mapper {
 
 
         boolean[] flag = new boolean[1];
-
+        List<Object> convertedArguments = null;
 
 
         try {
 
 
+        /* List to hold items that we coerce into parameter types. */
+            convertedArguments  = new ArrayList<>( argList );
+
             constructorToMatch = lookupConstructorMeta( size,
                     convertedArguments, classMeta, constructorToMatch, flag, false);
 
+
+
+        /* List to hold items that we coerce into parameter types. */
             if (constructorToMatch == null) {
+                convertedArguments = new ArrayList<>( argList );
                 constructorToMatch = lookupConstructorMeta( size,
                         convertedArguments, classMeta, constructorToMatch, flag, true);
             }
@@ -344,7 +349,7 @@ public class Mapper {
 
             /* If we were not able to match then we bail. */
             if ( constructorToMatch != null ) {
-                finalArgs = convertedArguments.toArray( new Object[convertedArguments.size()] );
+                finalArgs = convertedArguments.toArray( new Object[argList.size()] );
                 return constructorToMatch.create( finalArgs );
             } else {
                 return (T) die(Object.class, "Unable to convert list", convertedArguments, "into", clazz);
@@ -466,6 +471,8 @@ public class Mapper {
                                                                   ClassMeta<T> classMeta,
                                                                   ConstructorAccess<T> constructorToMatch,
                                                                   boolean[] flag, boolean loose) {
+
+
     /* Iterate through the constructors and see if one matches the arguments passed after coercion. */
         loop:
         for ( ConstructorAccess constructor : classMeta.constructors() ) {
@@ -564,18 +571,26 @@ public class Mapper {
                 case CHAR_SEQUENCE:
                 case NUMBER:
                 case LONG_WRAPPER:
-                    if (!loose && item instanceof CharSequence) {
-                        return false;
+
+
+                    if (!loose ) {
+                        if (item instanceof Number) {
+                            value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
+                            convertedArgumentList.set( index, value );
+
+                            return flag[0];
+                        } else {
+                            return false;
+                        }
+
+                    } else {
+                        value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
+                        convertedArgumentList.set( index, value );
+
+                        return flag[0];
+
                     }
 
-
-                    value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
-
-                    if (flag[0] == false) {
-                        return false;
-                    }
-                    convertedArgumentList.set( index, value );
-                    return true;
 
 
                 case ENUM:
@@ -588,41 +603,30 @@ public class Mapper {
                     if (item instanceof CharSequence) {
                         value = toEnum(parameterClass, item.toString());
                         convertedArgumentList.set( index, value );
-                        return true;
+
+                        return value!=null;
 
                     } else if (item instanceof Number){
                         value = toEnum(parameterClass, ((Number)item).intValue());
                         convertedArgumentList.set( index, value );
-                        return true;
-                    } else {
 
-                        if (flag[0] == false) {
-                            return false;
-                        }
+                        return value!=null;
+
+                    } else {
+                        return false;
                     }
 
-                    convertedArgumentList.set( index, value );
-                    return true;
 
                 case CLASS:
                     if (item instanceof Class) {
                         return true;
                     }
 
-                    if (item instanceof CharSequence) {
-                        value = toClass(item);
-                        convertedArgumentList.set( index, value );
-                        return true;
-
-                    } else {
-
-                        if (flag[0] == false) {
-                            return false;
-                        }
-                    }
-
+                    value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
                     convertedArgumentList.set( index, value );
-                    return true;
+
+                    return flag[0];
+
 
                 case STRING:
 
@@ -637,15 +641,14 @@ public class Mapper {
                         return true;
 
 
+                    } else if (loose) {
+
+                        value = item.toString();
+                        convertedArgumentList.set( index, value );
+                        return true;
                     } else {
-
-                        if (flag[0] == false) {
-                            return false;
-                        }
+                        return false;
                     }
-
-                    convertedArgumentList.set( index, value );
-                    return true;
 
                 case MAP:
                 case VALUE_MAP:
