@@ -286,13 +286,15 @@ public abstract class Criterion<VALUE> extends Criteria {
             if (field != null) {
                 switch (field.typeEnum()) {
 
-                    case ARRAY:
-                    case COLLECTION:
-                    case SET:
+
                     case NUMBER:
 
                         this.value = (VALUE) Conversions.coerce(field.type(), this.value);
                         return new MyNumber(this.value);
+
+                    case ARRAY:
+                    case COLLECTION:
+                    case SET:
                     case LIST:
                         this.value = (VALUE) Conversions.coerce(field.getComponentClass(), this.value);
                         break;
