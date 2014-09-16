@@ -36,8 +36,12 @@ import java.lang.reflect.Method;
  * Created by Richard on 2/17/14.
  */
 public interface MethodAccess extends BaseAccess{
+
+    public Object invokeDynamic(Object object, Object... args);
     public Object invoke(Object object, Object... args);
     boolean isStatic();
+    boolean isPublic();
+    boolean isPrivate();
 
     String name();
     Class<?> declaringType() ;

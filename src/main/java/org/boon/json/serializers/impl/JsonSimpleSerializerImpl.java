@@ -550,7 +550,15 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                 serializeCurrency ( ( Currency ) obj, builder );
                 return;
             default:
-                serializeUnknown ( obj, builder );
+                if (obj instanceof Map) {
+
+                    this.serializeMap ( ( Map ) obj, builder );
+                } else if (obj instanceof Collection) {
+                    this.serializeCollection((Collection) obj, builder);
+
+                } else {
+                    this.serializeUnknown(obj, builder);
+                }
 
         }
 

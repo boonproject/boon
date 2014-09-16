@@ -41,9 +41,33 @@ import java.util.Map;
  */
 public class ObjectSerializationWithTypeInfo implements ObjectSerializer {
 
+    private final boolean includeNulls;
+
+    public ObjectSerializationWithTypeInfo(boolean includeNulls) {
+
+        this.includeNulls = includeNulls;
+    }
 
     @Override
     public final void serializeObject ( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
+
+        if (instance instanceof Map) {
+
+            serializer.serializeMap ( ( Map ) instance, builder );
+            return;
+        } else if (instance instanceof Collection) {
+            serializer.serializeCollection((Collection) instance, builder);
+            return;
+
+        } else if (instance == null) {
+
+            if (includeNulls) {
+                builder.addNull();
+                return;
+            }
+
+        }
+
         builder.addString( "{\"class\":" );
         builder.addQuoted ( instance.getClass ().getName () );
         final Map<String, FieldAccess> fieldAccessors = serializer.getFields ( instance.getClass () );

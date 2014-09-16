@@ -87,17 +87,17 @@ public class JsonSerializerFactory {
             instanceSerializer = new InstanceSerializerImpl ();
 
             if ( !outputType && customObjectSerializers == null )  {
-                objectSerializer = new BasicObjectSerializerImpl();
+                objectSerializer = new BasicObjectSerializerImpl(includeNulls);
             } else if (customObjectSerializers != null ) {
 
-                objectSerializer = new CustomObjectSerializerImpl(outputType, customObjectSerializers);
+                objectSerializer = new CustomObjectSerializerImpl(outputType, customObjectSerializers, includeNulls);
             } else {
-                objectSerializer = new ObjectSerializationWithTypeInfo();
+                objectSerializer = new ObjectSerializationWithTypeInfo(includeNulls);
             }
 
 
             stringSerializer = new StringSerializerImpl (encodeStrings);
-            mapSerializer = new MapSerializerImpl ();
+            mapSerializer = new MapSerializerImpl (includeNulls);
 
             if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference
                     || !includeDefault || view!=null) {

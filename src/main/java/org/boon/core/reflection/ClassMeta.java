@@ -80,6 +80,11 @@ public class ClassMeta <T> implements Annotated{
 
     final static MethodAccess MANY_METHODS = new MethodAccessImpl(){
         @Override
+        public Object invokeDynamic(Object object, Object... args) {
+            return null;
+        }
+
+        @Override
         public Object invoke( Object object, Object... args ) {
             return die(Object.class, "Unable to invoke method as there are more than one with that same name", object, args);
         }

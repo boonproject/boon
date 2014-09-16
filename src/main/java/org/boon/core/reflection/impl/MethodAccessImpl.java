@@ -28,9 +28,10 @@
 
 package org.boon.core.reflection.impl;
 
-import org.boon.core.reflection.AnnotationData;
-import org.boon.core.reflection.Annotations;
-import org.boon.core.reflection.MethodAccess;
+import org.boon.Lists;
+import org.boon.core.Conversions;
+import org.boon.core.reflection.*;
+import org.boon.primitive.Arry;
 
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
@@ -39,6 +40,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,9 @@ public class MethodAccessImpl implements MethodAccess {
     final public Method method;
     final List<AnnotationData> annotationData;
     final Map<String, AnnotationData> annotationMap;
+
+
+    final List<org.boon.core.Type> paramTypeEnumList = new ArrayList<>();
 
 
 
@@ -74,6 +79,12 @@ public class MethodAccessImpl implements MethodAccess {
         this.method = method;
         this.method.setAccessible( true );
         this.annotationData = Annotations.getAnnotationDataForMethod(method);
+
+
+        for (Class<?> cls : method.getParameterTypes()) {
+            paramTypeEnumList.add(org.boon.core.Type.getType(cls));
+
+        }
 
 
         MethodHandle m;
@@ -98,6 +109,56 @@ public class MethodAccessImpl implements MethodAccess {
 
     }
 
+
+    public Object invokeDynamicList(final Object object, List<?> args) {
+
+        return invokeDynamic(object, Arry.objectArray(args));
+    }
+
+    @Override
+    public Object invokeDynamic(final Object object, final Object... args) {
+
+        final Class<?>[] parameterTypes = parameterTypes();
+        final int paramLength = parameterTypes.length;
+        final int argsLength = args.length;
+
+
+            /* If there are no parameters, just invoke it. */
+        if (paramLength == 0) {
+            return invoke(object);
+
+        }else if (argsLength == 1 && paramLength == argsLength) {
+
+            Object arg = args[0];
+            Class<?> paramType = parameterTypes[0];
+            org.boon.core.Type type = paramTypeEnumList.get(0);
+            arg = Conversions.coerce(type, paramType, arg);
+
+            return invoke(object, arg);
+        }
+            /* If the paramLength and argument are greater than one and
+            sizes match then invoke using invokeFromList. */
+        else if (paramLength > 1 && paramLength == argsLength) {
+
+            Object[] newArgs = new Object[argsLength];
+
+            for (int index=0; index< argsLength; index++) {
+
+                Object arg = args[index];
+                Class<?> paramType = parameterTypes[index];
+                org.boon.core.Type type = paramTypeEnumList.get(index);
+                newArgs[index] = Conversions.coerce(type, paramType, arg);
+            }
+
+
+            return invoke(object, newArgs);
+
+        } else {
+            return Invoker.invokeOverloadedFromList(object, name(), Lists.list(args));
+
+        }
+
+    }
 
     public Object invoke(Object object, Object... args) {
         try {
@@ -228,6 +289,18 @@ public class MethodAccessImpl implements MethodAccess {
     @Override
     public boolean isStatic() {
         return Modifier.isStatic(method.getModifiers());
+    }
+
+
+    @Override
+    public boolean isPublic() {
+        return Modifier.isPublic(method.getModifiers());
+    }
+
+
+    @Override
+    public boolean isPrivate() {
+        return Modifier.isPrivate(method.getModifiers());
     }
 
     @Override

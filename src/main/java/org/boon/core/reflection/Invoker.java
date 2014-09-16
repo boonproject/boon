@@ -668,18 +668,25 @@ public class Invoker {
                 case CHAR_SEQUENCE:
                 case NUMBER:
                 case LONG_WRAPPER:
-                    if (!loose && item instanceof CharSequence) {
-                        return false;
+
+                    if (!loose ) {
+                        if (item instanceof Number) {
+                            value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
+                            convertedArgumentList.set( index, value );
+
+                            return flag[0];
+                        } else {
+                            return false;
+                        }
+
+                    } else {
+                        value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
+                        convertedArgumentList.set( index, value );
+
+                        return flag[0];
+
                     }
 
-
-                    value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item);
-
-                    if (flag[0] == false) {
-                        return false;
-                    }
-                    convertedArgumentList.set( index, value );
-                    return true;
 
 
 

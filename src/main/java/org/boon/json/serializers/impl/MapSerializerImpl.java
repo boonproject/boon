@@ -41,6 +41,11 @@ import java.util.Set;
  */
 public class MapSerializerImpl implements MapSerializer {
     private static final char [] EMPTY_MAP_CHARS = {'{', '}'};
+    private final boolean includeNulls;
+
+    public MapSerializerImpl(boolean includeNulls) {
+        this.includeNulls = includeNulls;
+    }
 
 
     private void serializeFieldName ( String name, CharBuf builder ) {
@@ -60,12 +65,23 @@ public class MapSerializerImpl implements MapSerializer {
 
         final Set<Map.Entry<Object, Object>> entrySet = map.entrySet();
         int index=0;
-        for ( Map.Entry<Object, Object> entry : entrySet ) {
-            if (entry.getValue ()!=null) {
-                serializeFieldName ( entry.getKey().toString(), builder );
-                serializer.serializeObject ( entry.getValue (), builder );
-                builder.addChar ( ',' );
-                index++;
+
+        if (!includeNulls) {
+            for (Map.Entry<Object, Object> entry : entrySet) {
+                if (entry.getValue() != null) {
+                    serializeFieldName(entry.getKey().toString(), builder);
+                    serializer.serializeObject(entry.getValue(), builder);
+                    builder.addChar(',');
+                    index++;
+                }
+            }
+        }else {
+            for (Map.Entry<Object, Object> entry : entrySet) {
+                    serializeFieldName(entry.getKey().toString(), builder);
+                    serializer.serializeObject(entry.getValue(), builder);
+                    builder.addChar(',');
+                    index++;
+
             }
         }
         if (index>0)

@@ -30,6 +30,7 @@ package org.boon.core;
 
 
 import com.sun.management.UnixOperatingSystemMXBean;
+import org.boon.IO;
 import org.boon.Lists;
 import org.boon.Str;
 import org.boon.core.reflection.Annotations;
@@ -38,11 +39,13 @@ import org.boon.core.timer.TimeKeeper;
 import org.boon.core.timer.TimeKeeperBasic;
 import org.boon.logging.Logging;
 
+import java.io.File;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -306,6 +309,47 @@ public class Sys {
         return Conversions.toInt(property);
 
     }
+
+    public static File sysProp(String key, File defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return new File(property);
+
+    }
+
+
+    public static Path sysProp(String key, Path defaultValue) {
+
+        String property = (String) systemProperties.get(key);
+        if (property == null) {
+            property = env.get(key);
+        }
+
+        if (property == null) {
+            String newKey = Str.underBarCase(key);
+            property = env.get(newKey);
+        }
+
+        if (property == null) {
+            return defaultValue;
+        }
+
+        return  IO.path(property);
+    }
+
 
     public static int sysPropLong(String key) {
         return sysProp(key, -1);

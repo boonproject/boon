@@ -572,7 +572,6 @@ public class Mapper {
                 case NUMBER:
                 case LONG_WRAPPER:
 
-
                     if (!loose ) {
                         if (item instanceof Number) {
                             value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );

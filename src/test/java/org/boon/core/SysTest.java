@@ -46,7 +46,7 @@ public class SysTest {
     @Test
     public void testSysPropNullDefault() throws Exception {
 
-        String str = Sys.sysProp("KEY_SOME_VALUE", null);
+        String str = Sys.sysProp("KEY_SOME_VALUE", (String)null);
 
         Str.equalsOrDie("", str);
     }

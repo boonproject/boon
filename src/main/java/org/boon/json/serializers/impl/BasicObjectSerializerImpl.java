@@ -45,6 +45,13 @@ import java.util.TimeZone;
  * Created by rick on 1/1/14.
  */
 public class BasicObjectSerializerImpl implements ObjectSerializer {
+    private final boolean includeNulls;
+
+    public BasicObjectSerializerImpl(boolean includeNulls) {
+        this.includeNulls = includeNulls;
+
+    }
+
     @Override
     public final void serializeObject (JsonSerializerInternal jsonSerializer, Object obj, CharBuf builder )  {
 
@@ -53,6 +60,7 @@ public class BasicObjectSerializerImpl implements ObjectSerializer {
         switch ( type ) {
 
             case NULL:
+                if (includeNulls) builder.addNull();
                 return;
             case INT:
                 builder.addInt ( int.class.cast ( obj ) );
@@ -150,7 +158,15 @@ public class BasicObjectSerializerImpl implements ObjectSerializer {
                 builder.addCurrency(( Currency ) obj );
                 return;
             default:
-                jsonSerializer.serializeUnknown ( obj, builder );
+                if (obj instanceof Map) {
+
+                    jsonSerializer.serializeMap ( ( Map ) obj, builder );
+                } else if (obj instanceof Collection) {
+                    jsonSerializer.serializeCollection((Collection) obj, builder);
+
+                } else {
+                    jsonSerializer.serializeUnknown(obj, builder);
+                }
 
         }
 

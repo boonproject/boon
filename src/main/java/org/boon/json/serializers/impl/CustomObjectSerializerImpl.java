@@ -22,9 +22,12 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
 
     private final boolean typeInfo;
 
-    public CustomObjectSerializerImpl(boolean typeInfo, Map<Class, CustomObjectSerializer> overrideMap) {
+    private final boolean includeNulls;
+
+    public CustomObjectSerializerImpl(boolean typeInfo, Map<Class, CustomObjectSerializer> overrideMap, boolean includeNulls) {
         this.overrideMap = overrideMap;
         this.typeInfo = typeInfo;
+        this.includeNulls = includeNulls;
     }
 
 
@@ -43,6 +46,7 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
         switch ( type ) {
 
             case NULL:
+                if (includeNulls) builder.addNull();
                 return;
             case INT:
                 builder.addInt ( int.class.cast ( obj ) );
@@ -140,7 +144,15 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
                 builder.addCurrency((Currency) obj );
                 return;
             default:
-                jsonSerializer.serializeUnknown ( obj, builder );
+                if (obj instanceof Map) {
+
+                    jsonSerializer.serializeMap ( ( Map ) obj, builder );
+                } else if (obj instanceof Collection) {
+                    jsonSerializer.serializeCollection((Collection) obj, builder);
+
+                } else {
+                    jsonSerializer.serializeUnknown(obj, builder);
+                }
 
         }
 

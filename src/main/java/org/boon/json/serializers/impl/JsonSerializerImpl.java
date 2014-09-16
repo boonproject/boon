@@ -62,9 +62,9 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
     public JsonSerializerImpl ()  {
 
         instanceSerializer = new InstanceSerializerImpl ();
-        objectSerializer = new BasicObjectSerializerImpl ();
+        objectSerializer = new BasicObjectSerializerImpl (false);
         stringSerializer = new StringSerializerImpl (true);
-        mapSerializer = new MapSerializerImpl ();
+        mapSerializer = new MapSerializerImpl (false);
         fieldSerializer = new FieldSerializerImpl ();
         collectionSerializer = new CollectionSerializerImpl ();
         arraySerializer = (ArraySerializer) collectionSerializer;
@@ -130,7 +130,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         }
 
         if (objectSerializer == null) {
-            this.objectSerializer = new BasicObjectSerializerImpl ();
+            this.objectSerializer = new BasicObjectSerializerImpl (false);
         } else {
             this.objectSerializer = objectSerializer;
         }
@@ -142,7 +142,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         }
 
         if (mapSerializer == null) {
-            this.mapSerializer = new MapSerializerImpl();
+            this.mapSerializer = new MapSerializerImpl(false);
         } else {
             this.mapSerializer = mapSerializer;
         }
