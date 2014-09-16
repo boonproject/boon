@@ -32,14 +32,14 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
     public final void serializeObject (JsonSerializerInternal jsonSerializer, Object obj, CharBuf builder )  {
 
         Type type = Type.getInstanceType (obj);
-
-
-        final CustomObjectSerializer customObjectSerializer = overrideMap.get(Boon.cls(obj));
-        if (customObjectSerializer!=null) {
-             customObjectSerializer.serializeObject(jsonSerializer, obj, builder);
-             return;
+        Class<?> cls = Boon.cls(obj);
+        if (cls != null) {
+            final CustomObjectSerializer customObjectSerializer = overrideMap.get(cls);
+            if (customObjectSerializer != null) {
+                customObjectSerializer.serializeObject(jsonSerializer, obj, builder);
+                return;
+            }
         }
-
         switch ( type ) {
 
             case NULL:
