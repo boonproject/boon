@@ -32,6 +32,7 @@ import org.boon.core.Type;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.serializers.*;
+import org.boon.primitive.Arry;
 import org.boon.primitive.CharBuf;
 
 import java.math.BigDecimal;
@@ -97,6 +98,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
 
         final String fieldName = fieldAccess.alias();
         final Type typeEnum = fieldAccess.typeEnum();
+
         if ( useAnnotations && fieldAccess.ignore() )  {
             return false;
         }
@@ -326,8 +328,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 }
                 return false;
             case ARRAY:
-                Object []  array  = (Object []) value;
-                if (includeEmpty ||  include || array.length > 0) {
+                if (includeEmpty ||  include || Arry.len(value) > 0) {
                     serializeFieldName ( fieldName, builder );
                     serializer.serializeArray ( value, builder );
                     return true;

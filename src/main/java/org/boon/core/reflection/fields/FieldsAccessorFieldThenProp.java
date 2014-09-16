@@ -69,11 +69,29 @@ public class FieldsAccessorFieldThenProp implements FieldsAccessor {
 
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
         Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapFieldFirstForSerializer ( aClass );
+
+
+        Map<String, FieldAccess> mapOld = fieldAccessMap;
+        fieldAccessMap = new LinkedHashMap<>();
+        for (Map.Entry<String, FieldAccess> entry : mapOld.entrySet()) {
+            if (entry.getValue().isStatic()) {
+                continue;
+            }
+            fieldAccessMap.put(entry.getKey(), entry.getValue());
+        }
+
         if (caseInsensitive) {
-            Map<String, FieldAccess> mapOld = fieldAccessMap;
+            mapOld = fieldAccessMap;
             fieldAccessMap = new LinkedHashMap<>();
             for (Map.Entry<String, FieldAccess> entry : mapOld.entrySet()) {
+                if (entry.getValue().isStatic()) {
+                    continue;
+                }
                 fieldAccessMap.put(entry.getKey().toLowerCase(), entry.getValue());
+
+                fieldAccessMap.put(entry.getKey().toUpperCase(), entry.getValue());
+
+                fieldAccessMap.put(entry.getKey(), entry.getValue());
             }
         }
 
@@ -81,6 +99,9 @@ public class FieldsAccessorFieldThenProp implements FieldsAccessor {
             Map<String, FieldAccess> fieldAccessMap2 = new LinkedHashMap<> ( fieldAccessMap.size () );
 
             for (FieldAccess fa : fieldAccessMap.values ()) {
+                if (fa.isStatic()) {
+                    continue;
+                }
                 String alias = fa.alias();
                 if (caseInsensitive) {
                     alias = alias.toLowerCase();

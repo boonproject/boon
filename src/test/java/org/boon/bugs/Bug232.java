@@ -5,13 +5,15 @@ import org.boon.json.JsonSerializer;
 import org.boon.json.JsonSerializerFactory;
 import org.junit.Test;
 
-import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
+
 
 /**
  * Created by Richard on 9/16/14.
  */
 public class Bug232 {
 
+    boolean ok = false;
     @Test
     public void test() {
         JsonSerializerFactory factory = new JsonSerializerFactory();
@@ -24,7 +26,8 @@ public class Bug232 {
                         "showSize", 12)
         ).toString();
 
-        puts(json);
+
+        ok |= json.contains("\"age\":null") || die();
 
 
     }

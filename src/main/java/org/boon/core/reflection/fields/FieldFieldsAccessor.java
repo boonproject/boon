@@ -28,6 +28,7 @@
 
 package org.boon.core.reflection.fields;
 
+import org.boon.Maps;
 import org.boon.core.reflection.Reflection;
 
 import java.util.LinkedHashMap;
@@ -67,14 +68,6 @@ public class FieldFieldsAccessor implements FieldsAccessor {
     }
 
 
-//    @Override
-//    public FieldAccess getField(Class<? extends Object> aClass, String name) {
-//        if (caseInsensitive) {
-//            return fieldMap.get(aClass).get(name.toLowerCase());
-//        } else {
-//            return fieldMap.get(aClass).get(name);
-//        }
-//    }
 
     @Override
     public boolean isCaseInsensitive() {
@@ -85,11 +78,28 @@ public class FieldFieldsAccessor implements FieldsAccessor {
     private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
 
         Map<String, FieldAccess> fieldAccessMap = Reflection.getAllAccessorFields ( aClass, true );
+
+        Map<String, FieldAccess> mapOld = fieldAccessMap;
+        fieldAccessMap = new LinkedHashMap<>();
+        for (Map.Entry<String, FieldAccess> entry : mapOld.entrySet()) {
+            if (entry.getValue().isStatic()) {
+                continue;
+            }
+            fieldAccessMap.put(entry.getKey(), entry.getValue());
+        }
+
         if (caseInsensitive) {
-            Map<String, FieldAccess> mapOld = fieldAccessMap;
+            mapOld = fieldAccessMap;
             fieldAccessMap = new LinkedHashMap<>();
             for (Map.Entry<String, FieldAccess> entry : mapOld.entrySet()) {
+                if (entry.getValue().isStatic()) {
+                    continue;
+                }
                 fieldAccessMap.put(entry.getKey().toLowerCase(), entry.getValue());
+
+                fieldAccessMap.put(entry.getKey(), entry.getValue());
+
+                fieldAccessMap.put(entry.getKey().toUpperCase(), entry.getValue());
             }
         }
 
@@ -97,6 +107,9 @@ public class FieldFieldsAccessor implements FieldsAccessor {
             Map<String, FieldAccess> fieldAccessMap2 = new LinkedHashMap<> ( fieldAccessMap.size () );
 
             for (FieldAccess fa : fieldAccessMap.values ()) {
+                if (fa.isStatic()) {
+                    continue;
+                }
                 String alias = fa.alias();
                 if (caseInsensitive) {
                     alias = alias.toLowerCase();
