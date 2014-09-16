@@ -66,9 +66,28 @@ public class Reflection {
         }
 
         fields = Lists.list( theClass.getDeclaredFields() );
+        boolean foundCrap = false;
         for ( Field field : fields ) {
+            if (field.getName().indexOf('$')!=-1) {
+                foundCrap = true;
+                continue;
+            }
             field.setAccessible( true );
         }
+
+
+        if (foundCrap) {
+            List<Field> copy = Lists.copy(fields);
+
+            for (Field field : copy) {
+                if (field.getName().indexOf('$')!=-1) {
+                   fields.remove(field);
+                }
+
+
+            }
+        }
+
         return fields;
     }
 

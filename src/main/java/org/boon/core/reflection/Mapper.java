@@ -55,6 +55,8 @@ import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.coerce;
+import static org.boon.core.Conversions.toClass;
+import static org.boon.core.Conversions.toEnum;
 import static org.boon.core.Type.*;
 
 /**
@@ -511,7 +513,7 @@ public class Mapper {
                                                boolean[] flag, boolean loose) {
 
 
-        Object value;
+        Object value = null;
 
         try {
 
@@ -576,20 +578,72 @@ public class Mapper {
                     return true;
 
 
+                case ENUM:
+
+
+                    if (item instanceof Enum) {
+                       return true;
+                    }
+
+                    if (item instanceof CharSequence) {
+                        value = toEnum(parameterClass, item.toString());
+                        convertedArgumentList.set( index, value );
+                        return true;
+
+                    } else if (item instanceof Number){
+                        value = toEnum(parameterClass, ((Number)item).intValue());
+                        convertedArgumentList.set( index, value );
+                        return true;
+                    } else {
+
+                        if (flag[0] == false) {
+                            return false;
+                        }
+                    }
+
+                    convertedArgumentList.set( index, value );
+                    return true;
 
                 case CLASS:
-                case ENUM:
+                    if (item instanceof Class) {
+                        return true;
+                    }
+
+                    if (item instanceof CharSequence) {
+                        value = toClass(item);
+                        convertedArgumentList.set( index, value );
+                        return true;
+
+                    } else {
+
+                        if (flag[0] == false) {
+                            return false;
+                        }
+                    }
+
+                    convertedArgumentList.set( index, value );
+                    return true;
+
                 case STRING:
-                    if (!loose && !(item instanceof CharSequence)) {
-                        return false;
+
+                    if (item instanceof String) {
+                        return true;
                     }
 
+                    if (item instanceof CharSequence) {
 
-                    value = Conversions.coerceWithFlag(parameterType, parameterClass, flag, item );
+                        value = item.toString();
+                        convertedArgumentList.set( index, value );
+                        return true;
 
-                    if (flag[0] == false) {
-                        return false;
+
+                    } else {
+
+                        if (flag[0] == false) {
+                            return false;
+                        }
                     }
+
                     convertedArgumentList.set( index, value );
                     return true;
 
@@ -1542,74 +1596,127 @@ public class Mapper {
 
 
         Collections.reverse( fields ); // make super classes fields first that
-        // their update get overridden by
-        // subclass fields with the same name
 
-        List<Entry<String, Object>> entries = Conversions.mapFilterNulls(
-                new FieldToEntryConverter(object), fields );
+
 
         if (outputType) {
             map.put("class", object.getClass().getName());
         }
 
-        for ( Entry<String, Object> entry : entries ) {
+        for ( FieldAccess access : fields ) {
 
-            String key = entry.key();
+            String fieldName = access.name();
+
+            if (access.isStatic()) {
+                continue;
+            }
 
             if (ignoreSet!=null) {
-                if ( ignoreSet.contains( key ) ) {
+                if ( ignoreSet.contains( fieldName ) ) {
                     continue;
                 }
             }
 
-            Object value = entry.value();
+            Object value = access.getValue(object);
+
+
             if ( value == null ) {
                 continue;
             }
-            if ( Typ.isBasicType( value ) ) {
-                map.put( key, entry.value() );
-            } else if ( Boon.isArray( value )
-                    && Typ.isBasicType( value.getClass().getComponentType() ) ) {
-                map.put( key, entry.value() );
-            } else if ( Boon.isArray( value ) ) {
-                int length = Arry.len(value);
-                List<Map<String, Object>> list = new ArrayList<>( length );
-                for ( int index = 0; index < length; index++ ) {
-                    Object item = Arry.fastIndex( value, index );
-                    list.add( toMap( item ) );
-                }
-                map.put( key, list );
-            } else if ( value instanceof Collection ) {
-                Collection<?> collection = ( Collection<?> ) value;
-                Class<?> componentType = Reflection.getComponentType( collection, fieldMap.get( entry.key() ) );
-                if ( Typ.isBasicType( componentType ) ) {
 
-                    map.put(entry.key(), value);
-                } else if (Typ.isEnum(componentType)) {
-                    List<String> list = new ArrayList<>(
-                            collection.size() );
-                    for ( Object item : collection ) {
-                        if ( item != null ) {
-                            list.add( item.toString() );
-                        }
-                    }
-                    map.put( entry.key(), list );
 
-                } else {
-                    List<Map<String, Object>> list = new ArrayList<>(
-                            collection.size() );
-                    for ( Object item : collection ) {
-                        if ( item != null ) {
+            switch (access.typeEnum()) {
+                case BYTE:
+                case BYTE_WRAPPER:
+                case SHORT:
+                case SHORT_WRAPPER:
+                case INT:
+                case INTEGER:
+                case LONG:
+                case LONG_WRAPPER:
+                case FLOAT:
+                case FLOAT_WRAPPER:
+                case DOUBLE:
+                case DOUBLE_WRAPPER:
+                case CHAR:
+                case CHAR_WRAPPER:
+                case BIG_DECIMAL:
+                case BIG_INT:
+                case BOOLEAN:
+                case BOOLEAN_WRAPPER:
+                case CURRENCY:
+                case CALENDAR:
+                case DATE:
+                    map.put( fieldName, value );
+                    break;
+                case ARRAY:
+                    if (Typ.isBasicType( access.getComponentClass() ))  {
+                        map.put(fieldName, value);
+                    } else {
+                        int length = Arry.len(value);
+                        List<Map<String, Object>> list = new ArrayList<>( length );
+                        for ( int index = 0; index < length; index++ ) {
+                            Object item = Arry.fastIndex( value, index );
                             list.add( toMap( item ) );
                         }
+                        map.put( fieldName, list );
                     }
-                    map.put( entry.key(), list );
-                }
-            } else if ( value instanceof Map ) {
-                map.put(entry.key(), value);
-            } else {
-                map.put( entry.key(), toMap( value ) );
+                    break;
+                case COLLECTION:
+                case LIST:
+                case SET:
+                    Collection<?> collection = ( Collection<?> ) value;
+                    Class<?> componentType = access.getComponentClass();
+                    if ( Typ.isBasicType( componentType ) ) {
+                        map.put(fieldName, value);
+                    } else if (Typ.isEnum(componentType)) {
+                        List<String> list = new ArrayList<>(
+                                collection.size() );
+                        for ( Object item : collection ) {
+                            if ( item != null ) {
+                                list.add( item.toString() );
+                            }
+                        }
+                        map.put( fieldName, list );
+
+                    } else {
+                        List<Map<String, Object>> list = new ArrayList<>(
+                                collection.size() );
+                        for ( Object item : collection ) {
+                            if ( item != null ) {
+                                list.add( toMap( item ) );
+                            }
+                        }
+                        map.put( fieldName, list );
+                    }
+                    break;
+                case MAP:
+                    map.put(fieldName, value);
+                    break;
+
+                case INSTANCE:
+                case INTERFACE:
+                case ABSTRACT:
+                    map.put(fieldName, toMap(value));
+                    break;
+
+                case ENUM:
+                    map.put(fieldName, value);
+                    break;
+
+
+
+
+                default:
+                    map.put(fieldName, Conversions.toString(value));
+                    break;
+
+
+
+
+
             }
+
         }
         return map;
 
@@ -1617,29 +1724,29 @@ public class Mapper {
     }
 
 
-
-    /**
-     * Converts a field access set into a collection of map entries.
-     */
-    public static class FieldToEntryConverter implements
-            Function<FieldAccess, Entry<String, Object>> {
-
-        final Object object;
-
-        public FieldToEntryConverter(Object object) {
-            this.object = object;
-        }
-
-        @Override
-        public Entry<String, Object> apply( FieldAccess from ) {
-//            if ( from.isReadOnly() ) {
-//                return null;
-//            }
-            Entry<String, Object> entry = new Pair<>( from.name(),
-                    from.getValue( object ) );
-            return entry;
-        }
-    }
+//
+//    /**
+//     * Converts a field access set into a collection of map entries.
+//     */
+//    public static class FieldToEntryConverter implements
+//            Function<FieldAccess, Entry<String, Object>> {
+//
+//        final Object object;
+//
+//        public FieldToEntryConverter(Object object) {
+//            this.object = object;
+//        }
+//
+//        @Override
+//        public Entry<String, Object> apply( FieldAccess from ) {
+////            if ( from.isReadOnly() ) {
+////                return null;
+////            }
+//            Entry<String, Object> entry = new Pair<>( from.name(),
+//                    from.getValue( object ) );
+//            return entry;
+//        }
+//    }
 
 
 

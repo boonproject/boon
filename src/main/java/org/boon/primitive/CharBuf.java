@@ -1471,6 +1471,10 @@ public class CharBuf extends PrintWriter implements CharSequence {
                 prettyPrintCollection(Lists.list(Conversions.iterator(value)), type, indent);
                 break;
 
+            case ENUM:
+                addJsonEscapedString(((Enum)value).name().toCharArray());
+                break;
+
 
             default:
                 addJsonEscapedString(value.toString().toCharArray());
