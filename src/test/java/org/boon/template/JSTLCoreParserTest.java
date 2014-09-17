@@ -202,6 +202,11 @@ public class JSTLCoreParserTest extends TestCase {
 
 
         token = tokenList.get(5);
+
+
+        puts(token, Str.sliceOf(text, token.start, token.stop));
+
+
         equalsOrDie("Token starts at 35", 35, token.start);
         equalsOrDie("Token stops at 36", 36, token.stop);
         equalsOrDie("Token is TEXT", JSTLCoreParser.TokenTypes.TEXT, token.type);
@@ -297,4 +302,85 @@ public class JSTLCoreParserTest extends TestCase {
 
     }
 
+
+    @Test
+    public void testTight() {
+        JSTLCoreParser parser = new JSTLCoreParser();
+        String text = "<c:if test='foo'>body</c:if>";
+                   //  01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+                   //  0         10        20        30        40        50        60        70        80        90
+
+        parser.parse(text);
+        final List<JSTLCoreParser.Token> tokenList = parser.getTokenList();
+
+        ok = tokenList!=null || die();
+
+        JSTLCoreParser.Token token = tokenList.get(0);
+
+        equalsOrDie("Token starts at 3", 3, token.start);
+        equalsOrDie("Token stops at 16", 16, token.stop);
+        equalsOrDie("Token is COMMAND", JSTLCoreParser.TokenTypes.COMMAND, token.type);
+        equalsOrDie("TEXT is ", "if test='foo'", Str.sliceOf(text, token.start, token.stop));
+
+        token = tokenList.get(1);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 17", 17, token.start);
+        equalsOrDie("Token stops at 21", 21, token.stop);
+        equalsOrDie("Token is COMMAND_BODY", JSTLCoreParser.TokenTypes.COMMAND_BODY, token.type);
+        equalsOrDie("TEXT is ", "body", Str.sliceOf(text, token.start, token.stop));
+
+
+        token = tokenList.get(2);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 17", 17, token.start);
+        equalsOrDie("Token stops at 21", 21, token.stop);
+        equalsOrDie("Token is TEXT", JSTLCoreParser.TokenTypes.TEXT, token.type);
+        equalsOrDie("TEXT is ", "body", Str.sliceOf(text, token.start, token.stop));
+
+    }
+
+    @Test
+    public void testBuggyTight() {
+        JSTLCoreParser parser = new JSTLCoreParser();
+        String text = "<c:if test='${flag}'>${name}</c:if>";
+        //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+        //.............0         10        20        30        40        50        60        70        80        90
+
+        parser.parse(text);
+        final List<JSTLCoreParser.Token> tokenList = parser.getTokenList();
+
+        ok = tokenList!=null || die();
+
+        JSTLCoreParser.Token token = tokenList.get(0);
+
+        equalsOrDie("Token starts at 3", 3, token.start);
+        equalsOrDie("Token stops at 20", 20, token.stop);
+        equalsOrDie("Token is COMMAND", JSTLCoreParser.TokenTypes.COMMAND, token.type);
+        equalsOrDie("TEXT is ", "if test='${flag}'", Str.sliceOf(text, token.start, token.stop));
+
+        token = tokenList.get(1);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 21", 21, token.start);
+        equalsOrDie("Token stops at 28", 28, token.stop);
+        equalsOrDie("Token is COMMAND_BODY", JSTLCoreParser.TokenTypes.COMMAND_BODY, token.type);
+        equalsOrDie("TEXT is ", "${name}", Str.sliceOf(text, token.start, token.stop));
+
+
+        token = tokenList.get(2);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 23", 23, token.start);
+        equalsOrDie("Token stops at 27", 27, token.stop);
+        equalsOrDie("Token is EXPRESSION", JSTLCoreParser.TokenTypes.EXPRESSION, token.type);
+        equalsOrDie("TEXT is ", "name", Str.sliceOf(text, token.start, token.stop));
+
+
+    }
 }

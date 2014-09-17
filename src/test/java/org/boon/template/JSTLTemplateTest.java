@@ -1,6 +1,5 @@
 package org.boon.template;
 
-import junit.framework.TestCase;
 import org.boon.Boon;
 import org.boon.Lists;
 import org.boon.Maps;
@@ -115,6 +114,49 @@ public class JSTLTemplateTest  {
 
     }
 
+    @Test
+    public void test8TightIf() {
+
+        final String results = template.replace("<c:if test='${flag}'>${name}</c:if>" ,
+
+                Lists.list(Maps.map("flag", true), company));
+
+
+        Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void nestedIfIf() {
+
+        final String results = template.replace(
+                "<c:if test='${flag}'>" +
+                        "<c:if test='${flag}'>bobby</c:if>" +
+                "</c:if> sue" ,
+
+                Lists.list(Maps.map("flag", true), company));
+
+
+        Boon.equalsOrDie("#bobby sue#", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void nestedIfIfWithExpression() {
+
+        final String results = template.replace(
+                "<c:if test='${flag}'>" +
+                        "<c:if test='${flag}'>${name}</c:if>" +
+                        "</c:if> sue" ,
+
+                Lists.list(Maps.map("flag", true), company));
+
+
+        Boon.equalsOrDie("#Mammatus sue#", "#"+results+"#");
+
+    }
 
     public static enum Fruit {
         ORANGES,

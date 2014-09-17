@@ -524,6 +524,7 @@ public class JSTLCoreParser {
         if (index > 0 ) {
             this.tokenList.add(Token.expression(startIndex, index));
             index += TokenTypes.EXPRESSION_END.chars.length;
+
         }
     }
 
@@ -592,6 +593,7 @@ public class JSTLCoreParser {
                     index += TokenTypes.EXPRESSION_START.chars.length;
                     handleExpression();
                     text = Token.text(index, -1);
+                    index--;
 
 
                 }
