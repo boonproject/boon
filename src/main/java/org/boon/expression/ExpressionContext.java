@@ -28,6 +28,7 @@
 
 package org.boon.expression;
 
+import org.boon.Lists;
 import org.boon.Str;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.BeanUtils;
@@ -35,53 +36,61 @@ import org.boon.core.reflection.BeanUtils;
 import java.util.*;
 
 import static org.boon.Exceptions.die;
-import static org.boon.Str.endSliceOf;
 import static org.boon.Str.slc;
 import static org.boon.json.JsonFactory.fromJson;
 
 /**
  * Created by Richard on 2/10/14.
  */
-public class BasicContext implements ObjectContext, Map {
+public class ExpressionContext implements ObjectContext, Map {
 
 
     private LinkedList<Object> context;
 
-    public BasicContext(Object root) {
 
-        initContext(root);
-    }
-
-
-    public void initContext(final Object root) {
+    public  ExpressionContext(final List<Object> root) {
 
 
         this.context = new LinkedList<>();
 
-
-        if (root instanceof CharSequence) {
-
-            String str = root.toString().trim();
-
-            if (str.startsWith("[") || str.startsWith("{")) {
-                this.context.add(
-                        fromJson(root.toString()
-                        )
-                );
-            }
-
-        } else if (root instanceof List) {
-            List list = (List) root;
-
-            for (Object o : list) {
-                context.add(o);
-            }
-        } else if (root!=null) {
+        if (root!=null) {
             this.context.add(root);
         }
 
 
     }
+
+
+    public ExpressionContext(final Object... array) {
+
+
+
+        this.context = new LinkedList<>();
+
+        for (Object root : array ) {
+            if (root instanceof CharSequence) {
+
+                String str = root.toString().trim();
+
+                if (str.startsWith("[") || str.startsWith("{")) {
+                    this.context.add(
+                            fromJson(root.toString()
+                            )
+                    );
+                }
+
+            } else {
+                this.context.add(root);
+            }
+        }
+
+
+
+    }
+
+
+
+
 
 
 
@@ -94,11 +103,10 @@ public class BasicContext implements ObjectContext, Map {
     public  Object findProperty(String propertyPath) {
 
 
-        int index = propertyPath.indexOf('|');
-
         Object defaultValue;
 
-        if (index!=-1) {
+
+        if (propertyPath.indexOf('|') != -1) {
 
             String[] splitByPipe = Str.splitByPipe(propertyPath);
             defaultValue = splitByPipe[1];
@@ -108,26 +116,19 @@ public class BasicContext implements ObjectContext, Map {
             defaultValue = null;
         }
 
-        Object object;
-        Iterator iterator = Conversions.iterator(context);
-        while (iterator.hasNext()) {
-            Object ctx = iterator.next();
-            object = BeanUtils.idx(ctx, propertyPath);
-            if (object != null) {
 
-                if (object instanceof List) {
-                    List list = (List) object;
-                    int nulls = 0;
-                    for (Object o : list) {
-                        if (o == null) {
-                            nulls++;
-                        }
-                    }
-                    if (nulls == list.size()) {
-                        break;
-                    }
-                }
-                return object;
+
+
+        for (Object ctx : this.context) {
+
+            if (ctx instanceof ExpressionContext) {
+                ExpressionContext basicContext = (ExpressionContext) ctx;
+                basicContext.findProperty(propertyPath);
+
+            }
+            Object object = BeanUtils.idx(ctx, propertyPath);
+            if (object != null) {
+               return object;
             }
         }
 
@@ -305,7 +306,7 @@ public class BasicContext implements ObjectContext, Map {
 
         }
 
-        Object value = BeanUtils.findProperty(context, objectName);
+        Object value = findProperty(objectName);
 
         value = value == null ? defaultValue : value;
 
@@ -313,8 +314,8 @@ public class BasicContext implements ObjectContext, Map {
     }
 
 
-    public void pushContext(Object values) {
-        this.context.add(0, values);
+    public void pushContext(Object value) {
+        this.context.add(0, new ExpressionContext((Object)value));
     }
 
 

@@ -58,6 +58,7 @@ package org.boon.template;
 import org.boon.Str;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.primitive.CharScanner;
+import org.boon.template.support.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -356,7 +357,7 @@ import static org.boon.Boon.puts;
  * There is no logic in this parser. Just an array of token positions.
  * It is up to BoonTemplate on how to interpret those tokens.
  */
-public class JSTLCoreParser {
+public class BoonCoreTemplateParser {
 
 
     char charArray[];
@@ -367,100 +368,6 @@ public class JSTLCoreParser {
 
 
     private List<Token> tokenList;
-
-
-
-    public static class Token {
-
-        int start;
-        int stop;
-        TokenTypes type;
-
-        public int start() {
-            return start;
-        }
-
-
-        public int stop() {
-            return stop;
-        }
-
-        public TokenTypes type() {
-            return type;
-        }
-
-        public Token(int start, int stop, TokenTypes type) {
-            this.start = start;
-            this.stop = stop;
-            this.type = type;
-        }
-
-        public Token() {
-        }
-
-        public static Token text(int start, int stop) {
-            Token token = new Token();
-            token.start = start;
-            token.stop = stop;
-            token.type = TokenTypes.TEXT;
-            return token;
-        }
-
-
-        public static Token commandStart(int start, int stop) {
-            Token token = new Token();
-            token.start = start;
-            token.stop = stop;
-            token.type = TokenTypes.COMMAND;
-            return token;
-        }
-
-        public static Token commandBody(int start, int stop) {
-            Token token = new Token();
-            token.start = start;
-            token.stop = stop;
-            token.type = TokenTypes.COMMAND_BODY;
-            return token;
-        }
-
-        public static Token expression(int start, int stop) {
-            Token token = new Token();
-            token.start = start;
-            token.stop = stop;
-            token.type = TokenTypes.EXPRESSION;
-            return token;
-        }
-
-        @Override
-        public String toString() {
-            return "Token{" +
-                    "start=" + start +
-                    ", stop=" + stop +
-                    ", type=" + type +
-                    '}';
-        }
-    }
-
-    public static enum  TokenTypes {
-        COMMAND(""),
-        COMMAND_BODY(""),
-        EXPRESSION(""),
-        COMMAND_START("<c:"),
-
-        COMMAND_END_START(">"),
-        COMMAND_START_END("</c:"),
-        EXPRESSION_START("${"),
-        EXPRESSION_END("}"),
-        TEXT("");
-
-        TokenTypes(String str) {
-            this.chars = FastStringUtils.toCharArray(str);
-        }
-
-        char[] chars;
-    }
-
-
 
 
     public void parse(String string) {
@@ -530,7 +437,7 @@ public class JSTLCoreParser {
         }
 
         if (text!=null) {
-            text.stop = charArray.length;
+            text.stop(charArray.length);
             this.tokenList.add( text );
         }
     }
@@ -616,7 +523,7 @@ public class JSTLCoreParser {
 
                     text = textToken(text);
 
-                    commandBody.stop = index;
+                    commandBody.stop(index);
                     index++;
                     index = CharScanner.findChar('>', index, charArray);
                     break;
@@ -659,10 +566,10 @@ public class JSTLCoreParser {
 
 
         if (commandBody.stop() == -1) {
-            commandBody.stop = index;
+            commandBody.stop(index);
         }
         if (text!=null) {
-            text.stop = charArray.length;
+            text.stop(charArray.length);
             this.tokenList.add( text );
         }
 
@@ -672,8 +579,8 @@ public class JSTLCoreParser {
 
     private Token textToken(Token text) {
         if (text!=null) {
-            text.stop = index;
-            if (text.start!=text.stop) {
+            text.stop(index);
+            if (text.start()!=text.stop()) {
                 this.tokenList.add(text);
             }
             text = null;
@@ -683,7 +590,7 @@ public class JSTLCoreParser {
 
     public static void main (String... args) {
 
-        JSTLCoreParser parser = new JSTLCoreParser();
+        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
 
 //        parser.parse(
 ///*
@@ -744,7 +651,7 @@ public class JSTLCoreParser {
 
     public void displayTokens(String template) {
 
-        for (JSTLCoreParser.Token token : this.getTokenList()) {
+        for (Token token : this.getTokenList()) {
             puts ("token", token, Str.slc(template, token.start(), token.stop()));
         }
     }

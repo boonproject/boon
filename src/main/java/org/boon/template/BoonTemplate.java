@@ -3,9 +3,11 @@ package org.boon.template;
 import org.boon.*;
 import org.boon.collections.LazyMap;
 import org.boon.core.Conversions;
-import org.boon.core.reflection.BeanUtils;
-import org.boon.expression.BasicContext;
+import org.boon.expression.ExpressionContext;
 import org.boon.primitive.CharBuf;
+import org.boon.primitive.CharScanner;
+import org.boon.template.support.LoopTagStatus;
+import org.boon.template.support.Token;
 
 import java.util.*;
 
@@ -18,63 +20,63 @@ import static org.boon.json.JsonFactory.fromJson;
 /**
  * Created by Richard on 9/15/14.
  */
-public class JSTLTemplate implements Template {
+public class BoonTemplate implements Template {
 
 
 
-    private JSTLTemplate parentTemplate;
+    private BoonTemplate parentTemplate;
 
-    private JSTLCoreParser parser;
+    private BoonCoreTemplateParser parser;
 
 
     private String template;
 
     CharBuf _buf = CharBuf.create(16);
-    private BasicContext _context;
+    private ExpressionContext _context;
 
     private void output(Object object) {
         _buf.add(object);
     }
-    private void output(JSTLCoreParser.Token token) {
+    private void output(Token token) {
         _buf.add(template, token.start(), token.stop());
     }
 
 
     @Override
-    public String replace(String template, Object context) {
+    public String replace(String template, Object... context) {
 
         initContext(context);
-        parser = new JSTLCoreParser();
+        parser = new BoonCoreTemplateParser();
         this.template = template;
         parser.parse(template);
         _buf.readForRecycle();
 
-        Iterator<JSTLCoreParser.Token> tokens = parser.getTokenList().iterator();
+        Iterator<Token> tokens = parser.getTokenList().iterator();
 
         while (tokens.hasNext()) {
-            final JSTLCoreParser.Token token = tokens.next();
+            final Token token = tokens.next();
             processToken(tokens, token);
         }
 
         return _buf.toString();
     }
 
-    private String textFromToken(JSTLCoreParser.Token token) {
+    private String textFromToken(Token token) {
         return template.substring(token.start(), token.stop());
     }
 
 
-    protected void initContext(final Object root) {
+    protected void initContext(final Object... root) {
 
 
-        this._context = new BasicContext(root);
+        this._context = new ExpressionContext(root);
 
 
 
     }
 
 
-    private void handleCommand(String template, JSTLCoreParser.Token commandToken, Iterator<JSTLCoreParser.Token> tokens) {
+    private void handleCommand(String template, Token commandToken, Iterator<Token> tokens) {
 
         this.template = template;
 
@@ -90,13 +92,13 @@ public class JSTLTemplate implements Template {
         Map<String, String> params = parseArguments(args);
 
 
-        JSTLCoreParser.Token bodyToken = tokens.next();
+        Token bodyToken = tokens.next();
 
 
 
 
         int bodyTokenStop;
-        if (bodyToken.type() == JSTLCoreParser.TokenTypes.COMMAND_BODY) {
+        if (bodyToken.type() == TokenTypes.COMMAND_BODY) {
             bodyTokenStop = bodyToken.stop();
         }else {
             bodyTokenStop = -1;
@@ -104,11 +106,11 @@ public class JSTLTemplate implements Template {
         }
 
 
-        List <JSTLCoreParser.Token> commandTokens = new ArrayList<>();
+        List <Token> commandTokens = new ArrayList<>();
 
 
         while (tokens.hasNext()) {
-            final JSTLCoreParser.Token next = tokens.next();
+            final Token next = tokens.next();
             commandTokens.add(next);
             if (next.stop() == bodyTokenStop) {
                 break;
@@ -144,7 +146,23 @@ public class JSTLTemplate implements Template {
 
                 case '=':
                     collectName=false;
-                    index++; //skip quote
+                    if (chars[index+1] != '\'' && chars[index+1] != '\"') {
+                        int start = index+1;
+                        int end = CharScanner.findWhiteSpace(start, chars);
+                        if (end==-1){
+                            end = chars.length;
+                        }
+                        String v = Str.slc(args, start, end);
+                        params.put(name.toString(), v);
+                        index+=v.length();
+                        name = new StringBuilder();
+
+                        collectName=true;
+                        value = new StringBuilder();
+
+                    } else {
+                        index++; //skip quote
+                    }
                     continue;
 
 
@@ -173,7 +191,7 @@ public class JSTLTemplate implements Template {
     private void dispatchCommand(
             String command,
             Map<String, String> params,
-            List<JSTLCoreParser.Token> commandTokens
+            List<Token> commandTokens
     ) {
         switch (command) {
             case "if":
@@ -190,11 +208,13 @@ public class JSTLTemplate implements Template {
 
     private void handleIf(
                           Map<String, String> params,
-                          List<JSTLCoreParser.Token> commandTokens
+                          List<Token> commandTokens
                           ) {
 
 
         boolean display;
+
+        String var = getStringParam("var", params, "__none");
 
         final String test = params.get("test");
         if (test.startsWith("$")) {
@@ -206,26 +226,41 @@ public class JSTLTemplate implements Template {
         }
 
 
+        if (!var.equals("__none")) {
+            Map<String, Object> values = new LazyMap();
+
+
+            _context.pushContext(values);
+        }
+
+
         if (display) {
 
             processCommandBodyTokens(commandTokens);
 
         }
 
+
+        if (!var.equals("__none")) {
+
+
+            _context.removeLastContext();
+        }
+
     }
 
-    private void processCommandBodyTokens(List<JSTLCoreParser.Token> commandTokens) {
-        final Iterator<JSTLCoreParser.Token> commandTokenIterators
+    private void processCommandBodyTokens(List<Token> commandTokens) {
+        final Iterator<Token> commandTokenIterators
                 = commandTokens.iterator();
         while (commandTokenIterators.hasNext()) {
 
-            JSTLCoreParser.Token token = commandTokenIterators.next();
+            Token token = commandTokenIterators.next();
             processToken(commandTokenIterators, token);
 
         }
     }
 
-    private void processToken(Iterator<JSTLCoreParser.Token> tokens, JSTLCoreParser.Token token) {
+    private void processToken(Iterator<Token> tokens, Token token) {
         switch (token.type()) {
             case TEXT:
                 output(token);
@@ -243,19 +278,43 @@ public class JSTLTemplate implements Template {
     }
 
 
-    private void handleLoop(Map<String, String> params,  List<JSTLCoreParser.Token> commandTokens
+    private void handleLoop(Map<String, String> params,  List<Token> commandTokens
     ) {
 
         List<Object> items = Conversions.toList(_context.lookup(params.get("items")));
 
-        String var = params.get("var");
+        String var = getStringParam("var", params, "item");
+        String varStatus = getStringParam("varStatus", params, "status");
 
-        if (var == null) {
-            var = "item";
-        } else if (var.startsWith("$")) {
-            var = Conversions.toString(_context.lookupWithDefault(var, "item"));
 
+        int begin = getIntParam("begin", params,   -1);
+        int end = getIntParam("end",    params,   -1);
+        int step = getIntParam("step", params,   -1);
+
+        LoopTagStatus status = new LoopTagStatus();
+
+        status.setCount(items.size());
+
+        if (end != -1) {
+            status.setEnd(end);
+        } else {
+            end = items.size();
         }
+
+
+        if (begin != -1) {
+            status.setBegin(begin);
+        } else {
+            begin = 0;
+        }
+
+
+        if (step != -1) {
+            status.setStep(step);
+        } else {
+            step = 1;
+        }
+
 
         Map<String, Object> values = new LazyMap();
 
@@ -265,11 +324,17 @@ public class JSTLTemplate implements Template {
 
         for (Object item : items) {
 
-            values.put(var, item);
+            if (index >= begin && index <end && index % step == 0) {
 
-            values.put("index", index);
+                values.put(var, item);
+                values.put(varStatus, status);
 
-            processCommandBodyTokens(commandTokens);
+                values.put("index", index);
+
+                status.setIndex(index);
+
+                processCommandBodyTokens(commandTokens);
+            }
             index++;
         }
 
@@ -280,9 +345,34 @@ public class JSTLTemplate implements Template {
     }
 
 
+
+    private String getStringParam(String param, Map<String, String> params, String defaultValue) {
+
+        String value = params.get(param);
+        if (value == null) {
+            return defaultValue;
+        } else if (value.startsWith("$")) {
+            return Conversions.toString(_context.lookupWithDefault(value, defaultValue));
+
+        }
+        return Conversions.toString(value);
+    }
+
+    private int getIntParam(String param, Map<String, String> params, int defaultValue) {
+
+        String value = params.get(param);
+        if (value == null) {
+            return defaultValue;
+        } else if (value.startsWith("$")) {
+            return Conversions.toInt(_context.lookupWithDefault(value, defaultValue));
+
+        }
+        return Conversions.toInt(value);
+    }
+
     public void displayTokens() {
 
-        for (JSTLCoreParser.Token token : parser.getTokenList()) {
+        for (Token token : parser.getTokenList()) {
             puts ("token", token, textFromToken(token));
         }
     }

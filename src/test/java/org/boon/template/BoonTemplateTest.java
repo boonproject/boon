@@ -14,12 +14,12 @@ import java.util.List;
 /**
  * Created by Richard on 9/15/14.
  */
-public class JSTLTemplateTest  {
+public class BoonTemplateTest {
 
 
     Company company;
 
-    JSTLTemplate template;
+    BoonTemplate template;
 
 
     @Before
@@ -33,14 +33,206 @@ public class JSTLTemplateTest  {
         );
 
         company = new Company("Mammatus", list);
-        template = new JSTLTemplate();
+        template = new BoonTemplate();
 
+
+    }
+
+
+    @Test
+    public void companyObject() {
+
+        final String results = template.replace("${this}", company);
+
+
+        Boon.equalsOrDie(company.toString(), results);
+
+    }
+
+
+    @Test
+    public void companyObjectBoonWay() {
+
+        final String results = template.replace("$this", company);
+
+
+        Boon.equalsOrDie(company.toString(), results);
+
+    }
+
+    @Test
+    public void deptNames() {
+
+        final String results = template.replace("${this.depts.name}", company);
+
+
+        Boon.equalsOrDie("[Engineering, HR]", results);
+
+    }
+
+    @Test
+    public void deptNamesBoonWay() {
+
+        final String results = template.replace("$this.depts.name", company);
+
+
+        Boon.equalsOrDie("[Engineering, HR]", results);
+
+    }
+
+    @Test
+    public void deptNamesForEach() {
+
+        final String results = template.replace("<c:for items='$depts.name'>${item} </c:for>", company);
+
+
+        Boon.equalsOrDie("#Engineering HR #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void deptNamesForEachBoonWay() {
+
+        final String results = template.replace("<c:for items=$depts.name>$item </c:for>", company);
+
+
+        Boon.equalsOrDie("#Engineering HR #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void deptNamesForEachAgain() {
+
+        final String results = template.replace("<c:for items='$depts'>${item.name} </c:for>", company);
+
+
+        Boon.equalsOrDie("#Engineering HR #", "#" + results + "#");
+
+    }
+
+
+    @Test
+    public void deptNamesForEachAgainBoonWay() {
+
+        final String results = template.replace("<c:for items=$depts>$item.name </c:for>", company);
+
+
+        Boon.equalsOrDie("#Engineering HR #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void manyNums() {
+
+        final String results = template.replace("<c:for items='$list' step='3' >$item </c:for>",
+
+                Maps.map("list", Lists.list(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)));
+
+
+        Boon.equalsOrDie("#0 3 6 9 12 15 18 #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void manyNumsUsingThis() {
+
+        final String results = template.replace("<c:for items='$this' step='3' >$item </c:for>",
+            Lists.list(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18));
+
+
+        Boon.equalsOrDie("#0 3 6 9 12 15 18 #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void deptNamesForEachAgainBegin() {
+
+        final String results = template.replace("<c:for begin='1' items='$depts'>${item.name} </c:for>", company);
+
+
+        Boon.equalsOrDie("#HR #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void deptNamesForEachAgainBeginBoonWay() {
+
+        final String results = template.replace("<c:for items='$depts' begin=1 end=2>${item.name} </c:for>", company);
+
+
+        Boon.equalsOrDie("#HR #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void deptNamesForEachWithEnd() {
+
+        final String results = template.replace("<c:for end='1' items='$depts'>${item.name} </c:for>", company);
+
+
+        Boon.equalsOrDie("#Engineering #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void deptNamesForEachAgainWithIndex() {
+
+        final String results = template.replace("<c:for items='$depts'>$index $item.name" +
+                "\n </c:for>", company);
+
+
+        Boon.equalsOrDie("#0 Engineering\n" +
+                " 1 HR\n" +
+                " #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void deptNamesForEachAgainWithIndexAndEmployeesFirstName() {
+
+        final String results = template.replace("\n<c:for items='$depts'>" +
+                "   $index $item.name" +
+                "\n " +
+                "<c:for var='emp' items='$item.employees'>\t\t$index $emp.firstName\n</c:for>" +
+                "</c:for>\n", company);
+
+
+        Boon.equalsOrDie("#\n" +
+                "   0 Engineering\n" +
+                " \t\t0 Rick\n" +
+                "\n" +
+                "   1 HR\n" +
+                " \t\t0 Diana\n" +
+                "\n" +
+                "#", "#" + results + "#");
+
+    }
+
+
+    @Test
+    public void deptNamesForEachAgainWithIndexAndEmployeesFirstName2() {
+
+        final String results = template.replace("\n<c:for var='dept'' items='$depts'>" +
+                "   $index $dept.name" +
+                "\n " +
+                "<c:for  items='$dept.employees'>\t\t$index $item.firstName\n</c:for>" +
+                "</c:for>\n", company);
+
+
+        Boon.equalsOrDie("#\n" +
+                "   0 Engineering\n" +
+                " \t\t0 Rick\n" +
+                "\n" +
+                "   1 HR\n" +
+                " \t\t0 Diana\n" +
+                "\n" +
+                "#", "#" + results + "#");
 
     }
     @Test
     public void test() {
 
-        final String results = template.replace("${name}", company);
+        final String results = template.replace("${this.name}", company);
 
 
         Boon.equalsOrDie("Mammatus", results);
@@ -95,8 +287,7 @@ public class JSTLTemplateTest  {
     public void test6() {
 
         final String results = template.replace("<c:if test='${flag}'> ${name} </c:if>" ,
-
-                Lists.list(Maps.map("flag", false), company));
+                Maps.map("flag", false), company);
 
 
         Boon.equalsOrDie("##", "#"+results+"#");
@@ -109,7 +300,7 @@ public class JSTLTemplateTest  {
 
         final String results = template.replace("<c:if test='flag'> ${name} </c:if>" ,
 
-                Lists.list(Maps.map("flag", true), company));
+                Maps.map("flag", true), company);
 
 
         Boon.equalsOrDie("# Mammatus #", "#"+results+"#");
@@ -120,8 +311,7 @@ public class JSTLTemplateTest  {
     public void test8() {
 
         final String results = template.replace("<c:if test='flag'> $name </c:if>" ,
-
-                Lists.list(Maps.map("flag", true), company));
+                Maps.map("flag", true), company);
 
 
         Boon.equalsOrDie("# Mammatus #", "#"+results+"#");
@@ -132,8 +322,7 @@ public class JSTLTemplateTest  {
     public void test9() {
 
         final String results = template.replace("<c:if test='$flag'>$name</c:if>" ,
-
-                Lists.list(Maps.map("flag", false), company));
+                Maps.map("flag", false), company);
 
 
         Boon.equalsOrDie("##", "#"+results+"#");
@@ -144,10 +333,22 @@ public class JSTLTemplateTest  {
 
         final String results = template.replace("<c:if test='$flag'>$name</c:if>" ,
 
-                Lists.list(Maps.map("flag", true), company));
+                    Maps.map("flag", true), company);
 
 
         Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void testNoQuotes() {
+
+        final String results = template.replace("<c:if test=$flag> ${name} </c:if>" ,
+                Maps.map("flag", false), company);
+
+
+        Boon.equalsOrDie("##", "#"+results+"#");
 
     }
 
@@ -155,8 +356,7 @@ public class JSTLTemplateTest  {
     public void test8TightIf() {
 
         final String results = template.replace("<c:if test='flag'>${name}</c:if>" ,
-
-                Lists.list(Maps.map("flag", true), company));
+            Maps.map("flag", true), company);
 
 
         Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
@@ -204,7 +404,7 @@ public class JSTLTemplateTest  {
                         "123\n 123~<c:if test='${flag}'> 123 123 ~${name}</c:if>" +
                         "</c:if> sue" ,
 
-                Lists.list(Maps.map("flag", true), company));
+                Maps.map("flag", true), company);
 
 
         Boon.equalsOrDie("#123\n" +
@@ -217,8 +417,7 @@ public class JSTLTemplateTest  {
 
         final String results = template.replace(
                 "${boo|BAZ}" ,
-
-                Lists.list(Maps.map("boo", true), company));
+                Maps.map("boo", true), company);
 
 
         Boon.equalsOrDie("#true#", "#"+results+"#");
@@ -231,7 +430,7 @@ public class JSTLTemplateTest  {
 
         final String results = template.replace(
                 "${boo|BAZ}" ,
-                Lists.list(Maps.map("baz", true), company));
+                Maps.map("baz", true), company);
 
         Boon.equalsOrDie("#BAZ#", "#"+results+"#");
 
@@ -251,6 +450,28 @@ public class JSTLTemplateTest  {
         Boon.equalsOrDie("#apple orange b #", "#"+results +"#");
 
     }
+
+
+    @Test
+    public void cForStatus() {
+
+        final String results = template.replace(
+                "<c:loop items='${list}'}'>\n${status.index} ${status.count} ${item} ${status.last} ${status.first}\n</c:loop>" ,
+
+                Maps.map("list", Lists.list("apple", "orange", "banana")));
+
+
+        Boon.equalsOrDie("#\n" +
+                "0 3 apple false true\n" +
+                "\n" +
+                "1 3 orange false false\n" +
+                "\n" +
+                "2 3 banana true false\n" +
+                "#", "#" +results +"#");
+
+    }
+
+
 
 
     @Test
@@ -433,6 +654,14 @@ public class JSTLTemplateTest  {
         public Company(String name, List<Dept> depts) {
             this.name = name;
             this.depts = depts;
+        }
+
+        @Override
+        public String toString() {
+            return "Company{" +
+                    "name='" + name + '\'' +
+                    ", depts=" + depts +
+                    '}';
         }
     }
 
