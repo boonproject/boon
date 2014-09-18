@@ -397,7 +397,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
     private List processResultsFromIndex( SearchIndex searchIndex, List results ) {
         if ( searchIndex.isPrimaryKeyOnly() ) {
-            //TODO iterate through listStream and lookup items from keys, and put those in the actual results
+            //TODO iterate through listStream and lookupWithDefault items from keys, and put those in the actual results
             return null;
         } else {
             return results;

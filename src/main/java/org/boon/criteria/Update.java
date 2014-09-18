@@ -78,7 +78,7 @@ public abstract class Update implements Serializable {
     public static Update incPercent( final String name, final int percent ) {
         return new Update() {
 
-            //Avoid the lookup, pass the fields.
+            //Avoid the lookupWithDefault, pass the fields.
             @Override
             public void doSet( ObjectEditor repo, Object item ) {
                 int value = repo.getInt( item, name );

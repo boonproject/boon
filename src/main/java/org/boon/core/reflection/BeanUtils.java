@@ -827,7 +827,7 @@ public class BeanUtils {
 
         int index = propertyPath.indexOf('|');
 
-        Object defaultValue = null;
+        Object defaultValue;
 
         if (index!=-1) {
 
@@ -839,12 +839,25 @@ public class BeanUtils {
             defaultValue = null;
         }
 
-        Object object = null;
+        Object object;
         Iterator iterator = Conversions.iterator(context);
         while (iterator.hasNext()) {
                 Object ctx = iterator.next();
                 object = idx(ctx, propertyPath);
                 if (object != null) {
+
+                    if (object instanceof List) {
+                        List list = (List) object;
+                        int nulls = 0;
+                        for (Object o : list) {
+                            if (o == null) {
+                                nulls++;
+                            }
+                        }
+                        if (nulls == list.size()) {
+                            break;
+                        }
+                    }
                     return object;
                 }
         }
@@ -1590,8 +1603,13 @@ public class BeanUtils {
             if (firstItem instanceof Map) {
 
                 for (Object item : collection) {
-                    Map map = (Map) item;
-                    list.add( map.get(key) );
+                    if (item instanceof Map) {
+                        Map map = (Map) item;
+
+                        list.add(map.get(key));
+                    } else {
+                        list.add(BeanUtils.idx(item, key));
+                    }
                 }
                 return list;
 

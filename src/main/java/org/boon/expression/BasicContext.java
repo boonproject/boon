@@ -28,108 +28,203 @@
 
 package org.boon.expression;
 
+import org.boon.Str;
+import org.boon.core.Conversions;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.MapObjectConversion;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.boon.Exceptions.die;
+import static org.boon.Str.endSliceOf;
+import static org.boon.Str.slc;
+import static org.boon.json.JsonFactory.fromJson;
 
 /**
  * Created by Richard on 2/10/14.
  */
 public class BasicContext implements ObjectContext, Map {
 
-    Object root;
 
-    public BasicContext( Object root ) {
-        this.root = root;
+    private LinkedList<Object> context;
+
+    public BasicContext(Object root) {
+
+        initContext(root);
     }
+
+
+    public void initContext(final Object root) {
+
+
+        this.context = new LinkedList<>();
+
+
+        if (root instanceof CharSequence) {
+
+            String str = root.toString().trim();
+
+            if (str.startsWith("[") || str.startsWith("{")) {
+                this.context.add(
+                        fromJson(root.toString()
+                        )
+                );
+            }
+
+        } else if (root instanceof List) {
+            List list = (List) root;
+
+            for (Object o : list) {
+                context.add(o);
+            }
+        } else if (root!=null) {
+            this.context.add(root);
+        }
+
+
+    }
+
+
 
     @Override
     public char idxChar( String property ) {
-         return BeanUtils.idxChar( root, property );
+
+        return Conversions.toChar(this.findProperty(property));
     }
+
+    public  Object findProperty(String propertyPath) {
+
+
+        int index = propertyPath.indexOf('|');
+
+        Object defaultValue;
+
+        if (index!=-1) {
+
+            String[] splitByPipe = Str.splitByPipe(propertyPath);
+            defaultValue = splitByPipe[1];
+            propertyPath = splitByPipe[0];
+
+        } else {
+            defaultValue = null;
+        }
+
+        Object object;
+        Iterator iterator = Conversions.iterator(context);
+        while (iterator.hasNext()) {
+            Object ctx = iterator.next();
+            object = BeanUtils.idx(ctx, propertyPath);
+            if (object != null) {
+
+                if (object instanceof List) {
+                    List list = (List) object;
+                    int nulls = 0;
+                    for (Object o : list) {
+                        if (o == null) {
+                            nulls++;
+                        }
+                    }
+                    if (nulls == list.size()) {
+                        break;
+                    }
+                }
+                return object;
+            }
+        }
+
+        return defaultValue;
+
+    }
+
 
     @Override
     public byte idxByte( String property ) {
 
-        return BeanUtils.idxByte( root, property );
+
+        return Conversions.toByte(this.findProperty(property));
     }
 
     @Override
     public short idxShort( String property ) {
 
-        return BeanUtils.idxShort( root, property );
+        return Conversions.toShort(this.findProperty(property));
     }
 
     @Override
     public String idxString( String property ) {
 
-        return (String)BeanUtils.idx( root, property );
+        return Conversions.toString(this.findProperty(property));
     }
 
     @Override
     public int idxInt( String property ) {
-        return BeanUtils.idxInt( root, property );
+
+        return Conversions.toInt(this.findProperty(property));
     }
 
     @Override
     public float idxFloat( String property ) {
-        return BeanUtils.idxFloat( root, property );
+
+        return Conversions.toFloat(this.findProperty(property));
     }
 
     @Override
     public double idxDouble( String property ) {
-        return BeanUtils.idxDouble( root, property );
+
+        return Conversions.toDouble(this.findProperty(property));
     }
 
     @Override
     public long idxLong( String property ) {
-        return BeanUtils.idxLong( root, property );
+
+        return Conversions.toLong(this.findProperty(property));
     }
 
     @Override
     public Object idx( String property ) {
-        return BeanUtils.idx( root, property );
+
+        return this.findProperty(property);
     }
 
     @Override
     public <T> T idx( Class<T> type, String property ) {
-        return BeanUtils.idx(type, root, property );
+
+        for (Object o : this.context) {
+            if (o != null) {
+                return BeanUtils.idx(type, o, property);
+            }
+        }
+
+        return null;
     }
 
     @Override
     public int size() {
-       return MapObjectConversion.toMap( root ).size();
+       return context.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return MapObjectConversion.toMap( root ).isEmpty();
+        return context.isEmpty();
     }
 
     @Override
     public boolean containsKey( Object key ) {
 
-        //TODO not a good idea
-        return MapObjectConversion.toMap( root ).containsKey(key);
+        die();
+        return true;
     }
 
     @Override
     public boolean containsValue( Object value ) {
 
-
-        //TODO not a good idea
-        return MapObjectConversion.toMap( root ).containsValue( value );
+        die();
+        return true;
     }
 
     @Override
     public Object get( Object key ) {
 
-        return this.idx((key.toString()));
+        return this.findProperty((key.toString()));
 
     }
 
@@ -170,4 +265,64 @@ public class BasicContext implements ObjectContext, Map {
 
         return die(Set.class, "Context not map");
     }
+
+
+
+
+    /**
+     * Lookup an object and use its name as the default value if not found.
+     *
+     * @param objectName
+     * @return
+     */
+    public Object lookup(String objectName) {
+        return lookupWithDefault(objectName, objectName);
+    }
+
+
+
+
+    /**
+     * Lookup an object and supply a default value.
+     * @param objectName
+     * @param defaultValue
+     * @return
+     */
+    public Object lookupWithDefault(String objectName, Object defaultValue) {
+
+        if (objectName==null) {
+            return defaultValue;
+        }
+
+        char firstChar = Str.idx(objectName, 0);
+        char lastChar = Str.idx(objectName, -1);
+
+        if (firstChar == '$' && lastChar == '}') {
+            objectName = slc(objectName, 2, -1);
+
+        } else if (firstChar == '$' ) {
+            objectName = slc(objectName, 1);
+
+        }
+
+        Object value = BeanUtils.findProperty(context, objectName);
+
+        value = value == null ? defaultValue : value;
+
+        return value;
+    }
+
+
+    public void pushContext(Object values) {
+        this.context.add(0, values);
+    }
+
+
+    public void removeLastContext() {
+        this.context.remove(0);
+    }
+
+
+
+
 }

@@ -139,7 +139,7 @@ public class MessageSpecification implements Serializable {
     /**
      * Creates a message.
      *
-     * @param argKeys arguments to lookup that were configured.
+     * @param argKeys arguments to lookupWithDefault that were configured.
      * @param args    Arguments that were passed via the object that wants to
      *                generate the message
      */

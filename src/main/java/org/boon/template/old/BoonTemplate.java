@@ -26,7 +26,7 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.template;
+package org.boon.template.old;
 
 import org.boon.*;
 import org.boon.core.Conversions;

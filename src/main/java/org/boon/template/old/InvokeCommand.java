@@ -26,7 +26,7 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.template;
+package org.boon.template.old;
 
 
 import org.boon.Lists;
@@ -34,12 +34,14 @@ import org.boon.core.Typ;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MethodAccess;
 import org.boon.primitive.CharBuf;
+import org.boon.template.old.BoonTemplate;
+import org.boon.template.old.Command;
 
 import java.util.List;
 
 import static org.boon.json.JsonFactory.fromJson;
 
-public class InvokeCommand implements Command{
+public class InvokeCommand implements Command {
 
 
     private Object function;

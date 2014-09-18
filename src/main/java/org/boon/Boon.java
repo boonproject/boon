@@ -41,7 +41,7 @@ import org.boon.logging.LogLevel;
 import org.boon.logging.Logging;
 import org.boon.logging.TerminalLogger;
 import org.boon.primitive.CharBuf;
-import org.boon.template.BoonTemplate;
+import org.boon.template.old.BoonTemplate;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -466,7 +466,7 @@ public class Boon {
 
 
     /**
-     * Does path lookup.
+     * Does path lookupWithDefault.
      * Facade over BeanUtils.
      *
      * @param value value to read

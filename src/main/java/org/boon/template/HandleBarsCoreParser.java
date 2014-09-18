@@ -255,7 +255,7 @@ import static org.boon.Boon.putl;
  * </pre>
  *
  * Rather than treat mustache as having two expressions (tried that), I will treat it as one.
- * Then the lookup mechanism will handle the other case.
+ * Then the lookupWithDefault mechanism will handle the other case.
  *
  * Velocity allows $vice and ${vice}maniac forms. Rather than handling two forms.
  * All parsers treat $vice as an expression. So that $foo is always an expression.

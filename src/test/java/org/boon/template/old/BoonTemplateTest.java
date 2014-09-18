@@ -26,7 +26,7 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.template;
+package org.boon.template.old;
 
 import org.boon.Str;
 import org.boon.core.Fn;
@@ -46,7 +46,7 @@ import static org.boon.core.reflection.BeanUtils.getPropertyValue;
 import static org.boon.core.reflection.BeanUtils.idx;
 import static org.boon.json.JsonFactory.niceJson;
 import static org.boon.json.JsonFactory.toJson;
-import static org.boon.template.BoonTemplate.*;
+import static org.boon.template.old.BoonTemplate.*;
 
 /**
  * Created by Richard on 2/27/14.

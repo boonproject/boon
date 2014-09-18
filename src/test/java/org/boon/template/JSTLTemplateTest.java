@@ -85,6 +85,8 @@ public class JSTLTemplateTest  {
         final String results = template.replace("<c:if test='false'> ${name} </c:if>" , company);
 
 
+        template.displayTokens();
+
         Boon.equalsOrDie("##", "#"+results+"#");
 
     }
@@ -105,7 +107,7 @@ public class JSTLTemplateTest  {
     @Test
     public void test7() {
 
-        final String results = template.replace("<c:if test='${flag}'> ${name} </c:if>" ,
+        final String results = template.replace("<c:if test='flag'> ${name} </c:if>" ,
 
                 Lists.list(Maps.map("flag", true), company));
 
@@ -115,9 +117,44 @@ public class JSTLTemplateTest  {
     }
 
     @Test
+    public void test8() {
+
+        final String results = template.replace("<c:if test='flag'> $name </c:if>" ,
+
+                Lists.list(Maps.map("flag", true), company));
+
+
+        Boon.equalsOrDie("# Mammatus #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void test9() {
+
+        final String results = template.replace("<c:if test='$flag'>$name</c:if>" ,
+
+                Lists.list(Maps.map("flag", false), company));
+
+
+        Boon.equalsOrDie("##", "#"+results+"#");
+
+    }
+    @Test
+    public void test10() {
+
+        final String results = template.replace("<c:if test='$flag'>$name</c:if>" ,
+
+                Lists.list(Maps.map("flag", true), company));
+
+
+        Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
+
+    }
+
+    @Test
     public void test8TightIf() {
 
-        final String results = template.replace("<c:if test='${flag}'>${name}</c:if>" ,
+        final String results = template.replace("<c:if test='flag'>${name}</c:if>" ,
 
                 Lists.list(Maps.map("flag", true), company));
 
@@ -143,20 +180,134 @@ public class JSTLTemplateTest  {
     }
 
 
+
     @Test
-    public void nestedIfIfWithExpression() {
+    public void nestedIfNoExpression() {
 
         final String results = template.replace(
                 "<c:if test='${flag}'>" +
-                        "<c:if test='${flag}'>${name}</c:if>" +
+                        "<c:if test='flag'>bobby</c:if>" +
                         "</c:if> sue" ,
 
                 Lists.list(Maps.map("flag", true), company));
 
 
-        Boon.equalsOrDie("#Mammatus sue#", "#"+results+"#");
+        Boon.equalsOrDie("#bobby sue#", "#"+results+"#");
 
     }
+
+    @Test
+    public void nestedIfIfWithExpression() {
+
+        final String results = template.replace(
+                "<c:if test='${flag}'>" +
+                        "123\n 123~<c:if test='${flag}'> 123 123 ~${name}</c:if>" +
+                        "</c:if> sue" ,
+
+                Lists.list(Maps.map("flag", true), company));
+
+
+        Boon.equalsOrDie("#123\n" +
+                " 123~ 123 123 ~Mammatus sue#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void testDefaultExpressionValueFound() {
+
+        final String results = template.replace(
+                "${boo|BAZ}" ,
+
+                Lists.list(Maps.map("boo", true), company));
+
+
+        Boon.equalsOrDie("#true#", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void testDefaultExpressionValueNOTFound() {
+
+        final String results = template.replace(
+                "${boo|BAZ}" ,
+                Lists.list(Maps.map("baz", true), company));
+
+        Boon.equalsOrDie("#BAZ#", "#"+results+"#");
+
+    }
+
+
+
+    @Test
+    public void cFor() {
+
+        final String results = template.replace(
+                "<c:loop items='${list}'}'>${item} </c:loop>" ,
+
+                Lists.list(Maps.map("list", Lists.list("apple", "orange", "b"))));
+
+
+        Boon.equalsOrDie("#apple orange b #", "#"+results +"#");
+
+    }
+
+
+    @Test
+    public void cForWithVar() {
+
+        final String results = template.replace(
+                "<c:loop var=\"fruit\" items='${list}'}'>${fruit} </c:loop>" ,
+        Maps.map("list", Lists.list("apple", "orange", "b")));
+
+
+        Boon.equalsOrDie("#apple orange b #", "#"+results +"#");
+
+    }
+
+
+
+    @Test
+    public void cForNested() {
+
+        final String results = template.replace(
+                "<c:forEach var=\"currentList\" items='${lists}'}'>" +
+                        "\nList: ${currentList}\n" +
+                        "<c:forEach var='currentItem' items='${currentList}'>" +
+                        "   \tItem: ${currentItem}\t" +
+                        "</c:forEach>" +
+                        "\n------------\n"+
+                 "</c:for>" ,
+
+                 Maps.map(
+                                    "lists",
+                                    Lists.list(
+                                        Lists.list("a1", "a2", "a3"),
+                                        Lists.list("b1", "b2", "b3")
+
+                                    )
+
+
+                            )
+                        )
+                ;
+
+
+        Boon.equalsOrDie("#\n" +
+                "List: [a1, a2, a3]\n" +
+                "   \tItem: a1\t   \tItem: a2\t   \tItem: a3\t\n" +
+                "------------\n" +
+                "\n" +
+                "List: [b1, b2, b3]\n" +
+                "   \tItem: b1\t   \tItem: b2\t   \tItem: b3\t\n" +
+                "------------\n" +
+                "#", "#"+results +"#");
+
+    }
+
+
+
+
 
     public static enum Fruit {
         ORANGES,
@@ -284,6 +435,7 @@ public class JSTLTemplateTest  {
             this.depts = depts;
         }
     }
+
 
 
 

@@ -33,10 +33,8 @@ import org.boon.datarepo.Repo;
 import org.boon.datarepo.Repos;
 import  org.boon.primitive.Int;
 
-import org.boon.Lists;
 import org.boon.Str;
-import org.boon.criteria.ObjectFilter;
-import org.boon.template.BoonTemplate;
+import org.boon.template.old.BoonTemplate;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -55,8 +53,8 @@ import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.criteria.Selector.selectAs;
 import static org.boon.criteria.Selector.selectAsTemplate;
 import static org.boon.criteria.Selector.selects;
-import static org.boon.template.BoonTemplate.jstl;
-import static org.boon.template.BoonTemplate.template;
+import static org.boon.template.old.BoonTemplate.jstl;
+import static org.boon.template.old.BoonTemplate.template;
 
 public class DataRepoExample {
 

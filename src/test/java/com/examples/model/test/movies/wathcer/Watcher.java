@@ -348,7 +348,7 @@ public class Watcher {
 
 
     /**
-     * lookup likeFactor.
+     * lookupWithDefault likeFactor.
      * @param likeFactor
      * @return
      */

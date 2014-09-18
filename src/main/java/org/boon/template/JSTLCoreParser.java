@@ -55,6 +55,7 @@ package org.boon.template;
  *               \/           \/          \/         \/        \/  \/
  */
 
+import org.boon.Str;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.primitive.CharScanner;
 
@@ -62,6 +63,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.boon.Boon.putl;
+import static org.boon.Boon.puts;
 
 
 /**
@@ -283,7 +285,7 @@ import static org.boon.Boon.putl;
  * </pre>
  *
  * Rather than treat mustache as having two expressions (tried that), I will treat it as one.
- * Then the lookup mechanism will handle the other case.
+ * Then the lookupWithDefault mechanism will handle the other case.
  *
  * Velocity allows $vice and ${vice}maniac forms. Rather than handling two forms.
  * All parsers treat $vice as an expression. So that $foo is always an expression.
@@ -491,17 +493,34 @@ public class JSTLCoreParser {
                        handleCommand();
                    }
             }  else if (ch=='$') {
-                if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
 
 
-                    text = textToken(text);
+                char ch1 = charArray[index+1];
+                if (ch1 == '{') {
+                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
 
 
-                    index += TokenTypes.EXPRESSION_START.chars.length;
-                    handleExpression();
-                    text = Token.text(index, -1);
+                        text = textToken(text);
+
+                        index += TokenTypes.EXPRESSION_START.chars.length;
+                        handleCurlyExpression();
+                        text = Token.text(index, -1);
+                        index--;
+
+
+                    }
+                } else {
+
+
+                        text = textToken(text);
+                        index++;
+                        handleExpression(null);
+                        text = Token.text(index, -1);
+                        index--;
+
 
                 }
+
             } else {
                 if (text == null) {
 
@@ -517,7 +536,7 @@ public class JSTLCoreParser {
     }
 
 
-    private void handleExpression() {
+    private void handleCurlyExpression() {
 
         int startIndex = index;
         index = CharScanner.findChars(TokenTypes.EXPRESSION_END.chars, index, charArray);
@@ -526,6 +545,26 @@ public class JSTLCoreParser {
             index += TokenTypes.EXPRESSION_END.chars.length;
 
         }
+    }
+
+
+    private void handleExpression(String term) {
+
+        int startIndex = index;
+        index = CharScanner.findWhiteSpace(index, charArray);
+
+
+        if (term !=null) {
+            if (index == -1) {
+                index = startIndex;
+                index = CharScanner.findChars(term.toCharArray(), index, charArray);
+            }
+        }
+
+        if (index == -1) {
+            index = charArray.length;
+        }
+        this.tokenList.add(Token.expression(startIndex, index));
     }
 
 
@@ -585,18 +624,30 @@ public class JSTLCoreParser {
                 }
 
             } else if (ch=='$') {
-                if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
+
+                char ch1 = charArray[index+1];
+                if (ch1 == '{') {
+                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
 
 
-                    text = textToken(text);
+                        text = textToken(text);
 
-                    index += TokenTypes.EXPRESSION_START.chars.length;
-                    handleExpression();
-                    text = Token.text(index, -1);
-                    index--;
+                        index += TokenTypes.EXPRESSION_START.chars.length;
+                        handleCurlyExpression();
+                        text = Token.text(index, -1);
+                        index--;
 
 
+                    }
+                } else {
+                        text = textToken(text);
+
+                        index++;
+                        handleExpression("</");
+                        text = Token.text(index, -1);
+                        index--;
                 }
+
             } else {
                 if (text == null) {
 
@@ -607,6 +658,9 @@ public class JSTLCoreParser {
         }
 
 
+        if (commandBody.stop() == -1) {
+            commandBody.stop = index;
+        }
         if (text!=null) {
             text.stop = charArray.length;
             this.tokenList.add( text );
@@ -685,6 +739,16 @@ public class JSTLCoreParser {
     public List<Token> getTokenList() {
         return tokenList;
     }
+
+
+
+    public void displayTokens(String template) {
+
+        for (JSTLCoreParser.Token token : this.getTokenList()) {
+            puts ("token", token, Str.slc(template, token.start(), token.stop()));
+        }
+    }
+
 
 
 

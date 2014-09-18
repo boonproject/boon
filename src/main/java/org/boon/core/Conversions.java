@@ -1135,10 +1135,6 @@ public class Conversions {
     }
 
 
-    public static String toString(Object obj) {
-        return (obj == null) ? "" : obj.toString();
-
-    }
 
     public static Number toWrapper(long l) {
         if (l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE) {
@@ -1532,8 +1528,7 @@ public class Conversions {
         } else if (obj == null) {
             return 0;
         } else {
-            die(sputs("Not an array like object", obj, obj.getClass()));
-            return 0; //will never get here.
+            return 1;
         }
 
     }
@@ -1555,5 +1550,18 @@ public class Conversions {
         } catch (ClassNotFoundException ex) {
             return (Class<?>) handle(Object.class, ex);
         }
+    }
+
+    public static String toString(Object obj, String defaultValue) {
+
+        return (obj == null) ? defaultValue : obj.toString();
+
+    }
+
+
+
+    public static String toString(Object obj) {
+        return (obj == null) ? "" : obj.toString();
+
     }
 }

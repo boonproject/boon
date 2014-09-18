@@ -39,9 +39,9 @@ import java.util.logging.Logger;
 
 
 /**
- * A really simple lookup index that uses a standard java.util.HashMap.
+ * A really simple lookupWithDefault index that uses a standard java.util.HashMap.
  *
- * @param <KEY>  key to lookup
+ * @param <KEY>  key to lookupWithDefault
  * @param <ITEM> value
  */
 public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
@@ -140,7 +140,7 @@ public class LookupIndexDefault<KEY, ITEM> implements LookupIndex<KEY, ITEM> {
             map.put(key, mv);
 
         }catch (Exception ex) {
-             Exceptions.handle(ex, "Problem putting item in lookup index, item=", item, "key=", key, "mv=", mv,
+             Exceptions.handle(ex, "Problem putting item in lookupWithDefault index, item=", item, "key=", key, "mv=", mv,
                      "primaryKey=", primaryKey);
         }
     }

@@ -74,7 +74,7 @@ public class RepoBuilderDefault implements RepoBuilder {
      */
     Function<Class, LookupIndex> lookupIndexFactory;
     /**
-     * Unique lookup index factory.
+     * Unique lookupWithDefault index factory.
      *
      * @see org.boon.datarepo.impl.indexes.UniqueLookupIndex
      */

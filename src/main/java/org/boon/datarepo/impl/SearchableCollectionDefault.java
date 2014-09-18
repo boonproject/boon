@@ -570,7 +570,7 @@ public class SearchableCollectionDefault<KEY, ITEM> implements SearchableCollect
     }
 
     public void addLookupIndex( String name, LookupIndex si ) {
-        log.config( String.format( "lookup index added name %s", name ) );
+        log.config( String.format( "lookupWithDefault index added name %s", name ) );
 
         lookupIndexMap.put( name, si );
         indexes.add( si );

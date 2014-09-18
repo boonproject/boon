@@ -383,4 +383,116 @@ public class JSTLCoreParserTest extends TestCase {
 
 
     }
+
+
+    @Test
+    public void testNoCurlyBrackets1() {
+        JSTLCoreParser parser = new JSTLCoreParser();
+        String text = "$name";
+        //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+        //.............0         10        20        30        40        50        60        70        80        90
+
+        parser.parse(text);
+        final List<JSTLCoreParser.Token> tokenList = parser.getTokenList();
+
+        ok = tokenList != null || die();
+
+        JSTLCoreParser.Token token = tokenList.get(0);
+
+
+
+        equalsOrDie("Token starts at 1", 1, token.start);
+        equalsOrDie("Token stops at 5", 5, token.stop);
+        equalsOrDie("Token is EXPRESSION", JSTLCoreParser.TokenTypes.EXPRESSION, token.type);
+        equalsOrDie("TEXT is ", "name", Str.sliceOf(text, token.start, token.stop));
+
+
+
+
+    }
+
+    @Test
+    public void testNoCurlyBrackets() {
+        JSTLCoreParser parser = new JSTLCoreParser();
+        String text = "<c:if test='$flag'>$name </c:if>";
+        //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+        //.............0         10        20        30        40        50        60        70        80        90
+
+        parser.parse(text);
+        final List<JSTLCoreParser.Token> tokenList = parser.getTokenList();
+
+        ok = tokenList!=null || die();
+
+        JSTLCoreParser.Token token = tokenList.get(0);
+
+        equalsOrDie("Token starts at 3", 3, token.start);
+        equalsOrDie("Token stops at 18", 18, token.stop);
+        equalsOrDie("Token is COMMAND", JSTLCoreParser.TokenTypes.COMMAND, token.type);
+        equalsOrDie("TEXT is ", "if test='$flag'", Str.sliceOf(text, token.start, token.stop));
+
+        token = tokenList.get(1);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 19", 19, token.start);
+        equalsOrDie("Token stops at 25", 25, token.stop);
+        equalsOrDie("Token is COMMAND_BODY", JSTLCoreParser.TokenTypes.COMMAND_BODY, token.type);
+        equalsOrDie("TEXT is ", "$name ", Str.sliceOf(text, token.start, token.stop));
+
+
+        token = tokenList.get(2);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 20", 20, token.start);
+        equalsOrDie("Token stops at 24", 24, token.stop);
+        equalsOrDie("Token is EXPRESSION", JSTLCoreParser.TokenTypes.EXPRESSION, token.type);
+        equalsOrDie("TEXT is ", "name", Str.sliceOf(text, token.start, token.stop));
+
+
+    }
+
+
+
+    @Test
+    public void testNoCurlyBracketsNoSpace() {
+        JSTLCoreParser parser = new JSTLCoreParser();
+        String text = "<c:if test='$flag'>$name</c:if>";
+        //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+        //.............0         10        20        30        40        50        60        70        80        90
+
+        parser.parse(text);
+        final List<JSTLCoreParser.Token> tokenList = parser.getTokenList();
+
+        ok = tokenList!=null || die();
+
+        JSTLCoreParser.Token token = tokenList.get(0);
+
+        equalsOrDie("Token starts at 3", 3, token.start);
+        equalsOrDie("Token stops at 18", 18, token.stop);
+        equalsOrDie("Token is COMMAND", JSTLCoreParser.TokenTypes.COMMAND, token.type);
+        equalsOrDie("TEXT is ", "if test='$flag'", Str.sliceOf(text, token.start, token.stop));
+
+        token = tokenList.get(1);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 19", 19, token.start);
+        equalsOrDie("Token stops at 24", 24, token.stop);
+        equalsOrDie("Token is COMMAND_BODY", JSTLCoreParser.TokenTypes.COMMAND_BODY, token.type);
+        equalsOrDie("TEXT is ", "#$name#", "#" +
+                Str.sliceOf(text, token.start, token.stop) + "#");
+
+
+        token = tokenList.get(2);
+
+        puts(token);
+
+        equalsOrDie("Token starts at 20", 20, token.start);
+        equalsOrDie("Token stops at 24", 24, token.stop);
+        equalsOrDie("Token is EXPRESSION", JSTLCoreParser.TokenTypes.EXPRESSION, token.type);
+        equalsOrDie("TEXT is ", "name", Str.sliceOf(text, token.start, token.stop));
+
+
+    }
 }

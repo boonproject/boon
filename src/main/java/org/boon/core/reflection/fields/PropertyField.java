@@ -50,7 +50,7 @@ public class PropertyField extends BaseField {
 
 
 
-//        MethodHandles.Lookup lookup = MethodHandles.lookup();
+//        MethodHandles.Lookup lookupWithDefault = MethodHandles.lookupWithDefault();
 //        MethodType methodType
 //                = MethodType.methodType ( this.type );
 //        MethodHandle methodHandle = null;
@@ -58,7 +58,7 @@ public class PropertyField extends BaseField {
 //
 //        if ( parentType != null && getter != null ) {
 //            try {
-//                methodHandle = lookup.findVirtual ( this.parentType, getter.name (), methodType );
+//                methodHandle = lookupWithDefault.findVirtual ( this.parentType, getter.name (), methodType );
 //            } catch ( NoSuchMethodException e ) {
 //               Exceptions.handle ( e );
 //            } catch ( IllegalAccessException e ) {
@@ -79,7 +79,7 @@ public class PropertyField extends BaseField {
 //
 //
 //            try {
-//                methodHandle = lookup.findVirtual ( this.parentType, setter.name(), methodType );
+//                methodHandle = lookupWithDefault.findVirtual ( this.parentType, setter.name(), methodType );
 //            } catch ( NoSuchMethodException e ) {
 //                Exceptions.handle ( e );
 //            } catch ( IllegalAccessException e ) {

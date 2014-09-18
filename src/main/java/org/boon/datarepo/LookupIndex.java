@@ -32,7 +32,7 @@ import org.boon.core.Function;
 import java.util.List;
 
 /**
- * Creates a simple lookup index (like a hash map).
+ * Creates a simple lookupWithDefault index (like a hash map).
  *
  * @param <KEY>  The key
  * @param <ITEM> The item

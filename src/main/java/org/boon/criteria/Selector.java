@@ -32,7 +32,7 @@ package org.boon.criteria;
 import org.boon.core.Function;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.template.BoonTemplate;
+import org.boon.template.old.BoonTemplate;
 
 import java.util.*;
 
