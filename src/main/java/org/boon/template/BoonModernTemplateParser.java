@@ -213,7 +213,9 @@ public class BoonModernTemplateParser implements TemplateParser{
             }
 
             /* Add a text token up to the found expression or command. */
-            tokenList.add(Token.text(startIndex, index));
+            if (startIndex != index) {
+                tokenList.add(Token.text(startIndex, index));
+            }
             index += TokenTypes.EXPRESSION_START.handleBarStyle().length;
 
 
@@ -226,7 +228,7 @@ public class BoonModernTemplateParser implements TemplateParser{
             if (ch == '#') {
                 if (!handleCommand()) break; //nested command
             } else if (ch == '/') {
-                commandBody.stop(index - 3);
+                commandBody.stop(index - 2);
 
 
                 index = CharScanner.findChars(TokenTypes.EXPRESSION_END.handleBarStyle(), index, charArray);
