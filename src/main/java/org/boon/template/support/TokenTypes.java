@@ -1,4 +1,4 @@
-package org.boon.template;
+package org.boon.template.support;
 
 import org.boon.core.reflection.FastStringUtils;
 
@@ -18,9 +18,13 @@ public enum TokenTypes {
     EXPRESSION_START("${"),
     EXPRESSION_END("}"),
     TEXT("");
-    char[] chars;
+    private char[] JSTL_STYLE;
 
     TokenTypes(String str) {
-        this.chars = FastStringUtils.toCharArray(str);
+        this.JSTL_STYLE = FastStringUtils.toCharArray(str);
+    }
+
+    public char[] jstlStyle() {
+        return JSTL_STYLE;
     }
 }

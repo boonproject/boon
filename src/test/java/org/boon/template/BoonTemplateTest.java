@@ -39,17 +39,34 @@ public class BoonTemplateTest {
 
     }
 
-    //@Test
+    @Test
     public void testCSetNoEndTag() {
 
         final String results = template.replace(
-                "<c:set var=\"workplace\" value='${company}'>" +
+                "<c:set var=\"workplace\" value='${company}'/>" +
                         "${workplace.name}"
                 ,
 
                 Maps.map("string", "moon", "company", company));
 
 
+        template.displayTokens();
+        Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void testCSetNoEndTag2() {
+
+        final String results = template.replace(
+                "<c:set var=\"workplace\" value='${company}'> </c:set>" +
+                        "${workplace.name}"
+                ,
+
+                Maps.map("string", "moon", "company", company));
+
+
+        template.displayTokens();
         Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
 
     }

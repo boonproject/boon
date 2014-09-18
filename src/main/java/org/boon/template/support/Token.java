@@ -1,7 +1,5 @@
 package org.boon.template.support;
 
-import org.boon.template.TokenTypes;
-
 /**
 * Created by Richard on 9/17/14.
 */

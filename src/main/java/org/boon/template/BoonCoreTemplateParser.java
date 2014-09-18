@@ -59,6 +59,7 @@ import org.boon.Str;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.primitive.CharScanner;
 import org.boon.template.support.Token;
+import org.boon.template.support.TokenTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -443,12 +444,12 @@ public class BoonCoreTemplateParser {
             ch = charArray[index];
 
             if (ch == '<') {
-                if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START.jstlStyle(), index, this.charArray)) {
 
 
                     text = textToken(text);
 
-                    index += TokenTypes.COMMAND_START.chars.length;
+                    index += TokenTypes.COMMAND_START.jstlStyle().length;
                     handleCommand();
                 }
             }
@@ -459,12 +460,12 @@ public class BoonCoreTemplateParser {
 
                 char ch1 = charArray[index + 1];
                 if (ch1 == '{') {
-                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
+                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.jstlStyle(), index, this.charArray)) {
 
 
                         text = textToken(text);
 
-                        index += TokenTypes.EXPRESSION_START.chars.length;
+                        index += TokenTypes.EXPRESSION_START.jstlStyle().length;
                         handleCurlyExpression();
                         text = Token.text(index, -1);
                         index--;
@@ -500,10 +501,10 @@ public class BoonCoreTemplateParser {
     private void handleCurlyExpression() {
 
         int startIndex = index;
-        index = CharScanner.findChars(TokenTypes.EXPRESSION_END.chars, index, charArray);
+        index = CharScanner.findChars(TokenTypes.EXPRESSION_END.jstlStyle(), index, charArray);
         if (index > 0) {
             this.tokenList.add(Token.expression(startIndex, index));
-            index += TokenTypes.EXPRESSION_END.chars.length;
+            index += TokenTypes.EXPRESSION_END.jstlStyle().length;
 
         }
     }
@@ -532,19 +533,47 @@ public class BoonCoreTemplateParser {
 
 
         int startIndex = index;
-        index = CharScanner.findChars(TokenTypes.COMMAND_END_START.chars, index, charArray);
+        boolean noBody = false;
+        index = CharScanner.findChars(TokenTypes.COMMAND_END_START.jstlStyle(), index, charArray);
         if (index == -1 ) {
             return;
+        }
+
+        int foundIndex = CharScanner.findChars(TokenTypes.COMMAND_START_TAG_END.jstlStyle(), index-1, charArray);
+        if (foundIndex!=-1) {
+            noBody = true;
+        }
+//        if (foundIndex == -1) {
+//            index = CharScanner.findChars(TokenTypes.COMMAND_START_END.chars, index, charArray);
+//        } else {
+//            index = foundIndex;
+//            index++;
+//            noBody = true;
+//        }
+
+        if (noBody) {
+            index--;
+
         }
 
         //Add this command start to the token list.
         this.tokenList.add(Token.commandStart(startIndex, index));
 
 
-        index += TokenTypes.COMMAND_END_START.chars.length;
+        index += TokenTypes.COMMAND_END_START.jstlStyle().length;
 
 
-        Token commandBody = Token.commandBody(index, -1);
+        if (noBody) {
+
+            tokenList.add(Token.commandBody(index, index));
+
+            return;
+        }
+
+
+        Token commandBody = Token.commandBody(index, index);
+
+
         tokenList.add(commandBody);
 
 
@@ -561,15 +590,15 @@ public class BoonCoreTemplateParser {
 
             if (ch=='<') {
 
-                if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START.jstlStyle(), index, this.charArray)) {
 
 
                     text = textToken(text);
 
-                    index+=TokenTypes.COMMAND_START.chars.length;
+                    index+= TokenTypes.COMMAND_START.jstlStyle().length;
                     handleCommand();
 
-                } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.chars, index, this.charArray)) {
+                } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.jstlStyle(), index, this.charArray)) {
 
 
 
@@ -586,12 +615,12 @@ public class BoonCoreTemplateParser {
 
                 char ch1 = charArray[index+1];
                 if (ch1 == '{') {
-                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
+                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.jstlStyle(), index, this.charArray)) {
 
 
                         text = textToken(text);
 
-                        index += TokenTypes.EXPRESSION_START.chars.length;
+                        index += TokenTypes.EXPRESSION_START.jstlStyle().length;
                         handleCurlyExpression();
                         text = Token.text(index, -1);
                         index--;
@@ -634,7 +663,7 @@ public class BoonCoreTemplateParser {
 
         int startIndex = index;
         boolean noBody = false;
-        index = CharScanner.findChars(TokenTypes.COMMAND_START_END.chars, index, charArray);
+        index = CharScanner.findChars(TokenTypes.COMMAND_START_END.jstlStyle(), index, charArray);
         index++;
 
         //int foundIndex = CharScanner.findChars(TokenTypes.COMMAND_START_TAG_END.chars, index, charArray);
@@ -650,7 +679,7 @@ public class BoonCoreTemplateParser {
         this.tokenList.add(Token.commandStart(startIndex, index));
 
 
-        index += TokenTypes.COMMAND_END_START.chars.length;
+        index += TokenTypes.COMMAND_END_START.jstlStyle().length;
 
         if (noBody) {
             return;
@@ -674,15 +703,15 @@ public class BoonCoreTemplateParser {
 
             if (ch == '<') {
 
-                if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START.jstlStyle(), index, this.charArray)) {
 
 
                     text = textToken(text);
 
-                    index += TokenTypes.COMMAND_START.chars.length;
+                    index += TokenTypes.COMMAND_START.jstlStyle().length;
                     handleCommand();
 
-                } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.chars, index, this.charArray)) {
+                } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.jstlStyle(), index, this.charArray)) {
 
 
                     text = textToken(text);
@@ -699,7 +728,7 @@ public class BoonCoreTemplateParser {
 
             else if (ch == '/') {
 
-                if (CharScanner.matchChars(TokenTypes.COMMAND_START_TAG_END.chars, index, this.charArray)) {
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START_TAG_END.jstlStyle(), index, this.charArray)) {
 
 
                     text = textToken(text);
@@ -716,12 +745,12 @@ public class BoonCoreTemplateParser {
 
                 char ch1 = charArray[index + 1];
                 if (ch1 == '{') {
-                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
+                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.jstlStyle(), index, this.charArray)) {
 
 
                         text = textToken(text);
 
-                        index += TokenTypes.EXPRESSION_START.chars.length;
+                        index += TokenTypes.EXPRESSION_START.jstlStyle().length;
                         handleCurlyExpression();
                         text = Token.text(index, -1);
                         index--;

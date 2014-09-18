@@ -10,6 +10,7 @@ import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
 import org.boon.template.support.LoopTagStatus;
 import org.boon.template.support.Token;
+import org.boon.template.support.TokenTypes;
 
 import java.util.*;
 
@@ -70,7 +71,7 @@ public class BoonTemplate implements Template {
     }
 
 
-    private void handleCommand(String template, Token commandToken, Iterator<Token> tokens) {
+    private Token handleCommand(String template, Token commandToken, Iterator<Token> tokens) {
 
         this.template = template;
 
@@ -94,23 +95,27 @@ public class BoonTemplate implements Template {
             bodyTokenStop = bodyToken.stop();
         } else {
             bodyTokenStop = -1;
-            die("BODY TOKEN NOT FOUND", commandText, commandToken);
+
         }
 
 
         List<Token> commandTokens = new ArrayList<>();
 
 
-        while (tokens.hasNext()) {
-            final Token next = tokens.next();
-            commandTokens.add(next);
-            if (next.stop() == bodyTokenStop) {
-                break;
-            }
+        if (bodyToken.start()!=bodyToken.stop()) {
+            while (tokens.hasNext()) {
+                final Token next = tokens.next();
+                commandTokens.add(next);
+                if (next.stop() == bodyTokenStop) {
+                    break;
+                }
 
+            }
         }
 
         dispatchCommand(command, params, commandTokens);
+
+        return null;
 
     }
 
@@ -234,6 +239,7 @@ public class BoonTemplate implements Template {
                 break;
             case COMMAND:
                 handleCommand(template, token, tokens);
+
                 break;
 
 

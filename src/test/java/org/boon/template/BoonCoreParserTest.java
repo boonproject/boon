@@ -1,8 +1,8 @@
 package org.boon.template;
 
-import junit.framework.TestCase;
 import org.boon.Str;
 import org.boon.template.support.Token;
+import org.boon.template.support.TokenTypes;
 import org.junit.Test;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class BoonCoreParserTest  {
 
     boolean ok;
 
-    //@Test
+    @Test
     public void testSimpleNoEnd() {
         BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
         String text = "<c:set var='foo' target='bar'/>love";
@@ -33,14 +33,24 @@ public class BoonCoreParserTest  {
         equalsOrDie("Token starts at 3", 3, token.start());
         equalsOrDie("Token stops at 29", 29, token.stop());
         equalsOrDie("Token is COMMAND", TokenTypes.COMMAND, token.type());
-        equalsOrDie("TEXT is ", "set var='foo' target='bar'", Str.sliceOf(text, token.start(), token.stop()));
+        equalsOrDie("TEXT is ", "set var='foo' target='bar'", Str.sliceOf(text, token.start(),
+                token.stop()));
 
         token = tokenList.get(1);
 
+        equalsOrDie("Token starts at 30", 30, token.start());
+        equalsOrDie("Token stops at 30", 30, token.stop());
+        equalsOrDie("Token is COMMAND_BODY", TokenTypes.COMMAND_BODY, token.type());
+        equalsOrDie("TEXT is ", "", Str.sliceOf(text, token.start(), token.stop()));
+
+
+        token = tokenList.get(2);
+
         equalsOrDie("Token starts at 31", 31, token.start());
         equalsOrDie("Token stops at 35", 35, token.stop());
-        equalsOrDie("Token is COMMAND_BODY", TokenTypes.TEXT, token.type());
+        equalsOrDie("Token is TEXT", TokenTypes.TEXT, token.type());
         equalsOrDie("TEXT is ", "love", Str.sliceOf(text, token.start(), token.stop()));
+
     }
 
     @Test
