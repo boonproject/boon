@@ -149,7 +149,8 @@ public class BoonModernParserTest {
     public void simpleCommandNoSpace() {
         BoonModernTemplateParser parser = new BoonModernTemplateParser();
 
-        String text = "{{#if test}} {{fine}} {{/if}}";
+        String text = "{{#if test}}{{fine}}{{/if}}";
+        String test;
         //.............01234567
         parser.parse(text);
 
@@ -165,8 +166,124 @@ public class BoonModernParserTest {
         equalsOrDie("Token stops at 10", 10, token.stop());
         equalsOrDie("Token is COMMAND", TokenTypes.COMMAND, token.type());
         equalsOrDie("TEXT is ", "if test", Str.sliceOf(text, token.start(), token.stop()));
+
+        token = tokenList.get(1);
+
+        equalsOrDie("Token is COMMAND_BODY", TokenTypes.COMMAND_BODY, token.type());
+        test = Str.add("#",
+                Str.sliceOf(text, token.start(), token.stop()), "#");
+        equalsOrDie("TEXT is ", "#{{fine}}#", test);
+
+
+        token = tokenList.get(2);
+
+        equalsOrDie("Token is EXPRESSION", TokenTypes.EXPRESSION, token.type());
+        test = Str.add("#",
+                Str.sliceOf(text, token.start(), token.stop()), "#");
+        equalsOrDie("TEXT is ", "#fine#", test);
+
+
+
     }
 
+    @Test
+    public void simpleCommandExtraSpaceInCommand() {
+        BoonModernTemplateParser parser = new BoonModernTemplateParser();
+
+        String text = "{{#if test }}{{fine}}{{/if}}";
+        String test;
+        //.............01234567
+        parser.parse(text);
+
+        final List<Token> tokenList = parser.getTokenList();
+
+        ok = tokenList!=null || die();
+
+        parser.displayTokens(text);
+
+        Token token = tokenList.get(0);
+
+        equalsOrDie("Token is COMMAND", TokenTypes.COMMAND, token.type());
+        equalsOrDie("TEXT is ", "if test ", Str.sliceOf(text, token.start(), token.stop()));
+
+        token = tokenList.get(1);
+
+        equalsOrDie("Token is COMMAND_BODY", TokenTypes.COMMAND_BODY, token.type());
+        test = Str.add("#",
+                Str.sliceOf(text, token.start(), token.stop()), "#");
+        equalsOrDie("TEXT is ", "#{{fine}}#", test);
+
+
+        token = tokenList.get(2);
+
+        equalsOrDie("Token is EXPRESSION", TokenTypes.EXPRESSION, token.type());
+        test = Str.add("#",
+                Str.sliceOf(text, token.start(), token.stop()), "#");
+        equalsOrDie("TEXT is ", "#fine#", test);
+
+
+
+    }
+
+
+
+    @Test
+    public void simpleComment() {
+        BoonModernTemplateParser parser = new BoonModernTemplateParser();
+
+        String text = "{{! comment }}hi";
+        String test;
+        //.............01234567
+        parser.parse(text);
+
+        final List<Token> tokenList = parser.getTokenList();
+
+        ok = tokenList!=null || die();
+
+        parser.displayTokens(text);
+
+        Token token = tokenList.get(0);
+
+        equalsOrDie("Token is TEXT", TokenTypes.TEXT, token.type());
+        equalsOrDie("TEXT is ", "hi", Str.sliceOf(text, token.start(), token.stop()));
+
+
+        ok = tokenList.size() ==1 || die(tokenList.size());
+
+
+
+    }
+
+
+    @Test
+    public void twoComments() {
+        BoonModernTemplateParser parser = new BoonModernTemplateParser();
+
+        String text = "{{! comment 1 }}hi{{! comment 2 }}mom";
+        //.............01234567
+        parser.parse(text);
+
+        final List<Token> tokenList = parser.getTokenList();
+
+        ok = tokenList!=null || die();
+
+        parser.displayTokens(text);
+
+        Token token = tokenList.get(0);
+
+        equalsOrDie("Token is TEXT", TokenTypes.TEXT, token.type());
+        equalsOrDie("TEXT is ", "hi", Str.sliceOf(text, token.start(), token.stop()));
+
+
+        ok = tokenList.size() ==2 || die(tokenList.size());
+
+        token = tokenList.get(1);
+
+        equalsOrDie("Token is TEXT", TokenTypes.TEXT, token.type());
+        equalsOrDie("TEXT is ", "mom", Str.sliceOf(text, token.start(), token.stop()));
+
+
+    }
 
 }
 

@@ -13,4 +13,5 @@ public interface TemplateParser {
     List<Token> getTokenList();
 
     void displayTokens(String template);
+
 }

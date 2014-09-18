@@ -49,37 +49,9 @@ public class BoonModernTemplateParser implements TemplateParser{
     int ch;
 
 
-    private List<Token> tokenList;
-
-    public static void main(String... args) {
-
-        BoonModernTemplateParser parser = new BoonModernTemplateParser();
-        //            01234567890123456789012345678
-        //parser.parse("Hi Mom {{fine}} How are you?");
-
-        putl(parser.tokenList);
+    private List<Token> tokenList = new ArrayList<>();
 
 
-        //            01234567890123456789012345678
-        parser.parse(
-              /*
- 0123456789012345678901234567890123456789
-                */
-                "Hi Mom {{#if test}}{{fine}}{{/if}} How are you?");
-
-        putl(parser.tokenList);
-
-
-        //            01234567890123456789012345678
-        parser.parse(
-              /*
- 01234567890123456789012345678901234567890123456789012345678901234567890123456789
-                */
-                "Hi Mom {{#if test}} Good {{fine}} Good {{#if}}boyyah{{/if}} {{/if}} How are you?");
-
-
-        putl(parser.tokenList);
-    }
 
     public void TemplateParser() {
 
@@ -90,7 +62,7 @@ public class BoonModernTemplateParser implements TemplateParser{
         this.charArray = FastStringUtils.toCharArray(string);
         this.index = 0;
 
-        tokenList = new ArrayList();
+        tokenList.clear();
 
 
         processLoop();
@@ -113,7 +85,7 @@ public class BoonModernTemplateParser implements TemplateParser{
 
     private void processLoop() {
 
-        int startIndex = 0;
+        int startIndex;
 
         while (true) {
 
@@ -157,10 +129,26 @@ public class BoonModernTemplateParser implements TemplateParser{
 
         if (ch == '#') {
             return handleCommand();
-        } else {
+        } else if (ch=='!') {
+            return handleComment();
+        }
+        else {
             return handleExpression();
         }
 
+    }
+
+    private boolean handleComment() {
+        index++;
+        int foundIndex = CharScanner.findChars(
+                TokenTypes.EXPRESSION_END.handleBarStyle(), index, charArray);
+
+        if (foundIndex==-1) {
+            return false;
+        }
+
+        index = foundIndex + TokenTypes.EXPRESSION_END.handleBarStyle().length;
+        return true;
     }
 
     private boolean handleExpression() {
@@ -178,10 +166,6 @@ public class BoonModernTemplateParser implements TemplateParser{
     private boolean handleCommand() {
 
 
-        //            01234567890123456789012345678
-        //parser.parse(
-        // 0123456789012345678901234567890123456789
-        //        "Hi Mom {{#if test}}{{fine}}{{/if}} How are you?");
 
         int startIndex = index + 1;
         index = CharScanner.findChars(TokenTypes.EXPRESSION_END.handleBarStyle(), index, charArray);
@@ -189,7 +173,6 @@ public class BoonModernTemplateParser implements TemplateParser{
             return false;
         }
 
-        //Add this command start to the token list.
         this.tokenList.add(Token.commandStart(startIndex, index));
 
 
@@ -202,12 +185,11 @@ public class BoonModernTemplateParser implements TemplateParser{
         while (true) {
 
             startIndex = index;
-            //Look for a nested expression, body or end of this command
 
             index = CharScanner.findChars(TokenTypes.EXPRESSION_START.handleBarStyle(), index, charArray);
 
 
-                        /* If you found something than add a text token up to the point where you found something. */
+            /* If you found something than add a text token up to the point where you found something. */
             if (index == -1) {
                 return false;
             }

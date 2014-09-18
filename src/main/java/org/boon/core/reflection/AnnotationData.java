@@ -117,13 +117,13 @@ public class AnnotationData {
     Map<String, Object> doGetValues(Annotation annotation) {
         /* Holds the value map. */
         Map<String, Object> values = new HashMap<String, Object>();
-        /* Get the declared methodMap from the actual annotation. */
+        /* Get the declared staticMethodMap from the actual annotation. */
         Method[] methods = annotation.annotationType().getDeclaredMethods();
 
         final Object[] noargs = ( Object[] ) null;
 
-        /* Iterate through declared methodMap and extract values
-         * by invoking decalared methodMap if they are no arg methodMap.
+        /* Iterate through declared staticMethodMap and extract values
+         * by invoking decalared staticMethodMap if they are no arg staticMethodMap.
          */
         for ( Method method : methods ) {
             /* If it is a no arg method assume it is an annoation value. */

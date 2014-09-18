@@ -367,7 +367,7 @@ public class BoonCoreTemplateParser implements TemplateParser {
     char ch;
 
 
-    private List<Token> tokenList;
+    private List<Token> tokenList = new ArrayList<>();
 
 
     @Override
@@ -376,8 +376,7 @@ public class BoonCoreTemplateParser implements TemplateParser {
         this.charArray = FastStringUtils.toCharArray(string);
         this.index = 0;
 
-        tokenList = new ArrayList<>();
-
+        tokenList.clear();
 
         processLoop();
     }

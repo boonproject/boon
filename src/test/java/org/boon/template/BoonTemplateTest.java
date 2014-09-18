@@ -30,7 +30,6 @@ public class BoonTemplateTest {
                 new Dept("Engineering", new Employee("Rick", "Hightower", 1,
                         new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES)),
                 new Dept("HR", new Employee("Diana", "Hightower", 2, new Phone("320", "555", "1212")))
-
         );
 
         company = new Company("Mammatus", list);
@@ -38,6 +37,256 @@ public class BoonTemplateTest {
 
 
     }
+
+    @Test
+    public void jsonList() {
+
+        final String results = template.replace(
+                "<c:for ['apple', 'orange', 'kiwi']> $item </c:for>"
+                );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  kiwi #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonListMustache() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace(
+                "{{#for ['apple', 'orange', 'kiwi']}} {{item}} {{/for}}"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  kiwi #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonList2() {
+
+        final String results = template.replace(
+                "<c:each items=\"['apple', 'orange', 'kiwi']\"> $item </c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  kiwi #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonList2Mustache() {
+
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace(
+                "{{#each items=\"['apple', 'orange', 'kiwi']\"}} {{item}} {{/each}}"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  kiwi #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void methodCall() {
+
+        final String results = template.replace(
+                "<c:each items=\"['apple', 'orange', 'kiwi']\"> $item $item.length()</c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple 5 orange 6 kiwi 4#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void methodCallMustache() {
+
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace(
+
+                "{{#each items=\"['apple', 'orange', 'kiwi']\"}} {{item}} {{item.length()}}{{/each}}"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple 5 orange 6 kiwi 4#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void methodCallReplace() {
+
+        final String results = template.replace(
+                "<c:each items=\"['apple', 'orange', 'kiwi']\"> $item $item.replaceAll(i,a)</c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple apple orange orange kiwi kawa#", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void methodCallReplaceMustache() {
+
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace(
+                "{{#each ['apple', 'orange', 'kiwi'] }} {{item}} {{item.replaceAll(i,a)}}{{/each}}"
+
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple apple orange orange kiwi kawa#", "#"+results+"#");
+
+    }
+
+    //@Test Create method object that handles overload type matching
+    public void methodCallReplace2() {
+
+        final String results = template.replace(
+                "<c:each items=\"['apple', 'orange', 'kiwi']\"> $item $item.replace(i,a)</c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple apple orange orange kiwi kawa#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonList3() {
+
+        final String results = template.replace(
+                "<c:each items='[\"apple\", \"orange\", \"kiwi\"]' var='x'> $x </c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  kiwi #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonList4() {
+
+        final String results = template.replace(
+                "<c:each items=[apple,orange,kiwi] var='x'> $x </c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  kiwi #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonList5() {
+
+        final String results = template.replace(
+                "<c:each items='[apple,orange,kiwi]' var='x'> $x </c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  kiwi #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void random() {
+
+        final String results = template.replace(
+                "<c:set var='foo' value=[apple,orange,pear] />" +
+                        "<c:each items={{foo}} var='x'> $x </c:each>"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("# apple  orange  pear #", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonMap() {
+
+        final String results = template.replace(
+                "<c:set var='employee' " +
+                        "value=\"" +
+                        "{" +
+                        "      name:'Rick', \n" +
+                        "      age:100," +
+                        "      job:programmer" +
+                        "}\" />" +
+                        "" +
+                        "${employee.name} ${employee.age}  ${employee.job}"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("#Rick 100  programmer#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void jsonMapMustache() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+        final String results = template.replace(
+                "{{#set var='employee' " +
+                        "value=\"" +
+                        "{" +
+                        "      name:'Rick', \n" +
+                        "      age:100," +
+                        "      job:programmer" +
+                        "}\" }} {{/set}}" +
+                        "" +
+                        "{{employee.name}} {{employee.age}}  {{employee.job}}"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("#Rick 100  programmer#", "#"+results+"#");
+
+    }
+
+
+    @Test
+    public void jsonMapStrict() {
+
+        final String results = template.replace(
+                "<c:set var='employee' " +
+                        "value=\'" +
+                        "{" +
+                        "      \"name\":\"Rick\", \n" +
+                        "      \"age\":100,\n" +
+                        "      \"job\":\"programmer\"" +
+                        "}\' />" +
+                        "" +
+                        "${employee.name} ${employee.age}  ${employee.job}"
+        );
+
+
+        template.displayTokens();
+        Boon.equalsOrDie("#Rick 100  programmer#", "#"+results+"#");
+
+    }
+
 
     @Test
     public void testCSetNoEndTag() {
@@ -96,6 +345,32 @@ public class BoonTemplateTest {
     }
 
     @Test
+    public void testCSet2Mustache() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace(
+                "{{#set var=\"workplace\" value='${company}'" +
+                        " target='${map.map2}' property='company' " +
+                        "}}  {{/set}}" +
+                        "{{workplace.name}} \n " +
+                        "{{map.map2.company.name}}"
+                ,
+                Maps.map("string", "moon",
+                        "company", company,
+                        "map", Maps.map(
+                                "map2", Maps.map("name", "map2")
+                        )
+                )
+        );
+
+
+        Boon.equalsOrDie("#Mammatus \n" +
+                " Mammatus#", "#"+results+"#");
+
+    }
+
+    @Test
     public void testCSet() {
 
         final String results = template.replace(
@@ -116,6 +391,21 @@ public class BoonTemplateTest {
     public void testContains() {
 
         final String results = template.replace("<c:if test=$fn:contains(string, oon)>$string</c:if>",
+
+                Maps.map("string", "moon"));
+
+
+        Boon.equalsOrDie("moon", results);
+
+    }
+
+    @Test
+    public void testContainsMustache() {
+
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace("{{#if test=$fn:contains(string, oon)}}{{$string}}{{/if}}",
 
                 Maps.map("string", "moon"));
 
@@ -186,6 +476,19 @@ public class BoonTemplateTest {
 
     }
 
+    @Test
+    public void companyObjectMustache() {
+
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace("{{this}}", company);
+
+
+        Boon.equalsOrDie(company.toString(), results);
+
+    }
+
 
     @Test
     public void companyObjectBoonWay() {
@@ -206,6 +509,19 @@ public class BoonTemplateTest {
         Boon.equalsOrDie("[Engineering, HR]", results);
 
     }
+
+    @Test
+    public void deptNamesMustache() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace("{{this.depts.name}}", company);
+
+
+        Boon.equalsOrDie("[Engineering, HR]", results);
+
+    }
+
 
     @Test
     public void deptNamesBoonWay() {
@@ -237,6 +553,55 @@ public class BoonTemplateTest {
 
     }
 
+
+
+    @Test
+    public void deptNamesForEachBoonWayMustache() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace("{{#each items=depts.name }}" +
+                "{{item}} " +
+                "{{/each}}", company);
+
+
+        Boon.equalsOrDie("#Engineering HR #", "#" + results + "#");
+
+    }
+
+
+    @Test
+    public void deptNamesForEachBoonWayMustache1() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace("{{#each items=$depts.name }}" +
+                "{{item}} " +
+                "{{/each}}", company);
+
+
+        Boon.equalsOrDie("#Engineering HR #", "#" + results + "#");
+
+    }
+
+
+
+    @Test
+    public void deptNamesForEachBoonWayMustache2() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        final String results = template.replace("{{#each items=${depts.name} }}" +
+                "{{item}} " +
+                "{{/each}}", company);
+
+
+        Boon.equalsOrDie("#Engineering HR #", "#" + results + "#");
+
+    }
+
+
+
     @Test
     public void deptNamesForEachAgain() {
 
@@ -264,6 +629,37 @@ public class BoonTemplateTest {
         final String results = template.replace("<c:for items='$list' step='3' >$item </c:for>",
 
                 Maps.map("list", Lists.list(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)));
+
+
+        Boon.equalsOrDie("#0 3 6 9 12 15 18 #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void manyNumsJasonMaps() {
+
+        final String results = template.replace("<c:for { items:$list, step:3 } >$item </c:for>",
+
+                Maps.map("list", Lists.list(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)));
+
+
+        Boon.equalsOrDie("#0 3 6 9 12 15 18 #", "#" + results + "#");
+
+    }
+
+    @Test
+    public void manyNumsJasonMapWithList() {
+
+        final String results = template.replace("" +
+                        "<c:for " +
+                        "{ " +
+                        "items:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, " +
+                        "       11, 12, 13, 14, 15, 16, 17, 18], " +
+                        "step:3 } >" +
+                        "$item " +
+                        "</c:for>");
+
+
 
 
         Boon.equalsOrDie("#0 3 6 9 12 15 18 #", "#" + results + "#");

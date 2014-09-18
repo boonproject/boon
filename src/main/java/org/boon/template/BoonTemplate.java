@@ -1,5 +1,7 @@
 package org.boon.template;
 
+import org.boon.Boon;
+import org.boon.Lists;
 import org.boon.Str;
 import org.boon.StringScanner;
 import org.boon.collections.LazyMap;
@@ -23,11 +25,12 @@ import static org.boon.Exceptions.die;
 public class BoonTemplate implements Template {
 
 
-    CharBuf _buf = CharBuf.create(16);
+    private CharBuf _buf = CharBuf.create(16);
     private BoonTemplate parentTemplate;
     private TemplateParser parser;
     private String template;
     private ExpressionContext _context;
+    private BoonCommandArgumentParser commandArgumentParser = new BoonCommandArgumentParser();
 
     private void output(Object object) {
         _buf.add(object);
@@ -38,11 +41,28 @@ public class BoonTemplate implements Template {
     }
 
 
+    public BoonTemplate() {
+
+        parser = new BoonCoreTemplateParser();
+
+    }
+
+
+    public BoonTemplate(TemplateParser templateParser) {
+
+        parser = templateParser;
+
+    }
+
+//    @Override
+//    public String replace(TemplateParser parser, String template, Object... context) {
+//
+//    }
+
     @Override
     public String replace(String template, Object... context) {
 
         initContext(context);
-        parser = new BoonCoreTemplateParser();
         this.template = template;
         parser.parse(template);
         _buf.readForRecycle();
@@ -81,10 +101,10 @@ public class BoonTemplate implements Template {
 
         String command = Str.endSliceOf(commandText, index);
 
-        String args = Str.sliceOf(commandText, index).trim();
+        String args = Str.sliceOf(commandText, index);
 
 
-        Map<String, String> params = parseArguments(args);
+        Map<String, Object> params = commandArgumentParser.parseArguments(args);
 
 
         Token bodyToken = tokens.next();
@@ -119,103 +139,42 @@ public class BoonTemplate implements Template {
 
     }
 
-    private Map<String, String> parseArguments(String args) {
-        int index;
-        final char[] chars = args.toCharArray();
-
-        boolean collectName = true;
-
-        StringBuilder name = new StringBuilder();
-        StringBuilder value = new StringBuilder();
-
-        Map<String, String> params = new LinkedHashMap<>();
-
-        for (index = 0; index < chars.length; index++) {
-            char c = chars[index];
-
-            switch (c) {
-
-                case '\t':
-                case '\n':
-                case '\r':
-                case ' ':
-                    continue;
-
-                case '=':
-                    collectName = false;
-                    if (chars[index + 1] != '\'' && chars[index + 1] != '\"') {
-                        int start = index + 1;
-                        int end = -1;
-                        if (chars[index + 1] == '$' && chars[index + 2] == '{') {
-
-                            end = CharScanner.findChar('}', start, chars);
-                            if (end != -1) end++;
-                        } else {
-                            end = CharScanner.findWhiteSpace(start, chars);
-                        }
-                        if (end == -1) {
-                            end = chars.length;
-                        }
-                        String v = Str.slc(args, start, end);
-                        params.put(name.toString(), v);
-                        index += v.length();
-                        name = new StringBuilder();
-
-                        collectName = true;
-                        value = new StringBuilder();
-
-                    } else {
-                        index++; //skip quote
-                    }
-                    continue;
-
-
-                case '\"':
-                case '\'':
-                    collectName = true;
-                    index++;
-                    params.put(name.toString(), value.toString());
-                    name = new StringBuilder();
-                    value = new StringBuilder();
-                    continue;
-
-
-                default:
-                    if (collectName) {
-                        name.append(c);
-                    } else {
-                        value.append(c);
-                    }
-
-            }
-        }
-        return params;
-    }
 
     private void dispatchCommand(
             String command,
-            Map<String, String> params,
+            Map<String, Object> params,
             List<Token> commandTokens
     ) {
         switch (command) {
             case "if":
-                handleIf(params, commandTokens);
+                handleIf(params, commandTokens, true);
                 break;
+
+            case "unless":
+                handleIf(params, commandTokens, false);
+                break;
+
             case "set":
             case "let":
             case "var":
             case "define":
             case "def":
+            case "assign":
                 handleSet(params, commandTokens);
                 break;
+
+            case "list":
             case "for":
             case "forEach":
+            case "foreach":
             case "loop":
+            case "each":
                 handleLoop(params, commandTokens);
 
         }
 
     }
+
 
     private void processCommandBodyTokens(List<Token> commandTokens) {
         final Iterator<Token> commandTokenIterators
@@ -247,25 +206,25 @@ public class BoonTemplate implements Template {
     }
 
 
-    private String getStringParam(String param, Map<String, String> params, String defaultValue) {
+    private String getStringParam(String param, Map<String, Object> params, String defaultValue) {
 
-        String value = params.get(param);
-        if (value == null) {
+        String value = Str.toString(params.get(param));
+        if (Str.isEmpty(value)) {
             return defaultValue;
         } else if (value.startsWith("$")) {
             return Conversions.toString(_context.lookupWithDefault(value, defaultValue));
 
         }
-        return Conversions.toString(value);
+        return value;
     }
 
-    private int getIntParam(String param, Map<String, String> params, int defaultValue) {
+    private int getIntParam(String param, Map<String, Object> params, int defaultValue) {
 
-        String value = params.get(param);
+        Object value = params.get(param);
         if (value == null) {
             return defaultValue;
-        } else if (value.startsWith("$")) {
-            return Conversions.toInt(_context.lookupWithDefault(value, defaultValue));
+        } else if (value instanceof CharSequence && value.toString().startsWith("$")) {
+            return Conversions.toInt(_context.lookupWithDefault(value.toString(), defaultValue));
 
         }
         return Conversions.toInt(value);
@@ -279,10 +238,24 @@ public class BoonTemplate implements Template {
     }
 
 
-    private void handleLoop(Map<String, String> params, List<Token> commandTokens
+    private void handleLoop(Map<String, Object> params, List<Token> commandTokens
     ) {
 
-        List<Object> items = Conversions.toList(_context.lookup(params.get("items")));
+
+        String itemsName = Str.toString(params.get("items"));
+        final Object object = _context.lookup(itemsName);
+
+
+
+        List<Object> items;
+
+        if (Boon.isEmpty(object)) {
+            items = (List<Object>) params.get("varargs");
+        }else {
+            items = Conversions.toList(object);
+        }
+
+
 
         String var = getStringParam("var", params, "item");
         String varStatus = getStringParam("varStatus", params, "status");
@@ -345,13 +318,13 @@ public class BoonTemplate implements Template {
     }
 
 
-    private void handleSet(Map<String, String> params, List<Token> commandTokens) {
+    private void handleSet(Map<String, Object> params, List<Token> commandTokens) {
 
 
         String var = getStringParam("var", params, "");
         String propertyPath = getStringParam("property", params, "");
-        String valueExpression = params.get("value");
-        String targetExpression = params.get("target");
+        String valueExpression = Str.toString(params.get("value"));
+        String targetExpression = Str.toString(params.get("target"));
 
 
         Object value = _context.lookup(valueExpression);
@@ -368,15 +341,15 @@ public class BoonTemplate implements Template {
 
     }
 
-    private void handleIf(Map<String, String> params,
-            List<Token> commandTokens ) {
 
+    private void handleIf(Map<String, Object> params, List<Token> commandTokens,
+                          boolean normal) {
 
         boolean display;
 
         String var = getStringParam("var", params, "__none");
 
-        final String test = params.get("test");
+        final String test = Str.toString(params.get("test"));
         if (test.startsWith("$")) {
             Object o = _context.lookup(test);
 
@@ -385,13 +358,15 @@ public class BoonTemplate implements Template {
             display = Conversions.toBoolean(test);
         }
 
+        display = display && normal;
 
         if (!var.equals("__none")) {
-            Map<String, Object> values = new LazyMap();
 
+            _context.put(var, display);
 
-            _context.pushContext(values);
         }
+
+
 
 
         if (display) {
@@ -401,13 +376,9 @@ public class BoonTemplate implements Template {
         }
 
 
-        if (!var.equals("__none")) {
-
-
-            _context.removeLastContext();
-        }
 
     }
+
 
 
 }

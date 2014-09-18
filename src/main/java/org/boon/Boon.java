@@ -1510,4 +1510,8 @@ public class Boon {
         CharBuf buf = CharBuf.createCharBuf();
         return buf.prettyPrintObject(object, true, 0).toString();
     }
+
+    public static boolean isEmpty(Object object) {
+        return len(object)==0;
+    }
 }

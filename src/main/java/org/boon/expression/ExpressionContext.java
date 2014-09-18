@@ -32,8 +32,9 @@ import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.ClassMeta;
-import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.MethodAccess;
+import org.boon.json.JsonParserAndMapper;
+import org.boon.json.JsonParserFactory;
 import org.boon.primitive.Arry;
 
 import java.util.*;
@@ -50,9 +51,11 @@ public class ExpressionContext implements ObjectContext, Map {
 
     private LinkedList<Object> context;
 
+    private final JsonParserAndMapper jsonParser = new JsonParserFactory().lax().create();
+
 
     /** Functions can be used anywhere where expressions can be used. */
-    protected Map<String, MethodAccess> methodMap = new HashMap<>(100);
+    protected Map<String, MethodAccess> staticMethodMap = new HashMap<>(100);
 
 
     public  ExpressionContext(final List<Object> root) {
@@ -76,7 +79,7 @@ public class ExpressionContext implements ObjectContext, Map {
         for (MethodAccess m : standardFunctionsClassMeta.methods()) {
             if (m.isStatic()) {
                 String funcName = Str.add(prefix, ":", m.name());
-                methodMap.put(funcName, m);
+                staticMethodMap.put(funcName, m);
             }
         }
     }
@@ -149,7 +152,9 @@ public class ExpressionContext implements ObjectContext, Map {
 
             } else if (ctx instanceof Pair) {
                 Pair<String, Object> pair = (Pair<String, Object>)ctx;
-                if (propertyPath.startsWith(pair.getKey())){
+                if(pair.getKey().equals(propertyPath)) {
+                    return pair.getValue();
+                } else if (propertyPath.startsWith(pair.getKey())){
 
                     String subPath = StringScanner.substringAfter(
                             propertyPath, pair.getKey());
@@ -157,8 +162,6 @@ public class ExpressionContext implements ObjectContext, Map {
                     Object o = pair.getValue();
                     Object returnValue =  BeanUtils.idx(o, subPath);
                     return returnValue;
-                }else if(pair.getKey().equals(propertyPath)) {
-                    return pair.getValue();
                 }
 
             }
@@ -323,36 +326,47 @@ public class ExpressionContext implements ObjectContext, Map {
 
     /**
      * Lookup an object and supply a default value.
-     * @param objectName
+     * @param objectExpression
      * @param defaultValue
      * @return
      */
-    public Object lookupWithDefault(String objectName, Object defaultValue) {
+    public Object lookupWithDefault(String objectExpression, Object defaultValue) {
 
-        if (objectName==null) {
+        if (Str.isEmpty(objectExpression)) {
             return defaultValue;
         }
 
-        char firstChar = Str.idx(objectName, 0);
-        char lastChar = Str.idx(objectName, -1);
+        char firstChar = Str.idx(objectExpression, 0);
+        char secondChar = Str.idx(objectExpression, 1);
+        char lastChar = Str.idx(objectExpression, -1);
 
-        if (firstChar == '$' && lastChar == '}') {
-            objectName = slc(objectName, 2, -1);
-
-        } else if (firstChar == '$' ) {
-            objectName = slc(objectName, 1);
-
+        switch(firstChar) {
+            case '$':
+               if (lastChar=='}') {
+                   objectExpression = slc(objectExpression, 2, -1);
+               } else {
+                   objectExpression = slc(objectExpression, 1);
+               }
+               break;
+            case '{':
+                if (secondChar=='{' && lastChar=='}') {
+                    objectExpression = slc(objectExpression, 2, -2);
+                } else {
+                    return jsonParser.parse(objectExpression);
+                }
+                break;
+            case '[':
+                return jsonParser.parse(objectExpression);
         }
 
-        lastChar = Str.idx(objectName, -1);
-
+        lastChar = Str.idx(objectExpression, -1);
         if (lastChar==')') {
-            return handleFunction(objectName);
+            return handleFunction(objectExpression);
         }
 
 
 
-        Object value = findProperty(objectName);
+        Object value = findProperty(objectExpression);
 
         value = value == null ? defaultValue : value;
 
@@ -362,19 +376,52 @@ public class ExpressionContext implements ObjectContext, Map {
     private Object handleFunction(String functionCall) {
         String[] split = StringScanner.splitByChars(functionCall,  '(', ')');
         String methodName = split[0];
-        MethodAccess method = this.methodMap.get(methodName);
 
         String arguments = split[1];
         List<Object> args = getObjectFromArguments(arguments);
 
-        return method.invokeDynamic(null, Arry.array(args));
+        MethodAccess method = this.staticMethodMap.get(methodName);
+
+        if (method!=null) {
+
+            return method.invokeDynamic(null, Arry.array(args));
+        } else {
+            return handleMethodCall(methodName, args);
+        }
+
+    }
+
+    private Object handleMethodCall(String objectPath, List<Object> args) {
+
+        final int lastIndexOf = objectPath.lastIndexOf('.');
+
+        String beanPath = objectPath.substring(0, lastIndexOf);
+        String methodName = objectPath.substring(lastIndexOf+1, objectPath.length());
+
+        Object bean = lookup(beanPath);
+
+        if (bean == null) {
+            return null;
+        }
+
+        final Class<?> cls = Boon.cls(bean);
+
+        if (cls == null) {
+            return null;
+        }
+
+        final ClassMeta<?> classMeta = ClassMeta.classMeta(cls);
+
+        final MethodAccess method = classMeta.method(methodName);
+
+        if (method==null) {
+            return null;
+        }
+
+        return method.invokeDynamic(bean, Arry.array(args));
     }
 
     protected List<Object> getObjectFromArguments(String arguments) {
-
-        /**
-         * If arguments starts with '[' or '{' or '"'  or "'" then we think it JSON.
-         */
 
             final String[] strings = StringScanner.split(arguments, ',');
 

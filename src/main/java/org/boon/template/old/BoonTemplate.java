@@ -528,7 +528,7 @@ public abstract class BoonTemplate {
      /*
      *  functionMap()
      *  commandMap()
-     *  methodMap()
+     *  staticMethodMap()
      *  lineIndex()
      *  line()
      *  context()
@@ -539,7 +539,7 @@ public abstract class BoonTemplate {
 
         this.addFunction("functionMap", this);
         this.addFunction("commandMap", this);
-        this.addFunction("methodMap", this);
+        this.addFunction("staticMethodMap", this);
         this.addFunction("lineIndex", this);
         this.addFunction("line", this);
         this.addFunction("parentTemplate", this);
