@@ -25,7 +25,7 @@ public class BoonTemplate implements Template {
 
     CharBuf _buf = CharBuf.create(16);
     private BoonTemplate parentTemplate;
-    private BoonCoreTemplateParser parser;
+    private TemplateParser parser;
     private String template;
     private ExpressionContext _context;
 

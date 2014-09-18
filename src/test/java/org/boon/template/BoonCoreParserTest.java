@@ -20,7 +20,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testSimpleNoEnd() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "<c:set var='foo' target='bar'/>love";
         //..............012345678901234567890123456789012345678901234567890
         //..............0         10        20        30        40        50
@@ -55,7 +55,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testSimple() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "  blah   <c:if test='foo'>  body </c:if> more text";
                    //  012345678901234567890123456789012345678901234567890
                    //  0         10        20        30        40        50
@@ -105,7 +105,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testSimpleNoQuote() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "  blah   <c:if test=$foo >  body </c:if> more text";
         //  012345678901234567890123456789012345678901234567890
         //  0         10        20        30        40        50
@@ -155,7 +155,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testSimple1Char() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "  blah   <c:if test=1    >  body </c:if> more text";
         //  012345678901234567890123456789012345678901234567890
         //  0         10        20        30        40        50
@@ -206,7 +206,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testNested() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "  blah   <c:if test='foo'>  body  <c:if test='bar'> body2 </c:if> body3 </c:if>more text";
                    //  01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
                    //  0         10        20        30        40        50        60        70        80        90
@@ -290,7 +290,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testSimpleExpression() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "  blah   <c:if test='foo'>  ${body} </c:if> more text";
                    //  012345678901234567890123456789012345678901234567890
                    //  0         10        20        30        40        50
@@ -360,7 +360,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testTwoExpressions() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "  blah   <c:if test='foo'>  ${body}abc${bacon}zzz</c:if> more text";
                    //  01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
                    //  0         10        20        30        40        50       60
@@ -440,7 +440,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testTight() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "<c:if test='foo'>body</c:if>";
                    //  01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
                    //  0         10        20        30        40        50        60        70        80        90
@@ -480,7 +480,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testBuggyTight() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "<c:if test='${flag}'>${name}</c:if>";
         //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
         //.............0         10        20        30        40        50        60        70        80        90
@@ -522,7 +522,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testNoCurlyBrackets1() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "$name";
         //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
         //.............0         10        20        30        40        50        60        70        80        90
@@ -548,7 +548,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testNoCurlyBrackets() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "<c:if test='$flag'>$name </c:if>";
         //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
         //.............0         10        20        30        40        50        60        70        80        90
@@ -591,7 +591,7 @@ public class BoonCoreParserTest  {
 
     @Test
     public void testNoCurlyBracketsNoSpace() {
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        TemplateParser parser = new BoonCoreTemplateParser();
         String text = "<c:if test='$flag'>$name</c:if>";
         //.............01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
         //.............0         10        20        30        40        50        60        70        80        90

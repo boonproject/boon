@@ -358,7 +358,7 @@ import static org.boon.Boon.puts;
  *         There is no logic in this parser. Just an array of token positions.
  *         It is up to BoonTemplate on how to interpret those tokens.
  */
-public class BoonCoreTemplateParser {
+public class BoonCoreTemplateParser implements TemplateParser {
 
 
     char charArray[];
@@ -369,60 +369,8 @@ public class BoonCoreTemplateParser {
 
     private List<Token> tokenList;
 
-    public static void main(String... args) {
 
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
-
-//        parser.parse(
-///*
-// 01234567890123456789012345678 */
-//"Hi Mom ${fine} How are you?");
-//
-//        putl(parser.tokenList);
-//
-//
-//
-//
-//        parser.parse(
-//              /*
-//          10        20        30        40       50         60
-// 0123456789012345678901234567890123456789012345678901234567890
-//                */
-//"Hi Mom <c:if test>abc ${fine} abc </c:if> How are you?");
-//
-//        putl(parser.tokenList);
-//
-//
-//
-//
-//        //            01234567890123456789012345678
-//        parser.parse(
-//              /*
-//
-//          10        20        30        40       50         60         70       80
-// 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-//                */
-//"Hi Mom <c:if test> Good <c:if test> Good ${fine} good </c:if> boyyah <c:/if> How are you?");
-//
-//
-//
-//        putl(parser.tokenList);
-
-
-        //            01234567890123456789012345678
-        parser.parse(
-              /*
-
-           10        20        30        40       50         60         70       80
-  012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-                */
-                "<c:if test>         <c:if test>    g    ${fine}   </c:if>   g         </c:if>   How are you?");
-
-        putl(parser.tokenList);
-
-
-    }
-
+    @Override
     public void parse(String string) {
 
         this.charArray = FastStringUtils.toCharArray(string);
@@ -543,13 +491,6 @@ public class BoonCoreTemplateParser {
         if (foundIndex!=-1) {
             noBody = true;
         }
-//        if (foundIndex == -1) {
-//            index = CharScanner.findChars(TokenTypes.COMMAND_START_END.chars, index, charArray);
-//        } else {
-//            index = foundIndex;
-//            index++;
-//            noBody = true;
-//        }
 
         if (noBody) {
             index--;
@@ -658,135 +599,6 @@ public class BoonCoreTemplateParser {
 
     }
 
-    private void handleCommandFUCKED() {
-
-
-        int startIndex = index;
-        boolean noBody = false;
-        index = CharScanner.findChars(TokenTypes.COMMAND_START_END.jstlStyle(), index, charArray);
-        index++;
-
-        //int foundIndex = CharScanner.findChars(TokenTypes.COMMAND_START_TAG_END.chars, index, charArray);
-//        if (foundIndex == -1) {
-//            index = CharScanner.findChars(TokenTypes.COMMAND_START_END.chars, index, charArray);
-//        } else {
-//            index = foundIndex;
-//            index++;
-//            noBody = true;
-//        }
-
-        //Add this command start to the token list.
-        this.tokenList.add(Token.commandStart(startIndex, index));
-
-
-        index += TokenTypes.COMMAND_END_START.jstlStyle().length;
-
-        if (noBody) {
-            return;
-        }
-
-
-        Token commandBody = Token.commandBody(index, -1);
-        tokenList.add(commandBody);
-
-
-        Token text = Token.text(index, -1);
-
-
-        for (; index < charArray.length; index++) {
-            ch = charArray[index];
-
-            puts(ch, index);
-            if (index==20) {
-                puts("AT 36");
-            }
-
-            if (ch == '<') {
-
-                if (CharScanner.matchChars(TokenTypes.COMMAND_START.jstlStyle(), index, this.charArray)) {
-
-
-                    text = textToken(text);
-
-                    index += TokenTypes.COMMAND_START.jstlStyle().length;
-                    handleCommand();
-
-                } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.jstlStyle(), index, this.charArray)) {
-
-
-                    text = textToken(text);
-
-                    commandBody.stop(index);
-                    index++;
-                    index = CharScanner.findChar('>', index, charArray);
-                    break;
-
-                }
-
-            }
-
-
-            else if (ch == '/') {
-
-                if (CharScanner.matchChars(TokenTypes.COMMAND_START_TAG_END.jstlStyle(), index, this.charArray)) {
-
-
-                    text = textToken(text);
-
-                    commandBody.stop(index);
-                    index++;
-                    index++;
-                    break;
-
-                }
-            }
-
-            else if (ch == '$') {
-
-                char ch1 = charArray[index + 1];
-                if (ch1 == '{') {
-                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.jstlStyle(), index, this.charArray)) {
-
-
-                        text = textToken(text);
-
-                        index += TokenTypes.EXPRESSION_START.jstlStyle().length;
-                        handleCurlyExpression();
-                        text = Token.text(index, -1);
-                        index--;
-
-
-                    }
-                } else {
-                    text = textToken(text);
-
-                    index++;
-                    handleExpression("</");
-                    text = Token.text(index, -1);
-                    index--;
-                }
-
-            } else {
-                if (text == null) {
-
-                    text = Token.text(index, -1);
-                }
-            }
-
-        }
-
-
-        if (commandBody.stop() == -1) {
-            commandBody.stop(index);
-        }
-        if (text != null) {
-            text.stop(charArray.length);
-            this.tokenList.add(text);
-        }
-
-
-    }
-
     private Token textToken(Token text) {
         if (text != null) {
             text.stop(index);
@@ -798,11 +610,13 @@ public class BoonCoreTemplateParser {
         return text;
     }
 
+    @Override
     public List<Token> getTokenList() {
         return tokenList;
     }
 
 
+    @Override
     public void displayTokens(String template) {
 
         for (Token token : this.getTokenList()) {
