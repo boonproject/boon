@@ -1,8 +1,10 @@
 package org.boon.template;
 
-import org.boon.*;
+import org.boon.Str;
+import org.boon.StringScanner;
 import org.boon.collections.LazyMap;
 import org.boon.core.Conversions;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.expression.ExpressionContext;
 import org.boon.primitive.CharBuf;
 import org.boon.primitive.CharScanner;
@@ -12,10 +14,7 @@ import org.boon.template.support.Token;
 import java.util.*;
 
 import static org.boon.Boon.puts;
-import static org.boon.Boon.sputl;
 import static org.boon.Exceptions.die;
-import static org.boon.Str.slc;
-import static org.boon.json.JsonFactory.fromJson;
 
 /**
  * Created by Richard on 9/15/14.
@@ -23,20 +22,16 @@ import static org.boon.json.JsonFactory.fromJson;
 public class BoonTemplate implements Template {
 
 
-
-    private BoonTemplate parentTemplate;
-
-    private BoonCoreTemplateParser parser;
-
-
-    private String template;
-
     CharBuf _buf = CharBuf.create(16);
+    private BoonTemplate parentTemplate;
+    private BoonCoreTemplateParser parser;
+    private String template;
     private ExpressionContext _context;
 
     private void output(Object object) {
         _buf.add(object);
     }
+
     private void output(Token token) {
         _buf.add(template, token.start(), token.stop());
     }
@@ -72,7 +67,6 @@ public class BoonTemplate implements Template {
         this._context = new ExpressionContext(root);
 
 
-
     }
 
 
@@ -95,18 +89,16 @@ public class BoonTemplate implements Template {
         Token bodyToken = tokens.next();
 
 
-
-
         int bodyTokenStop;
         if (bodyToken.type() == TokenTypes.COMMAND_BODY) {
             bodyTokenStop = bodyToken.stop();
-        }else {
+        } else {
             bodyTokenStop = -1;
             die("BODY TOKEN NOT FOUND", commandText, commandToken);
         }
 
 
-        List <Token> commandTokens = new ArrayList<>();
+        List<Token> commandTokens = new ArrayList<>();
 
 
         while (tokens.hasNext()) {
@@ -126,14 +118,14 @@ public class BoonTemplate implements Template {
         int index;
         final char[] chars = args.toCharArray();
 
-        boolean collectName=true;
+        boolean collectName = true;
 
         StringBuilder name = new StringBuilder();
         StringBuilder value = new StringBuilder();
 
-        Map<String, String> params  = new LinkedHashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
 
-        for (index=0; index < chars.length; index++) {
+        for (index = 0; index < chars.length; index++) {
             char c = chars[index];
 
             switch (c) {
@@ -145,19 +137,26 @@ public class BoonTemplate implements Template {
                     continue;
 
                 case '=':
-                    collectName=false;
-                    if (chars[index+1] != '\'' && chars[index+1] != '\"') {
-                        int start = index+1;
-                        int end = CharScanner.findWhiteSpace(start, chars);
-                        if (end==-1){
+                    collectName = false;
+                    if (chars[index + 1] != '\'' && chars[index + 1] != '\"') {
+                        int start = index + 1;
+                        int end = -1;
+                        if (chars[index + 1] == '$' && chars[index + 2] == '{') {
+
+                            end = CharScanner.findChar('}', start, chars);
+                            if (end != -1) end++;
+                        } else {
+                            end = CharScanner.findWhiteSpace(start, chars);
+                        }
+                        if (end == -1) {
                             end = chars.length;
                         }
                         String v = Str.slc(args, start, end);
                         params.put(name.toString(), v);
-                        index+=v.length();
+                        index += v.length();
                         name = new StringBuilder();
 
-                        collectName=true;
+                        collectName = true;
                         value = new StringBuilder();
 
                     } else {
@@ -168,7 +167,7 @@ public class BoonTemplate implements Template {
 
                 case '\"':
                 case '\'':
-                    collectName=true;
+                    collectName = true;
                     index++;
                     params.put(name.toString(), value.toString());
                     name = new StringBuilder();
@@ -179,7 +178,7 @@ public class BoonTemplate implements Template {
                 default:
                     if (collectName) {
                         name.append(c);
-                    }else {
+                    } else {
                         value.append(c);
                     }
 
@@ -197,6 +196,13 @@ public class BoonTemplate implements Template {
             case "if":
                 handleIf(params, commandTokens);
                 break;
+            case "set":
+            case "let":
+            case "var":
+            case "define":
+            case "def":
+                handleSet(params, commandTokens);
+                break;
             case "for":
             case "forEach":
             case "loop":
@@ -206,10 +212,158 @@ public class BoonTemplate implements Template {
 
     }
 
-    private void handleIf(
-                          Map<String, String> params,
-                          List<Token> commandTokens
-                          ) {
+    private void processCommandBodyTokens(List<Token> commandTokens) {
+        final Iterator<Token> commandTokenIterators
+                = commandTokens.iterator();
+        while (commandTokenIterators.hasNext()) {
+
+            Token token = commandTokenIterators.next();
+            processToken(commandTokenIterators, token);
+
+        }
+    }
+
+    private void processToken(Iterator<Token> tokens, Token token) {
+        switch (token.type()) {
+            case TEXT:
+                output(token);
+                break;
+            case EXPRESSION:
+                String path = textFromToken(token);
+                output(_context.lookup(path));
+                break;
+            case COMMAND:
+                handleCommand(template, token, tokens);
+                break;
+
+
+        }
+    }
+
+
+    private String getStringParam(String param, Map<String, String> params, String defaultValue) {
+
+        String value = params.get(param);
+        if (value == null) {
+            return defaultValue;
+        } else if (value.startsWith("$")) {
+            return Conversions.toString(_context.lookupWithDefault(value, defaultValue));
+
+        }
+        return Conversions.toString(value);
+    }
+
+    private int getIntParam(String param, Map<String, String> params, int defaultValue) {
+
+        String value = params.get(param);
+        if (value == null) {
+            return defaultValue;
+        } else if (value.startsWith("$")) {
+            return Conversions.toInt(_context.lookupWithDefault(value, defaultValue));
+
+        }
+        return Conversions.toInt(value);
+    }
+
+    public void displayTokens() {
+
+        for (Token token : parser.getTokenList()) {
+            puts("token", token, textFromToken(token));
+        }
+    }
+
+
+    private void handleLoop(Map<String, String> params, List<Token> commandTokens
+    ) {
+
+        List<Object> items = Conversions.toList(_context.lookup(params.get("items")));
+
+        String var = getStringParam("var", params, "item");
+        String varStatus = getStringParam("varStatus", params, "status");
+
+
+        int begin = getIntParam("begin", params, -1);
+        int end = getIntParam("end", params, -1);
+        int step = getIntParam("step", params, -1);
+
+        LoopTagStatus status = new LoopTagStatus();
+
+        status.setCount(items.size());
+
+        if (end != -1) {
+            status.setEnd(end);
+        } else {
+            end = items.size();
+        }
+
+
+        if (begin != -1) {
+            status.setBegin(begin);
+        } else {
+            begin = 0;
+        }
+
+
+        if (step != -1) {
+            status.setStep(step);
+        } else {
+            step = 1;
+        }
+
+
+        Map<String, Object> values = new LazyMap();
+
+        int index = 0;
+
+        _context.pushContext(values);
+
+        for (Object item : items) {
+
+            if (index >= begin && index < end && index % step == 0) {
+
+                values.put(var, item);
+                values.put(varStatus, status);
+
+                values.put("index", index);
+
+                status.setIndex(index);
+
+                processCommandBodyTokens(commandTokens);
+            }
+            index++;
+        }
+
+        _context.removeLastContext();
+
+
+    }
+
+
+    private void handleSet(Map<String, String> params, List<Token> commandTokens) {
+
+
+        String var = getStringParam("var", params, "");
+        String propertyPath = getStringParam("property", params, "");
+        String valueExpression = params.get("value");
+        String targetExpression = params.get("target");
+
+
+        Object value = _context.lookup(valueExpression);
+
+        Object bean = _context.lookup(targetExpression);
+
+        if (!Str.isEmpty(propertyPath) && bean!=null ) {
+            BeanUtils.idx(bean, propertyPath, value);
+        }
+
+        if (!Str.isEmpty(var)) {
+            _context.put(var, value);
+        }
+
+    }
+
+    private void handleIf(Map<String, String> params,
+            List<Token> commandTokens ) {
 
 
         boolean display;
@@ -249,132 +403,5 @@ public class BoonTemplate implements Template {
 
     }
 
-    private void processCommandBodyTokens(List<Token> commandTokens) {
-        final Iterator<Token> commandTokenIterators
-                = commandTokens.iterator();
-        while (commandTokenIterators.hasNext()) {
-
-            Token token = commandTokenIterators.next();
-            processToken(commandTokenIterators, token);
-
-        }
-    }
-
-    private void processToken(Iterator<Token> tokens, Token token) {
-        switch (token.type()) {
-            case TEXT:
-                output(token);
-                break;
-            case EXPRESSION:
-                String path = textFromToken(token);
-                output(_context.lookup(path));
-                break;
-            case COMMAND:
-                handleCommand(template, token, tokens);
-                break;
-
-
-        }
-    }
-
-
-    private void handleLoop(Map<String, String> params,  List<Token> commandTokens
-    ) {
-
-        List<Object> items = Conversions.toList(_context.lookup(params.get("items")));
-
-        String var = getStringParam("var", params, "item");
-        String varStatus = getStringParam("varStatus", params, "status");
-
-
-        int begin = getIntParam("begin", params,   -1);
-        int end = getIntParam("end",    params,   -1);
-        int step = getIntParam("step", params,   -1);
-
-        LoopTagStatus status = new LoopTagStatus();
-
-        status.setCount(items.size());
-
-        if (end != -1) {
-            status.setEnd(end);
-        } else {
-            end = items.size();
-        }
-
-
-        if (begin != -1) {
-            status.setBegin(begin);
-        } else {
-            begin = 0;
-        }
-
-
-        if (step != -1) {
-            status.setStep(step);
-        } else {
-            step = 1;
-        }
-
-
-        Map<String, Object> values = new LazyMap();
-
-        int index = 0;
-
-        _context.pushContext(values);
-
-        for (Object item : items) {
-
-            if (index >= begin && index <end && index % step == 0) {
-
-                values.put(var, item);
-                values.put(varStatus, status);
-
-                values.put("index", index);
-
-                status.setIndex(index);
-
-                processCommandBodyTokens(commandTokens);
-            }
-            index++;
-        }
-
-        _context.removeLastContext();
-
-
-
-    }
-
-
-
-    private String getStringParam(String param, Map<String, String> params, String defaultValue) {
-
-        String value = params.get(param);
-        if (value == null) {
-            return defaultValue;
-        } else if (value.startsWith("$")) {
-            return Conversions.toString(_context.lookupWithDefault(value, defaultValue));
-
-        }
-        return Conversions.toString(value);
-    }
-
-    private int getIntParam(String param, Map<String, String> params, int defaultValue) {
-
-        String value = params.get(param);
-        if (value == null) {
-            return defaultValue;
-        } else if (value.startsWith("$")) {
-            return Conversions.toInt(_context.lookupWithDefault(value, defaultValue));
-
-        }
-        return Conversions.toInt(value);
-    }
-
-    public void displayTokens() {
-
-        for (Token token : parser.getTokenList()) {
-            puts ("token", token, textFromToken(token));
-        }
-    }
 
 }

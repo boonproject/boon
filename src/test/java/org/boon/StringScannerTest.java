@@ -350,4 +350,21 @@ public class StringScannerTest {
         assertEquals( "4", third );
     }
 
+
+    @Test
+    public void testSubStringAfter() {
+        final String substringAfter = StringScanner.substringAfter("love :: rocket", " :: ");
+
+        ok |= substringAfter.equals("rocket") || die(substringAfter);
+
+    }
+
+    @Test
+    public void testSubStringBefore() {
+        final String substringBefore = StringScanner.substringBefore("love :: rocket", " :: ");
+
+        ok |= substringBefore.equals("love") || die(substringBefore);
+
+    }
+
 }

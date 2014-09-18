@@ -14,9 +14,34 @@ import static org.boon.Exceptions.die;
 /**
  * Created by Richard on 9/14/14.
  */
-public class BoonCoreParserTest extends TestCase {
+public class BoonCoreParserTest  {
 
     boolean ok;
+
+    //@Test
+    public void testSimpleNoEnd() {
+        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+        String text = "<c:set var='foo' target='bar'/>love";
+        //..............012345678901234567890123456789012345678901234567890
+        //..............0         10        20        30        40        50
+        parser.parse(text);
+
+        final List<Token> tokenList = parser.getTokenList();
+
+        Token token = tokenList.get(0);
+
+        equalsOrDie("Token starts at 3", 3, token.start());
+        equalsOrDie("Token stops at 29", 29, token.stop());
+        equalsOrDie("Token is COMMAND", TokenTypes.COMMAND, token.type());
+        equalsOrDie("TEXT is ", "set var='foo' target='bar'", Str.sliceOf(text, token.start(), token.stop()));
+
+        token = tokenList.get(1);
+
+        equalsOrDie("Token starts at 31", 31, token.start());
+        equalsOrDie("Token stops at 35", 35, token.stop());
+        equalsOrDie("Token is COMMAND_BODY", TokenTypes.TEXT, token.type());
+        equalsOrDie("TEXT is ", "love", Str.sliceOf(text, token.start(), token.stop()));
+    }
 
     @Test
     public void testSimple() {

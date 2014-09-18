@@ -269,4 +269,30 @@ public class StringScanner {
     public static int findWhiteSpace(String buffer) {
         return CharScanner.findWhiteSpace(FastStringUtils.toCharArray(buffer));
     }
+
+    public static String substringAfter(String string, String after) {
+
+        int index = StringScanner.findString(string, after);
+        if (index==-1) {
+            return "";
+        } else {
+            return Str.slc(string, index+after.length());
+        }
+
+    }
+
+    private static int findString(String string, String after) {
+        return CharScanner.findChars(FastStringUtils.toCharArray(after),
+                FastStringUtils.toCharArray(string));
+    }
+
+    public static String substringBefore(String string, String before) {
+
+        int index = StringScanner.findString(string, before);
+        if (index==-1) {
+            return "";
+        } else {
+            return Str.slcEnd(string, index);
+        }
+    }
 }

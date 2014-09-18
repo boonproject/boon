@@ -69,293 +69,293 @@ import static org.boon.Boon.puts;
 
 /**
  * @author Rick Hightower
+ *         <p/>
+ *         This supports handlebar templates, freemarker-like jstl and JSTL-like templates.
+ *         <p/>
+ *         <pre>
+ *             {{#if foo}}
  *
- * This supports handlebar templates, freemarker-like jstl and JSTL-like templates.
+ *                  {{foo}} //Escaped
  *
- * <pre>
- *     {{#if foo}}
+ *                  {{{foo}}} //Unescaped
+ *             {{/if foo}}
  *
- *          {{foo}} //Escaped
+ *             {{#with foo}}
  *
- *          {{{foo}}} //Unescaped
- *     {{/if foo}}
+ *                   {{foo}}   //Escaped
+ *                   {{{foo}}} /Unescaped
  *
- *     {{#with foo}}
+ *             {{/with}}
  *
- *           {{foo}}   //Escaped
- *           {{{foo}}} /Unescaped
+ *             {{#each fruits}}
+ *                  {{this}}
+ *             {{/each}}
+ *         </pre>
+ *         <p/>
+ *         see http://www.tutorialspoint.com/jsp/jsp_standard_tag_library.htm
+ *         see http://www.tutorialspoint.com/jsp/jstl_core_foreach_tag.htm
+ *         see http://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/forEach.html
+ *         <pre>
+ *              <c:if test="foo">
  *
- *     {{/with}}
+ *                  ${fn:escapeXml(foo)} //Escaped
+ *                  ${foo} //Unescaped
  *
- *     {{#each fruits}}
- *          {{this}}
- *     {{/each}}
- * </pre>
+ *             </c:if>
  *
- * see http://www.tutorialspoint.com/jsp/jsp_standard_tag_library.htm
- * see http://www.tutorialspoint.com/jsp/jstl_core_foreach_tag.htm
- * see http://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/c/forEach.html
- * <pre>
- *      <c:if test="foo">
+ *             <c:with item="foo">
  *
- *          ${fn:escapeXml(foo)} //Escaped
- *          ${foo} //Unescaped
+ *                  ${fn:escapeXml(foo)} //Escaped
+ *                  ${foo} //Unescaped
  *
- *     </c:if>
+ *             </c:with>
  *
- *     <c:with item="foo">
+ *             <c:forEach items="fruits">
  *
- *          ${fn:escapeXml(foo)} //Escaped
- *          ${foo} //Unescaped
+ *                  ${item}
  *
- *     </c:with>
+ *             </c:forEach>
  *
- *     <c:forEach items="fruits">
+ *             <c:forEach var="window" items="${windows}">
+ *                         <c:out value="${window}"/>
+ *             </c:forEach>
  *
- *          ${item}
+ *         </pre>
+ *         <p/>
+ *         Freemarker like
+ *         <pre>
+ *              <#if foo>
  *
- *     </c:forEach>
+ *                  ${fn:escapeXml(foo)} //Escaped
+ *                  ${foo} //Unescaped
  *
- *     <c:forEach var="window" items="${windows}">
- *                 <c:out value="${window}"/>
- *     </c:forEach>
+ *             </#if>
  *
- * </pre>
+ *             <#with foo>
  *
- * Freemarker like
- * <pre>
- *      <#if foo>
+ *                  ${fn:escapeXml(foo)} //Escaped
+ *                  ${foo} //Unescaped
  *
- *          ${fn:escapeXml(foo)} //Escaped
- *          ${foo} //Unescaped
+ *             </#with>
  *
- *     </#if>
+ *             <#list fruits as fruit>
  *
- *     <#with foo>
+ *                  ${fruit}
  *
- *          ${fn:escapeXml(foo)} //Escaped
- *          ${foo} //Unescaped
+ *             </#list>
  *
- *     </#with>
  *
- *     <#list fruits as fruit>
+ *             <#list fruits>
  *
- *          ${fruit}
+ *                  ${item}
  *
- *     </#list>
+ *             </#list>
  *
  *
- *     <#list fruits>
+ *         </pre>
+ *         <p/>
+ *         Freemarker has an expression language for if and such.
+ *         There are no plans to add a full expression langauge to this jstl.
+ *         The same goes for JSTL-like. Simple boolean expressions and calls to functions but no logic.
+ *         <p/>
+ *         Velocity-like
+ *         <pre>
+ *                  <ul>
+ *                    #foreach( $product in $allProducts )
+ *                         <li>$product</li>
+ *                   #end
+ *                  </ul>
  *
- *          ${item}
+ *                  #if( $foo )
+ *                      <strong>Velocity!</strong>
+ *                  #end
+ *         </pre>
+ *         <p/>
+ *         Velocity and Freemarker have if and else, else if.
+ *         Handlebars has if / else. Handlebars also has unless.
+ *         JSTL just has if.
+ *         <p/>
+ *         Velocity, JSTL and Freemarker have full expression languages.
+ *         Handlebars does not.
+ *         <p/>
+ *         The plan (currently) is for this templating to have no expressions.
+ *         You have property paths that are either true or false only, and you can call functions
+ *         that return true or false. Or rather true-y or falsey (null = false, empty list = false, etc.).
+ *         Python style true or false which is more ore less what handlebars/mustache do.
+ *         So this will be a stupid jstl, i.e., no logic other than true/false.
+ *         <p/>
+ *         Start of block characters
+ *         <pre>
+ *             Freemarker-like
  *
- *     </#list>
+ *             <#if  = '<#'
  *
+ *             Velocity-like
  *
- * </pre>
+ *             #if = '#'
  *
- * Freemarker has an expression language for if and such.
- * There are no plans to add a full expression langauge to this jstl.
- * The same goes for JSTL-like. Simple boolean expressions and calls to functions but no logic.
+ *             JSTL-like
  *
- * Velocity-like
- * <pre>
- *          <ul>
- *            #foreach( $product in $allProducts )
- *                 <li>$product</li>
- *           #end
- *          </ul>
+ *             <c:if = '<c:if'
  *
- *          #if( $foo )
- *              <strong>Velocity!</strong>
- *          #end
- * </pre>
+ *             Mustache
+ *             {{#if = '{{'
  *
- * Velocity and Freemarker have if and else, else if.
- * Handlebars has if / else. Handlebars also has unless.
- * JSTL just has if.
+ *         </pre>
+ *         <p/>
+ *         <p/>
+ *         END of start block character
+ *         <pre>
+ *             Freemarker-like
  *
- * Velocity, JSTL and Freemarker have full expression languages.
- * Handlebars does not.
- *
- * The plan (currently) is for this templating to have no expressions.
- * You have property paths that are either true or false only, and you can call functions
- * that return true or false. Or rather true-y or falsey (null = false, empty list = false, etc.).
- * Python style true or false which is more ore less what handlebars/mustache do.
- * So this will be a stupid jstl, i.e., no logic other than true/false.
- *
- * Start of block characters
- * <pre>
- *     Freemarker-like
- *
- *     <#if  = '<#'
- *
- *     Velocity-like
- *
- *     #if = '#'
- *
- *     JSTL-like
- *
- *     <c:if = '<c:if'
- *
- *     Mustache
- *     {{#if = '{{'
- *
- * </pre>
- *
- *
- * END of start block character
- * <pre>
- *     Freemarker-like
- *
- *     <#if blah>   = '>'
- *              ^
- *              |
- *
- *     Velocity-like
- *
- *     #if<SPACE>  = ' '
- *           ^
- *           |
- *
- *     JSTL-like
- *
- *     <c:if test="foo">  = '>'
- *                     ^
- *                     |
- *
- *     Mustache
- *     {{#if    }  = '>'
- *              ^
- *              |
- *
- *
- * </pre>
- *
- * This parser merely delivers up the stuff between start and stop.
- * Then there are handlers to further divide up the strings as the syntax varies a lot of how
- * expression of {{if}}, {{each}}, and {{with}} are handled.
- *
- * Start of expression characters
- * <pre>
- *
- *     Freemarker-like
- *
- *     ${
- *
- *     Velocity-like
- *
- *     $
- *
- *     JSTL-like
- *
- *     ${
- *
- *     Mustache/Handlebar
- *     {{
- *
- *
- *     Mustache/Handlebar
- *     {{{
- *
- * </pre>
- *
- *
- * End of expression characters
- * <pre>
- *
- *     Freemarker-like
- *
- *     }
- *
- *     Velocity-like
- *
- *     <SPACE>
- *
- *     JSTL-like
- *
- *     }
- *
- *     Mustache/Handlebar
- *     }}
- *
- *
- *     Mustache/Handlebar (NOT HANDLED BY PARSER, HANDLED BY LOOKUP)
- *     }}}
- *
- * </pre>
- *
- * Rather than treat mustache as having two expressions (tried that), I will treat it as one.
- * Then the lookupWithDefault mechanism will handle the other case.
- *
- * Velocity allows $vice and ${vice}maniac forms. Rather than handling two forms.
- * All parsers treat $vice as an expression. So that $foo is always an expression.
- * This would mean for mustache you would have $vice or {{vice}}maniac.
- * The caveat being that $expression handlng is a flag so you can turn it off for handlebars by default.
- *
- * One of the goals is to have the ability to write scripts 100% compatible with Handlebars.
- *
- * There is not a similar goal with Velocity, JSTL, and Freemarker.
- * You can only ever write scripts that are similar to JSTL not true JSTL scripts.
- * You can only ever write scripts that are similar to Velocity not true Velocity scripts.
- * You can only ever write scripts that are similar to Freemarker not true Freemarker scripts.
- * The goal is the ability to write scripts that are 100% Handlebar compatible and can be rendered by browser or Java.
- *
- * The goal is for BoonTemplate is to be a superset of Handlebars and always only a subset of JSTL,
- * Velocity and Freemarker.
- *
- * Order of importance:
- * <ol>
- *     <li><Handlebar compliance</li>,
- *     <li>JSTL style support</li>,
- *     <li>Freemarker style support</li>
- *     <li> and then Velocity style support</li>
- * </ol>
- *
- * Handlebars has the advantage of the expression, and commands start with the same character, which
- * will help with parsing.
- *
- * <code><pre>
- *
- *     if (sameStart) {
- *         look for start char of command and expression
- *     } else {
- *         look for start char of expression or command  #NOTE this takes longer
- *     }
- * </pre></code>
- *
- * Also we need to support comments.
- *
- * <pre>
- *     Velocity like multiline
- *     ##.
- *     .##
- *
- *     Freemarker like
- *     <#--
- *     -->
- *
- *     Handlebar like
- *     {{!
- *     }}
- *
- *     JSTL like (I made this one up JSTL does not have comments JSP does. :)
- *     <c:comment
- *     >
- * </pre>
- *
- * Input:
- * char[]
- *
- * Output array of tokens in IndexOverlay style
- * <pre>
- *
- * Array item: TemplateToken (Block or Text or Expression or Comment, startIndex, stopIndex)
- *
- * </pre>
- *
- * There is no logic in this parser. Just an array of token positions.
- * It is up to BoonTemplate on how to interpret those tokens.
+ *             <#if blah>   = '>'
+ *                      ^
+ *                      |
+ *
+ *             Velocity-like
+ *
+ *             #if<SPACE>  = ' '
+ *                   ^
+ *                   |
+ *
+ *             JSTL-like
+ *
+ *             <c:if test="foo">  = '>'
+ *                             ^
+ *                             |
+ *
+ *             Mustache
+ *             {{#if    }  = '>'
+ *                      ^
+ *                      |
+ *
+ *
+ *         </pre>
+ *         <p/>
+ *         This parser merely delivers up the stuff between start and stop.
+ *         Then there are handlers to further divide up the strings as the syntax varies a lot of how
+ *         expression of {{if}}, {{each}}, and {{with}} are handled.
+ *         <p/>
+ *         Start of expression characters
+ *         <pre>
+ *
+ *             Freemarker-like
+ *
+ *             ${
+ *
+ *             Velocity-like
+ *
+ *             $
+ *
+ *             JSTL-like
+ *
+ *             ${
+ *
+ *             Mustache/Handlebar
+ *             {{
+ *
+ *
+ *             Mustache/Handlebar
+ *             {{{
+ *
+ *         </pre>
+ *         <p/>
+ *         <p/>
+ *         End of expression characters
+ *         <pre>
+ *
+ *             Freemarker-like
+ *
+ *             }
+ *
+ *             Velocity-like
+ *
+ *             <SPACE>
+ *
+ *             JSTL-like
+ *
+ *             }
+ *
+ *             Mustache/Handlebar
+ *             }}
+ *
+ *
+ *             Mustache/Handlebar (NOT HANDLED BY PARSER, HANDLED BY LOOKUP)
+ *             }}}
+ *
+ *         </pre>
+ *         <p/>
+ *         Rather than treat mustache as having two expressions (tried that), I will treat it as one.
+ *         Then the lookupWithDefault mechanism will handle the other case.
+ *         <p/>
+ *         Velocity allows $vice and ${vice}maniac forms. Rather than handling two forms.
+ *         All parsers treat $vice as an expression. So that $foo is always an expression.
+ *         This would mean for mustache you would have $vice or {{vice}}maniac.
+ *         The caveat being that $expression handlng is a flag so you can turn it off for handlebars by default.
+ *         <p/>
+ *         One of the goals is to have the ability to write scripts 100% compatible with Handlebars.
+ *         <p/>
+ *         There is not a similar goal with Velocity, JSTL, and Freemarker.
+ *         You can only ever write scripts that are similar to JSTL not true JSTL scripts.
+ *         You can only ever write scripts that are similar to Velocity not true Velocity scripts.
+ *         You can only ever write scripts that are similar to Freemarker not true Freemarker scripts.
+ *         The goal is the ability to write scripts that are 100% Handlebar compatible and can be rendered by browser or Java.
+ *         <p/>
+ *         The goal is for BoonTemplate is to be a superset of Handlebars and always only a subset of JSTL,
+ *         Velocity and Freemarker.
+ *         <p/>
+ *         Order of importance:
+ *         <ol>
+ *         <li><Handlebar compliance</li>,
+ *         <li>JSTL style support</li>,
+ *         <li>Freemarker style support</li>
+ *         <li> and then Velocity style support</li>
+ *         </ol>
+ *         <p/>
+ *         Handlebars has the advantage of the expression, and commands start with the same character, which
+ *         will help with parsing.
+ *         <p/>
+ *         <code><pre>
+ *         <p/>
+ *             if (sameStart) {
+ *                 look for start char of command and expression
+ *             } else {
+ *                 look for start char of expression or command  #NOTE this takes longer
+ *             }
+ *         </pre></code>
+ *         <p/>
+ *         Also we need to support comments.
+ *         <p/>
+ *         <pre>
+ *             Velocity like multiline
+ *             ##.
+ *             .##
+ *
+ *             Freemarker like
+ *             <#--
+ *             -->
+ *
+ *             Handlebar like
+ *             {{!
+ *             }}
+ *
+ *             JSTL like (I made this one up JSTL does not have comments JSP does. :)
+ *             <c:comment
+ *             >
+ *         </pre>
+ *         <p/>
+ *         Input:
+ *         char[]
+ *         <p/>
+ *         Output array of tokens in IndexOverlay style
+ *         <pre>
+ *
+ *         Array item: TemplateToken (Block or Text or Expression or Comment, startIndex, stopIndex)
+ *
+ *         </pre>
+ *         <p/>
+ *         There is no logic in this parser. Just an array of token positions.
+ *         It is up to BoonTemplate on how to interpret those tokens.
  */
 public class BoonCoreTemplateParser {
 
@@ -363,12 +363,64 @@ public class BoonCoreTemplateParser {
     char charArray[];
 
     int index;
-    int ch;
-
+    char ch;
 
 
     private List<Token> tokenList;
 
+    public static void main(String... args) {
+
+        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
+
+//        parser.parse(
+///*
+// 01234567890123456789012345678 */
+//"Hi Mom ${fine} How are you?");
+//
+//        putl(parser.tokenList);
+//
+//
+//
+//
+//        parser.parse(
+//              /*
+//          10        20        30        40       50         60
+// 0123456789012345678901234567890123456789012345678901234567890
+//                */
+//"Hi Mom <c:if test>abc ${fine} abc </c:if> How are you?");
+//
+//        putl(parser.tokenList);
+//
+//
+//
+//
+//        //            01234567890123456789012345678
+//        parser.parse(
+//              /*
+//
+//          10        20        30        40       50         60         70       80
+// 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+//                */
+//"Hi Mom <c:if test> Good <c:if test> Good ${fine} good </c:if> boyyah <c:/if> How are you?");
+//
+//
+//
+//        putl(parser.tokenList);
+
+
+        //            01234567890123456789012345678
+        parser.parse(
+              /*
+
+           10        20        30        40       50         60         70       80
+  012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+                */
+                "<c:if test>         <c:if test>    g    ${fine}   </c:if>   g         </c:if>   How are you?");
+
+        putl(parser.tokenList);
+
+
+    }
 
     public void parse(String string) {
 
@@ -387,22 +439,25 @@ public class BoonCoreTemplateParser {
         Token text = Token.text(index, -1);
 
 
-        for (; index< charArray.length; index++) {
+        for (; index < charArray.length; index++) {
             ch = charArray[index];
 
-            if ( ch == '<' ) {
-                   if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
+            if (ch == '<') {
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
 
 
-                       text = textToken(text);
+                    text = textToken(text);
 
-                       index+=TokenTypes.COMMAND_START.chars.length;
-                       handleCommand();
-                   }
-            }  else if (ch=='$') {
+                    index += TokenTypes.COMMAND_START.chars.length;
+                    handleCommand();
+                }
+            }
 
 
-                char ch1 = charArray[index+1];
+            else if (ch == '$') {
+
+
+                char ch1 = charArray[index + 1];
                 if (ch1 == '{') {
                     if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
 
@@ -419,11 +474,11 @@ public class BoonCoreTemplateParser {
                 } else {
 
 
-                        text = textToken(text);
-                        index++;
-                        handleExpression(null);
-                        text = Token.text(index, -1);
-                        index--;
+                    text = textToken(text);
+                    index++;
+                    handleExpression(null);
+                    text = Token.text(index, -1);
+                    index--;
 
 
                 }
@@ -436,24 +491,22 @@ public class BoonCoreTemplateParser {
             }
         }
 
-        if (text!=null) {
+        if (text != null) {
             text.stop(charArray.length);
-            this.tokenList.add( text );
+            this.tokenList.add(text);
         }
     }
-
 
     private void handleCurlyExpression() {
 
         int startIndex = index;
         index = CharScanner.findChars(TokenTypes.EXPRESSION_END.chars, index, charArray);
-        if (index > 0 ) {
+        if (index > 0) {
             this.tokenList.add(Token.expression(startIndex, index));
             index += TokenTypes.EXPRESSION_END.chars.length;
 
         }
     }
-
 
     private void handleExpression(String term) {
 
@@ -461,7 +514,7 @@ public class BoonCoreTemplateParser {
         index = CharScanner.findWhiteSpace(index, charArray);
 
 
-        if (term !=null) {
+        if (term != null) {
             if (index == -1) {
                 index = startIndex;
                 index = CharScanner.findChars(term.toCharArray(), index, charArray);
@@ -473,7 +526,6 @@ public class BoonCoreTemplateParser {
         }
         this.tokenList.add(Token.expression(startIndex, index));
     }
-
 
 
     private void handleCommand() {
@@ -547,12 +599,12 @@ public class BoonCoreTemplateParser {
 
                     }
                 } else {
-                        text = textToken(text);
+                    text = textToken(text);
 
-                        index++;
-                        handleExpression("</");
-                        text = Token.text(index, -1);
-                        index--;
+                    index++;
+                    handleExpression("</");
+                    text = Token.text(index, -1);
+                    index--;
                 }
 
             } else {
@@ -577,10 +629,139 @@ public class BoonCoreTemplateParser {
 
     }
 
+    private void handleCommandFUCKED() {
+
+
+        int startIndex = index;
+        boolean noBody = false;
+        index = CharScanner.findChars(TokenTypes.COMMAND_START_END.chars, index, charArray);
+        index++;
+
+        //int foundIndex = CharScanner.findChars(TokenTypes.COMMAND_START_TAG_END.chars, index, charArray);
+//        if (foundIndex == -1) {
+//            index = CharScanner.findChars(TokenTypes.COMMAND_START_END.chars, index, charArray);
+//        } else {
+//            index = foundIndex;
+//            index++;
+//            noBody = true;
+//        }
+
+        //Add this command start to the token list.
+        this.tokenList.add(Token.commandStart(startIndex, index));
+
+
+        index += TokenTypes.COMMAND_END_START.chars.length;
+
+        if (noBody) {
+            return;
+        }
+
+
+        Token commandBody = Token.commandBody(index, -1);
+        tokenList.add(commandBody);
+
+
+        Token text = Token.text(index, -1);
+
+
+        for (; index < charArray.length; index++) {
+            ch = charArray[index];
+
+            puts(ch, index);
+            if (index==20) {
+                puts("AT 36");
+            }
+
+            if (ch == '<') {
+
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START.chars, index, this.charArray)) {
+
+
+                    text = textToken(text);
+
+                    index += TokenTypes.COMMAND_START.chars.length;
+                    handleCommand();
+
+                } else if (CharScanner.matchChars(TokenTypes.COMMAND_START_END.chars, index, this.charArray)) {
+
+
+                    text = textToken(text);
+
+                    commandBody.stop(index);
+                    index++;
+                    index = CharScanner.findChar('>', index, charArray);
+                    break;
+
+                }
+
+            }
+
+
+            else if (ch == '/') {
+
+                if (CharScanner.matchChars(TokenTypes.COMMAND_START_TAG_END.chars, index, this.charArray)) {
+
+
+                    text = textToken(text);
+
+                    commandBody.stop(index);
+                    index++;
+                    index++;
+                    break;
+
+                }
+            }
+
+            else if (ch == '$') {
+
+                char ch1 = charArray[index + 1];
+                if (ch1 == '{') {
+                    if (CharScanner.matchChars(TokenTypes.EXPRESSION_START.chars, index, this.charArray)) {
+
+
+                        text = textToken(text);
+
+                        index += TokenTypes.EXPRESSION_START.chars.length;
+                        handleCurlyExpression();
+                        text = Token.text(index, -1);
+                        index--;
+
+
+                    }
+                } else {
+                    text = textToken(text);
+
+                    index++;
+                    handleExpression("</");
+                    text = Token.text(index, -1);
+                    index--;
+                }
+
+            } else {
+                if (text == null) {
+
+                    text = Token.text(index, -1);
+                }
+            }
+
+        }
+
+
+        if (commandBody.stop() == -1) {
+            commandBody.stop(index);
+        }
+        if (text != null) {
+            text.stop(charArray.length);
+            this.tokenList.add(text);
+        }
+
+
+    }
+
     private Token textToken(Token text) {
-        if (text!=null) {
+        if (text != null) {
             text.stop(index);
-            if (text.start()!=text.stop()) {
+            if (text.start() != text.stop()) {
                 this.tokenList.add(text);
             }
             text = null;
@@ -588,75 +769,17 @@ public class BoonCoreTemplateParser {
         return text;
     }
 
-    public static void main (String... args) {
-
-        BoonCoreTemplateParser parser = new BoonCoreTemplateParser();
-
-//        parser.parse(
-///*
-// 01234567890123456789012345678 */
-//"Hi Mom ${fine} How are you?");
-//
-//        putl(parser.tokenList);
-//
-//
-//
-//
-//        parser.parse(
-//              /*
-//          10        20        30        40       50         60
-// 0123456789012345678901234567890123456789012345678901234567890
-//                */
-//"Hi Mom <c:if test>abc ${fine} abc </c:if> How are you?");
-//
-//        putl(parser.tokenList);
-//
-//
-//
-//
-//        //            01234567890123456789012345678
-//        parser.parse(
-//              /*
-//
-//          10        20        30        40       50         60         70       80
-// 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-//                */
-//"Hi Mom <c:if test> Good <c:if test> Good ${fine} good </c:if> boyyah <c:/if> How are you?");
-//
-//
-//
-//        putl(parser.tokenList);
-
-
-        //            01234567890123456789012345678
-        parser.parse(
-              /*
-
-           10        20        30        40       50         60         70       80
-  012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-                */
- "<c:if test>         <c:if test>    g    ${fine}   </c:if>   g         </c:if>   How are you?");
-
-        putl(parser.tokenList);
-
-
-    }
-
-
     public List<Token> getTokenList() {
         return tokenList;
     }
 
 
-
     public void displayTokens(String template) {
 
         for (Token token : this.getTokenList()) {
-            puts ("token", token, Str.slc(template, token.start(), token.stop()));
+            puts("token", token, Str.slc(template, token.start(), token.stop()));
         }
     }
-
-
 
 
 }

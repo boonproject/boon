@@ -774,6 +774,7 @@ public class Str {
     }
 
 
+
     /**
      *
      * @param args
@@ -815,6 +816,30 @@ public class Str {
 
     /**
      *
+     * @param delim
+     * @param args
+     * @return
+     */
+    public static String joinCollection( String delim, List<?> args ) {
+        CharBuf builder = CharBuf.create( 10 * args.size() );
+
+        int index = 0;
+        for ( Object arg : args ) {
+            if ( arg == null ) {
+                continue;
+            }
+            builder.add( arg.toString() );
+            if ( !( index == args.size() - 1 ) ) {
+                builder.add( delim );
+            }
+            index++;
+        }
+        return builder.toString();
+
+    }
+
+    /**
+     *
      * @param str
      * @return
      */
@@ -824,6 +849,16 @@ public class Str {
             return true;
         } else {
             return str.isEmpty();
+        }
+
+    }
+
+    @Universal
+    public static boolean isEmpty( Object str ) {
+        if ( str == null ) {
+            return true;
+        } else {
+            return str.toString().isEmpty();
         }
 
     }
@@ -999,4 +1034,5 @@ public class Str {
 
 
     }
+
 }

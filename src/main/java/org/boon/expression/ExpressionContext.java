@@ -28,10 +28,13 @@
 
 package org.boon.expression;
 
-import org.boon.Lists;
-import org.boon.Str;
+import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.ClassMeta;
+import org.boon.core.reflection.Invoker;
+import org.boon.core.reflection.MethodAccess;
+import org.boon.primitive.Arry;
 
 import java.util.*;
 
@@ -48,6 +51,10 @@ public class ExpressionContext implements ObjectContext, Map {
     private LinkedList<Object> context;
 
 
+    /** Functions can be used anywhere where expressions can be used. */
+    protected Map<String, MethodAccess> methodMap = new HashMap<>(100);
+
+
     public  ExpressionContext(final List<Object> root) {
 
 
@@ -57,7 +64,21 @@ public class ExpressionContext implements ObjectContext, Map {
             this.context.add(root);
         }
 
+        addFunctions("fn", StandardFunctions.class);
 
+    }
+
+    private void addFunctions(String prefix, Class<StandardFunctions> standardFunctionsClass) {
+
+        final ClassMeta<StandardFunctions> standardFunctionsClassMeta = ClassMeta.classMeta(standardFunctionsClass);
+
+
+        for (MethodAccess m : standardFunctionsClassMeta.methods()) {
+            if (m.isStatic()) {
+                String funcName = Str.add(prefix, ":", m.name());
+                methodMap.put(funcName, m);
+            }
+        }
     }
 
 
@@ -85,6 +106,7 @@ public class ExpressionContext implements ObjectContext, Map {
         }
 
 
+        addFunctions("fn", StandardFunctions.class);
 
     }
 
@@ -124,6 +146,20 @@ public class ExpressionContext implements ObjectContext, Map {
             if (ctx instanceof ExpressionContext) {
                 ExpressionContext basicContext = (ExpressionContext) ctx;
                 basicContext.findProperty(propertyPath);
+
+            } else if (ctx instanceof Pair) {
+                Pair<String, Object> pair = (Pair<String, Object>)ctx;
+                if (propertyPath.startsWith(pair.getKey())){
+
+                    String subPath = StringScanner.substringAfter(
+                            propertyPath, pair.getKey());
+
+                    Object o = pair.getValue();
+                    Object returnValue =  BeanUtils.idx(o, subPath);
+                    return returnValue;
+                }else if(pair.getKey().equals(propertyPath)) {
+                    return pair.getValue();
+                }
 
             }
             Object object = BeanUtils.idx(ctx, propertyPath);
@@ -231,7 +267,9 @@ public class ExpressionContext implements ObjectContext, Map {
 
     @Override
     public Object put( Object key, Object value ) {
-        return die();
+        Pair<String, Object> pair = new Pair(key.toString(), value);
+        context.add(0, pair);
+        return pair;
     }
 
     @Override
@@ -306,12 +344,52 @@ public class ExpressionContext implements ObjectContext, Map {
 
         }
 
+        lastChar = Str.idx(objectName, -1);
+
+        if (lastChar==')') {
+            return handleFunction(objectName);
+        }
+
+
+
         Object value = findProperty(objectName);
 
         value = value == null ? defaultValue : value;
 
         return value;
     }
+
+    private Object handleFunction(String functionCall) {
+        String[] split = StringScanner.splitByChars(functionCall,  '(', ')');
+        String methodName = split[0];
+        MethodAccess method = this.methodMap.get(methodName);
+
+        String arguments = split[1];
+        List<Object> args = getObjectFromArguments(arguments);
+
+        return method.invokeDynamic(null, Arry.array(args));
+    }
+
+    protected List<Object> getObjectFromArguments(String arguments) {
+
+        /**
+         * If arguments starts with '[' or '{' or '"'  or "'" then we think it JSON.
+         */
+
+            final String[] strings = StringScanner.split(arguments, ',');
+
+            List list = new ArrayList();
+
+            for (String string : strings) {
+                Object object = lookup(string);
+                    list.add(object);
+            }
+
+            return list;
+
+
+    }
+
 
 
     public void pushContext(Object value) {

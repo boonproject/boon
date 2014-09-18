@@ -22,6 +22,7 @@ public class BoonTemplateTest {
     BoonTemplate template;
 
 
+
     @Before
     public void setup() {
 
@@ -35,6 +36,125 @@ public class BoonTemplateTest {
         company = new Company("Mammatus", list);
         template = new BoonTemplate();
 
+
+    }
+
+    //@Test
+    public void testCSetNoEndTag() {
+
+        final String results = template.replace(
+                "<c:set var=\"workplace\" value='${company}'>" +
+                        "${workplace.name}"
+                ,
+
+                Maps.map("string", "moon", "company", company));
+
+
+        Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void testCSet2() {
+
+        final String results = template.replace(
+                "<c:set var=\"workplace\" value='${company}'" +
+                        " target='${map.map2}' property='company' " +
+                        ">  </c:set>" +
+                        "${workplace.name} \n " +
+                        "${map.map2.company.name}"
+                ,
+                Maps.map("string", "moon",
+                        "company", company,
+                        "map", Maps.map(
+                                "map2", Maps.map("name", "map2")
+                        )
+                )
+        );
+
+
+        Boon.equalsOrDie("#Mammatus \n" +
+                " Mammatus#", "#"+results+"#");
+
+    }
+
+    @Test
+    public void testCSet() {
+
+        final String results = template.replace(
+                "<c:set var=\"workplace\" value='${company}'>  </c:set>" +
+                        "${workplace.name}"
+                        ,
+
+                Maps.map("string", "moon", "company", company));
+
+
+        Boon.equalsOrDie("#Mammatus#", "#"+results+"#");
+
+    }
+
+
+
+    @Test
+    public void testContains() {
+
+        final String results = template.replace("<c:if test=$fn:contains(string, oon)>$string</c:if>",
+
+                Maps.map("string", "moon"));
+
+
+        Boon.equalsOrDie("moon", results);
+
+    }
+
+    @Test
+    public void testContainsQuote() {
+
+        final String results = template.replace("<c:if test='$fn:contains(string, oon)'>$string</c:if>",
+
+                Maps.map("string", "moon"));
+
+
+        Boon.equalsOrDie("moon", results);
+
+    }
+
+
+    @Test
+    public void testContains2() {
+
+        final String results = template.replace("<c:if test='$fn:contains(string, zap)'>$string</c:if>",
+
+                Maps.map("string", "moon"));
+
+
+        Boon.equalsOrDie("", results);
+
+    }
+
+
+    @Test
+    public void testContains4() {
+
+        final String results = template.replace("<c:if test=$fn:contains(string,zap)>$string</c:if>",
+
+                Maps.map("string", "moon"));
+
+
+        Boon.equalsOrDie("", results);
+
+    }
+
+
+    @Test
+    public void testContains5() {
+
+        final String results = template.replace("<c:if test=${fn:contains(string, zap)}>$string</c:if>",
+
+                Maps.map("string", "moon"));
+
+
+        Boon.equalsOrDie("", results);
 
     }
 
