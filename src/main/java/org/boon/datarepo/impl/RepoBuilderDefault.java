@@ -515,9 +515,9 @@ public class RepoBuilderDefault implements RepoBuilder {
      */
     public RepoBuilder lookupIndex( String propertyName, boolean unique ) {
         if ( unique ) {
-            this.lookupIndexes.add( propertyName );
-        } else {
             this.uniqueLookupIndexes.add( propertyName );
+        } else {
+            this.lookupIndexes.add( propertyName );
         }
         return this;
     }
