@@ -227,6 +227,11 @@ public class Typ {
         return obj.getClass().isArray();
     }
 
+    public static boolean isStringArray(Object obj) {
+        if ( obj == null ) return false;
+        return obj.getClass().isArray() && obj.getClass().getComponentType()==String.class;
+    }
+
     public static boolean isEnum(Class<?> componentType) {
 
         return componentType.isEnum();

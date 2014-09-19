@@ -349,17 +349,59 @@ public class BoonTemplate implements Template {
     private void handleIf(Map<String, Object> params, List<Token> commandTokens,
                           boolean normal) {
 
-        boolean display;
+        boolean display = false;
 
         String var = getStringParam("var", params, "__none");
 
-        final String test = Str.toString(params.get("test"));
-        if (test.startsWith("$")) {
-            Object o = _context.lookup(test);
+        if (params.containsKey("test")) {
+            final String test = Str.toString(params.get("test"));
 
-            display = Conversions.toBoolean(o);
+            if (test.startsWith("$")) {
+                Object o = _context.lookup(test);
+
+                display = Conversions.toBoolean(o);
+            } else {
+                display = Conversions.toBoolean(test);
+            }
         } else {
-            display = Conversions.toBoolean(test);
+            final Object varargsObject = params.get("varargs");
+
+            if (Boon.isStringArray(varargsObject)) {
+
+                String[] array = (String[]) varargsObject;
+
+                if (array.length > 0) {
+                    display = true; //for now
+                }
+                for (int index=0; index< array.length; index++) {
+
+                    if (!Str.isEmpty(array[index])) {
+                        Object o = _context.lookup(array[index]);
+                        if (!Conversions.toBoolean(o)) {
+                            display = false;
+                            break;
+                        }
+                    }
+                }
+
+            } else if(varargsObject instanceof Collection) {
+                Collection varargs = (Collection)  varargsObject;
+
+
+                if (varargs.size() > 0) {
+                    display = true; //for now
+                }
+
+
+                for (Object arg : varargs) {
+
+                    Object value = _context.lookup(arg.toString());
+                    if (!Conversions.toBoolean(value)) {
+                        display = false;
+                        break;
+                    }
+                }
+            }
         }
 
         display = display && normal;

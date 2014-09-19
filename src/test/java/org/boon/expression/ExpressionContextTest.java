@@ -51,10 +51,23 @@ public class ExpressionContextTest {
         equalsOrDie("child-request", context.lookup("$fn:lower($fn:upper(session.request.name))"));
 
     }
+
+
+    @Test public void searchParent() {
+
+        equalsOrDie("parent-application", context.lookup("../name"));
+    }
+
+    @Test public void callFunctionOnParent() {
+        equalsOrDie("request-parent", context.lookup("..fn:lower(fn:upper(session.request.name))"));
+
+    }
+
     @Test
     public void main() {
 
         equalsOrDie("child-application", context.lookup("name") );
+
         equalsOrDie("parent-application", context.lookup("../name"));
         equalsOrDie("parent-application", context.lookup("..name"));
 
@@ -73,13 +86,25 @@ public class ExpressionContextTest {
         equalsOrDie("CHILD-REQUEST", context.lookup("fn:upper(session.request.name)"));
         equalsOrDie("child-request", context.lookup("fn:lower(fn:upper(session.request.name))"));
 
+        equalsOrDie("CHILD-REQUEST", context.lookup("{{fn:upper(session.request.name)}}"));
+
+        equalsOrDie("child-request", context.lookup("fn:lower(fn:upper(session/request/name))"));
+
+
+        equalsOrDie("request-parent", context.lookup("..fn:lower(fn:upper(session.request.name))"));
+
+
+        equalsOrDie("strawberries", context.lookup("session.request.fruit.1"));
+
+
+        equalsOrDie("oranges", context.lookup("../session.request.fruit.1"));
+
 //        puts(context.findProperty("session.request.name"));
 //
 //
 //        puts(context.findProperty("session.request.fruit"));
 //
 //
-//        puts(context.findProperty("session.request.fruit.1"));
 //
 //
 //        puts(context.findProperty("session/request/fruit/1"));

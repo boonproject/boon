@@ -267,11 +267,16 @@ public class Conversions {
         } else if (Boon.isArray(obj)) {
             return Boon.len(obj) > 0;
         } else if (obj instanceof Collection) {
-            List list = Lists.list((Collection) obj);
-            while (list.remove(null)) {
 
+            if (len(obj) > 0) {
+                List list = Lists.list((Collection) obj);
+                while (list.remove(null)) {
+
+                }
+                return Lists.len(list) > 0;
+            }else {
+                return false;
             }
-            return Lists.len(list) > 0;
         } else {
             return toBoolean(Conversions.toString(obj));
         }

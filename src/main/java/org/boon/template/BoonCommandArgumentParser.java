@@ -1,6 +1,7 @@
 package org.boon.template;
 
 import org.boon.Str;
+import org.boon.StringScanner;
 import org.boon.collections.LazyMap;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonParserAndMapper;
@@ -16,13 +17,13 @@ public class BoonCommandArgumentParser {
 
     final JsonParserAndMapper jsonParser = new JsonParserFactory().lax().create();
 
-    public Map<String, Object> parseArguments(String args) {
+    public Map<String, Object> parseArguments(final String args) {
         int index;
 
 
         final char[] chars = FastStringUtils.toCharArray(args);
 
-        index = CharScanner.skipWhiteSpace(chars, 0);
+        index = CharScanner.skipWhiteSpace(chars);
 
         char c = ' ';
 
@@ -118,6 +119,13 @@ public class BoonCommandArgumentParser {
                     }
 
             }
+        }
+
+        if (params.size()==1) {
+
+
+
+            params.put("varargs", StringScanner.splitByChars(args, ',', ' ', '\t', '\n'));
         }
         return params;
     }

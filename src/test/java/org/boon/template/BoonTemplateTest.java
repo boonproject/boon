@@ -984,6 +984,93 @@ public class BoonTemplateTest {
 
     }
 
+    @Test
+    public void cIf() {
+
+        final String results = template.replace(
+                "<c:if list> list </c:if>" ,
+
+                Maps.map("list", Lists.list("apple", "orange", "b")));
+
+
+        Boon.equalsOrDie("# list #", "#"+results +"#");
+
+    }
+
+    @Test
+    public void cIf2() {
+
+        final String results = template.replace(
+                "<c:if myTest list> $list </c:if>" ,
+
+                Maps.map("list", Lists.list("apple", "orange", "b"), "myTest", "true"));
+
+
+        Boon.equalsOrDie("# [apple, orange, b] #", "#"+results +"#");
+
+    }
+
+
+    @Test
+    public void cIf3() {
+
+        final String results = template.replace(
+                "<c:if myTest list myBoo> $list </c:if>" ,
+
+                Maps.map("list",
+                        Lists.list("apple", "orange", "b"),
+                        "myTest", "true", "myBoo", "false"));
+
+
+        Boon.equalsOrDie("##", "#"+results +"#");
+
+    }
+
+
+    @Test
+    public void cIf4() {
+
+        final String results = template.replace(
+                "<c:if myTest list myBoo> $list </c:if>" ,
+
+                Maps.map("list",
+                        Lists.list("apple", "orange", "b"),
+                        "myTest", "true", "myBoo", Lists.list(1)));
+
+
+        Boon.equalsOrDie("# [apple, orange, b] #", "#"+results +"#");
+
+    }
+
+    @Test
+    public void cIf5() {
+
+        final String results = template.replace(
+                "<c:if myTest list myBoo> $list </c:if>" ,
+
+                Maps.map("list",
+                        Lists.list("apple", "orange", "b"),
+                        "myTest", "true", "myBoo", Lists.list(null, null, null)));
+
+
+        Boon.equalsOrDie("##", "#"+results +"#");
+
+    }
+
+    @Test
+    public void cIf6() {
+
+        final String results = template.replace(
+                "<c:if myTest list myBoo> $list </c:if>" ,
+
+                Maps.map("list",
+                        Lists.list("apple", "orange", "b"),
+                        "myTest", "true", "myBoo", Lists.list()));
+
+
+        Boon.equalsOrDie("##", "#"+results +"#");
+
+    }
 
     @Test
     public void cForStatus() {

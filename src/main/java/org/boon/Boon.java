@@ -342,6 +342,9 @@ public class Boon {
     public static boolean isArray( Object obj ) {
         return Typ.isArray(obj);
     }
+    public static boolean isStringArray( Object obj ) {
+        return Typ.isStringArray(obj);
+    }
 
     public static int len( Object obj ) {
         return Conversions.len(obj);

@@ -1124,7 +1124,18 @@ public class CharScanner {
     };
 
 
+    public static int skipWhiteSpace( char [] array) {
+        int c;
+        int index=0;
+        for (; index< array.length; index++ ) {
+            c = array [index];
+            if ( c > 32 ) {
 
+                return index;
+            }
+        }
+        return index;
+    }
 
     public static int skipWhiteSpace( char [] array, int index ) {
         int c;

@@ -132,10 +132,6 @@ public class ExpressionContext implements ObjectContext{
     }
 
 
-    Object findProperty(String propertyPath) {
-
-        return findProperty(propertyPath, true);
-    }
 
     Object findProperty(String propertyPath, boolean searchChildren) {
 
@@ -160,7 +156,7 @@ public class ExpressionContext implements ObjectContext{
 
             if (searchChildren && ctx instanceof ExpressionContext ) {
                 ExpressionContext basicContext = (ExpressionContext) ctx;
-                return basicContext.findProperty(propertyPath);
+                return basicContext.findProperty(propertyPath, true);
 
             } else if (ctx instanceof Pair) {
                 Pair<String, Object> pair = (Pair<String, Object>)ctx;
@@ -254,7 +250,7 @@ public class ExpressionContext implements ObjectContext{
 
     public Object get( Object key ) {
 
-        return this.findProperty((key.toString()));
+        return this.lookup((key.toString()));
 
     }
 
@@ -286,7 +282,8 @@ public class ExpressionContext implements ObjectContext{
      * @param defaultValue
      * @return
      */
-    public Object lookupWithDefault(String objectExpression, Object defaultValue) {
+
+    private Object doLookup(String objectExpression, Object defaultValue, boolean searchChildren) {
 
         if (Str.isEmpty(objectExpression)) {
             return defaultValue;
@@ -298,12 +295,12 @@ public class ExpressionContext implements ObjectContext{
 
         switch(firstChar) {
             case '$':
-               if (lastChar=='}') {
-                   objectExpression = slc(objectExpression, 2, -1);
-               } else {
-                   objectExpression = slc(objectExpression, 1);
-               }
-               break;
+                if (lastChar=='}') {
+                    objectExpression = slc(objectExpression, 2, -1);
+                } else {
+                    objectExpression = slc(objectExpression, 1);
+                }
+                break;
             case '{':
                 if (secondChar=='{' && lastChar=='}') {
                     objectExpression = slc(objectExpression, 2, -2);
@@ -316,26 +313,30 @@ public class ExpressionContext implements ObjectContext{
             case '.':
                 if (secondChar=='.') {
 
-                   String newExp = slc(objectExpression, 2);
-                   return parent.findProperty(newExp, false);
+                    String newExp = slc(objectExpression, 2);
+                    return parent.doLookup(newExp, newExp, false);
                 }
         }
 
         lastChar = Str.idx(objectExpression, -1);
         if (lastChar==')') {
-            return handleFunction(objectExpression);
+            return handleFunction(objectExpression, searchChildren);
         }
 
 
 
-        Object value = findProperty(objectExpression);
+        Object value = findProperty(objectExpression, searchChildren);
 
         value = value == null ? defaultValue : value;
 
         return value;
+
+    }
+    public Object lookupWithDefault(String objectExpression, Object defaultValue) {
+            return doLookup(objectExpression, defaultValue, true);
     }
 
-    private Object handleFunction(String functionCall) {
+    private Object handleFunction(String functionCall, boolean searchChildren) {
 
         //"$fn:lower($fn:upper(session.request.name))"
 
@@ -346,7 +347,7 @@ public class ExpressionContext implements ObjectContext{
 
         String methodName = split[0];
         String arguments = slc(split[1], 0, -1) ;
-        List<Object> args = getObjectFromArguments(arguments);
+        List<Object> args = getObjectFromArguments(arguments, searchChildren);
 
         MethodAccess method = this.staticMethodMap.get(methodName);
 
@@ -389,14 +390,14 @@ public class ExpressionContext implements ObjectContext{
         return method.invokeDynamic(bean, Arry.array(args));
     }
 
-    protected List<Object> getObjectFromArguments(String arguments) {
+    protected List<Object> getObjectFromArguments(String arguments, boolean searchChildren) {
 
             final String[] strings = StringScanner.splitByChars(arguments, ',');
 
             List list = new ArrayList();
 
             for (String string : strings) {
-                Object object = lookup(string);
+                Object object = doLookup(string, string, searchChildren);
                 list.add(object);
             }
 
