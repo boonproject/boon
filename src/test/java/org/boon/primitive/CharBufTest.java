@@ -42,21 +42,61 @@ public class CharBufTest {
 
 
 
+    boolean ok;
+
 
     @Test
-    public void unicodeAndControl() {
+    public void jsonUTF8AsciiOnly() {
+        String str;
+
+        str =  CharBuf.create(0).asJsonString("Éé", true).toString();
+        ok = str.equals( "\"\\u00c9\\u00e9\"") || die(str);
+
+        str =  CharBuf.create(0).asJsonString("Ÿÿ", true).toString();
+        ok = str.equals( "\"\\u0178\\u00ff\"") || die(str);
+
+        str =  CharBuf.create(0).asJsonString("\u0001", true).toString();
+        ok = str.equals( "\"\\u0001\"") || die(str);
+
+
+        str =  CharBuf.create(0).asJsonString(" \b ", true).toString();
+        ok = str.equals( "\" \\b \"" ) || die(str);
+
+        str =  CharBuf.create(0).asJsonString(" \r ", true).toString();
+        ok = str.equals( "\" \\r \"" ) || die(str);
+
+        str =  CharBuf.create(0).asJsonString(" \n ", true).toString();
+        ok = str.equals( "\" \\n \"" ) || die(str);
+
+        str =  CharBuf.create(0).asJsonString(" \n ", true).toString();
+        ok = str.equals( "\" \\n \"" ) || die(str);
+
+
+        str =  CharBuf.create(0).asJsonString(" \f ", true).toString();
+        ok = str.equals( "\" \\f \"" ) || die(str);
+
+        str =  CharBuf.create(0).asJsonString(" \" Hi mom \" ", true).toString();
+        ok = str.equals( "\" \\\" Hi mom \\\" \"" ) || die(str);
+
+
+        str =  CharBuf.create(0).asJsonString(" \\ ", true).toString();
+        ok = str.equals( "\" \\\\ \"" ) || die(str);
+
+
+
+
+
+    }
+
+
+    @Test
+    public void jsonUTF8() {
         String str =  CharBuf.create(0).asJsonString("\u0001").toString();
 
-        boolean ok = str.equals( "\"\\u0001\"") || die(str);
+        ok = str.equals( "\"\\u0001\"") || die(str);
         str =  CharBuf.create(0).asJsonString("\u00ff").toString();
         ok = str.equals( "\"ÿ\"") || die(str);
 
-
-//        str =  CharBuf.create(0).asJsonString("\uffff").toString();
-//        ok = str.equals( "\"\\uffff\"") || die(str);
-//
-//        str =  CharBuf.create(0).asJsonString("\uefef").toString();
-//        ok = str.equals( "\"\\uefef\"") || die(str);
 
         str =  CharBuf.create(0).asJsonString(" \b ").toString();
         ok = str.equals( "\" \\b \"" ) || die(str);
@@ -88,7 +128,7 @@ public class CharBufTest {
           String str = "Éé, Èè, Êê, Ëë, Àà, Ââ, Ææ, Ôô, Œœ, Ùù, Ûû, Üü, Ÿÿ";
           byte[] bytes = str.getBytes( StandardCharsets.UTF_8 );
           CharBuf buf = CharBuf.createFromUTF8Bytes( bytes );
-          boolean ok = str.equals( buf.toString() ) || die( buf.toString() );
+          ok = str.equals( buf.toString() ) || die( buf.toString() );
     }
 
     @Test
@@ -96,7 +136,7 @@ public class CharBufTest {
         String str = "色 c";//olour; 白 white; 黒 black; 赤 red; 紅 crimson; 青 blue; 黄 yellow; 緑 green;";
         byte[] bytes = str.getBytes( StandardCharsets.UTF_8 );
         CharBuf buf = CharBuf.createFromUTF8Bytes( bytes );
-        boolean ok = str.equals( buf.toString() ) || die( buf.toString() );
+        ok = str.equals( buf.toString() ) || die( buf.toString() );
     }
 
     @Test

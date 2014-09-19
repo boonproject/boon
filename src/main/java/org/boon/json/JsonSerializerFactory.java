@@ -54,6 +54,7 @@ public class JsonSerializerFactory {
     private boolean cacheInstances = true;
     private boolean encodeStrings = true;
     private boolean serializeAsSupport = true;
+    private boolean asciiOnly = true;
     private String view;
 
     private List<FieldFilter> filterProperties = null;
@@ -68,7 +69,7 @@ public class JsonSerializerFactory {
                 !handleComplexBackReference && !includeDefault && filterProperties == null
                 && customFieldSerializers == null && customObjectSerializers == null &&
                 fieldAccessType == FieldAccessMode.FIELD) {
-            return new JsonSimpleSerializerImpl (view, encodeStrings, serializeAsSupport);
+            return new JsonSimpleSerializerImpl (view, encodeStrings, serializeAsSupport, asciiOnly);
         } else {
 
             InstanceSerializer instanceSerializer;
@@ -96,7 +97,7 @@ public class JsonSerializerFactory {
             }
 
 
-            stringSerializer = new StringSerializerImpl (encodeStrings);
+            stringSerializer = new StringSerializerImpl (encodeStrings, asciiOnly);
             mapSerializer = new MapSerializerImpl (includeNulls);
 
             if ( useAnnotations || includeNulls || includeEmpty || handleComplexBackReference
@@ -154,7 +155,8 @@ public class JsonSerializerFactory {
                     arraySerializer,
                     unknownSerializer,
                     dateSerializer,
-                    fieldsAccessor
+                    fieldsAccessor,
+                    asciiOnly
             );
         }
 
@@ -245,6 +247,21 @@ public class JsonSerializerFactory {
         return this;
     }
 
+
+    public boolean isAsciiOnly () {
+        return asciiOnly;
+    }
+
+
+    public JsonSerializerFactory setAsciiOnly ( boolean asciiOnly ) {
+        this.asciiOnly = asciiOnly;
+        return this;
+    }
+
+    public JsonSerializerFactory asciiOnly (  ) {
+        this.asciiOnly = true;
+        return this;
+    }
 
     public JsonSerializerFactory includeNulls () {
         this.includeNulls = true;

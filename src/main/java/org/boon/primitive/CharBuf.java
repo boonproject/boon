@@ -465,30 +465,39 @@ public class CharBuf extends PrintWriter implements CharSequence {
         return this;
     }
 
-
-
-    public final CharBuf asJsonString(String jsonString) {
+    public final CharBuf asJsonString(String jsonString, boolean asciiOnly) {
         char[] charArray = FastStringUtils.toCharArray ( jsonString );
-        return addJsonEscapedString ( charArray );
+        return addJsonEscapedString ( charArray, asciiOnly );
 
     }
 
 
+    public final CharBuf asJsonString(String jsonString) {
+
+        return asJsonString(jsonString, false);
+    }
+
+
+    private static  boolean isJSONEscapeOrAsciiControlOrUnicode(int c) {
+
+        return (c < 32 || c == 34 || c == 92 || c > 127 );
+
+    }
 
     private static  boolean isJSONEscapeOrAsciiControl(int c) {
 
-        return (c < 32 || c == 34 || c == 92 ) ? true : false;
+        return (c < 32 || c == 34 || c == 92 );
 
     }
 
     int jsonControlCount;
 
-    private final  boolean hasAnyJSONControlOrUnicodeChars( final char[] charArray ) {
+    private  boolean hasAnyAsciiControlOrUnicodeChars(final char[] charArray) {
         int index = 0;
         char c;
         while ( true ) {
             c = charArray[ index ];
-            if ( isJSONEscapeOrAsciiControl(c)) {
+            if ( isJSONEscapeOrAsciiControlOrUnicode(c)) {
                 jsonControlCount++;
 
             }
@@ -500,14 +509,47 @@ public class CharBuf extends PrintWriter implements CharSequence {
     }
 
 
+    private final  boolean hasAnyAsciiControl(final char[] charArray) {
+        int index = 0;
+        char c;
+        while ( true ) {
+            c = charArray[ index ];
+            if ( isJSONEscapeOrAsciiControl(c)) {
+                jsonControlCount++;
+
+            }
+            if ( ++index >= charArray.length) break;
+        }
+
+        return jsonControlCount>0;
+
+    }
 
     public final CharBuf addJsonEscapedString( final char[] charArray ) {
+
+        return addJsonEscapedString(charArray, false);
+    }
+
+
+    public final CharBuf addJsonEscapedString( final char[] charArray, boolean asciiOnly ) {
         jsonControlCount = 0;
 
-        if ( charArray.length > 0 && hasAnyJSONControlOrUnicodeChars( charArray )) {
-            return doAddJsonEscapedString(charArray);
+
+        if (!asciiOnly) {
+
+            if (charArray.length > 0 && hasAnyAsciiControl(charArray)) {
+                return doAddJsonEscapedString(charArray);
+            } else {
+                return this.addQuoted(charArray);
+            }
+
         } else {
-            return this.addQuoted ( charArray );
+            if (charArray.length > 0 && hasAnyAsciiControlOrUnicodeChars(charArray)) {
+                return doAddJsonEscapedStringEscapeUnicode(charArray);
+            } else {
+                return this.addQuoted(charArray);
+            }
+
         }
     }
 
@@ -515,6 +557,141 @@ public class CharBuf extends PrintWriter implements CharSequence {
     final byte[] encoded = new byte[2];
 
     final byte[] charTo = new byte[2];
+
+
+
+    private final CharBuf doAddJsonEscapedStringEscapeUnicode( char[] charArray ) {
+
+
+        char [] _buffer = buffer;
+        int _location =  this.location;
+
+        final byte[] _encoded = encoded;
+
+        final byte[] _charTo = charTo;
+        /* We are making a bet that not all chars will be unicode. */
+        int  ensureThisMuch = charArray.length +  ((jsonControlCount +2) * 5);
+
+        int sizeNeeded =  (ensureThisMuch) + _location;
+        if ( sizeNeeded  > capacity ) {
+
+            int growBy =   ( _buffer.length * 2 ) <  sizeNeeded  ? sizeNeeded : (_buffer.length*2);
+            _buffer = Chr.grow( _buffer, growBy);
+            capacity = _buffer.length;
+        }
+
+
+
+
+        _buffer[_location] = '"';
+        _location ++;
+
+        int index = 0;
+        while ( true ) {
+
+            char c = charArray[ index ];
+
+
+            if ( isJSONEscapeOrAsciiControlOrUnicode(c)) {
+
+                switch ( c ) {
+                    case '\"':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  '"';
+                        _location ++;
+                        break;
+                    case '\\':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  '\\';
+                        _location ++;
+                        break;
+                    case '\b':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'b';
+                        _location ++;
+                        break;
+                    case '\f':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'f';
+                        _location ++;
+                        break;
+                    case '\n':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'n';
+                        _location ++;
+                        break;
+                    case '\r':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'r';
+                        _location ++;
+                        break;
+
+                    case '\t':
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  't';
+                        _location ++;
+                        break;
+
+                    default:
+
+                        _buffer[_location] = '\\';
+                        _location ++;
+                        _buffer[_location] =  'u';
+                        _location ++;
+                        if (c <= 255) {
+                            _buffer[_location] =  '0';
+                            _location ++;
+                            _buffer[_location] =  '0';
+                            _location ++;
+                            ByteScanner.encodeByteIntoTwoAsciiCharBytes( c, _encoded );
+                            for (int b : _encoded) {
+                                _buffer [_location] = (char)b;
+                                _location ++;
+
+                            }
+                        } else {
+                            Byt.charTo( _charTo, c );
+
+                            for (int charByte : _charTo) {
+                                ByteScanner.encodeByteIntoTwoAsciiCharBytes( charByte, _encoded );
+                                for (int b : _encoded) {
+                                    _buffer [_location] = (char)b;
+                                    _location ++;
+                                }
+                            }
+
+                        }
+
+                }
+            }else {
+
+                _buffer[_location] = c;
+                _location ++;
+
+            }
+
+
+            if ( ++index >= charArray.length) break;
+
+
+        }
+        _buffer[_location] = '"';
+        _location ++;
+
+
+        buffer = _buffer;
+        location = _location;
+
+        return this;
+    }
+
 
     private final CharBuf doAddJsonEscapedString( char[] charArray ) {
 

@@ -63,7 +63,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
 
         instanceSerializer = new InstanceSerializerImpl ();
         objectSerializer = new BasicObjectSerializerImpl (false);
-        stringSerializer = new StringSerializerImpl (true);
+        stringSerializer = new StringSerializerImpl (true, false);
         mapSerializer = new MapSerializerImpl (false);
         fieldSerializer = new FieldSerializerImpl ();
         collectionSerializer = new CollectionSerializerImpl ();
@@ -83,7 +83,8 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
                                 final ArraySerializer arraySerializer,
                                 final UnknownSerializer unknownSerializer,
                                 final DateSerializer dateSerializer,
-                                final FieldsAccessor fieldsAccessor
+                                final FieldsAccessor fieldsAccessor,
+                                final boolean asAscii
 
     ) {
 
@@ -136,7 +137,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         }
 
         if (stringSerializer == null) {
-            this.stringSerializer = new StringSerializerImpl (true);
+            this.stringSerializer = new StringSerializerImpl (true, asAscii);
         } else {
             this.stringSerializer = stringSerializer;
         }

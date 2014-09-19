@@ -70,6 +70,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     private int level;
 
+    private boolean asciiOnly;
+
     public JsonSimpleSerializerImpl() {
 
         this.view = null;
@@ -93,46 +95,19 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
 
-    public JsonSimpleSerializerImpl(boolean encodeStrings, int bufferSize) {
-
-        this.view = null;
-        this.encodeStrings = encodeStrings;
-        this.serializeAsSupport = true;
-        builder = CharBuf.create( bufferSize );
 
 
-    }
-
-    public JsonSimpleSerializerImpl(String view) {
-
-        this.view = view;
-        this.encodeStrings = true;
-        builder = CharBuf.create( 4000 );
-
-        serializeAsSupport = true;
-
-
-    }
-
-
-    public JsonSimpleSerializerImpl(String view, boolean encodeStrings, boolean serializeAsSupport, int bufSize) {
-
-        this.encodeStrings = encodeStrings;
-        this.serializeAsSupport = serializeAsSupport;
-        this.view = view;
-        builder = CharBuf.create( bufSize );
-
-    }
-
-
-    public JsonSimpleSerializerImpl(String view, boolean encodeStrings, boolean serializeAsSupport) {
+    public JsonSimpleSerializerImpl(String view, boolean encodeStrings,
+                                    boolean serializeAsSupport, boolean asciiOnly) {
 
         this.encodeStrings = encodeStrings;
         this.serializeAsSupport = serializeAsSupport;
         this.view = view;
         builder = CharBuf.create( 4000 );
+        this.asciiOnly = asciiOnly;
 
     }
+
 
 
     SimpleCache<String, String> stringCache;
@@ -155,7 +130,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
 
-                  encodedJsonChars.asJsonString(str);
+                  encodedJsonChars.asJsonString(str, asciiOnly);
                   encodedString = encodedJsonChars.toStringAndRecycle();
                   stringCache.put(str, encodedString);
               }

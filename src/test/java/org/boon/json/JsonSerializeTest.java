@@ -67,17 +67,47 @@ public class JsonSerializeTest {
         }
     }
 
+
     @Test
     public void test() {
         Employee rick = new Employee();
-        String sRick = new JsonSimpleSerializerImpl(null).serialize( rick ).toString();
+        String sRick = new JsonSimpleSerializerImpl().serialize( rick ).toString();
 
         puts(sRick);
-        boolean ok = sRick.equals( "{\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
+        ok = sRick.equals( "{\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
 
         rick = new JsonParserFactory ().create ().parse ( Employee.class, sRick );
         ok = rick.url.equals( "http://foo.bar/foo.jpg" ) || die( sRick );
 
+    }
+
+
+    @Test
+    public void testWithUTF8() {
+        Employee aÉddié = new Employee();
+        aÉddié.name = "Éddié";
+        String sRick = new JsonSimpleSerializerImpl().serialize( aÉddié ).toString();
+
+        puts(sRick);
+        ok = sRick.equals( "{\"name\":\"Éddié\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
+
+        Employee bÉddié = new JsonParserFactory ().create ().parse ( Employee.class, sRick );
+
+        bÉddié.name.equals(aÉddié.name);
+    }
+
+    @Test
+    public void testWithAcii() {
+        Employee aÉddié = new Employee();
+        aÉddié.name = "Éddié";
+        String sRick = new JsonSerializerFactory().asciiOnly().create().serialize(aÉddié).toString();
+
+        puts(sRick);
+        ok = sRick.equals( "{\"name\":\"\\u00c9ddi\\u00e9\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
+
+        Employee bÉddié = new JsonParserFactory ().create ().parse ( Employee.class, sRick );
+
+        bÉddié.name.equals(aÉddié.name);
     }
 
     @Test
