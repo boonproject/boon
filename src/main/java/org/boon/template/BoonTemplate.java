@@ -252,7 +252,11 @@ public class BoonTemplate implements Template {
         if (Boon.isEmpty(object)) {
             items = (List<Object>) params.get("varargs");
         }else {
-            items = Conversions.toList(object);
+            if (object instanceof List) {
+                items = (List<Object>) object;
+            } else {
+                items = Conversions.toList(object);
+            }
         }
 
 

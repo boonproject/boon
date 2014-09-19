@@ -975,9 +975,9 @@ public class BoonTemplateTest {
     public void cFor() {
 
         final String results = template.replace(
-                "<c:loop items='${list}'}'>${item} </c:loop>" ,
+                "<c:loop items='${list}'}' var='foo'>${foo} </c:loop>" ,
 
-                Lists.list(Maps.map("list", Lists.list("apple", "orange", "b"))));
+                Maps.map("list", Lists.list("apple", "orange", "b")));
 
 
         Boon.equalsOrDie("#apple orange b #", "#"+results +"#");

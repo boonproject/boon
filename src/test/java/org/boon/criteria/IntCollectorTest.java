@@ -30,6 +30,7 @@ package org.boon.criteria;
 
 import org.boon.Lists;
 import org.boon.collections.IntList;
+import org.boon.core.reflection.BeanUtils;
 import org.boon.primitive.Int;
 import org.junit.Test;
 
@@ -62,7 +63,9 @@ public class IntCollectorTest {
         departments = Lists.deepCopy(departmentsList);
 
         /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departments, "employees");
+
+        /** Get all employees in every department. */
+        employees =  BeanUtils.idxList(Employee.class, departments, "employees");
 
         IntCollector salaryCollection = new IntCollector("salary");
 

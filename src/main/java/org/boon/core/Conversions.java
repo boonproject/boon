@@ -1404,11 +1404,13 @@ public class Conversions {
         }
 
         if (list == null) {
-            list = new ArrayList();
+            list = new LinkedList();
         }
+
 
         if (isArray) {
             int length = Array.getLength( o );
+
             for (int index = 0; index < length; index++) {
 
                 Object o1 = Array.get(o, index);
@@ -1418,8 +1420,12 @@ public class Conversions {
                     list.add(o1);
                 }
             }
-        } else if (o instanceof Iterable) {
-            Iterable i = ((Iterable) o);
+        } else if (o instanceof Collection) {
+
+            Collection i = ((Collection) o);
+
+
+
             for (Object item : i) {
 
                 if (item instanceof Iterable || o.getClass().isArray()) {
@@ -1432,6 +1438,7 @@ public class Conversions {
 
 
         } else {
+
             list.add(o);
         }
 

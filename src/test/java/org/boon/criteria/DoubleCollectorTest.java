@@ -31,6 +31,7 @@ package org.boon.criteria;
 import org.boon.Lists;
 import org.boon.collections.DoubleList;
 import org.boon.collections.FloatList;
+import org.boon.core.reflection.BeanUtils;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -59,7 +60,7 @@ public class DoubleCollectorTest {
         departments = Lists.deepCopy(departmentsList);
 
         /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departments, "employees");
+        employees =  BeanUtils.idxList(Employee.class, departments, "employees");
 
         DoubleCollector salaryCollection = new DoubleCollector("salary");
 
