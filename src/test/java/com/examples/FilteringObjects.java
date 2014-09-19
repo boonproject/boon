@@ -48,6 +48,7 @@ import static org.boon.Lists.lazyAdd;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.atIndex;
+import static org.boon.core.reflection.BeanUtils.idxList;
 import static org.boon.criteria.ObjectFilter.*;
 
 public class FilteringObjects {
@@ -71,7 +72,7 @@ public class FilteringObjects {
         departments = Lists.deepCopy(departmentsList);
 
         /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departments, "employees");
+        employees = idxList(Employee.class, departments, "employees");
 
                 /* Grab all employees in HR. */
         List<Employee> results = filter(employees, eq("department.name", "HR"));
@@ -121,7 +122,7 @@ public class FilteringObjects {
         departments = Lists.deepCopy(departmentsList);
 
         /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departments, "employees");
+        employees = idxList(Employee.class, departments, "employees");
 
 
         /* -----------------
@@ -168,7 +169,7 @@ public class FilteringObjects {
         /** Now work with maps */
 
         List<Map<String, Object>> employeeMaps =
-                (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
+                (List<Map<String, Object>>) idxList(departmentObjects, "employees");
 
         /** Grab employees in HR with a salary greater than 301 */
 

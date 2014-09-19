@@ -220,6 +220,17 @@ public class StandardFunctions {
         return Str.lower(string.toString());
     }
 
+    public static String upper(Object string) {
+
+
+        if (string == null ) {
+            return "";
+        }
+
+
+        return Str.upper(string.toString());
+    }
+
     public static String trim(Object string) {
 
 

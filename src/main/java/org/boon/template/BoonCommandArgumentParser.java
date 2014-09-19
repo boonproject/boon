@@ -70,7 +70,12 @@ public class BoonCommandArgumentParser {
 
                             end = CharScanner.findChar('}', start, chars);
                             if (end != -1) end++;
-                        } else {
+                        } else if (chars[index + 1] == '{' && chars[index + 2] == '{') {
+
+                            end = CharScanner.findChar('}', start, chars);
+                            if (end != -1) end+=2;
+                        }
+                        else {
                             end = CharScanner.findWhiteSpace(start, chars);
                         }
                         if (end == -1) {

@@ -730,8 +730,28 @@ public class BeanUtils {
 
     }
 
-    public static <T> List<T> idxList( Class<T> cls, Object items, String... path ) {
-        return ( List<T> ) getPropByPath( items, path );
+    public static <T> List<T> idxList( Class<T> cls, Object items, String path ) {
+
+        String[] properties = propertyPathAsStringArray(path);
+        return ( List<T> ) getPropByPath( items, properties );
+    }
+
+    public static List idxList( Object items, String path ) {
+
+        String[] properties = propertyPathAsStringArray(path);
+        return ( List ) getPropByPath( items, properties );
+    }
+
+    public static <T> List<T> idxRecurse( Class<T> cls, Object items, String path ) {
+
+        String[] properties = propertyPathAsStringArray(path);
+        return ( List<T> ) getPropByPath( items, properties );
+    }
+
+    public static List idxRecurse( Object items, String path ) {
+
+        String[] properties = propertyPathAsStringArray(path);
+        return ( List ) getPropByPath( items, properties );
     }
 
 

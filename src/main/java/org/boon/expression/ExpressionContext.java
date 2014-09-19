@@ -46,10 +46,12 @@ import static org.boon.json.JsonFactory.fromJson;
 /**
  * Created by Richard on 2/10/14.
  */
-public class ExpressionContext implements ObjectContext, Map {
+public class ExpressionContext implements ObjectContext{
 
 
     private LinkedList<Object> context;
+
+    private ExpressionContext parent;
 
     private final JsonParserAndMapper jsonParser = new JsonParserFactory().lax().create();
 
@@ -68,6 +70,8 @@ public class ExpressionContext implements ObjectContext, Map {
         }
 
         addFunctions("fn", StandardFunctions.class);
+
+        parent = this;
 
     }
 
@@ -106,6 +110,8 @@ public class ExpressionContext implements ObjectContext, Map {
             } else {
                 this.context.add(root);
             }
+
+            parent=this;
         }
 
 
@@ -122,10 +128,16 @@ public class ExpressionContext implements ObjectContext, Map {
     @Override
     public char idxChar( String property ) {
 
-        return Conversions.toChar(this.findProperty(property));
+        return Conversions.toChar(this.lookup(property));
     }
 
-    public  Object findProperty(String propertyPath) {
+
+    Object findProperty(String propertyPath) {
+
+        return findProperty(propertyPath, true);
+    }
+
+    Object findProperty(String propertyPath, boolean searchChildren) {
 
 
         Object defaultValue;
@@ -146,9 +158,9 @@ public class ExpressionContext implements ObjectContext, Map {
 
         for (Object ctx : this.context) {
 
-            if (ctx instanceof ExpressionContext) {
+            if (searchChildren && ctx instanceof ExpressionContext ) {
                 ExpressionContext basicContext = (ExpressionContext) ctx;
-                basicContext.findProperty(propertyPath);
+                return basicContext.findProperty(propertyPath);
 
             } else if (ctx instanceof Pair) {
                 Pair<String, Object> pair = (Pair<String, Object>)ctx;
@@ -180,132 +192,76 @@ public class ExpressionContext implements ObjectContext, Map {
     public byte idxByte( String property ) {
 
 
-        return Conversions.toByte(this.findProperty(property));
+        return Conversions.toByte(this.lookup(property));
     }
 
     @Override
     public short idxShort( String property ) {
 
-        return Conversions.toShort(this.findProperty(property));
+        return Conversions.toShort(this.lookup(property));
     }
 
     @Override
     public String idxString( String property ) {
 
-        return Conversions.toString(this.findProperty(property));
+        return Conversions.toString(this.lookup(property));
     }
 
     @Override
     public int idxInt( String property ) {
 
-        return Conversions.toInt(this.findProperty(property));
+        return Conversions.toInt(this.lookup(property));
     }
 
     @Override
     public float idxFloat( String property ) {
 
-        return Conversions.toFloat(this.findProperty(property));
+        return Conversions.toFloat(this.lookup(property));
     }
 
     @Override
     public double idxDouble( String property ) {
 
-        return Conversions.toDouble(this.findProperty(property));
+        return Conversions.toDouble(this.lookup(property));
     }
 
     @Override
     public long idxLong( String property ) {
 
-        return Conversions.toLong(this.findProperty(property));
+        return Conversions.toLong(this.lookup(property));
     }
 
     @Override
     public Object idx( String property ) {
 
-        return this.findProperty(property);
+        return this.lookup(property);
     }
 
     @Override
     public <T> T idx( Class<T> type, String property ) {
 
-        for (Object o : this.context) {
-            if (o != null) {
-                return BeanUtils.idx(type, o, property);
-            }
-        }
+        return (T) this.lookup(property);
 
-        return null;
     }
 
-    @Override
     public int size() {
        return context.size();
     }
 
-    @Override
     public boolean isEmpty() {
         return context.isEmpty();
     }
 
-    @Override
-    public boolean containsKey( Object key ) {
-
-        die();
-        return true;
-    }
-
-    @Override
-    public boolean containsValue( Object value ) {
-
-        die();
-        return true;
-    }
-
-    @Override
     public Object get( Object key ) {
 
         return this.findProperty((key.toString()));
 
     }
 
-    @Override
     public Object put( Object key, Object value ) {
         Pair<String, Object> pair = new Pair(key.toString(), value);
         context.add(0, pair);
         return pair;
-    }
-
-    @Override
-    public Object remove( Object key ) {
-        return die();
-    }
-
-    @Override
-    public void putAll( Map m ) {
-         die();
-
-    }
-
-    @Override
-    public void clear() {
-        die();
-    }
-
-    @Override
-    public Set keySet() {
-        return die(Set.class, "Context not map");
-    }
-
-    @Override
-    public Collection values() {
-
-        return die(Set.class, "Context not map");
-    }
-
-    @Override
-    public Set<Entry> entrySet() {
-
-        return die(Set.class, "Context not map");
     }
 
 
@@ -357,6 +313,12 @@ public class ExpressionContext implements ObjectContext, Map {
                 break;
             case '[':
                 return jsonParser.parse(objectExpression);
+            case '.':
+                if (secondChar=='.') {
+
+                   String newExp = slc(objectExpression, 2);
+                   return parent.findProperty(newExp, false);
+                }
         }
 
         lastChar = Str.idx(objectExpression, -1);
@@ -374,10 +336,16 @@ public class ExpressionContext implements ObjectContext, Map {
     }
 
     private Object handleFunction(String functionCall) {
-        String[] split = StringScanner.splitByChars(functionCall,  '(', ')');
-        String methodName = split[0];
 
-        String arguments = split[1];
+        //"$fn:lower($fn:upper(session.request.name))"
+
+
+
+        final String[] split = StringScanner.split(functionCall, '(', 1);
+
+
+        String methodName = split[0];
+        String arguments = slc(split[1], 0, -1) ;
         List<Object> args = getObjectFromArguments(arguments);
 
         MethodAccess method = this.staticMethodMap.get(methodName);
@@ -423,13 +391,13 @@ public class ExpressionContext implements ObjectContext, Map {
 
     protected List<Object> getObjectFromArguments(String arguments) {
 
-            final String[] strings = StringScanner.split(arguments, ',');
+            final String[] strings = StringScanner.splitByChars(arguments, ',');
 
             List list = new ArrayList();
 
             for (String string : strings) {
                 Object object = lookup(string);
-                    list.add(object);
+                list.add(object);
             }
 
             return list;
@@ -440,7 +408,9 @@ public class ExpressionContext implements ObjectContext, Map {
 
 
     public void pushContext(Object value) {
-        this.context.add(0, new ExpressionContext((Object)value));
+        final ExpressionContext child = new ExpressionContext((Object) value);
+        child.parent = this;
+        this.context.add(0, child);
     }
 
 

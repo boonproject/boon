@@ -96,6 +96,24 @@ public class StringScanner {
 
     }
 
+    public static String[] splitByCharsFromToDelims( final String string, int from, int to,
+                                         final char... delimiters ) {
+
+        char[][] comps = CharScanner.splitByCharsFromToDelims( FastStringUtils.toCharArray( string ), from, to, delimiters );
+
+        return Str.fromCharArrayOfArrayToStringArray( comps );
+
+    }
+
+    public static String[] splitByCharsFrom( final String string, int from,
+                                                     final char... delimiters ) {
+
+        char[][] comps = CharScanner.splitByCharsFromToDelims( FastStringUtils.toCharArray( string ), from, string.length(), delimiters );
+
+        return Str.fromCharArrayOfArrayToStringArray( comps );
+
+    }
+
     /**
      * Split string by white space
      * @param string string to split

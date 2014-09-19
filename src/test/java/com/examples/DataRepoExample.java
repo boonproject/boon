@@ -49,6 +49,7 @@ import static org.boon.Lists.lazyAdd;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
 import static org.boon.core.reflection.BeanUtils.atIndex;
+import static org.boon.core.reflection.BeanUtils.idxList;
 import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.criteria.Selector.selectAs;
 import static org.boon.criteria.Selector.selectAsTemplate;
@@ -69,7 +70,7 @@ public class DataRepoExample {
 
 
         /** Get all employees in every department. */
-        employees = (List<Employee>) atIndex(departmentsList, "employees");
+        employees =  idxList(Employee.class, departmentsList, "employees");
 
 
         /** It builds indexes on properties. */
@@ -107,7 +108,7 @@ public class DataRepoExample {
 
 
         /** Get all employees in every department. */
-        employeeMaps = (List<Map<String, Object>>) atIndex(departmentObjects, "employees");
+        employeeMaps = (List<Map<String, Object>>)  idxList( departmentObjects, "employees");
 
 
         /** It builds indexes on properties. */
@@ -148,7 +149,7 @@ public class DataRepoExample {
 
         List<?> array =  (List<?>) fromJson(json);
         employeeMaps =
-                (List<Map<String, Object>>) atIndex(array, "employees");
+                (List<Map<String, Object>>) idxList(array, "employees");
 
         employeeMapRepo = (Repo<Integer,Map<String, Object>>) (Object)
                 Repos.builder()
