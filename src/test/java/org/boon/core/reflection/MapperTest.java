@@ -60,7 +60,7 @@ public class MapperTest {
 
     public static Class<Employee> employee = Employee.class;
 
-    Mapper mapper = new Mapper();
+    Mapper mapper = new MapperComplex();
 
     public static class Employee {
         String name;
@@ -109,7 +109,7 @@ public class MapperTest {
     public static void main( String... args ) {
 
 
-        Mapper mapper = new Mapper();
+        Mapper mapper = new MapperComplex();
         List<Object> rickList;
         Map<String, Object> rickMap;
 
@@ -228,7 +228,7 @@ public class MapperTest {
 
     @Test
     public void testCollectionFromSingleValueMap() {
-        mapper = new Mapper(true);
+        mapper = new MapperComplex(true);
 
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringTuple("props", "Rick is great"));
@@ -260,7 +260,7 @@ public class MapperTest {
 
     @Test
     public void testArrayFromSingleValueMap() {
-        mapper = new Mapper(true);
+        mapper = new MapperComplex(true);
 
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringTuple("descriptions", "Rick is great"));

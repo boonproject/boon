@@ -40,7 +40,7 @@ public class MapperConversionTest {
 
     Employee employee;
 
-    Mapper mapper = new Mapper();
+    Mapper mapper = new MapperComplex();
 
     Employee boss = new Employee(1);
     boolean ok;

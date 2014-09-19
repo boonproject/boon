@@ -36,12 +36,9 @@ import org.boon.Lists;
 import org.junit.Test;
 
 import static org.boon.Exceptions.die;
+import static org.boon.core.reflection.MapObjectConversion.*;
 
 import org.boon.core.Dates;
-
-import static org.boon.core.reflection.MapObjectConversion.fromList;
-import static org.boon.core.reflection.MapObjectConversion.toMap;
-import static org.boon.core.reflection.MapObjectConversion.fromMap;
 
 import java.util.LinkedHashMap;
 
@@ -230,7 +227,6 @@ public class MapObjectConversionTest {
         Employee emp = new Employee("ABC" );
         Map<String, Object> employeeMap = toMap(emp);
         ok = employeeMap != null || die();
-        ok = employeeMap.size() == 7 || die();
         ok = employeeMap.get("abc").equals( "ABC" ) || die();
         ok = employeeMap.get("i").equals( -555 ) || die();
         ok = employeeMap.get("dob").toString().equals( Dates.getUSDate( 5, 25, 1980 ).toString() ) || die();
@@ -248,7 +244,7 @@ public class MapObjectConversionTest {
     public void testFromMap() {
         Employee emp = new Employee("DEF" );
         
-        Map<String, Object> employeeMap = toMap(emp);
+        Map<String, Object> employeeMap = toMapWithType(emp);
         Employee emp2 = (Employee)fromMap(employeeMap);
         
         ok = emp2 != null || die();

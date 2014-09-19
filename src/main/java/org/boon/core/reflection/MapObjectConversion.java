@@ -29,31 +29,15 @@
 package org.boon.core.reflection;
 
 import org.boon.*;
-import org.boon.core.Conversions;
-import org.boon.core.Function;
-import org.boon.core.Typ;
 import org.boon.core.Value;
-import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.value.ValueContainer;
-import org.boon.core.value.ValueList;
-import org.boon.core.value.ValueMap;
-import org.boon.core.value.ValueMapImpl;
-import org.boon.primitive.Arry;
-import org.boon.primitive.CharBuf;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
-import static org.boon.Boon.*;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.coerce;
-import static org.boon.core.Type.*;
 
 
 /**
@@ -69,12 +53,13 @@ import static org.boon.core.Type.*;
  */
 public class MapObjectConversion {
 
-    private static final Mapper mapper = new Mapper();
+    private static final Mapper mapper = new MapperSimple();
+
+    private static final Mapper mapperWithType = new MapperComplex();
 
 
 
-
-    private static final Mapper prettyMapper = new Mapper(
+    private static final Mapper prettyMapper = new MapperComplex(
             false, //outputType
             FieldAccessMode.PROPERTY_THEN_FIELD, //fieldAccessType
             true, //useAnnotations
@@ -118,7 +103,7 @@ public class MapObjectConversion {
     public static <T> T fromList( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor,
                                   List<?> argList, Class<T> clazz, Set<String> ignoreSet ) {
 
-        return new Mapper (fieldsAccessor, ignoreSet, view, respectIgnore).fromList(argList, clazz);
+        return new MapperComplex(fieldsAccessor, ignoreSet, view, respectIgnore).fromList(argList, clazz);
 
     }
 
@@ -135,7 +120,7 @@ public class MapObjectConversion {
      * @return the new object that we just created.
      */
     public static <T> T fromList( FieldsAccessor fieldsAccessor, List<?> argList, Class<T> clazz ) {
-        return new Mapper (fieldsAccessor, null, null, false).fromList(argList, clazz);
+        return new MapperComplex(fieldsAccessor, null, null, false).fromList(argList, clazz);
     }
 
 
@@ -177,7 +162,7 @@ public class MapObjectConversion {
     @SuppressWarnings( "unchecked" )
     public static <T> T fromMap( Map<String, Object> map, Class<T> clazz, String... excludeProperties ) {
         Set<String> ignoreProps = excludeProperties.length > 0 ? Sets.set(excludeProperties) :  null;
-        return new Mapper (FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), ignoreProps, null, true).fromMap(map, clazz);
+        return new MapperComplex(FieldAccessMode.FIELD_THEN_PROPERTY.create( false ), ignoreProps, null, true).fromMap(map, clazz);
 
 
     }
@@ -208,7 +193,7 @@ public class MapObjectConversion {
     @SuppressWarnings("unchecked")
     public static <T> T fromMap( boolean respectIgnore, String view, FieldsAccessor fieldsAccessor, Map<String, Object> map, Class<T> cls, Set<String> ignoreSet ) {
 
-        Mapper mapper = new Mapper(ignoreSet, view, respectIgnore);
+        Mapper mapper = new MapperComplex(ignoreSet, view, respectIgnore);
 
         return mapper.fromMap(map, cls);
     }
@@ -233,7 +218,7 @@ public class MapObjectConversion {
                                       final Class<T> cls, Set<String> ignoreSet ) {
 
 
-        Mapper mapper = new Mapper(fieldsAccessor, ignoreSet, view, respectIgnore);
+        Mapper mapper = new MapperComplex(fieldsAccessor, ignoreSet, view, respectIgnore);
         return mapper.fromValueMap(valueMap, cls);
 
      }
@@ -260,7 +245,7 @@ public class MapObjectConversion {
      */
     public static Map<String, Object> toMap( final Object object, Set<String> ignore ) {
 
-        return new Mapper(ignore).toMap(object);
+        return new MapperComplex(ignore).toMap(object);
 
     }
 
@@ -270,11 +255,6 @@ public class MapObjectConversion {
     /**
      * This could be refactored to use core.Type class and it would run faster.
      *
-     * REFACTOR:
-     * This is nearly a duplicate of the last method.
-     * I think the rationality was speed, but we need to rethink that and come up with a
-     * Mapper class.
-     * REFACTOR
      * Converts an object into a map
      * @param object the object that we want to convert
      * @return map map representation of the object
@@ -282,6 +262,19 @@ public class MapObjectConversion {
     public static Map<String, Object> toMap( final Object object ) {
 
         return mapper.toMap(object);
+    }
+
+
+    /**
+     * This could be refactored to use core.Type class and it would run faster.
+     *
+     * Converts an object into a map
+     * @param object the object that we want to convert
+     * @return map map representation of the object
+     */
+    public static Map<String, Object> toMapWithType( final Object object ) {
+
+        return mapperWithType.toMap(object);
     }
 
     /**
@@ -300,7 +293,7 @@ public class MapObjectConversion {
     public  static <T> List<T> convertListOfMapsToObjects(   boolean respectIgnore, String view,
                                                             FieldsAccessor fieldsAccessor,
                                                             Class<T> componentType, List<Map> list, Set<String> ignoreProperties) {
-        return new Mapper(fieldsAccessor, ignoreProperties,view, respectIgnore).convertListOfMapsToObjects(list, componentType);
+        return new MapperComplex(fieldsAccessor, ignoreProperties,view, respectIgnore).convertListOfMapsToObjects(list, componentType);
     }
 
     /**
