@@ -247,10 +247,35 @@ public class BoonTemplate implements Template {
 
 
 
-        List<Object> items;
+        Collection<Object> items = null;
 
         if (Boon.isEmpty(object)) {
-            items = (List<Object>) params.get("varargs");
+            Object itemsObject =  params.get("varargs");
+
+            if (itemsObject instanceof  List) {
+                items = (List<Object>) itemsObject;
+            } else if (Boon.isStringArray(itemsObject)){
+                String[] array = (String[])itemsObject;
+
+                List holder = new ArrayList();
+
+                for (int index=0; index < array.length; index++) {
+                    if (Str.isEmpty(array[index])) {
+                        continue;
+                    }
+                    itemsObject = _context.lookup(array[index]);
+                    if (itemsObject instanceof Collection) {
+                        holder.addAll ((Collection<Object>) itemsObject);
+
+                    } else {
+                        holder.addAll(Conversions.toList(itemsObject));
+                    }
+
+                }
+
+                items = holder;
+
+            }
         }else {
             if (object instanceof List) {
                 items = (List<Object>) object;
@@ -309,7 +334,15 @@ public class BoonTemplate implements Template {
 
                 values.put("index", index);
 
+                values.put("@index", index);
+
+                values.put("this", item);
+
                 status.setIndex(index);
+
+                values.put("@first", status.isFirst());
+
+                values.put("@last", status.isLast());
 
                 processCommandBodyTokens(commandTokens);
             }

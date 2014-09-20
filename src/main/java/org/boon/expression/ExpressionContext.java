@@ -95,7 +95,14 @@ public class ExpressionContext implements ObjectContext{
 
         this.context = new LinkedList<>();
 
+        if (array==null) {
+            return;
+        }
+
         for (Object root : array ) {
+            if (root == null) {
+                continue;
+            }
             if (root instanceof CharSequence) {
 
                 String str = root.toString().trim();

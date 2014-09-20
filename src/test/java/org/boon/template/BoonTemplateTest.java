@@ -10,6 +10,12 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.boon.Lists.list;
+import static org.boon.Maps.map;
+import static org.boon.Str.equalsOrDie;
+import static org.boon.json.JsonFactory.niceJson;
+import static org.boon.template.old.BoonTemplate.template;
+
 
 /**
  * Created by Richard on 9/15/14.
@@ -20,6 +26,8 @@ public class BoonTemplateTest {
     Company company;
 
     BoonTemplate template;
+
+    String replace;
 
 
 
@@ -1285,6 +1293,167 @@ public class BoonTemplateTest {
         }
     }
 
+
+    public static class Name {
+        String firstName;
+        String lastName;
+
+        public Name(String firstName, String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+    }
+
+    public static class Person {
+        Name name;
+
+        public Person(Name name) {
+            this.name = name;
+        }
+    }
+
+
+    @Test
+    public void testDefault3() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+
+
+        replace = template.replace("{{1/name/firstName|Bob}}",
+                map("a", 1), list(
+                        new Person(new Name("Diana", "Hightower")),
+                        new Person(new Name("Rick", "Hightower"))
+
+                )
+        );
+
+
+        equalsOrDie("Rick", replace);
+
+    }
+
+    @Test
+    public void testDefault2() {
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        replace = template.replace("{{name.firstName|Bob}}",
+                new Person(new Name("Rick", "Hightower")));
+
+        equalsOrDie("Rick", replace);
+
+
+        replace = template.replace("{{this/name/firstName|Bob}}",
+                new Person(new Name("Sam", "Hightower")));
+
+        equalsOrDie("Sam", replace);
+
+
+        replace = template.replace("{{name/firstName|Bob}}",
+                new Person(new Name("RickyBobby", "Hightower")));
+
+        equalsOrDie("RickyBobby", replace);
+
+
+
+        replace = template.replace("{{name/firstName|Bob}}",
+                niceJson("{ 'name': { 'firstName':'RickyBobby', 'lastName':'Hightower' } }"));
+
+        equalsOrDie("RickyBobby", replace);
+
+    }
+
+
+    @Test
+    public void testDefault() {
+
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+        replace = template.replace("{{name|Rick}}", null);
+        equalsOrDie("Rick", replace.toString());
+
+        replace = template.replace("{{name|Bob}}", map("name", "Rick"));
+        equalsOrDie("Rick", replace);
+
+        replace = template.replace("{{name|Bob}}", niceJson("{'name':'Rick'}"));
+        equalsOrDie("Rick", replace);
+
+    }
+
+
+
+
+
+
+
+
+    @Test
+    public void testIteration() {
+
+        String listTemplate = "\n{{#each items}}" +
+
+                " this {{this}}, index {{@index}}, key {{@key}}, first {{@first}}, last {{@last}}\n" +
+
+                "{{/each}}";
+
+        template = new BoonTemplate(new BoonModernTemplateParser());
+
+        replace = template.replace(listTemplate,
+                map("items", list("apple", "oranges", "pears")));
+
+        equalsOrDie("\n" +
+                " this apple, index 0, key @key, first true, last false\n" +
+
+                " this oranges, index 1, key @key, first false, last false\n" +
+
+                " this pears, index 2, key @key, first false, last true\n"
+                , replace);
+
+//        replace = template.replace(listTemplate, map("items", map("apple", 1, "oranges", 2, "pears", 4)));
+//        String test = "\n" +
+//                " this 1, index 0, key apple, first true, last false\n" +
+//                "\n" +
+//                "\n" +
+//                " this 2, index 1, key oranges, first false, last false\n" +
+//                "\n" +
+//                "\n" +
+//                " this 4, index 2, key pears, first false, last true\n" +
+//                "\n";
+//        equalsOrDie(test, replace);
+//
+//        replace = template.replace(listTemplate, niceJson("{'items' : ['apple', 'oranges', 'pears']}"));
+//        test = "\n" +
+//                " this apple, index 0, key @key, first true, last false\n" +
+//                "\n" +
+//                "\n" +
+//                " this oranges, index 1, key @key, first false, last false\n" +
+//                "\n" +
+//                "\n" +
+//                " this pears, index 2, key @key, first false, last true\n" +
+//                "\n";
+//        equalsOrDie(test, replace);
+//
+//        final String json = niceJson("{'items' : {'apple': 1, 'oranges': 2, 'pears': 4)}}");
+//        replace = template.replace(listTemplate, json);
+//        test = "\n" +
+//                " this 33, index 0, key pears, first true, last false\n" +
+//                "\n" +
+//                "\n" +
+//                " this 2, index 1, key oranges, first false, last false\n" +
+//                "\n" +
+//                "\n" +
+//                " this 1, index 2, key apple, first false, last true\n" +
+//                "\n";
+////        equalsOrDie(test, replace);
+
+    }
+
+    String jstListTemplate = "<c:forEach items=\"items\">\n" +
+            "\n" +
+            " this ${this}, index ${@index}, key ${@key}, first ${@first}, last ${@last}\n" +
+            "\n" +
+            "</c:forEach>";
 
 
 
