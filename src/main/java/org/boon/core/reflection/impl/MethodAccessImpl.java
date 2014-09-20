@@ -154,7 +154,12 @@ public class MethodAccessImpl implements MethodAccess {
             return invoke(object, newArgs);
 
         } else {
-            return Invoker.invokeOverloadedFromList(object, name(), Lists.list(args));
+            if (method.isVarArgs() && paramLength == 1) {
+
+                return this.invoke(object, (Object)args);
+            } else {
+                return Invoker.invokeOverloadedFromList(object, name(), Lists.list(args));
+            }
 
         }
 
@@ -162,6 +167,7 @@ public class MethodAccessImpl implements MethodAccess {
 
     public Object invoke(Object object, Object... args) {
         try {
+
             return method.invoke( object, args );
         } catch ( Throwable ex ) {
 

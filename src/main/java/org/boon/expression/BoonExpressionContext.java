@@ -401,7 +401,7 @@ public class BoonExpressionContext implements ExpressionContext {
 
         if (method!=null) {
 
-            return method.invokeDynamic(null, Arry.array(args));
+            return method.invokeDynamic(null, Arry.objectArray(args));
         } else {
             return handleMethodCall(methodName, args);
         }

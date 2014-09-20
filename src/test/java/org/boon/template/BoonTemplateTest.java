@@ -4,7 +4,6 @@ import org.boon.Boon;
 import org.boon.Lists;
 import org.boon.Maps;
 import org.boon.Str;
-import org.boon.core.Fn;
 import org.boon.primitive.Arry;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +32,9 @@ public class BoonTemplateTest {
     private boolean ok;
 
 
+    List<Employee> employees;
+
+
     @Before
     public void setup() {
 
@@ -45,6 +47,18 @@ public class BoonTemplateTest {
         company = new Company("Mammatus", list);
         template = new BoonTemplate();
 
+        employees = Lists.list(
+                new Employee("Rick", "Hightower", 1,
+                    new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Adam", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Zed", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Ryan", "Hightower", 1,
+                    new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES)
+        );
 
     }
 
@@ -765,6 +779,90 @@ public class BoonTemplateTest {
 
     }
 
+    @Test
+    public void cForSortEmployees() {
+
+
+        String results = template.replace("\n<c:for items='employees'> $this.firstName </c:for>",
+                Maps.map("employees", employees));
+
+
+        Boon.equalsOrDie("#\n" +
+                " Rick  Adam  Zed  Lucas  Ryan #", "#" + results + "#");
+
+        results = template.replace(
+                "<c:for items='${fn:sortBy(employees,firstName)}'>$this.firstName</c:for>",
+                Maps.map("employees", employees));
+
+        Boon.equalsOrDie("#AdamLucasRickRyanZed#", "#" + results + "#");
+
+    }
+
+
+    @Test
+    public void cForSortEmployees2() {
+
+
+        employees = Lists.list(
+                new Employee("Rick", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Adam", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Zed", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Ryan", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Smith", 1,
+                    new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES)
+
+        );
+
+        String results = template.replace(
+                "\n<c:for items='${fn:sortBy(employees, firstName, lastName)}'> ${this.firstName}, ${this.lastName}\n</c:for>",
+                Maps.map("employees", employees));
+
+        Boon.equalsOrDie("#\n" +
+                " Adam, Hightower\n" +
+                " Lucas, Hightower\n" +
+                " Lucas, Smith\n" +
+                " Rick, Hightower\n" +
+                " Ryan, Hightower\n" +
+                " Zed, Hightower\n" +
+                "#", "#" + results + "#");
+
+
+        results = template.replace(
+                "\n<c:for items='${fn:sortBy(employees, firstName_desc, lastName)}'> ${this.firstName}, ${this.lastName}\n</c:for>",
+                Maps.map("employees", employees));
+
+        Boon.equalsOrDie("#\n" +
+                " Zed, Hightower\n" +
+                " Ryan, Hightower\n" +
+                " Rick, Hightower\n" +
+                " Lucas, Hightower\n" +
+                " Lucas, Smith\n" +
+                " Adam, Hightower\n" +
+                "#", "#" + results + "#");
+
+
+        results = template.replace(
+                "\n<c:for items='${fn:sortBy(employees, firstName_desc, lastName_desc)}'> ${this.firstName}, ${this.lastName}\n</c:for>",
+                Maps.map("employees", employees));
+
+        Boon.equalsOrDie("#\n" +
+                " Zed, Hightower\n" +
+                " Ryan, Hightower\n" +
+                " Rick, Hightower\n" +
+                " Lucas, Smith\n" +
+                " Lucas, Hightower\n" +
+                " Adam, Hightower\n" +
+                "#", "#" + results + "#");
+
+    }
+
+
 
     @Test
     public void deptNamesForEachAgainWithIndexAndEmployeesFirstName2() {
@@ -1008,6 +1106,18 @@ public class BoonTemplateTest {
 
     }
 
+    @Test
+    public void cForSort() {
+
+        final String results = template.replace(
+                "<c:loop items='${fn:sort(list)}'}' var='foo'>${foo} </c:loop>" ,
+
+                Maps.map("list", Lists.list("apple", "orange", "b")));
+
+
+        Boon.equalsOrDie("#apple b orange #", "#"+results +"#");
+
+    }
     @Test
     public void cIf() {
 
