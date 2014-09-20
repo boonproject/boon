@@ -581,9 +581,9 @@ public class RepoBuilderDefault implements RepoBuilder {
      */
     public RepoBuilder searchIndex( String propertyName, boolean unique ) {
         if ( unique ) {
-            this.searchIndexes.add( propertyName );
-        } else {
             this.uniqueSearchIndexes.add( propertyName );
+        } else {
+            this.searchIndexes.add( propertyName );
         }
         return this;
     }
