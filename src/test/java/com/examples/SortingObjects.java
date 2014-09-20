@@ -35,6 +35,7 @@ import static org.boon.sort.Sorting.*;
 
 import static org.boon.sort.Ordering.*;
 
+import org.boon.core.reflection.BeanUtils;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -294,13 +295,13 @@ public class SortingObjects {
 
         puts(multiply('_', 30), "From JAVA Objects", multiply('_', 30), "\n");
 
-        List<Employee> employees = (List<Employee>) atIndex(departmentsList, "employees");
+        List<Employee> employees = (List<Employee>) BeanUtils.idxList(departmentsList, "employees");
 
         sorting(employees, departmentsList);
 
         puts(multiply('_', 30), "From LIST MAPS", multiply('_', 30), "\n");
 
-        List<?> employeeObjects = (List<?>) atIndex(departmentObjects, "employees");
+        List<?> employeeObjects = (List<?>) BeanUtils.idxList(departmentObjects, "employees");
 
         sorting(employeeObjects, departmentObjects);
 
@@ -312,7 +313,7 @@ public class SortingObjects {
         puts(json);
         Object jsonObject = fromJson(json);
         List<?> jsonDepartments = (List<?>) jsonObject;
-        List<?> jsonEmployees = (List<Employee>) atIndex(jsonDepartments, "employees");
+        List<?> jsonEmployees = (List<Employee>) BeanUtils.idxList(jsonDepartments, "employees");
 
         sorting(jsonEmployees, jsonDepartments);
 

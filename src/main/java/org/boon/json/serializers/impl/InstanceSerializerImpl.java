@@ -66,6 +66,16 @@ public class InstanceSerializerImpl implements InstanceSerializer{
 
     @Override
     public void serializeSubtypeInstance( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
+
+
+        if (instance instanceof Map) {
+            serializer.serializeMap(((Map) instance), builder);
+            return;
+        } else if (instance instanceof Collection) {
+            serializer.serializeCollection((Collection)instance, builder);
+            return;
+        }
+
         builder.addString( "{\"class\":" );
         builder.addQuoted ( instance.getClass ().getName () );
         final Map<String, FieldAccess> fieldAccessors = serializer.getFields ( instance.getClass () );
@@ -100,6 +110,7 @@ public class InstanceSerializerImpl implements InstanceSerializer{
 
     @Override
     public void serializeInstance(JsonSerializerImpl serializer, Object instance, CharBuf builder, boolean includeTypeInfo) {
+
         final Map<String, FieldAccess> fieldAccessors =   serializer.getFields(instance.getClass ());
         final Collection<FieldAccess> values = fieldAccessors.values ();
 

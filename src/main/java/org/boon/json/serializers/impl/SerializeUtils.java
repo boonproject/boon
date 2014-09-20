@@ -6,6 +6,7 @@ import org.boon.json.serializers.CustomObjectSerializer;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,6 +51,14 @@ public class SerializeUtils {
                 noHandle.add(cls);
 
             }
+        }
+
+        if (obj instanceof Map) {
+            jsonSerializer.serializeMap((Map) obj, builder);
+            return;
+        } else if (obj instanceof Collection) {
+            jsonSerializer.serializeCollection((Collection)obj, builder);
+            return;
         }
 
         if (type == Type.INSTANCE) {

@@ -616,6 +616,9 @@ public class RepoBuilderDefault implements RepoBuilder {
         if ( this.uniqueLookupIndexFactory == null ) {
             this.uniqueLookupIndexFactory = SPIFactory.getUniqueLookupIndexFactory();
         }
+        if ( this.uniqueSearchIndexFactory == null ) {
+            this.uniqueSearchIndexFactory = SPIFactory.getUniqueSearchIndexFactory();
+        }
         if ( this.searchableCollectionFactory == null ) {
             this.searchableCollectionFactory = SPIFactory.getSearchableCollectionFactory();
         }

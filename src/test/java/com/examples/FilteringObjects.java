@@ -28,6 +28,7 @@
 
 package com.examples;
 
+import org.boon.core.reflection.BeanUtils;
 import org.boon.criteria.internal.Criteria;
 import  org.boon.primitive.Int;
 
@@ -197,7 +198,7 @@ public class FilteringObjects {
 
         List<?> array =  (List<?>) fromJson(json);
         employeeMaps =
-                (List<Map<String, Object>>) atIndex(array, "employees");
+                (List<Map<String, Object>>) BeanUtils.idxList(array, "employees");
 
 
         resultObjects = filter(employeeMaps,
