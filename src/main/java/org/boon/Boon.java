@@ -41,7 +41,7 @@ import org.boon.logging.LogLevel;
 import org.boon.logging.Logging;
 import org.boon.logging.TerminalLogger;
 import org.boon.primitive.CharBuf;
-import org.boon.template.old.BoonTemplate;
+import org.boon.template.BoonTemplate;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -511,7 +511,7 @@ public class Boon {
      * @return template results
      */
     public static String handlebars(String template, Object context) {
-        return BoonTemplate.template().replace(template, context).toString();
+        return BoonTemplate.template().replace(template, context);
     }
 
 

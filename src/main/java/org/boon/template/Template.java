@@ -4,4 +4,9 @@ public interface Template {
 
 
     String replace(String string, Object... context);
+
+    void addFunctions(Class<?> functions);
+
+
+    void addFunctions(String prefix, Class<?> functions);
 }

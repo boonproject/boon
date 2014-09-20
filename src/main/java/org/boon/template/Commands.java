@@ -26,14 +26,28 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.template.old;
+package org.boon.template;
 
-import org.boon.primitive.CharBuf;
+import org.boon.core.Conversions;
 
 /**
  * Created by Richard on 2/27/14.
  */
-public interface Command {
+public enum Commands {
+    EACH, //DONE
+    IF, //DONE
+    WITH, //NOT DONE
+    UNLESS, //DONE
+    LOG, //NOT DONE
+    INCLUDE, //INCLUDE and import ANOTHER TEMPLATE has a name gets mapped in.. used like function if found in namespace WILL BE LIKE FREEMARKER style
+    UNKNOWN;
 
-    void processCommand(CharBuf output, String arguments, CharSequence block, Object context);
+    /**
+     *
+     * @param value
+     * @return
+     */
+    public static Commands command(String value) {
+       return Conversions.toEnum(Commands.class, value.toUpperCase(), UNKNOWN);
+    }
 }

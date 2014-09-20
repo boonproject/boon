@@ -158,6 +158,14 @@ public class BoonModernTemplateParser implements TemplateParser{
         if (index > 0) {
             this.tokenList.add(Token.expression(startIndex, index));
             index += TokenTypes.EXPRESSION_END.handleBarStyle().length;
+
+            if ( index<charArray.length) {
+                char c = charArray[index];
+                if (c == '}') {
+                    index++;
+                }
+            }
+
             return true;
         }
         return false;

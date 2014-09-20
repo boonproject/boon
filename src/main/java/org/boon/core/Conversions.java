@@ -1091,8 +1091,29 @@ public class Conversions {
             return new ArrayList((Collection) value);
         } else if (value == null) {
             return new ArrayList();
-        }  else
-        {
+        } else if (value instanceof Map) {
+            return new ArrayList(((Map)value).entrySet());
+        }
+        else {
+            ArrayList list = new ArrayList(Boon.len(value));
+            Iterator<Object> iterator = iterator(Typ.object, value);
+            while (iterator.hasNext()) {
+                list.add(iterator.next());
+            }
+            return list;
+        }
+    }
+
+
+    public static Collection toCollection(Object value) {
+        if (value instanceof Collection) {
+            return (Collection) value;
+        } else if (value == null) {
+            return new ArrayList();
+        } else if (value instanceof Map) {
+            return ((Map)value).entrySet();
+        }
+        else {
             ArrayList list = new ArrayList(Boon.len(value));
             Iterator<Object> iterator = iterator(Typ.object, value);
             while (iterator.hasNext()) {

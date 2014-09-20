@@ -34,7 +34,8 @@ import org.boon.datarepo.Repos;
 import  org.boon.primitive.Int;
 
 import org.boon.Str;
-import org.boon.template.old.BoonTemplate;
+import org.boon.template.BoonTemplate;
+import org.boon.template.Template;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -44,7 +45,6 @@ import java.util.Map;
 import static org.boon.Boon.fromJson;
 import static org.boon.Boon.puts;
 import static org.boon.Boon.toJson;
-import static org.boon.Lists.copy;
 import static org.boon.Lists.lazyAdd;
 import static org.boon.Lists.list;
 import static org.boon.Maps.map;
@@ -54,8 +54,7 @@ import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.criteria.Selector.selectAs;
 import static org.boon.criteria.Selector.selectAsTemplate;
 import static org.boon.criteria.Selector.selects;
-import static org.boon.template.old.BoonTemplate.jstl;
-import static org.boon.template.old.BoonTemplate.template;
+import static org.boon.template.BoonTemplate.jstl;
 
 public class DataRepoExample {
 
@@ -193,10 +192,10 @@ public class DataRepoExample {
 
 
 
-        BoonTemplate template = template();
-        template.addFunctions(new DecryptionService());
+        Template template = BoonTemplate.template();
+        template.addFunctions(DecryptionService.class);
 
-        template.addFunctions(new Salary());
+        template.addFunctions(Salary.class);
 
 
 
@@ -215,8 +214,8 @@ public class DataRepoExample {
 
 
         template = jstl();
-        template.addFunctions(new DecryptionService());
-        template.addFunctions(new Salary());
+        template.addFunctions(DecryptionService.class);
+        template.addFunctions(Salary.class);
 
 
 
@@ -236,8 +235,8 @@ public class DataRepoExample {
 
 
         template = jstl();
-        template.addFunctions(new DecryptionService());
-        template.addFunctions(new Salary());
+        template.addFunctions(DecryptionService.class);
+        template.addFunctions(Salary.class);
 
 
 
@@ -259,13 +258,13 @@ public class DataRepoExample {
     }
 
     public static class DecryptionService {
-        public String decrypt(Integer id) {
+        public static String decrypt(Integer id) {
             return "" + ("" + (id == null ? "null" :  id.hashCode())).hashCode();
         }
     }
 
     public static class Salary {
-        public Float pay(Integer salary) {
+        public static Float pay(Integer salary) {
             float pay = salary.floatValue() / 100;
             return pay;
         }

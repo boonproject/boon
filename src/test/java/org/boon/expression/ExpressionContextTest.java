@@ -13,13 +13,13 @@ import static org.boon.Boon.equalsOrDie;
 public class ExpressionContextTest {
 
 
-    ExpressionContext context;
+    BoonExpressionContext context;
 
     @Before
     public void setup() {
 
 
-        ExpressionContext child = new ExpressionContext(
+        BoonExpressionContext child = new BoonExpressionContext(
                 Maps.map(
                         "name", "child-application",
                         "session", Maps.map(
@@ -31,7 +31,7 @@ public class ExpressionContextTest {
                         "SOME KEY", "SOME VALUE"
                 )
         );
-        context = new ExpressionContext(
+        context = new BoonExpressionContext(
                 child,
                 Maps.map("name", "parent-application",
                         "session", Maps.map(

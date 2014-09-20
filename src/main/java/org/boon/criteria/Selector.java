@@ -32,7 +32,7 @@ package org.boon.criteria;
 import org.boon.core.Function;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
-import org.boon.template.old.BoonTemplate;
+import org.boon.template.Template;
 
 import java.util.*;
 
@@ -317,7 +317,7 @@ public abstract class Selector {
      * */
     public static Selector selectAsTemplate( final String alias,
                                      final String  template,
-                                     final BoonTemplate transform) {
+                                     final Template transform) {
         return new Selector( alias, alias ) {
 
             @Override

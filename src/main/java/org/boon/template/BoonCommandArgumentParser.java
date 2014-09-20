@@ -125,7 +125,7 @@ public class BoonCommandArgumentParser {
 
 
 
-            params.put("varargs", StringScanner.splitByChars(args, ',', ' ', '\t', '\n'));
+            params.put("varargs", StringScanner.splitByChars(args, ' ', '\t', '\n'));
         }
         return params;
     }

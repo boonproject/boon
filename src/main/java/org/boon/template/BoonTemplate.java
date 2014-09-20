@@ -1,15 +1,14 @@
 package org.boon.template;
 
 import org.boon.Boon;
-import org.boon.Lists;
 import org.boon.Str;
 import org.boon.StringScanner;
 import org.boon.collections.LazyMap;
 import org.boon.core.Conversions;
 import org.boon.core.reflection.BeanUtils;
+import org.boon.expression.BoonExpressionContext;
 import org.boon.expression.ExpressionContext;
 import org.boon.primitive.CharBuf;
-import org.boon.primitive.CharScanner;
 import org.boon.template.support.LoopTagStatus;
 import org.boon.template.support.Token;
 import org.boon.template.support.TokenTypes;
@@ -29,7 +28,7 @@ public class BoonTemplate implements Template {
     private BoonTemplate parentTemplate;
     private TemplateParser parser;
     private String template;
-    private ExpressionContext _context;
+    private final ExpressionContext _context;
     private BoonCommandArgumentParser commandArgumentParser = new BoonCommandArgumentParser();
 
     private void output(Object object) {
@@ -45,19 +44,25 @@ public class BoonTemplate implements Template {
 
         parser = new BoonCoreTemplateParser();
 
+        _context = new BoonExpressionContext();
+
     }
 
 
     public BoonTemplate(TemplateParser templateParser) {
 
         parser = templateParser;
+        _context = new BoonExpressionContext();
 
     }
 
-//    @Override
-//    public String replace(TemplateParser parser, String template, Object... context) {
-//
-//    }
+    public BoonTemplate(ExpressionContext context, TemplateParser templateParser) {
+
+        parser = templateParser;
+        _context = context;
+
+    }
+
 
     @Override
     public String replace(String template, Object... context) {
@@ -84,9 +89,7 @@ public class BoonTemplate implements Template {
 
     protected void initContext(final Object... root) {
 
-
-        this._context = new ExpressionContext(root);
-
+        _context.initContext(root);
 
     }
 
@@ -122,7 +125,7 @@ public class BoonTemplate implements Template {
         List<Token> commandTokens = new ArrayList<>();
 
 
-        if (bodyToken.start()!=bodyToken.stop()) {
+        if (bodyToken.start() != bodyToken.stop()) {
             while (tokens.hasNext()) {
                 final Token next = tokens.next();
                 commandTokens.add(next);
@@ -238,52 +241,45 @@ public class BoonTemplate implements Template {
     }
 
 
-    private void handleLoop(Map<String, Object> params, List<Token> commandTokens
-    ) {
+    private void handleLoop(Map<String, Object> params, List<Token> commandTokens) {
 
 
         String itemsName = Str.toString(params.get("items"));
-        final Object object = _context.lookup(itemsName);
+        Object object = null;
+        Collection<Object> items;
 
 
-
-        Collection<Object> items = null;
-
-        if (Boon.isEmpty(object)) {
-            Object itemsObject =  params.get("varargs");
-
-            if (itemsObject instanceof  List) {
-                items = (List<Object>) itemsObject;
-            } else if (Boon.isStringArray(itemsObject)){
-                String[] array = (String[])itemsObject;
-
-                List holder = new ArrayList();
-
-                for (int index=0; index < array.length; index++) {
-                    if (Str.isEmpty(array[index])) {
-                        continue;
-                    }
-                    itemsObject = _context.lookup(array[index]);
-                    if (itemsObject instanceof Collection) {
-                        holder.addAll ((Collection<Object>) itemsObject);
-
-                    } else {
-                        holder.addAll(Conversions.toList(itemsObject));
-                    }
-
-                }
-
-                items = holder;
-
-            }
-        }else {
-            if (object instanceof List) {
-                items = (List<Object>) object;
-            } else {
-                items = Conversions.toList(object);
-            }
+        if (!Boon.isEmpty(itemsName)) {
+            object = _context.lookup(itemsName);
         }
 
+        if (Boon.isEmpty(object)) {
+            object = params.get("varargs");
+
+        }
+
+        if (Boon.isStringArray(object)) {
+            String[] array = (String[]) object;
+
+            List holder = new ArrayList();
+
+            for (int index = 0; index < array.length; index++) {
+                if (Str.isEmpty(array[index])) {
+                    continue;
+                }
+                object = _context.lookup(array[index]);
+
+
+                holder.addAll(Conversions.toCollection(object));
+
+            }
+
+            object = holder;
+
+        }
+
+
+        items = Conversions.toCollection(object);
 
 
         String var = getStringParam("var", params, "item");
@@ -332,11 +328,6 @@ public class BoonTemplate implements Template {
                 values.put(var, item);
                 values.put(varStatus, status);
 
-                values.put("index", index);
-
-                values.put("@index", index);
-
-                values.put("this", item);
 
                 status.setIndex(index);
 
@@ -344,6 +335,21 @@ public class BoonTemplate implements Template {
 
                 values.put("@last", status.isLast());
 
+
+                values.put("index", index);
+                values.put("@index", index);
+
+                if (item instanceof Map.Entry) {
+                    Map.Entry entry = (Map.Entry) item;
+                    values.put("@key", entry.getKey());
+                    values.put("@value", entry.getValue());
+                    values.put("this", entry.getValue());
+
+                } else {
+
+                    values.put("this", item);
+
+                }
                 processCommandBodyTokens(commandTokens);
             }
             index++;
@@ -368,7 +374,7 @@ public class BoonTemplate implements Template {
 
         Object bean = _context.lookup(targetExpression);
 
-        if (!Str.isEmpty(propertyPath) && bean!=null ) {
+        if (!Str.isEmpty(propertyPath) && bean != null) {
             BeanUtils.idx(bean, propertyPath, value);
         }
 
@@ -388,13 +394,15 @@ public class BoonTemplate implements Template {
 
         if (params.containsKey("test")) {
             final String test = Str.toString(params.get("test"));
+            if (!Str.isEmpty(test)) {
 
-            if (test.startsWith("$")) {
-                Object o = _context.lookup(test);
+                if ("true".equals(test)) {
+                    display = true;
+                } else {
+                    Object o = _context.lookupWithDefault(test, "");
 
-                display = Conversions.toBoolean(o);
-            } else {
-                display = Conversions.toBoolean(test);
+                    display = Conversions.toBoolean(o);
+                }
             }
         } else {
             final Object varargsObject = params.get("varargs");
@@ -406,7 +414,7 @@ public class BoonTemplate implements Template {
                 if (array.length > 0) {
                     display = true; //for now
                 }
-                for (int index=0; index< array.length; index++) {
+                for (int index = 0; index < array.length; index++) {
 
                     if (!Str.isEmpty(array[index])) {
                         Object o = _context.lookup(array[index]);
@@ -417,8 +425,8 @@ public class BoonTemplate implements Template {
                     }
                 }
 
-            } else if(varargsObject instanceof Collection) {
-                Collection varargs = (Collection)  varargsObject;
+            } else if (varargsObject instanceof Collection) {
+                Collection varargs = (Collection) varargsObject;
 
 
                 if (varargs.size() > 0) {
@@ -446,8 +454,6 @@ public class BoonTemplate implements Template {
         }
 
 
-
-
         if (display) {
 
             processCommandBodyTokens(commandTokens);
@@ -455,9 +461,29 @@ public class BoonTemplate implements Template {
         }
 
 
-
     }
 
 
+    public static Template template() {
+
+        return new BoonTemplate(new BoonModernTemplateParser());
+
+    }
+
+    public static Template jstl() {
+
+        return new BoonTemplate(new BoonCoreTemplateParser());
+
+    }
+
+    public void addFunctions(Class<?> functions) {
+
+        _context.addFunctions(functions);
+    }
+
+    public void addFunctions(String prefix, Class<?> functions) {
+
+        _context.addFunctions(prefix, functions);
+    }
 
 }
