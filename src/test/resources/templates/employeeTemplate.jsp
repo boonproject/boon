@@ -1,3 +1,3 @@
-<c:forEach items='${fn:sortBy(employees, firstName, lastName)}'>
-    ${this.firstName}, ${this.lastName}
+<c:forEach items='${fn:sortBy(employees, firstName, lastName)}' >
+    <c:include resource='/templates/empTemp.jsp' emp='item'></c:include>
 </c:forEach>

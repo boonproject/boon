@@ -82,6 +82,23 @@ public class BoonTemplate implements Template {
         return _buf.toString();
     }
 
+
+    private String include(String template) {
+
+        this.template = template;
+        parser.parse(template);
+        _buf.readForRecycle();
+
+        Iterator<Token> tokens = parser.getTokenList().iterator();
+
+        while (tokens.hasNext()) {
+            final Token token = tokens.next();
+            processToken(tokens, token);
+        }
+
+        return _buf.toString();
+    }
+
     @Override
     public String replaceFromResource(String resource, Object... context) {
         final String template = Boon.resource(resource);
@@ -100,6 +117,13 @@ public class BoonTemplate implements Template {
 
         final String template = IO.readResource(resource);
         return replace(template, context);
+
+    }
+
+    public String inlcudeFromURI(String resource) {
+
+        final String template = IO.readResource(resource);
+        return include(template);
 
     }
 
@@ -186,6 +210,13 @@ public class BoonTemplate implements Template {
             case "assign":
                 handleSet(params, commandTokens);
                 break;
+
+
+            case "insert":
+            case "include":
+            case "import":
+            case "template":
+                handleInclude(params, commandTokens);
 
             case "list":
             case "for":
@@ -405,6 +436,77 @@ public class BoonTemplate implements Template {
 
     }
 
+
+    private void handleInclude(Map<String, Object> params, List<Token> commandTokens) {
+
+
+        Map<String, Object> newContext = new LazyMap(params.size());
+
+        for(Map.Entry<String, Object> entry : params.entrySet()) {
+            newContext.put(entry.getKey(), _context.lookupWithDefault(
+                    entry.getValue().toString(),
+                    entry.getValue()));
+        }
+
+        final Object otype = params.get("type");
+        String type;
+
+        if (!Boon.isEmpty(otype)) {
+            type = otype.toString();
+        } else {
+            type="";
+        }
+
+        TemplateParser includeParser;
+
+        switch (type) {
+            case "":
+                try {
+                    includeParser = parser.getClass().newInstance();
+                } catch (Exception e) {
+                    includeParser = new BoonModernTemplateParser();
+                }
+                break;
+            case "boon":
+            case "jsp":
+            case "jstl":
+                includeParser = new BoonCoreTemplateParser();
+                break;
+
+            case "modern":
+            case "mustache":
+            case "handlebar":
+            case "handlebars":
+                includeParser = new BoonModernTemplateParser();
+                break;
+
+            default:
+                includeParser = new BoonCoreTemplateParser();
+
+        }
+
+        BoonTemplate template = new BoonTemplate(_context, includeParser);
+        template.parentTemplate = this;
+        _context.pushContext(newContext);
+
+
+        final String resource = (String) params.get("resource");
+
+        if (resource.contains(":")) {
+            output(template.inlcudeFromURI(resource));
+        } else {
+            output(template.includeFromResource(resource));
+        }
+
+        _context.removeLastContext();
+
+
+    }
+
+    private String includeFromResource(String resource) {
+        final String template = Boon.resource(resource);
+        return include(template);
+    }
 
     private void handleIf(Map<String, Object> params, List<Token> commandTokens,
                           boolean normal) {
