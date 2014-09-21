@@ -1,6 +1,7 @@
 package org.boon.template;
 
 import org.boon.Boon;
+import org.boon.IO;
 import org.boon.Str;
 import org.boon.StringScanner;
 import org.boon.collections.LazyMap;
@@ -16,7 +17,6 @@ import org.boon.template.support.TokenTypes;
 import java.util.*;
 
 import static org.boon.Boon.puts;
-import static org.boon.Exceptions.die;
 
 /**
  * Created by Richard on 9/15/14.
@@ -80,6 +80,27 @@ public class BoonTemplate implements Template {
         }
 
         return _buf.toString();
+    }
+
+    @Override
+    public String replaceFromResource(String resource, Object... context) {
+        final String template = Boon.resource(resource);
+        return replace(template, context);
+    }
+
+    @Override
+    public String replaceFromFile(String resource, Object... context) {
+        final String template = IO.read(resource);
+        return replace(template, context);
+
+    }
+
+    @Override
+    public String replaceFromURI(String resource, Object... context) {
+
+        final String template = IO.readResource(resource);
+        return replace(template, context);
+
     }
 
     private String textFromToken(Token token) {

@@ -36,7 +36,6 @@ import org.boon.primitive.CharBuf;
 
 import java.io.*;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;

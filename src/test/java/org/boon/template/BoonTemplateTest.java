@@ -8,6 +8,7 @@ import org.boon.primitive.Arry;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -798,6 +799,134 @@ public class BoonTemplateTest {
 
     }
 
+
+    @Test
+    public void cForSortEmployeesWithURI() {
+
+        employees = Lists.list(
+                new Employee("Rick", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Adam", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Zed", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Ryan", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Smith", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES)
+
+        );
+
+
+        String results = template.replaceFromURI(
+                "classpath://templates/employeeTemplate.jsp",
+                Maps.map("employees", employees));
+
+        Boon.equalsOrDie("#\n" +
+                "    Adam, Hightower\n" +
+                "\n" +
+                "    Lucas, Hightower\n" +
+                "\n" +
+                "    Lucas, Smith\n" +
+                "\n" +
+                "    Rick, Hightower\n" +
+                "\n" +
+                "    Ryan, Hightower\n" +
+                "\n" +
+                "    Zed, Hightower\n" +
+                "#", "#" + results + "#");
+
+
+    }
+
+
+    @Test
+    public void cForSortEmployeesWithURI2() {
+
+        employees = Lists.list(
+                new Employee("Rick", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Adam", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Zed", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Ryan", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Smith", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES)
+
+        );
+
+
+        File file = new File(".");
+        file.getAbsolutePath();
+
+        String results = template.replaceFromURI(
+                "file:" + file.getAbsolutePath() +
+                        "/src//test/resources/templates/employeeTemplate.jsp",
+                Maps.map("employees", employees));
+
+        Boon.equalsOrDie("#\n" +
+                "    Adam, Hightower\n" +
+                "\n" +
+                "    Lucas, Hightower\n" +
+                "\n" +
+                "    Lucas, Smith\n" +
+                "\n" +
+                "    Rick, Hightower\n" +
+                "\n" +
+                "    Ryan, Hightower\n" +
+                "\n" +
+                "    Zed, Hightower\n" +
+                "#", "#" + results + "#");
+
+
+    }
+
+    @Test
+    public void cForSortEmployeesWithResouce() {
+
+        employees = Lists.list(
+                new Employee("Rick", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Adam", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Zed", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Ryan", "Hightower", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES),
+                new Employee("Lucas", "Smith", 1,
+                        new Phone("320", "555", "1212"), Fruit.ORANGES, Fruit.APPLES, Fruit.STRAWBERRIES)
+
+        );
+
+
+        String results = template.replaceFromResource(
+                "/templates/employeeTemplate.jsp",
+                Maps.map("employees", employees));
+
+        Boon.equalsOrDie("#\n" +
+                "    Adam, Hightower\n" +
+                "\n" +
+                "    Lucas, Hightower\n" +
+                "\n" +
+                "    Lucas, Smith\n" +
+                "\n" +
+                "    Rick, Hightower\n" +
+                "\n" +
+                "    Ryan, Hightower\n" +
+                "\n" +
+                "    Zed, Hightower\n" +
+                "#", "#" + results + "#");
+
+
+    }
 
     @Test
     public void cForSortEmployees2() {
