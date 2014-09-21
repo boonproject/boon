@@ -2,6 +2,7 @@ package org.boon.expression;
 
 import org.boon.Lists;
 import org.boon.Maps;
+import org.boon.core.Dates;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,8 @@ public class ExpressionContextTest {
                         "name", "child-application",
                         "session", Maps.map(
                                 "name", "child-session",
+                                "sessionId", 2.44444d,
+                                "dukesBirthday", Dates.getUSDate(5, 29, 1970),
                                 "request", Maps.map("name", "child-request",
                                         "fruit", Lists.list("peaches", "strawberries")
                                 )
@@ -62,6 +65,40 @@ public class ExpressionContextTest {
         equalsOrDie("request-parent", context.lookup("..fn:lower(fn:upper(session.request.name))"));
 
     }
+
+    @Test
+    public void simple() {
+
+        equalsOrDie("child-application", context.lookup("name"));
+    }
+
+    @Test
+    public void format() {
+
+        equalsOrDie("child-application", context.lookup("${name%s}"));
+    }
+
+    @Test
+    public void sessionId() {
+
+        equalsOrDie(2.44444, context.lookup("${session.sessionId}"));
+    }
+
+
+    @Test
+    public void sessionIdWithFormat() {
+
+        equalsOrDie("2.44", context.lookup("${session.sessionId%2.2f}"));
+    }
+
+
+    @Test
+    public void dukesBirthDay() {
+
+        equalsOrDie("05 29, 1970", context.lookup("${session.dukesBirthday%1$tm %1$te, %1$tY}"));
+    }
+
+
 
     @Test
     public void main() {

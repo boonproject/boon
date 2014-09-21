@@ -39,6 +39,7 @@ import org.boon.primitive.Arry;
 
 import java.util.*;
 
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Str.slc;
 import static org.boon.json.JsonFactory.fromJson;
@@ -163,7 +164,15 @@ public class BoonExpressionContext implements ExpressionContext {
     Object findProperty(String propertyPath, boolean searchChildren) {
 
 
+        //We have to cache the prop path and create a lookup object that we look up
+        //too expensive but ok for now.
+
         Object defaultValue;
+
+        String formatRule = null;
+
+
+        Object outputValue=null;
 
 
         if (propertyPath.indexOf('|') != -1) {
@@ -176,38 +185,62 @@ public class BoonExpressionContext implements ExpressionContext {
             defaultValue = null;
         }
 
+        if (propertyPath.indexOf('%') != -1) {
 
+            String[] splitByPercentSign = StringScanner.split(propertyPath, '%', 1);
+            formatRule = splitByPercentSign[1];
+            propertyPath = splitByPercentSign[0];
+        }
 
 
         for (Object ctx : this.context) {
 
             if (searchChildren && ctx instanceof BoonExpressionContext) {
                 BoonExpressionContext basicContext = (BoonExpressionContext) ctx;
-                return basicContext.findProperty(propertyPath, true);
-
+                outputValue =  basicContext.findProperty(propertyPath, true);
+                if (outputValue!=null) {
+                    break;
+                }
             } else if (ctx instanceof Pair) {
                 Pair<String, Object> pair = (Pair<String, Object>)ctx;
                 if(pair.getKey().equals(propertyPath)) {
-                    return pair.getValue();
+                    outputValue = pair.getValue();
+                    break;
                 } else if (propertyPath.startsWith(pair.getKey())){
 
                     String subPath = StringScanner.substringAfter(
                             propertyPath, pair.getKey());
 
                     Object o = pair.getValue();
-                    Object returnValue =  BeanUtils.idx(o, subPath);
-                    return returnValue;
+                    outputValue =  BeanUtils.idx(o, subPath);
+                    break;
                 }
 
-            }
-            Object object = BeanUtils.idx(ctx, propertyPath);
-            if (object != null) {
-               return object;
+            } else {
+                outputValue  = BeanUtils.idx(ctx, propertyPath);
+                if (outputValue != null) {
+
+                    break;
+                }
             }
         }
 
-        return defaultValue;
+        if (outputValue==null) {
+            outputValue = defaultValue;
+        }
 
+        if (formatRule!=null) {
+            outputValue = applyFormatRule(formatRule, outputValue);
+
+        }
+        return outputValue;
+
+    }
+
+
+    private Object applyFormatRule(String formatRule, Object outputValue) {
+
+        return String.format(Str.add("%",formatRule), outputValue);
     }
 
 
