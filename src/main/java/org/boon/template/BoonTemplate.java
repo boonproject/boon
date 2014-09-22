@@ -464,7 +464,7 @@ public class BoonTemplate implements Template {
                 try {
                     includeParser = parser.getClass().newInstance();
                 } catch (Exception e) {
-                    includeParser = new BoonModernTemplateParser();
+                    includeParser = new BoonCoreTemplateParser();
                 }
                 break;
             case "boon":
