@@ -1,10 +1,14 @@
 package org.boon.core.reflection.impl;
 
+import org.boon.Lists;
+import org.boon.Maps;
 import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.MethodAccess;
 import org.junit.Before;
 import org.junit.Test;
 
+
+import static org.boon.Boon.equalsOrDie;
 import static org.boon.Boon.puts;
 
 /**
@@ -13,6 +17,23 @@ import static org.boon.Boon.puts;
 public class OverloadedMethodTest {
     OverloadedMethod method;
 
+    public static class Employee {
+        String name="employee";
+
+        public Employee(String name) {
+            this.name = name;
+        }
+
+        Employee(){}
+
+        @Override
+        public String toString() {
+            return "Employee{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+    }
+
     public static class SomeClass {
         String add(char c, char b) {
             return "addTwoChars_" + c + "_" + b;
@@ -20,9 +41,17 @@ public class OverloadedMethodTest {
         String add(String c, String b) {
             return "addTwoStrings_" + c + "_" + b;
         }
-//String add(int c, int b) {
-//            return "addTwoInts_" + c + "_" + b;
-//        }
+        String add(int c, int b) {
+                return "addTwoInts_" + c + "_" + b;
+        }
+
+        String add(long c, long b) {
+            return "addTwoLongs" + c + "_" + b;
+        }
+
+        String add(Employee c, Employee b) {
+            return "addTwoEmployees" + c + "_" + b;
+        }
 
     }
 
@@ -40,8 +69,18 @@ public class OverloadedMethodTest {
     }
 
     @Test
+    public void testTwoInts() {
+        String str = (String) method.invokeDynamic(new SomeClass(), 1, 2);
+
+        equalsOrDie("addTwoInts_1_2", str);
+        puts(str);
+    }
+
+    @Test
     public void testTwoChars() {
         String str = (String) method.invokeDynamic(new SomeClass(), 'a', 'b');
+
+        equalsOrDie("addTwoChars_a_b", str);
         puts(str);
     }
 
@@ -49,6 +88,49 @@ public class OverloadedMethodTest {
     @Test
     public void testTwoStrings() {
         String str = (String) method.invokeDynamic(new SomeClass(), "a", "b");
+        equalsOrDie("addTwoStrings_a_b", str);
+
         puts(str);
+    }
+
+
+    @Test
+    public void testTwoLongs() {
+        String str = (String) method.invokeDynamic(new SomeClass(), 1L, 1L);
+        equalsOrDie("addTwoLongs1_1", str);
+
+        puts(str);
+    }
+
+
+    @Test
+    public void testTwoEmployee() {
+        String str = (String) method.invokeDynamic(new SomeClass(), new Employee(), new Employee());
+
+        puts(str);
+        equalsOrDie("addTwoEmployeesEmployee{name='employee'}_Employee{name='employee'}", str);
+
+    }
+
+    @Test
+    public void testTwoEmployeeWithMap() {
+        String str = (String) method.invokeDynamic(new SomeClass(),
+
+                Maps.map("name", "emp1"), Maps.map("name", "emp2"));
+
+        puts(str);
+        equalsOrDie("addTwoEmployeesEmployee{name='emp1'}_Employee{name='emp2'}", str);
+
+    }
+
+    @Test
+    public void testTwoEmployeeWithList() {
+        String str = (String) method.invokeDynamic(new SomeClass(),
+
+                Lists.list("emp1"), Lists.list("emp2"));
+
+        puts(str);
+        equalsOrDie("addTwoEmployeesEmployee{name='emp1'}_Employee{name='emp2'}", str);
+
     }
 }

@@ -95,51 +95,57 @@ public class OverloadedMethod implements MethodAccess {
         MethodAccess methodAccess = null;
 
         for (MethodAccess m : methodAccesses) {
-            int argIndex=0;
             int score = 1;
 
             if (object == null && !m.isStatic()) {
                 continue;
             }
 
+            int argIndex=0;
+
             loop:
             for (org.boon.core.Type type : m.paramTypeEnumList()) {
 
                 Object arg = args[argIndex];
 
-                final org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(args);
+                final org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(arg);
 
                 switch (type){
                     case BYTE_WRAPPER:
                     case BYTE:
                         score = handleByteArg(score, arg, instanceType);
-                        score += 10_000;
                         break;
 
                     case SHORT_WRAPPER:
                     case SHORT:
                         score = handleShortArg(score, arg, instanceType);
-                        score += 9_000;
                         break;
 
                     case INTEGER_WRAPPER:
                     case INTEGER:
                     case INT:
                         score = handleIntArg(score, arg, instanceType);
-                        score += 8_000;
+                        break;
+
+
+                    case NULL:
+                        score--;
+                        break;
+
+                    case LONG_WRAPPER:
+                    case LONG:
+                        score = handleLongArg(score, arg, instanceType);
                         break;
 
                     case FLOAT_WRAPPER:
                     case FLOAT:
                         score = handleFloatArg(score, arg, instanceType);
-                        score += 7_000;
                         break;
 
 
                     case DOUBLE_WRAPPER:
                     case DOUBLE:
                         score = handleDoubleArg(score, arg, instanceType);
-                        score += 6_000;
                         break;
 
 
@@ -147,24 +153,24 @@ public class OverloadedMethod implements MethodAccess {
                     case CHAR:
                         if (instanceType == org.boon.core.Type.CHAR ||
                                 instanceType == org.boon.core.Type.CHAR_WRAPPER) {
-                            score+=10_000;
+                            score+=1000;
                         }
                         break;
 
                     case STRING:
                         if (instanceType == org.boon.core.Type.STRING) {
-                            score +=10_000;
+                            score +=1_000;
                         } else if (instanceType == org.boon.core.Type.CHAR_SEQUENCE
                                 || arg instanceof CharSequence) {
-                            score +=7_000;
+                            score +=500;
                         }
                         break;
 
 
                     case INSTANCE:
                         if (instanceType == org.boon.core.Type.INSTANCE) {
-                            if (parameterTypes()[argIndex].isInstance(arg)){
-                                score+=10_000;
+                            if (m.parameterTypes()[argIndex].isInstance(arg)){
+                                score+=1000;
 
                             }
                         } else if (instanceType == org.boon.core.Type.MAP) {
@@ -172,11 +178,17 @@ public class OverloadedMethod implements MethodAccess {
                         } else if (instanceType == org.boon.core.Type.LIST) {
                             score +=500;
                         }
-                        else if (instanceType == org.boon.core.Type.CHAR_SEQUENCE
-                                || arg instanceof CharSequence) {
-                            score +=7_000;
-                        }
                         break;
+
+                    default:
+                        if (instanceType == type) {
+                            score+=1000;
+                        } else {
+                            if (m.parameterTypes()[argIndex].isInstance(arg)){
+                                score+=1000;
+
+                            }
+                        }
 
                 }
 
@@ -202,6 +214,61 @@ public class OverloadedMethod implements MethodAccess {
         return null;
     }
 
+    private int handleLongArg(int score, Object arg, org.boon.core.Type instanceType) {
+        switch (instanceType) {
+
+
+            case LONG:
+                score += 1000;
+                break;
+
+            case LONG_WRAPPER:
+                score += 900;
+                break;
+
+            case INT:
+                score += 800;
+                break;
+
+            case INTEGER_WRAPPER:
+                score += 700;
+                break;
+
+            case DOUBLE:
+                score += 700;
+                break;
+
+            case FLOAT:
+            case SHORT:
+            case BYTE:
+                score += 600;
+                break;
+
+
+
+            case SHORT_WRAPPER:
+            case BYTE_WRAPPER:
+            case FLOAT_WRAPPER:
+            case DOUBLE_WRAPPER:
+                score += 500;
+                break;
+
+
+
+            case STRING:
+                score += 400;
+                try {
+                    arg = Integer.valueOf(arg.toString());
+
+                }catch (Exception ex) {
+                    score = Integer.MIN_VALUE;
+                }
+                break;
+        }
+        return score;
+
+    }
+
     private int handleByteArg(int score, Object arg, org.boon.core.Type instanceType) {
         if (instanceType== org.boon.core.Type.BYTE|| instanceType == org.boon.core.Type.BYTE_WRAPPER) {
             return score + 1010;
@@ -220,9 +287,11 @@ public class OverloadedMethod implements MethodAccess {
 
     private int handleIntArg(int score, Object arg, org.boon.core.Type instanceType) {
         switch (instanceType) {
+
             case INT:
                 score += 1000;
                 break;
+
             case INTEGER_WRAPPER:
                 score += 900;
                 break;
