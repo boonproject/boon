@@ -260,7 +260,7 @@ public abstract class BaseField implements FieldAccess {
                     this.typeEnum = Type.getType(type);
                 }
 
-                if ( this.typeEnum == Type.ARRAY) {
+                if ( this.typeEnum.isArray()) {
                     componentClass = this.type.getComponentType();
                     componentType = Type.getType(componentClass);
                 } else if ( parameterizedType == null ) {
@@ -362,7 +362,7 @@ public abstract class BaseField implements FieldAccess {
             this.typeEnum = Type.getType(type);
         }
 
-        if ( this.typeEnum == Type.ARRAY) {
+        if ( this.typeEnum.isArray()) {
 
             componentClass = this.type.getComponentType();
 

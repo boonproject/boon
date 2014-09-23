@@ -120,10 +120,10 @@ public class NumberValue extends Number implements Value {
 
         switch ( type ) {
             case DOUBLE:
+            case DOUBLE_WRAPPER:
                 return doubleValue ();
-            case INTEGER:
-
-
+            case INT:
+            case INTEGER_WRAPPER:
 
                 if ( isInteger ( buffer, startIndex, endIndex - startIndex ) ) {
                     return intValue ();

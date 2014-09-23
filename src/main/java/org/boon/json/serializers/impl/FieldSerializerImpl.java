@@ -226,7 +226,17 @@ public class FieldSerializerImpl implements FieldSerializer {
                     return true;
                 }
                 return false;
+
+
             case ARRAY:
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
                 Object []  array  = (Object []) value;
                 if ( array.length > 0) {
                     serializeFieldName ( fieldName, builder );

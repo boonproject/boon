@@ -35,22 +35,36 @@ public class OverloadedMethodTest {
     }
 
     public static class SomeClass {
+
+
         String add(char c, char b) {
             return "addTwoChars_" + c + "_" + b;
         }
-        String add(String c, String b) {
-            return "addTwoStrings_" + c + "_" + b;
-        }
+
         String add(int c, int b) {
-                return "addTwoInts_" + c + "_" + b;
+            return "addTwoInts_" + c + "_" + b;
         }
 
         String add(long c, long b) {
             return "addTwoLongs" + c + "_" + b;
         }
 
+
+        String add(String c, String b) {
+            return "addTwoStrings_" + c + "_" + b;
+        }
+
+
         String add(Employee c, Employee b) {
             return "addTwoEmployees" + c + "_" + b;
+        }
+
+        String add(int c, long b) {
+            return "addIntLong" + c + "_" + b;
+        }
+
+        String add(String c, char b) {
+            return "addStringChar_" + c + "_" + b;
         }
 
     }
@@ -65,6 +79,16 @@ public class OverloadedMethodTest {
             method.add(ma);
         }
 
+
+    }
+
+
+    @Test
+    public void addStringAndChar() {
+        String str = (String) method.invokeDynamic(new SomeClass(), "a", 'b');
+
+        puts(str);
+        equalsOrDie("addStringChar_a_b", str);
 
     }
 
@@ -131,6 +155,47 @@ public class OverloadedMethodTest {
 
         puts(str);
         equalsOrDie("addTwoEmployeesEmployee{name='emp1'}_Employee{name='emp2'}", str);
+
+    }
+
+
+    @Test
+    public void addCharAndString() {
+        String str = (String) method.invokeDynamic(new SomeClass(), 'a', "b");
+
+        puts(str);
+        equalsOrDie("addTwoStrings_a_b", str);
+
+    }
+
+
+
+
+    @Test
+    public void addIntLong() {
+        String str = (String) method.invokeDynamic(new SomeClass(), 1, 1L);
+
+        puts(str);
+        equalsOrDie("addIntLong1_1", str);
+
+    }
+
+    @Test
+    public void addLongInt() {
+        String str = (String) method.invokeDynamic(new SomeClass(), 1L, 1);
+
+        puts(str);
+        equalsOrDie("addTwoLongs1_1", str);
+
+    }
+
+
+    @Test
+    public void addLongInt2() {
+        String str = (String) method.invokeDynamic(new SomeClass(), Long.MAX_VALUE, 1);
+
+        puts(str);
+        equalsOrDie("addTwoLongs9223372036854775807_1", str);
 
     }
 }

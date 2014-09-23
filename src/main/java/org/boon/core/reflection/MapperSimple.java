@@ -650,7 +650,16 @@ public class MapperSimple implements Mapper {
                     break;
 
 
+
                 case ARRAY:
+                case ARRAY_INT:
+                case ARRAY_BYTE:
+                case ARRAY_SHORT:
+                case ARRAY_FLOAT:
+                case ARRAY_DOUBLE:
+                case ARRAY_LONG:
+                case ARRAY_STRING:
+                case ARRAY_OBJECT:
                     item = Conversions.toList(item);
                 case SET:
                 case COLLECTION:
@@ -888,7 +897,16 @@ public class MapperSimple implements Mapper {
                 field.setObject( newInstance, newCollection );
                 break;
 
+
             case ARRAY:
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
 
                 org.boon.core.Type componentType =  field.componentType();
                 int index = 0;
@@ -1248,6 +1266,14 @@ public class MapperSimple implements Mapper {
             case COLLECTION:
             case SET:
             case ARRAY:
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
                 handleCollectionOfValues( newInstance, field,
                         ( Collection<Value> ) objValue );
 
@@ -1492,7 +1518,7 @@ public class MapperSimple implements Mapper {
                 case SHORT:
                 case SHORT_WRAPPER:
                 case INT:
-                case INTEGER:
+                case INTEGER_WRAPPER:
                 case LONG:
                 case LONG_WRAPPER:
                 case FLOAT:
@@ -1510,7 +1536,16 @@ public class MapperSimple implements Mapper {
                 case DATE:
                     map.put( fieldName, value );
                     break;
+
                 case ARRAY:
+                case ARRAY_INT:
+                case ARRAY_BYTE:
+                case ARRAY_SHORT:
+                case ARRAY_FLOAT:
+                case ARRAY_DOUBLE:
+                case ARRAY_LONG:
+                case ARRAY_STRING:
+                case ARRAY_OBJECT:
                     if (Typ.isBasicType( access.getComponentClass() ))  {
                         map.put(fieldName, value);
                     } else {
@@ -1618,7 +1653,16 @@ public class MapperSimple implements Mapper {
         switch (instanceType) {
             case NULL:
                 return Lists.list((Object)null);
+
             case ARRAY:
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
                 return Conversions.toList(object);
 
         }

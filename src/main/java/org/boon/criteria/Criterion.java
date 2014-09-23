@@ -292,7 +292,16 @@ public abstract class Criterion<VALUE> extends Criteria {
                         this.value = (VALUE) Conversions.coerce(field.type(), this.value);
                         return new MyNumber(this.value);
 
+
                     case ARRAY:
+                    case ARRAY_INT:
+                    case ARRAY_BYTE:
+                    case ARRAY_SHORT:
+                    case ARRAY_FLOAT:
+                    case ARRAY_DOUBLE:
+                    case ARRAY_LONG:
+                    case ARRAY_STRING:
+                    case ARRAY_OBJECT:
                     case COLLECTION:
                     case SET:
                     case LIST:

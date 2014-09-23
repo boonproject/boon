@@ -128,7 +128,16 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
             case MAP:
                 jsonSerializer.serializeMap ( (Map) obj, builder );
                 return;
+
             case ARRAY:
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
                 jsonSerializer.serializeArray ( obj, builder );
                 return;
             case INSTANCE:

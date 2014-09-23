@@ -492,7 +492,7 @@ public class JsonParserLax extends JsonFastParser {
         __index = index;
         __currentChar = currentChar;
 
-        Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
+        Type type = doubleFloat ? Type.DOUBLE : Type.INT;
 
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
         if (events!=null) if (!events.number( startIndex, __index, value ))stop();

@@ -7,6 +7,7 @@ import static org.boon.Maps.map;
 
 import com.google.common.collect.Maps;
 import org.boon.Boon;
+import org.boon.Str;
 import org.boon.json.JsonSerializer;
 import org.boon.json.JsonSerializerFactory;
 import org.boon.json.serializers.JsonSerializerInternal;
@@ -73,8 +74,8 @@ public class Bug247 {
 
         String result = Boon.toPrettyJson(filtered);
 
-        ok = result.equals("{\n" +
-                "    \"Bbbbb\" : \"bbbb\"\n" +
-                "}") || die(result);
+        Str.equalsOrDie("        {\n" +
+                "            \"Bbbbb\" : \"bbbb\"\n" +
+                "        }", result);
     }
 }

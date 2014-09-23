@@ -96,19 +96,25 @@ public class OverloadedMethod implements MethodAccess {
 
         for (MethodAccess m : methodAccesses) {
             int score = 1;
+            final List<org.boon.core.Type> paramTypeEnumList = m.paramTypeEnumList();
 
             if (object == null && !m.isStatic()) {
                 continue;
             }
 
-            int argIndex=0;
 
             loop:
-            for (org.boon.core.Type type : m.paramTypeEnumList()) {
+            for (int argIndex=0; argIndex < args.length; argIndex++) {
 
+                org.boon.core.Type type =paramTypeEnumList.get(argIndex);
                 Object arg = args[argIndex];
 
                 final org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(arg);
+
+                if (instanceType == type) {
+                    score += 2_000;
+                    continue;
+                }
 
                 switch (type){
                     case BYTE_WRAPPER:
@@ -122,7 +128,6 @@ public class OverloadedMethod implements MethodAccess {
                         break;
 
                     case INTEGER_WRAPPER:
-                    case INTEGER:
                     case INT:
                         score = handleIntArg(score, arg, instanceType);
                         break;
@@ -192,7 +197,6 @@ public class OverloadedMethod implements MethodAccess {
 
                 }
 
-                argIndex++;
             }
 
             if (score>maxScore) {
@@ -223,7 +227,7 @@ public class OverloadedMethod implements MethodAccess {
                 break;
 
             case LONG_WRAPPER:
-                score += 900;
+                score += 1000;
                 break;
 
             case INT:

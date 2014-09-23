@@ -28,49 +28,134 @@
 
 package org.boon.core;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public enum Type {
 
-    INT, SHORT, BYTE, LONG, CHAR, BOOLEAN, COLLECTION, ARRAY, FLOAT, INSTANCE, BIG_INT, BIG_DECIMAL,
-    DATE, NUMBER, LONG_WRAPPER, INTEGER_WRAPPER, SHORT_WRAPPER, CHAR_WRAPPER, BOOLEAN_WRAPPER,
-    BYTE_WRAPPER, FLOAT_WRAPPER, DOUBLE_WRAPPER,
-    INTEGER, STRING, DOUBLE, TRUE, FALSE, NULL, MAP, LIST, SET, CHAR_SEQUENCE,
-    INTERFACE, ABSTRACT, OBJECT, SYSTEM, ENUM, CALENDAR, VALUE_MAP, VALUE, CLASS, URL, URI, VOID, FILE, PATH, UUID,
-    LOCALE, TIME_ZONE, CURRENCY;
+
+    //PRIMITIVE
+    BOOLEAN(false, true), BYTE(false, true), SHORT(false, true), CHAR(false, true),
+    INT(false, true),  FLOAT(false, true), LONG(false, true), DOUBLE(false, true),
+
+    //Wrappers
+    LONG_WRAPPER(LONG), INTEGER_WRAPPER(INT), SHORT_WRAPPER(SHORT),
+    CHAR_WRAPPER(CHAR), BOOLEAN_WRAPPER(BOOLEAN),
+    BYTE_WRAPPER(BYTE), FLOAT_WRAPPER(FLOAT), DOUBLE_WRAPPER(DOUBLE),
 
 
+    //Concepts
+    TRUE(BOOLEAN), FALSE(BOOLEAN), INSTANCE, NULL,
+    INTERFACE, ABSTRACT, SYSTEM, VOID, UNKNOWN, BASIC_TYPE,
+
+    //BASE
+    CHAR_SEQUENCE, NUMBER, OBJECT, CLASS, ENUM,
+
+
+    //BASIC TYPES 1st Class
+    STRING(CHAR_SEQUENCE), CALENDAR, DATE,
+
+
+    //SECOND TIER BASIC TYPES
+    URL(BASIC_TYPE), URI(BASIC_TYPE), LOCALE(BASIC_TYPE),
+    TIME_ZONE(BASIC_TYPE), CURRENCY(BASIC_TYPE),
+    FILE(BASIC_TYPE), PATH(BASIC_TYPE), UUID(BASIC_TYPE),
+
+
+
+     //Numeric
+     BIG_INT(NUMBER), BIG_DECIMAL(NUMBER),
+
+    //COLLECTIONS
+    COLLECTION, LIST(COLLECTION), SET(COLLECTION),
+    MAP,
+    MAP_STRING_OBJECT(MAP),
+
+    ARRAY(true),
+    ARRAY_INT(true, INT),
+    ARRAY_BYTE(true, SHORT),
+    ARRAY_SHORT(true, SHORT),
+    ARRAY_FLOAT(true, FLOAT),
+    ARRAY_DOUBLE(true, DOUBLE),
+    ARRAY_LONG(true, LONG),
+    ARRAY_STRING(true, STRING),
+    ARRAY_OBJECT(true, OBJECT),
+
+
+
+    //BOON
+    VALUE_MAP, VALUE;
+
+
+    final Type baseTypeOrWrapper;
+    private final boolean array;
+    private final boolean primitive;
+
+    Type() {
+        baseTypeOrWrapper =null;
+        array=false;
+        primitive=false;
+    }
+
+
+    Type(Type type) {
+        baseTypeOrWrapper =type;
+        array=false;
+        primitive=false;
+
+    }
+
+    Type(boolean isarray) {
+        this.array = isarray;
+        baseTypeOrWrapper=null;
+        primitive=false;
+
+    }
+
+
+    Type(boolean isarray, Type type) {
+        this.array = isarray;
+        baseTypeOrWrapper=type;
+        primitive=false;
+
+    }
+
+    Type(boolean array, boolean primitive) {
+        this.array = array;
+        this.primitive = primitive;
+        baseTypeOrWrapper = null;
+    }
 
     public  static Type getInstanceType ( Object object ) {
 
 
              if (object == null) {
                  return NULL;
-             } else if (object instanceof Class) {
-                 return CLASS;
              } else {
-                 return getType(object.getClass ());
+                 return getType(object.getClass (), object);
              }
     }
 
+
+
     public static Type getType ( Class<?> clazz ) {
+        return getType(clazz, null);
+    }
+
+    public static Type getType ( Class<?> clazz, Object object ) {
 
         final String className = clazz.getName();
         Type type =  getType( className );
 
-        if (type != INSTANCE) {
+        if (type != UNKNOWN) {
             return type;
         }
-
-
 
         if ( clazz.isInterface() ) {
             type = INTERFACE;
         } else if (clazz.isEnum()) {
             type = ENUM;
         } else if (clazz.isArray()) {
-            type = ARRAY;
+            type = getArrayType(clazz);
         } else if (Typ.isAbstract(clazz)) {
             type = ABSTRACT;
         } else if ( className.startsWith("java")) {
@@ -92,10 +177,77 @@ public enum Type {
             }
         } else if (className.startsWith("com.sun") || className.startsWith("sun.")) {
             type = SYSTEM;
+        } else if (object !=null) {
+
+
+            if (object instanceof Map) {
+                type = MAP;
+            } else if (object instanceof Collection) {
+
+                type = COLLECTION;
+                if (object instanceof List) {
+                    type = LIST;
+                } else if (object instanceof Set) {
+                    type = SET;
+                }
+            } else {
+                type = INSTANCE;
+            }
+
+        } else {
+            type = INSTANCE;
         }
+
         return type;
 
 
+
+    }
+
+    private static Type getArrayType(Class<?> clazz) {
+        Type type;
+        final Type componentType = getType(clazz.getComponentType());
+        switch(componentType) {
+
+
+            case BYTE:
+                type = ARRAY_BYTE;
+                break;
+
+            case SHORT:
+                type = ARRAY_SHORT;
+                break;
+
+            case INT:
+                type = ARRAY_INT;
+                break;
+
+            case FLOAT:
+                type = ARRAY_FLOAT;
+                break;
+
+            case DOUBLE:
+                type = ARRAY_DOUBLE;
+                break;
+
+            case LONG:
+                type = ARRAY_LONG;
+                break;
+
+            case STRING:
+                type = ARRAY_STRING;
+                break;
+
+            case OBJECT:
+                type = ARRAY_OBJECT;
+                break;
+
+            default:
+                type = ARRAY;
+                break;
+
+        }
+        return type;
     }
 
     public static Type getType ( String typeName ) {
@@ -173,7 +325,6 @@ public enum Type {
                     return Type.MAP;
 
                 case "java.lang.CharSequence":
-                //case "org.boon.core.value.CharSequenceValue":
                     return Type.CHAR_SEQUENCE;
 
                 case "java.math.BigDecimal":
@@ -229,7 +380,7 @@ public enum Type {
                     return Type.CURRENCY;
 
             }
-            return Type.INSTANCE;
+            return Type.UNKNOWN;
 
     }
 
@@ -243,10 +394,9 @@ public enum Type {
             case CHAR_SEQUENCE:
             case SET:
             case COLLECTION:
-            case ARRAY:
                 return true;
             default:
-                return false;
+                return this.isArray() || this.isCollection();
         }
     }
 
@@ -315,5 +465,24 @@ public enum Type {
         }
 
         return types;
+    }
+
+    public Type wraps() {
+        return baseTypeOrWrapper;
+    }
+
+
+    public Type componentType() {
+        return baseTypeOrWrapper == null ? OBJECT : baseTypeOrWrapper;
+    }
+
+
+    public boolean isArray() {
+        return array;
+    }
+
+
+    public boolean isPrimitive() {
+        return primitive;
     }
 }

@@ -767,6 +767,8 @@ public class MapperComplex implements Mapper {
 
                 case ARRAY:
                    item = Conversions.toList(item);
+                   return true;
+
                 case SET:
                 case COLLECTION:
                 case LIST:
@@ -1004,8 +1006,16 @@ public class MapperComplex implements Mapper {
                 field.setObject( newInstance, newCollection );
                 break;
 
-            case ARRAY:
 
+            case ARRAY:
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
                 org.boon.core.Type componentType =  field.componentType();
                 int index = 0;
 
@@ -1376,7 +1386,14 @@ public class MapperComplex implements Mapper {
             case COLLECTION:
             case SET:
             case ARRAY:
-
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
                 if (acceptSingleValueAsArray && ValueContainer.NULL != value && !(objValue instanceof Collection)) {
                     if (objValue instanceof ValueMapImpl) {
                         objValue = Arrays.asList(new ValueContainer(objValue, MAP, false));
@@ -1639,7 +1656,7 @@ public class MapperComplex implements Mapper {
                 case SHORT:
                 case SHORT_WRAPPER:
                 case INT:
-                case INTEGER:
+                case INTEGER_WRAPPER:
                 case LONG:
                 case LONG_WRAPPER:
                 case FLOAT:
@@ -1657,7 +1674,16 @@ public class MapperComplex implements Mapper {
                 case DATE:
                     map.put( fieldName, value );
                     break;
+
                 case ARRAY:
+                case ARRAY_INT:
+                case ARRAY_BYTE:
+                case ARRAY_SHORT:
+                case ARRAY_FLOAT:
+                case ARRAY_DOUBLE:
+                case ARRAY_LONG:
+                case ARRAY_STRING:
+                case ARRAY_OBJECT:
                     if (Typ.isBasicType( access.getComponentClass() ))  {
                         map.put(fieldName, value);
                     } else {
@@ -1792,8 +1818,19 @@ public class MapperComplex implements Mapper {
         switch (instanceType) {
             case NULL:
                 return Lists.list((Object)null);
+
+
             case ARRAY:
+            case ARRAY_INT:
+            case ARRAY_BYTE:
+            case ARRAY_SHORT:
+            case ARRAY_FLOAT:
+            case ARRAY_DOUBLE:
+            case ARRAY_LONG:
+            case ARRAY_STRING:
+            case ARRAY_OBJECT:
                 return Conversions.toList(object);
+
             case INSTANCE:
                 if (Reflection.respondsTo(object, "toList")) {
                     return (List<?>) Reflection.invoke(object, "toList");

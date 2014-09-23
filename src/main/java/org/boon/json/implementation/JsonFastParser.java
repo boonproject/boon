@@ -210,7 +210,7 @@ public class JsonFastParser extends JsonParserCharArray {
         __index = index;
         __currentChar = currentChar;
 
-        Type type = doubleFloat ? Type.DOUBLE : Type.INTEGER;
+        Type type = doubleFloat ? Type.DOUBLE : Type.INT;
 
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
 
