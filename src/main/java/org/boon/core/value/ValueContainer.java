@@ -29,7 +29,7 @@
 package org.boon.core.value;
 
 
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.primitive.CharBuf;
 
@@ -45,13 +45,13 @@ import static org.boon.Exceptions.die;
 
 public class ValueContainer implements CharSequence, Value {
 
-    public static final Value TRUE = new ValueContainer ( Type.TRUE );
-    public static final Value FALSE = new ValueContainer ( Type.FALSE );
-    public static final Value NULL = new ValueContainer ( Type.NULL );
+    public static final Value TRUE = new ValueContainer ( TypeType.TRUE );
+    public static final Value FALSE = new ValueContainer ( TypeType.FALSE );
+    public static final Value NULL = new ValueContainer ( TypeType.NULL );
 
     public Object value;
 
-    public final Type type;
+    public final TypeType type;
     private boolean container;
 
     public boolean decodeStrings;
@@ -64,25 +64,25 @@ public class ValueContainer implements CharSequence, Value {
 
     }
 
-    public ValueContainer(  Object value, Type type, boolean decodeStrings ) {
+    public ValueContainer(  Object value, TypeType type, boolean decodeStrings ) {
         this.value = value;
         this.type = type;
         this.decodeStrings = decodeStrings;
     }
 
-    public ValueContainer( Type type ) {
+    public ValueContainer( TypeType type ) {
         this.type = type;
     }
 
     public ValueContainer( Map<String, Object> map ) {
         this.value = map;
-        this.type = Type.MAP;
+        this.type = TypeType.MAP;
         this.container = true;
     }
 
     public ValueContainer( List<Object> list ) {
         this.value = list;
-        this.type = Type.LIST;
+        this.type = TypeType.LIST;
         this.container = true;
     }
 
@@ -114,7 +114,7 @@ public class ValueContainer implements CharSequence, Value {
 
     @Override
     public String stringValue() {
-        if (type == Type.NULL)  {
+        if (type == TypeType.NULL)  {
             return null;
         } else {
             return type.toString();
@@ -123,7 +123,7 @@ public class ValueContainer implements CharSequence, Value {
 
     @Override
     public String stringValue(CharBuf charBuf) {
-        if (type == Type.NULL)  {
+        if (type == TypeType.NULL)  {
             return null;
         } else {
             return type.toString();
@@ -179,7 +179,7 @@ public class ValueContainer implements CharSequence, Value {
     }
 
     @Override
-    public Type type() {
+    public TypeType type() {
         return type;
     }
 

@@ -31,7 +31,7 @@ package org.boon.core.reflection;
 import org.boon.*;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.CharBuf;
@@ -43,7 +43,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.boon.Boon.className;
-import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.*;
 import static org.boon.Str.lines;
@@ -347,8 +346,8 @@ public class BeanUtils {
                     }
 
                     @Override
-                    public Type typeEnum() {
-                        return Type.OBJECT;
+                    public TypeType typeEnum() {
+                        return TypeType.OBJECT;
                     }
 
                     @Override
@@ -447,7 +446,7 @@ public class BeanUtils {
                     }
 
                     @Override
-                    public Type componentType() {
+                    public TypeType componentType() {
                         return null;
                     }
                 };
@@ -1246,7 +1245,7 @@ public class BeanUtils {
 
 
     /**
-     * Get Property Path Type
+     * Get Property Path TypeType
      * @param root
      * @param properties
      * @return
@@ -1266,7 +1265,7 @@ public class BeanUtils {
 
 
     /**
-     * Get Property Path Type
+     * Get Property Path TypeType
      * @param root
      * @param properties
      * @return
@@ -1286,7 +1285,7 @@ public class BeanUtils {
 
 
     /**
-     * Get Property Path Type
+     * Get Property Path TypeType
      * @param root
      * @param properties
      * @return
@@ -1870,7 +1869,7 @@ public class BeanUtils {
 
 
                       /* Non identical object copy. */
-        if (dstField.typeEnum () == Type.ABSTRACT || dstField.typeEnum () == Type.INTERFACE) {
+        if (dstField.typeEnum () == TypeType.ABSTRACT || dstField.typeEnum () == TypeType.INTERFACE) {
                             //no op
         } else {
                 Object newInstance = Reflection.newInstance ( dstField.type() );

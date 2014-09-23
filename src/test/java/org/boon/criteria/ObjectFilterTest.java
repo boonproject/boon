@@ -36,9 +36,8 @@ import static org.boon.criteria.ObjectFilter.*;
 import static org.boon.criteria.ObjectFilter.matches;
 
 import org.boon.Lists;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.reflection.Invoker;
-import org.boon.criteria.internal.Criteria;
 import org.boon.criteria.internal.Group;
 import org.boon.criteria.internal.Operator;
 import org.junit.Test;
@@ -56,7 +55,7 @@ public class ObjectFilterTest {
     public void testCreateCriteriaFromJson() {
 
         List<Integer> list = Lists.list(1, 2);
-        Criterion foo = (Criterion) ObjectFilter.createCriteria("foo", Operator.EQUAL, Type.INT, Object.class, list);
+        Criterion foo = (Criterion) ObjectFilter.createCriteria("foo", Operator.EQUAL, TypeType.INT, Object.class, list);
 
         equalsOrDie(Operator.EQUAL, foo.getOperator());
 
@@ -65,7 +64,7 @@ public class ObjectFilterTest {
 
         equalsOrDie("foo", foo.getName());
 
-        foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class, "createCriteria", Lists.list("foo", Operator.EQUAL, Type.INT, Object.class, list));
+        foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class, "createCriteria", Lists.list("foo", Operator.EQUAL, TypeType.INT, Object.class, list));
 
         equalsOrDie(Operator.EQUAL, foo.getOperator());
 
@@ -77,13 +76,13 @@ public class ObjectFilterTest {
                 Operator.NOT_CONTAINS);
 
 
-        List<Type> types = Lists.list(Type.INT, Type.DOUBLE, Type.OBJECT,
-                Type.FLOAT, Type.SHORT, Type.BYTE,
-                Type.LONG);
+        List<TypeType> types = Lists.list(TypeType.INT, TypeType.DOUBLE, TypeType.OBJECT,
+                TypeType.FLOAT, TypeType.SHORT, TypeType.BYTE,
+                TypeType.LONG);
 
 
         for (Operator op : operators) {
-            for (Type type : types) {
+            for (TypeType type : types) {
                 List<Object> args = Lists.list("foo", op, type, Object.class, list);
 
                 foo = (Criterion) Invoker.invokeFromList(ObjectFilter.class,

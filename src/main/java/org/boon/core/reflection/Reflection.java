@@ -31,7 +31,7 @@ package org.boon.core.reflection;
 import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.core.Function;
-import org.boon.core.Pair;
+import org.boon.Pair;
 import org.boon.core.Sys;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -620,14 +620,14 @@ public class Reflection {
 
         Map<String, FieldAccess> fields = getPropertyAccessorFieldsFromCache( theClass );
         if ( fields == null ) {
-            Map<String, Pair<Method>> methods = getPropertySetterGetterMethods( theClass );
+            Map<String, Pair<Method, Method>> methods = getPropertySetterGetterMethods( theClass );
 
             fields = new LinkedHashMap<>();
 
-            for ( Map.Entry<String, Pair<Method>> entry :
+            for ( Map.Entry<String, Pair<Method, Method>> entry :
                     methods.entrySet() ) {
 
-                final Pair<Method> methodPair = entry.getValue();
+                final Pair<Method, Method> methodPair = entry.getValue();
                 final String key = entry.getKey();
 
                 PropertyField pf = new PropertyField( key, methodPair.getFirst(), methodPair.getSecond() );
@@ -643,13 +643,13 @@ public class Reflection {
         return fields;
     }
 
-    public static Map<String, Pair<Method>> getPropertySetterGetterMethods(
+    public static Map<String, Pair<Method, Method>> getPropertySetterGetterMethods(
             Class<? extends Object> theClass ) {
 
         try {
             Method[] methods = theClass.getMethods();
 
-            Map<String, Pair<Method>> methodMap = new LinkedHashMap<>( methods.length );
+            Map<String, Pair<Method, Method>> methodMap = new LinkedHashMap<>( methods.length );
             List<Method> getterMethodList = new ArrayList<>( methods.length );
 
             for ( int index = 0; index < methods.length; index++ ) {
@@ -668,7 +668,7 @@ public class Reflection {
         }
     }
 
-    private static boolean extractPropertyInfoFromMethodPair(Map<String, Pair<Method>> methodMap,
+    private static boolean extractPropertyInfoFromMethodPair(Map<String, Pair<Method, Method>> methodMap,
                                                              List<Method> getterMethodList,
                                                              Method method) {
         String name = method.getName();
@@ -677,7 +677,7 @@ public class Reflection {
 
             if ( method.getParameterTypes().length == 1
                     && name.startsWith( "set" ) ) {
-                Pair<Method> pair = new Pair<Method>();
+                Pair<Method, Method> pair = new Pair<>();
                 pair.setFirst( method );
                 String propertyName = slc( name, 3 );
 
@@ -699,24 +699,26 @@ public class Reflection {
         }
     }
 
-    private static void extractProperty(Map<String, Pair<Method>> methodMap, Method method) {
+    private static void extractProperty(Map<String, Pair<Method, Method>> methodMap,
+                                        Method method) {
         try {
-        String name = method.getName();
-        String propertyName = null;
-        if ( name.startsWith( "is" ) ) {
-            propertyName = name.substring( 2 );
-        } else if ( name.startsWith( "get" ) ) {
-            propertyName = name.substring( 3 );
-        }
+            String name = method.getName();
+            String propertyName = null;
+            if ( name.startsWith( "is" ) ) {
+                propertyName = name.substring( 2 );
+            } else if ( name.startsWith( "get" ) ) {
+                propertyName = name.substring( 3 );
+            }
 
-        propertyName = lower( propertyName.substring( 0, 1 ) ) + propertyName.substring( 1 );
+            propertyName = lower( propertyName.substring( 0, 1 ) ) + propertyName.substring( 1 );
 
-        Pair<Method> pair = methodMap.get( propertyName );
-        if ( pair == null ) {
-            pair = new Pair<>();
-            methodMap.put( propertyName, pair );
-        }
-        pair.setSecond( method );
+            Pair<Method, Method> pair = methodMap.get( propertyName );
+            if ( pair == null ) {
+                pair = new Pair<>();
+                methodMap.put( propertyName, pair );
+            }
+            pair.setSecond(method);
+
         } catch (Exception ex) {
             Exceptions.handle(ex, "extractProperty property extract of getPropertySetterGetterMethods", method);
         }

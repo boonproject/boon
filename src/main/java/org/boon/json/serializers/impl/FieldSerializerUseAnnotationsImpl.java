@@ -29,7 +29,7 @@
 package org.boon.json.serializers.impl;
 
 import org.boon.Sets;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.serializers.*;
@@ -100,7 +100,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
     public final boolean serializeField ( JsonSerializerInternal serializer, Object parent, FieldAccess fieldAccess, CharBuf builder ) {
 
         final String fieldName = fieldAccess.alias();
-        final Type typeEnum = fieldAccess.typeEnum();
+        final TypeType typeEnum = fieldAccess.typeEnum();
 
         if ( useAnnotations && fieldAccess.ignore() )  {
             return false;

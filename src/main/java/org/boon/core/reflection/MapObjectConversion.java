@@ -48,7 +48,7 @@ import static org.boon.core.Conversions.coerce;
  * It is used by the JSON parser lib.
  * There are map like objects that are index overlays of the parsed JSON.
  * This set of utilties makes Java a bit more dynamic.
- * This is the core of the serialization for JSON and works in conjunction with org.boon.core.Type.
+ * This is the core of the serialization for JSON and works in conjunction with org.boon.core.TypeType.
  * </p>
  */
 public class MapObjectConversion {
@@ -237,7 +237,7 @@ public class MapObjectConversion {
 
 
     /**
-     * This could be refactored to use core.Type class and it would run faster.
+     * This could be refactored to use core.TypeType class and it would run faster.
      * Converts an object into a map
      * @param object the object that we want to convert
      * @param ignore the map
@@ -253,7 +253,7 @@ public class MapObjectConversion {
 
 
     /**
-     * This could be refactored to use core.Type class and it would run faster.
+     * This could be refactored to use core.TypeType class and it would run faster.
      *
      * Converts an object into a map
      * @param object the object that we want to convert
@@ -266,7 +266,7 @@ public class MapObjectConversion {
 
 
     /**
-     * This could be refactored to use core.Type class and it would run faster.
+     * This could be refactored to use core.TypeType class and it would run faster.
      *
      * Converts an object into a map
      * @param object the object that we want to convert

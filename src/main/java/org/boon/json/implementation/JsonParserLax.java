@@ -29,7 +29,7 @@
 package org.boon.json.implementation;
 
 
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
@@ -263,7 +263,7 @@ public class JsonParserLax extends JsonFastParser {
                     break endIndexLookup;
             }
         }
-        CharSequenceValue value = new  CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
+        CharSequenceValue value = new  CharSequenceValue ( chop, TypeType.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
         if (events!=null) if (!events.string( startIndexOfKey, endIndex + 1, value ))stop();
         return value;
     }
@@ -492,7 +492,7 @@ public class JsonParserLax extends JsonFastParser {
         __index = index;
         __currentChar = currentChar;
 
-        Type type = doubleFloat ? Type.DOUBLE : Type.INT;
+        TypeType type = doubleFloat ? TypeType.DOUBLE : TypeType.INT;
 
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
         if (events!=null) if (!events.number( startIndex, __index, value ))stop();
@@ -595,7 +595,7 @@ public class JsonParserLax extends JsonFastParser {
             escape = false;
         }
 
-        CharSequenceValue value = new CharSequenceValue ( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDates );
+        CharSequenceValue value = new CharSequenceValue ( chop, TypeType.STRING, startIndex, __index, this.charArray, encoded, checkDates );
 
         if ( __index < charArray.length ) {
             __index++;
@@ -650,7 +650,7 @@ public class JsonParserLax extends JsonFastParser {
 
         boolean checkDates = this.checkDates && !encoded && minusCount >= 2 && colonCount >= 2;
 
-        CharSequenceValue value = new CharSequenceValue ( chop, Type.STRING, startIndex, __index, this.charArray, encoded, checkDates );
+        CharSequenceValue value = new CharSequenceValue ( chop, TypeType.STRING, startIndex, __index, this.charArray, encoded, checkDates );
 
         if ( __index < charArray.length ) {
             __index++;

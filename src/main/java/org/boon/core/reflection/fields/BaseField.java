@@ -32,7 +32,7 @@ import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.Str;
 import org.boon.core.Conversions;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
@@ -74,8 +74,8 @@ public abstract class BaseField implements FieldAccess {
     protected final ParameterizedType parameterizedType;
     protected final Class<?> componentClass;
     protected final String typeName;
-    public final Type typeEnum;
-    private final Type componentType;
+    public final TypeType typeEnum;
+    private final TypeType componentType;
     private  Map<String,  Map<String, Object>> annotationMap = new ConcurrentHashMap<> (  );
     private  HashSet<String> includedViews;
     private  HashSet<String> ignoreWithViews;
@@ -255,17 +255,17 @@ public abstract class BaseField implements FieldAccess {
 
 
                 if (name.startsWith ( "$" )) {
-                    this.typeEnum = Type.SYSTEM;
+                    this.typeEnum = TypeType.SYSTEM;
                 } else {
-                    this.typeEnum = Type.getType(type);
+                    this.typeEnum = TypeType.getType(type);
                 }
 
                 if ( this.typeEnum.isArray()) {
                     componentClass = this.type.getComponentType();
-                    componentType = Type.getType(componentClass);
+                    componentType = TypeType.getType(componentClass);
                 } else if ( parameterizedType == null ) {
                     componentClass = Object.class;
-                    componentType = Type.OBJECT;
+                    componentType = TypeType.OBJECT;
                 }  else  {
                     Object obj2 = parameterizedType.getActualTypeArguments ()[ 0 ];
                     if (obj2 instanceof Class) {
@@ -274,7 +274,7 @@ public abstract class BaseField implements FieldAccess {
                         componentClass=Object.class;
                     }
 
-                    componentType = Type.getType(componentClass);
+                    componentType = TypeType.getType(componentClass);
 
                 }
 
@@ -288,15 +288,15 @@ public abstract class BaseField implements FieldAccess {
                 type = setter.getParameterTypes ()[ 0 ];
 
                 if (name.startsWith ( "$" )) {
-                    this.typeEnum = Type.SYSTEM;
+                    this.typeEnum = TypeType.SYSTEM;
                 } else {
-                    this.typeEnum = Type.getType(type);
+                    this.typeEnum = TypeType.getType(type);
                 }
                 bits.set( PRIMITIVE, type.isPrimitive ());
                 typeName = type.getName ().intern ();
                 parameterizedType = null;
                 componentClass = Object.class;
-                componentType = Type.getType(componentClass);
+                componentType = TypeType.getType(componentClass);
 
                 parentType = setter.getDeclaringClass();
 
@@ -357,9 +357,9 @@ public abstract class BaseField implements FieldAccess {
 
 
         if (name.startsWith ( "$" )) {
-            this.typeEnum = Type.SYSTEM;
+            this.typeEnum = TypeType.SYSTEM;
         } else {
-            this.typeEnum = Type.getType(type);
+            this.typeEnum = TypeType.getType(type);
         }
 
         if ( this.typeEnum.isArray()) {
@@ -379,7 +379,7 @@ public abstract class BaseField implements FieldAccess {
 
         }
 
-        componentType = Type.getType(componentClass);
+        componentType = TypeType.getType(componentClass);
 
 
 
@@ -653,7 +653,7 @@ public abstract class BaseField implements FieldAccess {
                 e.getClass ().getName (),
                 String.format ( "cause %s", e.getCause () ),
                 String.format ( "Field info name %s, type %s, class that declared field %s", this.name(), this.type(), this.getField ().getDeclaringClass () ),
-                String.format ( "Type of object passed %s", obj.getClass ().getName () )
+                String.format ( "TypeType of object passed %s", obj.getClass ().getName () )
         ), e );
 
     }
@@ -682,7 +682,7 @@ public abstract class BaseField implements FieldAccess {
 
 
     @Override
-    public final Type typeEnum () {
+    public final TypeType typeEnum () {
         return this.typeEnum;
     }
 
@@ -830,7 +830,7 @@ public abstract class BaseField implements FieldAccess {
 
 
     @Override
-    public Type componentType() {
+    public TypeType componentType() {
         return this.componentType;
     }
 

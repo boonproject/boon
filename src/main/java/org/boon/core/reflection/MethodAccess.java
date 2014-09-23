@@ -28,12 +28,11 @@
 
 package org.boon.core.reflection;
 
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -76,5 +75,5 @@ public interface MethodAccess extends BaseAccess, Comparable<MethodAccess>{
     int score();
 
 
-    List<Type> paramTypeEnumList();
+    List<TypeType> paramTypeEnumList();
 }

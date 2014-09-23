@@ -4,6 +4,7 @@ import org.boon.Boon;
 import org.boon.Lists;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
@@ -27,7 +28,7 @@ import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.coerce;
 import static org.boon.core.Conversions.toEnum;
-import static org.boon.core.Type.*;
+import static org.boon.core.TypeType.*;
 
 /**
  * Created by Richard on 9/18/14.
@@ -387,7 +388,7 @@ public class MapperSimple implements Mapper {
      *
      * REFACTOR:
      * This method was automatically refactored and its functionality gets duplicated in a few places.
-     * Namely Invoker lib. It needs to be documented. Refactored to use org.boon.core.Type.
+     * Namely Invoker lib. It needs to be documented. Refactored to use org.boon.core.TypeType.
      * And code coverage. I have used it on several projects and have modified to work on
      * edge cases for certain customers and have not updated the unit test.
      * This method is beastly and important. It is currently 250 lines of code.
@@ -418,7 +419,7 @@ public class MapperSimple implements Mapper {
             item = convertedArgumentList.get( index );
 
 
-            final org.boon.core.Type parameterType = org.boon.core.Type.getType(parameterClass);
+            final TypeType parameterType = TypeType.getType(parameterClass);
 
 
             if ( item instanceof ValueContainer) {
@@ -758,7 +759,7 @@ public class MapperSimple implements Mapper {
 
 
                 default:
-                    final org.boon.core.Type itemType = org.boon.core.Type.getInstanceType(item);
+                    final TypeType itemType = TypeType.getInstanceType(item);
 
                     switch (itemType) {
                         case LIST:
@@ -836,7 +837,7 @@ public class MapperSimple implements Mapper {
 
     /**
      * Processes an collection of maps.
-     * This can inject into an array and appears to be using some of the Type lib.
+     * This can inject into an array and appears to be using some of the TypeType lib.
      * @param newInstance  new instance we are injecting field into
      * @param field    field we are injecting a value into
      */
@@ -908,7 +909,7 @@ public class MapperSimple implements Mapper {
             case ARRAY_STRING:
             case ARRAY_OBJECT:
 
-                org.boon.core.Type componentType =  field.componentType();
+                TypeType componentType =  field.componentType();
                 int index = 0;
 
                 switch (componentType) {
@@ -1353,7 +1354,7 @@ public class MapperSimple implements Mapper {
     /**
      * Helper method to extract collection of values into some field collection.
      * REFACTOR:
-     * This could be refactored to use the org.boon.core.Type system which should be faster.
+     * This could be refactored to use the org.boon.core.TypeType system which should be faster.
      * REFACTOR
      * @param collection the collection we are coercing into a field value
      */
@@ -1469,7 +1470,7 @@ public class MapperSimple implements Mapper {
 
 
     /**
-     * This could be refactored to use core.Type class and it would run faster.
+     * This could be refactored to use core.TypeType class and it would run faster.
      * Converts an object into a map
      * @param object the object that we want to convert
      * @return map map representation of the object
@@ -1648,7 +1649,7 @@ public class MapperSimple implements Mapper {
     @Override
     public  List<?> toList(Object object) {
 
-        org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(object);
+        TypeType instanceType = TypeType.getInstanceType(object);
 
         switch (instanceType) {
             case NULL:

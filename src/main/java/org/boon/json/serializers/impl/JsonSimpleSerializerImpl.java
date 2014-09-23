@@ -34,7 +34,7 @@ import org.boon.Exceptions;
 import org.boon.Maps;
 import org.boon.Str;
 import org.boon.cache.SimpleCache;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.Reflection;
@@ -162,7 +162,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
 
         final String fieldName = fieldAccess.name();
-        final Type typeEnum = fieldAccess.typeEnum ();
+        final TypeType typeEnum = fieldAccess.typeEnum ();
 
 
         //try {
@@ -368,8 +368,8 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
                 case OBJECT:
                     serializeFieldName ( fieldName, builder );
-                    final Type instanceType = Type.getInstanceType(value);
-                    if (instanceType==Type.INSTANCE) {
+                    final TypeType instanceType = TypeType.getInstanceType(value);
+                    if (instanceType== TypeType.INSTANCE) {
                         serializeSubtypeInstance(value, builder);
                     } else {
                         serializeObject(value, builder);
@@ -428,7 +428,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     public final void serializeObject( Object obj, CharBuf builder )  {
 
 
-        Type type = Type.getInstanceType(obj);
+        TypeType type = TypeType.getInstanceType(obj);
 
         switch ( type ) {
 
@@ -681,7 +681,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
 
-    public final void serializeArray ( Type componentType, Object objectArray, CharBuf builder ) {
+    public final void serializeArray ( TypeType componentType, Object objectArray, CharBuf builder ) {
 
 
         switch (componentType) {

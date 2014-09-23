@@ -1,5 +1,6 @@
 package org.boon.core.reflection.impl;
 
+import org.boon.core.TypeType;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.MethodAccess;
 
@@ -96,7 +97,7 @@ public class OverloadedMethod implements MethodAccess {
 
         for (MethodAccess m : methodAccesses) {
             int score = 1;
-            final List<org.boon.core.Type> paramTypeEnumList = m.paramTypeEnumList();
+            final List<TypeType> paramTypeEnumList = m.paramTypeEnumList();
 
             if (object == null && !m.isStatic()) {
                 continue;
@@ -106,10 +107,10 @@ public class OverloadedMethod implements MethodAccess {
             loop:
             for (int argIndex=0; argIndex < args.length; argIndex++) {
 
-                org.boon.core.Type type =paramTypeEnumList.get(argIndex);
+                TypeType type =paramTypeEnumList.get(argIndex);
                 Object arg = args[argIndex];
 
-                final org.boon.core.Type instanceType = org.boon.core.Type.getInstanceType(arg);
+                final TypeType instanceType = TypeType.getInstanceType(arg);
 
                 if (instanceType == type) {
                     score += 2_000;
@@ -156,16 +157,16 @@ public class OverloadedMethod implements MethodAccess {
 
                     case CHAR_WRAPPER:
                     case CHAR:
-                        if (instanceType == org.boon.core.Type.CHAR ||
-                                instanceType == org.boon.core.Type.CHAR_WRAPPER) {
+                        if (instanceType == TypeType.CHAR ||
+                                instanceType == TypeType.CHAR_WRAPPER) {
                             score+=1000;
                         }
                         break;
 
                     case STRING:
-                        if (instanceType == org.boon.core.Type.STRING) {
+                        if (instanceType == TypeType.STRING) {
                             score +=1_000;
-                        } else if (instanceType == org.boon.core.Type.CHAR_SEQUENCE
+                        } else if (instanceType == TypeType.CHAR_SEQUENCE
                                 || arg instanceof CharSequence) {
                             score +=500;
                         }
@@ -173,14 +174,14 @@ public class OverloadedMethod implements MethodAccess {
 
 
                     case INSTANCE:
-                        if (instanceType == org.boon.core.Type.INSTANCE) {
+                        if (instanceType == TypeType.INSTANCE) {
                             if (m.parameterTypes()[argIndex].isInstance(arg)){
                                 score+=1000;
 
                             }
-                        } else if (instanceType == org.boon.core.Type.MAP) {
+                        } else if (instanceType == TypeType.MAP) {
                             score +=1_000;
-                        } else if (instanceType == org.boon.core.Type.LIST) {
+                        } else if (instanceType == TypeType.LIST) {
                             score +=500;
                         }
                         break;
@@ -218,7 +219,7 @@ public class OverloadedMethod implements MethodAccess {
         return null;
     }
 
-    private int handleLongArg(int score, Object arg, org.boon.core.Type instanceType) {
+    private int handleLongArg(int score, Object arg, TypeType instanceType) {
         switch (instanceType) {
 
 
@@ -273,23 +274,23 @@ public class OverloadedMethod implements MethodAccess {
 
     }
 
-    private int handleByteArg(int score, Object arg, org.boon.core.Type instanceType) {
-        if (instanceType== org.boon.core.Type.BYTE|| instanceType == org.boon.core.Type.BYTE_WRAPPER) {
+    private int handleByteArg(int score, Object arg, TypeType instanceType) {
+        if (instanceType== TypeType.BYTE|| instanceType == TypeType.BYTE_WRAPPER) {
             return score + 1010;
         } else {
             return handleIntArg(score, arg, instanceType);
         }
     }
 
-    private int handleShortArg(int score, Object arg, org.boon.core.Type instanceType) {
-        if (instanceType== org.boon.core.Type.SHORT || instanceType == org.boon.core.Type.SHORT_WRAPPER) {
+    private int handleShortArg(int score, Object arg, TypeType instanceType) {
+        if (instanceType== TypeType.SHORT || instanceType == TypeType.SHORT_WRAPPER) {
             return score + 1010;
         } else {
             return handleIntArg(score, arg, instanceType);
         }
     }
 
-    private int handleIntArg(int score, Object arg, org.boon.core.Type instanceType) {
+    private int handleIntArg(int score, Object arg, TypeType instanceType) {
         switch (instanceType) {
 
             case INT:
@@ -339,7 +340,7 @@ public class OverloadedMethod implements MethodAccess {
     }
 
 
-    private int handleFloatArg(int score, Object arg, org.boon.core.Type instanceType) {
+    private int handleFloatArg(int score, Object arg, TypeType instanceType) {
         switch (instanceType) {
 
             case FLOAT:
@@ -389,7 +390,7 @@ public class OverloadedMethod implements MethodAccess {
     }
 
 
-    private int handleDoubleArg(int score, Object arg, org.boon.core.Type instanceType) {
+    private int handleDoubleArg(int score, Object arg, TypeType instanceType) {
         switch (instanceType) {
 
             case DOUBLE:
@@ -523,7 +524,7 @@ public class OverloadedMethod implements MethodAccess {
     }
 
     @Override
-    public List<org.boon.core.Type> paramTypeEnumList() {
+    public List<TypeType> paramTypeEnumList() {
         return Collections.emptyList();
     }
 

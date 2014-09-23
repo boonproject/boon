@@ -30,6 +30,7 @@ package org.boon.core.reflection.impl;
 
 import org.boon.Lists;
 import org.boon.core.Conversions;
+import org.boon.core.TypeType;
 import org.boon.core.reflection.*;
 import org.boon.primitive.Arry;
 
@@ -59,7 +60,7 @@ public class MethodAccessImpl implements MethodAccess {
     final Map<String, AnnotationData> annotationMap;
 
 
-    final List<org.boon.core.Type> paramTypeEnumList = new ArrayList<>();
+    final List<TypeType> paramTypeEnumList = new ArrayList<>();
 
 
     final MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -82,7 +83,7 @@ public class MethodAccessImpl implements MethodAccess {
 
 
         for (Class<?> cls : method.getParameterTypes()) {
-            paramTypeEnumList.add(org.boon.core.Type.getType(cls));
+            paramTypeEnumList.add(TypeType.getType(cls));
 
         }
 
@@ -122,7 +123,7 @@ public class MethodAccessImpl implements MethodAccess {
                 score+=100;
                 continue;
             }
-            final org.boon.core.Type type = this.paramTypeEnumList.get(index);
+            final TypeType type = this.paramTypeEnumList.get(index);
 
             switch (type) {
 
@@ -205,7 +206,7 @@ public class MethodAccessImpl implements MethodAccess {
 
             Object arg = args[0];
             Class<?> paramType = parameterTypes[0];
-            org.boon.core.Type type = paramTypeEnumList.get(0);
+            TypeType type = paramTypeEnumList.get(0);
             arg = Conversions.coerce(type, paramType, arg);
 
             return invoke(object, arg);
@@ -220,7 +221,7 @@ public class MethodAccessImpl implements MethodAccess {
 
                 Object arg = args[index];
                 Class<?> paramType = parameterTypes[index];
-                org.boon.core.Type type = paramTypeEnumList.get(index);
+                TypeType type = paramTypeEnumList.get(index);
                 newArgs[index] = Conversions.coerce(type, paramType, arg);
             }
 
@@ -555,7 +556,7 @@ public class MethodAccessImpl implements MethodAccess {
     }
 
 
-    public List<org.boon.core.Type> paramTypeEnumList() {
+    public List<TypeType> paramTypeEnumList() {
         return paramTypeEnumList;
     }
 }

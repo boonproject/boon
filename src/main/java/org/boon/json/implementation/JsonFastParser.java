@@ -28,10 +28,8 @@
 
 package org.boon.json.implementation;
 
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
-import org.boon.core.reflection.fields.FieldAccessMode;
-import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.*;
 import org.boon.primitive.CharScanner;
 
@@ -210,7 +208,7 @@ public class JsonFastParser extends JsonParserCharArray {
         __index = index;
         __currentChar = currentChar;
 
-        Type type = doubleFloat ? Type.DOUBLE : Type.INT;
+        TypeType type = doubleFloat ? TypeType.DOUBLE : TypeType.INT;
 
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
 
@@ -236,7 +234,7 @@ public class JsonFastParser extends JsonParserCharArray {
             index = CharScanner.findEndQuote ( array, index );
         }
 
-        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, checkDates );
+        Value value = new CharSequenceValue ( chop, TypeType.STRING, startIndex, index, array, encoded, checkDates );
 
         if ( index < array.length ) {
             index++;

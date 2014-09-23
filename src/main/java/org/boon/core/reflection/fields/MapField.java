@@ -29,7 +29,7 @@
 package org.boon.core.reflection.fields;
 
 import org.boon.core.Conversions;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 
 import java.lang.reflect.Field;
@@ -278,8 +278,8 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public final Type typeEnum () {
-        return Type.OBJECT;
+    public final TypeType typeEnum () {
+        return TypeType.OBJECT;
     }
 
 
@@ -336,7 +336,7 @@ public class MapField implements FieldAccess {
     }
 
     @Override
-    public Type componentType() {
+    public TypeType componentType() {
         return null;
     }
 

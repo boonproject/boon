@@ -1,7 +1,7 @@
 package org.boon.json.serializers.impl;
 
 import org.boon.Boon;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.json.serializers.CustomObjectSerializer;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.primitive.CharBuf;
@@ -20,7 +20,7 @@ public class SerializeUtils {
                                         Object obj, CharBuf builder,
                                         Map<Class, CustomObjectSerializer> overrideMap,
                                         Set<Class> noHandle, boolean typeInfo,
-                                        Type type) {
+                                        TypeType type) {
         if (overrideMap!=null) {
             Class<?> cls = Boon.cls(obj);
             if (cls != null && !cls.isPrimitive() && !noHandle.contains(cls)) {
@@ -61,7 +61,7 @@ public class SerializeUtils {
             return;
         }
 
-        if (type == Type.INSTANCE) {
+        if (type == TypeType.INSTANCE) {
             jsonSerializer.serializeInstance(obj, builder, typeInfo);
         } else {
             jsonSerializer.serializeSubtypeInstance(obj, builder);

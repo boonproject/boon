@@ -30,7 +30,7 @@ package org.boon.core;
 
 import java.util.*;
 
-public enum Type {
+public enum TypeType {
 
 
     //PRIMITIVE
@@ -86,25 +86,25 @@ public enum Type {
     VALUE_MAP, VALUE;
 
 
-    final Type baseTypeOrWrapper;
+    final TypeType baseTypeOrWrapper;
     private final boolean array;
     private final boolean primitive;
 
-    Type() {
+    TypeType() {
         baseTypeOrWrapper =null;
         array=false;
         primitive=false;
     }
 
 
-    Type(Type type) {
+    TypeType(TypeType type) {
         baseTypeOrWrapper =type;
         array=false;
         primitive=false;
 
     }
 
-    Type(boolean isarray) {
+    TypeType(boolean isarray) {
         this.array = isarray;
         baseTypeOrWrapper=null;
         primitive=false;
@@ -112,20 +112,20 @@ public enum Type {
     }
 
 
-    Type(boolean isarray, Type type) {
+    TypeType(boolean isarray, TypeType type) {
         this.array = isarray;
         baseTypeOrWrapper=type;
         primitive=false;
 
     }
 
-    Type(boolean array, boolean primitive) {
+    TypeType(boolean array, boolean primitive) {
         this.array = array;
         this.primitive = primitive;
         baseTypeOrWrapper = null;
     }
 
-    public  static Type getInstanceType ( Object object ) {
+    public  static TypeType getInstanceType ( Object object ) {
 
 
              if (object == null) {
@@ -137,14 +137,14 @@ public enum Type {
 
 
 
-    public static Type getType ( Class<?> clazz ) {
+    public static TypeType getType ( Class<?> clazz ) {
         return getType(clazz, null);
     }
 
-    public static Type getType ( Class<?> clazz, Object object ) {
+    public static TypeType getType ( Class<?> clazz, Object object ) {
 
         final String className = clazz.getName();
-        Type type =  getType( className );
+        TypeType type =  getType( className );
 
         if (type != UNKNOWN) {
             return type;
@@ -204,9 +204,9 @@ public enum Type {
 
     }
 
-    private static Type getArrayType(Class<?> clazz) {
-        Type type;
-        final Type componentType = getType(clazz.getComponentType());
+    private static TypeType getArrayType(Class<?> clazz) {
+        TypeType type;
+        final TypeType componentType = getType(clazz.getComponentType());
         switch(componentType) {
 
 
@@ -250,71 +250,71 @@ public enum Type {
         return type;
     }
 
-    public static Type getType ( String typeName ) {
+    public static TypeType getType ( String typeName ) {
 
             switch ( typeName ) {
                 case "int":
-                    return Type.INT;
+                    return TypeType.INT;
                 case "short":
-                    return Type.SHORT;
+                    return TypeType.SHORT;
                 case "byte":
-                    return Type.BYTE;
+                    return TypeType.BYTE;
                 case "float":
-                    return Type.FLOAT;
+                    return TypeType.FLOAT;
                 case "double":
-                    return Type.DOUBLE;
+                    return TypeType.DOUBLE;
                 case "boolean":
-                    return Type.BOOLEAN;
+                    return TypeType.BOOLEAN;
                 case "char":
-                    return Type.CHAR;
+                    return TypeType.CHAR;
                 case "long":
-                    return Type.LONG;
+                    return TypeType.LONG;
 
                 case "java.lang.String":
-                    return Type.STRING;
+                    return TypeType.STRING;
                 case "java.lang.Boolean":
-                    return Type.BOOLEAN_WRAPPER;
+                    return TypeType.BOOLEAN_WRAPPER;
                 case "java.lang.Byte":
-                    return Type.BYTE_WRAPPER;
+                    return TypeType.BYTE_WRAPPER;
                 case "java.lang.Short":
-                    return Type.SHORT_WRAPPER;
+                    return TypeType.SHORT_WRAPPER;
                 case "java.lang.Integer":
-                    return Type.INTEGER_WRAPPER;
+                    return TypeType.INTEGER_WRAPPER;
                 case "java.lang.Double":
-                    return Type.DOUBLE_WRAPPER;
+                    return TypeType.DOUBLE_WRAPPER;
                 case "java.lang.Float":
-                    return Type.FLOAT_WRAPPER;
+                    return TypeType.FLOAT_WRAPPER;
                 case "java.lang.Character":
-                    return Type.CHAR_WRAPPER;
+                    return TypeType.CHAR_WRAPPER;
                 case "java.lang.Number":
-                    return Type.NUMBER;
+                    return TypeType.NUMBER;
 
                 case "java.lang.Class":
-                    return Type.CLASS;
+                    return TypeType.CLASS;
 
 
 
                 case "java.lang.Void":
-                    return Type.VOID;
+                    return TypeType.VOID;
 
 
 
 
 
                 case "java.lang.Long":
-                    return Type.LONG_WRAPPER;
+                    return TypeType.LONG_WRAPPER;
 
 
                 case "java.util.Set":
                 case "java.util.HashSet":
                 case "java.util.TreeSet":
-                    return Type.SET;
+                    return TypeType.SET;
 
                 case "java.util.List":
                 case "java.util.ArrayList":
                 case "java.util.LinkedList":
                 case "org.boon.core.value.ValueList":
-                    return Type.LIST;
+                    return TypeType.LIST;
 
                 case "java.util.Map":
                 case "org.boon.collections.LazyMap":
@@ -322,65 +322,65 @@ public enum Type {
                 case "java.util.LinkedHashMap":
                 case "java.util.TreeMap":
                 case "org.boon.core.value.LazyValueMap":
-                    return Type.MAP;
+                    return TypeType.MAP;
 
                 case "java.lang.CharSequence":
-                    return Type.CHAR_SEQUENCE;
+                    return TypeType.CHAR_SEQUENCE;
 
                 case "java.math.BigDecimal":
-                    return Type.BIG_DECIMAL;
+                    return TypeType.BIG_DECIMAL;
                 case "java.math.BigInteger":
-                    return Type.BIG_INT;
+                    return TypeType.BIG_INT;
 
                 case "java.util.Date":
                 case "java.sql.Date":
                 case "java.sql.Time":
                 case "java.sql.Timestamp":
-                    return Type.DATE;
+                    return TypeType.DATE;
 
 
 
                 case "java.util.Calendar":
-                    return Type.CALENDAR;
+                    return TypeType.CALENDAR;
 
                 case "org.boon.core.value.ValueMapImpl":
-                    return Type.VALUE_MAP;
+                    return TypeType.VALUE_MAP;
 
                 case "org.boon.core.value.NumberValue":
                 case "org.boon.core.value.CharSequenceValue":
-                    return Type.VALUE;
+                    return TypeType.VALUE;
 
                 case "java.lang.Object":
-                    return Type.OBJECT;
+                    return TypeType.OBJECT;
 
                 case "java.io.File":
-                    return Type.FILE;
+                    return TypeType.FILE;
 
                 case "java.net.URI":
-                    return Type.URI;
+                    return TypeType.URI;
 
                 case "java.net.URL":
-                    return Type.URL;
+                    return TypeType.URL;
 
                 case "java.nio.file.Path":
-                    return Type.PATH;
+                    return TypeType.PATH;
 
                 case "java.util.UUID":
-                    return Type.UUID;
+                    return TypeType.UUID;
 
 
                 case "java.util.Locale":
-                    return Type.LOCALE;
+                    return TypeType.LOCALE;
 
 
                 case "java.util.TimeZone":
-                    return Type.TIME_ZONE;
+                    return TypeType.TIME_ZONE;
 
                 case "java.util.Currency":
-                    return Type.CURRENCY;
+                    return TypeType.CURRENCY;
 
             }
-            return Type.UNKNOWN;
+            return TypeType.UNKNOWN;
 
     }
 
@@ -423,7 +423,7 @@ public enum Type {
                 types.add(gatherTypes((List) o));
             }
             else {
-                types.add(Type.getInstanceType(o));
+                types.add(TypeType.getInstanceType(o));
             }
         }
 
@@ -441,7 +441,7 @@ public enum Type {
                 types.add(gatherActualTypes((List) o));
             }
             else {
-                types.add(Type.getActualType(o));
+                types.add(TypeType.getActualType(o));
             }
         }
 
@@ -456,23 +456,23 @@ public enum Type {
         }
     }
 
-    public  static List<Type> gatherTypes ( Object... list ) {
+    public  static List<TypeType> gatherTypes ( Object... list ) {
 
-        List<Type> types = new ArrayList();
+        List<TypeType> types = new ArrayList();
 
         for (Object o : list) {
-            types.add(Type.getInstanceType( o )) ;
+            types.add(TypeType.getInstanceType(o)) ;
         }
 
         return types;
     }
 
-    public Type wraps() {
+    public TypeType wraps() {
         return baseTypeOrWrapper;
     }
 
 
-    public Type componentType() {
+    public TypeType componentType() {
         return baseTypeOrWrapper == null ? OBJECT : baseTypeOrWrapper;
     }
 

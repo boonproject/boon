@@ -28,7 +28,7 @@
 
 package org.boon.json.implementation;
 
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.value.*;
 
@@ -207,7 +207,7 @@ public class PlistParser extends JsonFastParser {
                     break endIndexLookup;
             }
         }
-        return new CharSequenceValue ( chop, Type.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
+        return new CharSequenceValue ( chop, TypeType.STRING, startIndexOfKey, endIndex + 1, this.charArray, encoded, checkDate );
     }
 
     private Value decodeValuePlist() {
@@ -394,7 +394,7 @@ public class PlistParser extends JsonFastParser {
         __index = index;
         __currentChar = currentChar;
 
-        Type type = doubleFloat ? Type.DOUBLE : Type.INT;
+        TypeType type = doubleFloat ? TypeType.DOUBLE : TypeType.INT;
 
         NumberValue value = new NumberValue ( chop, type, startIndex, __index, this.charArray );
 
@@ -481,7 +481,7 @@ public class PlistParser extends JsonFastParser {
             index = findEndQuote ( array, index );
         }
 
-        Value value = new CharSequenceValue ( chop, Type.STRING, startIndex, index, array, encoded, checkDates );
+        Value value = new CharSequenceValue ( chop, TypeType.STRING, startIndex, index, array, encoded, checkDates );
 
         if ( index < array.length ) {
             index++;

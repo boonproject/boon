@@ -31,7 +31,7 @@ package org.boon.core.value;
 import org.boon.Exceptions;
 import org.boon.core.Conversions;
 import org.boon.core.Dates;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.primitive.CharBuf;
@@ -54,11 +54,11 @@ public class NumberValue extends Number implements Value {
     private boolean chopped;
     private int startIndex;
     private int endIndex;
-    private Type type;
+    private TypeType type;
     private Object value;
 
 
-    public NumberValue( Type type ) {
+    public NumberValue( TypeType type ) {
         this.type = type;
     }
 
@@ -66,7 +66,7 @@ public class NumberValue extends Number implements Value {
 
     }
 
-    public NumberValue( boolean chop, Type type, int startIndex, int endIndex, char[] buffer ) {
+    public NumberValue( boolean chop, TypeType type, int startIndex, int endIndex, char[] buffer ) {
         this.type = type;
 
 
@@ -287,8 +287,8 @@ public class NumberValue extends Number implements Value {
     }
 
     @Override
-    public Type type() {
-        return Type.NUMBER;
+    public TypeType type() {
+        return TypeType.NUMBER;
     }
 
 

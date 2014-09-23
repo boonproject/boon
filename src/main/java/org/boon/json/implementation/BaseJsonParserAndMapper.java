@@ -32,11 +32,10 @@ import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Mapper;
-import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.json.JsonParser;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.primitive.CharBuf;
@@ -81,7 +80,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
                 return null;
             }
 
-            Type coerceTo = Type.getType(clz);
+            TypeType coerceTo = TypeType.getType(clz);
 
             switch ( coerceTo ) {
                 case MAP:
@@ -91,7 +90,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
 
             }
 
-            Type coerceFrom = Type.getType(object.getClass());
+            TypeType coerceFrom = TypeType.getType(object.getClass());
 
             switch ( coerceFrom ) {
 

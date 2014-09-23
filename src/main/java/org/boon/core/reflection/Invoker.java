@@ -34,7 +34,7 @@ import org.boon.Exceptions;
 import org.boon.Lists;
 import org.boon.core.Conversions;
 import org.boon.core.Typ;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueContainer;
@@ -50,7 +50,7 @@ import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Conversions.coerce;
-import static org.boon.core.Type.gatherTypes;
+import static org.boon.core.TypeType.gatherTypes;
 import static org.boon.core.reflection.MapObjectConversion.*;
 
 /**
@@ -202,7 +202,7 @@ public class Invoker {
 
                     } else {
                         final Class<?> aClass = m.parameterTypes()[0];
-                        final Type type = Type.getType(aClass);
+                        final TypeType type = TypeType.getType(aClass);
                         switch (type) {
                             case INSTANCE:
                                 return invokeFromList(respectIgnore, view, ignoreProperties, cls, object, name, Lists.list(args));
@@ -589,7 +589,7 @@ public class Invoker {
      *
      * REFACTOR:
      * This method was automatically refactored and its functionality gets duplicated in a few places.
-     * Namely Invoker lib. It needs to be documented. Refactored to use org.boon.core.Type.
+     * Namely Invoker lib. It needs to be documented. Refactored to use org.boon.core.TypeType.
      * And code coverage. I have used it on several projects and have modified to work on
      * edge cases for certain customers and have not updated the unit test.
      * This method is beastly and important. It is currently 250 lines of code.
@@ -628,7 +628,7 @@ public class Invoker {
             item = convertedArgumentList.get( index );
 
 
-            final org.boon.core.Type parameterType = org.boon.core.Type.getType(parameterClass);
+            final TypeType parameterType = TypeType.getType(parameterClass);
 
 
             if ( item instanceof ValueContainer) {
@@ -917,7 +917,7 @@ public class Invoker {
 
 
                 default:
-                    final org.boon.core.Type itemType = org.boon.core.Type.getInstanceType(item);
+                    final TypeType itemType = TypeType.getInstanceType(item);
 
                     switch (itemType) {
                         case LIST:

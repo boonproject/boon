@@ -32,7 +32,7 @@ import org.boon.Exceptions;
 import org.boon.Str;
 import org.boon.core.Typ;
 import org.boon.core.Conversions;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -715,13 +715,13 @@ public abstract class Criterion<VALUE> extends Criteria {
 //                        }
 //
 //                        @Override
-//                        public Type typeEnum() {
+//                        public TypeType typeEnum() {
 //
 //                            Object value = map.get(key);
 //                            if (value==null) {
-//                                return Type.OBJECT;
+//                                return TypeType.OBJECT;
 //                            } else {
-//                                return Type.getInstanceType(value);
+//                                return TypeType.getInstanceType(value);
 //                            }
 //                        }
 //
@@ -817,7 +817,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 //                        }
 //
 //                        @Override
-//                        public Type componentType() {
+//                        public TypeType componentType() {
 //                            return null;
 //                        }
 //                    };
@@ -1558,9 +1558,9 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
 
         @Override
-        public Type typeEnum() {
+        public TypeType typeEnum() {
             Object o = this.getValue(this.thisObject);
-            return Type.getInstanceType(o);
+            return TypeType.getInstanceType(o);
         }
 
         @Override
@@ -1672,7 +1672,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         }
 
         @Override
-        public Type componentType() {
+        public TypeType componentType() {
             return null;
         }
     }

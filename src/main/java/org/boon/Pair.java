@@ -1,5 +1,6 @@
 package org.boon;
 
+
 import static org.boon.Exceptions.requireNonNull;
 
 /**
@@ -54,6 +55,14 @@ public class Pair<K, V> implements Entry<K, V> {
     @Override
     public K key() {
         return k;
+    }
+
+
+    public K getFirst() {
+        return k;
+    }
+    public V getSecond() {
+        return v;
     }
 
     @Override
@@ -115,5 +124,13 @@ public class Pair<K, V> implements Entry<K, V> {
                 "\"k\":" + k +
                 ", \"v\":" + v +
                 '}';
+    }
+
+    public void setFirst(K first) {
+        this.k = first;
+    }
+
+    public void setSecond(V v) {
+        this.v = v;
     }
 }

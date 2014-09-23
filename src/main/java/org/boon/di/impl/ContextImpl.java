@@ -666,7 +666,7 @@ public class ContextImpl implements Context, Module {
                 }
 
 
-                puts("Type--:---------------------------");
+                puts("TypeType--:---------------------------");
                 for (Class<?> cls : module.types()) {
                     puts("              ", name);
                 }

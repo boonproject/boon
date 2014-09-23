@@ -36,7 +36,7 @@ import org.boon.cache.CacheType;
 import org.boon.cache.SimpleCache;
 import org.boon.core.Conversions;
 import org.boon.core.Dates;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Mapper;
 
@@ -1603,7 +1603,7 @@ public class CharBuf extends PrintWriter implements CharSequence {
     public CharBuf prettyPrintObject(Object value, boolean type, int indent) {
 
 
-        Type instanceType = Type.getInstanceType(value);
+        TypeType instanceType = TypeType.getInstanceType(value);
         switch (instanceType) {
 
 

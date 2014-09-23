@@ -57,7 +57,7 @@ public class EchoClient {
                 Scanner socketIn = new Scanner( echoSocket.getInputStream() );
                 Scanner console = new Scanner( System.in );
         ) {
-            System.out.println( "Type in some text please." );
+            System.out.println( "TypeType in some text please." );
             while ( console.hasNextLine() ) {
                 String userInput = console.nextLine();
                 socketOut.println( userInput );

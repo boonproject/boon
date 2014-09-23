@@ -1,8 +1,7 @@
 package org.boon.json.serializers.impl;
 
-import org.boon.Boon;
 import org.boon.Sets;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.json.serializers.CustomObjectSerializer;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.json.serializers.ObjectSerializer;
@@ -36,7 +35,7 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
     @Override
     public final void serializeObject (JsonSerializerInternal jsonSerializer, Object obj, CharBuf builder )  {
 
-        Type type = Type.getInstanceType (obj);
+        TypeType type = TypeType.getInstanceType(obj);
         switch ( type ) {
 
             case NULL:

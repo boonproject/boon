@@ -31,7 +31,7 @@ package org.boon.core.value;
 import org.boon.Exceptions;
 import org.boon.core.Conversions;
 import org.boon.core.Dates;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonException;
@@ -50,7 +50,7 @@ import static org.boon.primitive.CharScanner.*;
 
 public class CharSequenceValue implements Value, CharSequence {
 
-    private final Type type;
+    private final TypeType type;
     private final boolean checkDate;
     private final boolean decodeStrings;
 
@@ -60,7 +60,7 @@ public class CharSequenceValue implements Value, CharSequence {
     private int endIndex;
     private Object value;
 
-    public CharSequenceValue( boolean chop, Type type, int startIndex, int endIndex, char[] buffer,
+    public CharSequenceValue( boolean chop, TypeType type, int startIndex, int endIndex, char[] buffer,
                               boolean encoded, boolean checkDate ) {
         this.type = type;
         this.checkDate = checkDate;
@@ -238,7 +238,7 @@ public class CharSequenceValue implements Value, CharSequence {
     public Date dateValue () {
 
 
-        if ( type == Type.STRING ) {
+        if ( type == TypeType.STRING ) {
 
             if ( Dates.isISO8601QuickCheck ( buffer, startIndex, endIndex ) ) {
 
@@ -337,7 +337,7 @@ public class CharSequenceValue implements Value, CharSequence {
     }
 
     @Override
-    public Type type() {
-        return Type.CHAR_SEQUENCE;
+    public TypeType type() {
+        return TypeType.CHAR_SEQUENCE;
     }
 }

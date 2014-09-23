@@ -33,7 +33,7 @@ import org.boon.Boon;
 import org.boon.core.Conversions;
 import org.boon.core.Predicate;
 import org.boon.core.Typ;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -1272,7 +1272,7 @@ public class ObjectFilter {
      * @param values
      * @return
      */
-    public static Criteria createCriteria(String name, Operator operator, Type type, Class<Object> classType, List<?> values) {
+    public static Criteria createCriteria(String name, Operator operator, TypeType type, Class<Object> classType, List<?> values) {
 
         okOrDie("Values must be passed", values);
 

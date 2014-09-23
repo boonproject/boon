@@ -28,7 +28,7 @@
 
 package org.boon.core.reflection.fields;
 
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 
 import java.lang.reflect.Field;
@@ -86,7 +86,7 @@ public interface FieldAccess {
     void setObject( Object obj, Object value );
 
 
-    Type typeEnum();
+    TypeType typeEnum();
 
 
     boolean isPrimitive();
@@ -120,5 +120,5 @@ public interface FieldAccess {
 
     void setStaticValue(Object newValue);
 
-    Type componentType();
+    TypeType componentType();
 }

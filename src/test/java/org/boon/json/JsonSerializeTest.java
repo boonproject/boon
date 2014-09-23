@@ -278,11 +278,11 @@ public class JsonSerializeTest {
         message1.put( "id", "4f16fc97d1e2d32371003f02" );
         message1.put(
                 "body",
-                "COURTYARD\n\nMESQUITE\n2300 HWY 67\nMESQUITE, TX  75150\ntel: 972-681-3300\nfax: 972-681-3324\n\nHotel Information: http://courtyard.com/DALCM\n\n\nARRIVAL CONFIRMATION:\n Confirmation Number:84029698\nGuests in Room: 2\nNAME: MR ERIC  BASS \nGuest Phone: 7138530977\nNumber of Rooms:1\nArrive: Oct 6 2001\nDepart: Oct 7 2001\nRoom Type: ROOM - QUALITY\nGuarantee Method:\n Credit card guarantee\nCANCELLATION PERMITTED-BEFORE 1800 DAY OF ARRIVAL\n\nRATE INFORMATION:\nRate(s) Quoted inputStream: US DOLLAR\nArrival Date: Oct 6 2001\nRoom Rate: 62.10  per night. Plus tax when applicable\nRate Program: AAA AMERICAN AUTO ASSN\n\nSPECIAL REQUEST:\n NON-SMOKING ROOM, GUARANTEED\n   \n\n\nPLEASE DO NOT REPLY TO THIS EMAIL \nAny Inquiries Please call 1-800-321-2211 or your local\ninternational toll free number.\n \nConfirmation Sent: Mon Jul 30 18:19:39 2001\n\nLegal Disclaimer:\nThis confirmation notice has been transmitted to you by electronic\nmail for your convenience. Marriott's record of this confirmation\nnotice is the official record of this reservation. Subsequent\nalterations to this electronic message after its transmission\nwill be disregarded.\n\nMarriott is pleased to announce that High Speed Internet Access is\nbeing rolled out in all Marriott hotel brands around the world.\nTo learn more or to find out whether your hotel has the service\navailable, please visit Marriott.com.\n\nEarn points toward free vacations, or frequent flyer miles\nfor every stay you make!  Just provide your Marriott Rewards\nmembership number at check inputStream.  Not yet a member?  Join for free at\nhttps://member.marriottrewards.com/Enrollments/enroll.asp?source=MCRE\n\n" );
+                "COURTYARD\n\nMESQUITE\n2300 HWY 67\nMESQUITE, TX  75150\ntel: 972-681-3300\nfax: 972-681-3324\n\nHotel Information: http://courtyard.com/DALCM\n\n\nARRIVAL CONFIRMATION:\n Confirmation Number:84029698\nGuests in Room: 2\nNAME: MR ERIC  BASS \nGuest Phone: 7138530977\nNumber of Rooms:1\nArrive: Oct 6 2001\nDepart: Oct 7 2001\nRoom TypeType: ROOM - QUALITY\nGuarantee Method:\n Credit card guarantee\nCANCELLATION PERMITTED-BEFORE 1800 DAY OF ARRIVAL\n\nRATE INFORMATION:\nRate(s) Quoted inputStream: US DOLLAR\nArrival Date: Oct 6 2001\nRoom Rate: 62.10  per night. Plus tax when applicable\nRate Program: AAA AMERICAN AUTO ASSN\n\nSPECIAL REQUEST:\n NON-SMOKING ROOM, GUARANTEED\n   \n\n\nPLEASE DO NOT REPLY TO THIS EMAIL \nAny Inquiries Please call 1-800-321-2211 or your local\ninternational toll free number.\n \nConfirmation Sent: Mon Jul 30 18:19:39 2001\n\nLegal Disclaimer:\nThis confirmation notice has been transmitted to you by electronic\nmail for your convenience. Marriott's record of this confirmation\nnotice is the official record of this reservation. Subsequent\nalterations to this electronic message after its transmission\nwill be disregarded.\n\nMarriott is pleased to announce that High Speed Internet Access is\nbeing rolled out in all Marriott hotel brands around the world.\nTo learn more or to find out whether your hotel has the service\navailable, please visit Marriott.com.\n\nEarn points toward free vacations, or frequent flyer miles\nfor every stay you make!  Just provide your Marriott Rewards\nmembership number at check inputStream.  Not yet a member?  Join for free at\nhttps://member.marriottrewards.com/Enrollments/enroll.asp?source=MCRE\n\n" );
         message1.put( "filename", "2." );
         Map<String, Object> headers1 = new LinkedHashMap<>();
         headers1.put( "Content-Transfer-Encoding", "7bit" );
-        headers1.put( "Content-Type", "text/plain; charset=us-ascii" );
+        headers1.put( "Content-TypeType", "text/plain; charset=us-ascii" );
         headers1.put( "Date", new Date() );
         headers1.put( "From", "reservations@marriott.com" );
         headers1.put( "Message-ID", "<32788362.1075840323896.JavaMail.evans@thyme>" );
@@ -305,11 +305,11 @@ public class JsonSerializeTest {
         message2.put( "id", "4f16fc97d1e2d32371003f04" );
         message2.put(
                 "body",
-                "\nAUSTIN AT THE CAPITOL\n701 EAST 11TH STREET\nAUSTIN, TX  78701\ntel: 512-478-1111\nfax: 512-478-3700\n\nHotel Information: http://marriotthotels.com/AUSDT\n\n\nARRIVAL CONFIRMATION:\n Confirmation Number:83929275\nGuests in Room: 3\nNAME: MR ERIC  BASS \nGuest Phone: 7138530977\nNumber of Rooms:1\nArrive: Sep 7 2001\nDepart: Sep 8 2001\nRoom Type: ROOM - QUALITY\nGuarantee Method:\n Credit card guarantee\n\n\nRATE INFORMATION:\nRate(s) Quoted inputStream: US DOLLAR\nArrival Date: Sep 7 2001\nRoom Rate: 129.00  per night. Plus tax when applicable\nRate Program: LEISURE RATE\n\nSPECIAL REQUEST:\n NON-SMOKING ROOM, GUARANTEED\n 2 DOUBLE BEDS, GUARANTEED\n HIGH FLOOR, REQUEST NOTED\n \n\n\nPLEASE DO NOT REPLY TO THIS EMAIL \nAny Inquiries Please call 1-800-228-9290 or your local\ninternational toll free number.\n \nConfirmation Sent: Mon Jul 30 15:45:05 2001\n\nLegal Disclaimer:\nThis confirmation notice has been transmitted to you by electronic\nmail for your convenience. Marriott's record of this confirmation\nnotice is the official record of this reservation. Subsequent\nalterations to this electronic message after its transmission\nwill be disregarded.\n\nMarriott is pleased to announce that High Speed Internet Access is\nbeing rolled out in all Marriott hotel brands around the world.\nTo learn more or to find out whether your hotel has the service\navailable, please visit Marriott.com.\n\nEarn points toward free vacations, or frequent flyer miles\nfor every stay you make!  Just provide your Marriott Rewards\nmembership number at check inputStream.  Not yet a member?  Join for free at\nhttps://member.marriottrewards.com/Enrollments/enroll.asp?source=MCRE\n\n" );
+                "\nAUSTIN AT THE CAPITOL\n701 EAST 11TH STREET\nAUSTIN, TX  78701\ntel: 512-478-1111\nfax: 512-478-3700\n\nHotel Information: http://marriotthotels.com/AUSDT\n\n\nARRIVAL CONFIRMATION:\n Confirmation Number:83929275\nGuests in Room: 3\nNAME: MR ERIC  BASS \nGuest Phone: 7138530977\nNumber of Rooms:1\nArrive: Sep 7 2001\nDepart: Sep 8 2001\nRoom TypeType: ROOM - QUALITY\nGuarantee Method:\n Credit card guarantee\n\n\nRATE INFORMATION:\nRate(s) Quoted inputStream: US DOLLAR\nArrival Date: Sep 7 2001\nRoom Rate: 129.00  per night. Plus tax when applicable\nRate Program: LEISURE RATE\n\nSPECIAL REQUEST:\n NON-SMOKING ROOM, GUARANTEED\n 2 DOUBLE BEDS, GUARANTEED\n HIGH FLOOR, REQUEST NOTED\n \n\n\nPLEASE DO NOT REPLY TO THIS EMAIL \nAny Inquiries Please call 1-800-228-9290 or your local\ninternational toll free number.\n \nConfirmation Sent: Mon Jul 30 15:45:05 2001\n\nLegal Disclaimer:\nThis confirmation notice has been transmitted to you by electronic\nmail for your convenience. Marriott's record of this confirmation\nnotice is the official record of this reservation. Subsequent\nalterations to this electronic message after its transmission\nwill be disregarded.\n\nMarriott is pleased to announce that High Speed Internet Access is\nbeing rolled out in all Marriott hotel brands around the world.\nTo learn more or to find out whether your hotel has the service\navailable, please visit Marriott.com.\n\nEarn points toward free vacations, or frequent flyer miles\nfor every stay you make!  Just provide your Marriott Rewards\nmembership number at check inputStream.  Not yet a member?  Join for free at\nhttps://member.marriottrewards.com/Enrollments/enroll.asp?source=MCRE\n\n" );
         message2.put( "filename", "3." );
         Map<String, Object> headers2 = new LinkedHashMap<>();
         headers2.put( "Content-Transfer-Encoding", "7bit" );
-        headers2.put( "Content-Type", "text/plain; charset=us-ascii" );
+        headers2.put( "Content-TypeType", "text/plain; charset=us-ascii" );
         headers2.put( "Date", new Date() );
         headers2.put( "From", "reservations@marriott.com" );
         headers2.put( "Message-ID", "<9573108.1075840323920.JavaMail.evans@thyme>" );
@@ -332,11 +332,11 @@ public class JsonSerializeTest {
         message3.put( "id", "4f16fc97d1e2d32371003f05" );
         message3.put(
                 "body",
-                "\nAUSTIN AT THE CAPITOL\n701 EAST 11TH STREET\nAUSTIN, TX  78701\ntel: 512-478-1111\nfax: 512-478-3700\n\nHotel Information: http://marriotthotels.com/AUSDT\n\n\nARRIVAL CONFIRMATION:\n Confirmation Number:83929275\nGuests in Room: 3\nNAME: MR ERIC  BASS \nGuest Phone: 7138530977\nNumber of Rooms:1\nArrive: Sep 7 2001\nDepart: Sep 8 2001\nRoom Type: ROOM - QUALITY\nGuarantee Method:\n Credit card guarantee\n\n\nRATE INFORMATION:\nRate(s) Quoted inputStream: US DOLLAR\nArrival Date: Sep 7 2001\nRoom Rate: 129.00  per night. Plus tax when applicable\nRate Program: LEISURE RATE\n\nSPECIAL REQUEST:\n NON-SMOKING ROOM, GUARANTEED\n 2 DOUBLE BEDS, GUARANTEED\n HIGH FLOOR, REQUEST NOTED\n \n\n\nPLEASE DO NOT REPLY TO THIS EMAIL \nAny Inquiries Please call 1-800-228-9290 or your local\ninternational toll free number.\n \nConfirmation Sent: Mon Jul 30 15:45:05 2001\n\nLegal Disclaimer:\nThis confirmation notice has been transmitted to you by electronic\nmail for your convenience. Marriott's record of this confirmation\nnotice is the official record of this reservation. Subsequent\nalterations to this electronic message after its transmission\nwill be disregarded.\n\nMarriott is pleased to announce that High Speed Internet Access is\nbeing rolled out in all Marriott hotel brands around the world.\nTo learn more or to find out whether your hotel has the service\navailable, please visit Marriott.com.\n\nEarn points toward free vacations, or frequent flyer miles\nfor every stay you make!? Just provide your Marriott Rewards\nmembership number at check inputStream.? Not yet a member?? Join for free at\nhttps://member.marriottrewards.com/Enrollments/enroll.asp?source=MCRE\n\n" );
+                "\nAUSTIN AT THE CAPITOL\n701 EAST 11TH STREET\nAUSTIN, TX  78701\ntel: 512-478-1111\nfax: 512-478-3700\n\nHotel Information: http://marriotthotels.com/AUSDT\n\n\nARRIVAL CONFIRMATION:\n Confirmation Number:83929275\nGuests in Room: 3\nNAME: MR ERIC  BASS \nGuest Phone: 7138530977\nNumber of Rooms:1\nArrive: Sep 7 2001\nDepart: Sep 8 2001\nRoom TypeType: ROOM - QUALITY\nGuarantee Method:\n Credit card guarantee\n\n\nRATE INFORMATION:\nRate(s) Quoted inputStream: US DOLLAR\nArrival Date: Sep 7 2001\nRoom Rate: 129.00  per night. Plus tax when applicable\nRate Program: LEISURE RATE\n\nSPECIAL REQUEST:\n NON-SMOKING ROOM, GUARANTEED\n 2 DOUBLE BEDS, GUARANTEED\n HIGH FLOOR, REQUEST NOTED\n \n\n\nPLEASE DO NOT REPLY TO THIS EMAIL \nAny Inquiries Please call 1-800-228-9290 or your local\ninternational toll free number.\n \nConfirmation Sent: Mon Jul 30 15:45:05 2001\n\nLegal Disclaimer:\nThis confirmation notice has been transmitted to you by electronic\nmail for your convenience. Marriott's record of this confirmation\nnotice is the official record of this reservation. Subsequent\nalterations to this electronic message after its transmission\nwill be disregarded.\n\nMarriott is pleased to announce that High Speed Internet Access is\nbeing rolled out in all Marriott hotel brands around the world.\nTo learn more or to find out whether your hotel has the service\navailable, please visit Marriott.com.\n\nEarn points toward free vacations, or frequent flyer miles\nfor every stay you make!? Just provide your Marriott Rewards\nmembership number at check inputStream.? Not yet a member?? Join for free at\nhttps://member.marriottrewards.com/Enrollments/enroll.asp?source=MCRE\n\n" );
         message3.put( "filename", "33." );
         Map<String, Object> headers3 = new LinkedHashMap<>();
         headers3.put( "Content-Transfer-Encoding", "7bit" );
-        headers3.put( "Content-Type", "text/plain; charset=ANSI_X3.4-1968" );
+        headers3.put( "Content-TypeType", "text/plain; charset=ANSI_X3.4-1968" );
         headers3.put( "Date", new Date() );
         headers3.put( "From", "reservations@marriott.com" );
         headers3.put( "Message-ID", "<18215700.1075859134808.JavaMail.evans@thyme>" );
@@ -363,7 +363,7 @@ public class JsonSerializeTest {
         message4.put( "filename", "1041." );
         Map<String, Object> headers4 = new LinkedHashMap<>();
         headers4.put( "Content-Transfer-Encoding", "7bit" );
-        headers4.put( "Content-Type", "text/plain; charset=ANSI_X3.4-1968" );
+        headers4.put( "Content-TypeType", "text/plain; charset=ANSI_X3.4-1968" );
         headers4.put( "Date", new Date() );
         headers4.put( "From", "eric.bass@enron.com" );
         headers4.put( "Message-ID", "<1543176.1075854772155.JavaMail.evans@thyme>" );
@@ -391,7 +391,7 @@ public class JsonSerializeTest {
         message5.put( "filename", "1042." );
         Map<String, Object> headers5 = new LinkedHashMap<>();
         headers5.put( "Content-Transfer-Encoding", "7bit" );
-        headers5.put( "Content-Type", "text/plain; charset=ANSI_X3.4-1968" );
+        headers5.put( "Content-TypeType", "text/plain; charset=ANSI_X3.4-1968" );
         headers5.put( "Date", new Date() );
         headers5.put( "From", "eric.bass@enron.com" );
         headers5.put( "Message-ID", "<32137540.1075854772177.JavaMail.evans@thyme>" );
@@ -418,7 +418,7 @@ public class JsonSerializeTest {
         message6.put( "filename", "1043." );
         Map<String, Object> headers6 = new LinkedHashMap<>();
         headers6.put( "Content-Transfer-Encoding", "7bit" );
-        headers6.put( "Content-Type", "text/plain; charset=us-ascii" );
+        headers6.put( "Content-TypeType", "text/plain; charset=us-ascii" );
         headers6.put( "Date", new Date() );
         headers6.put( "From", "eric.bass@enron.com" );
         headers6.put( "Message-ID", "<9944177.1075854772199.JavaMail.evans@thyme>" );
@@ -445,7 +445,7 @@ public class JsonSerializeTest {
         message7.put( "filename", "1044." );
         Map<String, Object> headers7 = new LinkedHashMap<>();
         headers7.put( "Content-Transfer-Encoding", "7bit" );
-        headers7.put( "Content-Type", "text/plain; charset=us-ascii" );
+        headers7.put( "Content-TypeType", "text/plain; charset=us-ascii" );
         headers7.put( "Date", new Date() );
         headers7.put( "From", "eric.bass@enron.com" );
         headers7.put( "Message-ID", "<30727575.1075854772221.JavaMail.evans@thyme>" );
@@ -472,7 +472,7 @@ public class JsonSerializeTest {
         message8.put( "filename", "1045." );
         Map<String, Object> headers8 = new LinkedHashMap<>();
         headers8.put( "Content-Transfer-Encoding", "7bit" );
-        headers8.put( "Content-Type", "text/plain; charset=us-ascii" );
+        headers8.put( "Content-TypeType", "text/plain; charset=us-ascii" );
         headers8.put( "Date", new Date() );
         headers8.put( "From", "eric.bass@enron.com" );
         headers8.put( "Message-ID", "<2106897.1075854772243.JavaMail.evans@thyme>" );
@@ -499,7 +499,7 @@ public class JsonSerializeTest {
         message9.put( "filename", "1049." );
         Map<String, Object> headers9 = new LinkedHashMap<>();
         headers9.put( "Content-Transfer-Encoding", "7bit" );
-        headers9.put( "Content-Type", "text/plain; charset=us-ascii" );
+        headers9.put( "Content-TypeType", "text/plain; charset=us-ascii" );
         headers9.put( "Date", new Date() );
         headers9.put( "From", "eric.bass@enron.com" );
         headers9.put( "Message-ID", "<8467495.1075854772328.JavaMail.evans@thyme>" );
@@ -526,7 +526,7 @@ public class JsonSerializeTest {
         message10.put( "filename", "1058." );
         Map<String, Object> headers10 = new LinkedHashMap<>();
         headers10.put( "Content-Transfer-Encoding", "7bit" );
-        headers10.put( "Content-Type", "text/plain; charset=us-ascii" );
+        headers10.put( "Content-TypeType", "text/plain; charset=us-ascii" );
         headers10.put( "Date", new Date() );
         headers10.put( "From", "eric.bass@enron.com" );
         headers10.put( "Message-ID", "<26946157.1075854772551.JavaMail.evans@thyme>" );

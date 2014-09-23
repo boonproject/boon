@@ -34,7 +34,7 @@ import java.util.List;
  * Holds stuff
  * It is like a listStream but not guaranteed to be ordered.
  *
- * @param <ITEM> Type of Stuff you want to hold.
+ * @param <ITEM> TypeType of Stuff you want to hold.
  * @author Rick Hightower
  */
 public interface Bag<ITEM> {

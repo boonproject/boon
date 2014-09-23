@@ -30,7 +30,7 @@ package com.examples.model.test.movies.wathcer;
 
 
 /*
- * Type of device the user is using.
+ * TypeType of device the user is using.
  * @author Rick Hightower
  */
 public enum ScreenDevice {

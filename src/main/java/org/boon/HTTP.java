@@ -404,7 +404,7 @@ public class HTTP {
 
         connection.setDoOutput( true );
 
-        connection.addRequestProperty( "Content-Type", "application/x-www-form-urlencoded" );
+        connection.addRequestProperty( "Content-TypeType", "application/x-www-form-urlencoded" );
 
         ByteBuf buf = ByteBuf.create( 244 );
 
@@ -458,7 +458,7 @@ public class HTTP {
             connection.setRequestProperty( "Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset );
         }
         if ( contentType != null && !contentType.isEmpty() ) {
-            connection.setRequestProperty( "Content-Type", contentType );
+            connection.setRequestProperty( "Content-TypeType", contentType );
         }
 
     }
@@ -482,7 +482,7 @@ public class HTTP {
         /* Handle input. */
         HttpURLConnection http = ( HttpURLConnection ) connection;
         int status = http.getResponseCode();
-        String charset = getCharset( connection.getHeaderField( "Content-Type" ) );
+        String charset = getCharset( connection.getHeaderField( "Content-TypeType" ) );
 
         if ( status == 200 ) {
             return readResponseBody( http, charset );
@@ -498,7 +498,7 @@ public class HTTP {
         HttpURLConnection http = ( HttpURLConnection ) connection;
         int status = http.getResponseCode();
 
-        String charset = getCharset( connection.getHeaderField( "Content-Type" ) );
+        String charset = getCharset( connection.getHeaderField( "Content-TypeType" ) );
 
         String body;
 
@@ -517,13 +517,13 @@ public class HTTP {
         HttpURLConnection http = ( HttpURLConnection ) connection;
         int status = http.getResponseCode();
 
-        //System.out.println("CONTENT-TYPE" + connection.getHeaderField("Content-Type"));
+        //System.out.println("CONTENT-TYPE" + connection.getHeaderField("Content-TypeType"));
 
 
         if ( status == 200 ) {
             return readResponseBodyAsBytes( http );
         } else {
-            String charset = getCharset( connection.getHeaderField( "Content-Type" ) );
+            String charset = getCharset( connection.getHeaderField( "Content-TypeType" ) );
 
             readErrorResponseBody( http, status, charset );
             return null;
@@ -590,7 +590,7 @@ public class HTTP {
     private static void manageContentTypeHeaders( String contentType, String charset, URLConnection connection ) {
         connection.setRequestProperty( "Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset );
         if ( contentType != null && !contentType.isEmpty() ) {
-            connection.setRequestProperty( "Content-Type", contentType );
+            connection.setRequestProperty( "Content-TypeType", contentType );
         }
     }
 

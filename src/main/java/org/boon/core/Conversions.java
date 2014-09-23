@@ -375,7 +375,7 @@ public class Conversions {
             }
         }
 
-        return coerce(Type.getType(clz), clz, value);
+        return coerce(TypeType.getType(clz), clz, value);
     }
 
     public static <T> T createFromArg(Class<T> clz, Object value) {
@@ -414,9 +414,9 @@ public class Conversions {
         return null;
     }
 
-    public static <T> T coerce(Type coerceTo, Class<T> clz, Object value) {
+    public static <T> T coerce(TypeType coerceTo, Class<T> clz, Object value) {
         if (value == null) {
-            if (coerceTo != Type.INSTANCE && !clz.isPrimitive()) {
+            if (coerceTo != TypeType.INSTANCE && !clz.isPrimitive()) {
 
                 return null;
             } else if (clz.isPrimitive()) {
@@ -567,10 +567,10 @@ public class Conversions {
 
     public static <T> T coerceWithFlag(Class<T> clz, boolean [] flag, Object value) {
 
-        return coerceWithFlag(Type.getType(clz), clz, flag, value);
+        return coerceWithFlag(TypeType.getType(clz), clz, flag, value);
     }
 
-    public static <T> T coerceWithFlag(Type coerceTo, Class<T> clz, boolean [] flag, Object value) {
+    public static <T> T coerceWithFlag(TypeType coerceTo, Class<T> clz, boolean [] flag, Object value) {
 
         flag[0] = true;
         if (value == null) {

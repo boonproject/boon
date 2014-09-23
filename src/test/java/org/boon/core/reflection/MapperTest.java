@@ -30,7 +30,7 @@ package org.boon.core.reflection;
 
 import org.boon.Lists;
 import org.boon.Maps;
-import org.boon.core.Type;
+import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.value.*;
 import org.junit.Test;
@@ -278,9 +278,9 @@ public class MapperTest {
     private MapItemValue stringArrayTuple(String key, String... values) {
         List<CharSequenceValue>list = new ArrayList<>();
         for (String value : values) {
-            list.add(new CharSequenceValue(false, Type.STRING, 0, value.length(), value.toCharArray(), false, false));
+            list.add(new CharSequenceValue(false, TypeType.STRING, 0, value.length(), value.toCharArray(), false, false));
         }
-        return new MapItemValue(new CharSequenceValue(false, Type.STRING, 0, key.length(), key.toCharArray(), false, false ), new ValueContainer(list, Type.LIST, false));
+        return new MapItemValue(new CharSequenceValue(false, TypeType.STRING, 0, key.length(), key.toCharArray(), false, false ), new ValueContainer(list, TypeType.LIST, false));
     }
 
     private MapItemValue stringTuple(String props, String value) {
@@ -288,9 +288,9 @@ public class MapperTest {
         if(null==value) {
             v= ValueContainer.NULL;
         }else {
-            v = new CharSequenceValue(false, Type.STRING, 0, value.length(), value.toCharArray(), false, false);
+            v = new CharSequenceValue(false, TypeType.STRING, 0, value.length(), value.toCharArray(), false, false);
         }
-        return new MapItemValue(new CharSequenceValue(false, Type.STRING, 0, props.length(), props.toCharArray(), false, false ), v);
+        return new MapItemValue(new CharSequenceValue(false, TypeType.STRING, 0, props.length(), props.toCharArray(), false, false ), v);
     }
 
 

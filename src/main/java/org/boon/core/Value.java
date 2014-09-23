@@ -78,5 +78,5 @@ public interface Value {
     char charValue ();
 
 
-    Type type ();
+    TypeType type ();
 }
