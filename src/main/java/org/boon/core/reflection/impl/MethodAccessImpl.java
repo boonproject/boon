@@ -62,11 +62,11 @@ public class MethodAccessImpl implements MethodAccess {
     final List<org.boon.core.Type> paramTypeEnumList = new ArrayList<>();
 
 
-
     final MethodHandles.Lookup lookup = MethodHandles.lookup();
     final MethodHandle methodHandle;
 
     Object instance;
+    private int score;
 
     public MethodAccessImpl() {
         method=null;
@@ -106,6 +106,80 @@ public class MethodAccessImpl implements MethodAccess {
             annotationMap.put( data.getSimpleClassName(), data );
             annotationMap.put( data.getFullClassName(), data );
         }
+
+        score(method);
+
+    }
+
+    private void score(Method method) {
+        final Class<?>[] parameterTypes = method.getParameterTypes();
+        int index=0;
+
+        for (Class<?> paramType : parameterTypes) {
+
+
+            if (paramType.isPrimitive()) {
+                score+=100;
+                continue;
+            }
+            final org.boon.core.Type type = this.paramTypeEnumList.get(index);
+
+            switch (type) {
+
+                case LONG_WRAPPER:
+                    score+=85;
+                    break;
+
+                case INTEGER_WRAPPER:
+                    score+=75;
+                    break;
+
+                case SHORT_WRAPPER:
+                case BYTE_WRAPPER:
+                    score+=65;
+                    break;
+
+                case BOOLEAN_WRAPPER:
+                    score+=60;
+                    break;
+
+
+                case FLOAT_WRAPPER:
+                    score+=55;
+                    break;
+
+                case DOUBLE_WRAPPER:
+                    score+=50;
+                    break;
+
+                case BIG_INT:
+                    score+=45;
+                    break;
+
+
+                case BIG_DECIMAL:
+                    score+=40;
+                    break;
+
+                case STRING:
+                    score+=30;
+                    break;
+
+
+                case INSTANCE:
+                    score+=25;
+                    break;
+
+
+            }
+
+            index++;
+        }
+
+        if (method.isVarArgs()) {
+            score += -10_000;
+        }
+
 
     }
 
@@ -269,6 +343,11 @@ public class MethodAccessImpl implements MethodAccess {
     @Override
     public Method method() {
         return this.method;
+    }
+
+    @Override
+    public int score() {
+        return score;
     }
 
 
@@ -461,5 +540,22 @@ public class MethodAccessImpl implements MethodAccess {
         result = 31 * result + (annotationMap != null ? annotationMap.hashCode() : 0);
         result = 31 * result + (instance != null ? instance.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(MethodAccess o2) {
+
+        if (this.score() > o2.score()) {
+            return -1;
+        } else if (this.score() < o2.score()){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
+    public List<org.boon.core.Type> paramTypeEnumList() {
+        return paramTypeEnumList;
     }
 }

@@ -507,6 +507,17 @@ public class ClassMeta <T> implements Annotated{
         return this.cls.getSimpleName();
     }
 
+
+    public Class<T> cls() {
+        return this.cls;
+    }
+
+
+    public String longName() {
+        return this.cls.getName();
+    }
+
+
     public ConstantCallSite invokeReducerLongIntReturnLongMethodHandle(Object object) {
         MethodAccess methodAccess;
         if (methods.size()==1) {

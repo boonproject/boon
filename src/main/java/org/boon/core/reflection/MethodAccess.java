@@ -28,14 +28,18 @@
 
 package org.boon.core.reflection;
 
+import org.boon.core.Type;
+
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by Richard on 2/17/14.
  */
-public interface MethodAccess extends BaseAccess{
+public interface MethodAccess extends BaseAccess, Comparable<MethodAccess>{
 
     public Object invokeDynamic(Object object, Object... args);
     public Object invoke(Object object, Object... args);
@@ -44,6 +48,7 @@ public interface MethodAccess extends BaseAccess{
     boolean isPrivate();
 
     String name();
+
     Class<?> declaringType() ;
 
 
@@ -67,4 +72,9 @@ public interface MethodAccess extends BaseAccess{
     <T> ConstantCallSite invokeReducerLongIntReturnLongMethodHandle(T object);
 
     Method method();
+
+    int score();
+
+
+    List<Type> paramTypeEnumList();
 }
