@@ -87,13 +87,11 @@ public class JsonSerializerFactory {
 
             instanceSerializer = new InstanceSerializerImpl ();
 
-            if ( !outputType && customObjectSerializers == null )  {
-                objectSerializer = new BasicObjectSerializerImpl(includeNulls);
-            } else if (customObjectSerializers != null ) {
+            if (customObjectSerializers != null ) {
 
                 objectSerializer = new CustomObjectSerializerImpl(outputType, customObjectSerializers, includeNulls);
             } else {
-                objectSerializer = new ObjectSerializationWithTypeInfo(includeNulls);
+                objectSerializer = new BasicObjectSerializerImpl(includeNulls, outputType);
             }
 
 

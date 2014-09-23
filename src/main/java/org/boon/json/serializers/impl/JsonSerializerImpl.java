@@ -62,7 +62,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
     public JsonSerializerImpl ()  {
 
         instanceSerializer = new InstanceSerializerImpl ();
-        objectSerializer = new BasicObjectSerializerImpl (false);
+        objectSerializer = new BasicObjectSerializerImpl (false, true);
         stringSerializer = new StringSerializerImpl (true, false);
         mapSerializer = new MapSerializerImpl (false);
         fieldSerializer = new FieldSerializerImpl ();
@@ -131,7 +131,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         }
 
         if (objectSerializer == null) {
-            this.objectSerializer = new BasicObjectSerializerImpl (false);
+            this.objectSerializer = new BasicObjectSerializerImpl (false, true);
         } else {
             this.objectSerializer = objectSerializer;
         }

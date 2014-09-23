@@ -53,20 +53,27 @@ public class SerializeUtils {
             }
         }
 
-        if (obj instanceof Map) {
-            jsonSerializer.serializeMap((Map) obj, builder);
-            return;
-        } else if (obj instanceof Collection) {
-            jsonSerializer.serializeCollection((Collection)obj, builder);
-            return;
-        }
 
-        if (type == TypeType.INSTANCE) {
-            jsonSerializer.serializeInstance(obj, builder, typeInfo);
-        } else {
-            jsonSerializer.serializeSubtypeInstance(obj, builder);
+        switch (type) {
+            case MAP:
+                jsonSerializer.serializeMap((Map) obj, builder);
+                return;
+            case COLLECTION:
+            case LIST:
+            case SET:
+                jsonSerializer.serializeCollection((Collection)obj, builder);
+                return;
+            case INSTANCE:
+                jsonSerializer.serializeInstance(obj, builder, typeInfo);
+                return;
+            case INTERFACE:
+            case ABSTRACT:
+                jsonSerializer.serializeSubtypeInstance(obj, builder);
+                return;
+
+            default:
+                jsonSerializer.serializeUnknown(obj, builder);
         }
-        return;
     }
 
 }

@@ -46,9 +46,11 @@ import java.util.TimeZone;
  */
 public class BasicObjectSerializerImpl implements ObjectSerializer {
     private final boolean includeNulls;
+    private final boolean includeTypeInfo;
 
-    public BasicObjectSerializerImpl(boolean includeNulls) {
+    public BasicObjectSerializerImpl(boolean includeNulls, boolean includeTypeInfo) {
         this.includeNulls = includeNulls;
+        this.includeTypeInfo = includeTypeInfo;
 
     }
 
@@ -161,21 +163,14 @@ public class BasicObjectSerializerImpl implements ObjectSerializer {
                 jsonSerializer.serializeArray ( obj, builder );
                 return;
             case INSTANCE:
-                jsonSerializer.serializeInstance ( obj, builder );
+                jsonSerializer.serializeInstance ( obj, builder, includeTypeInfo );
                 return;
             case CURRENCY:
                 builder.addCurrency(( Currency ) obj );
                 return;
             default:
-                if (obj instanceof Map) {
+                jsonSerializer.serializeUnknown(obj, builder);
 
-                    jsonSerializer.serializeMap ( ( Map ) obj, builder );
-                } else if (obj instanceof Collection) {
-                    jsonSerializer.serializeCollection((Collection) obj, builder);
-
-                } else {
-                    jsonSerializer.serializeUnknown(obj, builder);
-                }
 
         }
 

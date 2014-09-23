@@ -147,15 +147,8 @@ public class CustomObjectSerializerImpl implements ObjectSerializer {
                 builder.addCurrency((Currency) obj );
                 return;
             default:
-                if (obj instanceof Map) {
+                jsonSerializer.serializeUnknown(obj, builder);
 
-                    jsonSerializer.serializeMap ( ( Map ) obj, builder );
-                } else if (obj instanceof Collection) {
-                    jsonSerializer.serializeCollection((Collection) obj, builder);
-
-                } else {
-                    jsonSerializer.serializeUnknown(obj, builder);
-                }
 
         }
 

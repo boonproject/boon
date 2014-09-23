@@ -365,7 +365,7 @@ public class HTTPTest {
     }
 
 
-    @Test
+    //@Test
     public void damnYouChris() {
         final String s = HTTP.get("https://login.yahoo.com");
         puts(s);

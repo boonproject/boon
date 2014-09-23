@@ -68,14 +68,6 @@ public class InstanceSerializerImpl implements InstanceSerializer{
     public void serializeSubtypeInstance( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
 
 
-        if (instance instanceof Map) {
-            serializer.serializeMap(((Map) instance), builder);
-            return;
-        } else if (instance instanceof Collection) {
-            serializer.serializeCollection((Collection)instance, builder);
-            return;
-        }
-
         builder.addString( "{\"class\":" );
         builder.addQuoted ( instance.getClass ().getName () );
         final Map<String, FieldAccess> fieldAccessors = serializer.getFields ( instance.getClass () );
@@ -117,7 +109,7 @@ public class InstanceSerializerImpl implements InstanceSerializer{
         if (includeTypeInfo) {
             builder.addString("{\"class\":");
             builder.addQuoted(instance.getClass().getName());
-
+            builder.addChar ( ',' );
         } else {
 
             builder.addChar('{');
