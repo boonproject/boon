@@ -262,7 +262,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             Class<?> classType = field.type();
 
             for (Object v : values) {
-                v =  Conversions.coerce(classType, this.value);
+                v =  Conversions.coerce(classType, v);
                 set.add(v);
             }
 
