@@ -100,8 +100,9 @@ public class Sys {
                 }
 
                 String build = split[ 1 ];
-                if (build.endsWith("-ea"))
-                  build = build.substring(0, build.length() - 3);
+                if (build.endsWith("-ea")) {
+                    build = build.substring(0, build.length() - 3);
+                }
                 b = Integer.parseInt ( build );
             } catch ( Exception ex ) {
                 ex.printStackTrace ();
@@ -111,8 +112,20 @@ public class Sys {
             b = -1;
             v = new BigDecimal("1.8");
         } else {
-            v = new BigDecimal ( sversion );
-            b = -1;
+
+            try {
+                v = new BigDecimal(sversion);
+                b = -1;
+            }catch (Exception ex) {
+
+                if (sversion.startsWith ( "1.7" )) {
+                    v = new BigDecimal ("1.7" );
+                } else if (sversion.startsWith ( "1.8" )) {
+                    v = new BigDecimal ("1.8" );
+                } else {
+                    v = new BigDecimal ("-1.0" );
+                }
+            }
         }
 
         buildNumber = b;

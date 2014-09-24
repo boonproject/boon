@@ -6,6 +6,9 @@ import org.boon.core.Dates;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
 import static org.boon.Boon.equalsOrDie;
 
 /**
@@ -88,6 +91,8 @@ public class ExpressionContextTest {
     @Test
     public void sessionIdWithFormat() {
 
+        Locale.setDefault(Locale.US);
+
         equalsOrDie("2.44", context.lookup("${session.sessionId%2.2f}"));
     }
 
@@ -95,6 +100,9 @@ public class ExpressionContextTest {
     @Test
     public void dukesBirthDay() {
 
+
+        Locale.setDefault(Locale.US);
+        TimeZone.setDefault(TimeZone.getTimeZone("PST"));
         equalsOrDie("05 29, 1970", context.lookup("${session.dukesBirthday%1$tm %1$te, %1$tY}"));
     }
 
