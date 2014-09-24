@@ -39,7 +39,8 @@ import java.util.concurrent.ConcurrentMap;
 
 import static org.boon.Exceptions.die;
 
-/** I got a lot of ideas from concurrent java books. and looking at open source implementations of this
+/**
+ * I got a lot of ideas from concurrent java books. and looking at open source implementations of this
  * This is written from scratch. It was heavily influenced by IntelliJ's ConcurrentWeakHashMap open source
  * project. Theirs is better. Mine is good enough for boon's needs.
  *
@@ -63,8 +64,7 @@ public class ConcurrentWeakHashMap<K, V> extends AbstractMap<K, V> implements Co
 
     public ConcurrentWeakHashMap(int initialCapacity,
                                  float loadFactor,
-                                 int concurrencyLevel
-    ) {
+                                 int concurrencyLevel ) {
 
         map = new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
     }
