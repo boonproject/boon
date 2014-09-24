@@ -36,16 +36,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Concurrent HashSet.
+ *
  * @param <T>
  */
 public class ConcurrentHashSet<T> implements Set<T> {
 
+    private static final Object NOTHING = new Object();
     private final Map<T, Object> map;
 
-    private static final Object NOTHING = new Object();
-
-    public ConcurrentHashSet( int size ) {
-        map = new ConcurrentHashMap<>( size );
+    public ConcurrentHashSet(int size) {
+        map = new ConcurrentHashMap<>(size);
     }
 
     public ConcurrentHashSet() {
@@ -54,25 +54,25 @@ public class ConcurrentHashSet<T> implements Set<T> {
 
 
     @Override
-    public boolean add( T e ) {
-        return map.put( e, NOTHING ) == null;
+    public boolean add(T e) {
+        return map.put(e, NOTHING) == null;
     }
 
     @Override
-    public boolean remove( Object o ) {
-        return map.remove( o ) == null;
+    public boolean remove(Object o) {
+        return map.remove(o) == null;
     }
 
     @Override
-    public boolean containsAll( Collection<?> collection ) {
-        return map.keySet().containsAll( collection );
+    public boolean containsAll(Collection<?> collection) {
+        return map.keySet().containsAll(collection);
     }
 
     @Override
-    public boolean addAll( Collection<? extends T> collection ) {
+    public boolean addAll(Collection<? extends T> collection) {
         boolean added = false;
-        for ( T e : collection ) {
-            if ( map.put( e, NOTHING ) == null ) {
+        for (T e : collection) {
+            if (map.put(e, NOTHING) == null) {
                 added = true;
             }
         }
@@ -80,12 +80,12 @@ public class ConcurrentHashSet<T> implements Set<T> {
     }
 
     @Override
-    public boolean retainAll( Collection<?> c ) {
+    public boolean retainAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean removeAll( Collection<?> c ) {
+    public boolean removeAll(Collection<?> c) {
         throw new UnsupportedOperationException();
     }
 
@@ -106,8 +106,8 @@ public class ConcurrentHashSet<T> implements Set<T> {
     }
 
     @Override
-    public boolean contains( Object o ) {
-        return map.containsKey( o );
+    public boolean contains(Object o) {
+        return map.containsKey(o);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class ConcurrentHashSet<T> implements Set<T> {
     }
 
     @Override
-    public <T> T[] toArray( T[] a ) {
-        return map.keySet().toArray( a );
+    public <T> T[] toArray(T[] a) {
+        return map.keySet().toArray(a);
     }
 }

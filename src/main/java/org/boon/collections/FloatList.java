@@ -33,30 +33,68 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Flt;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.boon.primitive.Flt.grow;
+
 /**
  * Holds primitive values in a list like object for ints.
- *
+ * <p/>
  * <p>
- *     Has sum, mean, median, standardDeviation, reduceBy,
- *     variance.
+ * Has sum, mean, median, standardDeviation, reduceBy,
+ * variance.
  * </p>
+ *
  * @author Rick Hightower
  */
 public class FloatList extends AbstractList<Float> {
 
 
+    /**
+     * Values in this list.
+     */
+    private float[] values;
+    /**
+     * Index of last value added.
+     */
+    private int end;
 
-    /** Creates a primitive list based on an input list and a property path
+    /**
+     * Create a new list with this many items in it.
+     */
+    public FloatList(int capacity) {
+        this.values = new float[capacity];
+    }
+
+
+    /**
+     * Create a new list with exactly 10 items in it.
+     */
+    public FloatList() {
+        this.values = new float[10];
+    }
+
+
+    /**
+     * Create a new list with this many items in it.
+     */
+    public FloatList(float values[]) {
+        this.values = values;
+        this.end = values.length;
+    }
+
+    /**
+     * Creates a primitive list based on an input list and a property path
      *
-     * @param inputList input list
+     * @param inputList    input list
      * @param propertyPath property path
      * @return primitive list
      */
-    public static FloatList toFloatList( Collection<?> inputList, String propertyPath ) {
-        if (inputList.size() == 0 ) {
+    public static FloatList toFloatList(Collection<?> inputList, String propertyPath) {
+        if (inputList.size() == 0) {
             return new FloatList(0);
         }
 
@@ -72,45 +110,19 @@ public class FloatList extends AbstractList<Float> {
 
         } else {
 
-            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject(inputList.iterator().next());
             FieldAccess fieldAccess = fields.get(propertyPath);
             for (Object o : inputList) {
-                outputList.add( fieldAccess.getFloat(o) );
+                outputList.add(fieldAccess.getFloat(o));
             }
         }
 
         return outputList;
     }
 
-
     /**
-     * Values in this list.
-     */
-    private float [] values;
-
-    /** Index of last value added. */
-    private int end;
-
-
-    /** Create a new list with this many items in it. */
-    public FloatList(int capacity) {
-        this.values = new float[capacity];
-    }
-
-
-    /** Create a new list with exactly 10 items in it. */
-    public FloatList() {
-        this.values = new float[10];
-    }
-
-    /** Create a new list with this many items in it. */
-    public FloatList(float values[]) {
-        this.values = values;
-        this.end = values.length;
-    }
-
-
-    /** Get the value at index
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -120,7 +132,9 @@ public class FloatList extends AbstractList<Float> {
     }
 
 
-    /** Get the value at index
+    /**
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -129,7 +143,9 @@ public class FloatList extends AbstractList<Float> {
     }
 
 
-    /** Get the value at index
+    /**
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -138,7 +154,9 @@ public class FloatList extends AbstractList<Float> {
     }
 
 
-    /** Get the value at index but don't use a wrapper
+    /**
+     * Get the value at index but don't use a wrapper
+     *
      * @param index index
      * @return value
      */
@@ -148,6 +166,7 @@ public class FloatList extends AbstractList<Float> {
 
     /**
      * Add a new value to the list.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -156,13 +175,14 @@ public class FloatList extends AbstractList<Float> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return true;
     }
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param value new value
      * @return was able to add.
      */
@@ -170,13 +190,14 @@ public class FloatList extends AbstractList<Float> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = value;
+        values[end] = value;
         end++;
         return true;
     }
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -184,13 +205,14 @@ public class FloatList extends AbstractList<Float> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return this;
     }
 
     /**
      * Add a new array to the list.
+     *
      * @return was able to add.
      */
     public boolean addArray(float... integers) {
@@ -199,65 +221,69 @@ public class FloatList extends AbstractList<Float> {
         }
 
         System.arraycopy(integers, 0, values, end, integers.length);
-        end+=integers.length;
+        end += integers.length;
         return true;
     }
 
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     @Override
     public Float set(int index, Float element) {
         float oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public float idx(int index, float element) {
         float oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
-
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public float atIndex(int index, float element) {
         float oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
     /**
      * Set in a new value no wrapper
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public float setFloat(int index, float element) {
         float oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
     /**
      * Return the current size.
+     *
      * @return
      */
     @Override
@@ -266,8 +292,9 @@ public class FloatList extends AbstractList<Float> {
     }
 
 
-
-    /** Sums the values with bounds checking. */
+    /**
+     * Sums the values with bounds checking.
+     */
     public float sum() {
 
         return Flt.sum(values, end);
@@ -276,9 +303,10 @@ public class FloatList extends AbstractList<Float> {
 
     /**
      * Get a copy of the array up to the end element.
+     *
      * @return
      */
-    public float [] toValueArray() {
+    public float[] toValueArray() {
 
         return java.util.Arrays.copyOfRange(values, 0, end);
     }
@@ -286,92 +314,100 @@ public class FloatList extends AbstractList<Float> {
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  double reduceBy( Object function ) {
+    public double reduceBy(Object function) {
         return Flt.reduceBy(values, end, function);
     }
 
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  double reduceBy( Object function, String name ) {
+    public double reduceBy(Object function, String name) {
         return Flt.reduceBy(values, end, function, name);
     }
-
 
 
     /**
      * @param reduceBy reduceBy function
      * @return the reduction
      */
-    public  double reduceBy( Flt.ReduceBy reduceBy ) {
+    public double reduceBy(Flt.ReduceBy reduceBy) {
         return Flt.reduceBy(values, end, reduceBy);
     }
 
     /**
      * Mean
+     *
      * @return mean
      */
-    public  float mean(  ) {
+    public float mean() {
         return Flt.mean(values, end);
     }
 
 
     /**
      * standardDeviation
+     *
      * @return standardDeviation
      */
-    public  float standardDeviation(  ) {
+    public float standardDeviation() {
         return Flt.standardDeviation(values, end);
     }
 
 
     /**
      * variance
+     *
      * @return variance
      */
-    public  float variance(  ) {
+    public float variance() {
         return Flt.variance(values, end);
     }
 
 
     /**
      * max
+     *
      * @return max
      */
-    public  float max(  ) {
+    public float max() {
         return Flt.max(values, end);
     }
 
 
     /**
      * min
+     *
      * @return min
      */
-    public  float min(  ) {
+    public float min() {
         return Flt.min(values, end);
     }
 
 
     /**
      * median
+     *
      * @return median
      */
-    public  float median(  ) {
+    public float median() {
         return Flt.median(values, end);
     }
 
 
     /**
      * sort
+     *
      * @return sort
      */
-    public  void sort(  ) {
+    public void sort() {
         Arrays.sort(values, 0, end);
     }
 

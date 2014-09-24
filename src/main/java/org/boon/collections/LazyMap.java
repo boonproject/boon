@@ -28,10 +28,10 @@
 
 package org.boon.collections;
 
+import org.boon.Maps;
 import org.boon.Sets;
 import org.boon.core.Sys;
 import org.boon.primitive.Arry;
-import org.boon.Maps;
 
 import java.util.*;
 
@@ -42,6 +42,7 @@ import java.util.*;
 public class LazyMap extends AbstractMap<String, Object> {
 
 
+    final static boolean althashingThreshold = System.getProperty("jdk.map.althashing.threshold") != null;
     private final boolean delayMap;
     /* Holds the actual map that will be lazily created. */
     private Map<String, Object> map;
@@ -52,31 +53,29 @@ public class LazyMap extends AbstractMap<String, Object> {
     /* The values stored in the map. */
     private Object[] values;
 
-
-
     public LazyMap() {
-        keys = new String[ 5 ];
-        values = new Object[ 5 ];
-        this.delayMap=false;
-    }
-
-    public LazyMap( int initialSize ) {
-        keys = new String[ initialSize ];
-        values = new Object[ initialSize ];
-        this.delayMap=false;
-
+        keys = new String[5];
+        values = new Object[5];
+        this.delayMap = false;
     }
 
 
-    public LazyMap( int initialSize, boolean delayMap ) {
-        keys = new String[ initialSize ];
-        values = new Object[ initialSize ];
+    public LazyMap(int initialSize) {
+        keys = new String[initialSize];
+        values = new Object[initialSize];
+        this.delayMap = false;
+
+    }
+
+
+    public LazyMap(int initialSize, boolean delayMap) {
+        keys = new String[initialSize];
+        values = new Object[initialSize];
         this.delayMap = delayMap;
 
     }
 
-
-    public LazyMap( final List<String> keys, final List values, boolean delayMap ) {
+    public LazyMap(final List<String> keys, final List values, boolean delayMap) {
 
         this.keys = Arry.array(String.class, keys);
         this.values = Arry.array(Object.class, values);
@@ -86,29 +85,30 @@ public class LazyMap extends AbstractMap<String, Object> {
         this.delayMap = delayMap;
 
     }
-    public Object put( String key, Object value ) {
-        if ( map == null ) {
-            keys[ size ] = key;
-            values[ size ] = value;
+
+    public Object put(String key, Object value) {
+        if (map == null) {
+            keys[size] = key;
+            values[size] = value;
             size++;
-            if ( size == keys.length ) {
+            if (size == keys.length) {
                 keys = Arry.grow(keys);
                 values = Arry.grow(values);
             }
             return null;
         } else {
-            return map.put( key, value );
+            return map.put(key, value);
         }
     }
 
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        if (map != null)  map.entrySet();
+        if (map != null) map.entrySet();
 
         if (delayMap) {
 
             return new FakeMapEntrySet(size, keys, values);
-        }else {
+        } else {
             buildIfNeeded();
             return map.entrySet();
         }
@@ -116,7 +116,7 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     @Override
     public int size() {
-        if ( map == null ) {
+        if (map == null) {
             return size;
         } else {
             return map.size();
@@ -125,7 +125,7 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     @Override
     public boolean isEmpty() {
-        if ( map == null ) {
+        if (map == null) {
             return size == 0;
         } else {
             return map.isEmpty();
@@ -133,41 +133,38 @@ public class LazyMap extends AbstractMap<String, Object> {
     }
 
     @Override
-    public boolean containsValue( Object value ) {
-        if ( map == null ) {
-            throw new RuntimeException( "wrong type of map" );
+    public boolean containsValue(Object value) {
+        if (map == null) {
+            throw new RuntimeException("wrong type of map");
         } else {
-            return map.containsValue( value );
+            return map.containsValue(value);
         }
     }
 
     @Override
-    public boolean containsKey( Object key ) {
+    public boolean containsKey(Object key) {
         buildIfNeeded();
-        return map.containsKey( key );
+        return map.containsKey(key);
     }
 
     @Override
-    public Object get( Object key ) {
+    public Object get(Object key) {
         buildIfNeeded();
-        return map.get( key );
+        return map.get(key);
     }
 
-
-    final static boolean althashingThreshold = System.getProperty("jdk.map.althashing.threshold") != null;
-
     private void buildIfNeeded() {
-        if ( map == null ) {
+        if (map == null) {
 
             /** added to avoid hash collision attack. */
             if (Sys.is1_7OrLater() && althashingThreshold) {
-                map = new LinkedHashMap<>( size, 0.01f );
+                map = new LinkedHashMap<>(size, 0.01f);
             } else {
                 map = new TreeMap<>();
             }
 
-            for ( int index = 0; index < size; index++ ) {
-                map.put( keys[ index ], values[ index ] );
+            for (int index = 0; index < size; index++) {
+                map.put(keys[index], values[index]);
             }
             this.keys = null;
             this.values = null;
@@ -175,22 +172,22 @@ public class LazyMap extends AbstractMap<String, Object> {
     }
 
     @Override
-    public Object remove( Object key ) {
+    public Object remove(Object key) {
 
         buildIfNeeded();
-        return map.remove( key );
+        return map.remove(key);
 
     }
 
     @Override
-    public void putAll( Map m ) {
+    public void putAll(Map m) {
         buildIfNeeded();
-        map.putAll( m );
+        map.putAll(m);
     }
 
     @Override
     public void clear() {
-        if ( map == null ) {
+        if (map == null) {
             size = 0;
         } else {
             map.clear();
@@ -201,7 +198,7 @@ public class LazyMap extends AbstractMap<String, Object> {
     public Set<String> keySet() {
 
 
-        if ( map == null ) {
+        if (map == null) {
             return Sets.set(size, keys);
         } else {
             return map.keySet();
@@ -211,8 +208,8 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     @Override
     public Collection<Object> values() {
-        if ( map == null ) {
-            return Arrays.asList( values );
+        if (map == null) {
+            return Arrays.asList(values);
         } else {
             return map.values();
         }
@@ -220,42 +217,42 @@ public class LazyMap extends AbstractMap<String, Object> {
     }
 
     @Override
-    public boolean equals( Object o ) {
-       buildIfNeeded ();
-       return map.equals( o );
+    public boolean equals(Object o) {
+        buildIfNeeded();
+        return map.equals(o);
     }
 
     @Override
     public int hashCode() {
-       buildIfNeeded ();
-       return map.hashCode();
+        buildIfNeeded();
+        return map.hashCode();
     }
 
     @Override
     public String toString() {
 
-       buildIfNeeded();
-       return map.toString();
+        buildIfNeeded();
+        return map.toString();
     }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
 
-        if ( map == null ) {
+        if (map == null) {
             return null;
         } else {
-            if (map instanceof LinkedHashMap)  {
-                return ((LinkedHashMap)map).clone();
+            if (map instanceof LinkedHashMap) {
+                return ((LinkedHashMap) map).clone();
             } else {
-                return Maps.copy (this);
+                return Maps.copy(this);
             }
         }
     }
 
     public LazyMap clearAndCopy() {
-        LazyMap map = new LazyMap (size);
-        for ( int index = 0; index < size; index++ ) {
-            map.put( keys[ index ], values[ index ] );
+        LazyMap map = new LazyMap(size);
+        for (int index = 0; index < size; index++) {
+            map.put(keys[index], values[index]);
         }
         size = 0;
         return map;

@@ -33,32 +33,69 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Lng;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.boon.primitive.Lng.grow;
 
 
 /**
  * Holds primitive values in a list like object for long.
- *
+ * <p/>
  * <p>
- *     Has sum, mean, median, standardDeviation, reduceBy,
- *     variance.
+ * Has sum, mean, median, standardDeviation, reduceBy,
+ * variance.
  * </p>
+ *
  * @author Rick Hightower
  */
 public class LongList extends AbstractList<Long> {
 
 
+    /**
+     * Values in this list.
+     */
+    private long[] values;
+    /**
+     * Index of last value added.
+     */
+    private int end;
 
-    /** Creates a primitive list based on an input list and a property path
+    /**
+     * Create a new list with this many items in it.
+     */
+    public LongList(int capacity) {
+        this.values = new long[capacity];
+    }
+
+
+    /**
+     * Create a new list with exactly 10 items in it.
+     */
+    public LongList() {
+        this.values = new long[10];
+    }
+
+
+    /**
+     * Create a new list with this many items in it.
+     */
+    public LongList(long values[]) {
+        this.values = values;
+        this.end = values.length;
+    }
+
+    /**
+     * Creates a primitive list based on an input list and a property path
      *
-     * @param inputList input list
+     * @param inputList    input list
      * @param propertyPath property path
      * @return primitive list
      */
-    public static LongList toLongList( Collection<?> inputList, String propertyPath ) {
-        if (inputList.size() == 0 ) {
+    public static LongList toLongList(Collection<?> inputList, String propertyPath) {
+        if (inputList.size() == 0) {
             return new LongList(0);
         }
 
@@ -74,45 +111,19 @@ public class LongList extends AbstractList<Long> {
 
         } else {
 
-            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject(inputList.iterator().next());
             FieldAccess fieldAccess = fields.get(propertyPath);
             for (Object o : inputList) {
-                outputList.add( fieldAccess.getLong(o) );
+                outputList.add(fieldAccess.getLong(o));
             }
         }
 
         return outputList;
     }
 
-
     /**
-     * Values in this list.
-     */
-    private long [] values;
-
-    /** Index of last value added. */
-    private int end;
-
-
-    /** Create a new list with this many items in it. */
-    public LongList(int capacity) {
-        this.values = new long[capacity];
-    }
-
-
-    /** Create a new list with exactly 10 items in it. */
-    public LongList() {
-        this.values = new long[10];
-    }
-
-    /** Create a new list with this many items in it. */
-    public LongList(long values[]) {
-        this.values = values;
-        this.end = values.length;
-    }
-
-
-    /** Get the value at index
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -122,7 +133,9 @@ public class LongList extends AbstractList<Long> {
     }
 
 
-    /** Get the value at index but don't use a wrapper
+    /**
+     * Get the value at index but don't use a wrapper
+     *
      * @param index index
      * @return value
      */
@@ -132,6 +145,7 @@ public class LongList extends AbstractList<Long> {
 
     /**
      * Add a new value to the list.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -140,13 +154,14 @@ public class LongList extends AbstractList<Long> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return true;
     }
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -154,7 +169,7 @@ public class LongList extends AbstractList<Long> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return true;
     }
@@ -162,6 +177,7 @@ public class LongList extends AbstractList<Long> {
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -169,7 +185,7 @@ public class LongList extends AbstractList<Long> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return this;
     }
@@ -177,6 +193,7 @@ public class LongList extends AbstractList<Long> {
 
     /**
      * Add a new array to the list.
+     *
      * @return was able to add.
      */
     public boolean addArray(long... integers) {
@@ -185,38 +202,41 @@ public class LongList extends AbstractList<Long> {
         }
 
         System.arraycopy(integers, 0, values, end, integers.length);
-        end+=integers.length;
+        end += integers.length;
         return true;
     }
 
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     @Override
     public Long set(int index, Long element) {
         long oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
     /**
      * Set in a new value no wrapper
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public long setLong(int index, int element) {
         long oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
     /**
      * Return the current size.
+     *
      * @return
      */
     @Override
@@ -225,8 +245,9 @@ public class LongList extends AbstractList<Long> {
     }
 
 
-
-    /** Sums the values with bounds checking. */
+    /**
+     * Sums the values with bounds checking.
+     */
     public long sum() {
 
         return Lng.sum(values, end);
@@ -235,9 +256,10 @@ public class LongList extends AbstractList<Long> {
 
     /**
      * Get a copy of the array up to the end element.
+     *
      * @return
      */
-    public long [] toValueArray() {
+    public long[] toValueArray() {
 
         return java.util.Arrays.copyOfRange(values, 0, end);
     }
@@ -245,92 +267,100 @@ public class LongList extends AbstractList<Long> {
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  long reduceBy( Object function ) {
+    public long reduceBy(Object function) {
         return Lng.reduceBy(values, end, function);
     }
 
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  long reduceBy( Object function, String name ) {
+    public long reduceBy(Object function, String name) {
         return Lng.reduceBy(values, end, function, name);
     }
-
 
 
     /**
      * @param reduceBy reduceBy function
      * @return the reduction
      */
-    public  long reduceBy( Lng.ReduceBy reduceBy ) {
+    public long reduceBy(Lng.ReduceBy reduceBy) {
         return Lng.reduceBy(values, end, reduceBy);
     }
 
     /**
      * Mean
+     *
      * @return mean
      */
-    public  long mean(  ) {
+    public long mean() {
         return Lng.mean(values, end);
     }
 
 
     /**
      * standardDeviation
+     *
      * @return standardDeviation
      */
-    public  long standardDeviation(  ) {
+    public long standardDeviation() {
         return Lng.standardDeviation(values, end);
     }
 
 
     /**
      * variance
+     *
      * @return variance
      */
-    public  long variance(  ) {
+    public long variance() {
         return Lng.variance(values, end);
     }
 
 
     /**
      * max
+     *
      * @return max
      */
-    public  long max(  ) {
+    public long max() {
         return Lng.max(values, end);
     }
 
 
     /**
      * min
+     *
      * @return min
      */
-    public  long min(  ) {
+    public long min() {
         return Lng.min(values, end);
     }
 
 
     /**
      * median
+     *
      * @return median
      */
-    public  long median(  ) {
+    public long median() {
         return Lng.median(values, end);
     }
 
 
     /**
      * sort
+     *
      * @return sort
      */
-    public void sort(  ) {
+    public void sort() {
         Arrays.sort(values, 0, end);
     }
 
@@ -356,12 +386,10 @@ public class LongList extends AbstractList<Long> {
     }
 
 
-
     public void clear() {
         this.values = new long[10];
         this.end = 0;
     }
-
 
 
 }

@@ -20,7 +20,7 @@ public class FakeMapEntrySet extends AbstractSet<Map.Entry<String, Object>> {
         array = new Map.Entry[size];
 
         for (int index = 0; index < size; index++) {
-            array [index]= Maps.entry(keys[index], values[index]);
+            array[index] = Maps.entry(keys[index], values[index]);
         }
     }
 

@@ -33,31 +33,68 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Dbl;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.boon.primitive.Dbl.grow;
 
 /**
  * Holds primitive values in a list like object for ints.
- *
+ * <p/>
  * <p>
- *     Has sum, mean, median, standardDeviation, reduceBy,
- *     variance.
+ * Has sum, mean, median, standardDeviation, reduceBy,
+ * variance.
  * </p>
+ *
  * @author Rick Hightower
  */
 public class DoubleList extends AbstractList<Double> {
 
 
+    /**
+     * Values in this list.
+     */
+    private double[] values;
+    /**
+     * Index of last value added.
+     */
+    private int end;
 
-    /** Creates a primitive list based on an input list and a property path
+    /**
+     * Create a new list with this many items in it.
+     */
+    public DoubleList(int capacity) {
+        this.values = new double[capacity];
+    }
+
+
+    /**
+     * Create a new list with exactly 10 items in it.
+     */
+    public DoubleList() {
+        this.values = new double[10];
+    }
+
+
+    /**
+     * Create a new list with this many items in it.
+     */
+    public DoubleList(double values[]) {
+        this.values = values;
+        this.end = values.length;
+    }
+
+    /**
+     * Creates a primitive list based on an input list and a property path
      *
-     * @param inputList input list
+     * @param inputList    input list
      * @param propertyPath property path
      * @return primitive list
      */
-    public static DoubleList toDoubleList( Collection<?> inputList, String propertyPath ) {
-        if (inputList.size() == 0 ) {
+    public static DoubleList toDoubleList(Collection<?> inputList, String propertyPath) {
+        if (inputList.size() == 0) {
             return new DoubleList(0);
         }
 
@@ -73,45 +110,19 @@ public class DoubleList extends AbstractList<Double> {
 
         } else {
 
-            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject(inputList.iterator().next());
             FieldAccess fieldAccess = fields.get(propertyPath);
             for (Object o : inputList) {
-                outputList.add( fieldAccess.getDouble(o) );
+                outputList.add(fieldAccess.getDouble(o));
             }
         }
 
         return outputList;
     }
 
-
     /**
-     * Values in this list.
-     */
-    private double [] values;
-
-    /** Index of last value added. */
-    private int end;
-
-
-    /** Create a new list with this many items in it. */
-    public DoubleList(int capacity) {
-        this.values = new double[capacity];
-    }
-
-
-    /** Create a new list with exactly 10 items in it. */
-    public DoubleList() {
-        this.values = new double[10];
-    }
-
-    /** Create a new list with this many items in it. */
-    public DoubleList(double values[]) {
-        this.values = values;
-        this.end = values.length;
-    }
-
-
-    /** Get the value at index
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -121,7 +132,9 @@ public class DoubleList extends AbstractList<Double> {
     }
 
 
-    /** Get the value at index
+    /**
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -130,7 +143,9 @@ public class DoubleList extends AbstractList<Double> {
     }
 
 
-    /** Get the value at index
+    /**
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -139,7 +154,9 @@ public class DoubleList extends AbstractList<Double> {
     }
 
 
-    /** Get the value at index but don't use a wrapper
+    /**
+     * Get the value at index but don't use a wrapper
+     *
      * @param index index
      * @return value
      */
@@ -149,6 +166,7 @@ public class DoubleList extends AbstractList<Double> {
 
     /**
      * Add a new value to the list.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -157,13 +175,14 @@ public class DoubleList extends AbstractList<Double> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return true;
     }
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param value new value
      * @return was able to add.
      */
@@ -171,13 +190,14 @@ public class DoubleList extends AbstractList<Double> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = value;
+        values[end] = value;
         end++;
         return true;
     }
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -185,13 +205,14 @@ public class DoubleList extends AbstractList<Double> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return this;
     }
 
     /**
      * Add a new array to the list.
+     *
      * @return was able to add.
      */
     public boolean addArray(double... integers) {
@@ -200,65 +221,69 @@ public class DoubleList extends AbstractList<Double> {
         }
 
         System.arraycopy(integers, 0, values, end, integers.length);
-        end+=integers.length;
+        end += integers.length;
         return true;
     }
 
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     @Override
     public Double set(int index, Double element) {
         double oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public double idx(int index, double element) {
         double oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
-
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public double atIndex(int index, double element) {
         double oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
     /**
      * Set in a new value no wrapper
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public double setFloat(int index, double element) {
         double oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
     /**
      * Return the current size.
+     *
      * @return
      */
     @Override
@@ -267,8 +292,9 @@ public class DoubleList extends AbstractList<Double> {
     }
 
 
-
-    /** Sums the values with bounds checking. */
+    /**
+     * Sums the values with bounds checking.
+     */
     public double sum() {
 
         return Dbl.sum(values, end);
@@ -277,9 +303,10 @@ public class DoubleList extends AbstractList<Double> {
 
     /**
      * Get a copy of the array up to the end element.
+     *
      * @return
      */
-    public double [] toValueArray() {
+    public double[] toValueArray() {
 
         return java.util.Arrays.copyOfRange(values, 0, end);
     }
@@ -287,92 +314,100 @@ public class DoubleList extends AbstractList<Double> {
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  double reduceBy( Object function ) {
+    public double reduceBy(Object function) {
         return Dbl.reduceBy(values, end, function);
     }
 
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  double reduceBy( Object function, String name ) {
+    public double reduceBy(Object function, String name) {
         return Dbl.reduceBy(values, end, function, name);
     }
-
 
 
     /**
      * @param reduceBy reduceBy function
      * @return the reduction
      */
-    public  double reduceBy( Dbl.ReduceBy reduceBy ) {
+    public double reduceBy(Dbl.ReduceBy reduceBy) {
         return Dbl.reduceBy(values, end, reduceBy);
     }
 
     /**
      * Mean
+     *
      * @return mean
      */
-    public  double mean(  ) {
+    public double mean() {
         return Dbl.mean(values, end);
     }
 
 
     /**
      * standardDeviation
+     *
      * @return standardDeviation
      */
-    public  double standardDeviation(  ) {
+    public double standardDeviation() {
         return Dbl.standardDeviation(values, end);
     }
 
 
     /**
      * variance
+     *
      * @return variance
      */
-    public  double variance(  ) {
+    public double variance() {
         return Dbl.variance(values, end);
     }
 
 
     /**
      * max
+     *
      * @return max
      */
-    public  double max(  ) {
+    public double max() {
         return Dbl.max(values, end);
     }
 
 
     /**
      * min
+     *
      * @return min
      */
-    public  double min(  ) {
+    public double min() {
         return Dbl.min(values, end);
     }
 
 
     /**
      * median
+     *
      * @return median
      */
-    public  double median(  ) {
+    public double median() {
         return Dbl.median(values, end);
     }
 
 
     /**
      * sort
+     *
      * @return sort
      */
-    public  void sort(  ) {
+    public void sort() {
         Arrays.sort(values, 0, end);
     }
 

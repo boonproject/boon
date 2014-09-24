@@ -33,30 +33,68 @@ import org.boon.core.reflection.BeanUtils;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.primitive.Int;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.boon.primitive.Int.grow;
 
 /**
  * Holds primitive values in a list like object for ints.
- *
+ * <p/>
  * <p>
- *     Has sum, mean, median, standardDeviation, reduceBy,
- *     variance.
+ * Has sum, mean, median, standardDeviation, reduceBy,
+ * variance.
  * </p>
+ *
  * @author Rick Hightower
  */
 public class IntList extends AbstractList<Integer> {
 
 
-    /** Creates a primitive list based on an input list and a property path
+    /**
+     * Values in this list.
+     */
+    private int[] values;
+    /**
+     * Index of last value added.
+     */
+    private int end;
+
+    /**
+     * Create a new list with this many items in it.
+     */
+    public IntList(int capacity) {
+        this.values = new int[capacity];
+    }
+
+
+    /**
+     * Create a new list with exactly 10 items in it.
+     */
+    public IntList() {
+        this.values = new int[10];
+    }
+
+
+    /**
+     * Create a new list with this many items in it.
+     */
+    public IntList(int values[]) {
+        this.values = values;
+        this.end = values.length;
+    }
+
+    /**
+     * Creates a primitive list based on an input list and a property path
      *
-     * @param inputList input list
+     * @param inputList    input list
      * @param propertyPath property path
      * @return primitive list
      */
-    public static IntList toIntList( Collection<?> inputList, String propertyPath ) {
-        if (inputList.size() == 0 ) {
+    public static IntList toIntList(Collection<?> inputList, String propertyPath) {
+        if (inputList.size() == 0) {
             return new IntList(0);
         }
 
@@ -72,51 +110,24 @@ public class IntList extends AbstractList<Integer> {
 
         } else {
 
-            Map<String, FieldAccess> fields =  BeanUtils.getFieldsFromObject(inputList.iterator().next());
+            Map<String, FieldAccess> fields = BeanUtils.getFieldsFromObject(inputList.iterator().next());
             FieldAccess fieldAccess = fields.get(propertyPath);
             for (Object o : inputList) {
-                outputList.add( fieldAccess.getInt(o) );
+                outputList.add(fieldAccess.getInt(o));
             }
         }
 
         return outputList;
     }
 
-
-    /**
-     * Values in this list.
-     */
-    private int [] values;
-
-    /** Index of last value added. */
-    private int end;
-
-
-    /** Create a new list with this many items in it. */
-    public IntList(int capacity) {
-        this.values = new int[capacity];
-    }
-
-
-    /** Create a new list with exactly 10 items in it. */
-    public IntList() {
-        this.values = new int[10];
-    }
-
-
     public void clear() {
         this.values = new int[10];
         this.end = 0;
     }
 
-    /** Create a new list with this many items in it. */
-    public IntList(int values[]) {
-        this.values = values;
-        this.end = values.length;
-    }
-
-
-    /** Get the value at index
+    /**
+     * Get the value at index
+     *
      * @param index index
      * @return value
      */
@@ -126,7 +137,9 @@ public class IntList extends AbstractList<Integer> {
     }
 
 
-    /** Get the value at index but don't use a wrapper
+    /**
+     * Get the value at index but don't use a wrapper
+     *
      * @param index index
      * @return value
      */
@@ -136,6 +149,7 @@ public class IntList extends AbstractList<Integer> {
 
     /**
      * Add a new value to the list.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -144,13 +158,14 @@ public class IntList extends AbstractList<Integer> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return true;
     }
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -158,13 +173,14 @@ public class IntList extends AbstractList<Integer> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return true;
     }
 
     /**
      * Add a new value to the list but don't employ a wrapper.
+     *
      * @param integer new value
      * @return was able to add.
      */
@@ -172,13 +188,14 @@ public class IntList extends AbstractList<Integer> {
         if (end + 1 >= values.length) {
             values = grow(values);
         }
-        values [end] = integer;
+        values[end] = integer;
         end++;
         return this;
     }
 
     /**
      * Add a new array to the list.
+     *
      * @return was able to add.
      */
     public boolean addArray(int... integers) {
@@ -187,38 +204,41 @@ public class IntList extends AbstractList<Integer> {
         }
 
         System.arraycopy(integers, 0, values, end, integers.length);
-        end+=integers.length;
+        end += integers.length;
         return true;
     }
 
     /**
      * Set a value in the list.
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     @Override
     public Integer set(int index, Integer element) {
         int oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
 
     /**
      * Set in a new value no wrapper
-     * @param index index
+     *
+     * @param index   index
      * @param element new value
      * @return old value at this index
      */
     public int setInt(int index, int element) {
         int oldValue = values[index];
-        values [index] = element;
+        values[index] = element;
         return oldValue;
     }
 
     /**
      * Return the current size.
+     *
      * @return
      */
     @Override
@@ -227,8 +247,9 @@ public class IntList extends AbstractList<Integer> {
     }
 
 
-
-    /** Sums the values with bounds checking. */
+    /**
+     * Sums the values with bounds checking.
+     */
     public int sum() {
 
         return Int.sum(values, end);
@@ -237,9 +258,10 @@ public class IntList extends AbstractList<Integer> {
 
     /**
      * Get a copy of the array up to the end element.
+     *
      * @return
      */
-    public int [] toValueArray() {
+    public int[] toValueArray() {
 
         return java.util.Arrays.copyOfRange(values, 0, end);
     }
@@ -247,92 +269,100 @@ public class IntList extends AbstractList<Integer> {
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  long reduceBy( Object function ) {
+    public long reduceBy(Object function) {
         return Int.reduceBy(values, end, function);
     }
 
 
     /**
      * This would be a good opportunity to reintroduce dynamic invoke
+     *
      * @param function function
      * @return
      */
-    public  long reduceBy( Object function, String name ) {
+    public long reduceBy(Object function, String name) {
         return Int.reduceBy(values, end, function, name);
     }
-
 
 
     /**
      * @param reduceBy reduceBy function
      * @return the reduction
      */
-    public  long reduceBy( Int.ReduceBy reduceBy ) {
+    public long reduceBy(Int.ReduceBy reduceBy) {
         return Int.reduceBy(values, end, reduceBy);
     }
 
     /**
      * Mean
+     *
      * @return mean
      */
-    public  int mean(  ) {
+    public int mean() {
         return Int.mean(values, end);
     }
 
 
     /**
      * standardDeviation
+     *
      * @return standardDeviation
      */
-    public  int standardDeviation(  ) {
+    public int standardDeviation() {
         return Int.standardDeviation(values, end);
     }
 
 
     /**
      * variance
+     *
      * @return variance
      */
-    public  int variance(  ) {
+    public int variance() {
         return Int.variance(values, end);
     }
 
 
     /**
      * max
+     *
      * @return max
      */
-    public  int max(  ) {
+    public int max() {
         return Int.max(values, end);
     }
 
 
     /**
      * min
+     *
      * @return min
      */
-    public  int min(  ) {
+    public int min() {
         return Int.min(values, end);
     }
 
 
     /**
      * median
+     *
      * @return median
      */
-    public  int median(  ) {
+    public int median() {
         return Int.median(values, end);
     }
 
 
     /**
      * sort
+     *
      * @return sort
      */
-    public  void sort(  ) {
+    public void sort() {
         Arrays.sort(values, 0, end);
     }
 

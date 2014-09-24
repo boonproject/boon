@@ -51,8 +51,8 @@ public class ConcurrentLinkedHashSet<T> implements Set<T> {
     }
 
     @Override
-    public boolean contains( Object o ) {
-        return set.contains( o );
+    public boolean contains(Object o) {
+        return set.contains(o);
     }
 
     @Override
@@ -62,55 +62,55 @@ public class ConcurrentLinkedHashSet<T> implements Set<T> {
 
     @Override
     public Object[] toArray() {
-        return list.toArray( new Object[list.size()] );
+        return list.toArray(new Object[list.size()]);
     }
 
     @Override
-    public <T1> T1[] toArray( T1[] a ) {
+    public <T1> T1[] toArray(T1[] a) {
 
-        return list.toArray( a );
+        return list.toArray(a);
     }
 
     @Override
-    public synchronized boolean add( T t ) {
-        list.remove( t );
-        list.add( t );
-        return set.add( t );
+    public synchronized boolean add(T t) {
+        list.remove(t);
+        list.add(t);
+        return set.add(t);
     }
 
 
-    public synchronized boolean addFirst( T t ) {
-        list.remove( t );
-        list.add(0, t );
-        return set.add( t );
-    }
-
-    @Override
-    public synchronized boolean remove( Object o ) {
-        list.remove( o );
-        return set.remove( o );
+    public synchronized boolean addFirst(T t) {
+        list.remove(t);
+        list.add(0, t);
+        return set.add(t);
     }
 
     @Override
-    public boolean containsAll( Collection<?> c ) {
-        return set.containsAll( c );
+    public synchronized boolean remove(Object o) {
+        list.remove(o);
+        return set.remove(o);
     }
 
     @Override
-    public boolean addAll( Collection<? extends T> c ) {
-        return set.addAll( c );
+    public boolean containsAll(Collection<?> c) {
+        return set.containsAll(c);
     }
 
     @Override
-    public synchronized boolean retainAll( Collection<?> c ) {
-        list.retainAll( c );
-        return set.retainAll( c );
+    public boolean addAll(Collection<? extends T> c) {
+        return set.addAll(c);
     }
 
     @Override
-    public synchronized boolean removeAll( Collection<?> c ) {
-        list.removeAll( c );
-        return set.removeAll( c );
+    public synchronized boolean retainAll(Collection<?> c) {
+        list.retainAll(c);
+        return set.retainAll(c);
+    }
+
+    @Override
+    public synchronized boolean removeAll(Collection<?> c) {
+        list.removeAll(c);
+        return set.removeAll(c);
     }
 
     @Override

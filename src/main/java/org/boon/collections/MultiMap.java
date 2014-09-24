@@ -40,12 +40,12 @@ public class MultiMap<K, V> implements Iterable<Map.Entry<K, Collection<V>>> {
     private Class<? extends Collection> collectionClass = ConcurrentLinkedHashSet.class;
 
 
-    public MultiMap( Class<? extends Collection> collectionClass, int initialSize ) {
+    public MultiMap(Class<? extends Collection> collectionClass, int initialSize) {
         this.collectionClass = collectionClass;
         this.initialSize = initialSize;
     }
 
-    public MultiMap( Class<? extends Collection> collectionClass ) {
+    public MultiMap(Class<? extends Collection> collectionClass) {
         this.collectionClass = collectionClass;
     }
 
@@ -59,76 +59,72 @@ public class MultiMap<K, V> implements Iterable<Map.Entry<K, Collection<V>>> {
     }
 
 
-    public void put( K key, V v ) {
-        Collection<V> collection = map.get( key );
-        if ( collection == null ) {
-            collection = createCollection( key );
+    public void put(K key, V v) {
+        Collection<V> collection = map.get(key);
+        if (collection == null) {
+            collection = createCollection(key);
         }
-        collection.add( v );
+        collection.add(v);
     }
 
 
-
-    public V get( K key ) {
-        Collection<V> collection = map.get( key );
-        if ( collection == null || collection.size()==0 ) {
+    public V get(K key) {
+        Collection<V> collection = map.get(key);
+        if (collection == null || collection.size() == 0) {
             return null;
         }
         return collection.iterator().next();
     }
 
 
-
-    public boolean containsKey( K key ) {
-        Collection<V> collection = map.get( key );
-        if ( collection == null || collection.size()==0 ) {
+    public boolean containsKey(K key) {
+        Collection<V> collection = map.get(key);
+        if (collection == null || collection.size() == 0) {
             return false;
         }
         return true;
     }
 
 
-
-    public Iterable<V> getAll( K key ) {
-        Collection<V> collection = map.get( key );
-        if ( collection == null  ) {
+    public Iterable<V> getAll(K key) {
+        Collection<V> collection = map.get(key);
+        if (collection == null) {
             return Collections.EMPTY_LIST;
         }
         return collection;
     }
 
-    public boolean remove( K key, V v ) {
-        Collection<V> collection = map.get( key );
+    public boolean remove(K key, V v) {
+        Collection<V> collection = map.get(key);
         if (collection == null) {
             return false;
         }
-        return collection.remove( v );
+        return collection.remove(v);
     }
 
 
-
-    public boolean remove( K key ) {
-        return map.remove( key ) != null;
+    public boolean remove(K key) {
+        return map.remove(key) != null;
     }
 
-    private Collection<V> createCollection( K key ) {
-        Collection<V> collection = ( Collection<V> ) Conversions.createCollection( collectionClass, initialSize );
-        map.put( key, collection );
+    private Collection<V> createCollection(K key) {
+        Collection<V> collection = (Collection<V>) Conversions.createCollection(collectionClass, initialSize);
+        map.put(key, collection);
         return collection;
     }
 
     public Iterable<K> keySet() {
-      return map.keySet();
+        return map.keySet();
     }
 
     public Iterable<V> values() {
 
-        List list = new ArrayList(  );
+        List list = new ArrayList();
         Collection<Collection<V>> values = map.values();
 
         for (Collection c : values) {
             for (Object o : c) {
-                list.add( o );
+                list.add(o);
             }
         }
         return list;
