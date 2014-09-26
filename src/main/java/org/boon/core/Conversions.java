@@ -520,6 +520,10 @@ public class Conversions {
                 return toCollection(clz, value);
 
             case INSTANCE:
+
+                if (value instanceof Value) {
+                    value = ((Value)value).toValue();
+                }
                 if (value instanceof Map) {
                     return MapObjectConversion.fromMap((Map<String, Object>) value, clz);
                 } else if (value instanceof List) {
@@ -935,7 +939,19 @@ public class Conversions {
             Object newInstance = Array.newInstance(clz.getComponentType(), Boon.len(value));
             Iterator<Object> iterator = iterator(Typ.object, value);
             while (iterator.hasNext()) {
-                BeanUtils.idx(newInstance, index, iterator.next());
+
+                Object item = iterator.next();
+
+                if (clz.getComponentType().isAssignableFrom(item.getClass())) {
+
+                    BeanUtils.idx(newInstance, index, item);
+
+                } else {
+
+                    item = coerce(clz.getComponentType(), item);
+
+                    BeanUtils.idx(newInstance, index, item);
+                }
                 index++;
             }
             return (T) newInstance;
