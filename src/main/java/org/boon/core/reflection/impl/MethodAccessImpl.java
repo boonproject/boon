@@ -57,6 +57,8 @@ public class MethodAccessImpl implements MethodAccess {
 
     final public Method method;
     final List<AnnotationData> annotationData;
+
+    final List<List<AnnotationData>> annotationDataForParams;
     final Map<String, AnnotationData> annotationMap;
 
 
@@ -74,12 +76,20 @@ public class MethodAccessImpl implements MethodAccess {
         annotationData=null;
         annotationMap=null;
         methodHandle = null;
+        this.annotationDataForParams = null;
     }
+
+    public List<List<AnnotationData>> annotationDataForParams() {
+        return annotationDataForParams;
+    }
+
 
     public MethodAccessImpl( Method method ) {
         this.method = method;
         this.method.setAccessible( true );
         this.annotationData = Annotations.getAnnotationDataForMethod(method);
+        this.annotationDataForParams = Annotations.getAnnotationDataForMethodParams(method);
+
 
 
         for (Class<?> cls : method.getParameterTypes()) {
@@ -188,6 +198,15 @@ public class MethodAccessImpl implements MethodAccess {
     public Object invokeDynamicList(final Object object, List<?> args) {
 
         return invokeDynamic(object, Arry.objectArray(args));
+    }
+
+    public Object invokeDynamicObject(final Object object, final Object args) {
+
+        if (args instanceof List) {
+            return invokeDynamicList(object, (List)args);
+        } else {
+            return invokeDynamic(object, args);
+        }
     }
 
     @Override

@@ -41,7 +41,7 @@ import java.util.Map;
  * validation data from more than one source.
  * <p/>
  * For example, you could read validation meta data from properties files, and
- * annotations.
+ * annotation.
  * <p/>
  * The last one configured in the chain wins if you have the same type.
  * <p/>

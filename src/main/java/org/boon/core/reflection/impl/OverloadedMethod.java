@@ -3,6 +3,7 @@ package org.boon.core.reflection.impl;
 import org.boon.core.TypeType;
 import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.MethodAccess;
+import org.boon.primitive.Arry;
 
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
@@ -527,6 +528,27 @@ public class OverloadedMethod implements MethodAccess {
     public List<TypeType> paramTypeEnumList() {
         return Collections.emptyList();
     }
+
+
+    public Object invokeDynamicObject(final Object object, final Object args) {
+
+        if (args instanceof List) {
+            return invokeDynamicList(object, (List)args);
+        } else {
+            return invokeDynamic(object, args);
+        }
+    }
+
+    @Override
+    public List<List<AnnotationData>> annotationDataForParams() {
+        return null;
+    }
+
+    public Object invokeDynamicList(final Object object, List<?> args) {
+
+        return invokeDynamic(object, Arry.objectArray(args));
+    }
+
 
     @Override
     public Class<?>[] parameterTypes() {

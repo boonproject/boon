@@ -76,4 +76,11 @@ public interface MethodAccess extends BaseAccess, Comparable<MethodAccess>{
 
 
     List<TypeType> paramTypeEnumList();
+
+
+    Object invokeDynamicObject(Object object, Object args);
+
+    List<List<AnnotationData>> annotationDataForParams();
+
+
 }

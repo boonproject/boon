@@ -41,19 +41,19 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * <p>
  * <b>AnnotationValidatorMetaDataReader</b> reads validation meta-data from
- * annotations.
+ * annotation.
  * </p>
  * <p/>
  * <p>
  * This class reads a annotation as follows: You pass in the base package of the
- * annotations it defaults to "org.boon.annotations.validation". It then takes
+ * annotation it defaults to "org.boon.annotation.validation". It then takes
  * the <code>name</code> of the <code>ValidatorMetaData</code> and
  * capitalizes the first letter. Thus if you pass the package
- * "com.my.company.annotations", and
+ * "com.my.company.annotation", and
  * <code>ValidatorMetaData.name = "required"</code>, then it will look for an
- * annotation called com.my.company.annotations.Required. The idea behind this is
+ * annotation called com.my.company.annotation.Required. The idea behind this is
  * that you can use annotation without polluting your model classes with Boon
- * annotations.
+ * annotation.
  * </p>
  * <p/>
  * <p>
@@ -95,23 +95,23 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
             new ConcurrentHashMap<>();
 
     /**
-     * Holds a list of packages that contain annotations that we will process.
+     * Holds a list of packages that contain annotation that we will process.
      * If the annotation package is not in this list, it will not be processed.
      */
     private Set<String> validationAnnotationPackages = new HashSet<>();
 
     {
-            /* By default, we only process our own annotations. */
-        validationAnnotationPackages.add( "org.boon.validation.annotations" );
+            /* By default, we only process our own annotation. */
+        validationAnnotationPackages.add( "org.boon.validation.annotation" );
     }
 
     /**
-     * Read the meta-data from annotations. This copies the meta-data
-     * from the annotations into a POJO. It first checks the meta-data cache,
+     * Read the meta-data from annotation. This copies the meta-data
+     * from the annotation into a POJO. It first checks the meta-data cache,
      * if the meta data is not found in the cache it then reads it from the
      * class.
      *
-     * @param clazz        The class that contains the annotations.
+     * @param clazz        The class that contains the annotation.
      * @param propertyName The name of the property that we are reading
      *                     the annotation meta-data from.
      */
@@ -148,10 +148,10 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
     private List<ValidatorMetaData> extractValidatorMetaData( Class<?> clazz, String propertyName, List<ValidatorMetaData> validatorMetaDataList ) {
         /* If the meta-data was not found, then generate it. */
         if ( validatorMetaDataList == null ) { // if not found
-            /* Read the annotations from the class based on the property name. */
+            /* Read the annotation from the class based on the property name. */
             Collection<AnnotationData> annotations = Annotations.getAnnotationDataForFieldAndProperty( clazz, propertyName, this.validationAnnotationPackages );
 
-            /* Extract the POJO based meta-data from the annotations. */
+            /* Extract the POJO based meta-data from the annotation. */
             validatorMetaDataList =
                     extractMetaDataFromAnnotations( annotations );
 
@@ -162,7 +162,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
     /**
      * Extract meta-data from the annotationData we collected thus far.
      *
-     * @param annotations The annotationData (preprocessed annotations).
+     * @param annotations The annotationData (preprocessed annotation).
      * @return list of validation meta data.
      */
     private List<ValidatorMetaData> extractMetaDataFromAnnotations(

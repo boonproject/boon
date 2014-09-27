@@ -73,7 +73,7 @@ public class DomainValidator extends BaseValidator {
     private static Set<String> allowedPackages = new HashSet<String>();
 
     static {
-        allowedPackages.add( "org.boon.annotations.validation" );
+        allowedPackages.add( "org.boon.annotation.validation" );
     }
 
     public DomainValidator() {

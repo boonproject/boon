@@ -175,6 +175,23 @@ public class Annotations {
         return list;
     }
 
+
+    public static List<List<AnnotationData>> getAnnotationDataForMethodParams( Method method ) {
+
+
+        final Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+
+        final List<List<AnnotationData>> parameterAnnotationsList = new ArrayList<>(parameterAnnotations.length);
+
+        for (Annotation[] paramAnnotaions : parameterAnnotations) {
+            List<AnnotationData> list = extractValidationAnnotationData( paramAnnotaions, Collections.EMPTY_SET );
+            parameterAnnotationsList.add(list);
+
+        }
+
+        return parameterAnnotationsList;
+    }
+
     public static List<AnnotationData> getAnnotationDataForMethod( Constructor method ) {
         List<AnnotationData> list = extractValidationAnnotationData( method.getDeclaredAnnotations(), Collections.EMPTY_SET );
         return list;
@@ -223,23 +240,23 @@ public class Annotations {
     }
 
     public static Collection<AnnotationData> getAnnotationDataForFieldAndProperty( Class<?> clazz, String propertyName, Set<String> allowedPackages ) {
-        /* Extract the AnnotationData from the Java annotations. */
+        /* Extract the AnnotationData from the Java annotation. */
         List<AnnotationData> propertyAnnotationDataList =
                 getAnnotationDataForProperty( clazz, propertyName, false, allowedPackages );
 
-        /* Read the field annotations.  */
+        /* Read the field annotation.  */
         List<AnnotationData> fieldAnnotationDataList =
                 getAnnotationDataForField( clazz, propertyName, allowedPackages );
 
-        /* Combine the annotations from field and properties. Field validations take precedence over property validations. */
+        /* Combine the annotation from field and properties. Field validations take precedence over property validations. */
         Map<String, AnnotationData> map = new HashMap<String, AnnotationData>( propertyAnnotationDataList.size() + fieldAnnotationDataList.size() );
 
-        /* Add the property annotations to the map. */
+        /* Add the property annotation to the map. */
         for ( AnnotationData annotationData : propertyAnnotationDataList ) {
             map.put( annotationData.getName(), annotationData );
         }
 
-        /* Add the field annotations to the map allowing them to override the property annotations. */
+        /* Add the field annotation to the map allowing them to override the property annotation. */
         for ( AnnotationData annotationData : fieldAnnotationDataList ) {
             map.put( annotationData.getName(), annotationData );
         }
@@ -250,7 +267,7 @@ public class Annotations {
     /**
      * Create an annotation data list.
      *
-     * @param annotations list of annotations.
+     * @param annotations list of annotation.
      * @return
      */
     public static List<AnnotationData> extractValidationAnnotationData(
@@ -266,9 +283,9 @@ public class Annotations {
     }
 
     /**
-     * Extract all annotations for a given property.
+     * Extract all annotation for a given property.
      * Searches current class and if none found searches
-     * super class for annotations. We do this because the class
+     * super class for annotation. We do this because the class
      * could be proxied with AOP.
      *
      * @param clazz        Class containing the property.
@@ -290,7 +307,7 @@ public class Annotations {
         } catch ( Exception ex ) {
             return Exceptions.handle ( Annotation[].class,
                     sputs (
-                            "Unable to extract annotations for property",
+                            "Unable to extract annotation for property",
                             propertyName, " of class ", clazz,
                             "  useRead ", useRead ), ex );
         }
@@ -298,9 +315,9 @@ public class Annotations {
     }
 
     /**
-     * Find annotations given a particular property name and clazz. This figures
+     * Find annotation given a particular property name and clazz. This figures
      * out the writeMethod for the property, and uses the write method
-     * to look up the annotations.
+     * to look up the annotation.
      *
      * @param clazz        The class that holds the property.
      * @param propertyName The name of the property.
