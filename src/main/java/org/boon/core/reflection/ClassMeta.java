@@ -29,8 +29,8 @@
 package org.boon.core.reflection;
 
 import org.boon.Lists;
-import org.boon.Sets;
 import org.boon.collections.MultiMap;
+import org.boon.collections.MultiMapImpl;
 import org.boon.core.Typ;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.impl.ConstructorAccessImpl;
@@ -59,7 +59,7 @@ public class ClassMeta <T> implements Annotated{
 
     final List<ConstructorAccess<T>> constructorAccessSet;
 
-    final MultiMap<String, MethodAccess> methodsMulti;
+    final MultiMapImpl<String, MethodAccess> methodsMulti;
     final List <MethodAccess> methods;
 
     final Map<String, FieldAccess> fieldMap;
@@ -174,7 +174,7 @@ public class ClassMeta <T> implements Annotated{
 
 
         methodMap = new ConcurrentHashMap<>(  );
-        methodsMulti = new MultiMap<>(  );
+        methodsMulti = new MultiMapImpl<>(  );
         instanceMethods = new LinkedHashSet<>();
         classMethods = new LinkedHashSet<>();
 

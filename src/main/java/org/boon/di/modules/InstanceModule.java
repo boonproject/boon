@@ -31,6 +31,7 @@ package org.boon.di.modules;
 import org.boon.Exceptions;
 import org.boon.Sets;
 import org.boon.collections.MultiMap;
+import org.boon.collections.MultiMapImpl;
 import org.boon.core.Supplier;
 import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.MethodAccess;
@@ -44,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InstanceModule extends BaseModule {
 
     private Map<Class, ProviderInfo> supplierTypeMap = new ConcurrentHashMap<>();
-    private MultiMap<String, ProviderInfo> supplierNameMap = new MultiMap<>();
+    private MultiMapImpl<String, ProviderInfo> supplierNameMap = new MultiMapImpl<>();
 
     private Object module;
 

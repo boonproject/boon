@@ -92,21 +92,30 @@ public class RespondsTo {
 
         String contents;
 
+        boolean readLine;
+        boolean openCalled;
+        boolean closeCalled;
+
+        boolean addCalled;
+
         public StringReaderThing(String contents) {
             this.contents = contents;
         }
 
         public void open(String fileName) {
 
+            openCalled = true;
             reader = new BufferedReader(new StringReader(contents));
 
         }
 
         public String readLine() throws IOException {
+            readLine = true;
             return reader.readLine();
         }
 
         public void close() throws IOException {
+            closeCalled = true;
             reader.close();
         }
 
@@ -114,6 +123,7 @@ public class RespondsTo {
 
 
 
+    boolean ok;
     @Test
     public void test() {
         FileObject file = new FileObject();
@@ -124,13 +134,24 @@ public class RespondsTo {
         for (Object object : list) {
             if ( respondsTo(object, "open", String.class) ) invoke(object, "open", "hi");
 
+//            ok = reader.openCalled || die("Open not called");
+
             if ( respondsTo(object, "add", int.class, int.class) ) puts ("add", invoke(object, "add", 1, 2));
 
-            if ( respondsTo(object, "readLine") ) puts ( invoke(object, "readLine") );
+
+//            ok = reader.addCalled || die("Add not called");
 
             if ( respondsTo(object, "readLine") ) puts ( invoke(object, "readLine") );
+
+
+//            ok = reader.readLine || die("Read Line not called");
+
+
 
             if ( respondsTo(object, "close" ) ) invoke(object, "close");
+
+//            ok = reader.closeCalled || die("Close not called");
+
         }
 
         boolean ok = file.closeCalled && file.readLine && file.openCalled && file.addCalled || die();
