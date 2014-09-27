@@ -40,6 +40,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import static org.boon.Exceptions.die;
+
 public class Str {
 
 
@@ -557,6 +559,13 @@ public class Str {
      * @param b b
      */
     public static void equalsOrDie(String a, String b) {
+        if (a == null && b == null) {
+            return;
+        }
+        if (a == null || b == null) {
+            die("Values not equal value a=", a, "value b=", b);
+        }
+
         char[] ac = FastStringUtils.toCharArray(a);
         char[] bc = FastStringUtils.toCharArray(b);
         Chr.equalsOrDie(ac, bc);

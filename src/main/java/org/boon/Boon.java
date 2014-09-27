@@ -1486,6 +1486,10 @@ public class Boon {
 
     public static boolean equalsOrDie(Object expected, Object got) {
 
+        if (expected == null && got == null) {
+            return true;
+        }
+
         if (expected==null && got != null) die();
         if (!expected.equals(got)) die("Expected was", expected, "but we got", got);
 
