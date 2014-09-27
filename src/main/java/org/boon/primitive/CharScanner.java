@@ -382,21 +382,82 @@ public class CharScanner {
         int index = 0;
 
 
+        for (; index < inputArray.length; index++, currentLineLength++ ) {
+            c = inputArray[ index ];
+            if ( c == split ) {
 
 
-//Ignore start delims
-//
-//        while (true) {
-//            c = inputArray[index];
-//            if (c==split) {
-//                index++;
-//                startCurrentLineIndex=index;
-//            }else {
-//
-//                break;
-//            }
-//
-//        }
+                results[ resultIndex ] = Chr.copy(
+                        inputArray, startCurrentLineIndex, currentLineLength - 1 );
+                startCurrentLineIndex = index + 1; //skip the char
+
+                resultIndex++;
+
+                if ( resultIndex >= limit ) {
+                    break;
+                }
+
+
+
+
+                currentLineLength = 0;
+
+            }
+        }
+
+
+
+
+        if (c!=split) {
+
+            if ( resultIndex == results.length ) {
+
+                results = _grow( results );
+            }
+            results[resultIndex] = Chr.copy(
+                    inputArray, startCurrentLineIndex, currentLineLength - 1);
+            resultIndex++;
+        } else if (index == inputArray.length) {
+            //noop
+        } else {
+
+            if ( resultIndex == results.length ) {
+
+                results = _grow( results );
+            }
+            results[ resultIndex ] = Chr.copy(
+                    inputArray, startCurrentLineIndex, inputArray.length - index - 1);
+            resultIndex++;
+
+        }
+
+        int actualLength = resultIndex;
+        if ( actualLength < results.length ) {
+            final int newSize = results.length - actualLength;
+            results = __shrink( results, newSize );
+        }
+        return results;
+    }
+
+    public static char[][] splitFromStartWithLimit( final char[] inputArray,
+                                  final char split, final int start,
+                                  final int limit ) {
+
+
+        if (inputArray.length==0) {
+            return EMPTY_CHAR_ARRAY_ARRAY;
+        }
+        /** Holds the results. */
+        char[][] results = new char[ limit + 1 ][];
+
+        int resultIndex = 0;
+        int startCurrentLineIndex = 0;
+        int currentLineLength = 1;
+
+
+        char c=0;
+        int index = start;
+
 
         for (; index < inputArray.length; index++, currentLineLength++ ) {
             c = inputArray[ index ];

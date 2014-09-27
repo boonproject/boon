@@ -129,4 +129,8 @@ public class MultiMap<K, V> implements Iterable<Map.Entry<K, Collection<V>>> {
         }
         return list;
     }
+
+    public int size() {
+        return map.size();
+    }
 }
