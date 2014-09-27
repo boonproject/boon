@@ -37,4 +37,7 @@ import org.boon.primitive.CharBuf;
 public interface JsonSerializer {
 
     CharBuf serialize( Object obj );
+
+
+    void serialize(CharBuf charBuf,  Object obj );
 }

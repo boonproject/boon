@@ -39,6 +39,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
+import static org.boon.Exceptions.handle;
+
 /**
  * Created by rick on 1/1/14.
  */
@@ -242,6 +244,16 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         return fieldsAccessor.getFields ( aClass );
     }
 
+
+    @Override
+    public void serialize(CharBuf builder, Object obj) {
+
+        try {
+            serializeObject( obj, builder );
+        } catch ( Exception ex ) {
+            handle("unable to serializeObject", ex);
+        }
+    }
 
 }
 

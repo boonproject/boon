@@ -156,6 +156,17 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         return builder;
     }
 
+    @Override
+    public void serialize(CharBuf builder, Object obj) {
+        level = 0;
+
+        try {
+            serializeObject( obj, builder );
+        } catch ( Exception ex ) {
+             handle("unable to serializeObject", ex);
+        }
+    }
+
 
     public final boolean serializeField ( Object parent, FieldAccess fieldAccess, CharBuf builder ) {
 
