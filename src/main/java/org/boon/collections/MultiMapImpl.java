@@ -148,7 +148,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
 
 
     @Override
-    public boolean removeMulit(K key) {
+    public boolean removeMulti(K key) {
         return map.remove(key) !=null;
     }
 
@@ -363,6 +363,8 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
     public Map<? extends K, ? extends Collection<V>> baseMap() {
         return map;
     }
+
+
 
 
 }

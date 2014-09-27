@@ -18,7 +18,7 @@ public interface MultiMap<K, V> extends Iterable<Map.Entry<K, Collection<V>>>, M
 
     boolean remove(K key, V v);
 
-    boolean removeMulit(K key);
+    boolean removeMulti(K key);
 
     Iterable<K> keySetMulti();
 
