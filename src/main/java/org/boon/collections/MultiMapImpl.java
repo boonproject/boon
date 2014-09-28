@@ -39,7 +39,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
 
     private int initialSize = 10;
     private Map<K, Collection<V>> map = new ConcurrentHashMap<>();
-    private Class<? extends Collection> collectionClass = ConcurrentLinkedHashSet.class;
+    private Class<? extends Collection> collectionClass = ArrayList.class;
 
 
     public MultiMapImpl(Class<? extends Collection> collectionClass, int initialSize) {
@@ -336,11 +336,15 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
 
     @Override
     public boolean containsKey(Object key) {
-        Collection<V> collection = map.get(key);
-        if (collection == null || collection.size() == 0) {
+        if  (!map.containsKey(key)) {
             return false;
+        } else {
+            Collection<V> collection = map.get(key);
+            if (collection == null || collection.size() == 0) {
+                return false;
+            }
+            return true;
         }
-        return true;
     }
 
 
@@ -364,7 +368,20 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
         return map;
     }
 
+    @Override
+    public Object getSingleObject(V name) {
+        final Collection<V> vs = map.get(name);
+        if (vs == null || vs.size()==0) {
+            return null;
+        }
+        if (vs.size() == 1) {
+            vs.iterator().hasNext();
+            return vs.iterator().next();
+        } else {
+            return vs;
+        }
 
+    }
 
 
 }

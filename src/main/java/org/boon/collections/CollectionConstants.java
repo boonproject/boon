@@ -64,6 +64,11 @@ public class CollectionConstants {
         }
 
         @Override
+        public Object getSingleObject(Object name) {
+            return null;
+        }
+
+        @Override
         public int size() {
             return 0;
         }
