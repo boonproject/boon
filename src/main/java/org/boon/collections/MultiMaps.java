@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class MultiMaps {
 
-    public static MultiMap multiMap() {
+    public static <K, V> MultiMap <K, V> multiMap() {
         return new MultiMapImpl(ArrayList.class);
     }
 
