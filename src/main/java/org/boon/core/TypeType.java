@@ -83,7 +83,7 @@ public enum TypeType {
 
 
     //BOON
-    VALUE_MAP, VALUE;
+    VALUE_MAP, VALUE, HANDLER;
 
 
     final TypeType baseTypeOrWrapper;
@@ -294,6 +294,7 @@ public enum TypeType {
 
 
 
+
                 case "java.lang.Void":
                     return TypeType.VOID;
 
@@ -349,6 +350,9 @@ public enum TypeType {
                 case "org.boon.core.value.NumberValue":
                 case "org.boon.core.value.CharSequenceValue":
                     return TypeType.VALUE;
+
+                case "org.boon.core.Handler":
+                    return TypeType.HANDLER;
 
                 case "java.lang.Object":
                     return TypeType.OBJECT;

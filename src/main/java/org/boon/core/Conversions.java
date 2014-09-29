@@ -559,6 +559,10 @@ public class Conversions {
             case OBJECT:
                 return (T) value;
 
+
+            case HANDLER:
+                return (T) value;
+
             default:
                 return createFromArg(clz, value);
         }
