@@ -109,6 +109,14 @@ public class JsonParserFactory {
         return jsonParser;
     }
 
+    public JsonParserAndMapper createFastParser( boolean checkDates ) {
+        BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper(
+                new JsonFastParser (  false, chop, lazyChop, checkDates ),
+                createMapper());
+        jsonParser.setCharset ( charset );
+        return jsonParser;
+    }
+
     private Mapper createMapper() {
         if (useAnnotations && !caseInsensitiveFields &&
                          !acceptSingleValueAsArray && ignoreSet == null
