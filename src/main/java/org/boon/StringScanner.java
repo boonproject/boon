@@ -97,7 +97,7 @@ public class StringScanner {
     }
 
     public static String[] splitByCharsFromToDelims( final String string, int from, int to,
-                                         final char... delimiters ) {
+                                         final char delimiters ) {
 
         char[][] comps = CharScanner.splitByCharsFromToDelims( FastStringUtils.toCharArray( string ), from, to, delimiters );
 
@@ -106,7 +106,7 @@ public class StringScanner {
     }
 
     public static String[] splitByCharsFrom( final String string, int from,
-                                                     final char... delimiters ) {
+                                                     final char delimiters ) {
 
         char[][] comps = CharScanner.splitByCharsFromToDelims( FastStringUtils.toCharArray( string ), from, string.length(), delimiters );
 
