@@ -1,0 +1,13 @@
+{
+
+    "main": "org.boon.slumberdb.DataStoreVerticle",
+    "description": "Writes data",
+    "licenses": [""],
+    "author": "Rick Hightower",
+
+    "developers": ["Other Dev 1", "Other Dev 2"],
+    "keywords": ["gerbils", "cars", "cheese", "chocolate", "underpants", "herring"],
+    "homepage": "url to your project page",
+
+    "auto-redeploy": false
+}

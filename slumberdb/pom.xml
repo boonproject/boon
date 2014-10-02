@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>5</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- org.boon.io, json.io was taken. -->
+    <groupId>io.fastjson</groupId>
+    <artifactId>slumberdb</artifactId>
+    <version>0.29-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+
+
+    <name>Slumber DB Bundle</name>
+
+    <description>Key/Value Store for JSON for Boon</description>
+    <url>http://richardhightower.github.io/site/Boon</url>
+
+
+    <properties>
+        <boon.version>0.29-SNAPSHOT</boon.version>
+    </properties>
+
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/RichardHightower/slumberdb.git</connection>
+        <developerConnection>scm:git:https://github.com/RichardHightower/slumberdb.git</developerConnection>
+        <url>https://github.com/RichardHightower/slumberdb</url>
+    </scm>
+
+
+    <developers>
+        <developer>
+            <id>RichardHightower</id>
+            <name>Richard Hightower</name>
+            <url>https://github.com/RichardHightower</url>
+        </developer>
+    </developers>
+
+
+
+    <modules>
+        <module>slumberdb-core</module>
+        <module>slumberdb-leveldb</module>
+        <module>slumberdb-mysql</module>
+        <module>slumberdb-service-model</module>
+        <module>slumberdb-service-client</module>
+        <module>slumberdb-service</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                    <arch>x86</arch>
+                </os>
+            </activation>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
