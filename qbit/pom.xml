@@ -55,7 +55,8 @@
 
     <modules>
         <module>qbit</module>
-    </modules>
+        <module>vertx-qbit</module>
+  </modules>
 
     <build>
         <plugins>
