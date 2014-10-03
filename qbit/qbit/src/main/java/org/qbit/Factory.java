@@ -5,6 +5,7 @@ import org.qbit.message.MethodCall;
 import org.qbit.message.Response;
 import org.qbit.proxy.Sender;
 import org.qbit.queue.Queue;
+import org.qbit.service.BeforeMethodCall;
 import org.qbit.service.Service;
 import org.qbit.service.ServiceBundle;
 import org.qbit.spi.ProtocolEncoder;
@@ -65,6 +66,12 @@ public interface Factory {
                                             String returnAddressArg,
                                             Sender<String> sender);
 
+
+    <T> T createRemoteProxy(final Class<T> serviceInterface,
+                            final String address,
+                            final String serviceName,
+                            String returnAddressArg,
+                            Sender<String> sender, BeforeMethodCall beforeMethodCall);
 
 
     Response<Object> createResponse(String message);

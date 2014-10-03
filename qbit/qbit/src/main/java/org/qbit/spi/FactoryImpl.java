@@ -10,6 +10,8 @@ import org.qbit.message.MethodCall;
 import org.qbit.message.Response;
 import org.qbit.proxy.*;
 import org.qbit.queue.Queue;
+import org.qbit.queue.ReceiveQueue;
+import org.qbit.service.BeforeMethodCall;
 import org.qbit.service.Service;
 import org.qbit.service.ServiceBundle;
 import org.qbit.service.impl.ServiceBundleImpl;
@@ -64,7 +66,13 @@ public class FactoryImpl implements Factory{
 
     @Override
     public <T> T createRemoteProxy(Class<T> serviceInterface, String address, String serviceName, String returnAddressArg, Sender<String> sender) {
-        return serviceRemoteProxyFactory.createProxyWithReturnAddress(serviceInterface, serviceName, returnAddressArg, new SenderEndPoint(this.createEncoder(), address, sender));
+        return createRemoteProxy(serviceInterface, address, serviceName, returnAddressArg, sender, null);
+
+    }
+
+    @Override
+    public <T> T createRemoteProxy(Class<T> serviceInterface, String address, String serviceName, String returnAddressArg, Sender<String> sender, BeforeMethodCall beforeMethodCall) {
+        return serviceRemoteProxyFactory.createProxyWithReturnAddress(serviceInterface, serviceName, returnAddressArg, new SenderEndPoint(this.createEncoder(), address, sender, beforeMethodCall));
     }
 
 

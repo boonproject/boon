@@ -1,7 +1,9 @@
 package org.qbit.proxy;
 
 import org.qbit.message.MethodCall;
+import org.qbit.service.BeforeMethodCall;
 import org.qbit.service.EndPoint;
+import org.qbit.service.impl.NoOpBeforeMethodCall;
 import org.qbit.spi.ProtocolEncoder;
 
 /**
@@ -13,12 +15,14 @@ public class SenderEndPoint implements EndPoint {
     final ProtocolEncoder encoder;
     final String address;
     private final Sender<String> sender;
+    private final BeforeMethodCall beforeMethodCall;
 
 
-    public SenderEndPoint(ProtocolEncoder encoder, String address, Sender<String> sender) {
+    public SenderEndPoint(ProtocolEncoder encoder, String address, Sender<String> sender, BeforeMethodCall beforeMethodCall) {
         this.encoder = encoder;
         this.address = address;
 
+        this.beforeMethodCall = beforeMethodCall == null ? new NoOpBeforeMethodCall() : beforeMethodCall;
         this.sender = sender;
     }
 
@@ -30,6 +34,7 @@ public class SenderEndPoint implements EndPoint {
     @Override
     public void call(MethodCall<Object> methodCall) {
 
+        beforeMethodCall.before(methodCall);
         sender.send(methodCall.returnAddress(), encoder.encodeAsString(methodCall));
     }
 }

@@ -260,7 +260,7 @@ public class ProtocolParserVersion1 implements ProtocolParser {
                 RETURN_ADDRESS_POS]);
 
         if (!Str.isEmpty(addressPrefix)) {
-            returnAddress = Str.add(addressPrefix, ".", returnAddress);
+            returnAddress = Str.add(addressPrefix, ""+((char) PROTOCOL_ARG_SEPARATOR), returnAddress);
         }
 
 
