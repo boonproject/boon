@@ -113,7 +113,10 @@ public class IntegrationForJSONInputForPOSTAndWebSocketBodiesTest {
 
         doCall();
 
+        Sys.sleep(200);
+
         response = responseReceiveQueue.pollWait();
+
 
         Str.equalsOrDie(returnAddress, response.returnAddress());
 

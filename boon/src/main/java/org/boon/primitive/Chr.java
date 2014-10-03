@@ -1024,4 +1024,8 @@ public class Chr {
 
         return true;
     }
+
+    public static boolean isEmpty(char[] messageBodyChars) {
+        return messageBodyChars==null || messageBodyChars.length==0;
+    }
 }

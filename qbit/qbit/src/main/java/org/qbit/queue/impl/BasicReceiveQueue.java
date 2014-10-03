@@ -106,7 +106,7 @@ class BasicReceiveQueue<T> implements ReceiveQueue<T> {
 
         T item = this.poll();
         if (item==null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         } else {
             List<T> batch = new ArrayList<>();
             batch.add(item);

@@ -1,4 +1,4 @@
-package org.boon.qbit.vertx.integration;
+package org.boon.qbit.vertx.integration.server;
 
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
@@ -11,7 +11,7 @@ import java.net.URL;
 
 import static org.boon.Boon.puts;
 
-public class QBitMain {
+public class QBitServiceMain {
 
 
     public static void main(String... args) throws Exception {
@@ -22,7 +22,7 @@ public class QBitMain {
         JsonObject jsonObject = new JsonObject();
 
         URL url = new File(".", "target/classes").getCanonicalFile().toURL();
-        platformManager.deployVerticle("org.boon.qbit.vertx.QBitVerticle", jsonObject, new URL[]{url}, 1, null,
+        platformManager.deployVerticle("org.boon.qbit.vertx.integration.server.QBitVerticle", jsonObject, new URL[]{url}, 1, null,
                 new Handler<AsyncResult<String>>() {
                     @Override
                     public void handle(AsyncResult<String> stringAsyncResult) {

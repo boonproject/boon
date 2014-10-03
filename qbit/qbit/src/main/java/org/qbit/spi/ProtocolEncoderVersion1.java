@@ -120,7 +120,18 @@ public class ProtocolEncoderVersion1 implements ProtocolEncoder {
                 serializer.serialize(buf, bodyPart);
                 buf.addChar(PROTOCOL_ARG_SEPARATOR);
             }
-        } else if (body!=null) {
+        } else if (body instanceof Object[]) {
+            Object[] args = (Object[]) body;
+            for (int index = 0; index < args.length; index++) {
+
+                Object bodyPart = args[index];
+                serializer.serialize(buf, bodyPart);
+                buf.addChar(PROTOCOL_ARG_SEPARATOR);
+
+            }
+        }
+
+        else if (body!=null) {
 
 
             serializer.serialize(buf, body);

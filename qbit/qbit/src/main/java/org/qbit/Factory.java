@@ -12,11 +12,13 @@ import org.qbit.spi.ProtocolEncoder;
 public interface Factory {
 
 
+    MethodCall<Object> createMethodCallToBeParsedFromBody(String addressPrefix, Object message);
+
     MethodCall<Object> createMethodCallToBeParsedFromBody(String address,
                                                           String returnAddress,
                                                           String objectName,
                                                           String methodName,
-                                                          Object args,
+                                                          Object message,
                                                           MultiMap<String, String> params);
 
 
@@ -63,6 +65,9 @@ public interface Factory {
                                             String returnAddressArg,
                                             Sender<String> sender);
 
+
+
+    Response<Object> createResponse(String message);
 
 
 

@@ -38,6 +38,7 @@
     <!--Dependency versions-->
     <vertx.version>2.1.2</vertx.version>
 
+
     <boon.version>0.29-SNAPSHOT</boon.version>
     <vertx.testtools.version>2.0.3-final</vertx.testtools.version>
     <junit.version>4.11</junit.version>
@@ -82,6 +83,11 @@
     <dependency>
         <groupId>io.fastjson</groupId>
         <artifactId>boon</artifactId>
+        <version>${boon.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>io.fastjson</groupId>
+        <artifactId>qbit</artifactId>
         <version>${boon.version}</version>
     </dependency>
     <!--Test dependencies-->

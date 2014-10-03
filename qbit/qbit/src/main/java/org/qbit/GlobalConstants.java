@@ -10,7 +10,7 @@ public class GlobalConstants {
     public static int POLL_WAIT = 5;
 
 
-    public static boolean DEBUG = Sys.sysProp("org.qbit.DEBUG", true);
+    public static boolean DEBUG = Sys.sysProp("org.qbit.DEBUG", false);
 
 
 

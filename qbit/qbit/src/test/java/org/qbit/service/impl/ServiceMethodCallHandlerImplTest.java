@@ -61,9 +61,10 @@ public class ServiceMethodCallHandlerImplTest {
         }
 
 
-        public void someMethod3() {
+        public boolean someMethod3() {
 
             methodCalled = true;
+            return true;
         }
     }
 

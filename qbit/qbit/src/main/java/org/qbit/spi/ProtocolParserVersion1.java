@@ -8,6 +8,7 @@ import org.boon.core.reflection.FastStringUtils;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 import org.boon.primitive.CharScanner;
+import org.boon.primitive.Chr;
 import org.qbit.message.Message;
 import org.qbit.message.MethodCall;
 import org.qbit.message.Response;
@@ -47,8 +48,15 @@ public class ProtocolParserVersion1 implements ProtocolParser {
             return false;
     }
 
+
     @Override
     public MethodCall<Object> parseMethodCall(Object body) {
+
+        return parseMethodCall("", body);
+    }
+
+    @Override
+    public MethodCall<Object> parseMethodCall(String addressPrefix, Object body) {
 
 
 
@@ -56,7 +64,7 @@ public class ProtocolParserVersion1 implements ProtocolParser {
 
         if (body!=null) {
             if (body instanceof String) {
-                return (MethodCall<Object>) (Object) parseMessageFromString((String) body);
+                return (MethodCall<Object>) (Object) parseMessageFromString(addressPrefix, (String) body);
             }
         }
 
@@ -88,7 +96,7 @@ public class ProtocolParserVersion1 implements ProtocolParser {
             final char versionMarker = chars[VERSION_MARKER_POSITION];
 
             if (versionMarker == PROTOCOL_VERSION_1) {
-                return Lists.list((Message<Object>)handleFastBodySubmissionVersion1Chars(chars));
+                return Lists.list((Message<Object>)handleFastBodySubmissionVersion1Chars("", chars));
             } else if (versionMarker == PROTOCOL_VERSION_1_GROUP){
 
                 final char[][] methodCalls = CharScanner.splitFrom(chars,
@@ -96,7 +104,7 @@ public class ProtocolParserVersion1 implements ProtocolParser {
 
                 List<Message<Object>> messages = new ArrayList<>(methodCalls.length);
                 for (char[] methodCall : methodCalls) {
-                    final Message<Object> m = parseMessageFromChars(methodCall);
+                    final Message<Object> m = parseMessageFromChars("", methodCall);
                     messages.add(m);
                 }
 
@@ -132,7 +140,7 @@ public class ProtocolParserVersion1 implements ProtocolParser {
                 if (versionMarker == PROTOCOL_VERSION_1_RESPONSE) {
 
 
-                    return parseResponseFromChars(args);
+                    return parseResponseFromChars("", args);
                 } else {
                     return null;
                 }
@@ -143,7 +151,7 @@ public class ProtocolParserVersion1 implements ProtocolParser {
         return null;
     }
 
-    private Response<Object> parseResponseFromChars(char[] args) {
+    private Response<Object> parseResponseFromChars(String addressPrefix, char[] args) {
             final char[][] chars = CharScanner.splitFromStartWithLimit(args,
                     (char) PROTOCOL_SEPARATOR, 0, METHOD_NAME_POS + 2);
 
@@ -175,8 +183,13 @@ public class ProtocolParserVersion1 implements ProtocolParser {
             }
 
             char[] messageBodyChars = chars[ ARGS_POS ];
-            Object messageBody = jsonParserThreadLocal.get().parse(messageBodyChars);
 
+            Object messageBody=null;
+            if (!Chr.isEmpty(messageBodyChars)) {
+                messageBody = jsonParserThreadLocal.get().parse(messageBodyChars);
+            } else {
+                messageBody = null;
+            }
             return new ResponseImpl<>( id,  timestamp,  address,  returnAddress, null, messageBody);
 
 
@@ -192,18 +205,18 @@ public class ProtocolParserVersion1 implements ProtocolParser {
     };
 
 
-    private Message<Object> parseMessageFromString(String args) {
+    private Message<Object> parseMessageFromString(String addressPrefix, String args) {
 
         if (args.isEmpty()) {
             return null;
         }
         final char[] chars = FastStringUtils.toCharArray(args);
 
-        return parseMessageFromChars(chars);
+        return parseMessageFromChars(addressPrefix, chars);
     }
 
 
-    private Message<Object> parseMessageFromChars(char[] chars) {
+    private Message<Object> parseMessageFromChars(String addressPrefix, char[] chars) {
 
 
         if (chars.length > 2 &&
@@ -213,9 +226,9 @@ public class ProtocolParserVersion1 implements ProtocolParser {
             final char versionMarker = chars[VERSION_MARKER_POSITION];
 
             if (versionMarker == PROTOCOL_VERSION_1) {
-                return handleFastBodySubmissionVersion1Chars(chars);
+                return handleFastBodySubmissionVersion1Chars(addressPrefix, chars);
             } else if (versionMarker == PROTOCOL_VERSION_1_RESPONSE) {
-                return parseResponseFromChars(chars);
+                return parseResponseFromChars(addressPrefix, chars);
             }
             else {
                 die("Unsupported method call", new String(chars));
@@ -226,7 +239,7 @@ public class ProtocolParserVersion1 implements ProtocolParser {
     }
 
 
-    private MethodCallImpl handleFastBodySubmissionVersion1Chars(char[] args) {
+    private MethodCallImpl handleFastBodySubmissionVersion1Chars(String addressPrefix, char[] args) {
 
         final char[][] chars = CharScanner.splitFromStartWithLimit(args,
                 (char) PROTOCOL_SEPARATOR, 0, METHOD_NAME_POS+2);
@@ -245,6 +258,10 @@ public class ProtocolParserVersion1 implements ProtocolParser {
 
         String returnAddress = FastStringUtils.noCopyStringFromChars(chars[
                 RETURN_ADDRESS_POS]);
+
+        if (!Str.isEmpty(addressPrefix)) {
+            returnAddress = Str.add(addressPrefix, ".", returnAddress);
+        }
 
 
         String headerBlock = FastStringUtils.noCopyStringFromChars(chars[
@@ -286,6 +303,10 @@ public class ProtocolParserVersion1 implements ProtocolParser {
 
         for (int index=0; index< argumentList.length; index++) {
             char [] charArgs = argumentList[index];
+
+            if (charArgs.length==0) {
+                break;
+            }
             Object arg = jsonParserThreadLocal.get().parse(charArgs);
             argList.add(arg);
         }

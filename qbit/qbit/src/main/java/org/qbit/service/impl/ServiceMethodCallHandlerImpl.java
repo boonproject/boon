@@ -275,7 +275,7 @@ public class ServiceMethodCallHandlerImpl implements ServiceMethodHandler {
     private Response<Object> response(MethodAccess methodAccess,
                                       MethodCall<Object> methodCall, Object returnValue) {
 
-        if (methodAccess.returnType() == Void.class) {
+        if (methodAccess.returnType() == void.class || methodAccess.returnType() == Void.class) {
             return ServiceConstants.VOID;
         }
         return ResponseImpl.response(
@@ -356,7 +356,7 @@ public class ServiceMethodCallHandlerImpl implements ServiceMethodHandler {
         return new Handler<Object>() {
             @Override
             public void handle(Object returnValue) {
-                responseSendQueue.send(
+                responseSendQueue.sendAndFlush(
                         ResponseImpl.response(methodCall, returnValue)
 
                 );

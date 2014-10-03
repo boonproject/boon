@@ -71,6 +71,10 @@ public class ServiceProxyForTextJsonImpl implements ServiceProxyFactory{
                         address, returnAddress,
                         serviceName, method.getName(), timestamp, args, null);
 
+                if (method.getName().equals("toString")) {
+                    return "PROXY OBJECT";
+                }
+
                 serviceBundle.call(call);
 
                 return null;

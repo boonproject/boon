@@ -105,6 +105,26 @@ public class FactoryImpl implements Factory{
         return methodCall;
     }
 
+
+
+    @Override
+    public MethodCall<Object> createMethodCallToBeParsedFromBody(String addressPrefix, Object body ){
+
+        MethodCall<Object> methodCall = null;
+
+        if (body != null) {
+            ProtocolParser parser = selectProtocolParser(body, null);
+
+            if (parser != null) {
+                methodCall = parser.parseMethodCall(addressPrefix, body);
+            } else {
+                methodCall = defaultProtocol.parseMethodCall(body);
+            }
+        }
+
+        return methodCall;
+    }
+
     @Override
     public MethodCall<Object> createMethodCallByAddress(String address, String returnAddress, Object args, MultiMap<String, String> params) {
         return createMethodCallToBeParsedFromBody(address, returnAddress, "", "", args, params);
@@ -113,6 +133,13 @@ public class FactoryImpl implements Factory{
     @Override
     public MethodCall<Object> createMethodCallByNames(String methodName, String objectName, String returnAddress, Object args, MultiMap<String, String> params) {
         return createMethodCallToBeParsedFromBody("", returnAddress, methodName, objectName, args, params);
+    }
+
+
+    @Override
+    public Response<Object> createResponse(String message) {
+        final ProtocolParser parser = selectProtocolParser(message, null);
+        return parser.parseResponse(message);
     }
 
     private ProtocolParser selectProtocolParser(Object args, MultiMap<String, String> params) {
