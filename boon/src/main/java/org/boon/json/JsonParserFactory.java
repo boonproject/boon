@@ -55,6 +55,8 @@ public class JsonParserFactory {
     private  boolean respectIgnore=true;
     private boolean acceptSingleValueAsArray;
 
+    private boolean checkDates=true;
+
 
     public FieldAccessMode getFieldAccessType() {
         return fieldAccessType;
@@ -103,7 +105,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createFastParser() {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper(
-                new JsonFastParser (  false, chop, lazyChop ),
+                new JsonFastParser (  false, chop, lazyChop, checkDates ),
                 createMapper());
         jsonParser.setCharset ( charset );
         return jsonParser;
@@ -112,7 +114,7 @@ public class JsonParserFactory {
     private Mapper createMapper() {
         if (useAnnotations && !caseInsensitiveFields &&
                          !acceptSingleValueAsArray && ignoreSet == null
-                && Str.isEmpty(view) && respectIgnore==true) {
+                && Str.isEmpty(view) && respectIgnore) {
             return new MapperSimple(fieldAccessType.create(true));
         }
         return new MapperComplex(fieldAccessType, useAnnotations,
@@ -157,7 +159,7 @@ public class JsonParserFactory {
 
     public JsonParserAndMapper createLaxParser() {
         BaseJsonParserAndMapper jsonParser = new BaseJsonParserAndMapper(
-                new JsonParserLax ( false, chop, lazyChop  ),
+                new JsonParserLax ( false, chop, lazyChop, checkDates  ),
                 createMapper());
 
         jsonParser.setCharset ( charset );
@@ -339,5 +341,15 @@ public class JsonParserFactory {
         this.acceptSingleValueAsArray = acceptSingleValueAsArray;
         return this;
 
+    }
+
+
+    public JsonParserFactory setCheckDates(boolean flag) {
+        this.checkDates = flag;
+        return this;
+    }
+
+    public boolean isCheckDatesSet() {
+        return checkDates;
     }
 }
