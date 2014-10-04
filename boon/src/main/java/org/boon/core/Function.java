@@ -29,7 +29,7 @@
 package org.boon.core;
 
 /**
- * Place holder or JDK 1.8 Function
+ * Place holder for JDK 1.8 Function
  */
 public interface Function<IN, OUT> {
 
