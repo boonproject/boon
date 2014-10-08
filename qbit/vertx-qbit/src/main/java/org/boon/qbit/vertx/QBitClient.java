@@ -1,3 +1,31 @@
+/*
+ * Copyright 2013-2014 Richard M. Hightower
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  		http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * __________                              _____          __   .__
+ * \______   \ ____   ____   ____   /\    /     \ _____  |  | _|__| ____    ____
+ *  |    |  _//  _ \ /  _ \ /    \  \/   /  \ /  \\__  \ |  |/ /  |/    \  / ___\
+ *  |    |   (  <_> |  <_> )   |  \ /\  /    Y    \/ __ \|    <|  |   |  \/ /_/  >
+ *  |______  /\____/ \____/|___|  / \/  \____|__  (____  /__|_ \__|___|  /\___  /
+ *         \/                   \/              \/     \/     \/       \//_____/
+ *      ____.                     ___________   _____    ______________.___.
+ *     |    |____ ___  _______    \_   _____/  /  _  \  /   _____/\__  |   |
+ *     |    \__  \\  \/ /\__  \    |    __)_  /  /_\  \ \_____  \  /   |   |
+ * /\__|    |/ __ \\   /  / __ \_  |        \/    |    \/        \ \____   |
+ * \________(____  /\_/  (____  / /_______  /\____|__  /_______  / / ______|
+ *               \/           \/          \/         \/        \/  \/
+ */
+
 package org.boon.qbit.vertx;
 
 import org.boon.Boon;
@@ -38,24 +66,87 @@ import static org.boon.Exceptions.die;
 import static org.qbit.service.Protocol.PROTOCOL_ARG_SEPARATOR;
 
 /**
+ * Factory to create client proxies using interfaces.
  * Created by Richard on 10/2/14.
+ * @author Rick Hightower
  */
 public class QBitClient {
 
 
+    /** Are we closed.*/
     private volatile boolean closed;
 
+    /** Host to connect to. */
     private final String host;
+    /** Port of host to connect to. */
     private final int port;
+    /** Uri at the host to connect to. */
     private final String uri;
+
+    /** Vertx which is the websocket lib we use. */
     private Vertx vertx;
+
+    /** Queue to get a connection. */
     private final BlockingQueue<WebSocket> connectionQueue = new ArrayBlockingQueue<>(1);
+
+    /** Output queue to server. */
     private final BlockingQueue<String> queueToServer = new ArrayBlockingQueue<>(1000);
+
+
+    /** Queue from server. */
     private final Queue<String> queueFromServer;
 
+    /** Map of handlers so we can do the whole async call back thing. */
+    private Map<HandlerKey, org.boon.core.Handler> handlers = new ConcurrentHashMap<>();
 
-    ScheduledFuture<?> scheduledFuture;
+    /** Logger. */
+    private Logger logger = Boon.logger(QBitClient.class);
 
+    /** Websocket from vertx land. */
+    private WebSocket webSocket;
+
+    /** scheduledFuture, we need to shut this down on close. */
+    private ScheduledFuture<?> scheduledFuture;
+
+    /**
+     *
+     * @param host host to connect to
+     * @param port port on host
+     * @param uri uri to connect to
+     * @param vertx vertx to attach to
+     */
+    public QBitClient(String host, int port, String uri, Vertx vertx){
+
+        this.host = host;
+        this.port = port;
+        this.uri = uri;
+        this.vertx = vertx==null ? VertxFactory.newVertx() : vertx;
+
+        connect();
+
+        queueFromServer = new BasicQueue<>(
+                Boon.joinBy('-', "QBitClient", host, port, uri), 5, TimeUnit.MILLISECONDS, 20);
+
+
+    }
+
+
+    /**
+     * Stop client. Stops processing call backs.
+     */
+    public void stop() {
+        if (scheduledFuture!=null) {
+            try {
+                scheduledFuture.cancel(true);
+            } catch (Exception ex) {
+                logger.warn(ex, "Problem stopping client");
+            }
+        }
+    }
+
+    /**
+     * Start processing callbacks.
+     */
     public void startReturnProcessing() {
         final ReceiveQueue<String> receiveQueue = queueFromServer.receiveQueue();
 
@@ -70,28 +161,8 @@ public class QBitClient {
                         String poll = receiveQueue.pollWait();
 
                         while (poll != null) {
+                            handleWebsocketQueueResponses(poll);
 
-                            final Response<Object> response = QBit.factory().createResponse(poll);
-
-                            final String[] split = StringScanner.split(response.returnAddress(), (char)PROTOCOL_ARG_SEPARATOR);
-                            HandlerKey key = new HandlerKey(split[1], response.id());
-
-
-
-                            final org.boon.core.Handler handler = handlers.get(key);
-
-                            if (handler instanceof HandlerWithErrorHandling) {
-                                HandlerWithErrorHandling handling = (HandlerWithErrorHandling) handler;
-
-
-                                if (response.wasErrors()) {
-                                    handling.errorHandler().handle(response.body());
-                                } else {
-                                    handling.handle(response.body());
-                                }
-                            } else if (handler instanceof org.boon.core.Handler) {
-                                handler.handle(response.body());
-                            }
 
                             poll = receiveQueue.pollWait();
                         }
@@ -103,9 +174,58 @@ public class QBitClient {
         }, 500, 500, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Handles websocket messages and parses them into responses.
+     * This does not handle batching or rather un-batching which we need for performance
+     * we do handle batching in the parser/encoder.
+     * @param websocketText websocket text
+     */
+    private void handleWebsocketQueueResponses(String websocketText) {
+    /* Message comes in as a string but we parse it into a Response object. */
+        final Response<Object> response = QBit.factory().createResponse(websocketText);
 
+
+        final String[] split = StringScanner.split(response.returnAddress(),
+                (char) PROTOCOL_ARG_SEPARATOR);
+        HandlerKey key = new HandlerKey(split[1], response.id());
+
+
+        final org.boon.core.Handler handler = handlers.get(key);
+
+        if (handler!=null) {
+
+            handleAsyncCallback(response, handler);
+        }
+    }
+
+    /** Handles an async callback. */
+    private void handleAsyncCallback(Response<Object> response, org.boon.core.Handler handler) {
+        if (handler instanceof HandlerWithErrorHandling) {
+            HandlerWithErrorHandling handling = (HandlerWithErrorHandling) handler;
+
+
+            if (response.wasErrors()) {
+                handling.errorHandler().handle(response.body());
+            } else {
+                handling.handle(response.body());
+            }
+        } else if (handler instanceof org.boon.core.Handler) {
+            handler.handle(response.body());
+        }
+    }
+
+
+    /**
+     * Key to store callback in call back map.
+     */
     private class HandlerKey {
+        /**
+         * Return address
+         */
         final String returnAddress;
+        /** Message id
+         *
+         */
         final long messageId;
 
         private HandlerKey(String returnAddress, long messageId) {
@@ -135,30 +255,11 @@ public class QBitClient {
         }
     }
 
-    private Map<HandlerKey, org.boon.core.Handler> handlers = new ConcurrentHashMap<>();
-
-
-    private Logger logger = Boon.logger(QBitClient.class);
-
-    private WebSocket webSocket;
-
-    public QBitClient(String host, int port, String uri, Vertx vertx){
-
-        this.host = host;
-        this.port = port;
-        this.uri = uri;
-        this.vertx = vertx==null ? VertxFactory.newVertx() : vertx;
-
-        connect();
-
-        queueFromServer = new BasicQueue<>(
-                Boon.joinBy('-', "QBitClient", host, port, uri), 5, TimeUnit.MILLISECONDS, 20);
-
-
-    }
 
 
 
+
+    /** Looks up websocket connection. */
     private WebSocket webSocket() {
         if (webSocket==null) {
             try {
@@ -172,6 +273,7 @@ public class QBitClient {
         return webSocket;
     }
 
+    /** Sends a message over websocket. */
     public void send(String newMessage) {
         webSocket();
         if (webSocket==null || closed) {
@@ -201,7 +303,13 @@ public class QBitClient {
     }
 
 
-
+    /**
+     * Creates a new client proxy given a service interface.
+     * @param serviceInterface service interface
+     * @param serviceName service name
+     * @param <T> class type of interface
+     * @return new client proxy.. calling methods on this proxy marshals method calls to server.
+     */
     public <T> T createProxy(final Class<T> serviceInterface,
                              final String serviceName) {
 
@@ -211,6 +319,14 @@ public class QBitClient {
                 UUID.randomUUID().toString()));
     }
 
+    /**
+     *
+     * @param serviceInterface service interface
+     * @param serviceName service name
+     * @param returnAddressArg specify a specific return address
+     * @param <T> class type of service interface
+     * @return proxy object
+     */
     public <T> T createProxy(final Class<T> serviceInterface,
                             final String serviceName,
                             String returnAddressArg
@@ -220,6 +336,7 @@ public class QBitClient {
             die("QBitClient:: The service interface must be an interface");
         }
 
+        /** Use this before call to register an async handler with the handlers map. */
         BeforeMethodCall beforeMethodCall = new BeforeMethodCall() {
             @Override
             public boolean before(final MethodCall call) {
@@ -258,6 +375,14 @@ public class QBitClient {
         );
     }
 
+    /**
+     * Create an async handler. Uses some generics reflection to see what the actual type is
+     * @param serviceInterface service interface
+     * @param call method call object
+     * @param handler handler that will handle the message
+     * @param <T> the class of hte service interface
+     * @return the new handler
+     */
     private <T> org.boon.core.Handler createHandler(final Class<T> serviceInterface, final MethodCall call, final org.boon.core.Handler handler) {
 
         final ClassMeta<T> clsMeta = ClassMeta.classMeta(serviceInterface);
@@ -289,6 +414,7 @@ public class QBitClient {
 
         final Class<?> componentClass = compType;
 
+        /** Create the return handler. */
         org.boon.core.Handler<Object> returnHandler = new org.boon.core.Handler<Object>() {
             @Override
             public void handle(Object event) {
@@ -307,6 +433,7 @@ public class QBitClient {
         };
 
 
+        /** Create the exception handler. */
         org.boon.core.Handler<Throwable> exceptionHandler = new org.boon.core.Handler<Throwable>() {
             @Override
             public void handle(Throwable event) {
@@ -320,10 +447,15 @@ public class QBitClient {
     }
 
 
+    /** Return the recieve queue. */
     public final ReceiveQueue<String> receiveQueue() {
         return queueFromServer.receiveQueue();
     }
 
+
+    /**
+     * Use vertx to connect to websocket server that is hosting this service.
+     */
     private void connect() {
 
         vertx.createHttpClient().setHost(host).setPort(port)

@@ -26,32 +26,61 @@
  *               \/           \/          \/         \/        \/  \/
  */
 
-package org.boon.qbit.vertx.integration.model;
+package org.boon.qbit.vertx.integration.client;
 
-import org.boon.Lists;
+import org.boon.Boon;
+import org.boon.core.Handler;
+import org.boon.qbit.vertx.QBitClient;
+import org.boon.qbit.vertx.integration.model.Employee;
+import org.boon.qbit.vertx.integration.model.EmployeeManagerProxy;
+import org.vertx.java.core.Vertx;
+import org.vertx.java.core.VertxFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import static org.boon.Boon.puts;
 
 /**
- * Employee Manager Service example.
+ * Created by Richard on 10/3/14.
  * @author Rick Hightower
  */
-public class EmployeeManagerImpl implements EmployeeManager {
+public class QBitClientUsingAsyncHandleMain {
+
+    public static void main(String... args) throws InterruptedException {
 
 
-    private Map<Long, Employee> employeeMap = new HashMap<>();
+        /* Create a new instance of Vertx. */
+        Vertx vertx = VertxFactory.newVertx();
 
-    @Override
-    public void addEmployee(Employee employee) {
+        /* Create new client. */
+        final QBitClient qBitClient = new QBitClient("localhost", 8080, "/services", vertx);
 
-        employeeMap.put(employee.getEmployeeId(), employee);
+        /* Start the async callback handler. */
+        qBitClient.startReturnProcessing();
+
+        /* Create an employee proxy using the client proxy interface with the handler. */
+        final EmployeeManagerProxy remoteProxy = qBitClient.createProxy(EmployeeManagerProxy.class,
+                "employeeService");
+
+
+        /* Add an employee to the proxy, which calls the websocket. */
+        remoteProxy.addEmployee(new Employee("Rick", "Hightower", 10, 1L));
+
+
+        /* Call list employees. To get a list of employees. Use the
+           Handler to get the list of employees async.
+         */
+        remoteProxy.list(new Handler<List<Employee>>() {
+            @Override
+            public void handle(List<Employee> employees) {
+                puts(employees);
+
+            }
+        });
+
+        Boon.gets();
+
     }
 
-    @Override
-    public List<Employee> list() {
-        return Lists.list(employeeMap.values());
-    }
+
 }

@@ -28,13 +28,18 @@
 
 package org.boon.qbit.vertx.integration.model;
 
+import org.boon.core.Handler;
+
 import java.util.List;
 
 /**
- * Created by Richard on 10/2/14.
+ * Client proxy interface. This does not do much.
+ * It is the client view of the employee manager service.
  */
-public interface EmployeeManager {
+public interface EmployeeManagerProxy {
+
     void addEmployee(Employee employee);
 
-    List<Employee> list();
+    void list(Handler<List<Employee>> employees );
 }
+
