@@ -64,6 +64,11 @@ public class Response {
     public boolean wasError() {
         return error !=null;
     }
+
+    public boolean successful() {
+        return !wasError();
+    }
+
     public String action() {
         return action;
     }

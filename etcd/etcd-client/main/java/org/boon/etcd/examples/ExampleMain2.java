@@ -31,7 +31,11 @@ package org.boon.etcd.examples;
 import org.boon.core.Handler;
 import org.boon.core.Sys;
 import org.boon.etcd.EtcdClient;
+import org.boon.etcd.RedirectResponse;
 import org.boon.etcd.Response;
+
+import java.net.URI;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.boon.Boon.puts;
 
@@ -44,7 +48,7 @@ public class ExampleMain2 {
 
     public static void main(String... args) {
 
-        Handler<Response> handler = new Handler<Response>() {
+        final Handler<Response> handler = new Handler<Response>() {
             @Override
             public void handle(Response event) {
 
@@ -57,12 +61,24 @@ public class ExampleMain2 {
         };
 
         EtcdClient client = new EtcdClient("localhost", 4001);
-        client.get("foo");
+        client.get(handler, "foo");
 
 
-        client.set(handler, "foo", "Rick Was here");
+        client.set(new Handler<Response>() {
+            @Override
+            public void handle(Response event) {
+                if (event instanceof RedirectResponse) {
 
-        Sys.sleep(1_000);
+                    URI location = ((RedirectResponse) event).location();
+                    EtcdClient client = new EtcdClient(location.getHost(), location.getPort());
+                    client.set(handler, "foo", "Rick found the other server");
+                } else {
+                    handler.handle(event);
+                }
+            }
+        }, "foo", "Rick Was here");
+
+        Sys.sleep(3_000);
 
 
         client.get(handler, "foo");
@@ -148,18 +164,23 @@ public class ExampleMain2 {
         Sys.sleep(1_000);
 
 
-        client.createDir(handler, "queue/job1");
+        client.addToDir(handler, "queue", "job1", "myjob");
         Sys.sleep(1_000);
 
 
         client.set(handler, "queue/job1/mom", "mom");
         Sys.sleep(1_000);
 
-        client.createDir(handler, "queue/job29");
+
+        client.addToDir(handler, "queue", "job29", "myjob");
         Sys.sleep(1_000);
 
 
-        client.createDir(handler, "queue/job3");
+
+        client.addToDir(handler, "queue", "job3", "job3");
+        Sys.sleep(1_000);
+
+
         Sys.sleep(1_000);
 
 

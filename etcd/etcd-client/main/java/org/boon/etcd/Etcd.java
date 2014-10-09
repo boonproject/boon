@@ -142,6 +142,15 @@ interface Etcd {
 
 
     /**
+     * Add key / value to dir
+     * @param key
+     * @param value
+     * @return
+     */
+    Response addToDir(String dirName, String key, String value);
+    void addToDir(Handler<Response> responseHandler, String dirName, String key, String value);
+
+    /**
      * Set a key
      * @param key
      * @param value

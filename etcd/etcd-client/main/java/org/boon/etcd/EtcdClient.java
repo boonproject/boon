@@ -31,6 +31,8 @@ package org.boon.etcd;
 import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.Str;
+import org.boon.etcd.exceptions.ConnectionException;
+import org.boon.etcd.exceptions.TimeoutException;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
 import org.vertx.java.core.Handler;
@@ -40,6 +42,7 @@ import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.*;
 
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -47,6 +50,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.boon.Boon.isEmpty;
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 
 /**
@@ -54,7 +58,6 @@ import static org.boon.Exceptions.die;
  */
 public class EtcdClient implements Etcd{
 
-    public static final String APPLICATION_JSON = "application/json";
 
 
     /** Vertx which is the websocket lib we use. */
@@ -70,6 +73,8 @@ public class EtcdClient implements Etcd{
     private final String host;
     /** Port of host to connect to. */
     private final int port;
+
+    private int timeout = 5000;
 
     private ThreadLocal<JsonParserAndMapper> jsonParserAndMapperThreadLocal = new ThreadLocal<JsonParserAndMapper>(){
         @Override
@@ -88,6 +93,17 @@ public class EtcdClient implements Etcd{
 
     }
 
+    public EtcdClient(Vertx vertx, String host, int port, int milliSecondTimeout) {
+
+        this.vertx = vertx==null ? VertxFactory.newVertx() : vertx;
+        this.host = host;
+        this.port = port;
+        this.timeout = milliSecondTimeout;
+        connect();
+
+    }
+
+
 
     public EtcdClient(String host, int port) {
         this(null, host, port);
@@ -98,7 +114,8 @@ public class EtcdClient implements Etcd{
 
         final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key), getResponseHandler("delete", key, responseBlockingQueue));
+        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key),
+                getResponseHandler("delete", key, responseBlockingQueue));
 
         httpClientRequest.end();
 
@@ -108,6 +125,12 @@ public class EtcdClient implements Etcd{
 
     @Override
     public void delete(org.boon.core.Handler<Response> responseHandler, String key) {
+
+        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key),
+                handleResponse("delete", key, responseHandler));
+
+        httpClientRequest.end();
+
 
     }
 
@@ -375,6 +398,38 @@ public class EtcdClient implements Etcd{
 
 
 
+    }
+
+    @Override
+    public Response addToDir(String dirName, String key, String value) {
+
+
+        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+
+        String uri = Str.add("/v2/keys/", dirName, "/", key);
+        HttpClientRequest httpClientRequest = httpClient.post(uri, getResponseHandler("set", key, responseBlockingQueue));
+
+        Buffer buffer = new Buffer(value.length());
+
+        addField(buffer, "value", value);
+
+        sendToEtcd(httpClientRequest, buffer);
+
+
+        return getResponse(key, responseBlockingQueue);
+    }
+
+    @Override
+    public void addToDir(org.boon.core.Handler<Response> responseHandler, String dirName, String key, String value) {
+
+        String uri = Str.add("/v2/keys/", dirName, "/", key);
+        HttpClientRequest httpClientRequest = httpClient.post(uri, handleResponse("set", key, responseHandler));
+
+        Buffer buffer = new Buffer(value.length());
+
+        addField(buffer, "value", value);
+
+        sendToEtcd(httpClientRequest, buffer);
     }
 
     public Response set(String key, String value) {
@@ -681,7 +736,8 @@ public class EtcdClient implements Etcd{
         final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key), getResponseHandler("get", key, responseBlockingQueue));
+        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key),
+                getResponseHandler("get", key, responseBlockingQueue));
 
         httpClientRequest.end();
 
@@ -844,9 +900,12 @@ public class EtcdClient implements Etcd{
 
     private Response getResponse(String key, BlockingQueue<Response> responseBlockingQueue) {
         try {
-            Response response = responseBlockingQueue.poll(5000, TimeUnit.MILLISECONDS);
+            Response response = responseBlockingQueue.poll(timeout, TimeUnit.MILLISECONDS);
             if (response == null) {
-                die("Response timeout for get request key=", key);
+                if (this.closed) {
+                    throw new ConnectionException(Str.add("Connection exception for key ", key, " host ", host, " port ", ""+port));
+                }
+                throw new TimeoutException(Str.add("Response timeout for get request key=", key));
             }
 
             return response;
@@ -879,6 +938,7 @@ public class EtcdClient implements Etcd{
 
                 final Buffer buffer = new Buffer(1000);
 
+
                 httpClientResponse.dataHandler(new Handler<Buffer>() {
                     @Override
                     public void handle(Buffer partialBuf) {
@@ -895,9 +955,31 @@ public class EtcdClient implements Etcd{
                         responseBlockingQueue.offer(response);
 
                     }
+                }).exceptionHandler(new Handler<Throwable>() {
+                    @Override
+                    public void handle(Throwable event) {
+
+                        Response response = createResponseFromException(action, key, event);
+                        responseBlockingQueue.offer(response);
+                    }
                 });
             }
         };
+    }
+
+    private Response createResponseFromException(String action, String key, Throwable throwable) {
+
+        if (throwable instanceof ConnectException) {
+            closed = true;
+
+            Error error = new Error(-1, throwable.getClass().getName(), Str.add("Unable to connect to host ", this.host, " port ", ""+this.port), 0L);
+            return new Response(action, -1, error);
+
+
+        }
+        Error error = new Error(-1, throwable.getClass().getName(), Str.add(throwable.getMessage(),
+                " action ", action, " key ", key, " host ", this.host, " port ", ""+this.port), 0L);
+        return new Response(action, -1, error);
     }
 
     private Handler<HttpClientResponse> handleResponse(final String action, final String key, final org.boon.core.Handler<Response> handler) {
@@ -920,6 +1002,13 @@ public class EtcdClient implements Etcd{
                         Response response = parseResponse(json, action, key, httpClientResponse);
                         handler.handle(response);
                     }
+                }).exceptionHandler(new Handler<Throwable>() {
+                    @Override
+                    public void handle(Throwable event) {
+
+                        Response response = createResponseFromException(action, key, event);
+                        handler.handle(response);
+                    }
                 });
             }
         };
@@ -933,6 +1022,11 @@ public class EtcdClient implements Etcd{
 
 
             switch (httpClientResponse.statusCode()) {
+
+                case 307:
+                    response = new RedirectResponse(httpClientResponse.headers().get("Location"));
+                    return response;
+
                 case 200:
                     response = jsonParserAndMapperThreadLocal.get().parse(Response.class, json);
                     response.setHttpStatusCode(httpClientResponse.statusCode());
@@ -959,23 +1053,46 @@ public class EtcdClient implements Etcd{
 
                         response = new Response(action, httpClientResponse.statusCode(), error);
                         return response;
-                    } else {
+                    } else if (!isEmpty(json)){
 
                         response = jsonParserAndMapperThreadLocal.get().parse(Response.class, json);
                         response.setHttpStatusCode(httpClientResponse.statusCode());
                         return response;
+                    } else {
+                        puts(httpClientResponse.statusCode(), httpClientResponse.headers().entries());
+                        return null;
                     }
 
             }
 
         } catch (Exception ex) {
-            Exceptions.handle(ex, "Unable to parse response for key", key, json);
-            return null;
+
+            if (!Str.isEmpty(json)) {
+                return createResponseFromException(action + "\n" + json + "\n", key, ex);
+            } else {
+
+                return createResponseFromException(action + " blank response", key, ex);
+            }
         }
     }
 
     private void connect() {
-        httpClient = vertx.createHttpClient().setHost(host).setPort(port).setConnectTimeout(5_000).setKeepAlive(true);
+        httpClient = vertx.createHttpClient().setHost(host).setPort(port).setConnectTimeout(timeout).setMaxPoolSize(20).exceptionHandler(new Handler<Throwable>() {
+            @Override
+            public void handle(Throwable throwable) {
 
+                if (throwable instanceof ConnectException) {
+                    closed = true;
+                } else {
+                    puts(throwable);
+                    throwable.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    public boolean isClosed() {
+        return closed;
     }
 }

@@ -44,21 +44,21 @@ public class ExampleMain {
 
         Response response;
 
-        EtcdClient client = new EtcdClient("localhost", 4001);
+        EtcdClient client = new EtcdClient("localhost", 4003);
         response = client.get("foo");
 
         puts(response);
 
         response = client.set("foo", "Rick Was here");
 
-        puts(response);
+        puts("SET RESPONSE", response);
 
 
         response = client.get("foo");
 
 
 
-        puts(response);
+        puts("GET FOO", response);
 
 
         response = client.delete("foo");
@@ -68,9 +68,9 @@ public class ExampleMain {
 
 
         client.setTemp("tempKey", "tempValue", 5);
+        Sys.sleep(1000);
 
         puts(client.get("tempKey").node().getValue());
-
         Sys.sleep(1000);
 
 
