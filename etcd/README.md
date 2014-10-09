@@ -1,7 +1,7 @@
-*Boon etcd is a Java client for etcd.*
+**Boon etcd is a Java client for etcd.**
 
 
-*What is etcd?*
+**What is etcd?**
 etcd is a highly-available key value store for shared configuration and service discovery.
 
 etcd is part of the coreos project.
@@ -17,7 +17,7 @@ algorithm to manage a highly-available replicated log.
 You can learn more about etcd at https://github.com/coreos/etcd.
 
 
-*Boon etcd client for Java*
+**Boon etcd client for Java**
 
 Unlike most etcd Java clients (perhaps all), it supports wait, which is it allows
 you to wait on a key or key directory changing.
