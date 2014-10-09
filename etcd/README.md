@@ -1,10 +1,15 @@
+Boon etcd is a Java client for etcd.
+
+
+What is etcd?
 etcd is a highly-available key value store for shared configuration and service discovery.
+
+etcd is part of the coreos project.
+
 etcd is inspired by Apache ZooKeeper and doozer, with a focus on being:
 
-Simple: REST like and curl'able user facing API (HTTP+JSON)
-Secure: optional SSL client cert authentication
-Fast: benchmarked 1000s of writes/s per instance
-Reliable: properly distributed using Raft
+Simple: REST like and curl'able user facing API (HTTP+JSON); Secure: optional SSL client cert authentication; Fast: benchmarked 1000s of writes/s per instance; Reliable: properly distributed using Raft.
+
 
 etcd is written in Go and uses the Raft consensus
 algorithm to manage a highly-available replicated log.
@@ -12,16 +17,17 @@ algorithm to manage a highly-available replicated log.
 You can learn more about etcd at https://github.com/coreos/etcd.
 
 
-
-Boon etcd is a Java client for etcd.
+Boon etcd
 
 Unlike most etcd Java clients (perhaps all), it supports wait, which is it allows
 you to wait on a key or key directory changing.
 
-Also unlike most etcd Java clients, it supports both asycn and sync mode.
+Also unlike most etcd Java clients, it supports both async and sync mode.
 
 
 Like all boon projects, it is easy to use, and fast. :)
+
+Rather then give you a very thin (hard to use) API that merely allows you to pass the various flags and switches, we create a task oriented Java API so all of the most common task are at your finger tips.
 
 
 ```java
