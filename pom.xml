@@ -57,6 +57,7 @@
         <module>qbit</module>
         <module>slumberdb</module>
         <module>bnsf</module>
+        <module>etcd</module>
     </modules>
 
     <build>

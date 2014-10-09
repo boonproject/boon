@@ -590,7 +590,7 @@ public class HTTP {
     private static void manageContentTypeHeaders( String contentType, String charset, URLConnection connection ) {
         connection.setRequestProperty( "Accept-Charset", charset == null ? StandardCharsets.UTF_8.displayName() : charset );
         if ( contentType != null && !contentType.isEmpty() ) {
-            connection.setRequestProperty( "Content-TypeType", contentType );
+            connection.setRequestProperty( "Content-Type", contentType );
         }
     }
 

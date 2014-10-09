@@ -34,6 +34,11 @@ public class CollectionConstants {
         }
 
         @Override
+        public boolean removeValueFrom(Object key, Object o) {
+            return false;
+        }
+
+        @Override
         public boolean remove(Object key, Object o) {
             return false;
         }

@@ -135,8 +135,9 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
     }
 
 
+
     @Override
-    public boolean remove(K key, V v) {
+    public boolean removeValueFrom(K key, V v) {
         Collection<V> collection = map.get(key);
         if (collection == null) {
             return false;
