@@ -1,39 +1,30 @@
-/*
- * Copyright 2013-2014 Richard M. Hightower
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  		http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * __________                              _____          __   .__
- * \______   \ ____   ____   ____   /\    /     \ _____  |  | _|__| ____    ____
- *  |    |  _//  _ \ /  _ \ /    \  \/   /  \ /  \\__  \ |  |/ /  |/    \  / ___\
- *  |    |   (  <_> |  <_> )   |  \ /\  /    Y    \/ __ \|    <|  |   |  \/ /_/  >
- *  |______  /\____/ \____/|___|  / \/  \____|__  (____  /__|_ \__|___|  /\___  /
- *         \/                   \/              \/     \/     \/       \//_____/
- *      ____.                     ___________   _____    ______________.___.
- *     |    |____ ___  _______    \_   _____/  /  _  \  /   _____/\__  |   |
- *     |    \__  \\  \/ /\__  \    |    __)_  /  /_\  \ \_____  \  /   |   |
- * /\__|    |/ __ \\   /  / __ \_  |        \/    |    \/        \ \____   |
- * \________(____  /\_/  (____  / /_______  /\____|__  /_______  / / ______|
- *               \/           \/          \/         \/        \/  \/
- */
+etcd is a highly-available key value store for shared configuration and service discovery.
+etcd is inspired by Apache ZooKeeper and doozer, with a focus on being:
+
+Simple: REST like and curl'able user facing API (HTTP+JSON)
+Secure: optional SSL client cert authentication
+Fast: benchmarked 1000s of writes/s per instance
+Reliable: properly distributed using Raft
+
+etcd is written in Go and uses the Raft consensus
+algorithm to manage a highly-available replicated log.
+
+You can learn more about etcd at https://github.com/coreos/etcd.
 
 
 
-/**
- * Created by rhightower on 10/8/14.
- */
-package org.boon.etcd;
+Boon etcd is a Java client for etcd.
 
-import org.boon.core.Handler;
+Unlike most etcd Java clients (perhaps all), it supports wait, which is it allows
+you to wait on a key or key directory changing.
+
+Also unlike most etcd Java clients, it supports both asycn and sync mode.
+
+
+Like all boon projects, it is easy to use, and fast. :)
+
+
+```java
 
 interface Etcd {
 
@@ -301,4 +292,246 @@ interface Etcd {
     void deleteIfValue(Handler<Response> responseHandler, String key, String prevValue);
 
 }
+```
 
+As you can see, the interface tries to spell out all of the main etcd operations
+form the etcd tutorial. If we are missing any, let us know.
+
+
+You can use boon etcd client synchronously as follows:
+
+```java
+
+        Response response;
+
+        EtcdClient client = new EtcdClient("localhost", 4001);
+        response = client.get("foo");
+
+        puts(response);
+
+        response = client.set("foo", "Rick Was here");
+
+        puts(response);
+
+
+        response = client.get("foo");
+
+
+
+        puts(response);
+
+
+        response = client.delete("foo");
+
+
+        puts(response);
+
+
+        client.setTemp("tempKey", "tempValue", 5);
+
+        puts(client.get("tempKey").node().getValue());
+
+        Sys.sleep(1000);
+
+
+        puts(client.get("tempKey").node().getValue());
+
+        Sys.sleep(1000);
+
+
+        puts(client.get("tempKey").node().getValue());
+
+        Sys.sleep(4000);
+
+
+        puts(client.get("tempKey"));
+
+
+        Response waitOnKey = client.wait("waitOnKey");
+
+        puts("GOT KEY WE ARE WAITING ONE", waitOnKey);
+
+        puts("Create a dir");
+
+        client.createDir("conf");
+
+
+        client.createDir("conf/foo1");
+
+        client.createDir("conf/foo2");
+
+
+        client.createDir("conf/foo3");
+
+
+        response = client.listRecursive("");
+
+        puts(response);
+
+
+        response = client.deleteDir("conf");
+
+
+        puts(response);
+
+        response = client.deleteDirRecursively("conf");
+
+
+        puts(response);
+
+
+        response = client.listRecursive("");
+
+        puts(response);
+
+        response = client.createDir("queue");
+        puts(response);
+
+        response = client.createDir("queue/job1");
+        puts(response);
+
+
+        response = client.set("queue/job1/mom", "mom");
+        puts(response);
+
+        response = client.createDir("queue/job29");
+        puts(response);
+
+
+        response = client.createDir("queue/job3");
+        puts(response);
+
+
+        response = client.listSorted("queue");
+        puts(response);
+
+```
+
+
+Or you can use it asynchronously as follows:
+
+```java
+
+        Handler<Response> handler = new Handler<Response>() {
+            @Override
+            public void handle(Response event) {
+
+                if (event.node() != null) {
+                    puts(event.action(), event.node().key(), event);
+                } else {
+                    puts(event);
+                }
+            }
+        };
+
+        EtcdClient client = new EtcdClient("localhost", 4001);
+        client.get("foo");
+
+
+        client.set(handler, "foo", "Rick Was here");
+
+        Sys.sleep(1_000);
+
+
+        client.get(handler, "foo");
+
+        Sys.sleep(1_000);
+
+
+        client.delete(handler, "foo");
+
+        Sys.sleep(1_000);
+
+
+
+        client.setTemp(handler, "tempKey", "tempValue", 5);
+
+        Sys.sleep(1_000);
+
+        client.get(handler, "tempKey");
+
+        Sys.sleep(1000);
+
+
+        client.get(handler, "tempKey");
+
+        Sys.sleep(1000);
+
+
+        client.get(handler, "tempKey");
+
+        Sys.sleep(4000);
+
+
+        client.get(handler, "tempKey");
+
+
+        Sys.sleep(1000);
+
+        client.get(handler, "tempKey");
+
+        Sys.sleep(1000);
+
+
+        puts("WAITING ON KEY");
+
+        client.wait(handler, "waitOnKey");
+
+        Sys.sleep(10_000);
+
+        client.createDir(handler, "conf");
+
+        Sys.sleep(1000);
+
+
+
+        client.createDir(handler, "conf/foo1");
+        client.createDir(handler, "conf/foo2");
+        client.createDir(handler, "conf/foo3");
+
+        puts ("LIST RECURSIVE");
+        client.listRecursive(handler, "");
+
+
+        Sys.sleep(3_000);
+
+        client.deleteDir(handler, "conf");
+
+        Sys.sleep(1_000);
+
+
+        client.deleteDirRecursively(handler, "conf");
+        Sys.sleep(1_000);
+
+
+        client.listRecursive(handler, "");
+
+        Sys.sleep(1_000);
+
+        client.createDir(handler, "queue");
+        Sys.sleep(1_000);
+
+
+        client.createDir(handler, "queue");
+        Sys.sleep(1_000);
+
+
+        client.createDir(handler, "queue/job1");
+        Sys.sleep(1_000);
+
+
+        client.set(handler, "queue/job1/mom", "mom");
+        Sys.sleep(1_000);
+
+        client.createDir(handler, "queue/job29");
+        Sys.sleep(1_000);
+
+
+        client.createDir(handler, "queue/job3");
+        Sys.sleep(1_000);
+
+
+        client.listSorted(handler, "queue");
+        Sys.sleep(1_000);
+
+```
