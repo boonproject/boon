@@ -2,6 +2,7 @@
 
 
 **What is etcd?**
+
 etcd is a highly-available key value store for shared configuration and service discovery.
 
 etcd is part of the coreos project.
