@@ -14,3 +14,15 @@ src/test/resources/foo.json
 src/test/resources/freeformatter-out.json
 
 
+
+machines/machine3/log
+
+machines/machine1/log
+
+machines/machine2/log
+
+machines/machine2/snapshot/1_20006.ss
+
+machines/machine3/snapshot/1_20006.ss
+
+machines/machine1/snapshot/1_20006.ss

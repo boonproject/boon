@@ -135,6 +135,7 @@ public class EtcdClient implements Etcd{
     protected EtcdClient(Vertx vertx, ClientBuilder builder) {
         this(vertx, builder, 0);
     }
+
     protected  EtcdClient(ClientBuilder builder) {
 
         this (null, builder, 0);
@@ -144,173 +145,130 @@ public class EtcdClient implements Etcd{
     @Override
     public Response delete(String key) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key),
-                getResponseHandler("delete", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-        return getResponse(key, responseBlockingQueue);
+        return request(Request.request().methodDELETE().key(key));
 
     }
 
     @Override
     public void delete(org.boon.core.Handler<Response> responseHandler, String key) {
 
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key),
-                handleResponse("delete", key, responseHandler));
-
-        httpClientRequest.end();
-
-
+        request(responseHandler, Request.request().methodDELETE().key(key));
     }
 
     @Override
     public Response deleteDir(String key) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key, "?dir=true"),
-                getResponseHandler("delete", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-        return getResponse(key, responseBlockingQueue);
+        return request(Request.request().methodDELETE().key(key).dir(true));
 
     }
 
     @Override
-    public void deleteDir(org.boon.core.Handler<Response> responseHandler, String name) {
+    public void deleteDir(org.boon.core.Handler<Response> responseHandler, String key) {
+
+         request(responseHandler, Request.request().methodDELETE().key(key).dir(true));
 
     }
 
     @Override
     public Response deleteDirRecursively(String key) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key, "?dir=true&recursive=true"),
-                getResponseHandler("delete", key, responseBlockingQueue));
+        return request(Request.request().methodDELETE().key(key).dir(true).recursive(true));
 
-        httpClientRequest.end();
-
-        return getResponse(key, responseBlockingQueue);
     }
 
     @Override
     public void deleteDirRecursively(org.boon.core.Handler<Response> responseHandler, String key) {
-
-
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key, "?dir=true&recursive=true"),
-                handleResponse("delete", key, responseHandler));
-
-        httpClientRequest.end();
+         request(responseHandler, Request.request().methodDELETE().key(key).dir(true).recursive(true));
 
     }
 
     @Override
     public Response deleteIfAtIndex(String key, long index) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key), getResponseHandler("delete", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(20);
-        addField(buffer, "prevIndex", index);
-        httpClientRequest.end(buffer);
-
-        return getResponse(key, responseBlockingQueue);
+        return request( Request.request().methodDELETE().key(key).prevIndex(index));
 
     }
 
     @Override
     public void deleteIfAtIndex(org.boon.core.Handler<Response> responseHandler, String key, long index) {
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key),
-                handleResponse("delete", key, responseHandler));
 
-        Buffer buffer = new Buffer(20);
-        addField(buffer, "prevIndex", index);
-        httpClientRequest.end(buffer);
-
+         request( responseHandler, Request.request().methodDELETE().key(key).prevIndex(index));
 
     }
 
     @Override
     public Response deleteIfValue(String key, String prevValue) {
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key),
-                getResponseHandler("delete", key, responseBlockingQueue));
 
-        Buffer buffer = new Buffer(20);
-        addField(buffer, "prevValue", prevValue);
-        httpClientRequest.end(buffer);
-
-        return getResponse(key, responseBlockingQueue);
+        return request( Request.request().methodDELETE().key(key).prevValue(prevValue));
 
     }
 
     @Override
     public void deleteIfValue(org.boon.core.Handler<Response> responseHandler, String key, String prevValue) {
 
-        HttpClientRequest httpClientRequest = httpClient.delete(Str.add("/v2/keys/", key), handleResponse("delete", key,
-                responseHandler));
-
-        Buffer buffer = new Buffer(20);
-        addField(buffer, "prevValue", prevValue);
-        httpClientRequest.end(buffer);
-
+        request( responseHandler, Request.request().methodDELETE().key(key).prevValue(prevValue));
 
     }
 
 
     @Override
+    public void request(org.boon.core.Handler<Response> responseHandler, Request request) {
+        sendHttpRequest(request, responseHandler);
+    }
+
+    @Override
+    public Response request(final Request request) {
+
+
+        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+
+        request(new org.boon.core.Handler<Response>() {
+            @Override
+            public void handle(Response event) {
+                responseBlockingQueue.offer(event);
+            }
+        }, request);
+
+        return getResponse(request.key(), responseBlockingQueue);
+    }
+
+
+    public Response requestForever(final Request request) {
+
+
+        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+
+        request(new org.boon.core.Handler<Response>() {
+            @Override
+            public void handle(Response event) {
+                responseBlockingQueue.offer(event);
+            }
+        }, request);
+
+        return getResponseWaitForever(request.key(), responseBlockingQueue);
+    }
+
+    @Override
     public void createDir(org.boon.core.Handler<Response> responseHandler, String key) {
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), handleResponse("set", key, responseHandler));
-
-        Buffer buffer = new Buffer(key.length());
-
-        buffer.appendString("dir=true");
-
-        sendToEtcd(httpClientRequest, buffer);
-
+        request(responseHandler, Request.request().methodPUT().key(key).dir(true));
 
     }
 
     @Override
     public Response createDir(String key) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        return request(Request.request().methodPUT().key(key).dir(true));
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(key.length());
-
-        buffer.appendString("dir=true");
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
     }
 
     @Override
     public Response createTempDir(String key, long ttl) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(key.length());
-
-        buffer.appendString("dir=true&ttl=" + ttl);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
+        return request(Request.request().methodPUT().key(key).ttl(ttl).dir(true));
 
     }
 
@@ -318,46 +276,21 @@ public class EtcdClient implements Etcd{
     public void createTempDir(org.boon.core.Handler<Response> responseHandler, String key, long ttl) {
 
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
-
-        Buffer buffer = new Buffer(key.length());
-
-        buffer.appendString("dir=true&ttl=" + ttl);
-
-        sendToEtcd(httpClientRequest, buffer);
+        request(responseHandler, Request.request().methodPUT().key(key).ttl(ttl).dir(true));
 
     }
 
     @Override
     public Response updateDirTTL(String key, long ttl) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        return request(Request.request().methodPUT().key(key).ttl(ttl).dir(true).prevExist(true));
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(key.length());
-
-        buffer.appendString("prevExist=true&dir=true&ttl=" + ttl);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
     }
 
     @Override
     public void updateDirTTL(org.boon.core.Handler<Response> responseHandler, String name, long ttl) {
 
-
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", name), handleResponse("set", name, responseHandler));
-
-        Buffer buffer = new Buffer(name.length());
-
-        buffer.appendString("prevExist=true&dir=true&ttl=" + ttl);
-
-        sendToEtcd(httpClientRequest, buffer);
+        request(responseHandler, Request.request().methodPUT().key(name).ttl(ttl).dir(true).prevExist(true));
 
     }
 
@@ -375,17 +308,7 @@ public class EtcdClient implements Etcd{
     @Override
     public Response listRecursive(String key) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?recursive=true"),
-
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-
-        return getResponse(key, responseBlockingQueue);
+        return request(Request.request().key(key).recursive(true));
 
     }
 
@@ -393,50 +316,35 @@ public class EtcdClient implements Etcd{
     public void listRecursive(org.boon.core.Handler<Response> responseHandler, String key) {
 
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?recursive=true"),
-
-                handleResponse("get", key, responseHandler));
-
-        httpClientRequest.end();
+        request(responseHandler, Request.request().key(key).recursive(true));
 
 
     }
 
     @Override
     public Response listSorted(String key) {
-
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?recursive=true&sorted=true"),
-
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-
-        return getResponse(key, responseBlockingQueue);
+        return request(Request.request().key(key).recursive(true).sorted(true));
 
     }
 
     @Override
     public void listSorted(org.boon.core.Handler<Response> responseHandler, String key) {
-
-        Request request = new Request();
-        request.key(key);
-        request.recursive(true).sorted(true);
-
-        sendHttpRequest(request, responseHandler);
+        request(responseHandler, Request.request().key(key).recursive(true).sorted(true));
 
     }
 
+    /**
+     * This actually sends the request.
+     * @param request request
+     * @param responseHandler handler
+     */
     private void sendHttpRequest(Request request, org.boon.core.Handler<Response> responseHandler) {
 
         HttpClientRequest httpClientRequest = httpClient.request(request.getMethod(), request.uri(),
                 handleResponse(request, responseHandler));
 
         if (!request.getMethod().equals("GET")) {
-            httpClientRequest.end(request.paramBody());
+            httpClientRequest.putHeader("Content-Type", "application/x-www-form-urlencoded").end(request.paramBody());
         } else {
             httpClientRequest.end();
         }
@@ -445,66 +353,25 @@ public class EtcdClient implements Etcd{
     @Override
     public Response addToDir(String dirName, String key, String value) {
 
-
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-        String uri = Str.add("/v2/keys/", dirName, "/", key);
-        HttpClientRequest httpClientRequest = httpClient.post(uri, getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
+        return request(Request.request().methodPOST().key(Str.add(dirName, "/", key)).value(value));
     }
 
     @Override
     public void addToDir(org.boon.core.Handler<Response> responseHandler, String dirName, String key, String value) {
-
-        String uri = Str.add("/v2/keys/", dirName, "/", key);
-        HttpClientRequest httpClientRequest = httpClient.post(uri, handleResponse("set", key, responseHandler));
-
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        sendToEtcd(httpClientRequest, buffer);
+         request(responseHandler, Request.request().methodPOST().key(Str.add(dirName, "/", key)).value(value));
     }
 
     public Response set(String key, String value) {
 
+        return request(Request.request().methodPUT().key(Str.add(key)).value(value));
 
-
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
 
     }
 
     @Override
     public void set(org.boon.core.Handler<Response> responseHandler, String key, String value) {
 
-
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
-
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        sendToEtcd(httpClientRequest, buffer);
+        request(responseHandler, Request.request().methodPUT().key(Str.add(key)).value(value));
 
     }
 
@@ -528,35 +395,19 @@ public class EtcdClient implements Etcd{
     public Response setIfExists(String key, String value) {
 
 
+        Request request = Request.request().methodPUT().key(key).value(value).prevExist(true);
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(value.length() + 50);
-
-        buffer.appendString("prevExist=true");
-        addField(buffer, "&value", value);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
+        return request(request);
 
     }
 
     @Override
     public void setIfExists(org.boon.core.Handler<Response> responseHandler, String key, String value) {
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
 
-        Buffer buffer = new Buffer(value.length() + 50);
+        Request request = Request.request().methodPUT().key(key).value(value).prevExist(true);
 
-        buffer.appendString("prevExist=true");
-        addField(buffer, "&value", value);
-
-        sendToEtcd(httpClientRequest, buffer);
+        request(responseHandler, request);
 
     }
 
@@ -564,34 +415,19 @@ public class EtcdClient implements Etcd{
     public Response setIfNotExists(String key, String value) {
 
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        Request request = Request.request().methodPUT().key(key).value(value).prevExist(false);
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(value.length() + 50);
-
-        buffer.appendString("prevExist=false");
-        addField(buffer, "&value", value);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
+        return request(request);
 
     }
 
     @Override
     public void setIfNotExists(org.boon.core.Handler<Response> responseHandler, String key, String value) {
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
 
-        Buffer buffer = new Buffer(value.length() + 50);
 
-        buffer.appendString("prevExist=false");
-        addField(buffer, "&value", value);
+        Request request = Request.request().methodPUT().key(key).value(value).prevExist(false);
 
-        sendToEtcd(httpClientRequest, buffer);
-
+        request(responseHandler, request);
 
     }
 
@@ -599,204 +435,87 @@ public class EtcdClient implements Etcd{
     public Response compareAndSwapByValue(String key, String prevValue, String value) {
 
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        Request request = Request.request().methodPUT().key(key).value(value).prevValue(prevValue);
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(50 + prevValue.length() + value.length());
-
-        addField(buffer, "prevValue", prevValue);
-
-        buffer.appendString("&value", value);
-
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
+        return request(request);
     }
 
     @Override
     public void compareAndSwapByValue(org.boon.core.Handler<Response> responseHandler, String key, String prevValue, String value) {
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
 
-        Buffer buffer = new Buffer(50 + prevValue.length() + value.length());
-
-        addField(buffer, "prevValue", prevValue);
-
-        buffer.appendString("&value", value);
+        Request request = Request.request().methodPUT().key(key).value(value).prevValue(prevValue);
 
 
-        sendToEtcd(httpClientRequest, buffer);
+        request(responseHandler, request);
+
 
 
     }
 
     @Override
     public Response compareAndSwapByModifiedIndex(String key, long prevIndex, String value) {
-
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(20 + value.length());
-
-        addField(buffer, "prevIndex",  prevIndex);
-
-        buffer.appendString("&value", value);
+        Request request = Request.request().methodPUT().key(key).value(value).prevIndex(prevIndex);
 
 
-        sendToEtcd(httpClientRequest, buffer);
+        return request(request);
 
-
-        return getResponse(key, responseBlockingQueue);
     }
 
     @Override
     public void compareAndSwapByModifiedIndex(org.boon.core.Handler<Response> responseHandler, String key, long prevIndex, String value) {
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
-
-        Buffer buffer = new Buffer(20 + value.length());
-
-        addField(buffer, "prevIndex",  prevIndex);
-
-        buffer.appendString("&value", value);
-
-
-        sendToEtcd(httpClientRequest, buffer);
+        Request request = Request.request().methodPUT().key(key).value(value).prevIndex(prevIndex);
+        request(responseHandler, request);
     }
 
 
-    private void addField(Buffer buffer, String fieldName, String value) {
-
-        try {
-            buffer.appendString(fieldName).appendString("=").appendString(URLEncoder.encode(value, StandardCharsets.UTF_8.displayName()));
-
-        } catch (UnsupportedEncodingException e) {
-            Exceptions.handle(e);
-        }
-    }
-
-
-    private void addField(Buffer buffer, String fieldName, long value) {
-            buffer.appendString(fieldName).appendString("=").appendString(Long.toString(value));
-
-    }
-
-
-    private void addField(Buffer buffer, String fieldName, boolean value) {
-        buffer.appendString(fieldName).appendString("=").appendString(Boolean.toString(value));
-
-    }
 
     @Override
     public Response setTemp(String key, String value, int ttl) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        Request request = Request.request().methodPUT().key(key).value(value).ttl(ttl);
+        return request(request);
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        buffer.appendString("&ttl=").appendString(Integer.toString(ttl));
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
     }
 
     @Override
     public void setTemp(org.boon.core.Handler<Response> responseHandler, String key, String value, int ttl) {
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
+        Request request = Request.request().methodPUT().key(key).value(value).ttl(ttl);
 
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        buffer.appendString("&ttl=").appendString(Integer.toString(ttl));
-
-        sendToEtcd(httpClientRequest, buffer);
-
+        request(responseHandler, request);
     }
 
     @Override
     public Response removeTTL(String key, String value) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
-
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        buffer.appendString("&ttl=&");
-
-        addField(buffer, "prevExist", true);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-
-        return getResponse(key, responseBlockingQueue);
+        Request request = Request.request().methodPUT().key(key).value(value).emptyTTL().prevExist(true);
+        return request(request);
     }
 
     @Override
     public void removeTTL(org.boon.core.Handler<Response> responseHandler, String key, String value) {
 
+        Request request = Request.request().methodPUT().key(key).value(value).emptyTTL().prevExist(true);
+        request(responseHandler, request);
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
-                handleResponse("set", key, responseHandler));
-
-        Buffer buffer = new Buffer(value.length());
-
-        addField(buffer, "value", value);
-
-        buffer.appendString("&ttl=&");
-
-        addField(buffer, "prevExist", true);
-
-        sendToEtcd(httpClientRequest, buffer);
-
-    }
-
-    private void sendToEtcd(HttpClientRequest httpClientRequest, Buffer buffer) {
-        httpClientRequest.putHeader("Content-Type", "application/x-www-form-urlencoded").end(buffer);
     }
 
     @Override
     public Response get(String key) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        Request request = Request.request().key(key);
+        return request(request);
 
-
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key),
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-
-        return getResponse(key, responseBlockingQueue);
     }
 
     @Override
     public void get(org.boon.core.Handler<Response> responseHandler, String key) {
 
-
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key),
-                handleResponse("get", key, responseHandler));
-
-        httpClientRequest.end();
-
-
+        Request request = Request.request().key(key);
+        request(responseHandler, request);
 
     }
 
@@ -804,84 +523,54 @@ public class EtcdClient implements Etcd{
     public Response getConsistent(String key) {
 
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        Request request = Request.request().key(key).consistent(true);
+        return request(request);
 
-
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?consistent=true"),
-
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-
-        return getResponse(key, responseBlockingQueue);
     }
 
     @Override
     public void getConsistent(org.boon.core.Handler<Response> responseHandler, String key) {
 
+        Request request = Request.request().key(key).consistent(true);
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?consistent=true"),
-
-                handleResponse("get", key, responseHandler));
-
-        httpClientRequest.end();
-
+        request(responseHandler, request);
 
     }
 
     @Override
     public Response wait(String key) {
 
+        Request request = Request.request().key(key).wait(true);
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
-
-
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?wait=true"),
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
+        return requestForever(request);
 
 
-        return getResponseWaitForever(key, responseBlockingQueue);
     }
 
     @Override
     public void wait(org.boon.core.Handler<Response> responseHandler, String key) {
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?wait=true"),
-                handleResponse("get", key, responseHandler));
 
-        httpClientRequest.end();
+        Request request = Request.request().key(key).wait(true);
 
-
+        request(responseHandler, request);
     }
 
     @Override
     public Response wait(String key, long index) {
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        Request request = Request.request().key(key).wait(true).waitIndex(index);
 
+        return requestForever(request);
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?wait=true&waitIndex=", Long.toString(index)),
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-
-        return getResponseWaitForever(key, responseBlockingQueue);
     }
 
     @Override
     public void wait(org.boon.core.Handler<Response> responseHandler, String key, long index) {
 
+        Request request = Request.request().key(key).wait(true).waitIndex(index);
 
-        HttpClientRequest httpClientRequest = httpClient.get(
-                Str.add("/v2/keys/", key, "?wait=true&waitIndex=", Long.toString(index)),
-                handleResponse("get", key, responseHandler));
-
-        httpClientRequest.end();
-
+        request(responseHandler, request);
 
     }
 
@@ -889,55 +578,35 @@ public class EtcdClient implements Etcd{
     public Response waitRecursive(String key) {
 
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        Request request = Request.request().key(key).wait(true).recursive(true);
 
+        return requestForever(request);
 
-        HttpClientRequest httpClientRequest = httpClient.get(
-                Str.add("/v2/keys/", key, "?wait=true&recursive=true"),
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-
-        return getResponseWaitForever(key, responseBlockingQueue);
     }
 
     @Override
     public void waitRecursive(org.boon.core.Handler<Response> responseHandler, String key) {
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?wait=true&recursive=true"),
-                handleResponse("get", key, responseHandler));
-
-        httpClientRequest.end();
-
+        Request request = Request.request().key(key).wait(true).recursive(true);
+        request(responseHandler, request);
     }
 
     @Override
     public Response waitRecursive(String key, long index) {
 
+        Request request = Request.request().key(key).wait(true).recursive(true).waitIndex(index);
 
-        final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
+        return requestForever(request);
 
-
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key,
-                        "?wait=true&recursive=true&index=", Long.toString(index)),
-                getResponseHandler("get", key, responseBlockingQueue));
-
-        httpClientRequest.end();
-
-
-        return getResponseWaitForever(key, responseBlockingQueue);
     }
 
     @Override
     public void waitRecursive(org.boon.core.Handler<Response> responseHandler, String key, long index) {
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key,
-                        "?wait=true&recursive=true&index=", Long.toString(index)),
-                handleResponse("get", key, responseHandler));
 
-        httpClientRequest.end();
+        Request request = Request.request().key(key).wait(true).recursive(true).waitIndex(index);
 
+        request(responseHandler, request);
     }
 
     private Response getResponse(String key, BlockingQueue<Response> responseBlockingQueue) {
@@ -973,41 +642,6 @@ public class EtcdClient implements Etcd{
         return null;
     }
 
-    private Handler<HttpClientResponse> getResponseHandler(final String action, final String key, final BlockingQueue<Response> responseBlockingQueue) {
-        return new Handler<HttpClientResponse>() {
-            @Override
-            public void handle(final HttpClientResponse httpClientResponse) {
-
-                final Buffer buffer = new Buffer(1000);
-
-
-                httpClientResponse.dataHandler(new Handler<Buffer>() {
-                    @Override
-                    public void handle(Buffer partialBuf) {
-
-                        buffer.appendBuffer(partialBuf);
-                    }
-                }).endHandler(new Handler<Void>() {
-                    @Override
-                    public void handle(Void aVoid) {
-
-                        String json = buffer.toString();
-
-                        Response response = parseResponse(json, action, key, httpClientResponse);
-                        responseBlockingQueue.offer(response);
-
-                    }
-                }).exceptionHandler(new Handler<Throwable>() {
-                    @Override
-                    public void handle(Throwable event) {
-
-                        Response response = createResponseFromException(action, key, event);
-                        responseBlockingQueue.offer(response);
-                    }
-                });
-            }
-        };
-    }
 
     private Response createResponseFromException(String action, String key, Throwable throwable) {
 
@@ -1056,37 +690,6 @@ public class EtcdClient implements Etcd{
         };
     }
 
-    private Handler<HttpClientResponse> handleResponse(final String action, final String key, final org.boon.core.Handler<Response> handler) {
-        return new Handler<HttpClientResponse>() {
-            @Override
-            public void handle(final HttpClientResponse httpClientResponse) {
-
-                final Buffer buffer = new Buffer(1000);
-
-                httpClientResponse.dataHandler(new Handler<Buffer>() {
-                    @Override
-                    public void handle(Buffer partialBuf) {
-
-                        buffer.appendBuffer(partialBuf);
-                    }
-                }).endHandler(new Handler<Void>() {
-                    @Override
-                    public void handle(Void aVoid) {
-                        String json = buffer.toString();
-                        Response response = parseResponse(json, action, key, httpClientResponse);
-                        handler.handle(response);
-                    }
-                }).exceptionHandler(new Handler<Throwable>() {
-                    @Override
-                    public void handle(Throwable event) {
-
-                        Response response = createResponseFromException(action, key, event);
-                        handler.handle(response);
-                    }
-                });
-            }
-        };
-    }
     private Response parseResponse(String json, String action, String key, HttpClientResponse httpClientResponse) {
         try {
 
@@ -1132,7 +735,7 @@ public class EtcdClient implements Etcd{
                         response.setHttpStatusCode(httpClientResponse.statusCode());
                         return response;
                     } else {
-                        puts(httpClientResponse.statusCode(), httpClientResponse.headers().entries());
+                        die(httpClientResponse.statusCode(), httpClientResponse.headers().entries());
                         return null;
                     }
 
@@ -1199,4 +802,5 @@ public class EtcdClient implements Etcd{
     public boolean isClosed() {
         return closed;
     }
+
 }

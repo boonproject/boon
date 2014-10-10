@@ -39,6 +39,19 @@ public interface Etcd {
 
 
     /**
+     * Request something from Etcd using standard Etcd client commands. Non blocking.
+     * @param responseHandler handler
+     */
+    void request(Handler<Response> responseHandler, Request request);
+
+
+    /**
+     * Request something from Etcd using standard Etcd client commands. Blocking.
+     */
+    Response request(Request request);
+
+
+    /**
      * Create a directory using async handler
      * @param responseHandler handler
      * @param name name of dir

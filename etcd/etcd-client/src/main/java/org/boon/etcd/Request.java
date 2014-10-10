@@ -17,12 +17,14 @@ public class Request {
     private final static String UTF_8 = StandardCharsets.UTF_8.displayName();
 
     private boolean wait;
-    private int waitIndex;
+    private long waitIndex;
     private boolean recursive;
     private boolean sorted;
     private String key;
     private long ttl;
     private boolean dir;
+
+    private boolean consistent;
 
 
     private String value;
@@ -35,6 +37,7 @@ public class Request {
     private boolean prevExist;
     private String prevValue;
     private long prevIndex;
+    private boolean emptyTTL;
 
 
     public static Request request () {
@@ -51,11 +54,11 @@ public class Request {
         return this;
     }
 
-    public int waitIndex() {
+    public long waitIndex() {
         return waitIndex;
     }
 
-    public Request waitIndex(int waitIndex) {
+    public Request waitIndex(long waitIndex) {
         this.waitIndex = waitIndex;
         return this;
     }
@@ -66,6 +69,17 @@ public class Request {
 
     public Request recursive(boolean recursive) {
         this.recursive = recursive;
+        return this;
+    }
+
+
+
+    public boolean consistent() {
+        return consistent;
+    }
+
+    public Request consistent(boolean consistent) {
+        this.consistent = consistent;
         return this;
     }
 
@@ -241,6 +255,13 @@ public class Request {
             first=false;
         }
 
+
+        if ( emptyTTL ) {
+            if (!first) builder.append("&");
+            builder.append("ttl=");
+            first=false;
+        }
+
         if ( prevExist ) {
             if (!first) builder.append("&");
             builder.append("prevExist=true");
@@ -252,6 +273,15 @@ public class Request {
             builder.append("dir=true");
             first=false;
         }
+
+
+        if ( consistent ) {
+            if (!first) builder.append("&");
+            builder.append("consistent=true");
+            first=false;
+        }
+
+
 
 
     }
@@ -290,5 +320,11 @@ public class Request {
         } else {
             return Str.add("http://",host, ":" + port, "::", method, uri(), "\nREQUEST_BODY\n\t", paramBody());
         }
+    }
+
+    public Request emptyTTL() {
+        this.emptyTTL = true;
+
+        return this;
     }
 }
