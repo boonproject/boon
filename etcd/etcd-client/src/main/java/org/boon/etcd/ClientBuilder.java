@@ -25,6 +25,8 @@ public class ClientBuilder {
 
     private SSLContext sslContext;
 
+    private boolean followLeader = true;
+
 
     private  URI[] hosts;
 
@@ -135,10 +137,19 @@ public class ClientBuilder {
 
 
     public Etcd createClient() {
-        return new EtcdClient(null, this, 0);
+        return new EtcdClient(null, this);
     }
 
     public static ClientBuilder builder() {
         return new ClientBuilder();
+    }
+
+    public boolean followLeader() {
+        return followLeader;
+    }
+
+    public ClientBuilder followLeader(boolean followLeader) {
+        this.followLeader = followLeader;
+        return this;
     }
 }

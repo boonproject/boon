@@ -59,7 +59,10 @@ public class ExampleAsyncMain {
         };
 
         Etcd client = ClientBuilder.builder().hosts(
-                URI.create("http://localhost:4001")).createClient();
+                URI.create("http://localhost:4001"),
+                URI.create("http://localhost:4002"),
+                URI.create("http://localhost:4003")
+                ).createClient();
 
         client.get(handler, "foo");
 

@@ -30,11 +30,14 @@ package org.boon.etcd;
 
 import org.boon.Exceptions;
 import org.boon.IO;
+import org.boon.Logger;
 import org.boon.Str;
+import org.boon.core.Sys;
 import org.boon.etcd.exceptions.ConnectionException;
 import org.boon.etcd.exceptions.TimeoutException;
 import org.boon.json.JsonParserAndMapper;
 import org.boon.json.JsonParserFactory;
+import org.boon.primitive.Arry;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.VertxFactory;
@@ -44,12 +47,14 @@ import org.vertx.java.core.http.*;
 import javax.net.ssl.SSLContext;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.boon.Boon.configurableLogger;
 import static org.boon.Boon.isEmpty;
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
@@ -63,17 +68,16 @@ public class EtcdClient implements Etcd{
 
     /** Vertx which is the http lib we use. */
     private final Vertx vertx;
+    private final URI[] hosts;
 
 
     private HttpClient httpClient;
 
     /** Are we closed.*/
-    private volatile boolean closed;
+    private AtomicBoolean closed = new AtomicBoolean();
 
-    /** Host to connect to. */
-    private final String host;
-    /** Port of host to connect to. */
-    private final int port;
+    private AtomicInteger currentIndex = new AtomicInteger(-1);
+
 
 
     private final SSLContext sslContext;
@@ -95,7 +99,15 @@ public class EtcdClient implements Etcd{
 
     private final boolean sslAuthRequired;
 
+
+    private final boolean followLeader;
+
     private final boolean sslTrustAll;
+
+
+    private Logger logger = configurableLogger(EtcdClient.class);
+
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(2);
 
 
     private ThreadLocal<JsonParserAndMapper> jsonParserAndMapperThreadLocal = new ThreadLocal<JsonParserAndMapper>(){
@@ -106,12 +118,12 @@ public class EtcdClient implements Etcd{
     };
 
 
-    protected EtcdClient(Vertx vertx, ClientBuilder builder, int index) {
+    protected EtcdClient(Vertx vertx, ClientBuilder builder) {
 
         this.vertx = vertx==null ? VertxFactory.newVertx() : vertx;
 
-        this.host = builder.hosts().get(index).getHost();
-        this.port = builder.hosts().get(index).getPort();
+
+
 
         this.sslAuthRequired = builder.sslAuthRequired();
         this.sslTrustAll = builder.sslTrustAll();
@@ -124,7 +136,11 @@ public class EtcdClient implements Etcd{
         this.useSSL = builder.useSSL();
         this.poolSize = builder.poolSize();
 
+        this.hosts = Arry.array(builder.hosts());
+
         this.sslContext = builder.sslContext();
+
+        this.followLeader = builder.followLeader();
 
 
         connect();
@@ -132,13 +148,9 @@ public class EtcdClient implements Etcd{
     }
 
 
-    protected EtcdClient(Vertx vertx, ClientBuilder builder) {
-        this(vertx, builder, 0);
-    }
-
     protected  EtcdClient(ClientBuilder builder) {
 
-        this (null, builder, 0);
+        this (null, builder);
 
     }
 
@@ -216,12 +228,16 @@ public class EtcdClient implements Etcd{
 
     @Override
     public void request(org.boon.core.Handler<Response> responseHandler, Request request) {
+
+        URI host = hosts[this.currentIndex.get()];
+
+        request.host(host.getHost()).port(host.getPort());
+
         sendHttpRequest(request, responseHandler);
     }
 
     @Override
     public Response request(final Request request) {
-
 
         final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
@@ -237,7 +253,6 @@ public class EtcdClient implements Etcd{
 
 
     public Response requestForever(final Request request) {
-
 
         final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
@@ -338,16 +353,62 @@ public class EtcdClient implements Etcd{
      * @param request request
      * @param responseHandler handler
      */
-    private void sendHttpRequest(Request request, org.boon.core.Handler<Response> responseHandler) {
+    private void sendHttpRequest(final Request request, final org.boon.core.Handler<Response> responseHandler) {
 
-        HttpClientRequest httpClientRequest = httpClient.request(request.getMethod(), request.uri(),
+        final HttpClientRequest httpClientRequest = httpClient.request(request.getMethod(), request.uri(),
                 handleResponse(request, responseHandler));
 
-        if (!request.getMethod().equals("GET")) {
-            httpClientRequest.putHeader("Content-Type", "application/x-www-form-urlencoded").end(request.paramBody());
+
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if (!request.getMethod().equals("GET")) {
+                    httpClientRequest.putHeader("Content-Type", "application/x-www-form-urlencoded").end(request.paramBody());
+                } else {
+                    httpClientRequest.end();
+                }
+
+            }
+        };
+
+
+
+        if (closed.get()) {
+           this.scheduledExecutorService.schedule(new Runnable() {
+               @Override
+               public void run() {
+                   connect();
+                   int retry = 0;
+                   while (closed.get()) {
+                       Sys.sleep(1000);
+
+                       if (!closed.get()) {
+                           break;
+                       }
+                       retry++;
+                       if (retry>10) {
+                           break;
+                       }
+
+                       if ( retry % 3 == 0 ) {
+                           connect();
+                       }
+                   }
+
+                   if (!closed.get()) {
+                       runnable.run();
+                   } else {
+                       responseHandler.handle(new Response("TIMEOUT", -1, new Error(-1, "Timeout", "Timeout", -1L)));
+                   }
+               }
+           }, 10, TimeUnit.MILLISECONDS);
         } else {
-            httpClientRequest.end();
+            runnable.run();
         }
+
+
+
     }
 
     @Override
@@ -613,8 +674,8 @@ public class EtcdClient implements Etcd{
         try {
             Response response = responseBlockingQueue.poll(this.timeOutInMilliseconds, TimeUnit.MILLISECONDS);
             if (response == null) {
-                if (this.closed) {
-                    throw new ConnectionException(Str.add("Connection exception for key ", key, " host ", host, " port ", ""+port));
+                if (this.closed.get()) {
+                    throw new ConnectionException(Str.add("Connection exception for key ", key));
                 }
                 throw new TimeoutException(Str.add("Response timeout for get request key=", key));
             }
@@ -643,19 +704,24 @@ public class EtcdClient implements Etcd{
     }
 
 
-    private Response createResponseFromException(String action, String key, Throwable throwable) {
+    private Response createResponseFromException(Request request, Throwable throwable) {
+
+
+        logger.error(throwable, "Unable to connect to ", request.toString(), request.key());
 
         if (throwable instanceof ConnectException) {
-            closed = true;
+            closed.set(true);
 
-            Error error = new Error(-1, throwable.getClass().getName(), Str.add("Unable to connect to host ", this.host, " port ", ""+this.port), 0L);
-            return new Response(action, -1, error);
+
+
+            Error error = new Error(-1, throwable.getClass().getName(), Str.add("Unable to connect", request.toString()), 0L);
+            return new Response(request.toString(), -1, error);
 
 
         }
         Error error = new Error(-1, throwable.getClass().getName(), Str.add(throwable.getMessage(),
-                " action ", action, " key ", key, " host ", this.host, " port ", ""+this.port), 0L);
-        return new Response(action, -1, error);
+                " Unable to connect to ", request.toString(), " key ", request.key()), 0L);
+        return new Response(request.toString(), -1, error);
     }
 
     private Handler<HttpClientResponse> handleResponse(final Request request, final org.boon.core.Handler<Response> handler) {
@@ -675,14 +741,20 @@ public class EtcdClient implements Etcd{
                     @Override
                     public void handle(Void aVoid) {
                         String json = buffer.toString();
-                        Response response = parseResponse(json, request.toString(), request.key(), httpClientResponse);
-                        handler.handle(response);
+                        Response response = parseResponse(json, request, handler, httpClientResponse);
+
+                        if (followLeader && response instanceof RedirectResponse) {
+                            //do nothing
+                        } else {
+                            handler.handle(response);
+                        }
                     }
                 }).exceptionHandler(new Handler<Throwable>() {
                     @Override
                     public void handle(Throwable event) {
 
-                        Response response = createResponseFromException(request.toString(), request.key(), event);
+                        logger.debug(event, Str.add("Unable to connect to ", request.toString()));
+                        Response response = createResponseFromException(request, event);
                         handler.handle(response);
                     }
                 });
@@ -690,7 +762,8 @@ public class EtcdClient implements Etcd{
         };
     }
 
-    private Response parseResponse(String json, String action, String key, HttpClientResponse httpClientResponse) {
+    private Response parseResponse(String json, Request request, org.boon.core.Handler<Response> handler,
+                                   HttpClientResponse httpClientResponse) {
         try {
 
 
@@ -701,6 +774,11 @@ public class EtcdClient implements Etcd{
 
                 case 307:
                     response = new RedirectResponse(httpClientResponse.headers().get("Location"));
+
+                    if (followLeader) {
+                        Etcd client = ClientBuilder.builder().hosts(((RedirectResponse) response).location()).createClient();
+                        client.request(handler, request);
+                    }
                     return response;
 
                 case 200:
@@ -718,7 +796,7 @@ public class EtcdClient implements Etcd{
 
                     Error notFound = jsonParserAndMapperThreadLocal.get().parse(Error.class, json);
 
-                    response = new Response(action, httpClientResponse.statusCode(), notFound);
+                    response = new Response(request.toString(), httpClientResponse.statusCode(), notFound);
                     return response;
 
                 default:
@@ -727,7 +805,7 @@ public class EtcdClient implements Etcd{
 
                         Error error = jsonParserAndMapperThreadLocal.get().parse(Error.class, json);
 
-                        response = new Response(action, httpClientResponse.statusCode(), error);
+                        response = new Response(request.toString(), httpClientResponse.statusCode(), error);
                         return response;
                     } else if (!isEmpty(json)){
 
@@ -744,30 +822,52 @@ public class EtcdClient implements Etcd{
         } catch (Exception ex) {
 
             if (!Str.isEmpty(json)) {
-                return createResponseFromException(action + "\n" + json + "\n", key, ex);
+                return createResponseFromException(request, ex);
             } else {
 
-                return createResponseFromException(action + " blank response", key, ex);
+                return createResponseFromException(request, ex);
             }
         }
     }
 
     private void connect() {
-        httpClient = vertx.createHttpClient().setHost(host).setPort(port)
-                .setConnectTimeout(this.timeOutInMilliseconds).setMaxPoolSize(poolSize).exceptionHandler(new Handler<Throwable>() {
-            @Override
-            public void handle(Throwable throwable) {
 
-                if (throwable instanceof ConnectException) {
-                    closed = true;
-                } else {
-                    puts(throwable); //add logging soon.
-                    throwable.printStackTrace();
+        int index = this.currentIndex.get();
+
+        int oldIndex = index;
+
+        if (index + 1 == hosts.length) {
+            index = 0;
+        } else {
+            index++;
+        }
+
+        if (this.currentIndex.compareAndSet(oldIndex, index)) {
+
+
+            final URI uri = this.hosts[index];
+
+            logger.info("Connecting to ", uri);
+
+            httpClient = vertx.createHttpClient().setHost(uri.getHost()).setPort(uri.getPort())
+                    .setConnectTimeout(this.timeOutInMilliseconds).setMaxPoolSize(poolSize);
+
+            httpClient.exceptionHandler(new Handler<Throwable>() {
+                @Override
+                public void handle(Throwable throwable) {
+
+                    if (throwable instanceof ConnectException) {
+                        closed.set(true);
+                    } else {
+                        logger.error(throwable, "Unable to connect to ", uri);
+                    }
                 }
-            }
-        });
+            });
 
-        configureSSL(httpClient);
+            configureSSL(httpClient);
+
+            closed.set(false);
+        }
 
     }
 
@@ -800,7 +900,7 @@ public class EtcdClient implements Etcd{
     }
 
     public boolean isClosed() {
-        return closed;
+        return closed.get();
     }
 
 }
