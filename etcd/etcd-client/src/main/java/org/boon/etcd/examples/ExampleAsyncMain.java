@@ -30,9 +30,7 @@ package org.boon.etcd.examples;
 
 import org.boon.core.Handler;
 import org.boon.core.Sys;
-import org.boon.etcd.EtcdClient;
-import org.boon.etcd.RedirectResponse;
-import org.boon.etcd.Response;
+import org.boon.etcd.*;
 
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,7 +41,7 @@ import static org.boon.Boon.puts;
 /**
  * Created by rhightower on 10/8/14.
  */
-public class ExampleMain2 {
+public class ExampleAsyncMain {
 
 
     public static void main(String... args) {
@@ -60,8 +58,14 @@ public class ExampleMain2 {
             }
         };
 
-        EtcdClient client = new EtcdClient("localhost", 4001);
+        Etcd client = ClientBuilder.builder().hosts(
+                URI.create("http://localhost:4001")).createClient();
+
         client.get(handler, "foo");
+
+
+        client.listSorted(handler, "queue");
+        Sys.sleep(1_000);
 
 
         client.set(new Handler<Response>() {
@@ -70,7 +74,10 @@ public class ExampleMain2 {
                 if (event instanceof RedirectResponse) {
 
                     URI location = ((RedirectResponse) event).location();
-                    EtcdClient client = new EtcdClient(location.getHost(), location.getPort());
+
+                    Etcd client = ClientBuilder.builder().hosts(
+                            location).createClient();
+
                     client.set(handler, "foo", "Rick found the other server");
                 } else {
                     handler.handle(event);

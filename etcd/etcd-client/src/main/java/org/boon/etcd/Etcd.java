@@ -35,7 +35,7 @@ package org.boon.etcd;
 
 import org.boon.core.Handler;
 
-interface Etcd {
+public interface Etcd {
 
 
     /**

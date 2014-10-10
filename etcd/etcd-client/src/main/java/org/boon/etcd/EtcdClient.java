@@ -41,6 +41,7 @@ import org.vertx.java.core.VertxFactory;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.*;
 
+import javax.net.ssl.SSLContext;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.URLEncoder;
@@ -60,7 +61,7 @@ public class EtcdClient implements Etcd{
 
 
 
-    /** Vertx which is the websocket lib we use. */
+    /** Vertx which is the http lib we use. */
     private final Vertx vertx;
 
 
@@ -74,7 +75,28 @@ public class EtcdClient implements Etcd{
     /** Port of host to connect to. */
     private final int port;
 
-    private int timeout = 5000;
+
+    private final SSLContext sslContext;
+
+
+    private final boolean useSSL;
+    private final int poolSize;
+
+    private final int timeOutInMilliseconds;
+
+
+    private final String sslTrustStorePath;
+    private final String sslTrustStorePassword;
+
+    private final String sslKeyStorePath;
+    private final String sslKeyStorePassword;
+
+
+
+    private final boolean sslAuthRequired;
+
+    private final boolean sslTrustAll;
+
 
     private ThreadLocal<JsonParserAndMapper> jsonParserAndMapperThreadLocal = new ThreadLocal<JsonParserAndMapper>(){
         @Override
@@ -84,29 +106,39 @@ public class EtcdClient implements Etcd{
     };
 
 
-    public EtcdClient(Vertx vertx, String host, int port) {
+    protected EtcdClient(Vertx vertx, ClientBuilder builder, int index) {
 
         this.vertx = vertx==null ? VertxFactory.newVertx() : vertx;
-        this.host = host;
-        this.port = port;
+
+        this.host = builder.hosts().get(index).getHost();
+        this.port = builder.hosts().get(index).getPort();
+
+        this.sslAuthRequired = builder.sslAuthRequired();
+        this.sslTrustAll = builder.sslTrustAll();
+        this.sslKeyStorePassword = builder.sslKeyStorePassword();
+        this.sslTrustStorePassword = builder.sslTrustStorePassword();
+        this.sslKeyStorePath = builder.sslKeyStorePath();
+        this.sslTrustStorePath = builder.sslTrustStorePath();
+
+        this.timeOutInMilliseconds = builder.timeOutInMilliseconds();
+        this.useSSL = builder.useSSL();
+        this.poolSize = builder.poolSize();
+
+        this.sslContext = builder.sslContext();
+
+
         connect();
 
     }
 
-    public EtcdClient(Vertx vertx, String host, int port, int milliSecondTimeout) {
 
-        this.vertx = vertx==null ? VertxFactory.newVertx() : vertx;
-        this.host = host;
-        this.port = port;
-        this.timeout = milliSecondTimeout;
-        connect();
-
+    protected EtcdClient(Vertx vertx, ClientBuilder builder) {
+        this(vertx, builder, 0);
     }
+    protected  EtcdClient(ClientBuilder builder) {
 
+        this (null, builder, 0);
 
-
-    public EtcdClient(String host, int port) {
-        this(null, host, port);
     }
 
     @Override
@@ -302,7 +334,8 @@ public class EtcdClient implements Etcd{
 
         final BlockingQueue<Response> responseBlockingQueue = new ArrayBlockingQueue<>(1);
 
-        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key), getResponseHandler("set", key, responseBlockingQueue));
+        HttpClientRequest httpClientRequest = httpClient.put(Str.add("/v2/keys/", key),
+                getResponseHandler("set", key, responseBlockingQueue));
 
         Buffer buffer = new Buffer(key.length());
 
@@ -389,15 +422,24 @@ public class EtcdClient implements Etcd{
     @Override
     public void listSorted(org.boon.core.Handler<Response> responseHandler, String key) {
 
+        Request request = new Request();
+        request.key(key);
+        request.recursive(true).sorted(true);
 
-        HttpClientRequest httpClientRequest = httpClient.get(Str.add("/v2/keys/", key, "?recursive=true&sorted=true"),
+        sendHttpRequest(request, responseHandler);
 
-                handleResponse("get", key, responseHandler));
+    }
 
-        httpClientRequest.end();
+    private void sendHttpRequest(Request request, org.boon.core.Handler<Response> responseHandler) {
 
+        HttpClientRequest httpClientRequest = httpClient.request(request.getMethod(), request.uri(),
+                handleResponse(request, responseHandler));
 
-
+        if (!request.getMethod().equals("GET")) {
+            httpClientRequest.end(request.paramBody());
+        } else {
+            httpClientRequest.end();
+        }
     }
 
     @Override
@@ -900,7 +942,7 @@ public class EtcdClient implements Etcd{
 
     private Response getResponse(String key, BlockingQueue<Response> responseBlockingQueue) {
         try {
-            Response response = responseBlockingQueue.poll(timeout, TimeUnit.MILLISECONDS);
+            Response response = responseBlockingQueue.poll(this.timeOutInMilliseconds, TimeUnit.MILLISECONDS);
             if (response == null) {
                 if (this.closed) {
                     throw new ConnectionException(Str.add("Connection exception for key ", key, " host ", host, " port ", ""+port));
@@ -982,6 +1024,38 @@ public class EtcdClient implements Etcd{
         return new Response(action, -1, error);
     }
 
+    private Handler<HttpClientResponse> handleResponse(final Request request, final org.boon.core.Handler<Response> handler) {
+        return new Handler<HttpClientResponse>() {
+            @Override
+            public void handle(final HttpClientResponse httpClientResponse) {
+
+                final Buffer buffer = new Buffer(1000);
+
+                httpClientResponse.dataHandler(new Handler<Buffer>() {
+                    @Override
+                    public void handle(Buffer partialBuf) {
+
+                        buffer.appendBuffer(partialBuf);
+                    }
+                }).endHandler(new Handler<Void>() {
+                    @Override
+                    public void handle(Void aVoid) {
+                        String json = buffer.toString();
+                        Response response = parseResponse(json, request.toString(), request.key(), httpClientResponse);
+                        handler.handle(response);
+                    }
+                }).exceptionHandler(new Handler<Throwable>() {
+                    @Override
+                    public void handle(Throwable event) {
+
+                        Response response = createResponseFromException(request.toString(), request.key(), event);
+                        handler.handle(response);
+                    }
+                });
+            }
+        };
+    }
+
     private Handler<HttpClientResponse> handleResponse(final String action, final String key, final org.boon.core.Handler<Response> handler) {
         return new Handler<HttpClientResponse>() {
             @Override
@@ -1013,7 +1087,6 @@ public class EtcdClient implements Etcd{
             }
         };
     }
-
     private Response parseResponse(String json, String action, String key, HttpClientResponse httpClientResponse) {
         try {
 
@@ -1077,18 +1150,49 @@ public class EtcdClient implements Etcd{
     }
 
     private void connect() {
-        httpClient = vertx.createHttpClient().setHost(host).setPort(port).setConnectTimeout(timeout).setMaxPoolSize(20).exceptionHandler(new Handler<Throwable>() {
+        httpClient = vertx.createHttpClient().setHost(host).setPort(port)
+                .setConnectTimeout(this.timeOutInMilliseconds).setMaxPoolSize(poolSize).exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
 
                 if (throwable instanceof ConnectException) {
                     closed = true;
                 } else {
-                    puts(throwable);
+                    puts(throwable); //add logging soon.
                     throwable.printStackTrace();
                 }
             }
         });
+
+        configureSSL(httpClient);
+
+    }
+
+    private void configureSSL(HttpClient httpClient) {
+        if (!useSSL) {
+            return;
+        }
+
+        if (sslAuthRequired) {
+
+            httpClient.setKeyStorePassword(sslKeyStorePassword);
+            httpClient.setKeyStorePath(sslKeyStorePath);
+        }
+
+
+        if (!Str.isEmpty(this.sslTrustStorePath)) {
+            httpClient.setTrustStorePassword(this.sslTrustStorePassword);
+
+            httpClient.setTrustStorePassword(this.sslTrustStorePath);
+        }
+
+        if (sslTrustAll) {
+            httpClient.setTrustAll(true);
+        }
+
+        if (sslContext==null) {
+            httpClient.setSSLContext(this.sslContext);
+        }
 
     }
 

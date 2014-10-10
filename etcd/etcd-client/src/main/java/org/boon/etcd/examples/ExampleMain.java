@@ -29,8 +29,11 @@
 package org.boon.etcd.examples;
 
 import org.boon.core.Sys;
-import org.boon.etcd.EtcdClient;
+import org.boon.etcd.ClientBuilder;
+import org.boon.etcd.Etcd;
 import org.boon.etcd.Response;
+
+import java.net.URI;
 
 import static org.boon.Boon.puts;
 
@@ -44,7 +47,10 @@ public class ExampleMain {
 
         Response response;
 
-        EtcdClient client = new EtcdClient("localhost", 4003);
+
+        Etcd client = ClientBuilder.builder().hosts(
+                URI.create("http://localhost:4001")).createClient();
+
         response = client.get("foo");
 
         puts(response);
