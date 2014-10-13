@@ -1321,8 +1321,17 @@ public class MapperSimple implements Mapper {
            REFACTOR:
              */
         }  else if (Typ.isMap( fieldClassType ))  {
-            Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
-            Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
+
+            Class keyType;
+            Class valueType;
+
+            if (field.getParameterizedType() == null) {
+                keyType = String.class;
+                valueType = Object.class;
+            } else {
+                keyType = (Class) field.getParameterizedType().getActualTypeArguments()[0];
+                valueType = (Class) field.getParameterizedType().getActualTypeArguments()[1];
+            }
 
             Set<Map.Entry> set = mapInner.entrySet();
             Map newMap = new LinkedHashMap(  );
