@@ -3,17 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-
     <parent>
         <groupId>io.fastjson</groupId>
-        <artifactId>qbit-bundle</artifactId>
+        <artifactId>boon-bundle</artifactId>
         <version>0.29-SNAPSHOT</version>
     </parent>
-
     <groupId>io.fastjson.bnsf</groupId>
     <artifactId>bnsf-core</artifactId>
-    <version>0.29-SNAPSHOT</version>
-
-
 </project>
