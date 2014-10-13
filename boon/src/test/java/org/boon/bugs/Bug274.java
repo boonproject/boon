@@ -1,9 +1,6 @@
 package org.boon.bugs;
 
 import org.boon.core.Conversions;
-import org.boon.core.Sys;
-import org.boon.core.Value;
-import org.boon.core.value.LazyValueMap;
 import org.boon.json.ObjectMapper;
 import org.boon.json.implementation.ObjectMapperImpl;
 import org.junit.Test;
