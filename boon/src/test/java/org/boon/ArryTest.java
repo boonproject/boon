@@ -417,6 +417,14 @@ public class ArryTest {
                 array2
         );
 
+
+        array2 = slc( fruit, 1 );
+
+        assertArrayEquals(
+                array( "oranges", "pears", "grapes", "kiwi" ),
+                array2
+        );
+
         String[] array3 = slc( fruit, -3, -1 );
 
         assertArrayEquals(

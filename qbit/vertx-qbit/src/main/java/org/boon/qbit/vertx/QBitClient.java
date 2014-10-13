@@ -351,8 +351,14 @@ public class QBitClient {
                         if (o instanceof org.boon.core.Handler) {
                             handlers.put(new HandlerKey(call.returnAddress(), call.id()),
                                     createHandler(serviceInterface, call, (org.boon.core.Handler)o));
+
+                            if (list.length-1==0) {
+                                list = new Object[0];
+                            } else {
+                                list = Arry.slc(list, 1); //Skip first arg it was a handler.
+                            }
+
                         }
-                        list = Arry.slc(list, 1);
                         if (call instanceof MethodCallImpl) {
                             MethodCallImpl impl = (MethodCallImpl) call;
                             impl.setBody(list);
