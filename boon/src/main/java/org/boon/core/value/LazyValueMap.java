@@ -196,6 +196,8 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
     @Override
     public Value put( String key, Object value ) {
+
+
         if ( map != null ) {
             return (Value) map.put(key, value);
         } else {
