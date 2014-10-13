@@ -3,14 +3,13 @@
 
 
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>5</version>
+        <groupId>io.fastjson</groupId>
+        <artifactId>boon-bundle</artifactId>
+        <version>0.29-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <!-- org.boon.io, json.io was taken. -->
-    <groupId>io.fastjson</groupId>
     <artifactId>qbit-bundle</artifactId>
     <version>0.29-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -23,9 +22,6 @@
     <url>http://richardhightower.github.io/site/Boon</url>
 
 
-    <properties>
-        <boon.version>0.29-SNAPSHOT</boon.version>
-    </properties>
 
 
     <licenses>

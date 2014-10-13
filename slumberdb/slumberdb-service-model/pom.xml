@@ -36,34 +36,16 @@
         <dependency>
             <groupId>io.fastjson</groupId>
             <artifactId>slumberdb-mysql</artifactId>
-            <version>0.29-SNAPSHOT</version>
+            <version>${boon.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.fastjson</groupId>
             <artifactId>slumberdb-leveldb</artifactId>
-            <version>0.29-SNAPSHOT</version>
+            <version>${boon.version}</version>
         </dependency>
 
     </dependencies>
 
-
-    <build>
-        <plugins>
-
-
-            <!-- Other plugins required by the build -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-
-    </build>
 
 </project>

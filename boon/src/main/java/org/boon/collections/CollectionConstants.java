@@ -38,10 +38,6 @@ public class CollectionConstants {
             return false;
         }
 
-        @Override
-        public boolean remove(Object key, Object o) {
-            return false;
-        }
 
         @Override
         public boolean removeMulti(Object key) {
