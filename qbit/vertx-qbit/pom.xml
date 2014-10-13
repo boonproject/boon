@@ -4,7 +4,7 @@
   <parent>
       <groupId>io.fastjson</groupId>
       <artifactId>qbit-bundle</artifactId>
-      <version>0.29</version>
+      <version>0.30-SNAPSHOT</version>
   </parent>
   <artifactId>vertx-qbit</artifactId>
   <name>Project - vertx-qbit</name>
