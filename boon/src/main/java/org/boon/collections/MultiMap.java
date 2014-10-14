@@ -28,5 +28,6 @@ public interface MultiMap<K, V> extends Iterable<Map.Entry<K, Collection<V>>>, M
 
     Map<? extends K,? extends Collection<V>> baseMap();
 
-    Object getSingleObject(V name);
+
+    public V getSingleObject(K name);
 }

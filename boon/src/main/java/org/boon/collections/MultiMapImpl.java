@@ -370,7 +370,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
     }
 
     @Override
-    public Object getSingleObject(V name) {
+    public V getSingleObject(K name) {
         final Collection<V> vs = map.get(name);
         if (vs == null || vs.size()==0) {
             return null;
@@ -379,7 +379,7 @@ public class MultiMapImpl<K, V> implements MultiMap<K,V> {
             vs.iterator().hasNext();
             return vs.iterator().next();
         } else {
-            return vs;
+            return null;
         }
 
     }
