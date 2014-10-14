@@ -15,7 +15,11 @@ import static org.boon.Exceptions.die;
 public class MultiMapWrapper implements MultiMap<String, String> {
 
 
-    org.vertx.java.core.MultiMap vertxMap;
+    final org.vertx.java.core.MultiMap vertxMap;
+
+    public MultiMapWrapper(org.vertx.java.core.MultiMap vertxMap) {
+        this.vertxMap = vertxMap;
+    }
 
     @Override
     public Iterator<Entry<String, Collection<String>>> iterator() {

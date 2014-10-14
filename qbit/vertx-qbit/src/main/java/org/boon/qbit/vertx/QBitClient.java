@@ -278,7 +278,7 @@ public class QBitClient {
         webSocket();
         if (webSocket==null || closed) {
             webSocket = null;
-            if (queueToServer.add(newMessage)) {
+            if (!queueToServer.add(newMessage)) {
                 die("QBitClient::not connected and output queueToServer is full");
             }
         } else {
