@@ -115,6 +115,7 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
         object = map.get ( key );
 
         lazyChopIfNeeded ( object );
+
         return object;
     }
 
@@ -195,15 +196,15 @@ public class LazyValueMap extends AbstractMap<String, Object> implements ValueMa
 
 
     @Override
-    public Value put( String key, Object value ) {
+    public Object put( String key, Object value ) {
 
 
-        if ( map != null ) {
-            return (Value) map.put(key, value);
-        } else {
-            die("Not that kind of map");
-            return null;
+        if ( map == null ) {
+            buildMap();
         }
+
+        return map.put(key, value);
+
     }
 
 
