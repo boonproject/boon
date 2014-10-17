@@ -225,8 +225,10 @@ public class MethodAccessImpl implements MethodAccess {
 
             Object arg = args[0];
             Class<?> paramType = parameterTypes[0];
-            TypeType type = paramTypeEnumList.get(0);
-            arg = Conversions.coerce(type, paramType, arg);
+            if (!paramType.isInstance(arg)) {
+                TypeType type = paramTypeEnumList.get(0);
+                arg = Conversions.coerce(type, paramType, arg);
+            }
 
             return invoke(object, arg);
         }
@@ -240,8 +242,14 @@ public class MethodAccessImpl implements MethodAccess {
 
                 Object arg = args[index];
                 Class<?> paramType = parameterTypes[index];
-                TypeType type = paramTypeEnumList.get(index);
-                newArgs[index] = Conversions.coerce(type, paramType, arg);
+
+                if (!paramType.isInstance(arg)) {
+                    TypeType type = paramTypeEnumList.get(index);
+                    newArgs[index] = Conversions.coerce(type, paramType, arg);
+                } else {
+                    newArgs[index] = arg;
+                }
+
             }
 
 
