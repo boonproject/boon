@@ -1,0 +1,7 @@
+
+description = ''
+dependencies {
+    compile group: 'org.fusesource.leveldbjni', name: 'leveldbjni-all', version:'1.8'
+    compile group: 'org.iq80.leveldb', name: 'leveldb', version:'0.7'
+  compile project(':slumberdb-bundle:slumberdb-core')
+}

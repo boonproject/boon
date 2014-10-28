@@ -1,0 +1,7 @@
+
+description = 'Slumber DB Store Service Model'
+dependencies {
+  compile project(':boon')
+  compile project(':slumberdb-bundle:slumberdb-mysql')
+  compile project(':slumberdb-bundle:slumberdb-leveldb')
+}

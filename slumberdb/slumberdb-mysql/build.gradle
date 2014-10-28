@@ -1,0 +1,6 @@
+
+description = ''
+dependencies {
+    compile group: 'mysql', name: 'mysql-connector-java', version:'5.1.30'
+  compile project(':slumberdb-bundle:slumberdb-core')
+}

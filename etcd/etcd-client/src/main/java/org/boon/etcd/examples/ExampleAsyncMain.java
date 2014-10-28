@@ -170,8 +170,9 @@ public class ExampleAsyncMain {
         Sys.sleep(1_000);
 
 
-        client.createDir(handler, "queue");
+        client.createDir(handler, "queue/queueSubDir");
         Sys.sleep(1_000);
+
 
 
         client.addToDir(handler, "queue", "job1", "myjob");

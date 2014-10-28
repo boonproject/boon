@@ -39,7 +39,6 @@ import org.boon.datarepo.DataRepoException;
 import org.boon.datarepo.PlanStep;
 import org.boon.datarepo.ResultSet;
 import org.boon.datarepo.spi.ResultSetInternal;
-import sun.invoke.empty.Empty;
 
 import java.lang.reflect.Array;
 import java.util.*;
