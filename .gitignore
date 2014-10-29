@@ -14,6 +14,7 @@ src/test/resources/foo.json
 src/test/resources/freeformatter-out.json
 
 
+boon/build/*
 
 machines/machine3/log
 
@@ -74,3 +75,5 @@ slumberdb/slumberdb-leveldb/build/poms/pom-default.xml
 slumberdb/slumberdb-mysql/build/poms/pom-default.xml
 
 slumberdb/slumberdb-service-model/build/poms/pom-default.xml
+
+build/poms/pom-default.xml
