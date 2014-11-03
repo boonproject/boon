@@ -36,6 +36,7 @@ import org.boon.etcd.Response;
 import java.net.URI;
 
 import static org.boon.Boon.puts;
+import static org.boon.Exceptions.die;
 
 /**
  * Created by rhightower on 10/8/14.
@@ -44,6 +45,8 @@ public class ExampleMain {
 
 
     public static void main(String... args) {
+
+        boolean ok;
 
         Response response;
 
@@ -96,11 +99,11 @@ public class ExampleMain {
         puts(client.get("tempKey"));
 
 
-        Response waitOnKey = client.wait("waitOnKey");
+        //Response waitOnKey = client.wait("waitOnKey");
 
-        puts("GOT KEY WE ARE WAITING ONE", waitOnKey);
+        //puts("GOT KEY WE ARE WAITING ONE", waitOnKey);
 
-        puts("Create a dir");
+        //puts("Create a dir");
 
         client.createDir("conf");
 
@@ -112,6 +115,17 @@ public class ExampleMain {
 
         client.createDir("conf/foo3");
 
+
+        client.createDir("conf/foo1/bar1");
+
+        client.addToDir("conf/foo1/bar1", "myKey", "myValue");
+
+        final Response myKeyLookResponse = client.get("conf/foo1/bar1/myKey");
+
+        ok = myKeyLookResponse.successful() || die("Lookup failed!");
+
+
+        ok = myKeyLookResponse.node().getValue().equals("myValue") || die("Lookup failed!");
 
         response = client.listRecursive("");
 

@@ -1,0 +1,24 @@
+rootProject.name = 'boon-bundle'
+include ':boon'
+include ':slumberdb-bundle:slumberdb-core'
+include ':slumberdb-bundle:slumberdb-leveldb'
+include ':slumberdb-bundle:slumberdb-mysql'
+include ':slumberdb-bundle:slumberdb-service-model'
+include ':slumberdb-bundle:slumberdb-service-client'
+include ':slumberdb-bundle:slumberdb-service'
+include ':slumberdb-bundle'
+include ':bnsf-core'
+include ':etcd-bundle:etcd-client'
+include ':etcd-bundle'
+
+project(':boon').projectDir = "$rootDir/boon" as File
+project(':slumberdb-bundle:slumberdb-core').projectDir = "$rootDir/slumberdb/slumberdb-core" as File
+project(':slumberdb-bundle:slumberdb-leveldb').projectDir = "$rootDir/slumberdb/slumberdb-leveldb" as File
+project(':slumberdb-bundle:slumberdb-mysql').projectDir = "$rootDir/slumberdb/slumberdb-mysql" as File
+project(':slumberdb-bundle:slumberdb-service-model').projectDir = "$rootDir/slumberdb/slumberdb-service-model" as File
+project(':slumberdb-bundle:slumberdb-service-client').projectDir = "$rootDir/slumberdb/slumberdb-service-client" as File
+project(':slumberdb-bundle:slumberdb-service').projectDir = "$rootDir/slumberdb/slumberdb-service" as File
+project(':slumberdb-bundle').projectDir = "$rootDir/slumberdb" as File
+project(':bnsf-core').projectDir = "$rootDir/bnsf" as File
+project(':etcd-bundle:etcd-client').projectDir = "$rootDir/etcd/etcd-client" as File
+project(':etcd-bundle').projectDir = "$rootDir/etcd" as File

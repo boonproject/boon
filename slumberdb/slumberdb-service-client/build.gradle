@@ -1,0 +1,14 @@
+
+description = 'Slumber DB Service Client'
+dependencies {
+  compile project(':slumberdb-bundle:slumberdb-service-model')
+  compile project(':boon')
+    compile group: 'io.vertx', name: 'vertx-core', version:'2.1.2'
+    compile group: 'io.vertx', name: 'vertx-platform', version:'2.1.2'
+    testCompile group: 'io.vertx', name: 'testtools', version:'2.0.3-final'
+    compile(group: 'io.vertx', name: 'vertx-hazelcast', version:'2.1.2') {
+       /* This dependency was originally in the Maven provided scope, but the project was not of type war.
+       This behavior is not yet supported by Gradle, so this dependency has been converted to a compile dependency.
+       Please review and delete this closure when resolved. */
+    }
+}

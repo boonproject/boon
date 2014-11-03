@@ -1,0 +1,6 @@
+
+description = ''
+dependencies {
+  compile project(':boon')
+    compile group: 'com.esotericsoftware.kryo', name: 'kryo', version:'2.23.0'
+}
