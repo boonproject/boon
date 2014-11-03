@@ -2,17 +2,16 @@ package org.boon.slumberdb.service.config;
 
 import org.boon.slumberdb.service.protocol.ProtocolConstants;
 import org.boon.slumberdb.stores.StartupMode;
-import org.boon.IO;
 import org.boon.Str;
 import org.boon.core.Sys;
-import org.boon.json.JsonParserFactory;
 
 /**
  * Created by Richard on 7/2/14.
  */
 public class DataStoreServerConfig {
 
-    private final static String FILE_LOCATION = Sys.sysProp("DataStoreServerConfig", "/opt/org/slumberdb/server.json");
+    private static final String DEFAULT_FILE_LOCATION = "/opt/org/slumberdb/server.json";
+
     String logDirectory;
     int adminPort;
     private long statusInterval;
@@ -31,12 +30,8 @@ public class DataStoreServerConfig {
     private boolean debug;
 
     public static DataStoreServerConfig load() {
-
-        if (IO.exists(FILE_LOCATION)) {
-            return new JsonParserFactory().create().parseFile(DataStoreServerConfig.class, FILE_LOCATION);
-        } else {
-            return new DataStoreServerConfig();
-        }
+        String fileLocation = Sys.sysProp("DataStoreServerConfig", DEFAULT_FILE_LOCATION);
+        return Sys.loadFromFileLocation(DataStoreServerConfig.class, fileLocation);
     }
 
     public static DataStoreServerConfig config() {

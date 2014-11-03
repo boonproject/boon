@@ -1,20 +1,16 @@
 package org.boon.slumberdb.service.config;
 
-import org.boon.Exceptions;
-import org.boon.IO;
 import org.boon.Lists;
 import org.boon.core.Sys;
-import org.boon.json.JsonParserFactory;
 
 import java.util.List;
 
 /**
  * Created by Richard on 7/2/14.
+ * Modified By Scott Oct '14
  */
 public class DataStoreConfig {
 
-
-    private final static String FILE_LOCATION = Sys.sysProp("org.boon.slumberdb.DataStoreConfig", "/opt/org/slumberdb/slumberdb.json");
     private String dbUrl;
     private String dbUser;
     private String dbPassword;
@@ -55,20 +51,15 @@ public class DataStoreConfig {
     private int dbReadFlushQueueIntervalMS;
     private int dbWriteFlushQueueIntervalMS;
 
+    private static final String DEFAULT_FILE_LOCATION = "/opt/org/slumberdb/slumberdb.json";
+
     public static DataStoreConfig load() {
+        String fileLocation = Sys.sysPropMultipleKeys(
+                "org.boon.slumberdb.DataStoreConfig", // POSSIBLE KEY, KEPT FOR BACKWARD COMPATIBLE
+                "DataStoreConfig"                     // POSSIBLE KEY
+        );
 
-        try {
-
-            if (IO.exists(FILE_LOCATION)) {
-                return new JsonParserFactory().create().parseFile(DataStoreConfig.class, FILE_LOCATION);
-            } else {
-                return new DataStoreConfig();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Exceptions.handle(ex, "Unable to read file from ", FILE_LOCATION);
-            return null;
-        }
+        return Sys.loadFromFileLocation(DataStoreConfig.class, fileLocation, DEFAULT_FILE_LOCATION);
     }
 
     public static DataStoreConfig config() {

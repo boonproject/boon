@@ -14,7 +14,7 @@ import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -26,26 +26,35 @@ import static org.boon.primitive.Lng.str;
  */
 public class BatchFileWriter implements TimeAware {
 
+    public final static String FORMAT_PATTERN;
+    public final static String SERVER_NAME;
 
-    public final static String FORMAT_PATTERN =
-            Sys.sysProp("NFL.USER_DATA_TRACKER.FILE_NAME_FORMAT_PATTERN",
-                    "%s/user_data_collection_%s_%s_%s.json");
-    public final static String SERVER_NAME =
-            Sys.sysProp("NFL.USER_DATA_TRACKER.SERVER_NAME",
-                    "server1");
     /**
      * Default log size 20,000,000, if beyond 20M create a new log *
      */
-    public static int FILE_SIZE_BYTES = Integer.parseInt(System.getProperty("NFL.USER_DATA_TRACKER.FILE_SIZE_BYTES", "" + 10_000_000));
+    public final static int FILE_SIZE_BYTES;
+
     /**
      * Default log batch time 10 minutes, if beyond ten, then create a new log.  *
      */
-    public static int FILE_TIMEOUT_MINUTES = Integer.parseInt(System.getProperty("NFL.USER_DATA_TRACKER.FILE_TIMEOUT_MINUTES", "10"));
-    private static int FILE_TIMEOUT_MILISECONDS = FILE_TIMEOUT_MINUTES * 60 * 1_000;
+    public final static int FILE_TIMEOUT_MINUTES;
+    public final static int FILE_TIMEOUT_MILISECONDS;
+
     /**
      * Default log size 20,000,000, if beyond 20M create a new log *
      */
-    public static int FLUSH_EVERY_N_BYTES = Integer.parseInt(System.getProperty("NFL.USER_DATA_TRACKER.FLUSH_EVERY_N_BYTES", "" + 20_000_000));
+    public final static int FLUSH_EVERY_N_BYTES;
+
+    static {
+        LogFilesConfig lfc = LogFilesConfig.load();
+        FORMAT_PATTERN = Sys.sysProp("NFL.USER_DATA_TRACKER.FILE_NAME_FORMAT_PATTERN", lfc.logFilesNameFormatPattern);
+        SERVER_NAME = Sys.sysProp("NFL.USER_DATA_TRACKER.SERVER_NAME", lfc.logFilesServerName);
+        FILE_SIZE_BYTES = Integer.parseInt(System.getProperty("NFL.USER_DATA_TRACKER.FILE_SIZE_BYTES", lfc.logFileSizeBytes.toString()));
+        FILE_TIMEOUT_MINUTES = Integer.parseInt(System.getProperty("NFL.USER_DATA_TRACKER.FILE_TIMEOUT_MINUTES", lfc.logFileTimeoutMinutes.toString()));
+        FILE_TIMEOUT_MILISECONDS = FILE_TIMEOUT_MINUTES * 60 * 1_000;
+        FLUSH_EVERY_N_BYTES = Integer.parseInt(System.getProperty("NFL.USER_DATA_TRACKER.FLUSH_EVERY_N_BYTES", lfc.logFileFlushEveryBytes.toString()));
+    }
+
     private volatile long buffersSent = 0;
     private volatile long bytesTransferred = 0;
     private volatile long bytesSinceLastFlush = 0;
@@ -59,8 +68,8 @@ public class BatchFileWriter implements TimeAware {
     private AtomicLong fileStartTime = new AtomicLong();
     private AtomicBoolean error = new AtomicBoolean(false);
     private Path outputDir;
-    private volatile String fileName = String.format(FORMAT_PATTERN,
-            outputDir, numFiles, System.currentTimeMillis(), SERVER_NAME);
+
+    private volatile String fileName;
     private SeekableByteChannel outputStream;
     private ByteBuffer outputBuffer;
     private boolean dirty;
@@ -281,11 +290,7 @@ public class BatchFileWriter implements TimeAware {
             return;
         }
 
-
-        fileName = String.format(FORMAT_PATTERN,
-                this.outputDirPath().toString(), numFiles, time, SERVER_NAME);
-
-
+        fileName = LogFilesConfig.getLogFileName(FORMAT_PATTERN, outputDirPath(), numFiles, time, SERVER_NAME);
         try {
             fileTimeOut.set(false);
             outputStream = streamCreator();

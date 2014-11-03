@@ -2,18 +2,14 @@ package org.boon.slumberdb.service.config;
 
 
 import org.boon.slumberdb.service.protocol.ProtocolConstants;
-import org.boon.Exceptions;
-import org.boon.IO;
 import org.boon.Str;
 import org.boon.core.Sys;
-import org.boon.json.JsonParserFactory;
 import org.boon.json.annotations.JsonIgnore;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.boon.Boon.puts;
 import static org.boon.Lists.list;
 
 /**
@@ -21,7 +17,7 @@ import static org.boon.Lists.list;
  */
 public class DataStoreClientConfig {
 
-    private final static String FILE_LOCATION = Sys.sysProp("org.boon.slumberdb.DataStoreClientConfig", "/opt/org/slumberdb/client.json");
+    private static final String DEFAULT_FILE_LOCATION = "/opt/org/slumberdb/client.json";
 
     private List<Bucket> buckets;
 
@@ -51,21 +47,12 @@ public class DataStoreClientConfig {
     }
 
     public static DataStoreClientConfig load() {
+        String fileLocation = Sys.sysPropMultipleKeys(
+                "org.boon.slumberdb.DataStoreClientConfig", // POSSIBLE KEY, KEPT FOR BACKWARD COMPATIBLE
+                "DataStoreClientConfig"                     // POSSIBLE KEY
+        );
 
-        puts("Config for data store client", FILE_LOCATION);
-
-        if (IO.exists(FILE_LOCATION)) {
-            try {
-                return new JsonParserFactory().create().parseFile(DataStoreClientConfig.class, FILE_LOCATION);
-            } catch (Exception ex) {
-                Exceptions.handle(ex, "Unable to read config file", FILE_LOCATION, "for data store client config");
-                return null;
-            }
-        } else {
-
-            puts("WARNING", FILE_LOCATION, "does not exist for data store client config!!!");
-            return new DataStoreClientConfig();
-        }
+        return Sys.loadFromFileLocation(DataStoreClientConfig.class, fileLocation, DEFAULT_FILE_LOCATION);
     }
 
     public static DataStoreClientConfig config() {

@@ -1346,4 +1346,12 @@ public class IO {
     public static boolean exists (String path ) {
         return Files.exists(IO.path(path));
     }
+
+    public static void move(Path source, Path target) {
+        try {
+            Files.move(source, target);
+        } catch (IOException e) {
+            Exceptions.handle(e);
+        }
+    }
 }

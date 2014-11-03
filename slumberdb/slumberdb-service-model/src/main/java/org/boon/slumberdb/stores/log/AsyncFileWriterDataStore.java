@@ -15,6 +15,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.boon.Boon.configurableLogger;
+import static org.boon.Boon.toJson;
 
 
 /**
@@ -180,25 +181,9 @@ public class AsyncFileWriterDataStore implements DataStore, TimeAware {
     }
 
     private void putDataInBuffer(ByteBuffer buffer, long messageId, String clientId, String key, String value) {
-        buffer.put((byte) '[');
-
-        buffer.put(("" + index++).getBytes());
-        buffer.put((byte) ',');
-
-        buffer.put(("" + approxTime.get()).getBytes());
-        buffer.put((byte) ',');
-
-        buffer.put(("\"" + clientId + "\"").getBytes());
-        buffer.put((byte) ',');
-
-        buffer.put(("" + messageId).getBytes());
-        buffer.put((byte) ',');
-
-
-        buffer.put(("\"" + key + "\"").getBytes());
-        buffer.put((byte) ',');
-        buffer.put(value.getBytes());
-        buffer.put(("]\n").getBytes());
+        LogEntry logEntry = new LogEntry(messageId, clientId, key, value);
+        buffer.put(toJson(logEntry).getBytes());
+        buffer.put((byte)'\n');
     }
 
     public void stop() {

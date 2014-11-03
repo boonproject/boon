@@ -30,6 +30,7 @@ package org.boon.core;
 
 
 import com.sun.management.UnixOperatingSystemMXBean;
+import org.boon.Exceptions;
 import org.boon.IO;
 import org.boon.Lists;
 import org.boon.Str;
@@ -37,6 +38,7 @@ import org.boon.core.reflection.Annotations;
 import org.boon.core.reflection.Reflection;
 import org.boon.core.timer.TimeKeeper;
 import org.boon.core.timer.TimeKeeperBasic;
+import org.boon.json.JsonParserFactory;
 import org.boon.logging.Logging;
 
 import java.io.File;
@@ -49,7 +51,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
-
 
 
 public class Sys {
@@ -67,6 +68,7 @@ public class Sys {
     private final static BigDecimal version;
     private final static boolean is1_7;
     private final static boolean is1_8;
+    public final static Object DEFAULT_NULL_NOT_EMPTY = new Object();
 
 
     static {
@@ -238,8 +240,22 @@ public class Sys {
                 Logging.contextToHold() );
     }
 
+    public static String sysPropMultipleKeys(String... keys) {
+        for (String key : keys) {
+            String value = _sysProp(key, DEFAULT_NULL_NOT_EMPTY);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     public static String sysProp(String key) {
-            return sysProp(key, (String)null);
+        return _sysProp(key, null);
+    }
+
+    public static String sysPropDefaultNull(String key) {
+        return _sysProp(key, DEFAULT_NULL_NOT_EMPTY);
     }
 
 
@@ -253,18 +269,22 @@ public class Sys {
      * @return
      */
     public static String sysProp(String key, Object defaultValue) {
+        return _sysProp(key, defaultValue);
+    }
+
+    private static String _sysProp(String key, Object defaultValue) {
         String property = (String) systemProperties.get(key);
         if (property == null) {
             property = env.get(key);
-        }
 
-        if (property == null) {
-            String newKey = Str.underBarCase(key);
-            property = env.get(newKey);
-        }
+            if (property == null) {
+                String newKey = Str.underBarCase(key);
+                property = env.get(newKey);
 
-        if (property == null) {
-            return Conversions.toString(defaultValue);
+                if (property == null && defaultValue != DEFAULT_NULL_NOT_EMPTY) {
+                    property = Conversions.toString(defaultValue);
+                }
+            }
         }
 
         return property;
@@ -755,5 +775,28 @@ public class Sys {
     public static int threadDaemonCount() {
 
         return ManagementFactory.getThreadMXBean().getDaemonThreadCount();
+    }
+
+    public static <T> T loadFromFileLocation(Class<T> clazz, String... fileLocations) {
+        for (String fileLocation : fileLocations) {
+            if (fileLocation != null && IO.exists(fileLocation)) {
+                try {
+                    return new JsonParserFactory().create().parseFile(clazz, fileLocation);
+                }
+                catch (Exception ex) {
+                    ex.printStackTrace();
+                    Exceptions.handle(ex, "Unable to read file from ", fileLocation);
+                    return null;
+                }
+            }
+        }
+
+        try {
+            return clazz.newInstance();
+        }
+        catch (InstantiationException | IllegalAccessException e) {
+            Exceptions.handle(e, "Unable to create instance of " + clazz.getName());
+            return null;
+        }
     }
 }

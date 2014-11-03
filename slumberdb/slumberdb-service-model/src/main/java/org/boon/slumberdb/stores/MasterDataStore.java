@@ -391,7 +391,9 @@ public class MasterDataStore implements DataStore {
         if (!mySQLReadOnly) {
             mySQLDataStore.set(request);
         }
-        levelDBDataStore.set(request);
+        if (levelDBDataStore != null) {
+            levelDBDataStore.set(request);
+        }
 
     }
 
@@ -408,8 +410,9 @@ public class MasterDataStore implements DataStore {
     @ServiceMethod
     @Override
     public void search(SearchRequest searchRequest) {
-        levelDBDataStore.search(searchRequest);
-
+        if (levelDBDataStore != null) {
+            levelDBDataStore.search(searchRequest);
+        }
     }
 
 
@@ -433,7 +436,9 @@ public class MasterDataStore implements DataStore {
     public void remove(RemoveRequest removeRequest) {
         logStore.remove(removeRequest);
         mapDataStore.remove(removeRequest);
-        levelDBDataStore.remove(removeRequest);
+        if (levelDBDataStore != null) {
+            levelDBDataStore.remove(removeRequest);
+        }
         if (!mySQLReadOnly) {
             mySQLDataStore.remove(removeRequest);
         }
@@ -446,7 +451,9 @@ public class MasterDataStore implements DataStore {
     public void addAll(BatchSetRequest batchSetRequest) {
         logStore.addAll(batchSetRequest);
         mapDataStore.addAll(batchSetRequest);
-        levelDBDataStore.addAll(batchSetRequest);
+        if (levelDBDataStore != null) {
+            levelDBDataStore.addAll(batchSetRequest);
+        }
         if (!mySQLReadOnly) {
             mySQLDataStore.addAll(batchSetRequest);
         }
