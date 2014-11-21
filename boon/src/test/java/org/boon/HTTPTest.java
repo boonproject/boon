@@ -59,7 +59,7 @@ public class HTTPTest {
         public void handle( HttpExchange t ) throws IOException {
 
             String contentType = null;
-            final List<String> strings = t.getRequestHeaders().get( "Content-TypeType" );
+            final List<String> strings = t.getRequestHeaders().get( "Content-Type" );
             if ( strings.size() > 0 ) {
                 contentType = strings.get( 0 );
             }
@@ -86,7 +86,7 @@ public class HTTPTest {
             boonSize = boonSize == -1 ? 19 : boonSize;
 
 
-            t.getResponseHeaders().put( "Content-TypeType", Lists.list( "application/java-archive" ) );
+            t.getResponseHeaders().put( "Content-Type", Lists.list( "application/java-archive" ) );
             t.sendResponseHeaders( 200, boonSize );
 
             OutputStream os = t.getResponseBody();
