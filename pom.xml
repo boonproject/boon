@@ -41,7 +41,6 @@
 
     <modules>
         <module>boon</module>
-        <module>slumberdb</module>
         <module>bnsf</module>
         <module>etcd</module>
     </modules>
