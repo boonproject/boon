@@ -38,10 +38,7 @@ import org.boon.core.reflection.AnnotationData;
 import org.boon.core.reflection.Annotations;
 import org.boon.core.value.ValueContainer;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -370,11 +367,20 @@ public abstract class BaseField implements FieldAccess {
         else if ( parameterizedType == null ) {
             componentClass = Object.class;
         } else {
-            Object obj = parameterizedType.getActualTypeArguments ()[ 0 ];
-            if (obj instanceof Class) {
-                componentClass = ( Class<?> ) parameterizedType.getActualTypeArguments ()[ 0 ];
-            }else {
-                componentClass=Object.class;
+
+
+            final Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+
+            if (actualTypeArguments.length>0) {
+
+                Object obj = parameterizedType.getActualTypeArguments()[0];
+                if (obj instanceof Class) {
+                    componentClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                } else {
+                    componentClass = Object.class;
+                }
+            } else {
+                componentClass = Object.class;
             }
 
         }
