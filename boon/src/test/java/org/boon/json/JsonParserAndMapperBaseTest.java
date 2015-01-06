@@ -39,11 +39,9 @@ import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.json.serializers.CustomFieldSerializer;
 import org.boon.json.serializers.FieldFilter;
 import org.boon.json.serializers.JsonSerializerInternal;
-import org.boon.json.serializers.impl.AbstractCustomObjectSerializer;
 import org.boon.json.serializers.impl.JsonSerializerImpl;
 import org.boon.json.test.AllTypes;
 import org.boon.json.test.Dog;
-import org.boon.json.test.FooBasket;
 import org.boon.json.test.FooEnum;
 import org.boon.primitive.CharBuf;
 import org.boon.utils.DateUtils;
@@ -404,7 +402,7 @@ public class JsonParserAndMapperBaseTest {
         //puts (testMe.ignoreMe3);
         ok |= testMe.ignoreMe3 == null || die();
 
-        ok |= testMe.someDate > 0 || die();
+        ok |= testMe.someTimeStamp > 0 || die();
 
 
         ok |= testMe.getAllTypesSet().size () > 0 || die();

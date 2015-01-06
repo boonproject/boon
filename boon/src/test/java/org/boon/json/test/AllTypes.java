@@ -80,7 +80,7 @@ public class AllTypes {
 
 
 
-    public long someDate = new Date (  ).getTime ();
+    public long someTimeStamp = new Date (  ).getTime ();
 
 
 
