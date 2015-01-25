@@ -282,7 +282,7 @@ public class JsonSerializeTest {
         message1.put( "filename", "2." );
         Map<String, Object> headers1 = new LinkedHashMap<>();
         headers1.put( "Content-Transfer-Encoding", "7bit" );
-        headers1.put( "Content-TypeType", "text/plain; charset=us-ascii" );
+        headers1.put( "Content-Type", "text/plain; charset=us-ascii" );
         headers1.put( "Date", new Date() );
         headers1.put( "From", "reservations@marriott.com" );
         headers1.put( "Message-ID", "<32788362.1075840323896.JavaMail.evans@thyme>" );
@@ -309,7 +309,7 @@ public class JsonSerializeTest {
         message2.put( "filename", "3." );
         Map<String, Object> headers2 = new LinkedHashMap<>();
         headers2.put( "Content-Transfer-Encoding", "7bit" );
-        headers2.put( "Content-TypeType", "text/plain; charset=us-ascii" );
+        headers2.put( "Content-Type", "text/plain; charset=us-ascii" );
         headers2.put( "Date", new Date() );
         headers2.put( "From", "reservations@marriott.com" );
         headers2.put( "Message-ID", "<9573108.1075840323920.JavaMail.evans@thyme>" );
@@ -336,7 +336,7 @@ public class JsonSerializeTest {
         message3.put( "filename", "33." );
         Map<String, Object> headers3 = new LinkedHashMap<>();
         headers3.put( "Content-Transfer-Encoding", "7bit" );
-        headers3.put( "Content-TypeType", "text/plain; charset=ANSI_X3.4-1968" );
+        headers3.put( "Content-Type", "text/plain; charset=ANSI_X3.4-1968" );
         headers3.put( "Date", new Date() );
         headers3.put( "From", "reservations@marriott.com" );
         headers3.put( "Message-ID", "<18215700.1075859134808.JavaMail.evans@thyme>" );
@@ -363,7 +363,7 @@ public class JsonSerializeTest {
         message4.put( "filename", "1041." );
         Map<String, Object> headers4 = new LinkedHashMap<>();
         headers4.put( "Content-Transfer-Encoding", "7bit" );
-        headers4.put( "Content-TypeType", "text/plain; charset=ANSI_X3.4-1968" );
+        headers4.put( "Content-Type", "text/plain; charset=ANSI_X3.4-1968" );
         headers4.put( "Date", new Date() );
         headers4.put( "From", "eric.bass@enron.com" );
         headers4.put( "Message-ID", "<1543176.1075854772155.JavaMail.evans@thyme>" );
@@ -391,7 +391,7 @@ public class JsonSerializeTest {
         message5.put( "filename", "1042." );
         Map<String, Object> headers5 = new LinkedHashMap<>();
         headers5.put( "Content-Transfer-Encoding", "7bit" );
-        headers5.put( "Content-TypeType", "text/plain; charset=ANSI_X3.4-1968" );
+        headers5.put( "Content-Type", "text/plain; charset=ANSI_X3.4-1968" );
         headers5.put( "Date", new Date() );
         headers5.put( "From", "eric.bass@enron.com" );
         headers5.put( "Message-ID", "<32137540.1075854772177.JavaMail.evans@thyme>" );
@@ -418,7 +418,7 @@ public class JsonSerializeTest {
         message6.put( "filename", "1043." );
         Map<String, Object> headers6 = new LinkedHashMap<>();
         headers6.put( "Content-Transfer-Encoding", "7bit" );
-        headers6.put( "Content-TypeType", "text/plain; charset=us-ascii" );
+        headers6.put( "Content-Type", "text/plain; charset=us-ascii" );
         headers6.put( "Date", new Date() );
         headers6.put( "From", "eric.bass@enron.com" );
         headers6.put( "Message-ID", "<9944177.1075854772199.JavaMail.evans@thyme>" );
@@ -445,7 +445,7 @@ public class JsonSerializeTest {
         message7.put( "filename", "1044." );
         Map<String, Object> headers7 = new LinkedHashMap<>();
         headers7.put( "Content-Transfer-Encoding", "7bit" );
-        headers7.put( "Content-TypeType", "text/plain; charset=us-ascii" );
+        headers7.put( "Content-Type", "text/plain; charset=us-ascii" );
         headers7.put( "Date", new Date() );
         headers7.put( "From", "eric.bass@enron.com" );
         headers7.put( "Message-ID", "<30727575.1075854772221.JavaMail.evans@thyme>" );
@@ -472,7 +472,7 @@ public class JsonSerializeTest {
         message8.put( "filename", "1045." );
         Map<String, Object> headers8 = new LinkedHashMap<>();
         headers8.put( "Content-Transfer-Encoding", "7bit" );
-        headers8.put( "Content-TypeType", "text/plain; charset=us-ascii" );
+        headers8.put( "Content-Type", "text/plain; charset=us-ascii" );
         headers8.put( "Date", new Date() );
         headers8.put( "From", "eric.bass@enron.com" );
         headers8.put( "Message-ID", "<2106897.1075854772243.JavaMail.evans@thyme>" );
@@ -499,7 +499,7 @@ public class JsonSerializeTest {
         message9.put( "filename", "1049." );
         Map<String, Object> headers9 = new LinkedHashMap<>();
         headers9.put( "Content-Transfer-Encoding", "7bit" );
-        headers9.put( "Content-TypeType", "text/plain; charset=us-ascii" );
+        headers9.put( "Content-Type", "text/plain; charset=us-ascii" );
         headers9.put( "Date", new Date() );
         headers9.put( "From", "eric.bass@enron.com" );
         headers9.put( "Message-ID", "<8467495.1075854772328.JavaMail.evans@thyme>" );
@@ -526,7 +526,7 @@ public class JsonSerializeTest {
         message10.put( "filename", "1058." );
         Map<String, Object> headers10 = new LinkedHashMap<>();
         headers10.put( "Content-Transfer-Encoding", "7bit" );
-        headers10.put( "Content-TypeType", "text/plain; charset=us-ascii" );
+        headers10.put( "Content-Type", "text/plain; charset=us-ascii" );
         headers10.put( "Date", new Date() );
         headers10.put( "From", "eric.bass@enron.com" );
         headers10.put( "Message-ID", "<26946157.1075854772551.JavaMail.evans@thyme>" );

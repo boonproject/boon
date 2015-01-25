@@ -66,7 +66,7 @@ public class MethodAccessImpl implements MethodAccess {
 
 
     final MethodHandles.Lookup lookup = MethodHandles.lookup();
-    final MethodHandle methodHandle;
+    MethodHandle methodHandle;
 
     Object instance;
     private int score;
@@ -97,19 +97,6 @@ public class MethodAccessImpl implements MethodAccess {
 
         }
 
-
-        MethodHandle m;
-         try {
-
-                    m = methodHandle();
-
-        } catch (Exception e) {
-            m = null;
-            handle(e);
-        }
-
-
-        methodHandle = m;
 
         annotationMap = new ConcurrentHashMap<>(  );
         for (AnnotationData data : annotationData) {
@@ -329,6 +316,9 @@ public class MethodAccessImpl implements MethodAccess {
 
     @Override
     public MethodAccess methodAccess() {
+        if (methodHandle == null) {
+            methodHandle = methodHandle();
+        }
         return new MethodAccessImpl(this.method){
 
 

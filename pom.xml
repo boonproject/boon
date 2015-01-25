@@ -9,7 +9,7 @@
 
     <groupId>io.fastjson</groupId>
     <artifactId>boon-bundle</artifactId>
-    <version>0.30-SNAPSHOT</version>
+    <version>0.31-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Boon and subprojects</name>
@@ -41,7 +41,6 @@
 
     <modules>
         <module>boon</module>
-        <module>slumberdb</module>
         <module>bnsf</module>
         <module>etcd</module>
     </modules>
