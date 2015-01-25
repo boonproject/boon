@@ -30,12 +30,22 @@ public abstract class DataStoreRequest {
 
     protected static String validateProtocolVersion(String[] split) {
         String version = split[ProtocolConstants.PROTOCOL_VERSION_POSITON];
-        if (!version.equals(ProtocolConstants.VERSION_1)) {
-            die("Unable to parse Data Store Request message", split);
+        if (version.equals(ProtocolConstants.VERSION_1)) {
+            return version;
         }
 
+        Action action = Action.getInstance(split[ProtocolConstants.ACTION_POSITION]);
+        if (action != null) {
+            switch (action) {
+                case Action.SET_BATCH:
+                    if (version.equals(ProtocolConstants.VERSION_2)) {
+                        return version;
+                    }
+            }
+        }
 
-        return version;
+        die("Unable to parse Data Store Request message", split);
+        return null; // never gets here since "die" throws
     }
 
     protected static void parseAction(String version, DataStoreRequest request, String[] split) {

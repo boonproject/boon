@@ -20,5 +20,7 @@ public enum DataStoreSource {
     LOCAL_DB_LOAD,
     REMOTE_DB_GET,
     LOCAL_STORES,
-    NONE,;
+    NONE,
+    REPLICATION,
+    ;
 }

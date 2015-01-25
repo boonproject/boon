@@ -43,7 +43,7 @@ public class MethodCall extends DataStoreRequest {
 
         final String[] messageParts = StringScanner.split(message, ProtocolConstants.DELIMITER);
 
-        parsePreamble(preamble, messageParts);
+        DataStoreRequest.parsePreamble(preamble, messageParts);
 
         final String clientId = messageParts[ProtocolConstants.Version1.Preamble.CLIENT_ID_POSITION];
 
@@ -73,7 +73,7 @@ public class MethodCall extends DataStoreRequest {
         PreambleOfRequest preamble = new PreambleOfRequest();
 
 
-        parsePreamble(message, preamble);
+        DataStoreRequest.parsePreamble(message, preamble);
 
 
         final String methodName = message.get("method");

@@ -1,9 +1,9 @@
 package org.boon.slumberdb.service.config;
 
-import org.boon.slumberdb.service.protocol.ProtocolConstants;
-import org.boon.slumberdb.stores.StartupMode;
 import org.boon.Str;
 import org.boon.core.Sys;
+import org.boon.slumberdb.service.protocol.ProtocolConstants;
+import org.boon.slumberdb.stores.StartupMode;
 
 /**
  * Created by Richard on 7/2/14.
@@ -25,7 +25,7 @@ public class DataStoreServerConfig {
     private int port;
     private long broadcastInterval;
     private StartupMode startupMode;
-
+    private String adminName = "Slumber DB";
 
     private boolean debug;
 
@@ -163,6 +163,8 @@ public class DataStoreServerConfig {
                 ", port=" + port() +
                 ", startupMode=" + startupMode() +
                 ", debug=" + debug() +
+                ", adminPort=" + adminPort() +
+                ", adminName=" + adminName() +
                 '}';
     }
 
@@ -180,5 +182,9 @@ public class DataStoreServerConfig {
         } else {
             return adminPort;
         }
+    }
+
+    public String adminName() {
+        return adminName;
     }
 }

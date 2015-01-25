@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Stats</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		.bs-example{
+			margin: 20px;
+		}
+	</style>
+</head>
+<body>
+
+<nav role="navigation" class="navbar navbar-default navbar-static-top">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<a href="index.html" class="navbar-brand">Slum Web</a>
+		</div>
+		<!-- Collection of nav links and other content for toggling -->
+		<div id="navbarCollapse" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="setForm.html">Set</a></li>
+				<li><a href="getForm.html">Get</a></li>
+				<li class="active"><a href="stats.html">Stats</a></li>
+				<li><a href="heartbeat.html">Heartbeat</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<!-- END COMMON HEADER -->
+<div class="bs-example">
+	<form action="/" method="POST" id="statsForm">
+		<div class="form-group">
+			<label for="host">Host</label>
+			<input name="host" class="form-control" id="host" type="text" value="localhost" >
+		</div>
+		<div class="form-group">
+			<label for="port">Port</label>
+			<input name="port" class="form-control" id="port" type="text" value="10101" >
+		</div>
+		<div class="form-group">
+			<label for="uri">Uri</label>
+			<input name="uri" class="form-control" id="uri" type="text" value="/services/data/store" >
+		</div>
+		<div class="form-group">
+			<label for="client">Client</label>
+			<input name="client" class="form-control" id="client" type="text" value="webclient" >
+		</div>
+		<button type="submit" onclick="clicked('getStats')" id="submit" class="btn btn-primary">Get Stats</button>
+		<button type="submit" onclick="clicked('clearStats')" id="submitClear" class="btn btn-primary">Clear Stats</button>
+	</form>
+</div>
+
+<div class="bs-example">
+	<table class="table table-bordered">
+		<tbody>
+		<tr>
+			<td>
+				<div id="resultOk">Ready!</div>
+				<div style="color: red" id="resultErr"></div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<script>
+	var action = "clearStats";
+	$("#host").val(document.domain)
+
+	function clicked(act){
+		action = act;
+	}
+
+	// Attach a submit handler to the form
+	$( "#statsForm" ).submit(function( event ) {
+
+		// Stop form from submitting normally
+		event.preventDefault();
+
+		// Get some values from elements on the page:
+		var $form = $( this ),
+				host = $form.find( "input[name='host']" ).val(),
+				port = $form.find( "input[name='port']" ).val(),
+				uri = $form.find( "input[name='uri']" ).val(),
+				client = $form.find( "input[name='client']" ).val()
+
+
+		var url = 'http://' + host + ':' + port + uri;
+
+		var delim = String.fromCharCode(29);
+		var data =
+				'a' + delim +      // 0  PROTOCOL VERSION
+				action + delim +   // 1  ACTION
+				'' + delim +       // 2  AUTH_TOKEN
+				'' + delim +       // 3  HEADER
+				'' + delim +       // 4  RESERVED
+				client + delim +   // 5  CLIENT ID
+				'0' + delim +      // 6  MESSAGE_ID
+				'0' + delim +      // 7  VERSION
+				'0' + delim +      // 8  UPDATE_TIMESTAMP
+				'0' + delim +      // 9  CREATE_TIMESTAMP
+				'ALL' + delim;    // 10 SOURCE
+
+		// Send the data using post
+		var jqXHR = $.ajax({
+			type: "POST",
+			url: url,
+			data: data,
+			contentType: "text/plain",
+			dataType: "text"
+		});
+
+		jqXHR.done(function(data, textStatus, jqXHR) {
+			$("#resultOk").html(action + " @ " + new Date().toUTCString() + "<pre>\r\n" + data + "</pre>");
+			$("#resultErr").html("");
+		})
+
+		jqXHR.fail(function( jqXHR, textStatus, errorThrown ) {
+			$("#resultOk").html("");
+			$("#resultErr").html(action + " @ " + new Date().toUTCString() + " http status: " + jqXHR.status + " " +  + jqXHR.responseText);
+		})
+	});
+</script>
+
+</body>
+</html>

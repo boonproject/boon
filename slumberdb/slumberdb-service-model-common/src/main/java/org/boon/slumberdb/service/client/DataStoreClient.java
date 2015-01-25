@@ -26,7 +26,6 @@ public interface DataStoreClient {
 
     public void setBatch(Map<String, Object> batch);
 
-
     public void setBatchIfNotExists(Map<String, Object> batch);
 
     public DataOutputQueue queue();
@@ -44,6 +43,10 @@ public interface DataStoreClient {
     public void set(DataStoreSource source, String key, Object value);
 
     public void get(DataStoreSource source, String key);
+
+    public void setBatch(DataStoreSource source, Map<String, Object> batch);
+
+    public void setBatchIfNotExists(DataStoreSource source, Map<String, Object> batch);
 
     public void remove(DataStoreSource source, String key);
 

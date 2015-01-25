@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Heartbeat</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		.bs-example{
+			margin: 20px;
+		}
+	</style>
+</head>
+<body>
+
+<div class="bs-example">
+	<ul class="nav nav-tabs">
+		<li><a href="/admin">Home</a></li>
+		<li><a href="/admin/set">Set</a></li>
+		<li><a href="/admin/get">Get</a></li>
+		<li><a href="/admin/stats">Stats</a></li>
+		<li><a href="/admin/config">Config</a></li>
+		<li class="active"><a href="config">Config</a></li>
+	</ul>
+</div>
+
+<!-- END COMMON HEADER -->
+<div class="bs-example">
+	<form action="/" method="POST" id="heartbeatForm">
+		<div class="form-group">
+			<label for="host">Host</label>
+			<input name="host" class="form-control" id="host" type="text" value=":replace-serverhost:" >
+		</div>
+		<div class="form-group">
+			<label for="port">Port</label>
+			<input name="port" class="form-control" id="port" type="text" value=":replace-adminport:" >
+		</div>
+		<div class="form-group">
+			<label for="uri">Uri</label>
+			<input name="uri" class="form-control" id="uri" type="text" value="/admin/heartbeat/" readonly>
+		</div>
+		<div class="form-group">
+			<label for="part">Part</label>
+			<select name="part" class="form-control" id="part">
+				<option value="system">System</option>
+				<option value="dataStoreServerConfig">Data Store Server Config</option>
+				<option value="dataStoreConfig">Data Store Config</option>
+				<option value="">Legacy</option>
+			</select>
+		</div>
+		<button type="submit" id="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+
+<div class="bs-example">
+	<table class="table table-bordered">
+		<tbody>
+		<tr>
+			<td>
+				<div id="resultOk">Ready!</div>
+				<div style="color: red" id="resultErr"></div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<script>
+	$("#host").val(document.domain)
+
+	// Attach a submit handler to the form
+	$( "#heartbeatForm" ).submit(function( event ) {
+
+		// Stop form from submitting normally
+		event.preventDefault();
+
+		// Get some values from elements on the page:
+		var $form = $( this ),
+				host = $form.find( "input[name='host']" ).val(),
+				port = $form.find( "input[name='port']" ).val(),
+				uri = $form.find( "input[name='uri']" ).val()
+
+		var part = $("#part").val();
+
+//		var url;
+//		if (part == "heartbeat") {
+//			url = 'http://' + host + ':' + port + uri;
+//		}
+//		else {
+//			url = 'http://' + host + ':' + port + uri + part;
+//		}
+		var url = 'http://' + host + ':' + port + uri + part;
+
+		// Send the data using post
+		var jqXHR = $.ajax({
+			type: "POST",
+			url: url,
+			contentType: "text/json",
+			dataType: "text"
+		});
+
+		jqXHR.done(function(data, textStatus, jqXHR) {
+			$("#resultOk").html("Heartbeat @ " + new Date().toUTCString() + "<pre>\r\n" + data + "</pre>");
+			$("#resultErr").html("");
+		})
+
+		jqXHR.fail(function( jqXHR, textStatus, errorThrown ) {
+			$("#resultOk").html("");
+			$("#resultErr").html("Heartbeat @ " + new Date().toUTCString() + " http status: " + jqXHR.status + " " +  + jqXHR.responseText);
+		})
+	});
+</script>
+
+</body>
+</html>

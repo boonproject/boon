@@ -17,7 +17,8 @@ import static org.boon.StringScanner.split;
  */
 public class ProtocolConstants {
 
-    public static final int PROTOCOL_VERSION_POSITON = 0;        //What version of the protocol are we getting?
+    public static final int PROTOCOL_VERSION_POSITON = 0;       //What version of the protocol are we getting?
+    public static final int ACTION_POSITION = 1;                //What do they want?
 
     public static final char DELIMITER = (char) 0x1d;
     public static final String DELIMITER_STR = new String(new char[]{DELIMITER});
@@ -27,9 +28,11 @@ public class ProtocolConstants {
     public static final char RECORD_DELIM = (char) 0x1e;
     public static final char UNIT_DELIM = (char) 0x1f;
     public static final String VERSION_1 = "a";
+    public static final String VERSION_2 = "b";
     public static final String GET_MASK = VERSION_1 + DELIMITER_STR + "get";
     public static final String SET_MASK = VERSION_1 + DELIMITER_STR + "set";
     public static final String REMOVE_MASK = VERSION_1 + DELIMITER_STR + "remove";
+    public static final String CLEAR_MASK = VERSION_1 + DELIMITER_STR + "clear";
     public static final String ACTION_MAP_KEY = "action";
     public static final String CLIENT_ID_MAP_KEY = "clientId";
     public static final String MESSAGE_ID_MAP_KEY = "messageId";
@@ -73,6 +76,8 @@ public class ProtocolConstants {
     public static final String SET_BATCH_IF_NOT_EXISTS_VERB = "setBatchIfNotExists";
     public static final String SET_BROADCAST_VERB = "setBroadcast";
     public static final String SET_IF_NOT_EXISTS_VERB = "setIfNotExists";
+    public static final String SET_REPLICATE_VERB = "setReplicate";
+    public static final String SET_REPLICATE_BATCH_VERB = "setReplicateBatch";
     public static final String PING_VERB = "ping";
     public static final String PING_VERB_STARTS = VERSION_1 + DELIMITER_STR + PING_VERB + DELIMITER_STR;
     public static final String RESPONSE = "response";
@@ -81,6 +86,7 @@ public class ProtocolConstants {
     public static final String BROADCAST = "broadcast";
     public static String GET_STATS_VERB = "getStats";
     public static int DELIMITER_COUNT_IN_RESPONSE = 2;
+
     public static Map<String, Action> actionMap = new ConcurrentHashMap<>();
 
     public static String prettyPrintMessageWithLinesTabs(String message) {
@@ -131,9 +137,7 @@ public class ProtocolConstants {
         return new ByMapFactories.MapProtocolFactory();
     }
 
-    public static class Version1
-
-    {
+    public static class Version1 {
         public static final char DELIMITER = (char) 0x1d;
 
         public static final String DELIMITER_STR = new String(new char[]{DELIMITER});
@@ -141,52 +145,46 @@ public class ProtocolConstants {
         public static final int PREAMBLE_SIZE = 7;
 
         public static class Preamble {
-            public static final int PROTOCOL_VERSION_POSITON = 0;        //What version of the protocol are we getting?
+            public static final int PROTOCOL_VERSION_POSITON = 0;       //What version of the protocol are we getting?
             public static final int ACTION_POSITION = 1;                //What do they want?
             public static final int AUTH_TOKEN_POSITION = 2;            //Credentials or token that allows us to communicate.
             public static final int HEADER_POSITON = 3;                 //Headers
             public static final int RESERVED = 4;
             public static final int CLIENT_ID_POSITION = 5;             //Who are they?
             public static final int MESSAGE_ID_POSITION = 6;            //Uniquely identifies a message for this client conversation
-
         }
 
         public static class ObjectVersion {
-
-            public static final int OBJECT_VERSION_POSITION = 7;                //KEY OF THE VALUE TO GET.
-            public static final int UPDATE_TIME_STAMP_POSITION = 8;            //KEY OF THE VALUE TO GET.
-            public static final int CREATE_TIME_STAMP_POSITION = 9;            //CREATE TIME_STAMP OF THE VALUE.
-            public static final int KEY_POSITION = 11;                   //KEY OF THE VALUE TO GET/SET.
-
+            public static final int OBJECT_VERSION_POSITION = 7;        //KEY OF THE VALUE TO GET.
+            public static final int UPDATE_TIME_STAMP_POSITION = 8;     //KEY OF THE VALUE TO GET.
+            public static final int CREATE_TIME_STAMP_POSITION = 9;     //CREATE TIME_STAMP OF THE VALUE.
+            public static final int KEY_POSITION = 11;                  //KEY OF THE VALUE TO GET/SET.
         }
 
         public static class SetGet {
-
-            public static final int SOURCE_POSITION = 10;                   //DATA SOURCE
-
+            public static final int SOURCE_POSITION = 10;               //DATA SOURCE
         }
 
         public static class Set {
-
-            public static final int PAYLOAD_POSITION = 12;                   //KEY OF THE VALUE TO GET/SET.
-
+            public static final int PAYLOAD_POSITION = 12;              //KEY OF THE VALUE TO GET/SET.
         }
-
 
         public static class BatchRead {
-
             public static final int KEYS = 7;                   //KEYS TO read
-
         }
-
 
         public static class BatchSet {
-
             public static final int KEYS = 7;                   //KEYS TO read
-            public static final int VALUES = 8;                   //KEYS TO read
-
+            public static final int VALUES = 8;                 //VALUE TO read
         }
+    }
 
+    public static class Version2 extends Version1 {
+        public static class BatchSet {
+            public static final int SOURCE_POSITION = 7;
+            public static final int KEYS = 8;                   //KEYS TO read
+            public static final int VALUES = 9;                 //VALUE TO read
+        }
     }
 
     public static class Search {

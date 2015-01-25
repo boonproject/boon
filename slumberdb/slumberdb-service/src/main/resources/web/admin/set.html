@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Set Form</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		.bs-example{
+			margin: 20px;
+		}
+	</style>
+</head>
+<body>
+
+<div class="bs-example">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="set.html">Set</a></li>
+		<li><a href="get.html">Get</a></li>
+		<li><a href="stats.html">Stats</a></li>
+		<li><a href="heartbeat.html">Heartbeat</a></li>
+	</ul>
+</div>
+
+<!-- END COMMON HEADER -->
+
+<div class="bs-example">
+	<form action="/" method="POST" id="setForm">
+		<div class="form-group">
+			<label for="host">Host</label>
+			<input name="host" class="form-control" id="host" type="text" value="localhost" >
+		</div>
+		<div class="form-group">
+			<label for="port">Port</label>
+			<input name="port" class="form-control" id="port" type="text" value="10101" >
+		</div>
+		<div class="form-group">
+			<label for="uri">Uri</label>
+			<input name="uri" class="form-control" id="uri" type="text" value="/services/data/store" >
+		</div>
+		<div class="form-group">
+			<label for="key">Key</label>
+			<input name="key" class="form-control" id="key" type="text" value="foo" >
+		</div>
+		<div class="form-group">
+			<label for="value">Value</label>
+			<input name="value" class="form-control" id="value" type="text" value="" >
+		</div>
+		<div class="form-group">
+			<label for="client">Client</label>
+			<input name="client" class="form-control" id="client" type="text" value="webclient" >
+		</div>
+		<div class="form-group">
+			<label for="source">Source</label>
+			<select name="source" class="form-control" id="source">
+				<option value="ALL">ALL</option>
+				<option value="MEMORY">MEMORY</option>
+				<option value="TRANSACTION_LOG">TRANSACTION_LOG</option>
+				<option value="LOCAL_DB">LOCAL_DB</option>
+				<option value="REMOTE_DB">REMOTE_DB</option>
+				<option value="CLIENT">CLIENT</option>
+				<option value="REPLICA">REPLICA</option>
+				<option value="END">END</option>
+				<option value="SERVER">SERVER</option>
+				<option value="FILE_SYSTEM">FILE_SYSTEM</option>
+				<option value="LOCAL_DB_GET">LOCAL_DB_GET</option>
+				<option value="LOCAL_DB_LOAD">LOCAL_DB_LOAD</option>
+				<option value="REMOTE_DB_GET">REMOTE_DB_GET</option>
+				<option value="LOCAL_STORES">LOCAL_STORES</option>
+				<option value="NONE">NONE</option>
+			</select>
+		</div>
+
+		<button type="submit" id="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+
+<div class="bs-example">
+	<table class="table table-bordered">
+		<tbody>
+		<tr>
+			<td>
+				<div id="resultOk">Ready!</div>
+				<div style="color: red" id="resultErr"></div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+<script>
+	$("#host").val(document.domain)
+	$("#value").val(Math.floor((Math.random() * 100000) + 1))
+
+	// Attach a submit handler to the form
+	$( "#setForm" ).submit(function( event ) {
+
+		// Stop form from submitting normally
+		event.preventDefault();
+
+		// Get some values from elements on the page:
+		var $form = $( this ),
+				host = $form.find( "input[name='host']" ).val(),
+				port = $form.find( "input[name='port']" ).val(),
+				uri = $form.find( "input[name='uri']" ).val(),
+				key = $form.find( "input[name='key']" ).val(),
+				value = $form.find( "input[name='value']" ).val(),
+				client = $form.find( "input[name='client']" ).val()
+
+		var source = $("#source").val();
+
+		var url = 'http://' + host + ':' + port + uri;
+
+		var action = 'set';
+		if ( source != "ALL" ) {
+			action = 'setToSrc';
+		}
+
+		var delim = String.fromCharCode(29);
+		var data =
+				'a' + delim +      // 0  PROTOCOL VERSION
+				action + delim +   // 1  ACTION
+				'' + delim +       // 2  AUTH_TOKEN
+				'' + delim +       // 3  HEADER
+				'' + delim +       // 4  RESERVED
+				client + delim +   // 5  CLIENT ID
+				'0' + delim +      // 6  MESSAGE_ID
+				'0' + delim +      // 7  VERSION
+				'0' + delim +      // 8  UPDATE_TIMESTAMP
+				'0' + delim +      // 9  CREATE_TIMESTAMP
+				source + delim +   // 10 SOURCE
+				key + delim +      // 11 key
+				value;             // 12 PayLoad
+
+//		var split = data.split(delim);
+//		$("#postProtocolVersion").html(split[0]);
+//		$("#postAction").html(split[1]);
+//		$("#postAuthToken").html(split[2]);
+//		$("#postHeader").html(split[3]);
+//		$("#postReserved").html(split[4]);
+//		$("#postClientId").html(split[5]);
+//		$("#postMessageId").html(split[6]);
+//		$("#postVersion").html(split[7]);
+//		$("#postUpdateTimestamp").html(split[8]);
+//		$("#postCreateTimestamp").html(split[9]);
+//		$("#postSource").html(split[10]);
+//		$("#postKey").html(split[11]);
+//		$("#postPayLoad").html(split[12]);
+//		$("#post").show();
+
+		// Send the data using post
+		var jqXHR = $.ajax({
+			type: "POST",
+			url: url,
+			data: data,
+			contentType: "text/plain",
+			dataType: "text"
+		});
+
+		jqXHR.done(function(data, textStatus, jqXHR) {
+			var key = $("#key");
+			var value = $("#value");
+			var source = $("#source");
+			$("#resultOk").html("SET &quot;" + key.val() + "&quot; as &quot;" + value.val() + "&quot; TO " + source.val() + " @ " + new Date().toUTCString() + "<pre>\r\n" + data + "</pre>");
+			$("#resultErr").html("");
+		})
+
+		jqXHR.fail(function( jqXHR, textStatus, errorThrown ) {
+			var key = $("#key");
+			var value = $("#value");
+			var source = $("#source");
+			$("#resultOk").html("");
+			$("#resultErr").html("SET &quot;" + key.val() + "&quot; as &quot;" + value.val() + "&quot; TO " + source.val() + " &rarr; " + ". http status: " + jqXHR.status + " " +  + jqXHR.responseText);
+		})
+	});
+</script>
+
+</body>
+</html>

@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author JD
  */
-public class SearchRequest extends DataStoreRequest {
+public class SearchRequest extends BaseDataStoreRequest {
     protected String clientId;
     protected DataStoreSource source;
     private ObjectId objectId = new ObjectId();
