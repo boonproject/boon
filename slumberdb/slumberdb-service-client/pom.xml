@@ -33,12 +33,7 @@
 
         <dependency>
             <groupId>io.fastjson</groupId>
-            <artifactId>slumberdb-service-model</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.fastjson</groupId>
-            <artifactId>boon</artifactId>
+            <artifactId>slumberdb-service-model-common</artifactId>
         </dependency>
 
         <!--Vertx provided dependencies-->

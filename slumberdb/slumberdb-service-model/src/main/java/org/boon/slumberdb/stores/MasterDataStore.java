@@ -1,17 +1,22 @@
 package org.boon.slumberdb.stores;
 
-import org.boon.slumberdb.service.config.DataStoreConfig;
-import org.boon.slumberdb.service.protocol.Action;
-import org.boon.slumberdb.service.protocol.requests.*;
-import org.boon.slumberdb.service.results.StatCount;
-import org.boon.slumberdb.service.server.ServiceMethod;
-import org.boon.slumberdb.stores.log.AsyncFileWriterDataStore;
-import org.boon.slumberdb.stores.mysql.MySQLDataStore;
 import org.boon.Lists;
 import org.boon.Logger;
 import org.boon.Pair;
 import org.boon.core.Sys;
+import org.boon.slumberdb.service.config.DataStoreConfig;
+import org.boon.slumberdb.service.config.DataStoreServerConfig;
+import org.boon.slumberdb.service.config.ReplicationDataStoreConfig;
+import org.boon.slumberdb.service.protocol.Action;
+import org.boon.slumberdb.service.protocol.requests.*;
+import org.boon.slumberdb.service.results.ErrorResult;
+import org.boon.slumberdb.service.results.StatCount;
+import org.boon.slumberdb.service.server.ServiceMethod;
+import org.boon.slumberdb.stores.log.AsyncFileWriterDataStore;
+import org.boon.slumberdb.stores.mysql.MySQLDataStore;
+import org.boon.slumberdb.stores.replicate.ReplicationDataStore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.boon.Boon.configurableLogger;
@@ -24,9 +29,7 @@ import static org.boon.Boon.puts;
  */
 public class MasterDataStore implements DataStore {
 
-
     private Logger logger = configurableLogger(MasterDataStore.class);
-
 
     private DataOutputQueue transferQueue;
     private LevelDBDataStore levelDBDataStore;
@@ -34,178 +37,234 @@ public class MasterDataStore implements DataStore {
     private ConcurrentMapDataStore mapDataStore = new ConcurrentMapDataStore();
     private EndOfTheLineMapStore endOfTheLineMapStore;
     private AsyncFileWriterDataStore logStore = new AsyncFileWriterDataStore();
+    private ReplicationDataStore replicationDataStore = new ReplicationDataStore();
     private List<DataStore> dataStoreList;
-    private DataStoreConfig config;
+    private DataStoreConfig dataStoreConfig;
     private boolean mySQLReadOnly;
 
-
     public void init(DataOutputQueue dataOutputQueue, StartupMode mode) {
-
-
-        final DataStoreConfig config = DataStoreConfig.load();
-
-        puts("Master Data Store Config", config);
-
-        init(config, dataOutputQueue, mode);
-
+        init(dataOutputQueue, mode, null, null);
     }
 
     public void init(DataOutputQueue dataOutputQueue) {
-
-
-        final DataStoreConfig config = DataStoreConfig.load();
-
-        init(config, dataOutputQueue, StartupMode.LEVELDB_AND_MYSQL);
+        init(dataOutputQueue, StartupMode.LEVELDB_AND_MYSQL, null, null);
     }
 
-    public void init(DataStoreConfig config, DataOutputQueue dataOutputQueue, StartupMode mode) {
+    public void init(DataOutputQueue dataOutputQueue, DataStoreServerConfig inDataStoreServerConfig) {
+        init(dataOutputQueue, inDataStoreServerConfig.startupMode(), null, inDataStoreServerConfig.replicationDataStoreConfig());
+    }
 
+    public void init(DataOutputQueue dataOutputQueue, StartupMode mode, DataStoreConfig inDataStoreConfig, ReplicationDataStoreConfig inReplicationDataStoreConfig) {
+        this.dataStoreConfig = inDataStoreConfig == null ? DataStoreConfig.load() : inDataStoreConfig;
+        puts("Master - Data Store Config", this.dataStoreConfig);
 
-        this.config = config;
-        logStore.init(config);
+        logStore.init(this.dataStoreConfig);
 
         if (mode == StartupMode.LEVELDB_AND_MYSQL) {
-
-
             transferQueue = dataOutputQueue;
             endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
             mySQLDataStore = new MySQLDataStore();
             levelDBDataStore = new LevelDBDataStore();
 
             dataStoreList = Lists.list(logStore, mapDataStore, levelDBDataStore, mySQLDataStore);
-
-            mapDataStore.init(config, transferQueue, levelDBDataStore);
-            levelDBDataStore.init(config, transferQueue, mySQLDataStore);
+            mapDataStore.init(this.dataStoreConfig, transferQueue, levelDBDataStore);
+            levelDBDataStore.init(this.dataStoreConfig, transferQueue, mySQLDataStore);
 
             try {
-                mySQLDataStore.init(config, transferQueue, endOfTheLineMapStore);
+                mySQLDataStore.init(this.dataStoreConfig, transferQueue, endOfTheLineMapStore);
             } catch (Exception ex) {
                 logger.error(ex, "Unable to connect to MySQL, proceeding without MySQL, no data will be forwarded to MySQL");
             }
+        }
 
-        } else if (mode == StartupMode.LEVELDB) {
+        else if (mode == StartupMode.LEVELDB) {
 
             transferQueue = dataOutputQueue;
-
             endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
-
+            // NO mySQLDataStore
             levelDBDataStore = new LevelDBDataStore();
 
             dataStoreList = Lists.list(mapDataStore, logStore, levelDBDataStore);
-
-            mapDataStore.init(config, transferQueue, levelDBDataStore);
-            levelDBDataStore.init(config, transferQueue, endOfTheLineMapStore);
-
-
-        } else if (mode == StartupMode.MYSQL) {
-
-            transferQueue = dataOutputQueue;
-
-            endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
-
-            mySQLDataStore = new MySQLDataStore();
-
-            dataStoreList = Lists.list(logStore, mySQLDataStore, mapDataStore);
-
-            mapDataStore.init(config, transferQueue, mySQLDataStore);
-            mySQLDataStore.init(config, transferQueue, endOfTheLineMapStore);
-
-
-        } else if (mode == StartupMode.MYSQL_READONLY) {
-
-            transferQueue = dataOutputQueue;
-
-            endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
-
-            mySQLDataStore = new MySQLDataStore();
-
-            dataStoreList = Lists.list(logStore, mySQLDataStore, mapDataStore);
-
-            mapDataStore.init(config, transferQueue, mySQLDataStore);
-            mySQLDataStore.init(config, transferQueue, endOfTheLineMapStore);
-            mySQLReadOnly = true;
-
-
-        } else if (mode == StartupMode.NO_BACKING_DB) {
-
-
-            transferQueue = dataOutputQueue;
-
-            endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
-
-            dataStoreList = Lists.list(mapDataStore, logStore);
-
-            mapDataStore.init(config, transferQueue, endOfTheLineMapStore);
-
+            mapDataStore.init(this.dataStoreConfig, transferQueue, levelDBDataStore);
+            levelDBDataStore.init(this.dataStoreConfig, transferQueue, endOfTheLineMapStore);
         }
 
+        else if (mode == StartupMode.MYSQL) {
 
+            transferQueue = dataOutputQueue;
+            endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
+            mySQLDataStore = new MySQLDataStore();
+            // NO levelDBDataStore
+
+            dataStoreList = Lists.list(logStore, mySQLDataStore, mapDataStore);
+            mapDataStore.init(this.dataStoreConfig, transferQueue, mySQLDataStore);
+            mySQLDataStore.init(this.dataStoreConfig, transferQueue, endOfTheLineMapStore);
+        }
+
+        else if (mode == StartupMode.MYSQL_READONLY) {
+
+            transferQueue = dataOutputQueue;
+            endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
+            mySQLDataStore = new MySQLDataStore();
+
+            dataStoreList = Lists.list(logStore, mySQLDataStore, mapDataStore);
+
+            mapDataStore.init(this.dataStoreConfig, transferQueue, mySQLDataStore);
+            mySQLDataStore.init(this.dataStoreConfig, transferQueue, endOfTheLineMapStore);
+            mySQLReadOnly = true;
+        }
+
+        else if (mode == StartupMode.NO_BACKING_DB) {
+
+            transferQueue = dataOutputQueue;
+            endOfTheLineMapStore = new EndOfTheLineMapStore(transferQueue);
+            // NO mySQLDataStore
+            // NO levelDBDataStore
+
+            dataStoreList = Lists.list(mapDataStore, logStore);
+            mapDataStore.init(this.dataStoreConfig, transferQueue, endOfTheLineMapStore);
+        }
+
+        if (inReplicationDataStoreConfig != null) {
+            replicationDataStore = new ReplicationDataStore();
+            replicationDataStore.init(inReplicationDataStoreConfig);
+            dataStoreList.add(replicationDataStore);
+        }
     }
 
 
     @ServiceMethod
     public void setSource(SetRequest request) {
+        _set(request.source(), request);
+    }
 
-
-        switch (request.source()) {
+    /*
+        THIS IS THE DELEGATE FOR SETTING DATA. For instance
+        set(SetRequest request) and setSource(SetRequest request)
+        will both call this method instead of processing the set themself,
+        therefore providing a common and consistent way to handle the set - SFF
+    */
+    protected void _set(DataStoreSource source, SetRequest request) {
+        switch (source) {
             case MEMORY:
-                mapDataStore.set(request);
+                _setMemory(request);
                 break;
             case LOCAL_DB:
-                levelDBDataStore.set(request);
+                _setLocal(request);
                 break;
             case REMOTE_DB:
-                mySQLDataStore.set(request);
+                _setRemote(request);
                 break;
             case TRANSACTION_LOG:
-                logStore.set(request);
+                _setTransactionLog(request);
                 break;
             case LOCAL_STORES:
-                mapDataStore.set(request);
-                levelDBDataStore.set(request);
+                _setMemory(request);
+                _setLocal(request);
+                break;
+            case ALL:
+                _setTransactionLog(request);
+                _setReplication(request);
+                _setMemory(request);
+                _setLocal(request);
+                _setRemote(request);
+                break;
+            case REPLICATION:
+                _setMemory(request);
+                _setLocal(request);
+                _setRemote(request);
                 break;
             default:
+                queueInvalidSource(request);
                 logger.error("Master Data Store:: Unable to handle Set Source", request);
         }
     }
 
+    private void _setMemory(SetRequest request) {
+        mapDataStore.set(request);
+    }
+
+    private void _setLocal(SetRequest request) {
+        if (levelDBDataStore != null) {
+            levelDBDataStore.set(request);
+        }
+        else {
+            queueInvalidSource(request);
+        }
+    }
+
+    private void _setRemote(SetRequest request) {
+        if (mySQLDataStore != null && !mySQLReadOnly) {
+            mySQLDataStore.set(request);
+        }
+        else {
+            queueInvalidSource(request);
+        }
+    }
+
+    private void _setTransactionLog(SetRequest request) {
+        logStore.set(request);
+    }
+
+    private void _setReplication(SetRequest request) {
+        if (replicationDataStore != null) {
+            replicationDataStore.set(request);
+        }
+    }
 
     @ServiceMethod
     public void getSource(GetRequest request) {
-
-
         switch (request.source()) {
             case MEMORY:
                 mapDataStore.get(request);
                 break;
             case LOCAL_DB:
-                levelDBDataStore.get(request);
+                if (levelDBDataStore != null) {
+                    levelDBDataStore.get(request);
+                }
+                else {
+                    queueInvalidSource(request);
+                }
                 break;
             case REMOTE_DB:
-                mySQLDataStore.get(request);
+                if (mySQLDataStore != null) {
+                    mySQLDataStore.get(request);
+                }
+                else {
+                    queueInvalidSource(request);
+                }
                 break;
             case TRANSACTION_LOG:
-                logStore.get(request);
+                queueInvalidSource(request);
+                logger.error("Master Data Store:: Improper Get Source", request);
                 break;
             default:
+                queueInvalidSource(request);
                 logger.error("Master Data Store:: Unable to handle Get Source", request);
-
         }
     }
 
-
     @ServiceMethod
     public void removeFromSource(RemoveRequest request) {
-
         switch (request.source()) {
             case MEMORY:
                 mapDataStore.remove(request);
                 break;
             case LOCAL_DB:
-                levelDBDataStore.remove(request);
+                if (levelDBDataStore != null) {
+                    levelDBDataStore.remove(request);
+                }
+                else {
+                    queueInvalidSource(request);
+                }
                 break;
             case REMOTE_DB:
-                mySQLDataStore.remove(request);
+                if (mySQLDataStore != null) {
+                    mySQLDataStore.remove(request);
+                }
+                else {
+                    queueInvalidSource(request);
+                }
                 break;
             case TRANSACTION_LOG:
                 logStore.remove(request);
@@ -216,33 +275,44 @@ public class MasterDataStore implements DataStore {
         }
     }
 
-
     @ServiceMethod
     @Override
     public void clearStats() {
         logStore.clearStats();
+        if (replicationDataStore != null) {
+            replicationDataStore.clearStats();
+        }
         mapDataStore.clearStats();
-        mySQLDataStore.clearStats();
-        levelDBDataStore.clearStats();
+        if (mySQLDataStore != null) {
+            mySQLDataStore.clearStats();
+        }
+        if (levelDBDataStore != null) {
+            levelDBDataStore.clearStats();
+        }
     }
 
 
     @ServiceMethod
     @Override
     public void sendStats(long now) {
-
-
         logStore.sendStats(now);
+        if (replicationDataStore != null) {
+            replicationDataStore.sendStats(now);
+        }
         mapDataStore.sendStats(now);
-        mySQLDataStore.sendStats(now);
-        levelDBDataStore.sendStats(now);
+        if (mySQLDataStore != null) {
+            mySQLDataStore.sendStats(now);
+        }
+        if (levelDBDataStore != null) {
+            levelDBDataStore.sendStats(now);
+        }
 
         StatCount statCount;
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG dbReaderCount",
-                config.dbReaderCount());
+                dataStoreConfig.dbReaderCount());
 
         transferQueue.put(statCount);
 
@@ -250,14 +320,14 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG dbWriterCount",
-                config.dbWriterCount());
+                dataStoreConfig.dbWriterCount());
 
         transferQueue.put(statCount);
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG levelDBBatchReaderCount",
-                config.levelDBBatchReaderCount());
+                dataStoreConfig.levelDBBatchReaderCount());
 
         transferQueue.put(statCount);
 
@@ -265,7 +335,7 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG checkStatusEveryIntervalMS",
-                config.checkStatusEveryIntervalMS());
+                dataStoreConfig.checkStatusEveryIntervalMS());
 
         transferQueue.put(statCount);
 
@@ -273,7 +343,7 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG dbMaxReadBatch",
-                config.dbMaxReadBatch());
+                dataStoreConfig.dbMaxReadBatch());
 
         transferQueue.put(statCount);
 
@@ -281,7 +351,7 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG dbMaxWriteBatch",
-                config.dbMaxWriteBatch());
+                dataStoreConfig.dbMaxWriteBatch());
 
         transferQueue.put(statCount);
 
@@ -289,7 +359,7 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG dbMinReadBatch",
-                config.dbMinReadBatch());
+                dataStoreConfig.dbMinReadBatch());
 
         transferQueue.put(statCount);
 
@@ -297,7 +367,7 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG dbReadFlushQueueIntervalMS",
-                config.dbReadFlushQueueIntervalMS());
+                dataStoreConfig.dbReadFlushQueueIntervalMS());
 
         transferQueue.put(statCount);
 
@@ -305,7 +375,7 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG levelDBCacheSize",
-                config.levelDBCacheSize());
+                dataStoreConfig.levelDBCacheSize());
 
         transferQueue.put(statCount);
 
@@ -313,7 +383,7 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG levelDBMaxOpenFiles",
-                config.levelDBMaxOpenFiles());
+                dataStoreConfig.levelDBMaxOpenFiles());
 
         transferQueue.put(statCount);
 
@@ -321,21 +391,21 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG levelDBWriteBufferSize",
-                config.levelDBWriteBufferSize());
+                dataStoreConfig.levelDBWriteBufferSize());
 
         transferQueue.put(statCount);
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG sqlBatchWrite",
-                config.sqlBatchWrite());
+                dataStoreConfig.sqlBatchWrite());
 
         transferQueue.put(statCount);
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG threadErrorResumeTimeMS",
-                config.threadErrorResumeTimeMS());
+                dataStoreConfig.threadErrorResumeTimeMS());
 
         transferQueue.put(statCount);
 
@@ -343,39 +413,39 @@ public class MasterDataStore implements DataStore {
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
                 "CONFIG pollTimeoutMS",
-                config.pollTimeoutMS());
+                dataStoreConfig.pollTimeoutMS());
 
         transferQueue.put(statCount);
 
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
-                "CONFIG blacklist" + config.mySQLKeyBlackList(),
-                config.mySQLKeyBlackList().size());
+                "CONFIG blacklist" + dataStoreConfig.mySQLKeyBlackList(),
+                dataStoreConfig.mySQLKeyBlackList().size());
 
         transferQueue.put(statCount);
 
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
-                "CONFIG DB URL " + config.dbUrl(),
-                config.dbUrl().length());
+                "CONFIG DB URL " + dataStoreConfig.dbUrl(),
+                dataStoreConfig.dbUrl().length());
 
         transferQueue.put(statCount);
 
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
-                "CONFIG levelDBFileName " + config.levelDBFileName(),
-                config.levelDBFileName().length());
+                "CONFIG levelDBFileName " + dataStoreConfig.levelDBFileName(),
+                dataStoreConfig.levelDBFileName().length());
 
         transferQueue.put(statCount);
 
 
         statCount = new StatCount(now, DataStoreSource.SERVER,
                 Action.NONE,
-                "CONFIG outputDirectory " + config.outputDirectory(),
-                config.outputDirectory().length());
+                "CONFIG outputDirectory " + dataStoreConfig.outputDirectory(),
+                dataStoreConfig.outputDirectory().length());
 
         transferQueue.put(statCount);
     }
@@ -384,28 +454,14 @@ public class MasterDataStore implements DataStore {
     @ServiceMethod
     @Override
     public void set(SetRequest request) {
-
-
-        logStore.set(request);
-        mapDataStore.set(request);
-        if (!mySQLReadOnly) {
-            mySQLDataStore.set(request);
-        }
-        if (levelDBDataStore != null) {
-            levelDBDataStore.set(request);
-        }
-
+        _set(request.source(), request);
     }
-
 
     @ServiceMethod
     @Override
     public void get(GetRequest getRequest) {
-
         mapDataStore.get(getRequest);
-
     }
-
 
     @ServiceMethod
     @Override
@@ -415,14 +471,10 @@ public class MasterDataStore implements DataStore {
         }
     }
 
-
     @ServiceMethod
     public String get(String key) {
-
         return mapDataStore.get(key);
-
     }
-
 
     @ServiceMethod
     @Override
@@ -430,145 +482,122 @@ public class MasterDataStore implements DataStore {
         mapDataStore.batchRead(request);
     }
 
-
     @ServiceMethod
     @Override
     public void remove(RemoveRequest removeRequest) {
         logStore.remove(removeRequest);
+        if (replicationDataStore != null) {
+            replicationDataStore.remove(removeRequest);
+        }
         mapDataStore.remove(removeRequest);
+        if (mySQLDataStore != null && !mySQLReadOnly) {
+            mySQLDataStore.remove(removeRequest);
+        }
         if (levelDBDataStore != null) {
             levelDBDataStore.remove(removeRequest);
         }
-        if (!mySQLReadOnly) {
-            mySQLDataStore.remove(removeRequest);
-        }
-
     }
 
 
     @ServiceMethod
     @Override
     public void addAll(BatchSetRequest batchSetRequest) {
-        logStore.addAll(batchSetRequest);
-        mapDataStore.addAll(batchSetRequest);
-        if (levelDBDataStore != null) {
-            levelDBDataStore.addAll(batchSetRequest);
+        if (DataStoreSource.REPLICATION != batchSetRequest.source()) {
+            logStore.addAll(batchSetRequest);
+            if (replicationDataStore != null) {
+                replicationDataStore.addAll(batchSetRequest);
+            }
         }
-        if (!mySQLReadOnly) {
+        mapDataStore.addAll(batchSetRequest);
+        if (mySQLDataStore != null && !mySQLReadOnly) {
             mySQLDataStore.addAll(batchSetRequest);
         }
-
-
+        if (levelDBDataStore != null) {
+            levelDBDataStore.addAll(batchSetRequest);
+    }
     }
 
 
     @Override
     public void start() {
-
         for (DataStore dataStore : dataStoreList) {
             dataStore.start();
         }
-
         Sys.sleep(10);
-
     }
 
     @Override
     public void stop() {
-
         if (dataStoreList != null) {
-
             for (DataStore dataStore : dataStoreList) {
                 dataStore.stop();
             }
         }
-
     }
 
     @ServiceMethod
     public void flush() {
         logStore.flush();
+        if (replicationDataStore != null) {
+            replicationDataStore.flush();
+        }
     }
 
 
     @ServiceMethod
     public long countLocalDB() {
-        if (levelDBDataStore != null) {
-            return this.levelDBDataStore.count();
-        } else {
-            return -1L;
-        }
+        return levelDBDataStore == null ? -1 : levelDBDataStore.count();
     }
 
     @ServiceMethod
     public long countKeyPrefix(String prefix) {
-        if (levelDBDataStore != null) {
-            return this.levelDBDataStore.countKeyPrefix(prefix);
-        } else {
-            return -1L;
-        }
+        return levelDBDataStore == null ? -1 : levelDBDataStore.countKeyPrefix(prefix);
     }
 
     @ServiceMethod
     public long deleteLocalDBByKeyPrefix(String prefix) {
-        if (levelDBDataStore != null) {
-            return this.levelDBDataStore.deleteKeysByPrefix(prefix);
-        } else {
-            return -1L;
-        }
+        return levelDBDataStore == null ? -1 : levelDBDataStore.deleteKeysByPrefix(prefix);
     }
 
     @ServiceMethod
     public List<Pair<String, String>> search(String prefix) {
-
-        return this.levelDBDataStore.search(prefix);
-
+        return levelDBDataStore.search(prefix);
     }
 
     @ServiceMethod
     public List<String> searchForKeys(String prefix) {
-
-        return this.levelDBDataStore.searchForKeys(prefix);
-
+        return levelDBDataStore == null ? new ArrayList<String>() : levelDBDataStore.searchForKeys(prefix);
     }
 
 
     @ServiceMethod
     public long deleteByKeyPrefix(String prefix) {
-
-        List<String> keys = this.levelDBDataStore.searchForKeys(prefix);
-
+        List<String> keys = searchForKeys(prefix);
         for (String key : keys) {
             mapDataStore.remove(key);
         }
-
-
-        for (String key : keys) {
-            mySQLDataStore.remove(new RemoveRequest(666, "admin", key));
+        if (mySQLDataStore != null) {
+            for (String key : keys) {
+                mySQLDataStore.remove(new RemoveRequest(666, "admin", key));
+            }
         }
 
         return keys.size();
-
     }
 
     @ServiceMethod
     public long countMemory() {
-        if (mapDataStore != null) {
-            return this.mapDataStore.count();
-        } else {
-            return -1L;
-        }
+        return mapDataStore.count();
     }
-
 
     @ServiceMethod
     public boolean exists(String key) {
-        return this.mapDataStore.exists(key);
+        return mapDataStore.exists(key);
     }
 
     @ServiceMethod
     public DataStoreConfig config() {
-        return config;
+        return dataStoreConfig;
     }
 
     @ServiceMethod
@@ -576,4 +605,11 @@ public class MasterDataStore implements DataStore {
         mapDataStore.set(key, value);
     }
 
+    private void queueInvalidSource(BaseDataStoreRequest request) {
+        transferQueue.put(invalidSourceResult(request));
+    }
+
+    private ErrorResult invalidSourceResult(BaseDataStoreRequest request) {
+        return new ErrorResult(request.messageId(), request.clientId(), request.source(), "Invalid Source");
+    }
 }

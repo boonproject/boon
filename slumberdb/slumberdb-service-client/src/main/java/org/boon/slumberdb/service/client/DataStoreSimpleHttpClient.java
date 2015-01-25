@@ -1,5 +1,9 @@
 package org.boon.slumberdb.service.client;
 
+import org.boon.HTTP;
+import org.boon.Lists;
+import org.boon.json.JsonSerializer;
+import org.boon.json.JsonSerializerFactory;
 import org.boon.slumberdb.service.protocol.Action;
 import org.boon.slumberdb.service.protocol.ProtocolConstants;
 import org.boon.slumberdb.service.protocol.requests.*;
@@ -9,10 +13,6 @@ import org.boon.slumberdb.service.results.StatsResults;
 import org.boon.slumberdb.stores.DataOutputQueue;
 import org.boon.slumberdb.stores.DataStoreSource;
 import org.boon.slumberdb.stores.queue.DataOutputQueueTransferQueue;
-import org.boon.HTTP;
-import org.boon.Lists;
-import org.boon.json.JsonSerializer;
-import org.boon.json.JsonSerializerFactory;
 
 import java.util.*;
 
@@ -23,7 +23,6 @@ import static org.boon.Boon.puts;
  * Created by Richard on 7/2/14.
  */
 public class DataStoreSimpleHttpClient implements DataStoreClient {
-
 
     private DataOutputQueue queue;
     private String url;
@@ -149,18 +148,20 @@ public class DataStoreSimpleHttpClient implements DataStoreClient {
 
     @Override
     public void setBatch(Map<String, Object> batch) {
+        setBatch(null, batch);
+    }
 
+    @Override
+    public void setBatch(DataStoreSource source, Map<String, Object> batch) {
         List<String> keys = Lists.list(batch.keySet());
         List<String> values = new ArrayList<>(keys.size());
 
         for (String key : keys) {
-
             values.add(serializer.serialize(batch.get(key)).toString());
         }
 
-        BatchSetRequest request = new BatchSetRequest(messageId++, clientId, keys, values);
+        BatchSetRequest request = new BatchSetRequest(source, messageId++, clientId, keys, values);
         send(request);
-
     }
 
     @Override
@@ -213,6 +214,11 @@ public class DataStoreSimpleHttpClient implements DataStoreClient {
 
     @Override
     public void setBatchIfNotExists(Map<String, Object> batch) {
+        setBatchIfNotExists(null, batch);
+    }
+
+    @Override
+    public void setBatchIfNotExists(DataStoreSource source, Map<String, Object> batch) {
         List<String> keys = Lists.list(batch.keySet());
         List<String> values = new ArrayList<>(keys.size());
 
@@ -221,7 +227,7 @@ public class DataStoreSimpleHttpClient implements DataStoreClient {
             values.add(serializer.serialize(batch.get(key)).toString());
         }
 
-        BatchSetRequest request = new BatchSetRequest(Action.SET_BATCH_IF_NOT_EXISTS, messageId, clientId, keys, values);
+        BatchSetRequest request = new BatchSetRequest(source, Action.SET_BATCH_IF_NOT_EXISTS, messageId, clientId, keys, values);
         send(request);
     }
 

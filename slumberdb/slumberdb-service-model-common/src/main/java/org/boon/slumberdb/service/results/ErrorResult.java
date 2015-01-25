@@ -5,7 +5,6 @@ import org.boon.Str;
 import org.boon.slumberdb.service.protocol.ProtocolConstants;
 import org.boon.slumberdb.stores.DataStoreSource;
 
-import static org.boon.Exceptions.die;
 import static org.boon.slumberdb.service.protocol.ProtocolConstants.DELIMITER;
 
 public class ErrorResult extends Result {

@@ -25,8 +25,6 @@ public enum Action {
     GET_SOURCE(ProtocolConstants.GET_SOURCE_VERB, ActionResponse.GET_RESPONSE),
     SET_BATCH_INTERNAL(ProtocolConstants.SET_INTERNAL_BATCH_VERB, ActionResponse.NONE),
     SET_INTERNAL(ProtocolConstants.SET_INTERNAL_VERB, ActionResponse.NONE),
-    SET_REPLICATE(ProtocolConstants.SET_REPLICATE_VERB, ActionResponse.NONE),
-    SET_REPLICATE_BATCH(ProtocolConstants.SET_REPLICATE_BATCH_VERB, ActionResponse.NONE),
     SEARCH(ProtocolConstants.SEARCH_VERB, ActionResponse.BATCH_RESPONSE),
     NONE(ProtocolConstants.NONE, ActionResponse.NONE),
     METHOD_CALL(ProtocolConstants.METHOD_CALL_VERB, ActionResponse.GET_RESPONSE),

@@ -14,10 +14,11 @@
 
     <modules>
         <module>slumberdb-core</module>
+        <module>slumberdb-service-model-common</module>
         <module>slumberdb-leveldb</module>
         <module>slumberdb-mysql</module>
-        <module>slumberdb-service-model</module>
         <module>slumberdb-service-client</module>
+        <module>slumberdb-service-model</module>
         <module>slumberdb-service</module>
     </modules>
 </project>

@@ -1,40 +1,27 @@
 package org.boon.slumberdb.handlers;
 
-import org.boon.core.Sys;
-import org.boon.slumberdb.service.config.DataStoreConfig;
-import org.boon.slumberdb.service.config.DataStoreServerConfig;
+import org.boon.slumberdb.MultiMapUtil;
+import org.boon.slumberdb.service.protocol.ProtocolConstants;
+import org.boon.slumberdb.service.server.DataStoreServer;
 import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.*;
+import org.vertx.java.core.http.HttpServerRequest;
 
-import static org.boon.Boon.*;
-import static org.boon.Exceptions.die;
-import static org.boon.Maps.map;
+import java.util.Map;
 
 public class AdminSearchUsers implements Handler<HttpServerRequest> {
-    private DataStoreServerConfig config;
+    private DataStoreServer dataStoreServer;
 
-    public AdminSearchUsers(DataStoreServerConfig config) {
-        this.config = config;
+    public AdminSearchUsers(DataStoreServer dataStoreServer) {
+        this.dataStoreServer = dataStoreServer;
     }
 
     @Override
-    public void handle(HttpServerRequest event) {
-        event.response().putHeader("Content-Type", "text/plain");
-        event.response().setChunked(true);
-        event.response().write(toJson(
-                map("ok", true,
-                        "sequence", 99,
-                        "description", "Slumber DB",
-                        "cpus", Runtime.getRuntime().availableProcessors(),
-                        "free memory", Runtime.getRuntime().freeMemory(),
-                        "total memory", Runtime.getRuntime().totalMemory(),
-                        "JDK 1.7 or later", Sys.is1_7OrLater(),
-                        "OS", System.getProperty("os.name"),
-                        "Java version", System.getProperty("java.version")
-                )
-        ));
-        event.response().write(config.toString());
-        event.response().write(DataStoreConfig.load().toString());
-        event.response().end();
+    public void handle(HttpServerRequest request) {
+        String ipAddress = request.remoteAddress().toString();
+        Map<String, String> map = MultiMapUtil.toMap(request.params());
+        map.put(ProtocolConstants.Search.HANDLER_KEY, "org.boon.slumberdb.search.BaseSearchHandler");
+        map.put(ProtocolConstants.Search.LIMIT_KEY, Integer.toString(ProtocolConstants.Search.LIMIT_VALUE));
+
+        dataStoreServer.handleCallWithMap(ipAddress, map, request.uri(), request.response());
     }
 }

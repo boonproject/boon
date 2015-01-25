@@ -18,15 +18,25 @@ import static org.boon.Boon.puts;
 public class Utils {
 
     public static void runDataStoreServer(int port) throws IOException {
+        runDataStoreServer("org.boon.slumberdb.DataStoreVerticle", port);
+    }
 
+    public static void runDataStoreServer(String main) throws IOException {
+        runDataStoreServer(main, null);
+    }
+
+    public static void runDataStoreServer(String main, Integer port) throws IOException {
 
         PlatformManager platformManager = PlatformLocator.factory.createPlatformManager();
 
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.putNumber("port", port);
+        JsonObject jsonObject = null;
+        if (port != null) {
+            jsonObject = new JsonObject();
+            jsonObject.putNumber("port", port);
+        }
 
         URL url = new File(".", "target/classes").getCanonicalFile().toURL();
-        platformManager.deployVerticle("org.boon.slumberdb.DataStoreVerticle", jsonObject, new URL[]{url}, 1, null,
+        platformManager.deployVerticle(main, jsonObject, new URL[]{url}, 1, null,
                 new Handler<AsyncResult<String>>() {
                     @Override
                     public void handle(AsyncResult<String> stringAsyncResult) {
@@ -40,6 +50,4 @@ public class Utils {
         // Prevent the JVM from exiting
         System.in.read();
     }
-
-
 }

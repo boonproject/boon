@@ -1,29 +1,29 @@
 package org.boon.slumberdb.service.config;
 
-import org.boon.Boon;
 import org.boon.core.Sys;
 
 /**
- * Created by Scott on 10/21/14
+ * Created by Scott in January 2015
  */
 public class ReplicationDataStoreConfig {
-    public String clientName;
-    public int batchSize = 1;
-    public boolean forever = false;
-    public boolean verbose = false;
-    public long millisPauseAfterSet = 100l;
-    public long millisPauseAfterRound = 5000l;
-    public long minimumAgeMillis = 180000;
-    public String archiveDirectory;
+    private DataStoreClientConfig dataStoreClientConfig;
+    private int maxBatchSize = 0;
+    private long maxWaitMillis = 1000;
 
     public static ReplicationDataStoreConfig load() {
-        String fileLocation = Sys.sysProp("LogFilesReplicatorConfig", "/opt/org/slumberdb/logfilesreplicator.json");
+        String fileLocation = Sys.sysProp("ReplicationDataStoreConfig", "/opt/org/slumberdb/replicationdatastore.json");
         return Sys.loadFromFileLocation(ReplicationDataStoreConfig.class, fileLocation);
     }
 
-    public static void main(String[] args) {
-        Sys.putSysProp("LogFilesReplicatorConfig", "C:\\dev\\boonproject\\_data\\logfilesreplicator.json");
-        ReplicationDataStoreConfig x = new ReplicationDataStoreConfig();
-        System.out.println(Boon.toJson(x));
+    public DataStoreClientConfig dataStoreClient() {
+        return dataStoreClientConfig;
+    }
+
+    public int maxBatchSize() {
+        return maxBatchSize;
+    }
+
+    public long maxWaitMillis() {
+        return maxWaitMillis;
     }
 }

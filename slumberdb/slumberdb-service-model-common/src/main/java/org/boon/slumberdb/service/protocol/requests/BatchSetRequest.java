@@ -74,6 +74,17 @@ public class BatchSetRequest extends BaseDataStoreRequest {
         }
     }
 
+    public Map<String, Object> entryMap() {
+        return appendEntriesTo(new HashMap<String, Object>());
+    }
+
+    public Map<String, Object> appendEntriesTo(Map<String, Object> map) {
+        for (int x = 0; x < keys.size(); x++) {
+            map.put(keys.get(x), values.get(x));
+        }
+        return map;
+    }
+
     public static BatchSetRequest parse(String message) {
         BatchSetRequest request = new BatchSetRequest();
 

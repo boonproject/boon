@@ -81,12 +81,22 @@
             </dependency>
             <dependency>
                 <groupId>io.fastjson</groupId>
+                <artifactId>slumberdb-service-model-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.fastjson</groupId>
                 <artifactId>slumberdb-mysql</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.fastjson</groupId>
                 <artifactId>slumberdb-leveldb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.fastjson</groupId>
+                <artifactId>slumberdb-service-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

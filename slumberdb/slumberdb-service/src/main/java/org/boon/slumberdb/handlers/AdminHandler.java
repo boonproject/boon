@@ -23,6 +23,15 @@ public class AdminHandler implements Handler<HttpServerRequest> {
         this.dataStoreConfig = dataStoreConfig;
     }
 
+    public String[] patterns() {
+        return new String[] {
+                "/admin/heartbeat",
+                "/admin/heartbeat/system",
+                "/admin/heartbeat/dataStoreServerConfig",
+                "/admin/heartbeat/dataStoreConfig"
+        };
+    }
+
     @Override
     public void handle(HttpServerRequest request) {
         request.response().putHeader("Content-Type", "text/plain");
@@ -34,12 +43,34 @@ public class AdminHandler implements Handler<HttpServerRequest> {
                 handleHeartbeat(request);
                 break;
 
-            case "/admin/config":
-            case "/admin/config/":
-                handleHeartbeat(request);
+            case "/admin/heartbeat/system":
+            case "/admin/heartbeat/system/":
+                handleSystem(request);
+                break;
+
+            case "/admin/heartbeat/dataStoreServerConfig":
+            case "/admin/heartbeat/dataStoreServerConfig/":
+                handleDataStoreServerConfig(request);
+                break;
+
+            case "/admin/heartbeat/dataStoreConfig":
+            case "/admin/heartbeat/dataStoreConfig/":
+                handleDataStoreConfig(request);
                 break;
         }
         request.response().end();
+    }
+
+    private void handleSystem(HttpServerRequest request) {
+        request.response().write(toPrettyJson(new SysBean()));
+    }
+
+    private void handleDataStoreServerConfig(HttpServerRequest request) {
+        request.response().write(toPrettyJson(dataStoreServerConfig));
+    }
+
+    private void handleDataStoreConfig(HttpServerRequest request) {
+        request.response().write(toPrettyJson(dataStoreConfig));
     }
 
     private void handleHeartbeat(HttpServerRequest request) {
@@ -48,21 +79,27 @@ public class AdminHandler implements Handler<HttpServerRequest> {
         request.response().write(dataStoreConfig.toString());
     }
 
-    private void handleNewHeartbeat(HttpServerRequest request) {
-        system = heartMap();
-        request.response().write(toPrettyJson(this));
+    protected Map<String, String> heartMap() {
+        SysBean sysBean = new SysBean();
+        return map("ok", "" + true,
+                "sequence", "99",
+                "description", sysBean.description,
+                "cpus", sysBean.cpus.toString(),
+                "free memory", sysBean.freeMemory.toString(),
+                "total memory", sysBean.totalMemory.toString(),
+                "JDK 1.7 or later", sysBean.jdk17OrLater.toString(),
+                "OS", sysBean.os,
+                "Java version", sysBean.javaVersion
+        );
     }
 
-    protected Map<String, String> heartMap() {
-        return map("ok", "" + true,
-                "sequence", "" + 99,
-                "description", "Slumber DB",
-                "cpus", "" + Runtime.getRuntime().availableProcessors(),
-                "free memory", "" + Runtime.getRuntime().freeMemory(),
-                "total memory", "" + Runtime.getRuntime().totalMemory(),
-                "JDK 1.7 or later", "" + Sys.is1_7OrLater(),
-                "OS", System.getProperty("os.name"),
-                "Java version", System.getProperty("java.version")
-        );
+    /* inner */ class SysBean {
+        Long freeMemory = Runtime.getRuntime().freeMemory();
+        Long totalMemory = Runtime.getRuntime().totalMemory();
+        Integer cpus = Runtime.getRuntime().availableProcessors();
+        String os = System.getProperty("os.name");
+        Boolean jdk17OrLater = Sys.is1_7OrLater();
+        String javaVersion = System.getProperty("java.version");
+        String description = "Slumber DB";
     }
 }

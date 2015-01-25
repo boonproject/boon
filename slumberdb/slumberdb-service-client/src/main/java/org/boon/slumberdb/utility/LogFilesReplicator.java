@@ -5,9 +5,10 @@ import org.boon.core.Dates;
 import org.boon.core.Sys;
 import org.boon.slumberdb.service.client.DataStoreClient;
 import org.boon.slumberdb.service.config.DataStoreConfig;
+import org.boon.slumberdb.service.config.LogFilesReplicatorConfig;
+import org.boon.slumberdb.stores.DataStoreSource;
 import org.boon.slumberdb.stores.log.LogEntry;
 import org.boon.slumberdb.stores.log.LogFile;
-import org.boon.slumberdb.stores.log.LogFilesReplicatorConfig;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,7 +51,7 @@ public class LogFilesReplicator implements IO.EachLine {
             while (logFiles.size() > 0) {
 
                 LogFile logFile = logFiles.remove(0);
-                DataStoreClient client = ClientHelper.getSimpleClient(config.clientName + "." + id);
+                DataStoreClient client = ClientHelper.getVertxWebSocketClient(config.clientName + "." + id);
 
                 LogFilesReplicator replicator = new LogFilesReplicator(config, client);
 
@@ -58,6 +59,7 @@ public class LogFilesReplicator implements IO.EachLine {
                 replicator.afterIoEachFile();
                 archive(config, logFile);
             }
+
             if (config.verbose) {
                 println("Round Completed: " + id);
             }
@@ -126,35 +128,45 @@ public class LogFilesReplicator implements IO.EachLine {
     public boolean line(String line, int index) {
         LogEntry le = LogEntry.load(line);
         if (batch) {
-            if (config.verbose) {
-                puts("Adding to batch: " + le.key + "=" + le.value);
-            }
+            log("Adding to batch: ", le.key, "=", le.value);
             batchMap.put(le.key, le.value);
-            if (batchMap.size() == config.batchSize) {
-                if (config.verbose) {
-                    puts("Setting Batch");
-                }
-                client.setBatch(batchMap);
+            if (batchMap.size() >= config.batchSize) {
+                clientSetBatch();
                 batchMap.clear();
-                Sys.sleep(config.millisPauseAfterSet);
             }
         }
         else {
-            if (config.verbose) {
-                puts("Setting: " + le.key + "=" + le.value);
-            }
-            client.set(le.key, le.value);
-            Sys.sleep(config.millisPauseAfterSet);
+            clientSet(le);
         }
         return true;
     }
 
     public void afterIoEachFile() {
         if (batch && batchMap.size() > 0) { // any leftovers smaller than the full batchsize
-            if (config.verbose) {
-                puts("Setting Batch");
-            }
-            client.setBatch(batchMap);
+            clientSetBatch();
+        }
+    }
+
+    private void clientSet(LogEntry le) {
+        log("Setting: ", le.key, "=", le.value);
+        client.set(DataStoreSource.REPLICATION, le.key, le.value);
+        sleepAfterSet();
+    }
+
+    private void clientSetBatch() {
+        log("Setting Batch");
+        client.setBatch(DataStoreSource.REPLICATION, batchMap);
+        sleepAfterSet();
+System.exit(0);
+    }
+
+    private void sleepAfterSet() {
+        Sys.sleep(config.millisPauseAfterSet);
+    }
+
+    private void log(String... messages) {
+        if (config.verbose) {
+            puts(messages);
         }
     }
 }

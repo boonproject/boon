@@ -1,5 +1,9 @@
 package org.boon.slumberdb.service.client;
 
+import org.boon.Exceptions;
+import org.boon.Logger;
+import org.boon.core.Sys;
+import org.boon.slumberdb.entries.Entry;
 import org.boon.slumberdb.service.config.Bucket;
 import org.boon.slumberdb.service.config.Server;
 import org.boon.slumberdb.service.protocol.Action;
@@ -9,10 +13,6 @@ import org.boon.slumberdb.service.results.BatchResult;
 import org.boon.slumberdb.service.results.SingleResult;
 import org.boon.slumberdb.stores.DataOutputQueue;
 import org.boon.slumberdb.stores.DataStoreSource;
-import org.boon.Exceptions;
-import org.boon.Logger;
-import org.boon.core.Sys;
-import org.boon.slumberdb.entries.Entry;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.buffer.Buffer;
@@ -274,19 +274,28 @@ public class ServerProxy {
     }
 
     public boolean batchSetIfNotExists(String clientId, List<Entry<String, String>> batch) {
+        return doBatchSet(null, Action.SET_BATCH_IF_NOT_EXISTS, clientId, batch);
+    }
 
-        return doBatchSet(Action.SET_BATCH_IF_NOT_EXISTS, clientId, batch);
+    public boolean batchSetIfNotExists(DataStoreSource source, String clientId, List<Entry<String, String>> batch) {
+        return doBatchSet(source, Action.SET_BATCH_IF_NOT_EXISTS, clientId, batch);
     }
 
     public boolean batchSet(String clientId, List<Entry<String, String>> batch) {
+        return doBatchSet(null, Action.SET_BATCH, clientId, batch);
+    }
 
-        return doBatchSet(Action.SET_BATCH, clientId, batch);
-
+    public boolean batchSet(DataStoreSource source, String clientId, List<Entry<String, String>> batch) {
+        return doBatchSet(source, Action.SET_BATCH, clientId, batch);
     }
 
     public boolean doBatchSet(Action action, String clientId, List<Entry<String, String>> batch) {
+        return doBatchSet(null, action, clientId, batch);
+    }
 
-        boolean sent = false;
+    public boolean doBatchSet(DataStoreSource source, Action action, String clientId, List<Entry<String, String>> batch) {
+
+        boolean allSent = true;
 
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
@@ -299,30 +308,24 @@ public class ServerProxy {
             values.add(entry.value());
             if (keys.size() >= 10_000) {
 
-                BatchSetRequest batchRequest = new BatchSetRequest(action, messageId, clientId, keys, values);
+                BatchSetRequest batchRequest = new BatchSetRequest(source, action, messageId, clientId, keys, values);
 
-
-                sent &= send(batchRequest.formTextRequest());
+                if ( !send(batchRequest.formTextRequest()) ) {
+                    allSent = false;
+                }
                 keys.clear();
                 values.clear();
             }
-
         }
-
 
         if (keys.size() > 0) {
             messageId++;
 
-
-            BatchSetRequest batchRequest = new BatchSetRequest(messageId, clientId, keys, values);
-
-
+            BatchSetRequest batchRequest = new BatchSetRequest(source, messageId, clientId, keys, values);
             return send(batchRequest.formTextRequest());
-
         }
 
-
-        return sent;
+        return allSent;
 
     }
 

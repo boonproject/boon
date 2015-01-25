@@ -1,16 +1,16 @@
 package org.boon.slumberdb.service.client;
 
-import org.boon.slumberdb.config.GlobalConfig;
-import org.boon.slumberdb.service.config.Bucket;
-import org.boon.slumberdb.service.config.DataStoreClientConfig;
-import org.boon.slumberdb.stores.DataOutputQueue;
-import org.boon.slumberdb.stores.DataStoreSource;
 import org.boon.Logger;
 import org.boon.Str;
 import org.boon.core.Sys;
 import org.boon.json.JsonSerializer;
 import org.boon.json.JsonSerializerFactory;
+import org.boon.slumberdb.config.GlobalConfig;
 import org.boon.slumberdb.entries.Entry;
+import org.boon.slumberdb.service.config.Bucket;
+import org.boon.slumberdb.service.config.DataStoreClientConfig;
+import org.boon.slumberdb.stores.DataOutputQueue;
+import org.boon.slumberdb.stores.DataStoreSource;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 
@@ -178,59 +178,43 @@ public class DataStoreVertxWebSocketClient implements DataStoreClient {
 
     @Override
     public void setBatch(Map<String, Object> batch) {
+        setBatch(null, batch);
+    }
 
-
-        Map<Bucket, List<Entry<String, String>>> map = new LinkedHashMap<>();
-        Bucket bucket;
-        List<Entry<String, String>> bucketItems;
-
-        Set<String> keys = batch.keySet();
-        for (String key : keys) {
-
-            bucket = config.pickBucket(key);
-            bucketItems = map.get(bucket);
-
-            if (bucketItems == null) {
-                bucketItems = new ArrayList<>();
-                map.put(bucket, bucketItems);
-            }
-            bucketItems.add(new Entry<>(key, serializer.serialize(batch.get(key)).toString()));
-        }
-
-
+    @Override
+    public void setBatch(DataStoreSource source, Map<String, Object> batch) {
+        Map<Bucket, List<Entry<String, String>>> map = buildBucketListMap(batch);
         for (Map.Entry<Bucket, List<Entry<String, String>>> entry : map.entrySet()) {
-
-            serverProxy(entry.getKey()).batchSet(clientId, entry.getValue());
-
+            serverProxy(entry.getKey()).batchSet(source, clientId, entry.getValue());
         }
-
     }
 
     @Override
     public void setBatchIfNotExists(Map<String, Object> batch) {
+        setBatchIfNotExists(null, batch);
+    }
 
+    @Override
+    public void setBatchIfNotExists(DataStoreSource source, Map<String, Object> batch) {
+        Map<Bucket, List<Entry<String, String>>> map = buildBucketListMap(batch);
+        for (Map.Entry<Bucket, List<Entry<String, String>>> entry : map.entrySet()) {
+            serverProxy(entry.getKey()).batchSetIfNotExists(source, clientId, entry.getValue());
+        }
+    }
+
+    protected Map<Bucket, List<Entry<String, String>>> buildBucketListMap(Map<String, Object> batch) {
         Map<Bucket, List<Entry<String, String>>> map = new LinkedHashMap<>();
-        Bucket bucket;
-        List<Entry<String, String>> bucketItems;
-
-        for (String key : batch.keySet()) {
-
-            bucket = config.pickBucket(key);
-            bucketItems = map.get(bucket);
-
+        Set<String> keys = batch.keySet();
+        for (String key : keys) {
+            Bucket bucket = config.pickBucket(key);
+            List<Entry<String, String>> bucketItems = map.get(bucket);
             if (bucketItems == null) {
                 bucketItems = new ArrayList<>();
                 map.put(bucket, bucketItems);
             }
             bucketItems.add(new Entry<>(key, serializer.serialize(batch.get(key)).toString()));
         }
-
-
-        for (Map.Entry<Bucket, List<Entry<String, String>>> entry : map.entrySet()) {
-
-            serverProxy(entry.getKey()).batchSetIfNotExists(clientId, entry.getValue());
-
-        }
+        return map;
     }
 
     @Override

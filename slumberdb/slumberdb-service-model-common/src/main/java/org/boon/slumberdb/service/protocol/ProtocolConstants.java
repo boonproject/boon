@@ -1,11 +1,11 @@
 package org.boon.slumberdb.service.protocol;
 
+import org.boon.Str;
+import org.boon.primitive.CharBuf;
 import org.boon.slumberdb.service.protocol.factory.ByMapFactories;
 import org.boon.slumberdb.service.protocol.factory.ByTextFactory;
 import org.boon.slumberdb.service.protocol.factory.RequestFactory;
 import org.boon.slumberdb.service.protocol.requests.DataStoreRequest;
-import org.boon.Str;
-import org.boon.primitive.CharBuf;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -76,8 +76,6 @@ public class ProtocolConstants {
     public static final String SET_BATCH_IF_NOT_EXISTS_VERB = "setBatchIfNotExists";
     public static final String SET_BROADCAST_VERB = "setBroadcast";
     public static final String SET_IF_NOT_EXISTS_VERB = "setIfNotExists";
-    public static final String SET_REPLICATE_VERB = "setReplicate";
-    public static final String SET_REPLICATE_BATCH_VERB = "setReplicateBatch";
     public static final String PING_VERB = "ping";
     public static final String PING_VERB_STARTS = VERSION_1 + DELIMITER_STR + PING_VERB + DELIMITER_STR;
     public static final String RESPONSE = "response";

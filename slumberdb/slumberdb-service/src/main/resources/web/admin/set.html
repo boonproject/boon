@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>Set Form</title>
+	<title>Set</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -18,10 +18,11 @@
 
 <div class="bs-example">
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="set.html">Set</a></li>
-		<li><a href="get.html">Get</a></li>
-		<li><a href="stats.html">Stats</a></li>
-		<li><a href="heartbeat.html">Heartbeat</a></li>
+		<li><a href="/admin">Home</a></li>
+		<li class="active"><a href="/admin/set">Set</a></li>
+		<li><a href="/admin/get">Get</a></li>
+		<li><a href="/admin/stats">Stats</a></li>
+		<li><a href="/admin/config">Config</a></li>
 	</ul>
 </div>
 
@@ -31,11 +32,11 @@
 	<form action="/" method="POST" id="setForm">
 		<div class="form-group">
 			<label for="host">Host</label>
-			<input name="host" class="form-control" id="host" type="text" value="localhost" >
+			<input name="host" class="form-control" id="host" type="text" value=":replace-serverhost:" >
 		</div>
 		<div class="form-group">
 			<label for="port">Port</label>
-			<input name="port" class="form-control" id="port" type="text" value="10101" >
+			<input name="port" class="form-control" id="port" type="text" value=":replace-serverport:" >
 		</div>
 		<div class="form-group">
 			<label for="uri">Uri</label>
@@ -51,7 +52,7 @@
 		</div>
 		<div class="form-group">
 			<label for="client">Client</label>
-			<input name="client" class="form-control" id="client" type="text" value="webclient" >
+			<input name="client" class="form-control" id="client" type="text" value="adminclient" >
 		</div>
 		<div class="form-group">
 			<label for="source">Source</label>

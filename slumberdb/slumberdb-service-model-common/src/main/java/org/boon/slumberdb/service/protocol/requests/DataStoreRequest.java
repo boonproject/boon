@@ -1,11 +1,11 @@
 package org.boon.slumberdb.service.protocol.requests;
 
 
+import org.boon.Str;
+import org.boon.StringScanner;
 import org.boon.slumberdb.service.protocol.Action;
 import org.boon.slumberdb.service.protocol.ProtocolConstants;
 import org.boon.slumberdb.stores.DataStoreSource;
-import org.boon.Str;
-import org.boon.StringScanner;
 
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public abstract class DataStoreRequest {
         Action action = Action.getInstance(split[ProtocolConstants.ACTION_POSITION]);
         if (action != null) {
             switch (action) {
-                case Action.SET_BATCH:
+                case SET_BATCH:
                     if (version.equals(ProtocolConstants.VERSION_2)) {
                         return version;
                     }

@@ -26,6 +26,7 @@ public class DataStoreServerConfig {
     private long broadcastInterval;
     private StartupMode startupMode;
     private String adminName = "Slumber DB";
+    private ReplicationDataStoreConfig replicationDataStoreConfig;
 
     private boolean debug;
 
@@ -165,6 +166,7 @@ public class DataStoreServerConfig {
                 ", debug=" + debug() +
                 ", adminPort=" + adminPort() +
                 ", adminName=" + adminName() +
+                ", replicationDataStoreConfig=" + replicationDataStoreConfig() +
                 '}';
     }
 
@@ -186,5 +188,9 @@ public class DataStoreServerConfig {
 
     public String adminName() {
         return adminName;
+    }
+
+    public ReplicationDataStoreConfig replicationDataStoreConfig() {
+        return replicationDataStoreConfig;
     }
 }

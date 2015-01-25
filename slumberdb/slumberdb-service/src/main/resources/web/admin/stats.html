@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>Stats</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
@@ -15,34 +16,26 @@
 </head>
 <body>
 
-<nav role="navigation" class="navbar navbar-default navbar-static-top">
-	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<a href="index.html" class="navbar-brand">Slum Web</a>
-		</div>
-		<!-- Collection of nav links and other content for toggling -->
-		<div id="navbarCollapse" class="collapse navbar-collapse">
-			<ul class="nav navbar-nav">
-				<li><a href="setForm.html">Set</a></li>
-				<li><a href="getForm.html">Get</a></li>
-				<li class="active"><a href="stats.html">Stats</a></li>
-				<li><a href="heartbeat.html">Heartbeat</a></li>
-			</ul>
-		</div>
-	</div>
-</nav>
+<div class="bs-example">
+	<ul class="nav nav-tabs">
+		<li><a href="/admin">Home</a></li>
+		<li><a href="/admin/set">Set</a></li>
+		<li><a href="/admin/get">Get</a></li>
+		<li class="active"><a href="/admin/stats">Stats</a></li>
+		<li><a href="/admin/config">Config</a></li>
+	</ul>
+</div>
 
 <!-- END COMMON HEADER -->
 <div class="bs-example">
 	<form action="/" method="POST" id="statsForm">
 		<div class="form-group">
 			<label for="host">Host</label>
-			<input name="host" class="form-control" id="host" type="text" value="localhost" >
+			<input name="host" class="form-control" id="host" type="text" value=":replace-serverhost:" >
 		</div>
 		<div class="form-group">
 			<label for="port">Port</label>
-			<input name="port" class="form-control" id="port" type="text" value="10101" >
+			<input name="port" class="form-control" id="port" type="text" value=":replace-serverport:" >
 		</div>
 		<div class="form-group">
 			<label for="uri">Uri</label>
@@ -50,7 +43,7 @@
 		</div>
 		<div class="form-group">
 			<label for="client">Client</label>
-			<input name="client" class="form-control" id="client" type="text" value="webclient" >
+			<input name="client" class="form-control" id="client" type="text" value="adminclient" >
 		</div>
 		<button type="submit" onclick="clicked('getStats')" id="submit" class="btn btn-primary">Get Stats</button>
 		<button type="submit" onclick="clicked('clearStats')" id="submitClear" class="btn btn-primary">Clear Stats</button>
@@ -117,9 +110,51 @@
 			dataType: "text"
 		});
 
+		function compareStatsJson(a,b) {
+			if (a.source < b.source) return -1;
+			if (a.source > b.source) return 1;
+			if (a.action < b.action) return -1;
+			if (a.action > b.action) return 1;
+			if (a.area < b.area) return -1;
+			if (a.area > b.area) return 1;
+			return 0;
+		}
+
 		jqXHR.done(function(data, textStatus, jqXHR) {
-			$("#resultOk").html(action + " @ " + new Date().toUTCString() + "<pre>\r\n" + data + "</pre>");
 			$("#resultErr").html("");
+
+			var output = "<pre>\r\n" + data + "</pre>";
+
+			// {"request":{"clientId":"webclient","source":"ALL","action":"GET_STATS"},
+			// "results":{
+			// "SERVER~NONE~CONFIG maxFrameSize":{"area":"CONFIG maxFrameSize","action":"NONE","time":575323704,"source":"SERVER","count":200000000,"key":{"action":"NONE","source":"SERVER","area":"CONFIG maxFrameSize"}},
+			// "SERVER~NONE~CONFIG checkStatusEveryIntervalMS":{"area":"CONFIG checkStatusEveryIntervalMS","action":"NONE","time":575323704,"source":"SERVER","count":30000,"key":{"action":"NONE","source":"SERVER","area":"CONFIG checkStatusEveryIntervalMS"}},"LOCAL_DB~GET~RESPONSE HANDLER 2":{"area":"RESPONSE HANDLER 2","action":"GET","time":575317817,"source":"LOCAL_DB","key":{"action":"GET","source":"LOCAL_DB","area":"RESPONSE HANDLER 2"}},"SERVER~NONE~CONFIG dataStoreDrainerCount":{"area":"CONFIG dataStoreDrainerCount","action":"NONE","time":575323704,"source":"SERVER","count":4,"key":{"action":"NONE","source":"SERVER","area":"CONFIG dataStoreDrainerCount"}},"MEMORY~GET~RESPONSE HANDLER 1":{"area":"RESPONSE HANDLER 1","action":"GET","time":575317817,"source":"MEMORY","key":{"action":"GET","source":"MEMORY","area":"RESPONSE HANDLER 1"}},"SERVER~GET_STATS~Memory totalMemory":{"area":"Memory totalMemory","action":"GET_STATS","time":575323704,"source":"SERVER","count":127270912,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory totalMemory"}},"SERVER~GET_STATS~Memory freeMemory":{"area":"Memory freeMemory","action":"GET_STATS","time":575323704,"source":"SERVER","count":115107960,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory freeMemory"}},"SERVER~GET_STATS~Thread started":{"area":"Thread started","action":"GET_STATS","time":575323704,"source":"SERVER","count":51,"key":{"action":"GET_STATS","source":"SERVER","area":"Thread started"}},"MEMORY~GET~RESPONSE HANDLER 0":{"area":"RESPONSE HANDLER 0","action":"GET","time":575317812,"source":"MEMORY","key":{"action":"GET","source":"MEMORY","area":"RESPONSE HANDLER 0"}},"END~GET~RESPONSE HANDLER 0":{"area":"RESPONSE HANDLER 0","action":"GET","time":575317812,"source":"END","key":{"action":"GET","source":"END","area":"RESPONSE HANDLER 0"}},"SERVER~GET_STATS~Thread CPU Time DS WebSocketWorker 0":{"area":"Thread CPU Time DS WebSocketWorker 0","action":"GET_STATS","time":575323704,"source":"SERVER","key":{"action":"GET_STATS","source":"SERVER","area":"Thread CPU Time DS WebSocketWorker 0"}},"SERVER~NONE~CONFIG logDirectory /var/log/slumberdb/":{"area":"CONFIG logDirectory /var/log/slumberdb/","action":"NONE","time":575323704,"source":"SERVER","count":19,"key":{"action":"NONE","source":"SERVER","area":"CONFIG logDirectory /var/log/slumberdb/"}},"LOCAL_DB~GET~RESPONSE HANDLER 3":{"area":"RESPONSE HANDLER 3","action":"GET","time":575317817,"source":"LOCAL_DB","key":{"action":"GET","source":"LOCAL_DB","area":"RESPONSE HANDLER 3"}},"SERVER~GET_STATS~Memory non-heap max":{"area":"Memory non-heap max","action":"GET_STATS","time":575323704,"source":"SERVER","count":136314880,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory non-heap max"}},"SERVER~GET_STATS~Memory heapUsage committed":{"area":"Memory heapUsage committed","action":"GET_STATS","time":575323704,"source":"SERVER","count":127270912,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory heapUsage committed"}},"LOCAL_DB~GET~RESPONSE HANDLER 1":{"area":"RESPONSE HANDLER 1","action":"GET","time":575317817,"source":"LOCAL_DB","key":{"action":"GET","source":"LOCAL_DB","area":"RESPONSE HANDLER 1"}},"SERVER~NONE~CONFIG statusInterval":{"area":"CONFIG statusInterval","action":"NONE","time":575323704,"source":"SERVER","count":60000,"key":{"action":"NONE","source":"SERVER","area":"CONFIG statusInterval"}},"SERVER~GET_STATS~Thread TIME CPU  RequestHandler DS RequestHandler Utility":{"area":"Thread TIME CPU  RequestHandler DS RequestHandler Utility","action":"GET_STATS","time":575323704,"source":"SERVER","key":{"action":"GET_STATS","source":"SERVER","area":"Thread TIME CPU  RequestHandler DS RequestHandler Utility"}},"SERVER~GET_STATS~Memory maxMemory":{"area":"Memory maxMemory","action":"GET_STATS","time":575323704,"source":"SERVER","count":1888419840,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory maxMemory"}},"SERVER~GET_STATS~Thread daemon count":{"area":"Thread daemon count","action":"GET_STATS","time":575323704,"source":"SERVER","count":43,"key":{"action":"GET_STATS","source":"SERVER","area":"Thread daemon count"}},"SERVER~NONE~CONFIG threadErrorResumeTimeMS":{"area":"CONFIG threadErrorResumeTimeMS","action":"NONE","time":575323704,"source":"SERVER","count":100,"key":{"action":"NONE","source":"SERVER","area":"CONFIG threadErrorResumeTimeMS"}},"SERVER~GET_STATS~Memory heapUsage used":{"area":"Memory heapUsage used","action":"GET_STATS","time":575323704,"source":"SERVER","count":12162952,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory heapUsage used"}},"SERVER~NONE~CONFIG batchResultSize":{"area":"CONFIG batchResultSize","action":"NONE","time":575323704,"source":"SERVER","count":50,"key":{"action":"NONE","source":"SERVER","area":"CONFIG batchResultSize"}},"SERVER~NONE~CONFIG levelDBBatchReaderCount":{"area":"CONFIG levelDBBatchReaderCount","action":"NONE","time":575323704,"source":"SERVER","count":5,"key":{"action":"NONE","source":"SERVER","area":"CONFIG levelDBBatchReaderCount"}},"SERVER~GET_STATS~Thread count":{"area":"Thread count","action":"GET_STATS","time":575323704,"source":"SERVER","count":50,"key":{"action":"GET_STATS","source":"SERVER","area":"Thread count"}},"SERVER~NONE~CONFIG dbReadFlushQueueIntervalMS":{"area":"CONFIG dbReadFlushQueueIntervalMS","action":"NONE","time":575323704,"source":"SERVER","count":250,"key":{"action":"NONE","source":"SERVER","area":"CONFIG dbReadFlushQueueIntervalMS"}},"SERVER~GET_STATS~Memory non-heap init":{"area":"Memory non-heap init","action":"GET_STATS","time":575323704,"source":"SERVER","count":24313856,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory non-heap init"}},"SERVER~GET_STATS~Thread TIME USER  RequestHandler DS RequestHandler Utility":{"area":"Thread TIME USER  RequestHandler DS RequestHandler Utility","action":"GET_STATS","time":575323704,"source":"SERVER","key":{"action":"GET_STATS","source":"SERVER","area":"Thread TIME USER  RequestHandler DS RequestHandler Utility"}},"SERVER~GET_STATS~CPU availableProcessors":{"area":"CPU availableProcessors","action":"GET_STATS","time":575323704,"source":"SERVER","count":4,"key":{"action":"GET_STATS","source":"SERVER","area":"CPU availableProcessors"}},"SERVER~GET_STATS~Memory pendingFinalizationCount":{"area":"Memory pendingFinalizationCount","action":"GET_STATS","time":575323704,"source":"SERVER","key":{"action":"GET_STATS","source":"SERVER","area":"Memory pendingFinalizationCount"}},"FILE_SYSTEM~GET_STATS~localDB TotalSpace C:\dev\boonproject\_data\logsdc1":{"area":"localDB TotalSpace C:\\dev\\boonproject\\_data\\logsdc1","action":"GET_STATS","source":"FILE_SYSTEM","count":973359239168,"key":{"action":"GET_STATS","source":"FILE_SYSTEM","area":"localDB TotalSpace C:\\dev\\boonproject\\_data\\logsdc1"}},"SERVER~NONE~CONFIG dbMaxWriteBatch":{"area":"CONFIG dbMaxWriteBatch","action":"NONE","time":575323704,"source":"SERVER","count":500,"key":{"action":"NONE","source":"SERVER","area":"CONFIG dbMaxWriteBatch"}},"REMOTE_DB~GET~RESPONSE HANDLER 3":{"area":"RESPONSE HANDLER 3","action":"GET","time":575317817,"source":"REMOTE_DB","key":{"action":"GET","source":"REMOTE_DB","area":"RESPONSE HANDLER 3"}},"END~GET~RESPONSE HANDLER 3":{"area":"RESPONSE HANDLER 3","action":"GET","time":575317817,"source":"END","key":{"action":"GET","source":"END","area":"RESPONSE HANDLER 3"}},"SERVER~GET_STATS~Memory non-heap used":{"area":"Memory non-heap used","action":"GET_STATS","time":575323704,"source":"SERVER","count":17021232,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory non-heap used"}},"END~GET~RESPONSE HANDLER 1":{"area":"RESPONSE HANDLER 1","action":"GET","time":575317817,"source":"END","key":{"action":"GET","source":"END","area":"RESPONSE HANDLER 1"}},"SERVER~GET_STATS~Load ":{"area":"Load ","action":"GET_STATS","time":575323704,"source":"SERVER","count":-1.0,"key":{"action":"GET_STATS","source":"SERVER","area":"Load "}},"SERVER~GET_STATS~Memory heapUsage max":{"area":"Memory heapUsage max","action":"GET_STATS","time":575323704,"source":"SERVER","count":1888419840,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory heapUsage max"}},"SERVER~NONE~CONFIG dbMaxReadBatch":{"area":"CONFIG dbMaxReadBatch","action":"NONE","time":575323704,"source":"SERVER","count":50,"key":{"action":"NONE","source":"SERVER","area":"CONFIG dbMaxReadBatch"}},"MEMORY~GET~RESPONSE HANDLER 2":{"area":"RESPONSE HANDLER 2","action":"GET","time":575317817,"source":"MEMORY","key":{"action":"GET","source":"MEMORY","area":"RESPONSE HANDLER 2"}},"SERVER~NONE~CONFIG broadcastInterval":{"area":"CONFIG broadcastInterval","action":"NONE","time":575323704,"source":"SERVER","count":5000,"key":{"action":"NONE","source":"SERVER","area":"CONFIG broadcastInterval"}},"SERVER~NONE~CONFIG dbReaderCount":{"area":"CONFIG dbReaderCount","action":"NONE","time":575323704,"source":"SERVER","count":5,"key":{"action":"NONE","source":"SERVER","area":"CONFIG dbReaderCount"}},"END~GET~RESPONSE HANDLER 2":{"area":"RESPONSE HANDLER 2","action":"GET","time":575317817,"source":"END","key":{"action":"GET","source":"END","area":"RESPONSE HANDLER 2"}},"SERVER~NONE~CONFIG levelDBMaxOpenFiles":{"area":"CONFIG levelDBMaxOpenFiles","action":"NONE","time":575323704,"source":"SERVER","count":1024,"key":{"action":"NONE","source":"SERVER","area":"CONFIG levelDBMaxOpenFiles"}},"MEMORY~GET~RESPONSE HANDLER 3":{"area":"RESPONSE HANDLER 3","action":"GET","time":575317817,"source":"MEMORY","key":{"action":"GET","source":"MEMORY","area":"RESPONSE HANDLER 3"}},"SERVER~GET_STATS~Thread peakCount":{"area":"Thread peakCount","action":"GET_STATS","time":575323704,"source":"SERVER","count":50,"key":{"action":"GET_STATS","source":"SERVER","area":"Thread peakCount"}},"LOCAL_DB~GET~RESPONSE HANDLER 0":{"area":"RESPONSE HANDLER 0","action":"GET","time":575317812,"source":"LOCAL_DB","key":{"action":"GET","source":"LOCAL_DB","area":"RESPONSE HANDLER 0"}},"REMOTE_DB~GET~RESPONSE HANDLER 2":{"area":"RESPONSE HANDLER 2","action":"GET","time":575317817,"source":"REMOTE_DB","key":{"action":"GET","source":"REMOTE_DB","area":"RESPONSE HANDLER 2"}},"SERVER~NONE~CONFIG blacklist[]":{"area":"CONFIG blacklist[]","action":"NONE","time":575323704,"source":"SERVER","key":{"action":"NONE","source":"SERVER","area":"CONFIG blacklist[]"}},"SERVER~GET_STATS~Memory heapUsage init":{"area":"Memory heapUsage init","action":"GET_STATS","time":575323704,"source":"SERVER","count":132755584,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory heapUsage init"}},"SERVER~NONE~CONFIG dbMinReadBatch":{"area":"CONFIG dbMinReadBatch","action":"NONE","time":575323704,"source":"SERVER","count":10,"key":{"action":"NONE","source":"SERVER","area":"CONFIG dbMinReadBatch"}},"SERVER~NONE~CONFIG sqlBatchWrite":{"area":"CONFIG sqlBatchWrite","action":"NONE","time":575323704,"source":"SERVER","count":200,"key":{"action":"NONE","source":"SERVER","area":"CONFIG sqlBatchWrite"}},"REMOTE_DB~GET~RESPONSE HANDLER 1":{"area":"RESPONSE HANDLER 1","action":"GET","time":575317817,"source":"REMOTE_DB","key":{"action":"GET","source":"REMOTE_DB","area":"RESPONSE HANDLER 1"}},"SERVER~GET_STATS~Memory non-heap committed":{"area":"Memory non-heap committed","action":"GET_STATS","time":575323704,"source":"SERVER","count":24313856,"key":{"action":"GET_STATS","source":"SERVER","area":"Memory non-heap committed"}},"SERVER~NONE~CONFIG dbWriterCount":{"area":"CONFIG dbWriterCount","action":"NONE","time":575323704,"source":"SERVER","count":10,"key":{"action":"NONE","source":"SERVER","area":"CONFIG dbWriterCount"}},"SERVER~NONE~CONFIG port":{"area":"CONFIG port","action":"NONE","time":575323704,"source":"SERVER","count":10101,"key":{"action":"NONE","source":"SERVER","area":"CONFIG port"}},"SERVER~NONE~CONFIG pollTimeoutMS":{"area":"CONFIG pollTimeoutMS","action":"NONE","time":575323704,"source":"SERVER","count":1,"key":{"action":"NONE","source":"SERVER","area":"CONFIG pollTimeoutMS"}},"SERVER~NONE~CONFIG debug":{"area":"CONFIG debug","action":"NONE","time":575323704,"source":"SERVER","key":{"action":"NONE","source":"SERVER","area":"CONFIG debug"}},"FILE_SYSTEM~GET_STATS~localDB FreeSpace C:\dev\boonproject\_data\logsdc1":{"area":"localDB FreeSpace C:\\dev\\boonproject\\_data\\logsdc1","action":"GET_STATS","source":"FILE_SYSTEM","count":140806684672,"key":{"action":"GET_STATS","source":"FILE_SYSTEM","area":"localDB FreeSpace C:\\dev\\boonproject\\_data\\logsdc1"}},"SERVER~NONE~CONFIG levelDBCacheSize":{"area":"CONFIG levelDBCacheSize","action":"NONE","time":575323704,"source":"SERVER","count":1073741824,"key":{"action":"NONE","source":"SERVER","area":"CONFIG levelDBCacheSize"}},"SERVER~NONE~CONFIG levelDBFileName slumber.dat":{"area":"CONFIG levelDBFileName slumber.dat","action":"NONE","time":575323704,"source":"SERVER","count":11,"key":{"action":"NONE","source":"SERVER","area":"CONFIG levelDBFileName slumber.dat"}},"SERVER~NONE~CONFIG websocketWorkerCount":{"area":"CONFIG websocketWorkerCount","action":"NONE","time":575323704,"source":"SERVER","count":16,"key":{"action":"NONE","source":"SERVER","area":"CONFIG websocketWorkerCount"}},"SERVER~NONE~CONFIG levelDBWriteBufferSize":{"area":"CONFIG levelDBWriteBufferSize","action":"NONE","time":575323704,"source":"SERVER","count":268435456,"key":{"action":"NONE","source":"SERVER","area":"CONFIG levelDBWriteBufferSize"}},"SERVER~NONE~CONFIG outputDirectory C:/dev/boonproject/_data/logsdc1":{"area":"CONFIG outputDirectory C:/dev/boonproject/_data/logsdc1","action":"NONE","time":575323704,"source":"SERVER","count":32,"key":{"action":"NONE","source":"SERVER","area":"CONFIG outputDirectory C:/dev/boonproject/_data/logsdc1"}},"FILE_SYSTEM~GET_STATS~localDB UsableSpace C:\dev\boonproject\_data\logsdc1":{"area":"localDB UsableSpace C:\\dev\\boonproject\\_data\\logsdc1","action":"GET_STATS","source":"FILE_SYSTEM","count":140806684672,"key":{"action":"GET_STATS","source":"FILE_SYSTEM","area":"localDB UsableSpace C:\\dev\\boonproject\\_data\\logsdc1"}},"REMOTE_DB~GET~RESPONSE HANDLER 0":{"area":"RESPONSE HANDLER 0","action":"GET","time":575317812,"source":"REMOTE_DB","key":{"action":"GET","source":"REMOTE_DB","area":"RESPONSE HANDLER 0"}},"SERVER~NONE~CONFIG DB URL jdbc:mysql://localhost:3306/slumberdc1":{"area":"CONFIG DB URL jdbc:mysql://localhost:3306/slumberdc1","action":"NONE","time":575323704,"source":"SERVER","count":38,"key":{"action":"NONE","source":"SERVER","area":"CONFIG DB URL jdbc:mysql://localhost:3306/slumberdc1"}}}}
+			var at = data.indexOf('"results":{');
+			if (at != -1) {
+				var jsonObjects = [];
+				var split = data.substring(at + 11).split("}},");
+				var last = split.length - 1;
+				for (x = 0; x <= last; x++) {
+					at = split[x].indexOf(':{"area":');
+					if (at != -1) {
+						var keyAt = split[x].indexOf(',"key":');
+						if (keyAt > at) {
+							var jstring = split[x].substring(at + 1, keyAt) + "}";
+							jsonObjects.push( JSON.parse(jstring) );
+						}
+					}
+				}
+				jsonObjects.sort(compareStatsJson);
+
+				output = "<table class='table table-bordered'><thead><tr><th>Source</th><th>Action</th><th>Area</th><th>Time</th><th>Count</th></tr></thead><tbody>";
+				for (x = 0; x < jsonObjects.length; x++) {
+					var json = jsonObjects[x];
+					output = output + "<tr><td>" + json.source + "</td><td>" + json.action + "</td><td>" + json.area + "</td><td>" + json.time + "</td><td>" + json.count + "</td></tr>";
+				}
+				output = output + "</tbody></table>";
+			}
+
+			$("#resultOk").html(action + " @ " + new Date().toUTCString() + output);
 		})
 
 		jqXHR.fail(function( jqXHR, textStatus, errorThrown ) {

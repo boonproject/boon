@@ -12,7 +12,12 @@
     <dependencies>
         <dependency>
             <groupId>io.fastjson</groupId>
-            <artifactId>boon</artifactId>
+            <artifactId>slumberdb-service-model-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.fastjson</groupId>
+            <artifactId>slumberdb-service-client</artifactId>
         </dependency>
 
         <dependency>

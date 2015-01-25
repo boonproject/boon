@@ -1,11 +1,11 @@
 package org.boon.slumberdb.stores.log;
 
-import org.boon.slumberdb.service.config.DataStoreConfig;
-import org.boon.slumberdb.service.protocol.requests.*;
-import org.boon.slumberdb.stores.DataStore;
 import org.boon.Logger;
 import org.boon.core.Dates;
 import org.boon.core.Sys;
+import org.boon.slumberdb.service.config.DataStoreConfig;
+import org.boon.slumberdb.service.protocol.requests.*;
+import org.boon.slumberdb.stores.DataStore;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class AsyncFileWriterDataStore implements DataStore, TimeAware {
     protected List<Future<?>> futures = new ArrayList<>();
     long lastForceFlush = 0;
     private Logger logger = configurableLogger(this.getClass());
-    private AtomicLong time = new AtomicLong();
+    private AtomicLong time = new AtomicLong(Dates.utcNow());
     private DataStoreConfig config;
     /**
      * Index / sequence of the line we just wrote to the JSON log.
@@ -181,11 +181,12 @@ public class AsyncFileWriterDataStore implements DataStore, TimeAware {
     }
 
     private void putDataInBuffer(ByteBuffer buffer, long messageId, String clientId, String key, String value) {
-        LogEntry logEntry = new LogEntry(messageId, clientId, key, value);
+        LogEntry logEntry = new LogEntry(time.get(), index++, messageId, clientId, key, value);
         buffer.put(toJson(logEntry).getBytes());
         buffer.put((byte)'\n');
     }
 
+    @Override
     public void stop() {
 
 
@@ -300,9 +301,7 @@ public class AsyncFileWriterDataStore implements DataStore, TimeAware {
     }
 
     public void init(DataStoreConfig config) {
-
         this.config = config;
-
         collector.init(config);
     }
 

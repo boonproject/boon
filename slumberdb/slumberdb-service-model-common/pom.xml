@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.fastjson</groupId>
         <artifactId>slumberdb-bundle</artifactId>
-        <version>0.30-SNAPSHOT</version>
+        <version>0.31-SNAPSHOT</version>
     </parent>
     <artifactId>slumberdb-service-model-common</artifactId>
     <name>Slumber DB Store Service Model Common</name>
@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>io.fastjson</groupId>
-            <artifactId>boon</artifactId>
+            <artifactId>slumberdb-core</artifactId>
         </dependency>
     </dependencies>
 </project>

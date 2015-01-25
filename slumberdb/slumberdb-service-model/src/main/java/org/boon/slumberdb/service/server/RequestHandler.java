@@ -1,17 +1,5 @@
 package org.boon.slumberdb.service.server;
 
-import org.boon.slumberdb.config.GlobalConfig;
-import org.boon.slumberdb.service.config.DataStoreServerConfig;
-import org.boon.slumberdb.service.protocol.Action;
-import org.boon.slumberdb.service.protocol.ProtocolConstants;
-import org.boon.slumberdb.service.protocol.factory.RequestFactory;
-import org.boon.slumberdb.service.protocol.requests.*;
-import org.boon.slumberdb.service.results.SingleResult;
-import org.boon.slumberdb.service.results.StatCount;
-import org.boon.slumberdb.service.results.StatsResults;
-import org.boon.slumberdb.stores.DataOutputQueue;
-import org.boon.slumberdb.stores.DataStoreSource;
-import org.boon.slumberdb.stores.MasterDataStore;
 import org.boon.*;
 import org.boon.collections.LazyMap;
 import org.boon.concurrent.SimpleExecutors;
@@ -27,6 +15,18 @@ import org.boon.json.JsonSerializer;
 import org.boon.json.JsonSerializerFactory;
 import org.boon.primitive.Arry;
 import org.boon.primitive.CharBuf;
+import org.boon.slumberdb.config.GlobalConfig;
+import org.boon.slumberdb.service.config.DataStoreServerConfig;
+import org.boon.slumberdb.service.protocol.Action;
+import org.boon.slumberdb.service.protocol.ProtocolConstants;
+import org.boon.slumberdb.service.protocol.factory.RequestFactory;
+import org.boon.slumberdb.service.protocol.requests.*;
+import org.boon.slumberdb.service.results.SingleResult;
+import org.boon.slumberdb.service.results.StatCount;
+import org.boon.slumberdb.service.results.StatsResults;
+import org.boon.slumberdb.stores.DataOutputQueue;
+import org.boon.slumberdb.stores.DataStoreSource;
+import org.boon.slumberdb.stores.MasterDataStore;
 
 import java.io.File;
 import java.lang.management.GarbageCollectorMXBean;
@@ -35,10 +35,10 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedTransferQueue;
 
-import static org.boon.slumberdb.service.protocol.ProtocolConstants.DELIMITER_STR;
 import static org.boon.Boon.configurableLogger;
 import static org.boon.Boon.puts;
 import static org.boon.Lists.safeList;
+import static org.boon.slumberdb.service.protocol.ProtocolConstants.DELIMITER_STR;
 
 
 /**
@@ -62,21 +62,21 @@ public class RequestHandler {
     private RequestFactory<String, DataStoreRequest> requestFromTextFactory;
     private RequestFactory<Map<String, String>, DataStoreRequest> requestFromMapFactory;
     private DataOutputQueue queue = null;
-        /*
+    /*
 
-   _____         .__         ___________       __                  .___ __________________________
-  /     \ _____  |__| ____   \_   _____/ _____/  |________ ___.__. |   |\      \__    ___/\_____  \
- /  \ /  \\__  \ |  |/    \   |    __)_ /    \   __\_  __ <   |  | |   |/   |   \|    |    /   |   \
+_____         .__         ___________       __                  .___ __________________________
+/     \ _____  |__| ____   \_   _____/ _____/  |________ ___.__. |   |\      \__    ___/\_____  \
+/  \ /  \\__  \ |  |/    \   |    __)_ /    \   __\_  __ <   |  | |   |/   |   \|    |    /   |   \
 /    Y    \/ __ \|  |   |  \  |        \   |  \  |  |  | \/\___  | |   /    |    \    |   /    |    \
 \____|__  (____  /__|___|  / /_______  /___|  /__|  |__|   / ____| |___\____|__  /____|   \_______  /
-        \/     \/        \/          \/     \/             \/                  \/                 \/
+    \/     \/        \/          \/     \/             \/                  \/                 \/
 ________      _____________________      ____________________________ _____________________
 \______ \    /  _  \__    ___/  _  \    /   _____/\__    ___/\_____  \\______   \_   _____/
- |    |  \  /  /_\  \|    | /  /_\  \   \_____  \   |    |    /   |   \|       _/|    __)_
- |    `   \/    |    \    |/    |    \  /        \  |    |   /    |    \    |   \|        \
+|    |  \  /  /_\  \|    | /  /_\  \   \_____  \   |    |    /   |   \|       _/|    __)_
+|    `   \/    |    \    |/    |    \  /        \  |    |   /    |    \    |   \|        \
 /_______  /\____|__  /____|\____|__  / /_______  /  |____|   \_______  /____|_  /_______  /
-        \/         \/              \/          \/                    \/       \/        \/
-     */
+    \/         \/              \/          \/                    \/       \/        \/
+ */
     private Logger logger = configurableLogger(this.getClass());
     private DataStoreServerConfig config;
     private DataStoreServer storeServer = null;
@@ -109,7 +109,7 @@ ________      _____________________      ____________________________ __________
                 masterDataStore.get((GetRequest) dataStoreRequest);
                 break;
             case GET_LOCAL_DB:
-                masterDataStore.getSource((GetRequest) dataStoreRequest);
+                handleGetLocalDbVerb(dataStoreRequest);
                 break;
             case GET_MEM:
                 handleGetMemVerb(dataStoreRequest);
@@ -346,24 +346,22 @@ ________      _____________________      ____________________________ __________
 
     }
 
+    private void handleGetLocalDbVerb(DataStoreRequest dataStoreRequest) {
+        masterDataStore.getSource((GetRequest) dataStoreRequest);
+
+    }
 
     private void handleGetMemVerb(DataStoreRequest dataStoreRequest) {
         String clientId = dataStoreRequest.clientId();
-
         String key = dataStoreRequest.key();
-
         String value = masterDataStore.get(key);
-
         value = value == null ? "null" : value;
-
 
         SingleResult dataItem = new SingleResult(dataStoreRequest.messageId(), dataStoreRequest.clientId(), DataStoreSource.MEMORY, key, value);
 
         if (debug) logger.info("RequestHandler::handleGetMemVerb::", dataItem);
 
-
         storeServer.sendMessageToClientId(clientId, dataItem.toTextMessage());
-
     }
 
 
@@ -842,52 +840,37 @@ ________      _____________________      ____________________________ __________
     private void doHandleCallFromClient(final String message, final Object commChannel) {
 
         try {
-
-
-            if (debug)
-                logger.info("RequestHandler:doHandleCallFromClient\n", ProtocolConstants.prettyPrintMessageWithLinesTabs(message));
-
+            if (debug) logger.info("RequestHandler:doHandleCallFromClient\n", ProtocolConstants.prettyPrintMessageWithLinesTabs(message));
 
             final DataStoreRequest dataStoreRequest = createRequest(message);
-
 
             if (debug) logger.info("RequestHandler:doHandleCallFromClient", "REQUEST=", dataStoreRequest);
 
             storeServer.registerOutputHandler(dataStoreRequest.clientId(), commChannel);
 
             mainRequestHandler(dataStoreRequest);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             logger.error(ex, "RequestHandler::Unable to handle request");
-
             logger.error("RequestHandler::Unable to handle request TEXT DATA\n",
-
-                    ProtocolConstants.prettyPrintMessageWithLinesTabs(message));
+            ProtocolConstants.prettyPrintMessageWithLinesTabs(message));
         }
 
     }
 
     private void doHandleCallFromClient(final Map<String, String> message, String uri, final Object commChannel) {
-
         try {
-
-
             if (debug) logger.info("RequestHandler::doHandleCallFromClient", message);
 
-
             final DataStoreRequest dataStoreRequest = createRequest(message);
-
-
-
 
             if (debug) logger.info("RequestHandler::doHandleCallFromClient", dataStoreRequest);
 
             storeServer.registerOutputHandler(dataStoreRequest.clientId(), commChannel);
-
-
             mainRequestHandler(dataStoreRequest);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             logger.error(ex, "RequestHandler::Unable to handle request");
-
             logger.error("RequestHandler::Unable to handle request MAP DATA", message);
         }
 
@@ -953,22 +936,13 @@ ________      _____________________      ____________________________ __________
     }
 
     private void handleSetSource(DataStoreRequest dataStoreRequest) {
-
         SetRequest request = (SetRequest) dataStoreRequest;
-
-
         masterDataStore.setSource(request);
-
-
     }
 
     private void handleGetSource(DataStoreRequest dataStoreRequest) {
-
         GetRequest request = (GetRequest) dataStoreRequest;
-
-
         masterDataStore.getSource(request);
-
     }
 
     private void handleSetBatchIfNotExists(DataStoreRequest dataStoreRequest) {

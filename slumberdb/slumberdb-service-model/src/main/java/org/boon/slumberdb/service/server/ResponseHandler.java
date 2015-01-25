@@ -1,5 +1,10 @@
 package org.boon.slumberdb.service.server;
 
+import org.boon.Logger;
+import org.boon.Maps;
+import org.boon.Str;
+import org.boon.collections.LazyMap;
+import org.boon.concurrent.Timer;
 import org.boon.slumberdb.config.GlobalConfig;
 import org.boon.slumberdb.service.config.DataStoreServerConfig;
 import org.boon.slumberdb.service.protocol.Action;
@@ -9,11 +14,6 @@ import org.boon.slumberdb.service.results.*;
 import org.boon.slumberdb.stores.DataStoreSource;
 import org.boon.slumberdb.stores.MasterDataStore;
 import org.boon.slumberdb.stores.queue.DataOutputQueueTransferQueue;
-import org.boon.Logger;
-import org.boon.Maps;
-import org.boon.Str;
-import org.boon.collections.LazyMap;
-import org.boon.concurrent.Timer;
 
 import java.util.Map;
 import java.util.Set;
@@ -69,33 +69,35 @@ public class ResponseHandler {
      */
     private void handleResponseFromDataStore(Result result) {
 
-
         if (debug) {
             logger.info("ResponseHandler::handleResponseFromDataStore", result);
         }
 
-        int size;
         if (result instanceof SingleResult) {
             SingleResult singleResult = (SingleResult) result;
-            size = handleSingleResult(singleResult);
-
+            int size = handleSingleResult(singleResult);
             counter(size, singleResult.source());
-        } else if (result instanceof SearchBatchResult) {
+        }
+        else if (result instanceof SearchBatchResult) {
             SearchBatchResult searchBatchResult = (SearchBatchResult) result;
             sendBatchResponse((BatchResult) result);
-            size = searchBatchResult.getResults().size();
+            int size = searchBatchResult.getResults().size();
             counter(size, searchBatchResult.source());
-        } else if (result instanceof BatchResult) {
+        }
+        else if (result instanceof BatchResult) {
             BatchResult batchResult = (BatchResult) result;
-            size = handleBatchResult(batchResult);
+            int size = handleBatchResult(batchResult);
             counter(size, batchResult.source());
+        }
+        else if (result instanceof ErrorResult) {
+            ErrorResult errorResult = (ErrorResult) result;
+            int size = handleErrorResult(errorResult);
+            counter(size, errorResult.source());
         }
     }
 
     private int handleBatchResult(BatchResult batchResult) {
         int size = batchResult.getResults().size();
-
-
         switch (batchResult.source()) {
             case LOCAL_DB:
                 masterDataStore.addAll(new BatchSetRequest(DataStoreSource.MEMORY,
@@ -117,11 +119,7 @@ public class ResponseHandler {
     }
 
     private int handleSingleResult(SingleResult result) {
-        int size;
         String clientId = result.clientId();
-
-        size = 1;
-
 
         switch (result.source()) {
             case LOCAL_DB:
@@ -131,13 +129,18 @@ public class ResponseHandler {
             case REMOTE_DB:
                 masterDataStore.setSource(new SetRequest(DataStoreSource.LOCAL_STORES, Action.SET_INTERNAL, result));
                 break;
-
-
         }
 
-
         storeServer.sendMessageToClientId(clientId, result.toTextMessage());
-        return size;
+
+        return 1;
+    }
+
+    private int handleErrorResult(ErrorResult result) {
+        String clientId = result.clientId();
+        String message = "[\"error\",\"" + result.getTitle() + "\",\"" + result.source().toString() + "\"]";
+        storeServer.sendMessageToClientId(clientId, message);
+        return 1;
     }
 
     private void readDataSourceOutputQueue() {

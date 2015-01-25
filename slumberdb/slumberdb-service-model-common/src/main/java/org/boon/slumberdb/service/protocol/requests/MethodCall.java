@@ -1,11 +1,11 @@
 package org.boon.slumberdb.service.protocol.requests;
 
-import org.boon.slumberdb.service.protocol.Action;
-import org.boon.slumberdb.service.protocol.ProtocolConstants;
-import org.boon.slumberdb.stores.DataStoreSource;
 import org.boon.Lists;
 import org.boon.Str;
 import org.boon.StringScanner;
+import org.boon.slumberdb.service.protocol.Action;
+import org.boon.slumberdb.service.protocol.ProtocolConstants;
+import org.boon.slumberdb.stores.DataStoreSource;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class MethodCall extends DataStoreRequest {
 
         final String[] messageParts = StringScanner.split(message, ProtocolConstants.DELIMITER);
 
-        DataStoreRequest.parsePreamble(preamble, messageParts);
+        parsePreamble(preamble, messageParts);
 
         final String clientId = messageParts[ProtocolConstants.Version1.Preamble.CLIENT_ID_POSITION];
 
@@ -73,7 +73,7 @@ public class MethodCall extends DataStoreRequest {
         PreambleOfRequest preamble = new PreambleOfRequest();
 
 
-        DataStoreRequest.parsePreamble(message, preamble);
+        parsePreamble(message, preamble);
 
 
         final String methodName = message.get("method");

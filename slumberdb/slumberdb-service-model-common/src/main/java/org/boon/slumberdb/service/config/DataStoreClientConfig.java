@@ -1,10 +1,10 @@
 package org.boon.slumberdb.service.config;
 
 
-import org.boon.slumberdb.service.protocol.ProtocolConstants;
 import org.boon.Str;
 import org.boon.core.Sys;
 import org.boon.json.annotations.JsonIgnore;
+import org.boon.slumberdb.service.protocol.ProtocolConstants;
 
 import java.util.List;
 import java.util.UUID;

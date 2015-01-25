@@ -1,12 +1,13 @@
 package org.boon.slumberdb.service.server;
 
+import org.boon.Logger;
+import org.boon.core.Sys;
 import org.boon.core.reflection.ClassMeta;
 import org.boon.slumberdb.config.GlobalConfig;
+import org.boon.slumberdb.service.config.DataStoreConfig;
 import org.boon.slumberdb.service.config.DataStoreServerConfig;
 import org.boon.slumberdb.stores.MasterDataStore;
 import org.boon.slumberdb.stores.queue.DataOutputQueueTransferQueue;
-import org.boon.Logger;
-import org.boon.core.Sys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +35,12 @@ public abstract class DataStoreServer {
 
     public void init(DataStoreServerConfig config) {
 
-
         logger.info("DataStoreServer::Server config will be loaded from", Sys.sysProp("DataStoreServerConfig"));
         logger.info("DataStoreServer::Server Configuration", config);
 
-
         logger.info("DataStoreServer::Data store will be loaded from", Sys.sysProp("DataStoreConfig"));
 
-
-        masterDataStore.init(queue, config.startupMode());
+        masterDataStore.init(queue, config);
         masterDataStore.start();
 
 
@@ -191,5 +189,7 @@ public abstract class DataStoreServer {
         return requestHandler.getServicesDefinition();
     }
 
-
+    public DataStoreConfig dataStoreConfig() {
+        return masterDataStore.config();
+    }
 }

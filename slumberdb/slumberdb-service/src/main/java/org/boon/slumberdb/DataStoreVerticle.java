@@ -1,19 +1,21 @@
 package org.boon.slumberdb;
 
+import org.boon.Logger;
 import org.boon.Str;
 import org.boon.StringScanner;
+import org.boon.core.Sys;
 import org.boon.core.reflection.ClassMeta;
 import org.boon.core.reflection.MethodAccess;
-import org.boon.slumberdb.service.config.DataStoreConfig;
+import org.boon.slumberdb.handlers.AdminFile;
+import org.boon.slumberdb.handlers.AdminHandler;
+import org.boon.slumberdb.handlers.AdminOptions;
+import org.boon.slumberdb.handlers.AdminSearchUsers;
 import org.boon.slumberdb.service.config.DataStoreServerConfig;
 import org.boon.slumberdb.service.protocol.Action;
 import org.boon.slumberdb.service.protocol.ProtocolConstants;
 import org.boon.slumberdb.service.protocol.requests.PingRequest;
 import org.boon.slumberdb.service.server.DataStoreServer;
-import org.boon.Logger;
-import org.boon.core.Sys;
 import org.vertx.java.core.Handler;
-import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.VoidHandler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.*;
@@ -21,17 +23,21 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.boon.Boon.*;
+import static org.boon.Boon.configurableLogger;
+import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
-import static org.boon.Maps.map;
+import static org.boon.slumberdb.ResponseUtil.setAllowOriginHeaders;
 
 public class DataStoreVerticle extends Verticle {
 
     private final static int MAX_MESSAGE_SIZE = Sys.sysProp("org.boon.slumberdb.config.MaxDataSize", 20_000_000);
     private final boolean debug = org.boon.slumberdb.config.GlobalConfig.DEBUG;
+
     DataStoreServer dataStoreServer = new DataStoreServer() {
         @Override
         protected void sendToAllClients(String reply) {
@@ -40,19 +46,14 @@ public class DataStoreVerticle extends Verticle {
 
         @Override
         protected void sendMessageToClientId(String clientId, String reply) {
-
-
             if (debug) {
                 logger.info("DataStoreServer::sendMessageToClientId()", clientId, ProtocolConstants.prettyPrintMessageWithLinesTabs(reply));
             }
             DataStoreVerticle.this.sendMessageToClientId(clientId, reply);
-
         }
 
         @Override
         public boolean clientExistsStill(String clientId) {
-
-
             if (debug) {
                 logger.info("DataStoreServer::clientExistsStill()", clientId);
             }
@@ -68,140 +69,29 @@ public class DataStoreVerticle extends Verticle {
             DataStoreVerticle.this.registerOutputHandler(clientId, commChannel);
         }
     };
+
     protected Map<String, ServerWebSocket> clientWebSocketMap = new ConcurrentHashMap<>();
     protected Map<String, HttpServerResponse> clientHttpMap = new ConcurrentHashMap<>();
     private Logger logger = configurableLogger(DataStoreVerticle.class);
     private DataStoreServerConfig config;
     private int maxMessageSize;
 
-    /**
-     * Converts a multi map to a map.
-     */
-    public static Map<String, String> toMap(final MultiMap multiMap) {
-
-        return new Map<String, String>() {
-            @Override
-            public int size() {
-                return multiMap.size();
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return multiMap.isEmpty();
-            }
-
-            @Override
-            public boolean containsKey(Object key) {
-                return multiMap.contains((CharSequence) key);
-            }
-
-            @Override
-            public boolean containsValue(Object value) {
-                return false;
-            }
-
-            @Override
-            public String get(Object key) {
-
-                return multiMap.get((CharSequence) key);
-            }
-
-            @Override
-            public String put(String key, String value) {
-                multiMap.add(key, value);
-                return null;
-            }
-
-            @Override
-            public String remove(Object key) {
-                return null;
-            }
-
-            @Override
-            public void putAll(Map<? extends String, ? extends String> m) {
-
-            }
-
-
-            @Override
-            public void clear() {
-                map = null;
-                multiMap.clear();
-            }
-
-            @Override
-            public Set<String> keySet() {
-                return multiMap.names();
-            }
-
-            @Override
-            public Collection<String> values() {
-                return map().values();
-            }
-
-            @Override
-            public Set<Entry<String, String>> entrySet() {
-                return map().entrySet();
-            }
-
-
-            public String toString() {
-                return map().toString();
-            }
-
-            Map<String, String> map;
-
-            private Map<String, String> map() {
-                if (map == null) {
-                    map = new HashMap<>(multiMap.size());
-                    for (String name : multiMap.names()) {
-                        List<String> all = multiMap.getAll(name);
-                        if (all.size() == 1) {
-                            map.put(name, all.get(0));
-                        } else if (all.size() == 0) {
-
-                        } else {
-                            map.put(name, all.get(0));
-                        }
-                    }
-                }
-                return map;
-            }
-        };
-    }
-
     public void start() {
-
         logger.info("Data Store Service Starting");
-
         try {
-
             config = DataStoreServerConfig.load();
-
             dataStoreServer.init(config);
-
-
             JsonObject configOverrides = container.config();
-
-
             if (configOverrides.containsField("port")) {
                 config.port(configOverrides.getInteger("port"));
             }
-
-
             puts("SERVER CONFIG", config.port());
-
-
             configureAndStartHttpServer(dataStoreServer.getServicesDefinition());
-
-
         } catch (Throwable ex) {
 
             logger.error(ex, "Data Store Service Starting FAILED");
 
         }
-
-
     }
 
     private void configureAndStartHttpServer(Map<String, ClassMeta<?>> servicesDefinition) {
@@ -218,8 +108,6 @@ public class DataStoreVerticle extends Verticle {
             server.setMaxWebSocketFrameSize(config.maxFrameSize());
             maxMessageSize = config.maxFrameSize();
         }
-
-
         if (debug) {
             logger.info("DataStoreServer::configureAndStartHttpServer()", config);
         }
@@ -227,8 +115,6 @@ public class DataStoreVerticle extends Verticle {
         server.websocketHandler(websocketHandler())
                 .requestHandler(clientRequestHandler())
                 .listen(config.port());
-
-
         HttpServer admin = vertx.createHttpServer();
         admin.setTCPKeepAlive(true);
         admin.setTCPNoDelay(true);
@@ -238,8 +124,6 @@ public class DataStoreVerticle extends Verticle {
         admin.listen(config.adminPort());
 
         puts("Admin port on", config.adminPort());
-
-
     }
 
     private Handler<HttpServerRequest> clientRequestHandler() {
@@ -258,8 +142,6 @@ public class DataStoreVerticle extends Verticle {
         final String websocketURI = config.websocketURI();
         return new Handler<ServerWebSocket>() {
             public void handle(final ServerWebSocket ws) {
-
-
                 if (debug) {
                     logger.info("websocket call", websocketURI, ws.path());
                 }
@@ -268,15 +150,11 @@ public class DataStoreVerticle extends Verticle {
                     ws.dataHandler(new Handler<Buffer>() {
                         @Override
                         public void handle(final Buffer buffer) {
-
-
                             handleWebSocketCall(ws, buffer);
                         }
                     }).closeHandler(new Handler<Void>() {
                         @Override
                         public void handle(Void aVoid) {
-
-
                             if (debug) {
                                 logger.info("DataStoreServer::closeHandler()");
 
@@ -301,43 +179,29 @@ public class DataStoreVerticle extends Verticle {
         };
     }
 
+    private void routeMatch(RouteMatcher routeMatcher, AdminOptions adminOptions, String pattern, Handler<HttpServerRequest> handler) {
+        routeMatcher.options(pattern, adminOptions);
+        routeMatcher.get(pattern, handler);
+        routeMatcher.post(pattern, handler);
+        routeMatcher.options(pattern + "/", adminOptions);
+        routeMatcher.get(pattern + "/", handler);
+        routeMatcher.post(pattern + "/", handler);
+    }
 
     private RouteMatcher adminRouteMatchers(Map<String, ClassMeta<?>> servicesDefinition) {
         RouteMatcher routeMatcher = new RouteMatcher();
 
-        routeMatcher.get("/admin/heartbeat/", new Handler<HttpServerRequest>() {
-            public void handle(HttpServerRequest request) {
-                request.response().putHeader("Content-Type", "text/plain");
-                request.response().setChunked(true);
-                request.response().write(toJson(
-                        map("ok", true,
-                                "sequence", 99,
-                                "description", "Slumber DB",
-                                "cpus", Runtime.getRuntime().availableProcessors(),
-                                "free memory", Runtime.getRuntime().freeMemory(),
-                                "total memory", Runtime.getRuntime().totalMemory(),
-                                "JDK 1.7 or later", Sys.is1_7OrLater(),
-                                "OS", System.getProperty("os.name"),
-                                "Java version", System.getProperty("java.version")
-                        )
-                ));
-                request.response().write(config.toString());
-                request.response().write(DataStoreConfig.load().toString());
-                request.response().end();
-            }
-        });
+        AdminOptions adminOptions = new AdminOptions();
+        AdminHandler adminHandler = new AdminHandler(config, dataStoreServer.dataStoreConfig());
+        for (String pattern : adminHandler.patterns() ) {
+            routeMatch(routeMatcher, adminOptions, pattern, adminHandler);
+        }
+        routeMatch(routeMatcher, adminOptions, "/admin/search/users", new AdminSearchUsers(dataStoreServer));
 
-        routeMatcher.get("/admin/search/users/", new Handler<HttpServerRequest>() {
-            public void handle(HttpServerRequest request) {
-                String ipAddress = request.remoteAddress().toString();
-                Map<String, String> map = toMap(request.params());
-                map.put(ProtocolConstants.Search.HANDLER_KEY, "org.boon.slumberdb.search.BaseSearchHandler");
-                map.put(ProtocolConstants.Search.LIMIT_KEY, Integer.toString(ProtocolConstants.Search.LIMIT_VALUE));
-
-                dataStoreServer.handleCallWithMap(ipAddress, map, request.uri(), request.response());
-            }
-        });
-
+        List<AdminFile> adminFiles = AdminFile.handlers(config);
+        for (AdminFile adminFile : adminFiles) {
+            routeMatcher.get(adminFile.file(), adminFile);
+        }
 
         final Set<Map.Entry<String, ClassMeta<?>>> entries = servicesDefinition.entrySet();
 
@@ -348,8 +212,6 @@ public class DataStoreVerticle extends Verticle {
             longName = longName.replace('.', '/');
 
             for (MethodAccess methodAccess : entry.getValue().methods()) {
-
-
                 if (methodAccess.hasAnnotation("serviceMethod")) {
 
                     puts("SERVICE REGISTERED UNDER", longName, "\n");
@@ -363,28 +225,16 @@ public class DataStoreVerticle extends Verticle {
 
                             String ipAddress = request.remoteAddress().toString();
 
-                            Map<String, String> map = toMap(request.params());
-
-
+                            Map<String, String> map = MultiMapUtil.toMap(request.params());
                             map.put("method", methodName);
-
                             map.put("object", entry.getKey());
-
                             map.put("action", Action.METHOD_CALL.verb());
-
-
                             dataStoreServer.handleCallWithMap(ipAddress, map, request.uri(), request.response());
-
-
                         }
                     };
-
-
                     puts("    SERVICE METHOD REGISTERED UNDER", uri, uri.toLowerCase());
                     routeMatcher.get(uri, handler);
                     routeMatcher.get(uri.toLowerCase(), handler);
-
-
                     uri = Str.add("/slumberdb/", entry.getKey(), "/", methodName);
                     puts("    SERVICE METHOD ALSO REGISTERED UNDER", uri, uri.toLowerCase());
                     routeMatcher.get(uri, handler);
@@ -394,25 +244,17 @@ public class DataStoreVerticle extends Verticle {
 
                 }
             }
-
-
         }
 
         return routeMatcher;
     }
 
     private void handleWebSocketCall(ServerWebSocket webSocket, Buffer buffer) {
-
-
         String payload = buffer.toString();
-
-
         if (PingRequest.isPing(payload)) {
             handlePingFromClient(payload, webSocket);
             return;
         }
-
-
         dataStoreServer.handleCallFromClient(buffer.toString(), webSocket);
 
     }
@@ -424,28 +266,21 @@ public class DataStoreVerticle extends Verticle {
     }
 
     private void handleRESTCall(final String restURI, final HttpServerRequest request) {
-
-
         if (debug) {
             logger.info("DataStoreVerticle::handleRESTCall()", restURI, request);
 
         }
+
         if (request.path().equals(restURI)) {
 
             if (request.method().equals("GET")) {
-
-
                 handleRestGET(request);
-
-
-            } else if (request.method().equals("POST")) {
-
-
+            }
+            else if (request.method().equals("POST")) {
+                setAllowOriginHeaders(request);
 
                 /* Create a buffer. */
                 final Buffer body = new Buffer();
-
-
                 /* Register a callback to get notified when we get the next block
                 of gak from the POST. */
                 request.dataHandler(new Handler<Buffer>() {
@@ -454,24 +289,21 @@ public class DataStoreVerticle extends Verticle {
                     }
                 });
 
-
-
                 /* Register a callback to notify us that we got all of the body. */
                 request.endHandler(new VoidHandler() {
                     public void handle() {
-
-
                         final String textData = body.toString();
                         handleRestPOST(textData, request);
 
                     }
                 });
-
-
             }
-
-
-        } else {
+            else if (request.method().equals("OPTIONS")) {
+                int status = setAllowOriginHeaders(request) ? 200 : 400;
+                request.response().setStatusCode(status).end();
+            }
+        }
+        else {
             request.response().setStatusCode(404).end();
         }
     }
@@ -480,27 +312,27 @@ public class DataStoreVerticle extends Verticle {
 
         try {
             dataStoreServer.handleCallFromClient(textData, request.response());
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             logger.error(ex, "Failed REST call", textData);
             request.response().end("[\"failed\"]");
         }
 
-
-        if (textData.startsWith(ProtocolConstants.SET_MASK) || textData.startsWith(ProtocolConstants.REMOVE_MASK)) {
-
+        if (    textData.startsWith(ProtocolConstants.SET_MASK)
+                || textData.startsWith(ProtocolConstants.REMOVE_MASK)
+                || textData.startsWith(ProtocolConstants.CLEAR_MASK)
+        ) {
             request.response().end("[\"ok\"]");
         }
-
     }
 
     private void handleRestGET(HttpServerRequest request) {
 
         String ipAddress = request.remoteAddress().toString();
 
-        dataStoreServer.handleCallWithMap(ipAddress, toMap(request.params()), request.uri(), request.response());
+        dataStoreServer.handleCallWithMap(ipAddress, MultiMapUtil.toMap(request.params()), request.uri(), request.response());
 
         if (request.params().get(ProtocolConstants.ACTION_MAP_KEY).startsWith(ProtocolConstants.SET_VERB)) {
-
             request.response().end("[\"ok\"]");
         }
 
@@ -520,11 +352,7 @@ public class DataStoreVerticle extends Verticle {
     private void sendToAllClients(String reply) {
         if (debug)
             logger.info("sendToAllClients()::", reply);
-
-
         final Set<Map.Entry<String, ServerWebSocket>> entries = clientWebSocketMap.entrySet();
-
-
         for (Map.Entry<String, ServerWebSocket> entry : entries) {
 
             if (debug) logger.info("Sending BROADCAST to", entry.getKey());
@@ -539,8 +367,6 @@ public class DataStoreVerticle extends Verticle {
     }
 
     public void registerOutputHandler(String clientId, Object commChannel) {
-
-
         if (commChannel instanceof ServerWebSocket) {
             clientWebSocketMap.put(clientId, (ServerWebSocket) commChannel);
         } else if (commChannel instanceof HttpServerResponse) {
@@ -551,8 +377,6 @@ public class DataStoreVerticle extends Verticle {
     }
 
     private void sendMessageToClientId(final String clientId, final String reply) {
-
-
         if (debug) {
             logger.info("DataStoreVerticle::sendMessageToClientId", clientId, reply);
         }
@@ -560,18 +384,12 @@ public class DataStoreVerticle extends Verticle {
         final ServerWebSocket webSocket = clientWebSocketMap.get(clientId);
 
         if (webSocket != null) {
-
-
             try {
                 webSocket.write(new Buffer(reply));
-
-
                 if (debug) {
                     logger.info("DataStoreVerticle::sendMessageToClientId::DONE\n", clientId, reply, "\nDONE");
                 }
             } catch (Exception ex) {
-
-
                 if (reply.length() > maxMessageSize) {
                     die("You have exceeded the MAX MESSAGE SIZE", reply, "\nMax size set to",
                             maxMessageSize, "You are trying to send this much", reply.length(),
