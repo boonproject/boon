@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -40,6 +41,7 @@
     </developers>
 
     <modules>
+        <module>osgi-plugins-parent</module>
         <module>boon</module>
         <module>bnsf</module>
         <module>etcd</module>
@@ -59,6 +61,10 @@
         <leveldbjni.version>1.8</leveldbjni.version>
         <mongo-java-driver.version>2.12.0</mongo-java-driver.version>
         <mysql-connector-java.version>5.1.30</mysql-connector-java.version>
+
+        <!-- OSGi plugin versions -->
+        <maven-bundle-plugin-version>2.3.4</maven-bundle-plugin-version>
+        <depends-maven-plugin-version>1.2</depends-maven-plugin-version>
     </properties>
 
     <dependencyManagement>
@@ -121,24 +127,24 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
-              <groupId>io.vertx</groupId>
-              <artifactId>vertx-core</artifactId>
-              <version>${vertx.version}</version>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>${vertx.version}</version>
             </dependency>
             <dependency>
-              <groupId>io.vertx</groupId>
-              <artifactId>vertx-platform</artifactId>
-              <version>${vertx.version}</version>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-platform</artifactId>
+                <version>${vertx.version}</version>
             </dependency>
             <dependency>
-              <groupId>io.vertx</groupId>
-              <artifactId>vertx-hazelcast</artifactId>
-              <version>${vertx.version}</version>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-hazelcast</artifactId>
+                <version>${vertx.version}</version>
             </dependency>
             <dependency>
-              <groupId>io.vertx</groupId>
-              <artifactId>testtools</artifactId>
-              <version>${vertx-testtools.version}</version>
+                <groupId>io.vertx</groupId>
+                <artifactId>testtools</artifactId>
+                <version>${vertx-testtools.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -238,6 +244,54 @@
                             <version>${vertx.version}</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <plugin>
+                    <!-- https://www.eclipse.org/m2e/documentation/m2e-execution-not-covered.html -->
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.felix</groupId>
+                                        <artifactId>maven-bundle-plugin</artifactId>
+                                        <versionRange>[${maven-bundle-plugin-version},)</versionRange>
+                                        <goals>
+                                            <goal>cleanVersions</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.servicemix.tooling</groupId>
+                                        <artifactId>depends-maven-plugin</artifactId>
+                                        <versionRange>[${depends-maven-plugin-version},)</versionRange>
+                                        <goals>
+                                            <goal>generate-depends-file</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.servicemix.tooling</groupId>
+                    <artifactId>depends-maven-plugin</artifactId>
+                    <version>${depends-maven-plugin-version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${maven-bundle-plugin-version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
