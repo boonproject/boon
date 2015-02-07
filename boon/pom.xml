@@ -31,8 +31,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
         <groupId>io.fastjson</groupId>
-        <artifactId>boon-bundle</artifactId>
+        <artifactId>osgi-plugins-parent</artifactId>
         <version>0.32-SNAPSHOT</version>
+        <relativePath>../osgi-plugins-parent</relativePath>
 	</parent>
 
 	<!-- boon.io, json.io was taken. -->
@@ -40,6 +41,15 @@
 	<name>boon</name>
 	<description>Simple opinionated Java for the novice to expert level Java Programmer. 
                  Low Ceremony. High Productivity. A real boon to Java to developers!</description>
+    <packaging>bundle</packaging> <!-- Mark it as an OSGi bundle-->
+
+    <properties>
+        <build.osgi.import.before.defaults>
+            com.sun.management;resolution:=optional,
+            sun.misc;resolution:=optional
+        </build.osgi.import.before.defaults> <!-- Used to import any special packages, which are not auto-imported -->
+        <build.osgi.export.pkg>org.boon.*</build.osgi.export.pkg> <!-- Export everything, or by package -->
+    </properties>
 
 	<dependencies>
     <dependency>
