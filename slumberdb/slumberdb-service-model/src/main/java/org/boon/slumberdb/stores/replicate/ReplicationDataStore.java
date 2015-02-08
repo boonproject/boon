@@ -5,15 +5,15 @@ import org.boon.core.Dates;
 import org.boon.core.Sys;
 import org.boon.slumberdb.service.client.DataStoreClient;
 import org.boon.slumberdb.service.config.ReplicationDataStoreConfig;
+import org.boon.slumberdb.service.protocol.Action;
 import org.boon.slumberdb.service.protocol.requests.*;
 import org.boon.slumberdb.stores.DataStore;
+import org.boon.slumberdb.stores.DataStoreSource;
 import org.boon.slumberdb.stores.log.TimeAware;
 import org.boon.slumberdb.utility.ClientHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -31,6 +31,7 @@ public class ReplicationDataStore implements DataStore, TimeAware {
     private Logger logger = configurableLogger(this.getClass());
     private ReplicationDataStoreConfig config;
     private DataStoreClient dataStoreClient;
+    private long messageId;
 
     public ReplicationDataStore() {
     }
@@ -51,11 +52,8 @@ public class ReplicationDataStore implements DataStore, TimeAware {
 
     private void processSets() {
 
-        Map<String, Object> map = new HashMap<>();
-        DataStoreRequest op = null;
-        long lastSend = 0;
-
         while (true) {
+            DataStoreRequest op = null;
             try {
                 while (op == null) {
                     op = queue.poll(10, TimeUnit.MILLISECONDS);
@@ -65,37 +63,50 @@ public class ReplicationDataStore implements DataStore, TimeAware {
                 continue;
             }
 
-            map.clear();
-            lastSend = time.get();
+            List<String> keys = new ArrayList<>(config.maxBatchSize());
+            List<String> values = new ArrayList<>(config.maxBatchSize());
+            long lastSend = time.get();
 
             while (op != null) {
                 if (op instanceof SetRequest) {
                     SetRequest setRequest = (SetRequest)op;
-                    map.put(setRequest.key(), setRequest.payload());
+                    keys.add(setRequest.key());
+                    values.add(setRequest.payload());
                 }
                 else if (op instanceof BatchSetRequest) {
                     BatchSetRequest bsr = (BatchSetRequest) op;
-                    bsr.appendEntriesTo(map);
+                    keys.addAll(bsr.keys());
+                    values.addAll(bsr.values());
                 }
 
-                boolean sendNow = map.size() >= config.maxBatchSize();
+                boolean sendNow = keys.size() >= config.maxBatchSize();
                 if (!sendNow) {
                     long elapsed = time.get() - lastSend;
                     sendNow = elapsed >= config.maxWaitMillis();
                 }
                 if (sendNow) {
-                    dataStoreClient.setBatch(map);
-                    map.clear();
+                    setBatch(keys, values);
+                    keys.clear();
+                    values.clear();
                     lastSend = time.get();
                 }
 
                 op = queue.poll();
             }
 
-            if (map.size() > 0) {
-                dataStoreClient.setBatch(map);
+            if (keys.size() > 0) {
+                setBatch(keys, values);
             }
         }
+    }
+
+    private void setBatch(List<String> keys, List<String> values) {
+        BatchSetRequest bsr = new BatchSetRequest(
+                DataStoreSource.REPLICATION, Action.SET_BATCH,
+                messageId++, config.dataStoreClient().clientId(),
+                keys, values
+        );
+        dataStoreClient.setBatch(bsr);
     }
 
     @Override
@@ -190,7 +201,7 @@ public class ReplicationDataStore implements DataStore, TimeAware {
 
     public void init(ReplicationDataStoreConfig config) {
         this.config = config;
-        dataStoreClient = ClientHelper.getVertxWebSocketClient(config.dataStoreClient().clientId(), config.dataStoreClient());
+        dataStoreClient = ClientHelper.getVertxWebSocketClient(config.dataStoreClient().clientId(), config.dataStoreClient(), config.verbose());
     }
 
 }

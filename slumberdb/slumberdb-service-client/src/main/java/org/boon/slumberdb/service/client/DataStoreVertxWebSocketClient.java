@@ -9,6 +9,7 @@ import org.boon.slumberdb.config.GlobalConfig;
 import org.boon.slumberdb.entries.Entry;
 import org.boon.slumberdb.service.config.Bucket;
 import org.boon.slumberdb.service.config.DataStoreClientConfig;
+import org.boon.slumberdb.service.protocol.requests.BatchSetRequest;
 import org.boon.slumberdb.stores.DataOutputQueue;
 import org.boon.slumberdb.stores.DataStoreSource;
 import org.vertx.java.core.Handler;
@@ -195,6 +196,11 @@ public class DataStoreVertxWebSocketClient implements DataStoreClient {
     }
 
     @Override
+    public void setBatch(BatchSetRequest request) {
+        serverProxy(pickBucket(request.hashCode())).doBatchSet(request);
+    }
+
+    @Override
     public void setBatchIfNotExists(DataStoreSource source, Map<String, Object> batch) {
         Map<Bucket, List<Entry<String, String>>> map = buildBucketListMap(batch);
         for (Map.Entry<Bucket, List<Entry<String, String>>> entry : map.entrySet()) {
@@ -330,6 +336,10 @@ public class DataStoreVertxWebSocketClient implements DataStoreClient {
 
         final ServerProxy serverProxy = serverProxy(bucket);
         return serverProxy.broadcastSet(clientId, key, value);
+    }
+
+    private Bucket pickBucket(int hash) {
+        return config.pickBucket(hash);
     }
 
     private Bucket pickBucket(String key) {

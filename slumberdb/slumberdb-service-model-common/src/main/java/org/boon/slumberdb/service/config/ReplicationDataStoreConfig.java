@@ -9,6 +9,7 @@ public class ReplicationDataStoreConfig {
     private DataStoreClientConfig dataStoreClientConfig;
     private int maxBatchSize = 0;
     private long maxWaitMillis = 1000;
+    boolean verbose = false;
 
     public static ReplicationDataStoreConfig load() {
         String fileLocation = Sys.sysProp("ReplicationDataStoreConfig", "/opt/org/slumberdb/replicationdatastore.json");
@@ -26,4 +27,6 @@ public class ReplicationDataStoreConfig {
     public long maxWaitMillis() {
         return maxWaitMillis;
     }
+
+    public boolean verbose() { return verbose; }
 }

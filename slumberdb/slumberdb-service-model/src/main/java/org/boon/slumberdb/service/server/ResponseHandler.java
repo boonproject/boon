@@ -36,7 +36,7 @@ public class ResponseHandler {
     private long lastStatusDisplay = Timer.timer().time();
     private MasterDataStore masterDataStore = null;
     private Logger logger = configurableLogger(this.getClass());
-
+    private boolean verboseStatus = true;
 
 
 
@@ -150,7 +150,9 @@ public class ResponseHandler {
 
             queueItem = queue.take();
 
-            showStatus(time, queueItem);
+            if (verboseStatus) {
+                showStatus(time, queueItem);
+            }
 
             while (queueItem != null) {
 
@@ -355,5 +357,7 @@ public class ResponseHandler {
         long notFound;
     }
 
-
+    public void setVerboseStatus(boolean verboseStatus) {
+        this.verboseStatus = verboseStatus;
+    }
 }

@@ -123,15 +123,11 @@ public class DataStoreClientConfig {
     }
 
     public Bucket pickBucket(String key) {
+        return pickBucket(key.hashCode());
+    }
 
-        int hash = key.hashCode() % buckets.size();
-
-        hash = hash >= 0 ? hash : hash * -1;
-
-        Bucket bucket = buckets.get(hash);
-
-        return bucket;
-
+    public Bucket pickBucket(int hash) {
+        return buckets.get( (hash < 0 ? -hash : hash) % buckets.size() );
     }
 
     public String websocketURI() {

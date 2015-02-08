@@ -28,7 +28,8 @@ public class DataStoreServerConfig {
     private String adminName = "Slumber DB";
     private ReplicationDataStoreConfig replicationDataStoreConfig;
 
-    private boolean debug;
+    private boolean debug = false;
+    private boolean verboseHandlerStatus = true;
 
     public static DataStoreServerConfig load() {
         String fileLocation = Sys.sysProp("DataStoreServerConfig", DEFAULT_FILE_LOCATION);
@@ -192,5 +193,9 @@ public class DataStoreServerConfig {
 
     public ReplicationDataStoreConfig replicationDataStoreConfig() {
         return replicationDataStoreConfig;
+    }
+
+    public boolean verboseHandlerStatus() {
+        return verboseHandlerStatus;
     }
 }

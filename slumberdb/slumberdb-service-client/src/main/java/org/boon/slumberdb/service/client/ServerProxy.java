@@ -301,83 +301,53 @@ public class ServerProxy {
         List<String> values = new ArrayList<>();
 
         for (Entry<String, String> entry : batch) {
-            messageId++;
-
             keys.add(entry.key());
-
             values.add(entry.value());
+
             if (keys.size() >= 10_000) {
-
-                BatchSetRequest batchRequest = new BatchSetRequest(source, action, messageId, clientId, keys, values);
-
-                if ( !send(batchRequest.formTextRequest()) ) {
-                    allSent = false;
-                }
+                allSent &= doBatchSet(new BatchSetRequest(source, action, ++messageId, clientId, keys, values));
                 keys.clear();
                 values.clear();
             }
         }
 
         if (keys.size() > 0) {
-            messageId++;
-
-            BatchSetRequest batchRequest = new BatchSetRequest(source, messageId, clientId, keys, values);
-            return send(batchRequest.formTextRequest());
+            allSent &= doBatchSet(new BatchSetRequest(source, action, ++messageId, clientId, keys, values));
         }
 
         return allSent;
 
     }
 
-    public boolean batchGet(final String clientId, Collection<String> batch) {
-
-
-        boolean sent = false;
-
-        if (batch.size() < 100) {
-            messageId++;
-
-            ReadBatchRequest batchRequest = new ReadBatchRequest(messageId, clientId, batch);
-
-            sent = send(batchRequest.formTextRequest());
-
-        } else {
-            List<String> list = new ArrayList<>();
-            for (String key : batch) {
-                messageId++;
-
-                list.add(key);
-                if (list.size() >= 100) {
-
-                    ReadBatchRequest batchRequest = new ReadBatchRequest(messageId, clientId, list);
-
-
-                    sent &= send(batchRequest.formTextRequest());
-                    list.clear();
-                }
-
-            }
-
-
-            if (list.size() > 0) {
-                messageId++;
-
-
-                ReadBatchRequest batchRequest = new ReadBatchRequest(messageId, clientId, list);
-
-
-                return send(batchRequest.formTextRequest());
-
-            }
-
-
-        }
-
-
-        return sent;
-
+    public boolean doBatchSet(BatchSetRequest batchRequest) {
+        return send(batchRequest.formTextRequest());
     }
 
+    public boolean batchGet(final String clientId, Collection<String> batch) {
+
+        if (batch.size() < 100) {
+            ReadBatchRequest batchRequest = new ReadBatchRequest(++messageId, clientId, batch);
+            return send(batchRequest.formTextRequest());
+        }
+
+        boolean sent = true;
+        List<String> list = new ArrayList<>(100);
+        for (String key : batch) {
+            list.add(key);
+            if (list.size() > 99) {
+                ReadBatchRequest batchRequest = new ReadBatchRequest(++messageId, clientId, list);
+                sent &= send(batchRequest.formTextRequest());
+                list.clear();
+            }
+        }
+
+        if (list.size() > 0) {
+            ReadBatchRequest batchRequest = new ReadBatchRequest(++messageId, clientId, list);
+            sent &= send(batchRequest.formTextRequest());
+        }
+
+        return sent;
+    }
 
     private void drainSendQueue() {
         String send = queueOut.poll();

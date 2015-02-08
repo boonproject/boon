@@ -165,6 +165,11 @@ public class DataStoreSimpleHttpClient implements DataStoreClient {
     }
 
     @Override
+    public void setBatch(BatchSetRequest request) {
+        send(request);
+    }
+
+    @Override
     public void remove(DataStoreSource source, String key) {
 
         RemoveRequest removeRequest = new RemoveRequest(source, Action.REMOVE_SOURCE, messageId++, clientId, key);
@@ -223,7 +228,6 @@ public class DataStoreSimpleHttpClient implements DataStoreClient {
         List<String> values = new ArrayList<>(keys.size());
 
         for (String key : keys) {
-
             values.add(serializer.serialize(batch.get(key)).toString());
         }
 

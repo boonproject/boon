@@ -20,28 +20,28 @@ public class BatchSetRequest extends BaseDataStoreRequest {
     protected List<String> keys;
     protected List<String> values;
 
-    public BatchSetRequest() {}
+    protected BatchSetRequest() {}
 
-    public BatchSetRequest(BatchSetRequest request, Collection<String> keys, Collection<String> values) {
-        this(null, request.action(), request.messageId(), request.clientId(), keys, values);
-    }
-
-    public BatchSetRequest(long messageId, String clientId, Collection<String> keys, Collection<String> values) {
-        this(null, Action.SET_BATCH, messageId, clientId, keys, values);
-    }
-
-    public BatchSetRequest(Action action, long messageId, String clientId, Collection<String> keys, Collection<String> values) {
-        this(null, action, messageId, clientId, keys, values);
-    }
-
-    public BatchSetRequest(DataStoreSource source, long messageId, String clientId, Collection<String> keys, Collection<String> values) {
-        this(source, Action.SET_BATCH, messageId, clientId, keys, values);
-    }
-
-    public BatchSetRequest(DataStoreSource source, Action action, long messageId, String clientId, Collection<String> keys, Collection<String> values) {
+    protected BatchSetRequest(DataStoreSource source, Action action, long messageId, String clientId) {
         super(messageId, action);
         this.source = source;
         this.clientId = clientId;
+    }
+
+    public BatchSetRequest(long messageId, String clientId, List<String> keys, List<String> values) {
+        this(null, Action.SET_BATCH, messageId, clientId, keys, values);
+    }
+
+    public BatchSetRequest(Action action, long messageId, String clientId, List<String> keys, List<String> values) {
+        this(null, action, messageId, clientId, keys, values);
+    }
+
+    public BatchSetRequest(DataStoreSource source, long messageId, String clientId, List<String> keys, List<String> values) {
+        this(source, Action.SET_BATCH, messageId, clientId, keys, values);
+    }
+
+    public BatchSetRequest(DataStoreSource source, Action action, long messageId, String clientId, List<String> keys, List<String> values) {
+        this(source, action, messageId, clientId);
         this.keys = Lists.list(keys);
         this.values = Lists.list(values);
     }
@@ -55,9 +55,7 @@ public class BatchSetRequest extends BaseDataStoreRequest {
     }
 
     public BatchSetRequest(DataStoreSource source, Action action, long messageId, String clientId, Map<String, String> map) {
-        super(messageId, action);
-        this.source = source;
-        this.clientId = clientId;
+        this(source, action, messageId, clientId);
         if (map instanceof LinkedHashMap) {
             this.keys = Lists.list(map.keySet());
             this.values = Lists.list(map.values());
@@ -72,17 +70,6 @@ public class BatchSetRequest extends BaseDataStoreRequest {
                 values.add(entry.getValue());
             }
         }
-    }
-
-    public Map<String, Object> entryMap() {
-        return appendEntriesTo(new HashMap<String, Object>());
-    }
-
-    public Map<String, Object> appendEntriesTo(Map<String, Object> map) {
-        for (int x = 0; x < keys.size(); x++) {
-            map.put(keys.get(x), values.get(x));
-        }
-        return map;
     }
 
     public static BatchSetRequest parse(String message) {
@@ -174,30 +161,30 @@ public class BatchSetRequest extends BaseDataStoreRequest {
 
         if (source == null) {
             return Str.join(ProtocolConstants.DELIMITER,
-                    ProtocolConstants.VERSION_1,             //        0  PROTOCOL VERSION
-                    action.verb(),                           //        1  ACTION
-                    "",                                      //        2  AUTH_TOKEN
-                    "",                                      //        3  HEADER
-                    "",                                      //        4  RESERVED
-                    clientId,                                //        5  CLIENT ID
-                    "" + messageId,                          //        6  MESSAGE_ID
-                    strKeys,                                 //        7  KEYS
-                    strValues                                //        8  VALUES
+                    ProtocolConstants.VERSION_1,        //        0  PROTOCOL VERSION
+                    action.verb(),                      //        1  ACTION
+                    "",                                 //        2  AUTH_TOKEN
+                    "",                                 //        3  HEADER
+                    "",                                 //        4  RESERVED
+                    clientId,                           //        5  CLIENT ID
+                    "" + messageId,                     //        6  MESSAGE_ID
+                    strKeys,                            //        7  KEYS
+                    strValues                           //        8  VALUES
 
             );
         }
 
         return Str.join(ProtocolConstants.DELIMITER,
-                ProtocolConstants.VERSION_2,           //        0  PROTOCOL VERSION
-                action.verb(),                           //        1  ACTION
-                "",                                      //        2  AUTH_TOKEN
-                "",                                      //        3  HEADER
-                "",                                      //        4  RESERVED
-                clientId,                                //        5  CLIENT ID
-                "" + messageId,                          //        6  MESSAGE_ID
-                source == null ? "" : source.toString(), //        7  SOURCE
-                strKeys,                                 //        8  KEYS
-                strValues                                //        9  VALUES
+                ProtocolConstants.VERSION_2,            //        0  PROTOCOL VERSION
+                action.verb(),                          //        1  ACTION
+                "",                                     //        2  AUTH_TOKEN
+                "",                                     //        3  HEADER
+                "",                                     //        4  RESERVED
+                clientId,                               //        5  CLIENT ID
+                "" + messageId,                         //        6  MESSAGE_ID
+                source.toString(),                      //        7  SOURCE
+                strKeys,                                //        8  KEYS
+                strValues                               //        9  VALUES
 
         );
 

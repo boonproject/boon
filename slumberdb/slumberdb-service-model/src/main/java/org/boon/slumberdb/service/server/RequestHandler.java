@@ -1,7 +1,6 @@
 package org.boon.slumberdb.service.server;
 
 import org.boon.*;
-import org.boon.collections.LazyMap;
 import org.boon.concurrent.SimpleExecutors;
 import org.boon.concurrent.Timer;
 import org.boon.core.Sys;
@@ -948,18 +947,24 @@ ________      _____________________      ____________________________ __________
     private void handleSetBatchIfNotExists(DataStoreRequest dataStoreRequest) {
 
         BatchSetRequest request = (BatchSetRequest) dataStoreRequest;
+        final List<String> requestKeys = request.keys();
+        final List<String> requestValues = request.values();
+        int size = requestKeys.size();
 
-        final List<String> keys = request.keys();
-
-        LazyMap map = new LazyMap(keys, request.values(), true);
-
-        for (String key : keys) {
-
-            if (masterDataStore.exists(key)) {
-                map.remove(key);
+        List<String> notExistKeys = new ArrayList<>(size);
+        List<String> notExistValues = new ArrayList<>(size);
+        for (int x = 0; x < size; x++) {
+            String key = requestKeys.get(x);
+            if (!masterDataStore.exists(key)) {
+                notExistKeys.add(key);
+                notExistValues.add(requestValues.get(x));
             }
         }
-        masterDataStore.addAll(new BatchSetRequest(request, map.keySet(), (List) map.values()));//only send short map
+
+        BatchSetRequest shortBsr = new BatchSetRequest(
+                request.source(), request.action(), request.messageId(), request.clientId(),
+                notExistKeys, notExistValues);
+        masterDataStore.addAll(shortBsr);
     }
 
     private void handleSetBatch(DataStoreRequest dataStoreRequest) {

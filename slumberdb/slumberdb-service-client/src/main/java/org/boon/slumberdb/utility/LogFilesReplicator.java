@@ -157,7 +157,6 @@ public class LogFilesReplicator implements IO.EachLine {
         log("Setting Batch");
         client.setBatch(DataStoreSource.REPLICATION, batchMap);
         sleepAfterSet();
-System.exit(0);
     }
 
     private void sleepAfterSet() {

@@ -150,29 +150,29 @@ public class MasterDataStore implements DataStore {
                 _setMemory(request);
                 break;
             case LOCAL_DB:
-                _setLocal(request);
+                _setLocal(request, true);
                 break;
             case REMOTE_DB:
-                _setRemote(request);
+                _setRemote(request, true);
                 break;
             case TRANSACTION_LOG:
                 _setTransactionLog(request);
                 break;
             case LOCAL_STORES:
                 _setMemory(request);
-                _setLocal(request);
+                _setLocal(request, true);
                 break;
             case ALL:
                 _setTransactionLog(request);
                 _setReplication(request);
                 _setMemory(request);
-                _setLocal(request);
-                _setRemote(request);
+                _setLocal(request, false);
+                _setRemote(request, false);
                 break;
             case REPLICATION:
                 _setMemory(request);
-                _setLocal(request);
-                _setRemote(request);
+                _setLocal(request, false);
+                _setRemote(request, false);
                 break;
             default:
                 queueInvalidSource(request);
@@ -184,20 +184,20 @@ public class MasterDataStore implements DataStore {
         mapDataStore.set(request);
     }
 
-    private void _setLocal(SetRequest request) {
+    private void _setLocal(SetRequest request, boolean required) {
         if (levelDBDataStore != null) {
             levelDBDataStore.set(request);
         }
-        else {
+        else if (required) {
             queueInvalidSource(request);
         }
     }
 
-    private void _setRemote(SetRequest request) {
+    private void _setRemote(SetRequest request, boolean required) {
         if (mySQLDataStore != null && !mySQLReadOnly) {
             mySQLDataStore.set(request);
         }
-        else {
+        else if (required) {
             queueInvalidSource(request);
         }
     }

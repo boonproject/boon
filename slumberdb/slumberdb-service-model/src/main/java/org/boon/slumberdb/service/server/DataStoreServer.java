@@ -48,8 +48,8 @@ public abstract class DataStoreServer {
 
         for (int index = 0; index < dataStoreDrainerCount; index++) {
 
-            ResponseHandler responseHandler =
-                    new ResponseHandler();
+            ResponseHandler responseHandler = new ResponseHandler();
+            responseHandler.setVerboseStatus(config.verboseHandlerStatus());
 
             responseHandlers.add(responseHandler);
             responseHandler.init(this, config, index, masterDataStore, queue);

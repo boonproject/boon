@@ -1,6 +1,6 @@
 package org.boon.slumberdb.service.client;
 
-
+import org.boon.slumberdb.service.protocol.requests.BatchSetRequest;
 import org.boon.slumberdb.stores.DataOutputQueue;
 import org.boon.slumberdb.stores.DataStoreSource;
 
@@ -10,27 +10,27 @@ import java.util.Map;
 public interface DataStoreClient {
 
 
-    public void flush();
+    void flush();
 
-    public boolean connected(String key);
+    boolean connected(String key);
 
-    public void get(String key);
+    void get(String key);
 
-    public void batchLoad(Collection<String> keys);
+    void batchLoad(Collection<String> keys);
 
-    public void set(String key, Object value);
-
-
-    public void broadcastSet(String key, Object value);
+    void set(String key, Object value);
 
 
-    public void setBatch(Map<String, Object> batch);
+    void broadcastSet(String key, Object value);
 
-    public void setBatchIfNotExists(Map<String, Object> batch);
 
-    public DataOutputQueue queue();
+    void setBatch(Map<String, Object> batch);
 
-    public DataStoreAdminClient admin(String shardId, String password);
+    void setBatchIfNotExists(Map<String, Object> batch);
+
+    DataOutputQueue queue();
+
+    DataStoreAdminClient admin(String shardId, String password);
 
     void setIfNotExists(String add, Object value);
 
@@ -40,25 +40,27 @@ public interface DataStoreClient {
 
 
     /* This is mostly for testing. */
-    public void set(DataStoreSource source, String key, Object value);
+    void set(DataStoreSource source, String key, Object value);
 
-    public void get(DataStoreSource source, String key);
+    void get(DataStoreSource source, String key);
 
-    public void setBatch(DataStoreSource source, Map<String, Object> batch);
+    void setBatch(DataStoreSource source, Map<String, Object> batch);
 
-    public void setBatchIfNotExists(DataStoreSource source, Map<String, Object> batch);
+    void setBatchIfNotExists(DataStoreSource source, Map<String, Object> batch);
 
-    public void remove(DataStoreSource source, String key);
+    void setBatch(BatchSetRequest request);
 
-    public void remove(String key);
+    void remove(DataStoreSource source, String key);
 
-    public void getStats();
+    void remove(String key);
 
-    public void clearStats();
+    void getStats();
+
+    void clearStats();
 
 
-    public void getStats(DataStoreSource source);
+    void getStats(DataStoreSource source);
 
-    public void clearStats(DataStoreSource source);
+    void clearStats(DataStoreSource source);
 
 }
