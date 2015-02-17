@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/boonproject/boon.svg)](httpshttps://travis-ci.org/boonproject/boon)
+[![Build Status](https://travis-ci.org/boonproject/boon.svg)](https://travis-ci.org/boonproject/boon)
 
 
 Got a question? Ask here. Get help from the Boon community.
