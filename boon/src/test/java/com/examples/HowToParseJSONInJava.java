@@ -1,6 +1,5 @@
 package com.examples;
 
-import org.boon.Boon;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 
