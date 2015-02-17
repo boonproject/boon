@@ -208,41 +208,46 @@ public class MethodAccessImpl implements MethodAccess {
         if (paramLength == 0) {
             return invoke(object);
 
-        }else if (argsLength == 1 && paramLength == argsLength) {
-
-            Object arg = args[0];
-            Class<?> paramType = parameterTypes[0];
-            if (!paramType.isInstance(arg)) {
-                TypeType type = paramTypeEnumList.get(0);
-                arg = Conversions.coerce(type, paramType, arg);
-            }
-
-            return invoke(object, arg);
         }
-            /* If the paramLength and argument are greater than one and
-            sizes match then invoke using invokeFromList. */
-        else if (paramLength > 1 && paramLength == argsLength) {
 
-            Object[] newArgs = new Object[argsLength];
+        if (paramLength == argsLength) {
 
-            for (int index=0; index< argsLength; index++) {
+            if (argsLength == 1) {
 
-                Object arg = args[index];
-                Class<?> paramType = parameterTypes[index];
-
+                Object arg = args[0];
+                Class<?> paramType = parameterTypes[0];
                 if (!paramType.isInstance(arg)) {
-                    TypeType type = paramTypeEnumList.get(index);
-                    newArgs[index] = Conversions.coerce(type, paramType, arg);
-                } else {
-                    newArgs[index] = arg;
+                    TypeType type = paramTypeEnumList.get(0);
+                    arg = Conversions.coerce(type, paramType, arg);
                 }
 
+                return invoke(object, arg);
             }
+            /* If the paramLength and argument are greater than one and
+            sizes match then invoke using invokeFromList. */
+            else  {
+
+                Object[] newArgs = new Object[argsLength];
+
+                for (int index = 0; index < argsLength; index++) {
+
+                    Object arg = args[index];
+                    Class<?> paramType = parameterTypes[index];
+
+                    if (!paramType.isInstance(arg)) {
+                        TypeType type = paramTypeEnumList.get(index);
+                        newArgs[index] = Conversions.coerce(type, paramType, arg);
+                    } else {
+                        newArgs[index] = arg;
+                    }
+
+                }
 
 
-            return invoke(object, newArgs);
+                return invoke(object, newArgs);
 
-        } else {
+            }
+        }else {
             if (method.isVarArgs() && paramLength == 1) {
 
                 return this.invoke(object, (Object)args);
