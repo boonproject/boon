@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.fastjson</groupId>
         <artifactId>boon-bundle</artifactId>
-        <version>0.32-SNAPSHOT</version>
+        <version>0.32</version>
         <relativePath>../</relativePath>
     </parent>
     <artifactId>osgi-plugins-parent</artifactId>
@@ -22,9 +21,9 @@
             version="[$(version;===;${build.osgi.version.clean}),$(version;==+;${build.osgi.version.clean}))"
         </build.osgi.import.strict.version>
         <build.osgi.import.default.version>[$(version;==;$(@)),$(version;+;$(@)))</build.osgi.import.default.version>
-        <build.osgi.import.defaults/>
-        <build.osgi.import.before.defaults/>
-        <build.osgi.import.additional/>
+        <build.osgi.import.defaults />
+        <build.osgi.import.before.defaults />
+        <build.osgi.import.additional />
         <build.osgi.import.pkg>
             !${build.osgi.export.pkg},
             org.boon.*;${build.osgi.import.build.version},
@@ -33,16 +32,16 @@
             ${build.osgi.import.additional},
             *
         </build.osgi.import.pkg>
-        <build.osgi.export.pkg/>
-        <build.osgi.activator/>
+        <build.osgi.export.pkg />
+        <build.osgi.activator />
         <build.osgi.failok>false</build.osgi.failok>
         <build.osgi.private.pkg>!*</build.osgi.private.pkg>
         <build.osgi.export>${build.osgi.export.pkg};${build.osgi.version}</build.osgi.export>
-        <build.osgi.meta.persistence/>
+        <build.osgi.meta.persistence />
         <build.osgi.version>version=${project.version}</build.osgi.version>
         <build.osgi.split.pkg>-split-package:=first</build.osgi.split.pkg>
         <build.osgi.import>${build.osgi.import.pkg}</build.osgi.import>
-        <build.osgi.dynamic/>
+        <build.osgi.dynamic />
         <build.osgi.symbolic.name>${project.groupId}.${project.artifactId}</build.osgi.symbolic.name>
         <build.osgi.exclude.dependencies>false</build.osgi.exclude.dependencies>
     </properties>
