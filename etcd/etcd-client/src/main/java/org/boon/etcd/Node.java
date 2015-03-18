@@ -41,6 +41,7 @@ public class Node {
     private final long createdIndex;
     private final long modifiedIndex;
     private final long ttl;
+    private final boolean dir;
     private final List<Node> nodes;
 
     public Node(final String key,
@@ -48,12 +49,14 @@ public class Node {
          final long createdIndex,
          final long modifiedIndex,
          final long ttl,
+         final boolean dir,
          final List<Node> nodes) {
         this.key = key;
         this.value = value;
         this.createdIndex = createdIndex;
         this.modifiedIndex = modifiedIndex;
         this.ttl = ttl;
+        this.dir = dir;
         this.nodes = nodes;
     }
 
@@ -75,6 +78,10 @@ public class Node {
 
     public String getValue() {
         return value;
+    }
+    
+    public boolean isDir() {
+       return dir;
     }
 
     public List<Node> getNodes() {
