@@ -832,25 +832,11 @@ public class CharBuf extends PrintWriter implements CharSequence {
         return addJsonFieldName ( FastStringUtils.toCharArray ( str ) );
     }
 
-    public final CharBuf addJsonFieldName( char[] chars ) {
-            int sizeNeeded = chars.length + 4 + location;
-            if (  sizeNeeded > capacity ) {
-                buffer = Chr.grow( buffer, sizeNeeded * 2  );
-                capacity = buffer.length;
-            }
-            buffer [location] = '"';
-            location++;
-
-            System.arraycopy( chars, 0, buffer, location, chars.length );
-
-            location += (chars.length);
-            buffer [location] = '"';
-            location++;
-            buffer [location] = ':';
-            location++;
-
-            return this;
-     }
+    public final CharBuf addJsonFieldName(char[] chars) {
+        addJsonEscapedString(chars);
+        addChar(':');
+        return this;
+    }
 
     public final CharBuf addQuoted( String str ) {
         final char[] chars = FastStringUtils.toCharArray ( str );

@@ -242,4 +242,16 @@ public class CharBufTest {
 
     }
 
+    @Test
+    public void testAddJsonFieldName() {
+        assertEquals("\"\":", CharBuf.create(0).addJsonFieldName("").toString());
+        assertEquals("\"test\":", CharBuf.create(0).addJsonFieldName("test").toString());
+        assertEquals("\"\\\"\":", CharBuf.create(0).addJsonFieldName("\"").toString());
+        assertEquals("\"\\b\":",  CharBuf.create(0).addJsonFieldName("\b").toString());
+        assertEquals("\"\\f\":",  CharBuf.create(0).addJsonFieldName("\f").toString());
+        assertEquals("\"\\n\":",  CharBuf.create(0).addJsonFieldName("\n").toString());
+        assertEquals("\"\\r\":",  CharBuf.create(0).addJsonFieldName("\r").toString());
+        assertEquals("\"\\t\":",  CharBuf.create(0).addJsonFieldName("\t").toString());
+        assertEquals("\"\\\\\":", CharBuf.create(0).addJsonFieldName("\\").toString());
+    }
 }
