@@ -185,7 +185,7 @@ public class Request {
         StringBuilder builder = new StringBuilder(80);
         builder.append(URI_STUB).append(key);
 
-        if (this.method.equals("GET")) {
+        if (this.method.equals("GET") || this.method.equals("DELETE")) {
 
             builder.append("?");
 
