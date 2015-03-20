@@ -83,6 +83,49 @@ public class JsonSerializeTest {
 
 
     @Test
+    public void testWithStringArray(){
+
+        String[] cats = new String[10];
+        cats[0] = "Felix0";
+
+        cats[5] = "Felix5";
+
+
+
+        String jsonString = new JsonSimpleSerializerImpl().serialize(cats).toString();
+
+//        try {
+        String[] dogs = (String[])new JsonParserFactory().create().parse(jsonString);
+        ok = true;
+//        } catch (JsonException e){
+//            ok = false;
+//        }
+//        ok = jsonString.equals( "[\"Felix\",,,,,,,,,,]" ) ;
+
+    }
+
+    @Test
+    public void testWithIntArray(){
+
+        int[] numbers = new int[10];
+        numbers[0] = 5;
+
+
+        String jsonString = new JsonSimpleSerializerImpl().serialize(numbers).toString();
+
+//        try {
+        int[] NUMBERS = (int[])new JsonParserFactory().create().parseIntArray(jsonString);
+        ok = true;
+//        } catch (JsonException e){
+//            ok = false;
+//        }
+//        ok = jsonString.equals( "[\"Felix\",,,,,,,,,,]" ) ;
+
+    }
+
+
+
+    @Test
     public void testWithUTF8() {
         Employee aÉddié = new Employee();
         aÉddié.name = "Éddié";
