@@ -380,7 +380,7 @@ public class Conversions {
 
     public static <T> T createFromArg(Class<T> clz, Object value) {
         if (value == null) {
-            return Reflection.newInstance(clz);
+            return null;
         }
         ClassMeta meta = ClassMeta.classMeta(clz);
         List<ConstructorAccess> constructors = meta.oneArgumentConstructors();
