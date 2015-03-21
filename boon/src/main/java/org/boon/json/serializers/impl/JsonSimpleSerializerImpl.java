@@ -434,6 +434,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         switch (type) {
 
             case NULL:
+                builder.addNull();
                 return;
             case INT:
                 builder.addInt(int.class.cast(obj));

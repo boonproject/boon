@@ -32,9 +32,12 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import org.boon.Lists;
 import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.ReflectionTest;
 import org.boon.json.serializers.impl.JsonSimpleSerializerImpl;
 import org.boon.json.test.AllTypes;
+import org.boon.json.test.Dog;
 import org.boon.json.test.FooEnum;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.URL;
@@ -84,43 +87,40 @@ public class JsonSerializeTest {
 
     @Test
     public void testWithStringArray(){
+        String[] cats = new String[10];
+        cats[0] = "Felix";
+        cats[5] = "Tom";
+        String sRick = new JsonSimpleSerializerImpl().serialize(cats).toString();
+        boolean ok = sRick.equals( "[\"Felix\",null,null,null,null,\"Tom\",null,null,null,null]" ) || die( sRick );
+    }
+
+
+    @Test
+    public void testWithJSONStringArray(){
 
         String[] cats = new String[10];
-        cats[0] = "Felix0";
+        cats[0] = "Felix";
+        cats[5] = "Tom";
 
-        cats[5] = "Felix5";
+        String sRick = new JsonSimpleSerializerImpl().serialize(cats).toString();
 
+        String[] gatos = new String[10];
+        new JsonParserFactory().create().parse(List.class, sRick).toArray(gatos);
 
-
-        String jsonString = new JsonSimpleSerializerImpl().serialize(cats).toString();
-
-//        try {
-        String[] dogs = (String[])new JsonParserFactory().create().parse(jsonString);
-        ok = true;
-//        } catch (JsonException e){
-//            ok = false;
-//        }
-//        ok = jsonString.equals( "[\"Felix\",,,,,,,,,,]" ) ;
-
+        Assert.assertArrayEquals(cats, gatos);
     }
+
 
     @Test
     public void testWithIntArray(){
-
         int[] numbers = new int[10];
         numbers[0] = 5;
+        numbers[3] = 10;
 
+        String sRick = new JsonSimpleSerializerImpl().serialize(numbers).toString();
+        int[] numeros = new JsonParserFactory().create().parseIntArray(sRick);
 
-        String jsonString = new JsonSimpleSerializerImpl().serialize(numbers).toString();
-
-//        try {
-        int[] NUMBERS = (int[])new JsonParserFactory().create().parseIntArray(jsonString);
-        ok = true;
-//        } catch (JsonException e){
-//            ok = false;
-//        }
-//        ok = jsonString.equals( "[\"Felix\",,,,,,,,,,]" ) ;
-
+        Assert.assertArrayEquals(numbers, numeros);
     }
 
 
