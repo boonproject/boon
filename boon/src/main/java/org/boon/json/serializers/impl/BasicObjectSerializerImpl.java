@@ -29,6 +29,7 @@
 package org.boon.json.serializers.impl;
 
 import org.boon.core.TypeType;
+import org.boon.core.Value;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.json.serializers.ObjectSerializer;
 import org.boon.primitive.CharBuf;
@@ -162,6 +163,12 @@ public class BasicObjectSerializerImpl implements ObjectSerializer {
             case ARRAY_OBJECT:
                 jsonSerializer.serializeArray ( obj, builder );
                 return;
+
+            case VALUE:
+                Value value = (Value) obj;
+                serializeObject( jsonSerializer, value.toValue(), builder );
+                return;
+
             case INSTANCE:
                 jsonSerializer.serializeInstance ( obj, builder, includeTypeInfo );
                 return;

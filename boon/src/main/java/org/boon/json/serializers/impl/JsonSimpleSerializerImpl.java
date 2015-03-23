@@ -35,6 +35,7 @@ import org.boon.Maps;
 import org.boon.Str;
 import org.boon.cache.SimpleCache;
 import org.boon.core.TypeType;
+import org.boon.core.Value;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.Invoker;
 import org.boon.core.reflection.Reflection;
@@ -547,6 +548,11 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
             case ABSTRACT:
             case INTERFACE:
                 serializeSubtypeInstance ( obj, builder );
+                return;
+
+            case VALUE:
+                Value value = (Value) obj;
+                serializeObject( value.toValue(), builder );
                 return;
 
             case INSTANCE:

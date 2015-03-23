@@ -167,7 +167,7 @@ public class ConversionsTest {
     @Test
     public void convertEmployeeFromNull() {
         Employee e = Conversions.coerce(Employee.class, null);
-        boolean ok = e != null || die();
+        boolean ok = e == null || die();
 
     }
 
