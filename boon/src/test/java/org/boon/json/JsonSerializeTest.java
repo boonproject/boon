@@ -30,11 +30,15 @@ package org.boon.json;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import org.boon.Lists;
 import org.boon.core.reflection.BeanUtils;
+import org.boon.core.reflection.ReflectionTest;
 import org.boon.json.serializers.impl.JsonSimpleSerializerImpl;
 import org.boon.json.test.AllTypes;
+import org.boon.json.test.Dog;
 import org.boon.json.test.FooEnum;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.URL;
@@ -42,6 +46,7 @@ import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
+
 import org.boon.core.Dates;
 
 /**
@@ -79,6 +84,94 @@ public class JsonSerializeTest {
         rick = new JsonParserFactory ().create ().parse ( Employee.class, sRick );
         ok = rick.url.equals( "http://foo.bar/foo.jpg" ) || die( sRick );
 
+    }
+
+
+    @Test
+    public void testWithStringArray(){
+        String[] cats = new String[10];
+        cats[0] = "Felix";
+        cats[5] = "Tom";
+        String sRick = new JsonSimpleSerializerImpl().serialize(cats).toString();
+        boolean ok = sRick.equals("[\"Felix\",null,null,null,null,\"Tom\",null,null,null,null]") || die(sRick);
+    }
+
+
+    @Test
+    public void testWithJSONStringArray() {
+
+        String[] cats = new String[10];
+        cats[0] = "Felix";
+        cats[5] = "Tom";
+
+        String sRick = new JsonSimpleSerializerImpl().serialize(cats).toString();
+
+        String[] gatos = new String[10];
+        new JsonParserFactory().create().parse(List.class, sRick).toArray(gatos);
+
+        Assert.assertArrayEquals(cats, gatos);
+    }
+
+
+    @Test
+    public void testWithIntArray() {
+        int[] numbers = new int[10];
+        numbers[0] = 5;
+        numbers[3] = 10;
+
+        String sRick = new JsonSimpleSerializerImpl().serialize(numbers).toString();
+        int[] numeros = new JsonParserFactory().create().parseIntArray(sRick);
+
+        Assert.assertArrayEquals(numbers, numeros);
+    }
+
+
+    class Dog {
+        private String name;
+
+        public Dog(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "Dog{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Dog dog = (Dog) o;
+
+            if (!name.equals(dog.name)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+    }
+
+    @Test
+    public void testWithObjectArray() {
+
+        Dog[] dogs = new Dog[10];
+        dogs[0] = new Dog("Brian");
+        dogs[3] = new Dog("Snoopy");
+
+        String sRick = new JsonSimpleSerializerImpl().serialize(dogs).toString();
+        // [{"name":"Brian"},null,null,{"name":"Snoopy"},null,null,null,null,null,null]
+
+        Dog[] peros = new Dog[10];
+        new JsonParserFactory().create().parseList(Dog.class, sRick).toArray(peros);
+
+        Assert.assertArrayEquals(dogs, peros);
     }
 
 

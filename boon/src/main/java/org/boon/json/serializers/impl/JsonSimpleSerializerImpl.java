@@ -48,7 +48,6 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 
@@ -444,6 +443,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         switch ( type ) {
 
             case NULL:
+                builder.addNull();
                 return;
             case INT:
                 builder.addInt ( int.class.cast ( obj ) );
