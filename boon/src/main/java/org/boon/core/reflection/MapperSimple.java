@@ -1235,6 +1235,12 @@ public class MapperSimple implements Mapper {
             case MAP:
             case VALUE_MAP:
 
+                if (objValue==null) {
+
+                    field.setValue(newInstance, null);
+                    break;
+                }
+
 
                 Class keyType = (Class)field.getParameterizedType().getActualTypeArguments()[0];
                 Class valueType = (Class)field.getParameterizedType().getActualTypeArguments()[1];
