@@ -9,7 +9,7 @@
 
     <groupId>io.fastjson</groupId>
     <artifactId>boon-bundle</artifactId>
-    <version>0.33</version>
+    <version>0.34-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Boon and subprojects</name>
