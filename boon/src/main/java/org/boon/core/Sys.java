@@ -75,6 +75,13 @@ public class Sys {
         BigDecimal v = new BigDecimal ( "-1" );
         int b = -1;
         String sversion = System.getProperty ( "java.version" );
+
+        // get rid of build suffix, like ea or icedtea
+        int dash = sversion.indexOf("-");
+        if (dash != - 1) {
+            sversion = sversion.substring(0, dash);
+        }
+
         if ( sversion.indexOf ( "_" ) != -1 ) {
             final String[] split = sversion.split ( "_" );
             try {
@@ -110,7 +117,7 @@ public class Sys {
                 ex.printStackTrace ();
                 System.err.println ( "Unable to determine build number or version" );
             }
-        } else if ("1.8.0".equals(sversion) || "1.8.0-ea".equals(sversion)) {
+        } else if ("1.8.0".equals(sversion)) {
             b = -1;
             v = new BigDecimal("1.8");
         } else {
