@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.fastjson</groupId>
         <artifactId>slumberdb-bundle</artifactId>
-        <version>0.31-SNAPSHOT</version>
+        <version>0.34-SNAPSHOT</version>
     </parent>
     
     <artifactId>slumberdb-leveldb</artifactId>

@@ -1,0 +1,4 @@
+ƒhttp://localhost:8080/v2/keys/mykey?prevValue=prevValue&value=value&prevIndex=99&wait=true&recursive=true&prevExist=true&dir=true 
+Dhttp://localhost:8080::DELETE/v2/keys/mykey?recursive=true&dir=true
+REQUEST_BODY
+	recursive=true&dir=true 
