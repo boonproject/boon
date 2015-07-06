@@ -1551,7 +1551,7 @@ public class Boon {
 
     public static boolean equalsOrDie(String message, Object expected, Object got) {
         if (expected == null) {
-            return got == null || die(message, "Expected was", expected, "but we got", got);
+            return got == null || die(message, "Expected was null but we got", got);
         }
 
         return expected.equals(got) || die(message, "Expected was", expected, "but we got", got);
