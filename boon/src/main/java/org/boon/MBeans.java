@@ -220,7 +220,7 @@ public class MBeans {
         Exceptions.requireNonNull( name, "name can't be null" );
         Exceptions.requireNonNull( mbean, "mbean can't be null" );
 
-        String nameOfBean = nameOfBean = String.format( "%s.%s:type=%s",
+        String nameOfBean = String.format( "%s.%s:type=%s",
                 prefix, mbean.getClass().getSimpleName(),
                 name );
 
