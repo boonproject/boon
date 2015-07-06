@@ -215,7 +215,7 @@ class CacheEntry<KEY, VALUE> implements Comparable<CacheEntry> {
         }
 
 
-        return cmp = compareReadCount( other );
+        return compareReadCount( other );
     }
 
     @Override
