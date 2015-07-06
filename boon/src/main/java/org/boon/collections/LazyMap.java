@@ -103,7 +103,7 @@ public class LazyMap extends AbstractMap<String, Object> {
 
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        if (map != null) map.entrySet();
+        if (map != null) return map.entrySet();
 
         if (delayMap) {
 
