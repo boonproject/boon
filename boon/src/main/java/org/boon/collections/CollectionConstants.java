@@ -9,7 +9,7 @@ public class CollectionConstants {
 
 
 
-    public static MultiMap EMPTY_MULTI_MAP = new MultiMap() {
+    public static final MultiMap EMPTY_MULTI_MAP = new MultiMap() {
 
         Map empty = Collections.emptyMap();
         @Override
