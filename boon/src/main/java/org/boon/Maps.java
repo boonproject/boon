@@ -1227,8 +1227,6 @@ public class Maps {
             if ( iterator.hasNext() ) {
                 V v = iterator.next();
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
         }
         return map;
@@ -1241,8 +1239,6 @@ public class Maps {
             if ( iterator.hasNext() ) {
                 V v = iterator.next();
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
         }
         return map;
@@ -1256,8 +1252,6 @@ public class Maps {
             if ( index < keys.length ) {
                 V v = values[ index ];
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
             index++;
         }
@@ -1396,8 +1390,6 @@ public class Maps {
             if ( iterator.hasNext() ) {
                 V v = iterator.next();
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
         }
         return map;
@@ -1410,8 +1402,6 @@ public class Maps {
             if ( iterator.hasNext() ) {
                 V v = iterator.next();
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
         }
         return map;
@@ -1425,8 +1415,6 @@ public class Maps {
             if ( index < keys.length ) {
                 V v = values[ index ];
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
             index++;
         }
@@ -1564,8 +1552,6 @@ public class Maps {
             if ( iterator.hasNext() ) {
                 V v = iterator.next();
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
         }
         return map;
@@ -1579,8 +1565,6 @@ public class Maps {
             if ( index < keys.length ) {
                 V v = values[ index ];
                 map.put( k, v );
-            } else {
-                map.put( k, null );
             }
             index++;
         }
