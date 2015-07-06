@@ -119,14 +119,12 @@ public class IO {
         try {
             fs = provider.getFileSystem( fileJarURI );
         } catch ( Exception ex ) {
-            if ( provider != null ) {
-                try {
-                    fs = provider.newFileSystem( fileJarURI, env );
-                } catch ( IOException ex2 ) {
-                    Exceptions.handle( FileSystem.class,
-                            sputs( "unable to load", fileJarURI, "as zip file system" ),
-                            ex2 );
-                }
+            try {
+                fs = provider.newFileSystem( fileJarURI, env );
+            } catch ( IOException ex2 ) {
+                Exceptions.handle( FileSystem.class,
+                        sputs( "unable to load", fileJarURI, "as zip file system" ),
+                        ex2 );
             }
         }
 
