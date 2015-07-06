@@ -30,6 +30,7 @@ package org.boon.primitive;
 
 import org.boon.Boon;
 
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -55,13 +56,13 @@ public class IOReader extends Reader{
 
     public IOReader( int size) {
 
-        reader = System.in;
+        reader = new InputStreamReader(System.in);
         buffer = new char[size];
 
     }
 
     public IOReader() {
-        reader = System.in;
+        reader = new InputStreamReader(System.in);
         buffer = new char[defaultBufferSize];
     }
 
