@@ -55,13 +55,13 @@ public class IOReader extends Reader{
 
     public IOReader( int size) {
 
-        this.reader = reader;
+        reader = System.in;
         buffer = new char[size];
 
     }
 
     public IOReader() {
-        this.reader = reader;
+        reader = System.in;
         buffer = new char[defaultBufferSize];
     }
 
