@@ -408,12 +408,13 @@ public class HTTP {
 
         ByteBuf buf = ByteBuf.create( 244 );
 
-        final Set<String> keys = formData.keySet();
+        final Set<Map.Entry<String, Object>> entries = formData.entrySet();
 
         int index = 0;
-        for ( String key : keys ) {
+        for ( Map.Entry<String, Object> entry : entries ) {
 
-            Object value = formData.get( key );
+            String key = entry.getKey();
+            Object value = entry.getValue();
 
             if ( index > 0 ) {
                 buf.addByte( '&' );
@@ -626,11 +627,10 @@ public class HTTP {
 
         manageHeaders( headers, connection );
 
-        final Set<String> keys = params.keySet();
+        for ( Map.Entry<String, ?> entry : params.entrySet() ) {
 
-        for ( String key : keys ) {
-
-            Object value = params.get( key );
+            String key = entry.getKey();
+            Object value = entry.getValue();
             connection.addRequestProperty ( URLEncoder.encode (key, charset), URLEncoder.encode ( value.toString(), charset) );
         }
         return connection;
