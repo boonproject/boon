@@ -132,7 +132,7 @@ public class IO {
             }
         }
 
-        requireNonNull( provider, "Zip file system was not found" );
+        requireNonNull( fs, "Zip file system was not found" );
 
         return fs;
     }
