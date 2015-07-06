@@ -1541,23 +1541,20 @@ public class Boon {
 
     public static boolean equalsOrDie(Object expected, Object got) {
 
-        if (expected == null && got == null) {
-            return true;
+        if (expected == null) {
+            return got == null || die();
         }
 
-        if (expected == null && got != null) die();
-        if (!expected.equals(got)) die("Expected was", expected, "but we got", got);
-
-        return true;
+        return expected.equals(got) || die("Expected was", expected, "but we got", got);
     }
 
 
     public static boolean equalsOrDie(String message, Object expected, Object got) {
+        if (expected == null) {
+            return got == null || die(message, "Expected was", expected, "but we got", got);
+        }
 
-        if (expected == null && got != null) die(message, "Expected was", expected, "but we got", got);
-        if (!expected.equals(got)) die(message, "Expected was", expected, "but we got", got);
-
-        return true;
+        return expected.equals(got) || die(message, "Expected was", expected, "but we got", got);
     }
 
     public static String toPrettyJson(Object object) {
