@@ -337,7 +337,7 @@ public class Exceptions {
                 }
             }
 
-            return Exceptions.getFilteredStackTrace(super.getStackTrace());
+            return filteredStackTrace;
 
         }
 
