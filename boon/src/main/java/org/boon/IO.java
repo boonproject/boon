@@ -83,7 +83,7 @@ public class IO {
         String resourcePath = strings[ 1 ];
 
         String key = slc(strings[ 0 ], JAR_FILE_SCHEMA.length()+1);
-        if ( !pathToZipFileSystems.containsKey( fileJarURI ) ) {
+        if ( !pathToZipFileSystems.containsKey( key ) ) {
             pathToZipFileSystems.put( key, IO.zipFileSystem(fileJarURI) );
 
             cleanPathToZipFileSystemMap();
