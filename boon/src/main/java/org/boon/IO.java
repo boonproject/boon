@@ -108,8 +108,6 @@ public class IO {
 
     public static FileSystem zipFileSystem( URI fileJarURI ) {
 
-
-
         final Map<String, Object> env = Maps.map( "create", ( Object ) "true" );
 
         FileSystemProvider provider = loadFileSystemProvider("jar");
@@ -554,8 +552,12 @@ public class IO {
 
         try ( Reader r = reader ) {
 
-            reader.read( buffer );
-
+            int byteCount = reader.read( buffer );
+            if (byteCount < size) {
+                char[] fullBuffer = new char[byteCount];
+                System.arraycopy(buffer, 0, fullBuffer, 0, byteCount);
+                buffer = fullBuffer;
+            }
 
         } catch ( Exception ex ) {
             return Exceptions.handle( char[].class, ex );
