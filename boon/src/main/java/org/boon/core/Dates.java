@@ -73,7 +73,7 @@ public class Dates {
 
     public static long timeZoneNow(TimeZone timeZone) {
         Calendar calendar = Calendar.getInstance();
-        return timeZoneNow(timeZone);
+        return timeZoneNow(timeZone, calendar);
     }
 
 
