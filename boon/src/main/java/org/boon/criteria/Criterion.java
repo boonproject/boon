@@ -51,10 +51,10 @@ import static org.boon.Exceptions.*;
 
 
 public abstract class Criterion<VALUE> extends Criteria {
-    
-    
 
-    private Object name;
+
+
+    private String name;
     private Operator operator;
     protected VALUE value;
     protected VALUE value2;
@@ -103,7 +103,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         FieldAccess field;
 
         if (path) {
-            field = BeanUtils.idxField(objectUnderTest, name.toString());
+            field = BeanUtils.idxField(objectUnderTest, name);
 
 
             if (field == null) {
@@ -111,10 +111,6 @@ public abstract class Criterion<VALUE> extends Criteria {
             }
 
             return field;
-        }
-
-        if (name instanceof Enum) {
-            name = Str.camelCaseLower(name.toString());
         }
 
         field = fields().get(name);
@@ -125,7 +121,7 @@ public abstract class Criterion<VALUE> extends Criteria {
     private FieldAccess fakeField() {
 
         if (fakeField == null) {
-            fakeField = new ThisField(this.name.toString(), objectUnderTest);
+            fakeField = new ThisField(this.name, objectUnderTest);
         }
 
         fakeField.thisObject = objectUnderTest;
@@ -144,7 +140,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getValue(objectUnderTest);
         } else {
-            return BeanUtils.atIndex(objectUnderTest, name.toString());
+            return BeanUtils.atIndex(objectUnderTest, name);
         }
     }
 
@@ -153,7 +149,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getInt(objectUnderTest);
         } else {
-            return BeanUtils.idxInt(objectUnderTest, name.toString());
+            return BeanUtils.idxInt(objectUnderTest, name);
 
         }
     }
@@ -165,7 +161,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getShort(objectUnderTest);
         } else {
-            return BeanUtils.idxShort(objectUnderTest, name.toString());
+            return BeanUtils.idxShort(objectUnderTest, name);
 
         }
 
@@ -178,7 +174,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getLong(objectUnderTest);
         } else {
-            return BeanUtils.idxLong(objectUnderTest, name.toString());
+            return BeanUtils.idxLong(objectUnderTest, name);
 
         }
 
@@ -192,7 +188,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getFloat(objectUnderTest);
         } else {
-            return BeanUtils.idxFloat(objectUnderTest, name.toString());
+            return BeanUtils.idxFloat(objectUnderTest, name);
 
         }
 
@@ -207,7 +203,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getDouble(objectUnderTest);
         } else {
-            return BeanUtils.idxDouble(objectUnderTest, name.toString());
+            return BeanUtils.idxDouble(objectUnderTest, name);
 
         }
     }
@@ -220,7 +216,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getBoolean(objectUnderTest);
         } else {
-            return BeanUtils.idxBoolean(objectUnderTest, name.toString());
+            return BeanUtils.idxBoolean(objectUnderTest, name);
 
         }
 
@@ -234,7 +230,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getByte(objectUnderTest);
         } else {
-            return BeanUtils.idxByte(objectUnderTest, name.toString());
+            return BeanUtils.idxByte(objectUnderTest, name);
 
         }
     }
@@ -244,7 +240,7 @@ public abstract class Criterion<VALUE> extends Criteria {
             FieldAccess field1 = this.field();
             return field1.getChar(objectUnderTest);
         } else {
-            return BeanUtils.idxChar(objectUnderTest, name.toString());
+            return BeanUtils.idxChar(objectUnderTest, name);
 
         }
 
@@ -337,7 +333,7 @@ public abstract class Criterion<VALUE> extends Criteria {
 
 
     public String getName() {
-        return name.toString();
+        return name;
     }
 
     public Operator getOperator() {
@@ -922,7 +918,7 @@ public abstract class Criterion<VALUE> extends Criteria {
         if ( initialized ) return;
         initialized = true;
 
-        String name = this.name.toString();
+        String name = this.name;
 
         FieldAccess field = field();
         if ( field == null ) {
