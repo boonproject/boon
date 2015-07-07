@@ -125,9 +125,6 @@ public class Annotations {
         if (annotationDataList == null ) {
 
             annotationDataList = extractValidationAnnotationData ( extractAllAnnotationsForProperty ( clazz, propertyName, useReadMethod ), allowedPackages );
-            if (annotationDataList == null) {
-                annotationDataList = Collections.EMPTY_LIST;
-            }
             classMap.put (propertyName,  annotationDataList );
 
         }
@@ -151,10 +148,6 @@ public class Annotations {
         if (annotationDataList == null ) {
 
             annotationDataList = extractValidationAnnotationData( findFieldAnnotations( clazz, propertyName ), allowedPackages );
-
-            if (annotationDataList == null) {
-                annotationDataList = Collections.EMPTY_LIST;
-            }
             classMap.put (propertyName,  annotationDataList );
 
         }
