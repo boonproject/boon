@@ -14,7 +14,7 @@ public interface Mapper {
 
     <T> T fromMap(Map<String, Object> map, Class<T> cls);
 
-    <T> T fromList(List<?> argList, Class<T> clazz);
+    <T> T fromList(Collection<?> argList, Class<T> clazz);
 
     @SuppressWarnings("unchecked")
     Object fromValueMap(Map<String, Value> valueMap

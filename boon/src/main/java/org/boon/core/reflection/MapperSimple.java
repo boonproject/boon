@@ -194,7 +194,7 @@ public class MapperSimple implements Mapper {
      * @return the new object that we just created.
      */
     @Override
-    public  <T> T fromList(List<?> argList, Class<T> clazz) {
+    public  <T> T fromList(Collection<?> argList, Class<T> clazz) {
 
         /* Size of the arguments. */
         int size = argList.size();
