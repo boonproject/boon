@@ -668,6 +668,7 @@ public class Dates {
         buf.add( Str.zfill( minute, 2 ) ).add( ':' );
         buf.add( Str.zfill( second, 2 ) ).add( "." );
         buf.add( Str.zfill( mili, 3 ) ).add( "Z" );
+        buf.add( Str.zfill( offset, 4 ) );
 
         buf.add( '"' );
 
