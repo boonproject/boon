@@ -1092,6 +1092,7 @@ public class Conversions {
 
                 @Override
                 public T next() {
+                    if (i >= length) throw new NoSuchElementException("No more properties");
                     T next = (T) BeanUtils.idx(value, i);
                     i++;
                     return next;
