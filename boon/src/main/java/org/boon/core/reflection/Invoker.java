@@ -248,7 +248,7 @@ public class Invoker {
                                                  Object object,  List<?> argsList, MethodAccess methodAccess
                                                   ) {
 
-        List<Object> convertedArguments = new ArrayList(argsList);
+        List<Object> convertedArguments = argsList == null? Collections.emptyList() : new ArrayList(argsList);
         Class<?>[] parameterTypes = methodAccess.parameterTypes();
 
         boolean[] flag = new boolean[1];
