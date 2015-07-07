@@ -782,7 +782,7 @@ public class Conversions {
     @SuppressWarnings("unchecked")
     public static <T> T coerceClassic(Class<T> clz, Object value) {
 
-        if (value == null) {
+        if (clz == null || value == null) {
             return null;
         }
 
@@ -824,7 +824,7 @@ public class Conversions {
             return toPrimitiveArrayIfPossible(clz, value);
         } else if (Typ.isCollection(clz)) {
             return toCollection(clz, value);
-        } else if (clz != null && clz.getPackage() != null && !clz.getPackage().getName().startsWith("java")
+        } else if (clz.getPackage() != null && !clz.getPackage().getName().startsWith("java")
                 && Typ.isMap(value.getClass()) && Typ.doesMapHaveKeyTypeString(value)) {
             return (T) MapObjectConversion.fromMap((Map<String, Object>) value);
         } else if (clz.isEnum()) {
