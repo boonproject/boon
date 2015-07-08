@@ -338,20 +338,14 @@ public abstract class BaseField implements FieldAccess {
 
         bits.set(PRIMITIVE, type.isPrimitive ());
 
-        if ( field != null ) {
-            Object obj = field.getGenericType ();
+        Object genericType = field.getGenericType ();
 
-            if ( obj instanceof ParameterizedType ) {
+        if ( genericType instanceof ParameterizedType ) {
 
-                parameterizedType = ( ParameterizedType ) obj;
-            } else {
-                parameterizedType = null;
-            }
-
+            parameterizedType = ( ParameterizedType ) genericType;
         } else {
             parameterizedType = null;
         }
-
 
         if (name.startsWith ( "$" )) {
             this.typeEnum = TypeType.SYSTEM;
