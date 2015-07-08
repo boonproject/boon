@@ -345,7 +345,7 @@ public class StandardFunctions {
 
             final Sort sort = Sort.sortByDesc(property);
             for (int index=2; index< args.length; index++) {
-                sort.sortByDesc(args[index].toString());
+                sort.then(Sort.sortByDesc(args[index].toString()));
             }
             sort.sort(list);
             return list;
