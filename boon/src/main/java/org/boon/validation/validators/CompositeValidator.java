@@ -68,7 +68,7 @@ public class CompositeValidator implements FieldValidator {
 
 
         if ( stopOnRuleValidator != null ) {
-            validatorList.remove( stopOnRule );
+            validatorList.remove( stopOnRuleValidator );
             String ruleName = stopOnRuleValidator.getRuleName();
             if ( "first".equals( ruleName ) || ruleName == null ) {
                 stopOnFirstRule = true;
@@ -84,7 +84,7 @@ public class CompositeValidator implements FieldValidator {
     public ValidatorMessageHolder validate( Object object, String fieldLabel ) {
 
         ValidatorMessages messages = new ValidatorMessages(); //holds error messages.
-        
+
         /* Validate with the requiredValidator if it is present. */
         ValidatorMessage requiredMessage = validateWithRequriedIfPresent( object, fieldLabel, messages );
 
