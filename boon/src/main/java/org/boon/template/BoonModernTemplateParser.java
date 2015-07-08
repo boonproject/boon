@@ -53,10 +53,6 @@ public class BoonModernTemplateParser implements TemplateParser{
 
 
 
-    public void TemplateParser() {
-
-    }
-
     public void parse(String string) {
 
         this.charArray = FastStringUtils.toCharArray(string);
