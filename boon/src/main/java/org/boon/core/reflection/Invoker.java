@@ -917,10 +917,11 @@ public class Invoker {
                     switch (itemType) {
                         case LIST:
                             convertedArgumentList.set(index, fromList(respectIgnore, view, fieldsAccessor, (List<Object>) item, parameterClass, ignoreSet));
+                            return true;
                         case MAP:
                         case VALUE_MAP:
                             convertedArgumentList.set(index, fromMap(respectIgnore, view, fieldsAccessor, (Map<String, Object>) item, parameterClass, ignoreSet));
-
+                            return true;
                         case NUMBER:
                         case BOOLEAN:
                         case INT:
