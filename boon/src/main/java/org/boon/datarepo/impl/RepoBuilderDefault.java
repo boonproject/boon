@@ -704,9 +704,10 @@ public class RepoBuilderDefault implements RepoBuilder {
             Map<String, FieldAccess> fieldsComponentType
                     = BeanUtils.getFieldsFromObject( cls );
 
-            for ( String sKey : fieldsComponentType.keySet() ) {
+            for ( Map.Entry<String, FieldAccess> entry : fieldsComponentType.entrySet() ) {
+                String sKey = entry.getKey();
                 if ( !fields.containsKey( sKey ) ) {
-                    fields.put( sKey, fieldsComponentType.get( sKey ) );
+                    fields.put( sKey, entry.getValue() );
                 }
             }
         }
@@ -883,8 +884,9 @@ public class RepoBuilderDefault implements RepoBuilder {
             ( ( SearchableCollection ) query ).addSearchIndex( "_type", index );
         }
 
-        for ( String prop : nestedIndexes.keySet() ) {
-            NestedKeySearchIndex index = new NestedKeySearchIndex( this.nestedIndexes.get( prop ) );
+        for ( Map.Entry<String, String[]> entry : nestedIndexes.entrySet() ) {
+            String prop = entry.getKey();
+            NestedKeySearchIndex index = new NestedKeySearchIndex( entry.getValue() );
             configIndex( prop, index );
         }
         for ( String prop : searchIndexes ) {
