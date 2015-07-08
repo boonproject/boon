@@ -105,45 +105,11 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
                     public int compare(Number o1, Number o2) {
 
                         if (o1 instanceof Long) {
-                            long long1 = o1.longValue();
-                            long long2 = o2.longValue();
-                            if (long1 > long2) {
-                                return 1;
-                            } else if (long1 < long2) {
-                                return -1;
-                            } else {
-                                return 0;
-                            }
-                        } else if (o1 instanceof Double) {
-                            double long1 = o1.doubleValue();
-                            double long2 = o2.doubleValue();
-                            if (long1 > long2) {
-                                return 1;
-                            } else if (long1 < long2) {
-                                return -1;
-                            } else {
-                                return 0;
-                            }
-                        } else if (o1 instanceof BigDecimal) {
-                            double long1 = o1.doubleValue();
-                            double long2 = o2.doubleValue();
-                            if (long1 > long2) {
-                                return 1;
-                            } else if (long1 < long2) {
-                                return -1;
-                            } else {
-                                return 0;
-                            }
+                            return Long.compare(o1.longValue(), o2.longValue());
+                        } else if (o1 instanceof Integer) {
+                            return Integer.compare(o1.intValue(), o2.intValue());
                         } else {
-                            double long1 = o1.doubleValue();
-                            double long2 = o2.doubleValue();
-                            if (long1 > long2) {
-                                return 1;
-                            }else if (long1 < long2) {
-                                return -1;
-                            } else {
-                                return 0;
-                            }
+                            return Double.compare(o1.doubleValue(), o2.doubleValue());
                         }
 
                     }
