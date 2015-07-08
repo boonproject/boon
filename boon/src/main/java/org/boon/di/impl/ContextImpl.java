@@ -417,8 +417,6 @@ public class ContextImpl implements Context, Module {
             final Supplier<T> s = supplier;
 
 
-            final Context resolver = (Context) this;
-
             return new Supplier<T>() {
                 @Override
                 public T get() {
