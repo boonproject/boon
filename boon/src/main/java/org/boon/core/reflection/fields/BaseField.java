@@ -532,11 +532,11 @@ public abstract class BaseField implements FieldAccess {
                     } else if ( type.isInstance( object)) {
                         this.setObject ( obj, object );
                         return;
-                    }  else if (object != null) {
-                                die(sputs("Unable to set value into field after conversion was called",
-                                    this, "converted value", object, "original value", value, "field", this,
-                                    "converted object type", object.getClass()
-                                        ));
+                    } else {
+                        die(sputs("Unable to set value into field after conversion was called",
+                            this, "converted value", object, "original value", value, "field", this,
+                            "converted object type", object.getClass()
+                                ));
 
 
                     }
