@@ -591,7 +591,7 @@ public class MapperComplex implements Mapper {
 
 
                     if (item instanceof Enum) {
-                       return true;
+                        return true;
                     }
 
                     if (item instanceof CharSequence) {
@@ -759,8 +759,8 @@ public class MapperComplex implements Mapper {
 
 
                 case ARRAY:
-                   item = Conversions.toList(item);
-                   return true;
+                    item = Conversions.toList(item);
+                    return true;
 
                 case SET:
                 case COLLECTION:
@@ -944,7 +944,7 @@ public class MapperComplex implements Mapper {
      */
     @SuppressWarnings("unchecked")
     private  void handleCollectionOfValues(
-         Object newInstance,
+            Object newInstance,
             FieldAccess field, Collection<Value> acollectionOfValues ) {
 
         Collection collectionOfValues = acollectionOfValues;
@@ -1009,13 +1009,14 @@ public class MapperComplex implements Mapper {
             case ARRAY_LONG:
             case ARRAY_STRING:
             case ARRAY_OBJECT:
+
                 TypeType componentType =  field.componentType();
                 int index = 0;
 
                 switch (componentType) {
                     case INT:
                         int [] iarray = new int[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             iarray[index] = value.intValue();
                             index++;
 
@@ -1024,7 +1025,7 @@ public class MapperComplex implements Mapper {
                         return;
                     case SHORT:
                         short [] sarray = new short[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             sarray[index] = value.shortValue();
                             index++;
 
@@ -1033,7 +1034,7 @@ public class MapperComplex implements Mapper {
                         return;
                     case DOUBLE:
                         double [] darray = new double[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             darray[index] = value.doubleValue();
                             index++;
 
@@ -1042,7 +1043,7 @@ public class MapperComplex implements Mapper {
                         return;
                     case FLOAT:
                         float [] farray = new float[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             farray[index] = value.floatValue();
                             index++;
 
@@ -1052,7 +1053,7 @@ public class MapperComplex implements Mapper {
 
                     case LONG:
                         long [] larray = new long[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             larray[index] = value.longValue();
                             index++;
 
@@ -1063,7 +1064,7 @@ public class MapperComplex implements Mapper {
 
                     case BYTE:
                         byte [] barray = new byte[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             barray[index] = value.byteValue();
                             index++;
 
@@ -1074,7 +1075,7 @@ public class MapperComplex implements Mapper {
 
                     case CHAR:
                         char [] chars = new char[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             chars[index] = value.charValue();
                             index++;
                         }
@@ -1084,7 +1085,7 @@ public class MapperComplex implements Mapper {
                     case STRING:
                         CharBuf buffer = CharBuf.create(100);
                         String [] strings = new String[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             strings[index] = value.stringValue(buffer);
                             index++;
                         }
@@ -1268,15 +1269,15 @@ public class MapperComplex implements Mapper {
      * @return new object from value map
      */
     private  <T> void fromMapHandleNonValueCase( T newInstance, FieldAccess field,
-                                                       Object objectValue ) {
+                                                 Object objectValue ) {
         try {
             if ( objectValue instanceof Map ) {
                 Class<?> clazz = field.type();
                 if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
                     objectValue = fromValueMap(  ( Map<String, Value> ) objectValue, field.type() );
                 } else {
-                     String className = (( Map<String, Value> ) objectValue)
-                             .get("class").toString();
+                    String className = (( Map<String, Value> ) objectValue)
+                            .get("class").toString();
                     Class<?> cls = Reflection.loadClass( className );
 
                     objectValue = fromValueMap(   ( Map<String, Value> ) objectValue, cls );
@@ -1308,7 +1309,7 @@ public class MapperComplex implements Mapper {
      * @return new object from value map
      */
     private  <T> void fromValueMapHandleValueCase(
-             T newInstance, FieldAccess field, Value value  ) {
+            T newInstance, FieldAccess field, Value value  ) {
 
 
         Object objValue =
@@ -1725,7 +1726,6 @@ public class MapperComplex implements Mapper {
                     map.put(fieldName, toMap(value));
                     break;
 
-
                 case INTERFACE:
                 case ABSTRACT:
                     final Map<String, Object> abstractMap = toMap(value);
@@ -1811,7 +1811,6 @@ public class MapperComplex implements Mapper {
         switch (instanceType) {
             case NULL:
                 return Lists.list((Object)null);
-
 
             case ARRAY:
             case ARRAY_INT:

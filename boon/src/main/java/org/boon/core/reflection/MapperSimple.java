@@ -643,7 +643,6 @@ public class MapperSimple implements Mapper {
                     break;
 
 
-
                 case ARRAY:
                 case ARRAY_INT:
                 case ARRAY_BYTE:
@@ -907,7 +906,7 @@ public class MapperSimple implements Mapper {
                 switch (componentType) {
                     case INT:
                         int [] iarray = new int[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             iarray[index] = value.intValue();
                             index++;
 
@@ -916,7 +915,7 @@ public class MapperSimple implements Mapper {
                         return;
                     case SHORT:
                         short [] sarray = new short[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             sarray[index] = value.shortValue();
                             index++;
 
@@ -925,7 +924,7 @@ public class MapperSimple implements Mapper {
                         return;
                     case DOUBLE:
                         double [] darray = new double[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             darray[index] = value.doubleValue();
                             index++;
 
@@ -934,7 +933,7 @@ public class MapperSimple implements Mapper {
                         return;
                     case FLOAT:
                         float [] farray = new float[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             farray[index] = value.floatValue();
                             index++;
 
@@ -944,7 +943,7 @@ public class MapperSimple implements Mapper {
 
                     case LONG:
                         long [] larray = new long[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             larray[index] = value.longValue();
                             index++;
 
@@ -955,7 +954,7 @@ public class MapperSimple implements Mapper {
 
                     case BYTE:
                         byte [] barray = new byte[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             barray[index] = value.byteValue();
                             index++;
 
@@ -966,7 +965,7 @@ public class MapperSimple implements Mapper {
 
                     case CHAR:
                         char [] chars = new char[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             chars[index] = value.charValue();
                             index++;
                         }
@@ -976,7 +975,7 @@ public class MapperSimple implements Mapper {
                     case STRING:
                         CharBuf buffer = CharBuf.create(100);
                         String [] strings = new String[collectionOfValues.size()];
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             strings[index] = value.stringValue(buffer);
                             index++;
                         }
