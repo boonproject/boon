@@ -347,21 +347,24 @@ public class Sort {
     }
 
     public int doHashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (nullsFirst ? 1 : 0);
-        result = 31 * result + (sorts != null ? sorts.hashCode() : 0);
-        result = 31 * result + (toString != null ? toString.hashCode() : 0);
-        result = 31 * result + hashCode;
-        result = 31 * result + (comparators != null ? comparators.hashCode() : 0);
-        result = 31 * result + (comparator != null ? comparator.hashCode() : 0);
-        return result;
+        if (hashCode == -1) {
+            int result = name != null ? name.hashCode() : 0;
+            result = 31 * result + (type != null ? type.hashCode() : 0);
+            result = 31 * result + (nullsFirst ? 1 : 0);
+            result = 31 * result + (sorts != null ? sorts.hashCode() : 0);
+            result = 31 * result + (toString != null ? toString.hashCode() : 0);
+            result = 31 * result + hashCode;
+            result = 31 * result + (comparators != null ? comparators.hashCode() : 0);
+            hashCode = 31 * result + (comparator != null ? comparator.hashCode() : 0);
+        }
+        return hashCode;
     }
 
 
     @Override
     public String toString() {
-        return "Sort{" +
+        if (toString == null) {
+            toString = "Sort{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
                 ", nullsFirst=" + nullsFirst +
@@ -371,5 +374,7 @@ public class Sort {
                 ", comparators=" + comparators +
                 ", comparator=" + comparator +
                 '}';
+        }
+        return toString;
     }
 }
