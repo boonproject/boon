@@ -566,7 +566,7 @@ public class ObjectEditorDefault<KEY, ITEM> implements ObjectEditorComposer<KEY,
         if (fields != null) {
             this.fields = fields;
         } else {
-            fields = Collections.EMPTY_MAP;
+            this.fields = Collections.EMPTY_MAP;
         }
     }
 
