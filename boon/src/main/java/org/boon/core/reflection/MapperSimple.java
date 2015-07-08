@@ -211,14 +211,11 @@ public class MapperSimple implements Mapper {
 
 
         boolean[] flag = new boolean[1];
-        List<Object> convertedArguments = null;
-
-
+        /* List to hold items that we coerce into parameter types. */
+        List<Object> convertedArguments = new ArrayList<>( argList );
         try {
 
 
-        /* List to hold items that we coerce into parameter types. */
-            convertedArguments  = new ArrayList<>( argList );
 
             constructorToMatch = lookupConstructorMeta( size,
                     convertedArguments, classMeta, constructorToMatch, flag, false);
