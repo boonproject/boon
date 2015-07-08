@@ -4,7 +4,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *  		http://www.apache.org/licenses/LICENSE-2.0
+ *          http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -99,14 +99,14 @@ public class LongRangeValidator extends AbstractRangeValidator {
         }
         /* Initialize based on type for all Integer value
          * so that LongRangeValidator can be used
-    	 * for int, short, byte, and long. */
+         * for int, short, byte, and long. */
         if ( !isInitialized() ) {
             if ( type.equals( Integer.class ) ) {
-                init( new Integer( min.intValue() ), new Integer( max.intValue() ) );
+                init( Integer.valueOf( min.intValue() ), Integer.valueOf( max.intValue() ) );
             } else if ( type.equals( Byte.class ) ) {
-                init( new Byte( min.byteValue() ), new Byte( max.byteValue() ) );
+                init( Byte.valueOf( min.byteValue() ), Byte.valueOf( max.byteValue() ) );
             } else if ( type.equals( Short.class ) ) {
-                init( new Short( min.byteValue() ), new Short( max.byteValue() ) );
+                init( Short.valueOf( min.shortValue() ), Short.valueOf( max.shortValue() ) );
             } else {
                 init( min, max );
             }
@@ -122,14 +122,14 @@ public class LongRangeValidator extends AbstractRangeValidator {
     private void dynamicallyInitIfNeeded( Object value ) {
         /* Check to see if this class was already initialized,
          * if not, initialize it based on the type of the value.
-		 */
+         */
         if ( !isInitialized() ) {
             if ( value instanceof Integer ) {
-                init( new Integer( min.intValue() ), new Integer( max.intValue() ) );
+                init( Integer.valueOf( min.intValue() ), Integer.valueOf( max.intValue() ) );
             } else if ( value instanceof Byte ) {
-                init( new Byte( min.byteValue() ), new Byte( max.byteValue() ) );
+                init( Byte.valueOf( min.byteValue() ), Byte.valueOf( max.byteValue() ) );
             } else if ( value instanceof Short ) {
-                init( new Short( min.shortValue() ), new Short( max.shortValue() ) );
+                init( Short.valueOf( min.shortValue() ), Short.valueOf( max.shortValue() ) );
             } else {
                 init( min, max );
             }
