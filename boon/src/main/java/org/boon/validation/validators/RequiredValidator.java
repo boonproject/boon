@@ -61,7 +61,7 @@ public class RequiredValidator extends BaseValidator {
 
         if ( object instanceof String ) {
             String string = ( String ) object;
-            boolean valid = string != null && !string.trim().equals( "" );
+            boolean valid = !string.trim().equals( "" );
             if ( !valid ) {
                 populateMessage( message, fieldLabel );
             }
