@@ -983,7 +983,7 @@ public class MapperComplex implements Mapper {
                 Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfValues.size() );
 
 
-                for ( Value value : ( List<Value> ) collectionOfValues ) {
+                for ( Value value : acollectionOfValues ) {
 
                     if ( value.isContainer() ) {
                         Object oValue = value.toValue();
@@ -1096,7 +1096,7 @@ public class MapperComplex implements Mapper {
                         Object array = Array.newInstance(componentClass, collectionOfValues.size());
                         Object o;
 
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             if (value instanceof ValueContainer) {
                                 o = value.toValue();
                                 if (o instanceof List) {

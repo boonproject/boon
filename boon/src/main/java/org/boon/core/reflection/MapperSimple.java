@@ -846,7 +846,7 @@ public class MapperSimple implements Mapper {
 
         if(field.typeEnum() == INSTANCE) {
 
-            field.setObject(newInstance, fromList((List) acollectionOfValues, field.type()));
+            field.setObject(newInstance, fromList(acollectionOfValues, field.type()));
             return;
 
         }
@@ -874,7 +874,7 @@ public class MapperSimple implements Mapper {
                 Collection<Object> newCollection = Conversions.createCollection( field.type(), collectionOfValues.size() );
 
 
-                for ( Value value : ( List<Value> ) collectionOfValues ) {
+                for ( Value value : acollectionOfValues ) {
 
                     if ( value.isContainer() ) {
                         Object oValue = value.toValue();
@@ -988,7 +988,7 @@ public class MapperSimple implements Mapper {
                         Object array = Array.newInstance(componentClass, collectionOfValues.size());
                         Object o;
 
-                        for ( Value value : ( List<Value> ) collectionOfValues ) {
+                        for ( Value value : acollectionOfValues ) {
                             if (value instanceof ValueContainer) {
                                 o = value.toValue();
                                 if (o instanceof List) {
