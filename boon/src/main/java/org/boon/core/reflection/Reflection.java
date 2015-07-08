@@ -708,7 +708,7 @@ public class Reflection {
                 propertyName = name.substring( 2 );
             } else if ( name.startsWith( "get" ) ) {
                 propertyName = name.substring( 3 );
-            }
+            } else return;
 
             propertyName = lower( propertyName.substring( 0, 1 ) ) + propertyName.substring( 1 );
 
