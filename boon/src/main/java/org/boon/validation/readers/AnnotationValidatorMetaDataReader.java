@@ -91,7 +91,7 @@ public class AnnotationValidatorMetaDataReader implements ValidatorMetaDataReade
      * reflection.
      * Since this could get hit by multiple threads.
      */
-    private Map<String, List<ValidatorMetaData>> metaDataCache =
+    private transient Map<String, List<ValidatorMetaData>> metaDataCache =
             new ConcurrentHashMap<>();
 
     /**
