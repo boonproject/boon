@@ -104,6 +104,7 @@ public class FilterDefault implements Filter, FilterComposer {
 
         if (expressions == null || expressions.length == 0) {
             results.addResults ( searchableCollection.all() );
+            return results;
         }
 
         /* I am sure this looked easy to read when I wrote it.
