@@ -217,6 +217,7 @@ public class BoonTemplate implements Template {
             case "import":
             case "template":
                 handleInclude(params, commandTokens);
+                break;
 
             case "list":
             case "for":
