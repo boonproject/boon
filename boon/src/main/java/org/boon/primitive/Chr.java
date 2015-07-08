@@ -902,8 +902,8 @@ public class Chr {
             char [] bc1 = null;
             try {
                 bc1 = sliceOf(bc, indexOfDiff - 20, (bc.length - indexOfDiff) > 40 ?  indexOfDiff + 10: bc.length+1 );
-            } catch (Exception ex) {
-                ac1 = bc;
+            } catch (RuntimeException ex) {
+                bc1 = bc;
             }
 
 
