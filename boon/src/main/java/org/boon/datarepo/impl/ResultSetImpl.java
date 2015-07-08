@@ -440,7 +440,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
                 break;
             }
         }
-        return values[ 1 ];
+        return values[ 0 ];
     }
 
     @Override
@@ -459,7 +459,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
                 break;
             }
         }
-        return values[ 1 ];
+        return values[ 0 ];
     }
 
     @Override
@@ -478,7 +478,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
                 break;
             }
         }
-        return values[ 1 ];
+        return values[ 0 ];
     }
 
     @Override
@@ -497,7 +497,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
                 break;
             }
         }
-        return values[ 1 ];
+        return values[ 0 ];
     }
 
     @Override
@@ -516,7 +516,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
                 break;
             }
         }
-        return values[ 1 ];
+        return values[ 0 ];
     }
 
     @Override
@@ -535,7 +535,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
                 break;
             }
         }
-        return values[ 1 ];
+        return values[ 0 ];
     }
 
     @Override
@@ -554,7 +554,7 @@ public class ResultSetImpl<T> implements ResultSetInternal<T> {
                 break;
             }
         }
-        return ( OBJ ) values[ 1 ];
+        return ( OBJ ) values[ 0 ];
     }
 
     @Override
