@@ -505,8 +505,8 @@ public class Chr {
 
     private static char[] getCharsFromStringBuilder( StringBuilder sbuf ) {
         int length = sbuf.length();
-        char[] array2 = new char[ sbuf.length() ];
-        sbuf.getChars( 0, sbuf.length(), array2, 0 );
+        char[] array2 = new char[ length ];
+        sbuf.getChars( 0, length, array2, 0 );
         return array2;
     }
 
