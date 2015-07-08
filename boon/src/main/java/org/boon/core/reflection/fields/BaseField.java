@@ -367,9 +367,9 @@ public abstract class BaseField implements FieldAccess {
 
             if (actualTypeArguments.length>0) {
 
-                Object obj = parameterizedType.getActualTypeArguments()[0];
-                if (obj instanceof Class) {
-                    componentClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                Object firstArgType = parameterizedType.getActualTypeArguments()[0];
+                if (firstArgType instanceof Class) {
+                    componentClass = (Class<?>) firstArgType;
                 } else {
                     componentClass = Object.class;
                 }
