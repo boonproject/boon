@@ -136,7 +136,7 @@ public class Arry {
     public static Object fastIndex( final Object array, int index ) {
         final int i = calculateIndex( array, index );
 
-        return Array.get(array, index);
+        return Array.get(array, i);
     }
 
 
