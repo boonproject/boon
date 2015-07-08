@@ -118,7 +118,7 @@ public class UniqueSearchIndex<KEY, ITEM> extends UniqueLookupIndex<KEY, ITEM> i
 
         if ( keyFrag instanceof String ) {
             String start = ( String ) keyFrag;
-            if ( start.length() == 0 || start == null ) {
+            if ( start == null || start.isEmpty() ) {
                 return Collections.EMPTY_LIST;
             }
 

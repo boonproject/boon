@@ -163,7 +163,7 @@ public class SearchIndexDefault<KEY, ITEM> extends LookupIndexDefault<KEY, ITEM>
 
         if ( keyFrag instanceof String ) {
             String start = ( String ) keyFrag;
-            if ( start.length() == 0 || start == null ) {
+            if ( start == null || start.isEmpty() ) {
                 return Collections.EMPTY_LIST;
             }
 
