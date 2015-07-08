@@ -56,6 +56,8 @@ public class JsonCreator {
         } else if (resource.endsWith( "/" )) {
              config = new LinkedHashMap<>(  );
              handleDir( config, laxParser, resource );
+        } else {
+            throw new IllegalArgumentException("Unable to instantiate Creator from: " + resource);
         }
         return Creator.create( type, config );
     }
