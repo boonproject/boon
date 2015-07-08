@@ -103,7 +103,7 @@ public abstract class Group extends Criteria {
     @Override
     public int hashCode() {
         int result = expressions == null ? 0 : expressions.hashCode();
-        if (grouping) result++;
+        if (grouping != null) result += grouping.hashCode();
         return result;
     }
 
