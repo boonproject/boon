@@ -226,9 +226,10 @@ public class Collections {
             Map<String, FieldAccess> fieldsSubType
                     = BeanUtils.getFieldsFromObject( cls );
 
-            for ( String sKey : fieldsSubType.keySet() ) {
+            for ( Map.Entry<String, FieldAccess> entry : fieldsSubType.entrySet() ) {
+                String sKey = entry.getKey();
                 if ( !fields.containsKey( sKey ) ) {
-                    fields.put( sKey, fieldsSubType.get( sKey ) );
+                    fields.put( sKey, entry.getValue() );
                 }
             }
 
