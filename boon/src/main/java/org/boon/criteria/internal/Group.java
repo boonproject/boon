@@ -100,7 +100,12 @@ public abstract class Group extends Criteria {
         return true;
     }
 
-
+    @Override
+    public int hashCode() {
+        int result = expressions == null ? 0 : expressions.hashCode();
+        if (grouping) result++;
+        return result;
+    }
 
 
     public static class And extends Group {
