@@ -1461,7 +1461,7 @@ public class Int {
     }
 
     private static double mean( Collection<?> inputList, String propertyPath ) {
-        double mean = sum(inputList, propertyPath)/inputList.size();
+        double mean = sum(inputList, propertyPath)/(double) inputList.size();
         return Math.round(mean);
     }
 
