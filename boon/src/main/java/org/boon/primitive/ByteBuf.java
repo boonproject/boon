@@ -372,7 +372,7 @@ public class ByteBuf implements Output {
 
 
                 default:
-                    if ( ch > 127 ) {
+                    if ( (0xff & ch) > 127 ) {
                         this.addByte( '\\' );
                         this.addByte( 'u' );
                         this.addByte( '0' );
