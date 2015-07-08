@@ -653,6 +653,7 @@ public class MapperSimple implements Mapper {
                 case ARRAY_STRING:
                 case ARRAY_OBJECT:
                     item = Conversions.toList(item);
+                    return true;
                 case SET:
                 case COLLECTION:
                 case LIST:
