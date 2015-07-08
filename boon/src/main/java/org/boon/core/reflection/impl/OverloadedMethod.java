@@ -264,7 +264,7 @@ public class OverloadedMethod implements MethodAccess {
             case STRING:
                 score += 400;
                 try {
-                    arg = Integer.valueOf(arg.toString());
+                    Long.parseLong(arg.toString());
 
                 }catch (Exception ex) {
                     score = Integer.MIN_VALUE;
@@ -330,7 +330,7 @@ public class OverloadedMethod implements MethodAccess {
             case STRING:
                 score += 400;
                 try {
-                    arg = Integer.valueOf(arg.toString());
+                    Integer.parseInt(arg.toString());
 
                 }catch (Exception ex) {
                     score = Integer.MIN_VALUE;
@@ -380,7 +380,7 @@ public class OverloadedMethod implements MethodAccess {
             case STRING:
                 score += 400;
                 try {
-                    arg = Float.valueOf(arg.toString());
+                    Float.parseFloat(arg.toString());
 
                 }catch (Exception ex) {
                     score = Integer.MIN_VALUE;
@@ -430,7 +430,7 @@ public class OverloadedMethod implements MethodAccess {
             case STRING:
                 score += 400;
                 try {
-                    arg = Double.valueOf(arg.toString());
+                    Double.parseDouble(arg.toString());
                 }catch (Exception ex) {
                     score = Integer.MIN_VALUE;
                 }
