@@ -166,27 +166,29 @@ public class DomainValidator extends BaseValidator {
                 }
             }
 
-            // Invoke the validation method and watch for any exceptions
-            try {
-                if ( noArgs ) {
-                    m.invoke( validator );
-                } else if ( sameLevel ) {
-                    m.invoke( validator, new Object[]{ fieldValue } );
-                } else {
-                    m.invoke( validator, new Object[]{ child, fieldValue } );
+            if (!error) {
+                // Invoke the validation method and watch for any exceptions
+                try {
+                    if ( noArgs ) {
+                        m.invoke( validator );
+                    } else if ( sameLevel ) {
+                        m.invoke( validator, new Object[]{ fieldValue } );
+                    } else {
+                        m.invoke( validator, new Object[]{ child, fieldValue } );
+                    }
+                } catch ( IllegalAccessException iae ) {
+                    detailMessage = iae.getCause().getMessage();
+                    summaryMessage = iae.getCause().getMessage();
+                    error = true;
+                } catch ( InvocationTargetException ite ) {
+                    detailMessage = ite.getCause().getMessage();
+                    summaryMessage = ite.getCause().getMessage();
+                    error = true;
+                } catch ( Exception e ) {
+                    detailMessage = e.getCause().getMessage();
+                    summaryMessage = e.getCause().getMessage();
+                    error = true;
                 }
-            } catch ( IllegalAccessException iae ) {
-                detailMessage = iae.getCause().getMessage();
-                summaryMessage = iae.getCause().getMessage();
-                error = true;
-            } catch ( InvocationTargetException ite ) {
-                detailMessage = ite.getCause().getMessage();
-                summaryMessage = ite.getCause().getMessage();
-                error = true;
-            } catch ( Exception e ) {
-                detailMessage = e.getCause().getMessage();
-                summaryMessage = e.getCause().getMessage();
-                error = true;
             }
         }
 
