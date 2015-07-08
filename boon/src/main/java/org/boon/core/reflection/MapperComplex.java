@@ -556,11 +556,6 @@ public class MapperComplex implements Mapper {
                 case FLOAT:
                 case DOUBLE:
                 case LONG:
-                    if (item == null) {
-                        return false;
-                    }
-
-
                 case INTEGER_WRAPPER:
                 case BYTE_WRAPPER:
                 case SHORT_WRAPPER:
