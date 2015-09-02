@@ -332,7 +332,7 @@ public class ObjectFilter {
                     return false;
                 }
 
-                return fieldValue.toString().startsWith(value.toString());
+                return fieldValue.toString().endsWith(value.toString());
             }
         };
     }
