@@ -1549,6 +1549,35 @@ public class BeanUtils {
     }
 
 
+    public static void copyPropertiesFromMap( final Object dest, final Map<String, Object> src ) {
+
+        Set<Map.Entry<String, Object>> props = src.entrySet();
+        for ( Map.Entry<String, Object> entry : props ) {
+
+            if (entry.getValue() instanceof Map) {
+
+
+                Object newDest;
+                if (dest instanceof Map) {
+                    newDest = ((Map) dest).get(entry.getKey());
+                } else {
+                    newDest = BeanUtils.getPropByPath(dest, entry.getKey());
+                }
+
+                if (newDest == null) {
+                    if (dest instanceof Map) {
+                        newDest = new LinkedHashMap<>();
+                        ((Map) dest).put(entry.getKey(), newDest);
+                    }
+                }
+                final Map<String, Object> newSrc = ((Map) entry.getValue());
+                copyPropertiesFromMap(newDest, newSrc);
+            } else {
+                setPropertyValue(dest, entry.getValue(), entry.getKey());
+            }
+        }
+    }
+
     public static void copyProperties( Object object, Map<String, Object> properties ) {
 
         Set<Map.Entry<String, Object>> props = properties.entrySet();
