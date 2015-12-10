@@ -50,7 +50,12 @@ public class CollectionSerializerImpl implements CollectionSerializer, ArraySeri
 
         builder.addChar( '[' );
         for ( Object o : collection ) {
-            serializer.serializeObject ( o, builder );
+            if (o == null) {
+                builder.addNull();
+                builder.addChar ( ',' );
+                continue;
+            }
+            serializer.serializeObject(o, builder);
             builder.addChar ( ',' );
         }
         builder.removeLastChar ();
@@ -68,7 +73,13 @@ public class CollectionSerializerImpl implements CollectionSerializer, ArraySeri
         builder.addChar( '[' );
         final int length = Array.getLength ( array );
         for ( int index = 0; index < length; index++ ) {
-            serializer.serializeObject ( Array.get ( array, index ), builder );
+            final Object o = Array.get(array, index);
+            if (o == null) {
+                builder.addNull();
+                builder.addChar ( ',' );
+                continue;
+            }
+            serializer.serializeObject ( o, builder );
             builder.addChar ( ',' );
         }
         builder.removeLastChar ();
