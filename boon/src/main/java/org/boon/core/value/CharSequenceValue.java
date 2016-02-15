@@ -104,7 +104,7 @@ public class CharSequenceValue implements Value, CharSequence {
 
         switch ( type ) {
             case STRING:
-                return Conversions.toEnum ( cls, stringValue () );
+                return Conversions.toEnum ( cls, new String( buffer, startIndex, endIndex - startIndex) );
             case INT:
             case INTEGER_WRAPPER:
                 return Conversions.toEnum( cls, intValue() );

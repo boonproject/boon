@@ -848,32 +848,50 @@ public class Conversions {
         return toEnum(cls, value, null);
     }
 
+    public static Map<String, Enum> enumMap = new ConcurrentHashMap<>();
+
     public static <T extends Enum> T toEnum(Class<T> cls, String value, Enum defaultEnum) {
 
-        T[] enumConstants = cls.getEnumConstants();
-        for (T e : enumConstants) {
-            if (e.name().equals(value)) {
-                return e;
+        Enum enumVal = enumMap.get(value);
+
+        if (enumVal != null) {
+            return (T) enumVal;
+        } else {
+
+            T[] enumConstants = cls.getEnumConstants();
+            for (T e : enumConstants) {
+                if (e.name().equals(value)) {
+                    enumVal = e;
+                    break;
+                }
             }
+
+
+            value = value.toUpperCase().replace('-', '_');
+            for (T e : enumConstants) {
+                if (e.name().equals(value)) {
+                    enumVal = e;
+                    break;
+                }
+            }
+
+            value = Str.underBarCase(value);
+            for (T e : enumConstants) {
+                if (e.name().equals(value)) {
+                    enumVal = e;
+                    break;
+                }
+            }
+
+
+            if (enumVal != null) {
+                enumMap.put(value, enumVal);
+            } else {
+                enumVal = defaultEnum;
+            }
+            return (T) defaultEnum;
         }
 
-
-        value = value.toUpperCase().replace('-', '_');
-        for (T e : enumConstants) {
-            if (e.name().equals(value)) {
-                return e;
-            }
-        }
-
-        value = Str.underBarCase(value);
-        for (T e : enumConstants) {
-            if (e.name().equals(value)) {
-                return e;
-            }
-        }
-
-
-        return (T) defaultEnum;
     }
 
     public static <T extends Enum> T toEnum(Class<T> cls, int value) {
