@@ -49,28 +49,6 @@ public enum FieldAccessMode {
     }
 
     public static FieldsAccessor create(FieldAccessMode fieldAccessType, boolean useAlias, boolean caseInsensitive) {
-        FieldsAccessor fieldsAccessor = null;
-
-        switch ( fieldAccessType )  {
-            case FIELD:
-                fieldsAccessor = new FieldFieldsAccessor( useAlias, caseInsensitive);
-                break;
-            case PROPERTY:
-                fieldsAccessor = new PropertyFieldAccessor ( useAlias, caseInsensitive);
-                break;
-            case FIELD_THEN_PROPERTY:
-                fieldsAccessor = new FieldsAccessorFieldThenProp( useAlias, caseInsensitive);
-                break;
-            case PROPERTY_THEN_FIELD:
-                fieldsAccessor = new FieldsAccessorsPropertyThenField( useAlias, caseInsensitive);
-                break;
-            default:
-                fieldsAccessor = new FieldFieldsAccessor( useAlias, caseInsensitive);
-
-        }
-
-        return fieldsAccessor;
-
-
+        return new FieldsAccessorImpl(fieldAccessType, useAlias, caseInsensitive);
     }
 }

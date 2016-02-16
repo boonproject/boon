@@ -43,15 +43,15 @@ public class InstanceSerializerImpl implements InstanceSerializer{
 
     @Override
     public final void serializeInstance ( JsonSerializerInternal serializer, Object instance, CharBuf builder ) {
-        final Map<String, FieldAccess> fieldAccessors =   serializer.getFields(instance.getClass ());
-        final Collection<FieldAccess> values = fieldAccessors.values ();
+
+        FieldAccess[] fieldAccessors = serializer.getFields(instance.getClass ());
 
 
 
         builder.addChar( '{' );
 
         int index = 0;
-        for ( FieldAccess fieldAccess : values ) {
+        for ( FieldAccess fieldAccess : fieldAccessors ) {
             if (serializer.serializeField ( instance, fieldAccess, builder ) ) {
                 builder.addChar ( ',' );
                 index++;
@@ -70,17 +70,15 @@ public class InstanceSerializerImpl implements InstanceSerializer{
 
         builder.addString( "{\"class\":" );
         builder.addQuoted ( instance.getClass ().getName () );
-        final Map<String, FieldAccess> fieldAccessors = serializer.getFields ( instance.getClass () );
+        FieldAccess[] fieldAccessors = serializer.getFields(instance.getClass ());
+
 
         int index = 0;
-        Collection<FieldAccess> values = fieldAccessors.values();
-        int length = values.size();
-
-        if ( length > 0 ) {
+        if ( fieldAccessors.length > 0 ) {
             builder.addChar( ',' );
 
 
-            for ( FieldAccess fieldAccess : values ) {
+            for ( FieldAccess fieldAccess : fieldAccessors ) {
                 boolean sent = serializer.serializeField ( instance, fieldAccess, builder );
                 if (sent) {
                     index++;
@@ -103,8 +101,7 @@ public class InstanceSerializerImpl implements InstanceSerializer{
     @Override
     public void serializeInstance(JsonSerializerImpl serializer, Object instance, CharBuf builder, boolean includeTypeInfo) {
 
-        final Map<String, FieldAccess> fieldAccessors =   serializer.getFields(instance.getClass ());
-        final Collection<FieldAccess> values = fieldAccessors.values ();
+        final FieldAccess[] fieldAccessors =   serializer.getFields(instance.getClass ());
 
         if (includeTypeInfo) {
             builder.addString("{\"class\":");
@@ -115,7 +112,7 @@ public class InstanceSerializerImpl implements InstanceSerializer{
             builder.addChar('{');
         }
         int index = 0;
-        for ( FieldAccess fieldAccess : values ) {
+        for ( FieldAccess fieldAccess : fieldAccessors ) {
             if (serializer.serializeField ( instance, fieldAccess, builder ) ) {
                 builder.addChar ( ',' );
                 index++;

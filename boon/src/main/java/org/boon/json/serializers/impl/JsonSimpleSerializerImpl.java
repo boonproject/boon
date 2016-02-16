@@ -59,7 +59,7 @@ import static org.boon.Exceptions.handle;
  * It excludes nulls and empties as well.
  */
 public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
-    private final Map <Class<?>,  Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<>( );
+    private final Map <Class<?>,  FieldAccess[]> fieldMap = new ConcurrentHashMap<>( );
     private final String view;
     private final boolean encodeStrings;
 
@@ -76,7 +76,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
         this.view = null;
         this.encodeStrings = true;
-        serializeAsSupport = true;
+        serializeAsSupport = false;
         builder = CharBuf.create( 4000 );
 
 
@@ -88,7 +88,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         this.view = null;
         this.encodeStrings = encodeStrings;
 
-        serializeAsSupport = true;
+        serializeAsSupport = false;
         builder = CharBuf.create( 4000 );
 
 
@@ -603,7 +603,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                 return;
             }
 
-            final Collection<FieldAccess> fields = getFields(instance.getClass()).values();
+            FieldAccess[] fields = getFields(instance.getClass());
 
 
             builder.addChar( '{' );
@@ -639,17 +639,17 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
     }
 
 
-    public Map<String, FieldAccess> getFields( Class<? extends Object> aClass ) {
-            Map<String, FieldAccess> map = fieldMap.get( aClass );
-            if (map == null) {
-                map = doGetFields ( aClass );
-                fieldMap.put ( aClass, map );
+    public FieldAccess[] getFields( Class<? extends Object> aClass ) {
+        FieldAccess[] fieldAccesses = fieldMap.get(aClass);
+        if (fieldAccesses == null) {
+            fieldAccesses = doGetFields ( aClass );
+                fieldMap.put ( aClass, fieldAccesses );
             }
-            return map;
+            return fieldAccesses;
 
    }
 
-    private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
+    private final FieldAccess[] doGetFields ( Class<? extends Object> aClass ) {
         Map<String, FieldAccess> fields =  Maps.copy ( Reflection.getPropertyFieldAccessMapFieldFirstForSerializer ( aClass ) );
 
         List<FieldAccess> removeFields = new ArrayList<>();
@@ -663,7 +663,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         for (FieldAccess fieldAccess : removeFields) {
             fields.remove(fieldAccess.name());
         }
-        return fields;
+        return fields.values().toArray(new FieldAccess[fields.size()]);
     }
 
 
@@ -785,20 +785,18 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         if (level > 100) {
             die("Detected circular dependency", builder.toString());
         }
-
-        final Map<String, FieldAccess> fieldAccessors = getFields(instance.getClass ());
-        final Collection<FieldAccess> values = fieldAccessors.values ();
+        FieldAccess[] fieldAccessors = getFields(instance.getClass());
 
         builder.addString( "{\"class\":" );
         builder.addQuoted ( instance.getClass ().getName () );
 
         int index = 0;
-        int length = values.size();
+        int length = fieldAccessors.length;
 
         if ( length > 0 ) {
             builder.addChar( ',' );
 
-            for ( FieldAccess fieldAccess : values ) {
+            for ( FieldAccess fieldAccess : fieldAccessors ) {
                 if (serializeField ( instance, fieldAccess, builder ) ) {
                     builder.addChar ( ',' );
                     index++;

@@ -53,7 +53,7 @@ public class JsonSerializerFactory {
     private boolean includeDefault = false;
     private boolean cacheInstances = true;
     private boolean encodeStrings = true;
-    private boolean serializeAsSupport = true;
+    private boolean serializeAsSupport = false;
     private boolean asciiOnly = true;
     private String view;
 
@@ -130,24 +130,9 @@ public class JsonSerializerFactory {
             }
 
 
+            fieldsAccessor = new FieldsAccessorImpl(fieldAccessType, useAnnotations, true);
 
-            switch ( fieldAccessType )  {
-                case FIELD:
-                    fieldsAccessor = new FieldFieldsAccessor( useAnnotations );
-                    break;
-                case PROPERTY:
-                    fieldsAccessor = new PropertyFieldAccessor( useAnnotations );
-                    break;
-                case FIELD_THEN_PROPERTY:
-                    fieldsAccessor = new FieldsAccessorFieldThenProp( useAnnotations );
-                    break;
-                case PROPERTY_THEN_FIELD:
-                    fieldsAccessor = new FieldsAccessorsPropertyThenField( useAnnotations );
-                    break;
-                default:
-                    fieldsAccessor = new FieldFieldsAccessor( useAnnotations );
 
-            }
 
             return new JsonSerializerImpl (
                     objectSerializer,

@@ -55,6 +55,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.boon.Boon.putl;
 import static org.boon.Boon.puts;
 import static org.boon.Boon.sputs;
@@ -64,6 +65,7 @@ import static org.boon.Maps.idx;
 import static org.boon.Maps.map;
 import static org.boon.Str.lines;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class JsonParserAndMapperBaseTest {
 
@@ -256,18 +258,24 @@ public class JsonParserAndMapperBaseTest {
 
         //puts ( serializer.serialize ( foo ).toString () );
 
-        Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( serializer.serialize ( foo ).toString () );
+        String jsonString = serializer.serialize(foo).toString();
+
+        Map <String, Object> map = ( Map<String, Object> ) jsonParserAndMapper.parse ( jsonString );
 
         Map <String, Object> petMap = ( Map<String, Object> ) map.get ( "pet" );
 
         String className = (String)petMap.get("class");
 
-        boolean ok = className.endsWith ( ".Dog" )  || die(className);
+        assertTrue(className.endsWith ( ".Dog" ) );
 
-        AllTypes foo2 = jsonParserAndMapper.parse ( AllTypes.class, serializer.serialize (  foo ).toCharArray () );
+        char[] jsonArray = serializer.serialize(foo).toCharArray();
+
+        AllTypes foo2 = jsonParserAndMapper.parse ( AllTypes.class,  jsonArray);
 
         Dog dog = (Dog)foo2.pet;
-        ok = dog.name.equals ( "Mooney" )  || die( dog.name );
+
+        assertNotNull(dog);
+        assertEquals("Mooney", dog.name);
 
 
     }

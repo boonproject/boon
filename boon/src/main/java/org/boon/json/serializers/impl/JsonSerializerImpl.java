@@ -30,8 +30,9 @@ package org.boon.json.serializers.impl;
 
 import org.boon.Exceptions;
 import org.boon.core.reflection.fields.FieldAccess;
+import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.reflection.fields.FieldsAccessorFieldThenProp;
+import org.boon.core.reflection.fields.FieldsAccessorImpl;
 import org.boon.json.serializers.*;
 import org.boon.primitive.CharBuf;
 
@@ -42,7 +43,6 @@ import java.util.Map;
 import static org.boon.Exceptions.handle;
 
 /**
- * Created by rick on 1/1/14.
  */
 public class JsonSerializerImpl implements JsonSerializerInternal {
 
@@ -72,7 +72,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         arraySerializer = (ArraySerializer) collectionSerializer;
         unknownSerializer = new UnknownSerializerImpl ();
         dateSerializer = new DateSerializerImpl ();
-        fieldsAccessor = new FieldsAccessorFieldThenProp(true);
+        fieldsAccessor = new FieldsAccessorImpl(true, FieldAccessMode.PROPERTY_THEN_FIELD);
 
     }
 
@@ -94,7 +94,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
 
 
         if (fieldsAccessor == null) {
-            this.fieldsAccessor = new FieldsAccessorFieldThenProp (true);
+            this.fieldsAccessor = new FieldsAccessorImpl(true, FieldAccessMode.PROPERTY_THEN_FIELD);
         } else {
             this.fieldsAccessor = fieldsAccessor;
         }
@@ -240,7 +240,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         this.instanceSerializer.serializeSubtypeInstance ( this, obj, builder );
     }
 
-    public final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
+    public final FieldAccess[] getFields ( Class<? extends Object> aClass ) {
         return fieldsAccessor.getFields ( aClass );
     }
 

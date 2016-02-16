@@ -93,7 +93,7 @@ public class MapperSimple implements Mapper {
 
 
         T toObject = Reflection.newInstance( cls );
-        Map<String, FieldAccess> fields = fieldsAccessor.getFields( toObject.getClass() );
+        Map<String, FieldAccess> fields = fieldsAccessor.getFieldsAsMap( toObject.getClass() );
         Set<Map.Entry<String, Object>> mapKeyValuesEntrySet = map.entrySet();
 
 
@@ -1075,7 +1075,7 @@ public class MapperSimple implements Mapper {
         ValueMap map = ( ValueMap ) ( Map ) valueMap;
 
 
-        Map<String, FieldAccess> fields = fieldsAccessor.getFields( cls);
+        Map<String, FieldAccess> fields = fieldsAccessor.getFieldsAsMap( cls);
         Map.Entry<String, Object>[] entries;
 
         FieldAccess field = null;

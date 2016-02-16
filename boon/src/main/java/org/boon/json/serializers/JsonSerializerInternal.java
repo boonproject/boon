@@ -65,7 +65,7 @@ public interface JsonSerializerInternal extends JsonSerializer {
 
     void serializeObject ( Object value, CharBuf builder );
 
-    Map<String, FieldAccess> getFields ( Class<? extends Object> aClass );
+    FieldAccess[] getFields ( Class<? extends Object> aClass );
 
     boolean serializeField ( Object instance, FieldAccess fieldAccess, CharBuf builder );
 

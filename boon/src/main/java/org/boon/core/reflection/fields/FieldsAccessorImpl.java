@@ -28,59 +28,100 @@
 
 package org.boon.core.reflection.fields;
 
+import org.boon.Lists;
+import org.boon.Maps;
 import org.boon.core.reflection.Reflection;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FieldsAccessorsPropertyThenField implements FieldsAccessor {
+public class FieldsAccessorImpl implements FieldsAccessor {
 
-    private final Map <Class<?>, Map<String, FieldAccess>> fieldMap = new ConcurrentHashMap<> ( );
+
+    private final Map <Class<?>, FieldAccess[]> fieldMap = new ConcurrentHashMap<> ( );
+    private final Map <Class<?>, Map<String, FieldAccess>> fieldMapMap = new ConcurrentHashMap<> ( );
+    private final FieldAccessMode fieldAccessMode;
     private final boolean useAlias;
     private final boolean caseInsensitive;
 
-    public FieldsAccessorsPropertyThenField(boolean useAlias) {
-        this(useAlias, false);
+
+    public FieldsAccessorImpl(boolean useAlias, FieldAccessMode fieldAccessMode) {
+        this(fieldAccessMode, useAlias, false);
     }
 
-    public FieldsAccessorsPropertyThenField(boolean useAlias, boolean caseInsensitive) {
+    public FieldsAccessorImpl(FieldAccessMode fieldAccessMode, boolean useAlias, boolean caseInsensitive) {
+        this.fieldAccessMode = fieldAccessMode;
         this.useAlias = useAlias;
         this.caseInsensitive = caseInsensitive;
     }
 
-    public final Map<String, FieldAccess> getFields ( Class<? extends Object> aClass ) {
-        Map<String, FieldAccess> map = fieldMap.get( aClass );
-        if (map == null) {
-            map = doGetFields ( aClass );
-            fieldMap.put ( aClass, map );
-        }
-        return map;
-    }
 
     @Override
     public boolean isCaseInsensitive() {
         return caseInsensitive;
     }
 
+    @Override
+    public Map<String, FieldAccess> getFieldsAsMap(Class<?> aClass) {
 
-    private final Map<String, FieldAccess> doGetFields ( Class<? extends Object> aClass ) {
-        Map<String, FieldAccess> fieldAccessMap = Reflection.getPropertyFieldAccessMapPropertyFirstForSerializer( aClass );
 
-
-        Map<String, FieldAccess> mapOld = fieldAccessMap;
-        fieldAccessMap = new LinkedHashMap<>();
-        for (Map.Entry<String, FieldAccess> entry : mapOld.entrySet()) {
-            if (entry.getValue().isStatic()) {
-                continue;
-            }
-            fieldAccessMap.put(entry.getKey(), entry.getValue());
+        Map<String, FieldAccess> fieldMap = fieldMapMap.get(aClass);
+        if (fieldMap == null) {
+            FieldAccess[] fields = getFields(aClass);
+            fieldMap = new LinkedHashMap<>(fields.length);
+            fieldMapMap.put(aClass, fieldMap);
         }
 
+        return fieldMap;
+    }
+
+    public FieldAccess[] getFields(Class<? extends Object> aClass ) {
+        FieldAccess[] fieldAccesses = fieldMap.get(aClass);
+        if (fieldAccesses == null) {
+            fieldAccesses = doGetFields ( aClass );
+            fieldMap.put ( aClass, fieldAccesses );
+        }
+        return fieldAccesses;
+
+    }
+
+    private final FieldAccess[] doGetFields ( Class<? extends Object> aClass ) {
+        Map<String, FieldAccess> fieldAccessMap =  null;
+
+
+        switch (fieldAccessMode) {
+            case PROPERTY:
+                fieldAccessMap = Maps.copy ( Reflection.getPropertyFieldAccessors ( aClass ) );
+                break;
+            case FIELD:
+                fieldAccessMap = Maps.copy ( Reflection.getAllAccessorFields ( aClass ) );
+                break;
+            case PROPERTY_THEN_FIELD:
+                fieldAccessMap = Maps.copy ( Reflection.getPropertyFieldAccessMapPropertyFirstForSerializer ( aClass ) );
+                break;
+            case FIELD_THEN_PROPERTY:
+                fieldAccessMap = Maps.copy ( Reflection.getPropertyFieldAccessMapFieldFirstForSerializer ( aClass ) );
+                break;
+        }
+
+        List<FieldAccess> removeFields = new ArrayList<>();
+
+        for (FieldAccess field : fieldAccessMap.values()) {
+            if (field.isWriteOnly ())  {
+                removeFields.add(field);
+            }
+        }
+
+        for (FieldAccess fieldAccess : removeFields) {
+            fieldAccessMap.remove(fieldAccess.name());
+        }
+
+
         if (caseInsensitive) {
-            mapOld = fieldAccessMap;
-            fieldAccessMap = new LinkedHashMap<>();
-            for (Map.Entry<String, FieldAccess> entry : mapOld.entrySet()) {
+
+            List<Map.Entry<String, FieldAccess>> entryList = Lists.list(fieldAccessMap.entrySet());
+
+            for (Map.Entry<String, FieldAccess> entry : entryList) {
                 if (entry.getValue().isStatic()) {
                     continue;
                 }
@@ -106,12 +147,14 @@ public class FieldsAccessorsPropertyThenField implements FieldsAccessor {
                 }
                 fieldAccessMap2.put (alias, fa );
             }
-            return fieldAccessMap2;
+            fieldAccessMap = fieldAccessMap2;
         } else {
-            return fieldAccessMap;
+            fieldAccessMap = fieldAccessMap;
         }
 
+        return fieldAccessMap.values().toArray(new FieldAccess[fieldAccessMap.size()]);
     }
+
 
 
 }

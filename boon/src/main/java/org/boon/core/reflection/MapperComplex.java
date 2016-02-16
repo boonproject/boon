@@ -36,7 +36,7 @@ import org.boon.core.Value;
 import org.boon.core.reflection.fields.FieldAccess;
 import org.boon.core.reflection.fields.FieldAccessMode;
 import org.boon.core.reflection.fields.FieldsAccessor;
-import org.boon.core.reflection.fields.FieldsAccessorFieldThenProp;
+import org.boon.core.reflection.fields.FieldsAccessorImpl;
 import org.boon.core.value.ValueContainer;
 import org.boon.core.value.ValueList;
 import org.boon.core.value.ValueMap;
@@ -103,7 +103,7 @@ public class MapperComplex implements Mapper {
     }
 
     public MapperComplex(Set<String> ignoreSet, String view, boolean respectIgnore) {
-        this.fieldsAccessor = new FieldsAccessorFieldThenProp(true);
+        this.fieldsAccessor = new FieldsAccessorImpl(true, FieldAccessMode.FIELD_THEN_PROPERTY);
         this.ignoreSet = ignoreSet;
         this.view = view;
         this.respectIgnore = respectIgnore;
@@ -113,7 +113,7 @@ public class MapperComplex implements Mapper {
 
 
     public MapperComplex(Set<String> ignoreSet) {
-        this.fieldsAccessor = new FieldsAccessorFieldThenProp(true);;
+        this.fieldsAccessor = new FieldsAccessorImpl(true, FieldAccessMode.FIELD_THEN_PROPERTY);;
         this.ignoreSet = ignoreSet;
         this.view = null;
         this.respectIgnore = true;
@@ -122,7 +122,7 @@ public class MapperComplex implements Mapper {
     }
 
     public MapperComplex(boolean acceptSingleValueAsArray) {
-        fieldsAccessor = new FieldsAccessorFieldThenProp(true);
+        fieldsAccessor = new FieldsAccessorImpl(true, FieldAccessMode.FIELD_THEN_PROPERTY);
 
         ignoreSet = null;
         view = null;
@@ -133,7 +133,7 @@ public class MapperComplex implements Mapper {
     }
 
     public MapperComplex() {
-        fieldsAccessor = new FieldsAccessorFieldThenProp(true);
+        fieldsAccessor = new FieldsAccessorImpl(true, FieldAccessMode.FIELD_THEN_PROPERTY);
 
         ignoreSet = null;
         view = null;
@@ -189,7 +189,7 @@ public class MapperComplex implements Mapper {
 
 
         T toObject = Reflection.newInstance( cls );
-        Map<String, FieldAccess> fields = fieldsAccessor.getFields( toObject.getClass() );
+        Map<String, FieldAccess> fields = fieldsAccessor.getFieldsAsMap( toObject.getClass() );
         Set<Map.Entry<String, Object>> mapKeyValuesEntrySet = map.entrySet();
 
 
@@ -1183,7 +1183,7 @@ public class MapperComplex implements Mapper {
         ValueMap map = ( ValueMap ) ( Map ) valueMap;
 
 
-        Map<String, FieldAccess> fields = fieldsAccessor.getFields( cls);
+        Map<String, FieldAccess> fields = fieldsAccessor.getFieldsAsMap( cls);
         Map.Entry<String, Object>[] entries;
 
         FieldAccess field = null;
