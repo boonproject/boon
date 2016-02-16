@@ -848,11 +848,18 @@ public class Conversions {
         return toEnum(cls, value, null);
     }
 
-    public static Map<String, Enum> enumMap = new ConcurrentHashMap<>();
+    public static Map<Class, Map<String, Enum>> enumMap = new ConcurrentHashMap<>();
 
     public static <T extends Enum> T toEnum(Class<T> cls, String value, Enum defaultEnum) {
 
-        Enum enumVal = enumMap.get(value);
+
+        Map<String, Enum> stringEnumMap = enumMap.get(cls);
+        if (stringEnumMap == null) {
+            stringEnumMap = new ConcurrentHashMap<>();
+            enumMap.put(cls, stringEnumMap);
+        }
+
+        Enum enumVal = stringEnumMap.get(value);
 
         if (enumVal != null) {
             return (T) enumVal;
@@ -867,29 +874,33 @@ public class Conversions {
             }
 
 
-            value = value.toUpperCase().replace('-', '_');
-            for (T e : enumConstants) {
-                if (e.name().equals(value)) {
-                    enumVal = e;
-                    break;
+            if (enumVal == null) {
+                value = value.toUpperCase().replace('-', '_');
+                for (T e : enumConstants) {
+                    if (e.name().equals(value)) {
+                        enumVal = e;
+                        break;
+                    }
                 }
             }
 
-            value = Str.underBarCase(value);
-            for (T e : enumConstants) {
-                if (e.name().equals(value)) {
-                    enumVal = e;
-                    break;
+            if (enumVal == null) {
+                value = Str.underBarCase(value);
+                for (T e : enumConstants) {
+                    if (e.name().equals(value)) {
+                        enumVal = e;
+                        break;
+                    }
                 }
             }
 
 
             if (enumVal != null) {
-                enumMap.put(value, enumVal);
+                stringEnumMap.put(value, enumVal);
             } else {
                 enumVal = defaultEnum;
             }
-            return (T) defaultEnum;
+            return (T) enumVal;
         }
 
     }
