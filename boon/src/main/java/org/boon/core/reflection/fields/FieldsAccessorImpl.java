@@ -69,6 +69,16 @@ public class FieldsAccessorImpl implements FieldsAccessor {
         if (fieldMap == null) {
             FieldAccess[] fields = getFields(aClass);
             fieldMap = new LinkedHashMap<>(fields.length);
+
+            for (FieldAccess fa : fields) {
+                fieldMap.put(fa.name(), fa);
+                if (useAlias) {
+                    fieldMap.put(fa.alias(), fa);
+                }
+                if (caseInsensitive) {
+                    fieldMap.put(fa.name().toLowerCase(), fa);
+                }
+            }
             fieldMapMap.put(aClass, fieldMap);
         }
 
@@ -117,40 +127,6 @@ public class FieldsAccessorImpl implements FieldsAccessor {
         }
 
 
-        if (caseInsensitive) {
-
-            List<Map.Entry<String, FieldAccess>> entryList = Lists.list(fieldAccessMap.entrySet());
-
-            for (Map.Entry<String, FieldAccess> entry : entryList) {
-                if (entry.getValue().isStatic()) {
-                    continue;
-                }
-
-                fieldAccessMap.put(entry.getKey().toLowerCase(), entry.getValue());
-
-                fieldAccessMap.put(entry.getKey().toUpperCase(), entry.getValue());
-
-                fieldAccessMap.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        if ( useAlias ) {
-            Map<String, FieldAccess> fieldAccessMap2 = new LinkedHashMap<> ( fieldAccessMap.size () );
-
-            for (FieldAccess fa : fieldAccessMap.values ()) {
-                if (fa.isStatic()) {
-                    continue;
-                }
-                String alias = fa.alias();
-                if (caseInsensitive) {
-                    alias = alias.toLowerCase();
-                }
-                fieldAccessMap2.put (alias, fa );
-            }
-            fieldAccessMap = fieldAccessMap2;
-        } else {
-            fieldAccessMap = fieldAccessMap;
-        }
 
         return fieldAccessMap.values().toArray(new FieldAccess[fieldAccessMap.size()]);
     }

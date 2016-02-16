@@ -46,6 +46,7 @@ import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
+import static org.junit.Assert.assertEquals;
 
 import org.boon.core.Dates;
 
@@ -212,7 +213,7 @@ public class JsonSerializeTest {
                 .serialize( rick ).toString();
 
         puts (sRick);
-        boolean ok = sRick.equals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}" ) || die( sRick );
+        assertEquals( "{\"class\":\"org.boon.json.JsonSerializeTest$Employee\",\"name\":\"Rick\",\"url\":\"http://foo.bar/foo.jpg\",\"dob\":328147200000,\"currency\":\"USD\",\"salary\":100000.00}", sRick);
     }
 
     @Test
