@@ -28,7 +28,6 @@
 
 package org.boon.core.reflection.fields;
 
-import org.boon.Lists;
 import org.boon.Maps;
 import org.boon.core.reflection.Reflection;
 
@@ -38,8 +37,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FieldsAccessorImpl implements FieldsAccessor {
 
 
-    private final Map <Class<?>, FieldAccess[]> fieldMap = new ConcurrentHashMap<> ( );
-    private final Map <Class<?>, Map<String, FieldAccess>> fieldMapMap = new ConcurrentHashMap<> ( );
+    private static final Map <Class<?>, FieldAccess[]> fieldMap = new ConcurrentHashMap<> ( ); //temp
+    private static final Map <Class<?>, Map<String, FieldAccess>> fieldMapMap = new ConcurrentHashMap<> ( );//temp
     private final FieldAccessMode fieldAccessMode;
     private final boolean useAlias;
     private final boolean caseInsensitive;
