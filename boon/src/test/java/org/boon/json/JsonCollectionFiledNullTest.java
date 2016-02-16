@@ -37,6 +37,7 @@ import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
 import static org.boon.json.JsonFactory.fromJson;
 import static org.boon.json.JsonFactory.toJson;
+import static org.junit.Assert.assertEquals;
 
 public class JsonCollectionFiledNullTest {
 
@@ -55,7 +56,9 @@ public class JsonCollectionFiledNullTest {
         puts(map);
         puts(toJson(map));
 
-        boolean ok = toJson(map).equals("{}") || die();
+        String json = toJson(map);
+
+        assertEquals("{}", json);
     }
 
     public class CollectionHolder {

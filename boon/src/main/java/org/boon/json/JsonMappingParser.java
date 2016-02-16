@@ -34,7 +34,6 @@ import org.boon.core.Typ;
 import org.boon.core.Value;
 import org.boon.core.reflection.MapObjectConversion;
 import org.boon.core.reflection.Mapper;
-import org.boon.core.reflection.fields.FieldsAccessor;
 import org.boon.core.value.ValueContainer;
 import org.boon.json.implementation.*;
 import org.boon.primitive.CharBuf;
@@ -205,7 +204,7 @@ public class JsonMappingParser implements JsonParserAndMapper {
 
         if (object instanceof Map ) {
             Map<String, Value> objectMap = ( Map<String, Value> ) object;
-           return mapper.fromValueMap( objectMap, type );
+           return mapper.fromValueMapWithClass( objectMap, type );
         }
 
         if (object instanceof ValueContainer) {

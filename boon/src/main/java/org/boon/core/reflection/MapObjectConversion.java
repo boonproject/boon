@@ -219,7 +219,7 @@ public class MapObjectConversion {
 
 
         Mapper mapper = new MapperComplex(fieldsAccessor, ignoreSet, view, respectIgnore);
-        return mapper.fromValueMap(valueMap, cls);
+        return mapper.fromValueMapWithClass(valueMap, cls);
 
      }
 

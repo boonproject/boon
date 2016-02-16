@@ -141,6 +141,11 @@ public class ValueContainer implements CharSequence, Value {
     }
 
     @Override
+    public String rawString() {
+        return toString();
+    }
+
+    @Override
     public  Object toValue() {
         if ( value != null ) {
             return value;

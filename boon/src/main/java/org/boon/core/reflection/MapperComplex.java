@@ -164,7 +164,7 @@ public class MapperComplex implements Mapper {
 
                 Map map = ( Map ) obj;
                 if ( map instanceof ValueMapImpl) {
-                    newList.add( fromValueMap(  ( Map<String, Value> ) map, componentType ) );
+                    newList.add( fromValueMapWithClass(  ( Map<String, Value> ) map, componentType ) );
                 } else {
                     newList.add( fromMap(  map, componentType ) );
                 }
@@ -996,7 +996,7 @@ public class MapperComplex implements Mapper {
                     if ( value.isContainer() ) {
                         Object oValue = value.toValue();
                         if ( oValue instanceof Map ) {
-                            newCollection.add( fromValueMap(  ( Map ) oValue, componentClass ) );
+                            newCollection.add( fromValueMapWithClass(  ( Map ) oValue, componentClass ) );
                         }
                     } else {
                         newCollection.add( Conversions.coerce( componentClass, value.toValue() ) );
@@ -1150,16 +1150,15 @@ public class MapperComplex implements Mapper {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public  Object fromValueMap(final Map<String, Value> valueMap
-    ) {
+    public  Object fromValueMap(final Map<String, Value> valueMap) {
 
 
         try {
-            String className = valueMap.get( "class" ).toString();
+            String className = valueMap.get( "class" ).rawString();
             Class<?> cls = Reflection.loadClass( className );
-            return fromValueMap( valueMap, cls );
+            return fromValueMapWithClass( valueMap, cls );
         } catch ( Exception ex ) {
-            return handle(Object.class, sputs("fromValueMap", "map", valueMap, "fieldAccessor", fieldsAccessor), ex);
+            return handle(Object.class, sputs("fromValueMapWithClass", "map", valueMap, "fieldAccessor", fieldsAccessor), ex);
         }
     }
 
@@ -1176,8 +1175,8 @@ public class MapperComplex implements Mapper {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public  <T> T fromValueMap(final Map<String, Value> valueMap,
-                               final Class<T> cls) {
+    public  <T> T fromValueMapWithClass(final Map<String, Value> valueMap,
+                                        final Class<T> cls) {
 
         T newInstance = Reflection.newInstance( cls );
         ValueMap map = ( ValueMap ) ( Map ) valueMap;
@@ -1266,7 +1265,7 @@ public class MapperComplex implements Mapper {
 
     /**
      *
-     * Gets called by  fromValueMap
+     * Gets called by  fromValueMapWithClass
      * This does some special handling to take advantage of us using the value map so it avoids creating
      * a bunch of array objects and collections. Things you have to worry about when writing a
      * high-speed JSON serializer.
@@ -1281,13 +1280,13 @@ public class MapperComplex implements Mapper {
             if ( objectValue instanceof Map ) {
                 Class<?> clazz = field.type();
                 if ( !clazz.isInterface() && !Typ.isAbstract( clazz ) ) {
-                    objectValue = fromValueMap(  ( Map<String, Value> ) objectValue, field.type() );
+                    objectValue = fromValueMapWithClass(  ( Map<String, Value> ) objectValue, field.type() );
                 } else {
                      String className = (( Map<String, Value> ) objectValue)
                              .get("class").toString();
                     Class<?> cls = Reflection.loadClass( className );
 
-                    objectValue = fromValueMap(   ( Map<String, Value> ) objectValue, cls );
+                    objectValue = fromValueMapWithClass(   ( Map<String, Value> ) objectValue, cls );
                 }
                 field.setValue(newInstance, objectValue);
             } else if ( objectValue instanceof Collection ) {
@@ -1297,7 +1296,7 @@ public class MapperComplex implements Mapper {
                 field.setValue( newInstance, objectValue );
             }
         } catch ( Exception ex ) {
-            handle(sputs("Problem handling non value case of fromValueMap", "field", field.name(),
+            handle(sputs("Problem handling non value case of fromValueMapWithClass", "field", field.name(),
                     "fieldType", field.type().getName(), "object from map", objectValue), ex);
         }
     }
@@ -1306,7 +1305,7 @@ public class MapperComplex implements Mapper {
 
     /**
      *
-     * Gets called by  fromValueMap
+     * Gets called by  fromValueMapWithClass
      * This does some special handling to take advantage of us using the value map so it avoids creating
      * a bunch of array objects and collections. Things you have to worry about when writing a
      * high-speed JSON serializer.
@@ -1340,7 +1339,7 @@ public class MapperComplex implements Mapper {
             case INSTANCE:
                 switch (value.type()) {
                     case MAP:
-                        objValue = fromValueMap( ( Map<String, Value> ) objValue, clazz );
+                        objValue = fromValueMapWithClass( ( Map<String, Value> ) objValue, clazz );
                         break;
                     case LIST:
                         objValue = fromList((List<Object>) objValue, clazz);

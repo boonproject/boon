@@ -188,6 +188,9 @@ public class Reflection {
         Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsPropertyFirst = new ConcurrentHashMap<>( 200 );
         Map<Class<?>, Map<String, FieldAccess>> _combinedFieldsPropertyFirstForSerializer = new ConcurrentHashMap<>( 200 );
 
+
+        Map<String, Class> _classMap = new ConcurrentHashMap<>( 200 );
+
     }
 
 
@@ -462,10 +465,17 @@ public class Reflection {
 
     public static Class<?> loadClass( String className ) {
 
+
+        Class<?> clazz = context()._classMap.get(className);
+        if (clazz !=null) {
+            return clazz;
+        }
+
         try {
-            Class<?> clazz = Class.forName( className );
+            clazz = Class.forName( className );
 
 
+            context()._classMap.put(className, clazz);
             return clazz;
 
 

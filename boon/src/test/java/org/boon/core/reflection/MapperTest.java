@@ -189,7 +189,7 @@ public class MapperTest {
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringTuple("props", null));
         valueMap.add(stringTuple("name", "Rick"));
-        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+        Employee emp = mapper.fromValueMapWithClass(valueMap, Employee.class);
 
         ok = emp != null || die();
         ok |= emp.props == null || die();
@@ -202,7 +202,7 @@ public class MapperTest {
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringTuple("descriptions", null));
         valueMap.add(stringTuple("name", "Rick"));
-        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+        Employee emp = mapper.fromValueMapWithClass(valueMap, Employee.class);
 
         ok = emp != null || die();
         ok |= emp.descriptions == null || die();
@@ -216,7 +216,7 @@ public class MapperTest {
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringArrayTuple("props", "Rick is great"));
         valueMap.add(stringTuple("name", "Rick"));
-        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+        Employee emp = mapper.fromValueMapWithClass(valueMap, Employee.class);
 
         ok = emp != null || die();
         ok = emp.props != null || die();
@@ -233,7 +233,7 @@ public class MapperTest {
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringTuple("props", "Rick is great"));
         valueMap.add(stringTuple("name", "Rick"));
-        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+        Employee emp = mapper.fromValueMapWithClass(valueMap, Employee.class);
 
         ok = emp != null || die();
         ok = emp.props != null || die();
@@ -248,7 +248,7 @@ public class MapperTest {
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringArrayTuple("descriptions", "Rick is great"));
         valueMap.add(stringTuple("name", "Rick"));
-        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+        Employee emp = mapper.fromValueMapWithClass(valueMap, Employee.class);
 
         ok = emp != null || die();
         ok = emp.descriptions != null || die();
@@ -265,7 +265,7 @@ public class MapperTest {
         ValueMap valueMap = new ValueMapImpl();
         valueMap.add(stringTuple("descriptions", "Rick is great"));
         valueMap.add(stringTuple("name", "Rick"));
-        Employee emp = mapper.fromValueMap(valueMap, Employee.class);
+        Employee emp = mapper.fromValueMapWithClass(valueMap, Employee.class);
 
         ok = emp != null || die();
         ok = emp.descriptions != null || die();

@@ -17,12 +17,11 @@ public interface Mapper {
     <T> T fromList(List<?> argList, Class<T> clazz);
 
     @SuppressWarnings("unchecked")
-    Object fromValueMap(Map<String, Value> valueMap
-    );
+    Object fromValueMap(Map<String, Value> valueMap);
 
     @SuppressWarnings("unchecked")
-    <T> T fromValueMap(Map<String, Value> valueMap,
-                       Class<T> cls);
+    <T> T fromValueMapWithClass(Map<String, Value> valueMap,
+                                Class<T> cls);
 
     Object fromMap(Map<String, Object> map);
 

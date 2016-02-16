@@ -95,7 +95,7 @@ public class BaseJsonParserAndMapper implements JsonParserAndMapper {
             switch ( coerceFrom ) {
 
                 case VALUE_MAP:
-                    return mapper.fromValueMap(  ( Map<String, Value> ) object, clz );
+                    return mapper.fromValueMapWithClass(  ( Map<String, Value> ) object, clz );
 
                 case MAP:
                     return mapper.fromMap ( ( Map<String, Object> ) object, clz );

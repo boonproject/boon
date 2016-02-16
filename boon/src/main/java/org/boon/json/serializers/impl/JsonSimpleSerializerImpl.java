@@ -176,8 +176,6 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
         final TypeType typeEnum = fieldAccess.typeEnum ();
 
 
-        //try {
-
 
             if ( view!=null ){
                 if (!fieldAccess.isViewActive( view ) ) {
@@ -420,10 +418,6 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     return true;
             }
 
-//        } catch (Exception ex) {
-//            return handle(Boolean.class, ex, "Unable to serialize field", fieldName, "from parent object", parent,
-//                    "type enum", typeEnum);
-//        }
 
     }
 
@@ -608,14 +602,15 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
             builder.addChar( '{' );
 
-            int index = 0;
-            for ( FieldAccess fieldAccess : fields ) {
+            int count = 0;
+            for ( int index = 0; index < fields.length;  index++) {
+                 FieldAccess fieldAccess = fields[index];
                  if (serializeField ( instance, fieldAccess, builder ) ) {
                      builder.add(',');
-                     index++;
+                     count++;
                  }
             }
-            if ( index > 0 ) {
+            if ( count > 0 ) {
                 builder.removeLastChar();
             }
             builder.addChar( '}' );

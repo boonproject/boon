@@ -292,6 +292,8 @@ public class NumberValue extends Number implements Value {
     }
 
 
-
-
+    @Override
+    public String rawString() {
+        return toString();
+    }
 }

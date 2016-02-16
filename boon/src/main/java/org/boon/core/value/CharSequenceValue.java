@@ -60,17 +60,17 @@ public class CharSequenceValue implements Value, CharSequence {
     private int endIndex;
     private Object value;
 
-    public CharSequenceValue( boolean chop, TypeType type, int startIndex, int endIndex, char[] buffer,
-                              boolean encoded, boolean checkDate ) {
+    public CharSequenceValue(boolean chop, TypeType type, int startIndex, int endIndex, char[] buffer,
+                             boolean encoded, boolean checkDate) {
         this.type = type;
         this.checkDate = checkDate;
         this.decodeStrings = encoded;
-        
-        if ( chop ) {
+
+        if (chop) {
             try {
-                this.buffer = Arrays.copyOfRange ( buffer, startIndex, endIndex );
-            } catch ( Exception ex ) {
-                Exceptions.handle ( ex );
+                this.buffer = Arrays.copyOfRange(buffer, startIndex, endIndex);
+            } catch (Exception ex) {
+                Exceptions.handle(ex);
             }
             this.startIndex = 0;
             this.endIndex = this.buffer.length;
@@ -83,16 +83,28 @@ public class CharSequenceValue implements Value, CharSequence {
         }
     }
 
-    public String toString () {
+    public String toString() {
 
         if (this.decodeStrings) {
             return stringValue();
-        } else if ( startIndex == 0 && endIndex == buffer.length ) {
-            return FastStringUtils.noCopyStringFromCharsNoCheck( buffer );
+        } else if (startIndex == 0 && endIndex == buffer.length) {
+            return FastStringUtils.noCopyStringFromCharsNoCheck(buffer);
         } else {
-            return new String ( buffer, startIndex, ( endIndex - startIndex ) );
+            return new String(buffer, startIndex, (endIndex - startIndex));
         }
     }
+
+    public String rawString() {
+        if(startIndex==0&&endIndex==buffer.length) {
+            return FastStringUtils.noCopyStringFromCharsNoCheck(buffer);
+        }
+        else {
+            return new String(buffer, startIndex, (endIndex - startIndex));
+        }
+    }
+
+
+
 
     @Override
     public final Object toValue () {
