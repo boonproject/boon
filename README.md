@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/boonproject/boon.svg)](https://travis-ci.org/boonproject/boon)
 
 
 Got a question? Ask here. Get help from the Boon community.
@@ -44,9 +43,9 @@ Java and .NET applications. Take a look at YourKit's leading software products:
 [YourKit Java Profiler](http://www.yourkit.com/java/profiler/index.jsp) 
 and [YourKit .Net  profiler](http://www.yourkit.com/.net/profiler/index.jsp).
 
-![YourKit Logo](https://raw.githubusercontent.com/RichardHightower/boon/master/yourkit.png)
+![YourKit Logo](https://www.yourkit.com/images/yklogo.png)
 
-![YourKit Logo](https://raw.githubusercontent.com/RichardHightower/boon/master/yourkit2.png)
+![YourKit Logo](https://www.yourkit.com/images/yklogo.png)
 
 
 Philosophy
