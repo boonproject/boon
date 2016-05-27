@@ -178,7 +178,7 @@ public class EtcdClient implements Etcd{
     @Override
     public void deleteDir(org.boon.core.Handler<Response> responseHandler, String key) {
 
-         request(responseHandler, Request.request().methodDELETE().key(key).dir(true));
+        request(responseHandler, Request.request().methodDELETE().key(key).dir(true));
 
     }
 
@@ -192,7 +192,7 @@ public class EtcdClient implements Etcd{
 
     @Override
     public void deleteDirRecursively(org.boon.core.Handler<Response> responseHandler, String key) {
-         request(responseHandler, Request.request().methodDELETE().key(key).dir(true).recursive(true));
+        request(responseHandler, Request.request().methodDELETE().key(key).dir(true).recursive(true));
 
     }
 
@@ -206,7 +206,7 @@ public class EtcdClient implements Etcd{
     @Override
     public void deleteIfAtIndex(org.boon.core.Handler<Response> responseHandler, String key, long index) {
 
-         request( responseHandler, Request.request().methodDELETE().key(key).prevIndex(index));
+        request( responseHandler, Request.request().methodDELETE().key(key).prevIndex(index));
 
     }
 
@@ -296,16 +296,16 @@ public class EtcdClient implements Etcd{
     }
 
     @Override
-    public Response updateDirTTL(String key, long ttl) {
+    public Response updateDirTTL(String key, long ttl, boolean refresh) {
 
-        return request(Request.request().methodPUT().key(key).ttl(ttl).dir(true).prevExist(true));
+        return request(Request.request().methodPUT().key(key).ttl(ttl).dir(true).prevExist(true).refresh(refresh));
 
     }
 
     @Override
-    public void updateDirTTL(org.boon.core.Handler<Response> responseHandler, String name, long ttl) {
+    public void updateDirTTL(org.boon.core.Handler<Response> responseHandler, String name, long ttl, boolean refresh) {
 
-        request(responseHandler, Request.request().methodPUT().key(name).ttl(ttl).dir(true).prevExist(true));
+        request(responseHandler, Request.request().methodPUT().key(name).ttl(ttl).dir(true).prevExist(true).refresh(refresh));
 
     }
 
@@ -375,34 +375,34 @@ public class EtcdClient implements Etcd{
 
 
         if (closed.get()) {
-           this.scheduledExecutorService.schedule(new Runnable() {
-               @Override
-               public void run() {
-                   connect();
-                   int retry = 0;
-                   while (closed.get()) {
-                       Sys.sleep(1000);
+            this.scheduledExecutorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    connect();
+                    int retry = 0;
+                    while (closed.get()) {
+                        Sys.sleep(1000);
 
-                       if (!closed.get()) {
-                           break;
-                       }
-                       retry++;
-                       if (retry>10) {
-                           break;
-                       }
+                        if (!closed.get()) {
+                            break;
+                        }
+                        retry++;
+                        if (retry>10) {
+                            break;
+                        }
 
-                       if ( retry % 3 == 0 ) {
-                           connect();
-                       }
-                   }
+                        if ( retry % 3 == 0 ) {
+                            connect();
+                        }
+                    }
 
-                   if (!closed.get()) {
-                       runnable.run();
-                   } else {
-                       responseHandler.handle(new Response("TIMEOUT", -1, new Error(-1, "Timeout", "Timeout", -1L)));
-                   }
-               }
-           }, 10, TimeUnit.MILLISECONDS);
+                    if (!closed.get()) {
+                        runnable.run();
+                    } else {
+                        responseHandler.handle(new Response("TIMEOUT", -1, new Error(-1, "Timeout", "Timeout", -1L)));
+                    }
+                }
+            }, 10, TimeUnit.MILLISECONDS);
         } else {
             runnable.run();
         }
@@ -419,7 +419,17 @@ public class EtcdClient implements Etcd{
 
     @Override
     public void addToDir(org.boon.core.Handler<Response> responseHandler, String dirName, String key, String value) {
-         request(responseHandler, Request.request().methodPOST().key(Str.add(dirName, "/", key)).value(value));
+        request(responseHandler, Request.request().methodPOST().key(Str.add(dirName, "/", key)).value(value));
+    }
+
+    @Override
+    public Response addToDirTemp(String dirName, String key, String value, int ttl) {
+        return this.request(Request.request().methodPOST().key(Str.add(dirName, "/", key)).value(value).ttl((long)ttl));
+    }
+
+    @Override
+    public void addToDirTemp(org.boon.core.Handler<Response> responseHandler, String dirName, String key, String value, int ttl) {
+        request(responseHandler, Request.request().methodPOST().key(Str.add(dirName, "/", key)).value(value).ttl((long)ttl));
     }
 
     public Response set(String key, String value) {
