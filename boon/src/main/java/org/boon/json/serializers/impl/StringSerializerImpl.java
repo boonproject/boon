@@ -39,20 +39,25 @@ public class StringSerializerImpl implements StringSerializer {
 
     final boolean encodeStrings;
     final boolean asAscii;
+    final boolean includeBlank;
 
-    public StringSerializerImpl(boolean encodeStrings, boolean asAscii) {
+    public StringSerializerImpl(boolean encodeStrings, boolean asAscii, boolean includeBlank) {
 
         this.encodeStrings = encodeStrings;
         this.asAscii = asAscii;
+        this.includeBlank = includeBlank;
     }
 
     @Override
     public final void serializeString ( JsonSerializerInternal serializer, String string, CharBuf builder )  {
-        if (encodeStrings) {
+        if(includeBlank || (string != null && !string.isEmpty())){
 
-            builder.asJsonString(string, asAscii);
-        } else {
-            builder.addQuoted(string);
+            if (encodeStrings) {
+
+                builder.asJsonString(string, asAscii);
+            } else {
+                builder.addQuoted(string);
+            }
         }
     }
 }
