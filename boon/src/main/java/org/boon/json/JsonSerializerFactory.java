@@ -55,6 +55,7 @@ public class JsonSerializerFactory {
     private boolean encodeStrings = true;
     private boolean serializeAsSupport = true;
     private boolean asciiOnly = true;
+    private boolean includeBlank = true;
     private String view;
 
     private List<FieldFilter> filterProperties = null;
@@ -66,11 +67,11 @@ public class JsonSerializerFactory {
     public JsonSerializer create() {
 
         if ( !outputType && !includeEmpty && !includeNulls && !useAnnotations && !serializeMapKeys &&
-                !jsonFormatForDates && handleSimpleBackReference &&
+                !jsonFormatForDates && handleSimpleBackReference && includeBlank &&
                 !handleComplexBackReference && !includeDefault && filterProperties == null
                 && customFieldSerializers == null && customObjectSerializers == null &&
                 fieldAccessType == FieldAccessMode.FIELD) {
-            return new JsonSimpleSerializerImpl (view, encodeStrings, serializeAsSupport, asciiOnly);
+            return getJsonSimpleSerializer();
         } else {
 
             InstanceSerializer instanceSerializer;
@@ -81,7 +82,6 @@ public class JsonSerializerFactory {
             FieldsAccessor fieldsAccessor;
 
             ObjectSerializer objectSerializer;
-            StringSerializer stringSerializer;
             MapSerializer mapSerializer;
             FieldSerializer fieldSerializer;
 
@@ -96,7 +96,7 @@ public class JsonSerializerFactory {
             }
 
 
-            stringSerializer = new StringSerializerImpl (encodeStrings, asciiOnly);
+            StringSerializer stringSerializer = getStringSerializer();
 
             if (!serializeMapKeys) {
                 mapSerializer = new MapSerializerImpl(includeNulls);
@@ -164,6 +164,14 @@ public class JsonSerializerFactory {
             );
         }
 
+    }
+
+    protected JsonSerializer getJsonSimpleSerializer() {
+        return new JsonSimpleSerializerImpl(view, encodeStrings, serializeAsSupport, asciiOnly);
+    }
+
+    protected StringSerializer getStringSerializer() {
+        return new StringSerializerImpl(encodeStrings, asciiOnly, includeBlank);
     }
 
 
@@ -264,6 +272,18 @@ public class JsonSerializerFactory {
 
     public JsonSerializerFactory asciiOnly (  ) {
         this.asciiOnly = true;
+        return this;
+    }
+
+    public boolean isIncludeBlank() {  return includeBlank; }
+
+    public JsonSerializerFactory setIncludeBlank( boolean includeBlank ) {
+        this.includeBlank = includeBlank;
+        return this;
+    }
+
+    public JsonSerializerFactory includeBlank() {
+        this.includeBlank = true;
         return this;
     }
 
