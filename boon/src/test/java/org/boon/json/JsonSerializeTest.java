@@ -29,25 +29,27 @@
 package org.boon.json;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.boon.Boon;
 import org.boon.Lists;
+import org.boon.core.Dates;
 import org.boon.core.reflection.BeanUtils;
-import org.boon.core.reflection.ReflectionTest;
 import org.boon.json.serializers.impl.JsonSimpleSerializerImpl;
 import org.boon.json.test.AllTypes;
-import org.boon.json.test.Dog;
 import org.boon.json.test.FooEnum;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.net.URL;
-import java.util.*;
 
 import static org.boon.Boon.puts;
 import static org.boon.Exceptions.die;
-
-import org.boon.core.Dates;
 
 /**
  * Created by rick on 12/18/13.
@@ -647,5 +649,38 @@ public class JsonSerializeTest {
         JsonSerializer serializer = new JsonSerializerFactory().create();
         serializer.serialize( new int[]{ 0, 1, 2, 3, 4, 5 } );
     }
+
+    public class Cat {
+        public String name;
+        public String type;
+        public String sex;
+
+        public Cat(String name, String type, String sex) {
+            this.name = name;
+            this.type = type;
+            this.sex = sex;
+        }
+    }
+
+    /**
+     * @author javamonkey79
+     * https://github.com/boonproject/boon/issues/355
+     */
+    @Test
+    public void includeEmptyString() {
+        Cat mittens = new Cat("mittens", "calico", "");
+        Assert.assertEquals("{\"name\":\"mittens\",\"type\":\"calico\",\"sex\":\"\"}", String.valueOf(new JsonSerializerFactory().setIncludeEmpty(true).create().serialize(mittens)));
+    }
+
+    /**
+     * @author javamonkey79
+     * https://github.com/boonproject/boon/issues/355
+     */
+    @Test
+    public void excludeEmptyString() {
+        Cat mittens = new Cat("mittens", "calico", "");
+        Assert.assertEquals("{\"name\":\"mittens\",\"type\":\"calico\"}", Boon.toJson(mittens));
+    }
+
 
 }

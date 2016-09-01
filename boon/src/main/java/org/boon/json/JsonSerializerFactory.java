@@ -55,7 +55,6 @@ public class JsonSerializerFactory {
     private boolean encodeStrings = true;
     private boolean serializeAsSupport = true;
     private boolean asciiOnly = true;
-    private boolean includeBlank = true;
     private String view;
 
     private List<FieldFilter> filterProperties = null;
@@ -67,7 +66,7 @@ public class JsonSerializerFactory {
     public JsonSerializer create() {
 
         if ( !outputType && !includeEmpty && !includeNulls && !useAnnotations && !serializeMapKeys &&
-                !jsonFormatForDates && handleSimpleBackReference && includeBlank &&
+                !jsonFormatForDates && handleSimpleBackReference &&
                 !handleComplexBackReference && !includeDefault && filterProperties == null
                 && customFieldSerializers == null && customObjectSerializers == null &&
                 fieldAccessType == FieldAccessMode.FIELD) {
@@ -171,7 +170,7 @@ public class JsonSerializerFactory {
     }
 
     protected StringSerializer getStringSerializer() {
-        return new StringSerializerImpl(encodeStrings, asciiOnly, includeBlank);
+        return new StringSerializerImpl(encodeStrings, asciiOnly, includeEmpty);
     }
 
 
@@ -272,18 +271,6 @@ public class JsonSerializerFactory {
 
     public JsonSerializerFactory asciiOnly (  ) {
         this.asciiOnly = true;
-        return this;
-    }
-
-    public boolean isIncludeBlank() {  return includeBlank; }
-
-    public JsonSerializerFactory setIncludeBlank( boolean includeBlank ) {
-        this.includeBlank = includeBlank;
-        return this;
-    }
-
-    public JsonSerializerFactory includeBlank() {
-        this.includeBlank = true;
         return this;
     }
 

@@ -29,6 +29,7 @@
 package org.boon.json.serializers.impl;
 
 import org.boon.Sets;
+import org.boon.Str;
 import org.boon.core.TypeType;
 import org.boon.core.reflection.FastStringUtils;
 import org.boon.core.reflection.fields.FieldAccess;
@@ -246,7 +247,7 @@ public class FieldSerializerUseAnnotationsImpl implements FieldSerializer {
                 return true;
             case STRING:
                 String string = (String) value;
-                if (includeEmpty ||  include || string.length() > 0) {
+                if (includeEmpty ||  !Str.empty(string)) {
                     serializeFieldName ( fieldName, builder );
                     serializer.serializeString( string, builder );
                     return true;

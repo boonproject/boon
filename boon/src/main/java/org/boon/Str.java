@@ -28,17 +28,16 @@
 
 package org.boon;
 
-import org.boon.core.reflection.FastStringUtils;
-import org.boon.primitive.CharBuf;
-import org.boon.primitive.CharScanner;
-import org.boon.primitive.Chr;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import org.boon.core.reflection.FastStringUtils;
+import org.boon.primitive.CharBuf;
+import org.boon.primitive.CharScanner;
+import org.boon.primitive.Chr;
+
 
 import static org.boon.Exceptions.die;
 
@@ -1043,5 +1042,13 @@ public class Str {
 
 
     }
+
+    /**
+     * Null safe empty check.
+     *
+     * @param str - the String to check
+     * @return whether the String is null || empty
+     */
+    public static boolean empty(String str) { return str == null || str.isEmpty(); }
 
 }

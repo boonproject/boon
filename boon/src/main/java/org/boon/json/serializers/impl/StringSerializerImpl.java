@@ -28,6 +28,7 @@
 
 package org.boon.json.serializers.impl;
 
+import org.boon.Str;
 import org.boon.json.serializers.JsonSerializerInternal;
 import org.boon.json.serializers.StringSerializer;
 import org.boon.primitive.CharBuf;
@@ -39,18 +40,18 @@ public class StringSerializerImpl implements StringSerializer {
 
     final boolean encodeStrings;
     final boolean asAscii;
-    final boolean includeBlank;
+    final boolean includeEmpty;
 
-    public StringSerializerImpl(boolean encodeStrings, boolean asAscii, boolean includeBlank) {
+    public StringSerializerImpl(boolean encodeStrings, boolean asAscii, boolean includeEmpty) {
 
         this.encodeStrings = encodeStrings;
         this.asAscii = asAscii;
-        this.includeBlank = includeBlank;
+        this.includeEmpty = includeEmpty;
     }
 
     @Override
     public final void serializeString ( JsonSerializerInternal serializer, String string, CharBuf builder )  {
-        if(includeBlank || (string != null && !string.isEmpty())){
+        if(includeEmpty || !Str.empty(string)){
 
             if (encodeStrings) {
 

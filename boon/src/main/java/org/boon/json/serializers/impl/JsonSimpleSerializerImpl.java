@@ -115,9 +115,7 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
 
     public final void serializeString( String str, CharBuf builder ) {
 
-
-
-          if (encodeStrings) {
+          if (encodeStrings && !Str.empty(str)) {
 
               if (stringCache == null) {
                   stringCache = new SimpleCache<>(1000);
@@ -289,6 +287,9 @@ public class JsonSimpleSerializerImpl implements JsonSerializerInternal {
                     serializeDate((Date) value, builder);
                     return true;
                 case STRING:
+                    if(Str.empty((String)value)){
+                        return false;
+                    }
                     serializeFieldName ( fieldName, builder );
                     serializeString((String) value, builder);
                     return true;
