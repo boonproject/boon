@@ -99,6 +99,9 @@ public class ValueList extends AbstractList<Object> implements List<Object> {
         return list.add( obj );
     }
 
+    public Object set(int index, Object element) {
+        return list.set(index, element);
+    }
 
     public void chopList() {
 
