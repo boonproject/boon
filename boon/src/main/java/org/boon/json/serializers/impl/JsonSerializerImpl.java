@@ -139,7 +139,7 @@ public class JsonSerializerImpl implements JsonSerializerInternal {
         }
 
         if (stringSerializer == null) {
-            this.stringSerializer = new StringSerializerImpl (true, asAscii, true);
+            this.stringSerializer = new StringSerializerImpl (true, asAscii, false);
         } else {
             this.stringSerializer = stringSerializer;
         }
