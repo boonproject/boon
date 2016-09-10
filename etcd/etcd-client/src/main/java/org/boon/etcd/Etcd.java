@@ -88,7 +88,7 @@ public interface Etcd {
      * @param ttl ttl
      * @return
      */
-    Response updateDirTTL(String name, long ttl);
+    Response updateDirTTL(String name, long ttl, boolean refresh);
 
     /**
      * Update a directories time to live.
@@ -96,7 +96,7 @@ public interface Etcd {
      * @param name
      * @param ttl
      */
-    void updateDirTTL(Handler<Response> responseHandler, String name, long ttl);
+    void updateDirTTL(Handler<Response> responseHandler, String name, long ttl, boolean refresh);
 
     /**
      * Delete a dir
@@ -162,6 +162,15 @@ public interface Etcd {
      */
     Response addToDir(String dirName, String key, String value);
     void addToDir(Handler<Response> responseHandler, String dirName, String key, String value);
+
+    /**
+     * Add key / value to dir and set ttl
+     * @param key
+     * @param value
+     * @return
+     */
+    Response addToDirTemp(String dirName, String key, String value, int ttl);
+    void addToDirTemp(Handler<Response> responseHandler, String dirName, String key, String value, int ttl);
 
     /**
      * Set a key

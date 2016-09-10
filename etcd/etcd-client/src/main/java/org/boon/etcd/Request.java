@@ -23,6 +23,7 @@ public class Request {
     private String key;
     private long ttl;
     private boolean dir;
+    private boolean refresh;
 
     private boolean consistent;
 
@@ -107,6 +108,15 @@ public class Request {
 
     public Request ttl(long ttl) {
         this.ttl = ttl;
+        return this;
+    }
+
+    public boolean refresh(){
+        return refresh;
+    }
+
+    public Request refresh(boolean refresh){
+        this.refresh = refresh;
         return this;
     }
 
@@ -281,7 +291,11 @@ public class Request {
             first=false;
         }
 
-
+        if ( refresh ) {
+            if (!first) builder.append("&");
+            builder.append("refresh=true");
+            first=false;
+        }
 
 
     }
