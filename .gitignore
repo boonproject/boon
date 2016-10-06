@@ -40,21 +40,12 @@ machines/machine3/conf
 
 machines/machine3/snapshot/29_30007.ss
 
-.gradle/2.1/taskArtifacts/cache.properties
-
-.gradle/2.1/taskArtifacts/cache.properties.lock
-
-.gradle/2.1/taskArtifacts/fileHashes.bin
-
-.gradle/2.1/taskArtifacts/fileSnapshots.bin
-
-.gradle/2.1/taskArtifacts/outputFileStates.bin
-
-.gradle/2.1/taskArtifacts/taskArtifacts.bin
+.gradle
 
 *.class
 
 *.jar
+!gradle-wrapper.jar
 
 *.MF
 
