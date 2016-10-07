@@ -49,22 +49,4 @@ machines/machine3/snapshot/29_30007.ss
 
 *.MF
 
-boon/build/poms/pom-default.xml
-
-etcd/build/poms/pom-default.xml
-
-bnsf/build/poms/pom-default.xml
-
-etcd/etcd-client/build/poms/pom-default.xml
-
-slumberdb/build/poms/pom-default.xml
-
-slumberdb/slumberdb-core/build/poms/pom-default.xml
-
-slumberdb/slumberdb-leveldb/build/poms/pom-default.xml
-
-slumberdb/slumberdb-mysql/build/poms/pom-default.xml
-
-slumberdb/slumberdb-service-model/build/poms/pom-default.xml
-
-build/poms/pom-default.xml
+build/
