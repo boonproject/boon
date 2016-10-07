@@ -6,15 +6,11 @@ target
 .classpath
 .project
 .settings
-.gitignore~
 hs_err_*.log
 
 src/test/resources/foo.json
 
 src/test/resources/freeformatter-out.json
-
-
-boon/build/*
 
 machines/machine3/log
 
@@ -46,7 +42,5 @@ machines/machine3/snapshot/29_30007.ss
 
 *.jar
 !gradle-wrapper.jar
-
-*.MF
 
 build/
