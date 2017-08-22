@@ -79,19 +79,36 @@ public class MapperSimple implements Mapper {
         return ( List<T> ) newList;
     }
 
+    static <T> Class<T> handleAbstractReplacement(final Map<String, ?> map, final Class<T> cls) {
+        if (cls.isInterface() && Typ.isAbstract(cls)) {
+            if(map.containsKey("class")) {
+                String className = map.get("class").toString();
+                if (className != null) {
+                    Class c = Reflection.loadClass(className);
+                    if (cls.isAssignableFrom(c)) {
+                        return c;
+                    }
+                }
+
+            }
+        }
+        return cls;
+
+    }
 
 
-    /**
-     * fromMap converts a map into a java object
-     * @param map map to create the object from.
-     * @param cls class type of new object
-     * @param <T> map to create teh object from.
-     * @return new object of type cls <T>
-     */
+
+
+
+        /**
+         * fromMap converts a map into a java object
+         * @param map map to create the object from.
+         * @param <T> map to create teh object from.
+         * @return new object of type cls <T>
+         */
     @Override
-    public  <T> T fromMap(final Map<String, Object> map, final Class<T> cls) {
-
-
+    public  <T> T fromMap(final Map<String, Object> map, final Class<T> c) {
+        final Class<T> cls = handleAbstractReplacement(map, c);
         T toObject = Reflection.newInstance( cls );
         Map<String, FieldAccess> fields = fieldsAccessor.getFields( toObject.getClass() );
         Set<Map.Entry<String, Object>> mapKeyValuesEntrySet = map.entrySet();
@@ -1042,8 +1059,7 @@ public class MapperSimple implements Mapper {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public  Object fromValueMap(final Map<String, Value> valueMap
-    ) {
+    public  Object fromValueMap(final Map<String, Value> valueMap) {
 
 
         try {
@@ -1063,14 +1079,15 @@ public class MapperSimple implements Mapper {
      * This does some special handling to take advantage of us using the value map so it avoids creating
      * a bunch of array objects and collections. Things you have to worry about when writing a
      * high-speed JSON serializer.
-     * @param cls the new type
+     * @param c the new type
      * @return new object from value map
      */
     @Override
     @SuppressWarnings("unchecked")
     public  <T> T fromValueMap(final Map<String, Value> valueMap,
-                               final Class<T> cls) {
+                               final Class<T> c) {
 
+        final Class<T> cls = handleAbstractReplacement(valueMap, c);
         T newInstance = Reflection.newInstance( cls );
         ValueMap map = ( ValueMap ) ( Map ) valueMap;
 
@@ -1259,7 +1276,13 @@ public class MapperSimple implements Mapper {
                     }
 
                     key  = Conversions.coerce( keyType, key );
-                    evalue = Conversions.coerce( valueType, evalue );
+                    Class actualType = valueType;
+                    if ( valueType.isInterface() || Typ.isAbstract( valueType )  && evalue instanceof  Map && ((Map)evalue).containsKey("class")) {
+                        String className = ((Map)evalue)
+                                .get("class").toString();
+                        actualType = Reflection.loadClass( className );
+                    }
+                    evalue = Conversions.coerce( actualType, evalue );
                     newMap.put( key, evalue );
                 }
 
@@ -1352,7 +1375,13 @@ public class MapperSimple implements Mapper {
                 }
 
                 key  = Conversions.coerce(keyType, key);
-                evalue = Conversions.coerce( valueType, evalue );
+                Class actualType = valueType;
+                if ( valueType.isInterface() || Typ.isAbstract( valueType )  && evalue instanceof  Map && ((Map)evalue).containsKey("class")) {
+                    String className = ((Map)evalue)
+                            .get("class").toString();
+                    actualType = Reflection.loadClass( className );
+                }
+                evalue = Conversions.coerce( actualType, evalue );
                 newMap.put( key, evalue );
             }
 

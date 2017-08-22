@@ -300,7 +300,7 @@ public class Annotations {
             /* In the land of dynamic proxied AOP classes,
              * this class could be a proxy. This seems like a bug
              * waiting to happen. So far it has worked... */
-            if ( annotations.length == 0 ) {
+            if ( annotations.length == 0  && clazz.getSuperclass() != null) {
                 annotations = findPropertyAnnotations( clazz.getSuperclass(), propertyName, useRead );
             }
             return annotations;
