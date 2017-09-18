@@ -29,6 +29,7 @@ package org.boon.bugs;
 
 
 
+import org.boon.Boon;
 import org.boon.IO;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
@@ -112,10 +113,10 @@ public class BugReport165AndIssue169 {
                 e.printStackTrace();
             }
 
-            file =new File("/usr/local/bin/vertx");
+            //file =new File("/usr/local/bin/vertx");
 
             date = new Date();
-            path = file.toPath();
+            //path = file.toPath();
             locale = Locale.CANADA;
             timeZone = TimeZone.getTimeZone("PST");
         }
@@ -194,6 +195,8 @@ public class BugReport165AndIssue169 {
         puts(json);
         puts (sample1);
 
+        puts(Boon.toJson(Locale.CANADA_FRENCH));
+
         ok = json.contains("\"effectiveDate\"") || die();
 
         Sample sample2 = JsonFactory.fromJson(json, Sample.class);
@@ -202,7 +205,7 @@ public class BugReport165AndIssue169 {
 
         puts ("sample2", JsonFactory.toJson(sample2));
 
-        ok = sample1.equals(sample2);
+        ok = sample1.equals(sample2) || die();
 
     }
 
