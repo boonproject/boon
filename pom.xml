@@ -50,7 +50,7 @@
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
-        <groovy.version>2.3.2</groovy.version>
+        <groovy.version>2.4.21</groovy.version>
         <junit.version>4.11</junit.version>
         <guava.version>18.0</guava.version>
         <vertx.version>2.1.2</vertx.version>
