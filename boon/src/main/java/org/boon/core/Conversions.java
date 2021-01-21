@@ -882,7 +882,7 @@ public class Conversions {
 
         T[] enumConstants = cls.getEnumConstants();
         for (T e : enumConstants) {
-            if (e.name().equals(value)) {
+            if (e.name().equalsIgnoreCase(value)) {
                 return e;
             }
         }
