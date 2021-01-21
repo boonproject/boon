@@ -53,11 +53,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.*;
 import java.util.*;
 
-import static org.boon.Boon.putl;
-import static org.boon.Boon.puts;
-import static org.boon.Boon.sputs;
+import static org.boon.Boon.*;
 import static org.boon.Exceptions.die;
 import static org.boon.Lists.list;
 import static org.boon.Maps.idx;
@@ -499,12 +498,9 @@ public class JsonParserAndMapperBaseTest {
     @Test
     public void objectSerialization () {
 
-
         String fileContents = IO.read ( "files/AllTypes.json" );
 
         AllTypes types = objectParser ().parse ( AllTypes.class, new StringReader ( fileContents ) );
-
-
 
         //puts ( types );
         validateAllTypes ( types );
@@ -512,7 +508,6 @@ public class JsonParserAndMapperBaseTest {
         validateAllTypes ( types.getAllType () );
 
         boolean ok = true;
-
 
         //        outputs ("################", types.getBigDecimal (), types.getBirthDate (), types.getBigInteger ());
 
@@ -526,6 +521,21 @@ public class JsonParserAndMapperBaseTest {
         ok |= types.getBar ().toString().equals ( "BAR" ) || die();
 
         ok |= types.getAllTypeList().size () == 3 || die ( "" + types.getAllTypeList().size () );
+
+        ok |= types.getDurationNanos ().equals ( Duration.ofSeconds(60) ) || die();
+        ok |= types.getDurationString ().equals ( Duration.ofSeconds(30) ) || die();
+
+        Instant instant = Instant.ofEpochMilli(1611259073072L);
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+        ok |= types.getZonedDateTimeMillis () .equals ( zonedDateTime ) || die();
+        ok |= types.getZonedDateTimeToString () .equals ( zonedDateTime ) || die();
+        ok |= types.getZonedDateTimeIso () .equals ( ZonedDateTime.parse("2021-01-21T14:57:53.0720000Z") ) || die();
+
+        ok |= types.getLocalDate () .equals ( LocalDate.parse("2021-01-21") ) || die();
+        ok |= types.getLocalTime () .equals ( LocalTime.parse("15:16:17.181") ) || die();
+        ok |= types.getLocalDateTime () .equals ( LocalDateTime.parse("2021-01-21T15:16:17.181") ) || die();
+
+        System.out.println(JsonFactory.toJson(types));
 
         for ( AllTypes allType : types.getAllTypeList() ) {
             validateAllTypes ( allType );

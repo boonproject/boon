@@ -53,6 +53,7 @@ public enum TypeType {
 
     //BASIC TYPES 1st Class
     STRING(CHAR_SEQUENCE), CALENDAR, DATE,
+    ZONED_DATE_TIME, LOCAL_DATE, LOCAL_TIME, LOCAL_DATE_TIME, DURATION,
 
 
     //SECOND TIER BASIC TYPES
@@ -339,7 +340,20 @@ public enum TypeType {
                 case "java.sql.Timestamp":
                     return TypeType.DATE;
 
+                case "java.time.ZonedDateTime":
+                    return TypeType.ZONED_DATE_TIME;
 
+                case "java.time.LocalDate":
+                    return TypeType.LOCAL_DATE;
+
+                case "java.time.LocalTime":
+                    return TypeType.LOCAL_TIME;
+
+                case "java.time.LocalDateTime":
+                    return TypeType.LOCAL_DATE_TIME;
+
+                case "java.time.Duration":
+                    return TypeType.DURATION;
 
                 case "java.util.Calendar":
                     return TypeType.CALENDAR;

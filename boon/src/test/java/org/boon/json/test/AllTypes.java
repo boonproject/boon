@@ -33,6 +33,7 @@ import org.boon.json.annotations.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.*;
 import java.util.*;
 
 @JsonIgnoreProperties ("ignoreMe2")
@@ -67,6 +68,14 @@ public class AllTypes {
     BigDecimal bigDecimal;
     BigInteger bigInteger;
     Date date;
+    ZonedDateTime zonedDateTimeMillis;
+    ZonedDateTime zonedDateTimeIso;
+    ZonedDateTime zonedDateTimeToString;
+    LocalDate localDate;
+    LocalTime localTime;
+    LocalDateTime localDateTime;
+    Duration durationNanos;
+    Duration durationString;
 
     float myFloat;
     double myDouble;
@@ -215,6 +224,69 @@ public class AllTypes {
         this.date = date;
     }
 
+    public ZonedDateTime getZonedDateTimeMillis() {
+        return zonedDateTimeMillis;
+    }
+
+    public void setZonedDateTimeMillis(ZonedDateTime zonedDateTimeMillis) {
+        this.zonedDateTimeMillis = zonedDateTimeMillis;
+    }
+
+    public ZonedDateTime getZonedDateTimeToString() {
+        return zonedDateTimeToString;
+    }
+
+    public void setZonedDateTimeToString(ZonedDateTime zonedDateTimeToString) {
+        this.zonedDateTimeToString = zonedDateTimeToString;
+    }
+
+    public ZonedDateTime getZonedDateTimeIso() {
+        return zonedDateTimeIso;
+    }
+
+    public void setZonedDateTimeIso(ZonedDateTime zonedDateTimeIso) {
+        this.zonedDateTimeIso = zonedDateTimeIso;
+    }
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public Duration getDurationNanos() {
+        return durationNanos;
+    }
+
+    public void setDurationNanos(Duration durationNanos) {
+        this.durationNanos = durationNanos;
+    }
+
+    public Duration getDurationString() {
+        return durationString;
+    }
+
+    public void setDurationString(Duration durationString) {
+        this.durationString = durationString;
+    }
 
     public FooEnum getFoo () {
         return foo;
