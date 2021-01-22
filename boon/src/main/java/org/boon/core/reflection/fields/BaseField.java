@@ -461,6 +461,21 @@ public abstract class BaseField implements FieldAccess {
             case DATE:
                 this.setObject ( obj, toDate ( value ) );
                 return;
+            case ZONED_DATE_TIME:
+                this.setObject ( obj, toZonedDateTime ( value ) );
+                return;
+            case LOCAL_DATE:
+                this.setObject ( obj, toLocalDate ( value ) );
+                return;
+            case LOCAL_TIME:
+                this.setObject ( obj, toLocalTime ( value ) );
+                return;
+            case LOCAL_DATE_TIME:
+                this.setObject ( obj, toLocalDateTime ( value ) );
+                return;
+            case DURATION:
+                this.setObject ( obj, toDuration ( value ) );
+                return;
 
             case STRING:
                 if (value instanceof String)  {
@@ -624,9 +639,21 @@ public abstract class BaseField implements FieldAccess {
             case DATE:
                 this.setObject ( obj, value.dateValue () );
                 return;
-
-
-
+            case ZONED_DATE_TIME:
+                this.setObject ( obj, toZonedDateTime ( value ) );
+                return;
+            case LOCAL_DATE:
+                this.setObject ( obj, toLocalDate ( value ) );
+                return;
+            case LOCAL_TIME:
+                this.setObject ( obj, toLocalTime ( value ) );
+                return;
+            case LOCAL_DATE_TIME:
+                this.setObject ( obj, toLocalDateTime ( value ) );
+                return;
+            case DURATION:
+                this.setObject ( obj, toDuration ( value ) );
+                return;
 
             case ENUM:
                 this.setObject ( obj, value.toEnum (  ( Class<? extends Enum> )type ) );

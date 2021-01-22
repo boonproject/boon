@@ -37,11 +37,11 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import static org.boon.Boon.sputs;
 import static org.boon.Exceptions.die;
 import static org.boon.Exceptions.handle;
 import static org.boon.core.Typ.getComponentType;
@@ -494,6 +494,21 @@ public class Conversions {
             case CALENDAR:
                 return (T) toCalendar(toDate(value));
 
+            case ZONED_DATE_TIME:
+                return (T) toZonedDateTime(value);
+
+            case LOCAL_DATE:
+                return (T) toLocalDate(value);
+
+            case LOCAL_TIME:
+                return (T) toLocalTime(value);
+
+            case LOCAL_DATE_TIME:
+                return (T) toLocalDateTime(value);
+
+            case DURATION:
+                return (T) toDuration(value);
+
             case BOOLEAN:
             case BOOLEAN_WRAPPER:
                 return (T) (Boolean) toBoolean(value);
@@ -669,6 +684,21 @@ public class Conversions {
 
             case CALENDAR:
                 return (T) toCalendar(toDate(value));
+
+            case ZONED_DATE_TIME:
+                return (T) toZonedDateTime(value);
+
+            case LOCAL_DATE:
+                return (T) toLocalDate(value);
+
+            case LOCAL_TIME:
+                return (T) toLocalTime(value);
+
+            case LOCAL_DATE_TIME:
+                return (T) toLocalDateTime(value);
+
+            case DURATION:
+                return (T) toDuration(value);
 
 
             case BOOLEAN:
@@ -852,7 +882,7 @@ public class Conversions {
 
         T[] enumConstants = cls.getEnumConstants();
         for (T e : enumConstants) {
-            if (e.name().equals(value)) {
+            if (e.name().equalsIgnoreCase(value)) {
                 return e;
             }
         }
@@ -1332,7 +1362,6 @@ public class Conversions {
         return c.getTime();
 
     }
-
     public static Date toDate(long value) {
         return new Date(value);
     }
@@ -1388,6 +1417,134 @@ public class Conversions {
             return null;
         }
 
+    }
+
+    public static ZonedDateTime toZonedDateTime(Object object) {
+        try {
+            if (object instanceof ZonedDateTime) {
+                return (ZonedDateTime)object;
+            }
+            if (object instanceof LocalDate) {
+                return ZonedDateTime.of((LocalDate)object, LocalTime.of(0, 0, 0, 0), ZoneId.systemDefault());
+            }
+            if (object instanceof LocalDateTime) {
+                return ZonedDateTime.of((LocalDateTime)object, ZoneId.systemDefault());
+            }
+            if (object instanceof Number) {
+                Instant instant = Instant.ofEpochMilli(((Number)object).longValue());
+                return ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+            }
+            if (object instanceof Value) {
+                ZonedDateTime.parse(((Value) object).stringValue());
+            }
+            return ZonedDateTime.parse(object.toString());
+        } catch (Exception ex) {
+            die("Unable to parse zone date time");
+            return null;
+        }
+    }
+
+    public static LocalDate toLocalDate(Object object) {
+        try {
+            if (object instanceof LocalDate) {
+                return (LocalDate)object;
+            }
+            if (object instanceof LocalDateTime) {
+                return ((LocalDateTime)object).toLocalDate();
+            }
+            if (object instanceof ZonedDateTime) {
+                return ((ZonedDateTime)object).toLocalDate();
+            }
+            if (object instanceof Value) {
+                LocalDate.parse(((Value) object).stringValue());
+            }
+            return LocalDate.parse(object.toString());
+        } catch (Exception ex) {
+            die("Unable to parse local date");
+            return null;
+        }
+    }
+
+    public static LocalTime toLocalTime(Object object) {
+        try {
+            if (object instanceof LocalTime) {
+                return (LocalTime)object;
+            }
+            if (object instanceof LocalDateTime) {
+                return ((LocalDateTime)object).toLocalTime();
+            }
+            if (object instanceof ZonedDateTime) {
+                return ((ZonedDateTime)object).toLocalTime();
+            }
+            if (object instanceof Value) {
+                LocalTime.parse(((Value) object).stringValue());
+            }
+            return LocalTime.parse(object.toString());
+        } catch (Exception ex) {
+            die("Unable to parse local date time");
+            return null;
+        }
+    }
+
+    public static LocalDateTime toLocalDateTime(Object object) {
+        try {
+            if (object instanceof LocalDateTime) {
+                return (LocalDateTime)object;
+            }
+            if (object instanceof LocalDate) {
+
+                return LocalDateTime.of((LocalDate)object, LocalTime.of(0, 0, 0, 0));
+            }
+            if (object instanceof ZonedDateTime) {
+                return ((ZonedDateTime)object).toLocalDateTime();
+            }
+            if (object instanceof Value) {
+                LocalDateTime.parse(((Value) object).stringValue());
+            }
+            return LocalDateTime.parse(object.toString());
+        } catch (Exception ex) {
+            die("Unable to parse local date time");
+            return null;
+        }
+    }
+
+    public static Duration toDuration(Object object) {
+        if (object instanceof Duration) {
+            return (Duration) object;
+        }
+
+        if (object instanceof Number) {
+            try {
+                return Duration.ofNanos(((Number) object).longValue());
+            }
+            catch (Exception e) {
+                die("Unable to parse duration");
+                return null;
+            }
+        }
+
+        String sValue;
+        if (object instanceof CharSequence) {
+            sValue = ((CharSequence) object).toString();
+        }
+        else if (object instanceof Value) {
+            sValue = ((Value) object).stringValue();
+        }
+        else {
+            sValue = object.toString();
+        }
+
+        try {
+            return Duration.parse(sValue);
+        } catch (Exception ex) {
+            try {
+                return Duration.ofNanos(Long.parseLong(sValue));
+            }
+            catch (Exception ex2) {
+                die("Unable to parse duration");
+            }
+            return null;
+        }
     }
 
     public static Collection<Object> createCollection(Class<?> type, int size) {

@@ -33,16 +33,15 @@ import org.boon.json.annotations.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.*;
 import java.util.*;
 
 @JsonIgnoreProperties ("ignoreMe2")
 public class AllTypes {
 
-
     public Animal pet2;
 
     public Pet pet;
-
 
     public FooBasket getFooBasket () {
         return fooBasket;
@@ -68,6 +67,15 @@ public class AllTypes {
     BigInteger bigInteger;
     Date date;
 
+    ZonedDateTime zonedDateTimeMillis;
+    ZonedDateTime zonedDateTimeIso;
+    ZonedDateTime zonedDateTimeToString;
+    LocalDate localDate;
+    LocalTime localTime;
+    LocalDateTime localDateTime;
+    Duration durationNanos;
+    Duration durationString;
+
     float myFloat;
     double myDouble;
     byte myByte;
@@ -82,15 +90,11 @@ public class AllTypes {
 
     public long someTimeStamp = new Date (  ).getTime ();
 
-
-
     AllTypes allType;
 
     List<AllTypes> allTypeList = new ArrayList<> (  );
 
-
     Set<AllTypes> allTypesSet = new HashSet<> (  );
-
 
     public Set<AllTypes> getAllTypesSet() {
         return allTypesSet;
@@ -172,7 +176,6 @@ public class AllTypes {
         this.string = string;
     }
 
-
     public float getMyFloat () {
         return myFloat;
     }
@@ -206,7 +209,6 @@ public class AllTypes {
         this.bigInteger = bigInteger;
     }
 
-
     public Date getDate () {
         return date;
     }
@@ -215,6 +217,69 @@ public class AllTypes {
         this.date = date;
     }
 
+    public ZonedDateTime getZonedDateTimeMillis() {
+        return zonedDateTimeMillis;
+    }
+
+    public void setZonedDateTimeMillis(ZonedDateTime zonedDateTimeMillis) {
+        this.zonedDateTimeMillis = zonedDateTimeMillis;
+    }
+
+    public ZonedDateTime getZonedDateTimeToString() {
+        return zonedDateTimeToString;
+    }
+
+    public void setZonedDateTimeToString(ZonedDateTime zonedDateTimeToString) {
+        this.zonedDateTimeToString = zonedDateTimeToString;
+    }
+
+    public ZonedDateTime getZonedDateTimeIso() {
+        return zonedDateTimeIso;
+    }
+
+    public void setZonedDateTimeIso(ZonedDateTime zonedDateTimeIso) {
+        this.zonedDateTimeIso = zonedDateTimeIso;
+    }
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public Duration getDurationNanos() {
+        return durationNanos;
+    }
+
+    public void setDurationNanos(Duration durationNanos) {
+        this.durationNanos = durationNanos;
+    }
+
+    public Duration getDurationString() {
+        return durationString;
+    }
+
+    public void setDurationString(Duration durationString) {
+        this.durationString = durationString;
+    }
 
     public FooEnum getFoo () {
         return foo;
@@ -254,6 +319,15 @@ public class AllTypes {
         if ( string != null ? !string.equals ( allTypes1.string ) : allTypes1.string != null ) return false;
         if ( string2 != null ? !string2.equals ( allTypes1.string2 ) : allTypes1.string2 != null ) return false;
 
+        if ( zonedDateTimeMillis != null ? !zonedDateTimeMillis.equals ( allTypes1.zonedDateTimeMillis ) : allTypes1.zonedDateTimeMillis != null ) return false;
+        if ( zonedDateTimeIso != null ? !zonedDateTimeIso.equals ( allTypes1.zonedDateTimeIso ) : allTypes1.zonedDateTimeIso != null ) return false;
+        if ( zonedDateTimeToString != null ? !zonedDateTimeToString.equals ( allTypes1.zonedDateTimeToString ) : allTypes1.zonedDateTimeToString != null ) return false;
+        if ( localDate != null ? !localDate.equals ( allTypes1.localDate ) : allTypes1.localDate != null ) return false;
+        if ( localTime != null ? !localTime.equals ( allTypes1.localTime ) : allTypes1.localTime != null ) return false;
+        if ( localDateTime != null ? !localDateTime.equals ( allTypes1.localDateTime ) : allTypes1.localDateTime != null ) return false;
+        if ( durationNanos != null ? !durationNanos.equals ( allTypes1.durationNanos ) : allTypes1.durationNanos != null ) return false;
+        if ( durationString != null ? !durationString.equals ( allTypes1.durationString ) : allTypes1.durationString != null ) return false;
+
         if ( allTypeList == null && allTypes1.allTypeList.size () == 0) {
             return true;
         } else {
@@ -285,7 +359,7 @@ public class AllTypes {
 
         }
 
-       if ( allType != null ? !allType.equals ( allTypes1.allType ) : allTypes1.allType != null ) return false;
+        if ( allType != null ? !allType.equals ( allTypes1.allType ) : allTypes1.allType != null ) return false;
         if ( bar != allTypes1.bar ) return false;
         if ( foo != allTypes1.foo ) return false;
 
@@ -306,6 +380,16 @@ public class AllTypes {
         result = 31 * result + ( bigDecimal != null ? bigDecimal.hashCode () : 0 );
         result = 31 * result + ( bigInteger != null ? bigInteger.hashCode () : 0 );
         result = 31 * result + ( date != null ? date.hashCode () : 0 );
+
+        result = 31 * result + ( zonedDateTimeMillis != null ? zonedDateTimeMillis.hashCode () : 0 );
+        result = 31 * result + ( zonedDateTimeIso != null ? zonedDateTimeIso.hashCode () : 0 );
+        result = 31 * result + ( zonedDateTimeToString != null ? zonedDateTimeToString.hashCode () : 0 );
+        result = 31 * result + ( localDate != null ? localDate.hashCode () : 0 );
+        result = 31 * result + ( localTime != null ? localTime.hashCode () : 0 );
+        result = 31 * result + ( localDateTime != null ? localDateTime.hashCode () : 0 );
+        result = 31 * result + ( durationNanos != null ? durationNanos.hashCode () : 0 );
+        result = 31 * result + ( durationString != null ? durationString.hashCode () : 0 );
+
         result = 31 * result + ( myFloat != +0.0f ? Float.floatToIntBits ( myFloat ) : 0 );
         temp = Double.doubleToLongBits ( myDouble );
         result = 31 * result + ( int ) ( temp ^ ( temp >>> 32 ) );
@@ -328,7 +412,14 @@ public class AllTypes {
                 ", string2='" + string2 + '\'' +
                 ", bigDecimal=" + bigDecimal +
                 ", bigInteger=" + bigInteger +
-                ", date=" + date +
+                ", zonedDateTimeMillis=" + zonedDateTimeMillis +
+                ", zonedDateTimeIso=" + zonedDateTimeIso +
+                ", zonedDateTimeToString=" + zonedDateTimeToString +
+                ", localDate=" + localDate +
+                ", localTime=" + localTime +
+                ", localDateTime=" + localDateTime +
+                ", durationNanos=" + durationNanos +
+                ", durationString=" + durationString +
                 ", myFloat=" + myFloat +
                 ", myDouble=" + myDouble +
                 ", myByte=" + myByte +

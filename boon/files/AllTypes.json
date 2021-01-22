@@ -13,6 +13,14 @@
     "bigInteger" : "101",
     "foo" : "FOO",
     "bar" : 1,
+    "zonedDateTimeMillis" : 1611259073072,
+    "zonedDateTimeIso" : "2021-01-21T14:57:53.0720000Z",
+    "zonedDateTimeToString" : "2021-01-21T14:57:53.072-05:00[America/New_York]",
+    "localDate": "2021-01-21",
+    "localTime": "15:16:17.181",
+    "localDateTime": "2021-01-21T15:16:17.181",
+    "durationNanos": 60000000000,
+    "durationString": "PT30S",
 
     "allType" : {
         "myInt" : 1,
