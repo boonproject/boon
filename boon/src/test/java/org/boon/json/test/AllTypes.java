@@ -39,11 +39,9 @@ import java.util.*;
 @JsonIgnoreProperties ("ignoreMe2")
 public class AllTypes {
 
-
     public Animal pet2;
 
     public Pet pet;
-
 
     public FooBasket getFooBasket () {
         return fooBasket;
@@ -68,6 +66,7 @@ public class AllTypes {
     BigDecimal bigDecimal;
     BigInteger bigInteger;
     Date date;
+
     ZonedDateTime zonedDateTimeMillis;
     ZonedDateTime zonedDateTimeIso;
     ZonedDateTime zonedDateTimeToString;
@@ -91,15 +90,11 @@ public class AllTypes {
 
     public long someTimeStamp = new Date (  ).getTime ();
 
-
-
     AllTypes allType;
 
     List<AllTypes> allTypeList = new ArrayList<> (  );
 
-
     Set<AllTypes> allTypesSet = new HashSet<> (  );
-
 
     public Set<AllTypes> getAllTypesSet() {
         return allTypesSet;
@@ -181,7 +176,6 @@ public class AllTypes {
         this.string = string;
     }
 
-
     public float getMyFloat () {
         return myFloat;
     }
@@ -214,7 +208,6 @@ public class AllTypes {
     public void setBigInteger ( BigInteger bigInteger ) {
         this.bigInteger = bigInteger;
     }
-
 
     public Date getDate () {
         return date;
@@ -326,6 +319,15 @@ public class AllTypes {
         if ( string != null ? !string.equals ( allTypes1.string ) : allTypes1.string != null ) return false;
         if ( string2 != null ? !string2.equals ( allTypes1.string2 ) : allTypes1.string2 != null ) return false;
 
+        if ( zonedDateTimeMillis != null ? !zonedDateTimeMillis.equals ( allTypes1.zonedDateTimeMillis ) : allTypes1.zonedDateTimeMillis != null ) return false;
+        if ( zonedDateTimeIso != null ? !zonedDateTimeIso.equals ( allTypes1.zonedDateTimeIso ) : allTypes1.zonedDateTimeIso != null ) return false;
+        if ( zonedDateTimeToString != null ? !zonedDateTimeToString.equals ( allTypes1.zonedDateTimeToString ) : allTypes1.zonedDateTimeToString != null ) return false;
+        if ( localDate != null ? !localDate.equals ( allTypes1.localDate ) : allTypes1.localDate != null ) return false;
+        if ( localTime != null ? !localTime.equals ( allTypes1.localTime ) : allTypes1.localTime != null ) return false;
+        if ( localDateTime != null ? !localDateTime.equals ( allTypes1.localDateTime ) : allTypes1.localDateTime != null ) return false;
+        if ( durationNanos != null ? !durationNanos.equals ( allTypes1.durationNanos ) : allTypes1.durationNanos != null ) return false;
+        if ( durationString != null ? !durationString.equals ( allTypes1.durationString ) : allTypes1.durationString != null ) return false;
+
         if ( allTypeList == null && allTypes1.allTypeList.size () == 0) {
             return true;
         } else {
@@ -357,7 +359,7 @@ public class AllTypes {
 
         }
 
-       if ( allType != null ? !allType.equals ( allTypes1.allType ) : allTypes1.allType != null ) return false;
+        if ( allType != null ? !allType.equals ( allTypes1.allType ) : allTypes1.allType != null ) return false;
         if ( bar != allTypes1.bar ) return false;
         if ( foo != allTypes1.foo ) return false;
 
@@ -378,6 +380,16 @@ public class AllTypes {
         result = 31 * result + ( bigDecimal != null ? bigDecimal.hashCode () : 0 );
         result = 31 * result + ( bigInteger != null ? bigInteger.hashCode () : 0 );
         result = 31 * result + ( date != null ? date.hashCode () : 0 );
+
+        result = 31 * result + ( zonedDateTimeMillis != null ? zonedDateTimeMillis.hashCode () : 0 );
+        result = 31 * result + ( zonedDateTimeIso != null ? zonedDateTimeIso.hashCode () : 0 );
+        result = 31 * result + ( zonedDateTimeToString != null ? zonedDateTimeToString.hashCode () : 0 );
+        result = 31 * result + ( localDate != null ? localDate.hashCode () : 0 );
+        result = 31 * result + ( localTime != null ? localTime.hashCode () : 0 );
+        result = 31 * result + ( localDateTime != null ? localDateTime.hashCode () : 0 );
+        result = 31 * result + ( durationNanos != null ? durationNanos.hashCode () : 0 );
+        result = 31 * result + ( durationString != null ? durationString.hashCode () : 0 );
+
         result = 31 * result + ( myFloat != +0.0f ? Float.floatToIntBits ( myFloat ) : 0 );
         temp = Double.doubleToLongBits ( myDouble );
         result = 31 * result + ( int ) ( temp ^ ( temp >>> 32 ) );
@@ -400,7 +412,14 @@ public class AllTypes {
                 ", string2='" + string2 + '\'' +
                 ", bigDecimal=" + bigDecimal +
                 ", bigInteger=" + bigInteger +
-                ", date=" + date +
+                ", zonedDateTimeMillis=" + zonedDateTimeMillis +
+                ", zonedDateTimeIso=" + zonedDateTimeIso +
+                ", zonedDateTimeToString=" + zonedDateTimeToString +
+                ", localDate=" + localDate +
+                ", localTime=" + localTime +
+                ", localDateTime=" + localDateTime +
+                ", durationNanos=" + durationNanos +
+                ", durationString=" + durationString +
                 ", myFloat=" + myFloat +
                 ", myDouble=" + myDouble +
                 ", myByte=" + myByte +
